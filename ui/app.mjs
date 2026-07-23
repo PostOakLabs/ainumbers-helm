@@ -38,9 +38,13 @@ function mountTokenForm(root, onPaired) {
   root.innerHTML = `
     <div class="welcome-state" aria-live="polite">
       <p class="welcome-title">Waiting for Helm on this computer&hellip;</p>
-      <p class="empty-state">Run <code>helmd start</code> — it opens this page paired automatically.</p>
-      <p class="empty-state">Lost this tab, or opened a bookmark? Run <code>helmd open</code> to get a fresh paired link.</p>
-      <p class="empty-state"><a href="https://ainumbers.co/helm" rel="noopener">Don't have Helm installed yet?</a></p>
+      <p class="empty-state">This tab isn't paired with helmd yet. To connect:</p>
+      <ol class="steps">
+        <li>Open a terminal (Command Prompt or PowerShell on Windows, Terminal on macOS or Linux).</li>
+        <li>Type <code>helmd start</code> and press Enter. It opens a freshly paired tab automatically.</li>
+        <li>Lost this tab or opened a bookmark? Run <code>helmd open</code> instead to get a fresh paired link.</li>
+      </ol>
+      <p class="empty-state">Don't have Helm installed yet? Get it at <a href="https://ainumbers.co/helm" rel="noopener">ainumbers.co/helm</a>.</p>
       <details class="disclosure">
         <summary>Advanced: pair by hand</summary>
         <form class="token-form" aria-label="Pair with helmd">

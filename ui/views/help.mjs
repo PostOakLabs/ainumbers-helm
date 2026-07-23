@@ -37,6 +37,12 @@ export async function renderHelp(root) {
     <section class="card" aria-labelledby="help-pairing">
       <h3 id="help-pairing">Pairing / troubleshooting</h3>
       <p>"Not paired" means this browser tab has no token for talking to helmd — pairing tokens are per-tab and don't survive a closed tab or a restart, by design.</p>
-      <p>Run <code>helmd start</code> to open a freshly paired tab, or <code>helmd open</code> to get a new paired link for this browser.</p>
+      <p>To pair again:</p>
+      <ol class="steps">
+        <li>Open a terminal (Command Prompt or PowerShell on Windows, Terminal on macOS or Linux).</li>
+        <li>Run <code>helmd start</code> to launch the daemon and open a freshly paired tab.</li>
+        <li>If helmd is already running, run <code>helmd open</code> to get a new paired link for this browser.</li>
+        <li>When it connects, the status pill at the top right reads "helmd connected".</li>
+      </ol>
     </section>`;
 }
