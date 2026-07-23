@@ -1,0 +1,10 @@
+{
+  "sourceRepo": "https://github.com/PostOakLabs/ainumbers.git",
+  "pinnedSha": "bfa1bd621ca7147d2dc32f34326444159dfb0387",
+  "paths": [
+    "chaingraph/kernels",
+    "chaingraph/standard/SPEC.md",
+    "chaingraph/standard/openchain-graph-v0.4.schema.json"
+  ],
+  "destination": "hub/vendored/ocg"
+}

@@ -1,0 +1,235 @@
+{
+  "tool_id": "art-04-agent-identity-attestation-checker",
+  "note": "golden_hash fields are empty until first `node golden-parity.test.mjs --update`. policy_parameters carry the full credential object for complete input anchoring.",
+  "vectors": [
+    {
+      "name": "valid_agent_credential_pass",
+      "policy_parameters": {
+        "validate_at_unix": 1750248000,
+        "credential": {
+          "credential_type": "AgentCredential",
+          "agent_id": "agent:acme:shopping-bot:v2",
+          "issuer": "did:web:auth.acme.com",
+          "issued_at": 1750161600,
+          "expires_at": 1752840000,
+          "scopes": [
+            "read:account",
+            "execute:checkout",
+            "write:payment"
+          ],
+          "eu_ai_act_risk_class": "limited",
+          "signature": "ed25519:MEYCIQDexampleSignatureHexGoesHereForTestingPurposesOnly"
+        }
+      },
+      "output_payload": {
+        "overall_status": "pass",
+        "pass": 8,
+        "fail": 0,
+        "warn": 0,
+        "checks": [
+          {
+            "code": "KYA-T01",
+            "status": "pass"
+          },
+          {
+            "code": "KYA-R01",
+            "status": "pass"
+          },
+          {
+            "code": "KYA-R02",
+            "status": "pass"
+          },
+          {
+            "code": "KYA-R03",
+            "status": "pass"
+          },
+          {
+            "code": "KYA-R04",
+            "status": "pass"
+          },
+          {
+            "code": "KYA-R05",
+            "status": "pass"
+          },
+          {
+            "code": "KYA-R06",
+            "status": "pass"
+          },
+          {
+            "code": "KYA-EU1",
+            "status": "pass"
+          }
+        ],
+        "root_agent_id": "agent:acme:shopping-bot:v2",
+        "scopes": [
+          "read:account",
+          "execute:checkout",
+          "write:payment"
+        ]
+      },
+      "golden_hash": "a1ad74ebe62829232e2d2b000d883179d916c51bc8bdc8d0fdbcb75d65bacc8b"
+    },
+    {
+      "name": "expired_credential_fail",
+      "policy_parameters": {
+        "validate_at_unix": 1750248000,
+        "credential": {
+          "credential_type": "AgentCredential",
+          "agent_id": "agent:beta:old-bot:v1",
+          "issuer": "did:key:z6Mkexample",
+          "issued_at": 1747656000,
+          "expires_at": 1748865600,
+          "scopes": [
+            "read:transactions"
+          ],
+          "eu_ai_act_risk_class": "minimal",
+          "signature": "ed25519:MEYCIQDexpiredSigExample"
+        }
+      },
+      "output_payload": {
+        "overall_status": "fail",
+        "pass": 7,
+        "fail": 1,
+        "warn": 0,
+        "checks": [
+          {
+            "code": "KYA-T01",
+            "status": "pass"
+          },
+          {
+            "code": "KYA-R01",
+            "status": "pass"
+          },
+          {
+            "code": "KYA-R02",
+            "status": "pass"
+          },
+          {
+            "code": "KYA-R03",
+            "status": "fail"
+          },
+          {
+            "code": "KYA-R04",
+            "status": "pass"
+          },
+          {
+            "code": "KYA-R05",
+            "status": "pass"
+          },
+          {
+            "code": "KYA-R06",
+            "status": "pass"
+          },
+          {
+            "code": "KYA-EU1",
+            "status": "pass"
+          }
+        ],
+        "root_agent_id": "agent:beta:old-bot:v1",
+        "scopes": [
+          "read:transactions"
+        ]
+      },
+      "golden_hash": "de3613ec539918b52d65a24b3170b62e98829208ed78d696420caf0975d22da7"
+    },
+    {
+      "name": "delegation_chain_scope_escalation_fail",
+      "policy_parameters": {
+        "validate_at_unix": 1750248000,
+        "credential": {
+          "credential_type": "DelegationChain",
+          "root": {
+            "agent_id": "agent:root:orchestrator",
+            "issuer": "did:web:auth.platform.io",
+            "issued_at": 1750161600,
+            "expires_at": 1752840000,
+            "scopes": [
+              "read:account",
+              "write:payment"
+            ],
+            "eu_ai_act_risk_class": "high",
+            "signature": "ed25519:MEYRootSig"
+          },
+          "delegates": [
+            {
+              "agent_id": "agent:delegate:sub-bot",
+              "depth": 1,
+              "delegated_by": "agent:root:orchestrator",
+              "scopes": [
+                "read:account",
+                "write:payment",
+                "execute:trade"
+              ],
+              "issued_at": 1750165200,
+              "expires_at": 1752840000,
+              "signature": "ed25519:MEYDelegateSig"
+            }
+          ]
+        }
+      },
+      "output_payload": {
+        "overall_status": "fail",
+        "pass": 10,
+        "fail": 1,
+        "warn": 1,
+        "checks": [
+          {
+            "code": "KYA-T01",
+            "status": "pass"
+          },
+          {
+            "code": "KYA-R01",
+            "status": "pass"
+          },
+          {
+            "code": "KYA-R02",
+            "status": "pass"
+          },
+          {
+            "code": "KYA-R03",
+            "status": "pass"
+          },
+          {
+            "code": "KYA-R04",
+            "status": "pass"
+          },
+          {
+            "code": "KYA-R05",
+            "status": "pass"
+          },
+          {
+            "code": "KYA-R06",
+            "status": "pass"
+          },
+          {
+            "code": "KYA-EU1",
+            "status": "warn"
+          },
+          {
+            "code": "KYA-D01",
+            "status": "pass"
+          },
+          {
+            "code": "KYA-D02",
+            "status": "fail"
+          },
+          {
+            "code": "KYA-D03",
+            "status": "pass"
+          },
+          {
+            "code": "KYA-D04",
+            "status": "pass"
+          }
+        ],
+        "root_agent_id": "agent:root:orchestrator",
+        "scopes": [
+          "read:account",
+          "write:payment",
+          "execute:trade"
+        ]
+      },
+      "golden_hash": "1319d2b4b1c4232e6624d09cd29244b8d4f462cc9d05e497608a6ddb20f0c3bb"
+    }
+  ]
+}
