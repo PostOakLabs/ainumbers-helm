@@ -68,6 +68,8 @@ jobs:
     environment: release
     permissions:
       contents: write
+    outputs:
+      is_ga: ${{ steps.tag-kind.outputs.is_ga }}
     steps:
       - uses: actions/checkout@9c091bb21b7c1c1d1991bb908d89e4e9dddfe3e0 # v7.0.0
       - uses: actions/setup-node@249970729cb0ef3589644e2896645e5dc5ba9c38 # v6.5.0
@@ -93,6 +95,18 @@ jobs:
 
       - name: derive release version from tag
         run: echo "HELM_RELEASE_VERSION=${GITHUB_REF_NAME#v}" >> "$GITHUB_ENV"
+
+      # -rc tags stay GitHub prereleases and never publish to npm; only a
+      # bare vN.N.N GA tag does both. publish-npm reads this job output to
+      # decide whether to run at all.
+      - name: classify tag (GA vs -rc)
+        id: tag-kind
+        run: |
+          if [[ "$GITHUB_REF_NAME" == *-rc* ]]; then
+            echo "is_ga=false" >> "$GITHUB_OUTPUT"
+          else
+            echo "is_ga=true" >> "$GITHUB_OUTPUT"
+          fi
 
       - name: sign release manifest
         env:
@@ -123,10 +137,10 @@ jobs:
           GH_TOKEN: ${{ github.token }}
         run: |
           # RC tags (v1.2.3-rc1) stay --prerelease; GA tags (vN.N.N) self-promote to --latest.
-          if [[ "$GITHUB_REF_NAME" == *-rc* ]]; then
-            PROMOTE_FLAG=--prerelease
-          else
+          if [[ "${{ steps.tag-kind.outputs.is_ga }}" == "true" ]]; then
             PROMOTE_FLAG=--latest
+          else
+            PROMOTE_FLAG=--prerelease
           fi
           gh release create "$GITHUB_REF_NAME" \
             --repo "$GITHUB_REPOSITORY" \
@@ -134,3 +148,41 @@ jobs:
             --generate-notes \
             "$PROMOTE_FLAG" \
             dist/upload/*
+
+      # HELM-REL-AUTO-4: the filled npm package (package.json/bin/install.mjs
+      # with real sha256 values, no template placeholders) lands here from
+      # gen-packaging-manifests.mjs above. publish-npm downloads it rather
+      # than regenerating, so what's published is byte-identical to what the
+      # release manifest attested to.
+      - uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4.6.2
+        with:
+          name: npm-package
+          path: dist/packaging/npm
+          if-no-files-found: error
+
+  publish-npm:
+    needs: sign-and-release
+    if: needs.sign-and-release.outputs.is_ga == 'true'
+    runs-on: ubuntu-latest
+    environment: release
+    permissions:
+      id-token: write
+      contents: read
+    steps:
+      - uses: actions/download-artifact@018cc2cf5baa6db3ef3c5f8a56943fffe632ef53 # v6.0.0
+        with:
+          name: npm-package
+          path: npm-package
+      - uses: actions/setup-node@249970729cb0ef3589644e2896645e5dc5ba9c38 # v6.5.0
+        with:
+          node-version: "22"
+          registry-url: "https://registry.npmjs.org"
+
+      # OIDC trusted publishing needs npm CLI >=11.5.1; setup-node's bundled
+      # CLI lags behind, so pin to latest before publishing.
+      - name: update npm CLI for OIDC trusted publishing
+        run: npm install -g npm@latest
+
+      - name: publish to npm (OIDC provenance, no token)
+        working-directory: npm-package
+        run: npm publish --access public
