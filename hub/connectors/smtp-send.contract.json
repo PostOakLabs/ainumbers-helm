@@ -1,0 +1,9 @@
+{
+  "connector_id": "smtp.send",
+  "connector_version": "1.0.0",
+  "publisher": "user-declared",
+  "allowed_hosts": ["smtp.example.com:587"],
+  "allowed_methods": ["SEND"],
+  "scopes": ["smtp.send"],
+  "vault_scope": ["vault://helm/connectors/smtp/example/credential"]
+}
