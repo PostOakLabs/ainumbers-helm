@@ -55,7 +55,8 @@ function main() {
     }
 
     const postjectArgs = [
-      "--yes", "postject@1", outPath, "NODE_SEA_BLOB", blobPath,
+      // postject publishes prerelease versions only — "@1" matches nothing (ETARGET); pin exact
+      "--yes", "postject@1.0.0-alpha.6", outPath, "NODE_SEA_BLOB", blobPath,
       "--sentinel-fuse", SENTINEL_FUSE,
     ];
     if (platform() === "darwin") postjectArgs.push("--macho-segment-name", "NODE_SEA");
