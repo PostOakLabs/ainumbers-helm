@@ -1,0 +1,10 @@
+{
+  "run_id": "run-9f1c2b",
+  "workflow_manifest_digest": "sha256:cf34ecd7b8eeff090b776cb06ab3742e15e4b739e7f6eac14d7fb02d2999c5b7",
+  "recorded_at": "2026-07-23T06:00:06Z",
+  "principal": "agent:reconcile-bot@helm",
+  "delegation_chain": [],
+  "allowed_tools": ["google-drive.fetch"],
+  "limits": { "max_runs_per_day": 4 },
+  "prohibitions": ["external_action_intent"]
+}

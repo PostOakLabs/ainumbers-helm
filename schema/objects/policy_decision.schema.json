@@ -1,0 +1,25 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://ainumbers.co/helm/schema/objects/policy_decision.schema.json",
+  "title": "Control Plane Profile — object kind: policy_decision (SPEC.md §26.4, reserved-†)",
+  "description": "Reserved in ocg-control-plane@1: schema is normative, production is OPTIONAL (Helm Phase 2+). A @1 verifier MUST parse and verify this if it encounters one. Policy pack evaluation outcome.",
+  "$defs": {
+    "sha256ref": { "type": "string", "pattern": "^sha256:[0-9a-f]{64}$" },
+    "timestamp": { "type": "string", "pattern": "^\\d{4}-\\d{2}-\\d{2}T\\d{2}:\\d{2}:\\d{2}(\\.\\d+)?Z$" }
+  },
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "run_id", "workflow_manifest_digest", "recorded_at",
+    "policy_bundle_digest", "decision", "reason_codes", "effective_inputs_digest"
+  ],
+  "properties": {
+    "run_id": { "type": "string", "minLength": 1 },
+    "workflow_manifest_digest": { "$ref": "#/$defs/sha256ref" },
+    "recorded_at": { "$ref": "#/$defs/timestamp" },
+    "policy_bundle_digest": { "$ref": "#/$defs/sha256ref" },
+    "decision": { "type": "string", "enum": ["allow", "deny", "escalate"] },
+    "reason_codes": { "type": "array", "items": { "type": "string", "minLength": 1 } },
+    "effective_inputs_digest": { "$ref": "#/$defs/sha256ref" }
+  }
+}

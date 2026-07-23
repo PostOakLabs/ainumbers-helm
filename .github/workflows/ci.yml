@@ -20,5 +20,7 @@ jobs:
         run: node scripts/lint.mjs
       - name: test
         run: node scripts/test.mjs
+      - name: validate control-plane schemas
+        run: node scripts/validate-schemas.mjs
       - name: sea build dry-run
         run: node scripts/sea-dry-run.mjs

@@ -1,0 +1,76 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://ainumbers.co/helm/schema/workflow-manifest.schema.json",
+  "title": "Control Plane Profile — workflow manifest (SPEC.md §26.3)",
+  "description": "The machine-readable graph of trigger, connectors, compute nodes, gates, and actions. Every control-plane run records workflow_manifest_digest = SHA-256 of THIS document's JCS-canonical form — the digest is carried by referencing objects, never stored inside the manifest itself. env_overlays are by reference only; a literal secret value here is a producer bug, not a schema violation this shape check can catch on its own (contract-level rule, §26.3).",
+  "$defs": {
+    "sha256ref": { "type": "string", "pattern": "^sha256:[0-9a-f]{64}$" },
+    "computeNode": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["node_id", "kernel_id", "kernel_digest"],
+      "properties": {
+        "node_id": { "type": "string", "minLength": 1 },
+        "kernel_id": { "type": "string", "minLength": 1 },
+        "kernel_digest": { "$ref": "#/$defs/sha256ref" }
+      }
+    },
+    "connectorRef": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["connector_id", "contract_digest"],
+      "properties": {
+        "connector_id": { "type": "string", "minLength": 1 },
+        "contract_digest": { "$ref": "#/$defs/sha256ref" }
+      }
+    },
+    "gate": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["gate_id", "type"],
+      "properties": {
+        "gate_id": { "type": "string", "minLength": 1 },
+        "type": { "type": "string", "minLength": 1 }
+      }
+    },
+    "action": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["action_id", "type", "target_host"],
+      "properties": {
+        "action_id": { "type": "string", "minLength": 1 },
+        "type": { "type": "string", "minLength": 1 },
+        "target_host": { "type": "string", "minLength": 1 }
+      }
+    },
+    "envOverlayRef": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["vault_ref"],
+      "properties": {
+        "vault_ref": { "type": "string", "minLength": 1, "description": "Opaque secret reference into the vault (D-class secret store). NEVER a secret value." }
+      }
+    }
+  },
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["manifest_version", "workflow_id", "trigger", "nodes", "connectors", "gates", "actions"],
+  "properties": {
+    "manifest_version": { "const": "1" },
+    "workflow_id": { "type": "string", "minLength": 1 },
+    "trigger": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["type"],
+      "properties": {
+        "type": { "type": "string", "minLength": 1 },
+        "schedule": { "type": "string", "minLength": 1 }
+      }
+    },
+    "nodes": { "type": "array", "items": { "$ref": "#/$defs/computeNode" } },
+    "connectors": { "type": "array", "items": { "$ref": "#/$defs/connectorRef" } },
+    "gates": { "type": "array", "items": { "$ref": "#/$defs/gate" } },
+    "actions": { "type": "array", "items": { "$ref": "#/$defs/action" } },
+    "env_overlays": { "type": "array", "items": { "$ref": "#/$defs/envOverlayRef" } }
+  }
+}

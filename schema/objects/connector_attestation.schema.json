@@ -1,0 +1,30 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://ainumbers.co/helm/schema/objects/connector_attestation.schema.json",
+  "title": "Control Plane Profile — object kind: connector_attestation (SPEC.md §26.4, normative)",
+  "description": "An authorized connector retrieved/received a payload. Trust label connector_asserted — no claim about payload truth. Validates the statement.predicate carried inside an envelope whose predicateType is .../attestation/v1#connector_attestation.",
+  "$defs": {
+    "sha256ref": { "type": "string", "pattern": "^sha256:[0-9a-f]{64}$" },
+    "timestamp": { "type": "string", "pattern": "^\\d{4}-\\d{2}-\\d{2}T\\d{2}:\\d{2}:\\d{2}(\\.\\d+)?Z$" }
+  },
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "run_id", "workflow_manifest_digest", "recorded_at",
+    "connector_id", "connector_version", "contract_digest",
+    "operation", "scope", "endpoint_host", "payload_digest", "classification"
+  ],
+  "properties": {
+    "run_id": { "type": "string", "minLength": 1 },
+    "workflow_manifest_digest": { "$ref": "#/$defs/sha256ref" },
+    "recorded_at": { "$ref": "#/$defs/timestamp" },
+    "connector_id": { "type": "string", "minLength": 1 },
+    "connector_version": { "type": "string", "minLength": 1 },
+    "contract_digest": { "$ref": "#/$defs/sha256ref" },
+    "operation": { "type": "string", "minLength": 1 },
+    "scope": { "type": "array", "items": { "type": "string", "minLength": 1 } },
+    "endpoint_host": { "type": "string", "minLength": 1 },
+    "payload_digest": { "$ref": "#/$defs/sha256ref" },
+    "classification": { "type": "string", "minLength": 1 }
+  }
+}

@@ -1,0 +1,38 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://ainumbers.co/helm/schema/journal_entry.schema.json",
+  "title": "Control Plane Profile — journal entry (SPEC.md §26.5)",
+  "description": "One append-only row in the producer-local journal. rh is the per-stream running hash: rh_n = SHA-256(rh_{n-1} || stream_id || journal_seq || entry_digest), rh_0 = SHA-256(stream_id). period_start/period_end, reference_db_version, triggering_input_digest, and humans_involved satisfy EU AI Act Art. 12(2)/(3) logging minima by name. humans_involved MAY be empty but MUST be present.",
+  "$defs": {
+    "sha256ref": { "type": "string", "pattern": "^sha256:[0-9a-f]{64}$" },
+    "rawSha256Hex": { "type": "string", "pattern": "^[0-9a-f]{64}$" },
+    "timestamp": { "type": "string", "pattern": "^\\d{4}-\\d{2}-\\d{2}T\\d{2}:\\d{2}:\\d{2}(\\.\\d+)?Z$" },
+    "humanRef": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["id_ref", "role"],
+      "properties": {
+        "id_ref": { "type": "string", "minLength": 1 },
+        "role": { "type": "string", "minLength": 1 }
+      }
+    }
+  },
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "journal_seq", "stream_id", "entry_digest", "rh",
+    "period_start", "period_end", "reference_db_version",
+    "triggering_input_digest", "humans_involved"
+  ],
+  "properties": {
+    "journal_seq": { "type": "integer", "minimum": 0 },
+    "stream_id": { "type": "string", "minLength": 1 },
+    "entry_digest": { "$ref": "#/$defs/sha256ref" },
+    "rh": { "$ref": "#/$defs/rawSha256Hex" },
+    "period_start": { "$ref": "#/$defs/timestamp" },
+    "period_end": { "$ref": "#/$defs/timestamp" },
+    "reference_db_version": { "type": "string", "minLength": 1 },
+    "triggering_input_digest": { "$ref": "#/$defs/sha256ref" },
+    "humans_involved": { "type": "array", "items": { "$ref": "#/$defs/humanRef" } }
+  }
+}

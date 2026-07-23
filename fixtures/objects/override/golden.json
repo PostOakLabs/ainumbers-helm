@@ -1,0 +1,9 @@
+{
+  "run_id": "run-9f1c2b",
+  "workflow_manifest_digest": "sha256:cf34ecd7b8eeff090b776cb06ab3742e15e4b739e7f6eac14d7fb02d2999c5b7",
+  "recorded_at": "2026-07-23T06:00:05Z",
+  "authority": "finance-lead",
+  "reason": "one-time vendor migration spike, pre-approved by treasury",
+  "scope": "gate:g1",
+  "expiry": "2026-07-24T00:00:00Z"
+}
