@@ -34,6 +34,25 @@ test("vaultBackendFor reports the tier a ref landed on", () => {
   assert.ok(["macos-keychain", "windows-dpapi", "linux-secret-tool", "file-fallback"].includes(backend));
 });
 
+test("windows-dpapi: round trip still works with secret passed via stdin", () => {
+  if (process.platform !== "win32") return; // tier only reachable on win32
+  const secret = { access_token: "DPAPI-STDIN-CHECK-SECRET" };
+  const { ref, backend } = vaultSet("test:dpapi-stdin", secret);
+  assert.equal(backend, "windows-dpapi");
+  assert.deepEqual(vaultGet(ref), secret);
+  vaultDelete(ref);
+});
+
+test("windows-dpapi: secret/ciphertext reach powershell.exe only via stdin, never argv (HELM-SEC-2, F2)", async () => {
+  const src = await import("node:fs").then((fs) => fs.readFileSync(new URL("./vault.mjs", import.meta.url), "utf8"));
+  const windowsSetBody = src.slice(src.indexOf("function windowsSet"), src.indexOf("function windowsGet"));
+  const windowsGetBody = src.slice(src.indexOf("function windowsGet"), src.indexOf("function windowsDelete"));
+  for (const body of [windowsSetBody, windowsGetBody]) {
+    assert.match(body, /spawnSync\("powershell\.exe",\s*\[[^\]]*\],\s*\{\s*input:/s, "secret must be passed via the input: option");
+    assert.doesNotMatch(body, /FromBase64String\('\$\{/, "no direct string-interpolation of secret bytes into the -Command script");
+  }
+});
+
 test("file-fallback tier never writes the secret in plaintext to disk", () => {
   vaultSet("test:no-plaintext", { access_token: "SECRET-PLAINTEXT-CHECK" });
   if (vaultBackendFor("test:no-plaintext") !== "file-fallback") return; // only applies to this tier
