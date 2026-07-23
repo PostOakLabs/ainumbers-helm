@@ -107,16 +107,24 @@ export function __setSocketConnectForTest(fn) {
   openSocket = fn ?? defaultOpenSocket;
 }
 
-function upgradeToTls(socket, servername) {
+function defaultUpgradeToTls(socket, servername) {
   return new Promise((resolve, reject) => {
     const upgraded = tlsConnect({ socket, servername }, () => resolve(upgraded));
     upgraded.once("error", reject);
   });
 }
 
+// Overridable only for tests — a real STARTTLS handshake needs a genuine TLS
+// server; this lets a test assert the servername argument (the actual
+// security property of HELM-P2-R11-F2) without standing up a cert harness.
+let upgradeToTls = defaultUpgradeToTls;
+export function __setTlsUpgradeForTest(fn) {
+  upgradeToTls = fn ?? defaultUpgradeToTls;
+}
+
 // Runs the full EHLO -> [STARTTLS] -> [AUTH] -> MAIL/RCPT/DATA dialogue.
 // Returns the raw message bytes actually sent, for the attestation digest.
-async function runDialogue(socket, { heloHost, from, to, subject, text, authUser, authPass, secure }) {
+async function runDialogue(socket, { host, heloHost, from, to, subject, text, authUser, authPass, secure }) {
   let activeSocket = socket;
   let activeReader = makeReader(socket);
   await expect(activeReader, ["220"]);
@@ -132,7 +140,7 @@ async function runDialogue(socket, { heloHost, from, to, subject, text, authUser
     }
     writeLine(activeSocket, "STARTTLS");
     await expect(activeReader, ["220"]);
-    activeSocket = await upgradeToTls(activeSocket, heloHost);
+    activeSocket = await upgradeToTls(activeSocket, host);
     activeReader = makeReader(activeSocket);
     writeLine(activeSocket, `EHLO ${heloHost}`);
     ehlo = await expect(activeReader, ["250"]);
@@ -227,7 +235,7 @@ export function createSmtpConnector({ db, contract, contractDigest }) {
       } finally {
         unpin();
       }
-      const messageBytes = await runDialogue(socket, { heloHost: "helm.local", from, to, subject, text, authUser, authPass, secure });
+      const messageBytes = await runDialogue(socket, { host, heloHost: "helm.local", from, to, subject, text, authUser, authPass, secure });
 
       const responseDigest = sha256ref(messageBytes);
       recordEgress(db, { connectorId: CONNECTOR_ID, destinationHost: hostPort, operation: "SEND", decision: "allowed", requestDigest, responseDigest });
