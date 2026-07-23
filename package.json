@@ -14,6 +14,7 @@
     "vendor:anchor": "node scripts/vendor-anchor.mjs",
     "packs:compile": "node scripts/compile-packs.mjs",
     "packs:check": "node scripts/compile-packs.mjs --check",
+    "packs:parity": "node scripts/compile-parity-gate.mjs",
     "sea:dry-run": "node scripts/sea-dry-run.mjs",
     "build:sea": "node scripts/build-sea.mjs",
     "release:manifest": "node scripts/release-manifest.mjs",
