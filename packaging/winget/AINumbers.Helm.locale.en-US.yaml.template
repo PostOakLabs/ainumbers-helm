@@ -1,0 +1,10 @@
+PackageIdentifier: AINumbers.Helm
+PackageVersion: {{VERSION}}
+PackageLocale: en-US
+Publisher: Post Oak Labs
+PackageName: AINumbers Helm
+License: Proprietary
+ShortDescription: Local-first control plane for verifiable connected workflows.
+PackageUrl: https://ainumbers.co/helm
+ManifestType: defaultLocale
+ManifestVersion: 1.6.0

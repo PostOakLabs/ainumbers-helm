@@ -1,11 +1,17 @@
 // Self-check: config readable, token file mode 0600, state dir private, port free.
-import { statSync, existsSync } from "node:fs";
+import { statSync, existsSync, readFileSync } from "node:fs";
 import { platform } from "node:os";
 import { createServer } from "node:net";
+import { join, dirname } from "node:path";
+import { fileURLToPath } from "node:url";
 import { stateDir, statePath } from "./state-dir.mjs";
 import { loadConfig } from "./config.mjs";
 import { loadOrCreateToken } from "./token.mjs";
 import { openJournal, replayVerify } from "./journal.mjs";
+import { checkVersion } from "./version-check.mjs";
+
+const HERE = dirname(fileURLToPath(import.meta.url));
+const CURRENT_VERSION = JSON.parse(readFileSync(join(HERE, "..", "package.json"), "utf8")).version;
 
 function checkPortFree(port) {
   return new Promise((resolve) => {
@@ -45,6 +51,24 @@ export async function runDoctor() {
     db.close();
   } else {
     checks.push({ name: "journal_replay_integrity", pass: true, detail: "no journal.db yet" });
+  }
+
+  // Version-check notice (HELM-H8, D10): informational only. Unreachable
+  // (offline/airgapped) or disabled (empty url) are both a PASS — this
+  // never gates doctor on network access. A reachable-but-malformed
+  // response is the one failure worth surfacing (server misconfigured).
+  if (config.versionCheckUrl) {
+    const versionCheck = await checkVersion({ currentVersion: CURRENT_VERSION, url: config.versionCheckUrl });
+    const malformed = !versionCheck.checked && versionCheck.errs;
+    checks.push({
+      name: "version_check_notice",
+      pass: !malformed,
+      detail: versionCheck.checked
+        ? (versionCheck.upToDate ? "up to date" : `update available: ${versionCheck.latestVersion}`)
+        : versionCheck.reason,
+    });
+  } else {
+    checks.push({ name: "version_check_notice", pass: true, detail: "disabled" });
   }
 
   const allPass = checks.every((c) => c.pass);

@@ -8,6 +8,9 @@ const DEFAULTS = {
   // the literal string "null" as Origin for fetches from file:// documents.
   // Exact-match this (never a wildcard) per D8. Override for a served-UI deployment.
   allowedOrigin: "null",
+  // D10: passive notice only, never an auto-updater. Empty string disables
+  // the check entirely (airgapped installs).
+  versionCheckUrl: "https://ainumbers.co/helm/version.json",
 };
 
 export function loadConfig() {

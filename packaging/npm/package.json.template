@@ -1,0 +1,17 @@
+{
+  "name": "@ainumbers/helm-cli",
+  "version": "{{VERSION}}",
+  "description": "AINumbers Helm — local-first control plane for verifiable connected workflows (installs the native helmd binary for your platform).",
+  "license": "SEE LICENSE IN https://github.com/PostOakLabs/ainumbers-helm/blob/main/LICENSE",
+  "os": ["darwin", "linux", "win32"],
+  "cpu": ["x64", "arm64"],
+  "bin": {
+    "helmd": "bin/helmd.mjs"
+  },
+  "scripts": {
+    "postinstall": "node bin/install.mjs"
+  },
+  "engines": {
+    "node": ">=22.5"
+  }
+}

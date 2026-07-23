@@ -10,12 +10,19 @@ Local-first control plane for verifiable connected workflows: a customer-install
 ## Layout (target)
 
 ```
-hub/      helmd daemon (TypeScript/Node, SEA binary)
-ui/       helm.html static surface
-schema/   Control Plane profile JSON Schemas (SSOT)
-fixtures/ golden + tampered fixtures per schema
-scripts/  vendoring, CI, packaging
+hub/       helmd daemon (TypeScript/Node, SEA binary)
+ui/        helm.html static surface
+schema/    Control Plane profile JSON Schemas (SSOT)
+fixtures/  golden + tampered fixtures per schema
+scripts/   vendoring, CI, packaging, release signing
+packaging/ winget/homebrew/npm manifest templates (HELM-H8)
+docs/      install + operational docs
 ```
+
+## Installing
+
+See `docs/INSTALL.md` — winget/brew/npm, manual download + offline signature
+verification, and how the version-check notice works (never an auto-updater).
 
 OCG kernels and verify code are vendored pinned from `PostOakLabs/ainumbers` — never edited here; fix upstream and re-vendor.
 

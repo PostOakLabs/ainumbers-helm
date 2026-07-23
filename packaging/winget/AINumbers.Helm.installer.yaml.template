@@ -1,0 +1,11 @@
+PackageIdentifier: AINumbers.Helm
+PackageVersion: {{VERSION}}
+InstallerType: portable
+Commands:
+  - helmd
+Installers:
+  - Architecture: x64
+    InstallerUrl: https://github.com/PostOakLabs/ainumbers-helm/releases/download/v{{VERSION}}/helmd-windows-x64.exe
+    InstallerSha256: {{SHA256_WINDOWS_X64}}
+ManifestType: installer
+ManifestVersion: 1.6.0

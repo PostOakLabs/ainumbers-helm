@@ -1,0 +1,19 @@
+#!/usr/bin/env node
+// Launcher shim: execs the vendored native binary install.mjs downloaded,
+// forwarding argv/stdio. Kept as a thin .mjs so `npm i -g @ainumbers/helm-cli`
+// gives a `helmd` on PATH that works identically to the standalone SEA binary.
+import { spawnSync } from "node:child_process";
+import { existsSync } from "node:fs";
+import { join, dirname } from "node:path";
+import { fileURLToPath } from "node:url";
+
+const HERE = dirname(fileURLToPath(import.meta.url));
+const bin = join(HERE, "..", "vendor", process.platform === "win32" ? "helmd.exe" : "helmd");
+
+if (!existsSync(bin)) {
+  console.error("helm-cli: native helmd binary missing — postinstall may have failed. Try `npm rebuild @ainumbers/helm-cli`.");
+  process.exit(1);
+}
+
+const result = spawnSync(bin, process.argv.slice(2), { stdio: "inherit" });
+process.exit(result.status ?? 1);
