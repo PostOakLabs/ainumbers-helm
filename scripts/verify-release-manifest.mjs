@@ -7,7 +7,7 @@
 import { readFileSync, existsSync } from "node:fs";
 import { createHash } from "node:crypto";
 import { join, dirname } from "node:path";
-import { fileURLToPath } from "node:url";
+import { fileURLToPath, pathToFileURL } from "node:url";
 import { verifyEnvelope } from "../hub/envelope.mjs";
 import { loadReleasePublicKeys } from "../hub/release-keys.mjs";
 import { cgCanon } from "../hub/vendored/ocg/kernels/_hash.mjs";
@@ -58,7 +58,7 @@ export function verifyReleaseManifest(distDir, publicKeys = loadReleasePublicKey
   return { ok: true, version: statement.predicate.version, artifactCount: statement.subject.length };
 }
 
-if (import.meta.url === `file://${process.argv[1]}`) {
+if (process.argv[1] && import.meta.url === pathToFileURL(process.argv[1]).href) {
   const distDir = process.argv[2] ? join(process.cwd(), process.argv[2]) : join(ROOT, "dist");
   const result = verifyReleaseManifest(distDir);
   console.log(JSON.stringify(result, null, 2));
