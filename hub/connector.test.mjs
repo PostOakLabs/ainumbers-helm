@@ -76,4 +76,38 @@ test("performEgress: approved host is allowed and the transcript records the all
   db.close();
 });
 
+test("performEgress: redirect to a non-allowlisted host is blocked, not silently followed", async () => {
+  const { contract } = loadContract(CONTRACT_PATH);
+  const db = openJournal(join(TMP, "redirect-blocked.db"));
+  const originalFetch = globalThis.fetch;
+  let calls = 0;
+  globalThis.fetch = async (u, opts) => {
+    calls++;
+    assert.equal(opts.redirect, "manual", "must disable auto-follow so every hop is re-checked");
+    if (calls === 1) {
+      return new Response(null, { status: 302, headers: { location: "https://evil.example.com/steal" } });
+    }
+    throw new Error("must not follow redirect past the allowlist check");
+  };
+
+  await assert.rejects(
+    () => performEgress(db, {
+      contract, connectorId: "google-drive.fetch", url: "https://www.googleapis.com/drive/v3/files/abc?alt=media", method: "GET",
+    }),
+    /egress blocked/
+  );
+  assert.equal(calls, 1, "the redirect target must never be fetched");
+
+  const rows = db.prepare("SELECT * FROM journal WHERE stream_id = ?").all("egress:google-drive.fetch");
+  assert.equal(rows.length, 2, "both the original allow and the redirect-target block are journaled");
+  const entries = rows.map((r) => JSON.parse(r.entry_json));
+  assert.equal(entries[0].destination_host, "www.googleapis.com");
+  assert.equal(entries[0].decision, "allowed");
+  assert.equal(entries[1].destination_host, "evil.example.com");
+  assert.equal(entries[1].decision, "blocked");
+
+  globalThis.fetch = originalFetch;
+  db.close();
+});
+
 process.on("exit", () => rmSync(TMP, { recursive: true, force: true }));
