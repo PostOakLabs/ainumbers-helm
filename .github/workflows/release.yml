@@ -117,13 +117,19 @@ jobs:
           cp dist/windows-x64/helmd.exe dist/upload/helmd-windows-x64.exe
           cp dist/release-manifest.json dist/release-manifest.dsse.json dist/upload/
 
-      - name: create GitHub pre-release
+      - name: create GitHub release
         env:
           GH_TOKEN: ${{ github.token }}
         run: |
+          # RC tags (v1.2.3-rc1) stay --prerelease; GA tags (vN.N.N) self-promote to --latest.
+          if [[ "$GITHUB_REF_NAME" == *-rc* ]]; then
+            PROMOTE_FLAG=--prerelease
+          else
+            PROMOTE_FLAG=--latest
+          fi
           gh release create "$GITHUB_REF_NAME" \
             --repo "$GITHUB_REPOSITORY" \
             --title "Helm $GITHUB_REF_NAME" \
-            --prerelease \
             --generate-notes \
+            "$PROMOTE_FLAG" \
             dist/upload/*
