@@ -24,10 +24,18 @@
   --focus-ring: 2px solid var(--accent);
 }
 
-:root[data-density="compact"] {
+/* DEC-2 (locked): compact is the default density; comfortable is opt-in
+   via the header toggle (data-density="comfortable" restores base spacing). */
+:root {
   --space-2: 0.35rem;
   --space-3: 0.65rem;
   --space-4: 1rem;
+}
+
+:root[data-density="comfortable"] {
+  --space-2: 0.5rem;
+  --space-3: 1rem;
+  --space-4: 1.5rem;
 }
 
 @media (prefers-contrast: more) {
@@ -56,6 +64,10 @@ header.shell-header {
   gap: var(--space-3);
   padding: var(--space-2) var(--space-3);
   border-bottom: 1px solid var(--border);
+  position: sticky;
+  top: 0;
+  z-index: 10;
+  background: var(--surface);
 }
 
 .wordmark {
@@ -65,13 +77,28 @@ header.shell-header {
 
 nav.shell-nav {
   display: flex;
-  gap: var(--space-2);
+  align-items: center;
+  gap: var(--space-1);
+}
+
+/* Workflow arc grouping: Build (Choose/Canvas/Connect) → Execute
+   (Run/Verify/Review) → Operate, separated by a hairline at each group's
+   first item so the arc reads as stages, not a flat 7-item row. */
+nav.shell-nav a:nth-child(4),
+nav.shell-nav a:nth-child(7) {
+  margin-left: var(--space-2);
+  padding-left: calc(var(--space-2) + var(--space-1));
+  border-left: 1px solid var(--border);
 }
 
 nav.shell-nav a {
   color: var(--text-muted);
   text-decoration: none;
-  padding: var(--space-1) var(--space-2);
+  font-weight: 500;
+  padding: var(--space-2) var(--space-3);
+  min-height: 40px;
+  display: inline-flex;
+  align-items: center;
   border-radius: var(--radius);
 }
 
@@ -349,8 +376,10 @@ button {
   color: var(--accent-contrast);
   border: none;
   border-radius: var(--radius);
-  padding: var(--space-1) var(--space-3);
+  padding: var(--space-2) var(--space-3);
+  min-height: 40px;
   font: inherit;
+  font-weight: 500;
   cursor: pointer;
 }
 button:disabled {

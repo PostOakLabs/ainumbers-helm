@@ -10,17 +10,18 @@
   <header class="shell-header">
     <span class="wordmark">Helm</span>
     <nav class="shell-nav" aria-label="Primary">
-      <a href="#/choose" data-view="choose">Choose</a>
-      <a href="#/canvas" data-view="canvas">Canvas</a>
-      <a href="#/connect" data-view="connect">Connect</a>
-      <a href="#/run" data-view="run">Run</a>
-      <a href="#/verify" data-view="verify">Verify</a>
-      <a href="#/review" data-view="review">Review</a>
-      <a href="#/operate" data-view="operate">Operate</a>
+      <a href="#/choose" data-view="choose" data-group="build">Choose</a>
+      <a href="#/canvas" data-view="canvas" data-group="build">Canvas</a>
+      <a href="#/connect" data-view="connect" data-group="build">Connect</a>
+      <a href="#/run" data-view="run" data-group="execute">Run</a>
+      <a href="#/verify" data-view="verify" data-group="execute">Verify</a>
+      <a href="#/review" data-view="review" data-group="execute">Review</a>
+      <a href="#/operate" data-view="operate" data-group="operate">Operate</a>
     </nav>
     <span class="status-pill">
       <span id="status-dot" class="status-dot" data-state="dormant"></span>
       <span id="status-label">not paired</span>
+      <button id="density-toggle" class="secondary" type="button" aria-pressed="false">Comfortable</button>
       <button id="unpair-btn" class="secondary" type="button">Unpair</button>
     </span>
   </header>

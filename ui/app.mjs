@@ -37,6 +37,7 @@ function mountTokenForm(root, onPaired) {
     <div class="welcome-state" aria-live="polite">
       <p class="welcome-title">Waiting for Helm on this computer&hellip;</p>
       <p class="empty-state">Run <code>helmd start</code> — it opens this page paired automatically.</p>
+      <p class="empty-state">Lost this tab, or opened a bookmark? Run <code>helmd open</code> to get a fresh paired link.</p>
       <p class="empty-state"><a href="https://ainumbers.co/helm" rel="noopener">Don't have Helm installed yet?</a></p>
       <details class="disclosure">
         <summary>Advanced: pair by hand</summary>
@@ -81,9 +82,29 @@ async function render(app) {
   refreshConnectivity(port, token, app.statusDot, app.statusLabel);
 }
 
+const DENSITY_KEY = "helm.density";
+
+// DEC-2 (locked): compact by default, comfortable is an opt-in toggle
+// persisted per-browser.
+function initDensityToggle(btn) {
+  const apply = (density) => {
+    document.documentElement.dataset.density = density;
+    btn.setAttribute("aria-pressed", String(density === "comfortable"));
+    btn.textContent = density === "comfortable" ? "Compact" : "Comfortable";
+  };
+  apply(localStorage.getItem(DENSITY_KEY) === "comfortable" ? "comfortable" : "compact");
+  btn.addEventListener("click", () => {
+    const next = document.documentElement.dataset.density === "comfortable" ? "compact" : "comfortable";
+    localStorage.setItem(DENSITY_KEY, next);
+    apply(next);
+  });
+}
+
 export function boot() {
   const preHashToken = readTokenFromLocation();
   if (preHashToken) saveToken(preHashToken);
+
+  initDensityToggle(document.getElementById("density-toggle"));
 
   const app = {
     main: document.getElementById("shell-main"),
