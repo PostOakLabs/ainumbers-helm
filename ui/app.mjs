@@ -6,8 +6,10 @@ import { renderRun } from "./views/run.mjs";
 import { renderOperate } from "./views/operate.mjs";
 import { renderVerify } from "./views/verify.mjs";
 import { renderReview } from "./views/review.mjs";
+import { renderHelp } from "./views/help.mjs";
 
-const VIEWS = { choose: renderChoose, canvas: renderCanvas, connect: renderConnect, run: renderRun, verify: renderVerify, review: renderReview, operate: renderOperate };
+const VIEWS = { choose: renderChoose, canvas: renderCanvas, connect: renderConnect, run: renderRun, verify: renderVerify, review: renderReview, operate: renderOperate, help: renderHelp };
+const STATIC_VIEWS = new Set(["help"]);
 const DEFAULT_VIEW = "choose";
 
 function currentRoute() {
@@ -73,7 +75,11 @@ async function render(app) {
   });
 
   if (!token) {
-    mountTokenForm(app.main, () => render(app));
+    if (STATIC_VIEWS.has(view)) {
+      await VIEWS[view](app.main, { port, token, params });
+    } else {
+      mountTokenForm(app.main, () => render(app));
+    }
     setStatus(app.statusDot, app.statusLabel, "dormant", "not paired");
     return;
   }
