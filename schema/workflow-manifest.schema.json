@@ -50,6 +50,37 @@
       "properties": {
         "vault_ref": { "type": "string", "minLength": 1, "description": "Opaque secret reference into the vault (D-class secret store). NEVER a secret value." }
       }
+    },
+    "requiredInput": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["input_id", "target_node_id", "target_param"],
+      "properties": {
+        "input_id": { "type": "string", "minLength": 1 },
+        "description": { "type": "string", "minLength": 1 },
+        "target_node_id": { "type": "string", "minLength": 1 },
+        "target_param": { "type": "string", "minLength": 1 }
+      }
+    },
+    "sourceChainRef": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["chain_id", "chain_digest"],
+      "properties": {
+        "chain_id": { "type": "string", "minLength": 1 },
+        "chain_digest": { "$ref": "#/$defs/sha256ref" }
+      }
+    },
+    "connectorInputStep": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["step_id", "connector_id", "feeds_node_id", "feeds_param"],
+      "properties": {
+        "step_id": { "type": "string", "minLength": 1 },
+        "connector_id": { "type": "string", "minLength": 1, "description": "MUST match a connector_id present in this manifest's connectors[]." },
+        "feeds_node_id": { "type": "string", "minLength": 1 },
+        "feeds_param": { "type": "string", "minLength": 1 }
+      }
     }
   },
   "type": "object",
@@ -71,6 +102,9 @@
     "connectors": { "type": "array", "items": { "$ref": "#/$defs/connectorRef" } },
     "gates": { "type": "array", "items": { "$ref": "#/$defs/gate" } },
     "actions": { "type": "array", "items": { "$ref": "#/$defs/action" } },
-    "env_overlays": { "type": "array", "items": { "$ref": "#/$defs/envOverlayRef" } }
+    "env_overlays": { "type": "array", "items": { "$ref": "#/$defs/envOverlayRef" } },
+    "required_inputs": { "type": "array", "items": { "$ref": "#/$defs/requiredInput" }, "description": "What the user must supply, derived from node param schemas — vs kernel-internal wiring (HELM-PHASE2-BUILD-SPEC.md §2)." },
+    "source_chain_ref": { "$ref": "#/$defs/sourceChainRef", "description": "Provenance back to the site chaingraph.json chain this pack was compiled from (HELM-PHASE2-BUILD-SPEC.md §2 compiler)." },
+    "connector_inputs": { "type": "array", "items": { "$ref": "#/$defs/connectorInputStep" }, "description": "DEC-6a: optional connector-fetch input steps — trigger -> connector fetch -> kernel -> evidence composition." }
   }
 }

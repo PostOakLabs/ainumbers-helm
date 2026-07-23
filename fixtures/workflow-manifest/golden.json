@@ -16,5 +16,15 @@
   ],
   "env_overlays": [
     { "vault_ref": "vault://helm/wf-invoice-reconcile-01/smtp-creds" }
+  ],
+  "required_inputs": [
+    { "input_id": "invoice_batch_uri", "description": "URI of the invoice batch to reconcile", "target_node_id": "n1", "target_param": "batch_uri" }
+  ],
+  "source_chain_ref": {
+    "chain_id": "chain-invoice-reconcile",
+    "chain_digest": "sha256:cf34ecd7b8eeff090b776cb06ab3742e15e4b739e7f6eac14d7fb02d2999c5b7"
+  },
+  "connector_inputs": [
+    { "step_id": "ci1", "connector_id": "google-drive.fetch", "feeds_node_id": "n1", "feeds_param": "batch_uri" }
   ]
 }
