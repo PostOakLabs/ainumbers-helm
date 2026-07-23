@@ -7,12 +7,13 @@ import { test } from "node:test";
 import assert from "node:assert/strict";
 import { createHash } from "node:crypto";
 import { anchorRfc3161, anchorOpenTimestamps, RELAY_CA_LIST, OTS_CALENDAR_LIST } from "./anchor-client.mjs";
+import { liveTest } from "../test-support/live.mjs";
 
 function digestOf(text) {
   return createHash("sha256").update(text).digest("hex");
 }
 
-test("anchor round-trip: rfc3161 relay returns a verifiable-shaped TimeStampResp", { timeout: 40_000 }, async () => {
+liveTest("anchor round-trip: rfc3161 relay returns a verifiable-shaped TimeStampResp", { timeout: 40_000 }, async () => {
   const hash = digestOf(`helm-h3-rfc3161-fixture-${Date.now()}`);
   const anchor = await anchorRfc3161(hash, { ca: "freetsa" });
   assert.equal(anchor.type, "rfc3161");
@@ -30,7 +31,7 @@ test("anchor round-trip: rejects an unknown relay CA before making a network cal
   await assert.rejects(() => anchorRfc3161("a".repeat(64), { ca: "not-a-real-ca" }));
 });
 
-test("anchor round-trip: opentimestamps calendar returns a pending attestation", { timeout: 25_000 }, async () => {
+liveTest("anchor round-trip: opentimestamps calendar returns a pending attestation", { timeout: 25_000 }, async () => {
   const hash = digestOf(`helm-h3-ots-fixture-${Date.now()}`);
   const anchor = await anchorOpenTimestamps(hash, { calendar: OTS_CALENDAR_LIST[0] });
   assert.equal(anchor.type, "opentimestamps");

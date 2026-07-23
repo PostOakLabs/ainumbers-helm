@@ -4,6 +4,7 @@
 // RFC 3161 relay, §20) — plus a TAMPERED-BUNDLE fixture proven to FAIL.
 import { test } from "node:test";
 import assert from "node:assert/strict";
+import { liveTest } from "../test-support/live.mjs";
 import { mkdtempSync } from "node:fs";
 import { tmpdir } from "node:os";
 import { join } from "node:path";
@@ -48,7 +49,7 @@ function manifest() {
   };
 }
 
-test("H7 round-trip: drive-fetch -> kernel -> bundle -> journal -> checkpoint -> anchor", { timeout: 40_000 }, async () => {
+liveTest("H7 round-trip: drive-fetch -> kernel -> bundle -> journal -> checkpoint -> anchor", { timeout: 40_000 }, async () => {
   const runId = "run-h7-roundtrip-1";
   const db = openJournal(join(TMP, "roundtrip.db"));
 

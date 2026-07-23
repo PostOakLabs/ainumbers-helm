@@ -6,8 +6,9 @@ import assert from "node:assert/strict";
 import { createHash } from "node:crypto";
 import { anchorRfc3161 } from "../../hub/anchor-client.mjs";
 import { parseRfc3161MessageImprint } from "../vendored/der.mjs";
+import { liveTest } from "../../test-support/live.mjs";
 
-test("parseRfc3161MessageImprint binds a live FreeTSA token to the digest it was requested for", { timeout: 40_000 }, async () => {
+liveTest("parseRfc3161MessageImprint binds a live FreeTSA token to the digest it was requested for", { timeout: 40_000 }, async () => {
   const hash = createHash("sha256").update(`helm-u3-der-fixture-${Date.now()}`).digest("hex");
   const anchor = await anchorRfc3161(hash, { ca: "freetsa" });
   const { hashedMessageHex, genTime, policyOid } = parseRfc3161MessageImprint(anchor.der);
