@@ -18,12 +18,18 @@ const CONTENT_TYPES = {
 };
 
 // ui-relative path for every file the shell app actually loads at runtime
-// (excludes *.test.mjs and fixtures/, which never ship).
+// (excludes *.test.mjs, which never ship). fixtures/verify-demo.mjs DOES
+// ship — views/verify.mjs statically imports it for the built-in demo
+// buttons, so omitting it 401s the whole ES module graph on load (HELM-P2-B8
+// root cause B: a static import 404/401 aborts the entire `<script
+// type=module>` before app.mjs's top-level code ever runs, leaving
+// `<main>` empty even though mountTokenForm would otherwise render fine).
 const FILES = [
   "helm.html",
   "app.mjs",
   "api.mjs",
   "theme.css",
+  "fixtures/verify-demo.mjs",
   "lib/dag-svg.mjs",
   "lib/manifest-dag.mjs",
   "lib/manifest-digest.mjs",

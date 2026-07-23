@@ -4,12 +4,13 @@
 import { loadConfig } from "./config.mjs";
 import { loadOrCreateToken, pairingUrl } from "./token.mjs";
 import { createHelmServer } from "./server.mjs";
-import { createCliChannel } from "./cli-channel.mjs";
+import { createCliChannel, cliChannelPath } from "./cli-channel.mjs";
 import { runDoctor } from "./doctor.mjs";
 import { log } from "./log.mjs";
 import { existsSync } from "node:fs";
 import { execFileSync } from "node:child_process";
 import { platform } from "node:os";
+import { createConnection } from "node:net";
 import { statePath } from "./state-dir.mjs";
 import { openJournal, replayVerify } from "./journal.mjs";
 
@@ -57,6 +58,16 @@ function cmdStart({ open = false } = {}) {
   createHelmServer({ port: config.port, allowedOrigin: config.allowedOrigin, token });
   createCliChannel({
     health: () => ({ status: "ok" }),
+    // HELM-P2-B8 / DEC-3: the ONLY re-pair path. Gated by the pipe's OS ACL
+    // (same-user), never by an HTTP endpoint — an unauthenticated HTTP route
+    // that hands out the token would be reachable by any local process. Opens
+    // the browser server-side (same code path as first-run) and also returns
+    // the URL so the CLI can print it for headless/no-DE sessions.
+    pair: () => {
+      const u = pairingUrl(token, config.port);
+      openBrowser(u);
+      return { url: u };
+    },
   });
 
   log.info("helmd started", { port: config.port });
@@ -69,11 +80,44 @@ function cmdStart({ open = false } = {}) {
   if (isFirstRun || open) openBrowser(url);
 }
 
+// Client side of the re-pair path (DEC-3): connects to the ALREADY-RUNNING
+// daemon's pipe/socket and asks it for a fresh pairing link — never spins up
+// its own server, never touches HTTP. If nothing is listening (daemon not
+// started, or a stale socket file), that's a plain "start it first" error.
+function cmdOpen() {
+  const path = cliChannelPath();
+  const socket = createConnection(path, () => socket.write(JSON.stringify({ cmd: "pair" }) + "\n"));
+  let buf = "";
+  socket.on("data", (chunk) => {
+    buf += chunk.toString("utf8");
+    const idx = buf.indexOf("\n");
+    if (idx === -1) return;
+    socket.end();
+    let msg;
+    try {
+      msg = JSON.parse(buf.slice(0, idx));
+    } catch {
+      console.error("helmd open: malformed response from daemon");
+      process.exit(1);
+    }
+    if (!msg.ok) {
+      console.error(`helmd open: ${msg.error}`);
+      process.exit(1);
+    }
+    console.log(msg.result.url);
+  });
+  socket.on("error", (err) => {
+    console.error(`helmd open: no daemon listening (${err.code === "ENOENT" || err.code === "ECONNREFUSED" ? "run `helmd start` first" : err.message})`);
+    process.exit(1);
+  });
+}
+
 const args = process.argv.slice(2);
 const cmd = args[0] || "start";
 if (cmd === "doctor") await cmdDoctor();
 else if (cmd === "start") cmdStart({ open: args.includes("--open") });
+else if (cmd === "open") cmdOpen();
 else {
-  console.error(`helmd: unknown command "${cmd}" (expected: start | doctor)`);
+  console.error(`helmd: unknown command "${cmd}" (expected: start | doctor | open)`);
   process.exit(1);
 }
