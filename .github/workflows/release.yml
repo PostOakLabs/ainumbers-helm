@@ -104,6 +104,19 @@ jobs:
       - name: generate packaging manifests
         run: node scripts/gen-packaging-manifests.mjs
 
+      # Release assets share one flat namespace — three binaries all named
+      # `helmd` collide (second upload 404s). Stage platform-suffixed copies.
+      # The signed manifest's subject names stay `<platform>/<file>`; INSTALL.md
+      # documents the rename mapping for manual verification.
+      - name: stage release assets
+        run: |
+          mkdir -p dist/upload
+          cp dist/linux-x64/helmd      dist/upload/helmd-linux-x64
+          cp dist/macos-x64/helmd     dist/upload/helmd-macos-x64
+          cp dist/macos-arm64/helmd   dist/upload/helmd-macos-arm64
+          cp dist/windows-x64/helmd.exe dist/upload/helmd-windows-x64.exe
+          cp dist/release-manifest.json dist/release-manifest.dsse.json dist/upload/
+
       - name: create GitHub pre-release
         env:
           GH_TOKEN: ${{ github.token }}
@@ -113,9 +126,4 @@ jobs:
             --title "Helm $GITHUB_REF_NAME" \
             --prerelease \
             --generate-notes \
-            dist/linux-x64/helmd \
-            dist/macos-x64/helmd \
-            dist/macos-arm64/helmd \
-            dist/windows-x64/helmd.exe \
-            dist/release-manifest.json \
-            dist/release-manifest.dsse.json
+            dist/upload/*
