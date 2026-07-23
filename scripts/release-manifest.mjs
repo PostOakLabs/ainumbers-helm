@@ -29,7 +29,15 @@ function walk(dir) {
 }
 
 function main() {
-  const version = process.env.HELM_RELEASE_VERSION || JSON.parse(readFileSync(join(ROOT, "package.json"), "utf8")).version;
+  const pkgVersion = JSON.parse(readFileSync(join(ROOT, "package.json"), "utf8")).version;
+  const version = process.env.HELM_RELEASE_VERSION || pkgVersion;
+
+  if (process.env.HELM_RELEASE_VERSION && process.env.HELM_RELEASE_VERSION !== pkgVersion) {
+    console.error(
+      `release-manifest: tag version v${process.env.HELM_RELEASE_VERSION} does not match package.json version ${pkgVersion} — refusing to sign a mismatched release`
+    );
+    process.exit(1);
+  }
 
   if (!existsSync(DIST)) {
     console.error(`release-manifest: no dist/ directory — run build-sea.mjs for each platform first`);

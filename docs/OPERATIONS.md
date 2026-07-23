@@ -25,6 +25,17 @@ credentials** — that is the gate, not a date.
   patch reaches customers only when they choose to update. Factor this into any future
   time-to-patch SLA: "released" ≠ "deployed."
 
+## Cutting a release (v0.1.0+)
+
+1. `node scripts/gen-release-keys.mjs` — writes public keys to `schema/release-signing-keys.json` (commit them), prints the private key blob to stdout.
+2. Pipe the private key straight into the secret store — **never paste it, never write it to a file** (shell scrollback + history are a leak surface):
+   ```
+   node scripts/gen-release-keys.mjs | tail -n1 | gh secret set HELM_RELEASE_SIGNING_KEY_B64 --repo PostOakLabs/ainumbers-helm --body-file -
+   ```
+3. `git tag vX.Y.Z && git push origin vX.Y.Z` — this is the only trigger for `release.yml` (`test` → `build` → `sign-and-release`, fail-closed at each step).
+
+**Windows note:** `helmd.exe` is unsigned (no Authenticode certificate in Phase 1) — first launch shows a SmartScreen "Windows protected your PC" prompt. Users click "More info" → "Run anyway". This is expected until Phase 2 code-signing is budgeted; it is not a build defect.
+
 ## Revisit triggers
 
 Re-open every row above **before** any of:
