@@ -19,7 +19,7 @@ process.env.HELM_HOME = TMP;
 
 const { openJournal } = await import("../journal.mjs");
 const { loadContract, __setHostResolverForTest } = await import("../connector.mjs");
-const { createSmtpConnector, CONNECTOR_ID, __setSocketConnectForTest } = await import("./smtp-send.mjs");
+const { createSmtpConnector, CONNECTOR_ID, __setSocketConnectForTest, __setTlsUpgradeForTest } = await import("./smtp-send.mjs");
 
 // "mock-smtp.test" is a non-literal hostname so assertResolvedIpAllowed
 // takes the resolver-override path (proven safe by connector.test.mjs);
@@ -37,7 +37,7 @@ const ATTESTATION_SCHEMA = JSON.parse(
 
 // Minimal plaintext SMTP dialogue: no STARTTLS advertised (so secure:"none"
 // callers proceed unauthenticated), accepts exactly one message.
-function startMockRelay() {
+function startMockRelay({ starttls = false } = {}) {
   return new Promise((resolve) => {
     let received = null;
     const server = createServer((socket) => {
@@ -61,8 +61,11 @@ function startMockRelay() {
             }
             continue;
           }
-          if (line.startsWith("EHLO")) socket.write("250 mock\r\n");
-          else if (line.startsWith("MAIL FROM")) socket.write("250 OK\r\n");
+          if (line.startsWith("EHLO")) {
+            socket.write(starttls ? "250-mock\r\n250 STARTTLS\r\n" : "250 mock\r\n");
+          } else if (line === "STARTTLS" && starttls) {
+            socket.write("220 Go ahead\r\n");
+          } else if (line.startsWith("MAIL FROM")) socket.write("250 OK\r\n");
           else if (line.startsWith("RCPT TO")) socket.write("250 OK\r\n");
           else if (line === "DATA") {
             inData = true;
@@ -116,6 +119,44 @@ test("smtp.send: happy path over a plaintext mock relay produces a schema-valid 
     db.close();
   } finally {
     __setSocketConnectForTest(null);
+    server.close();
+  }
+});
+
+test("smtp.send: STARTTLS upgrade validates the cert against the relay host, not the EHLO identity (HELM-P2-R11-F2)", async () => {
+  const { server, port, getReceived } = await startMockRelay({ starttls: true });
+  __setSocketConnectForTest((host, connectPort) => new Promise((resolve, reject) => {
+    const socket = netConnect({ host: "127.0.0.1", port }, () => resolve(socket));
+    socket.once("error", reject);
+  }));
+  let tlsUpgradeServername = null;
+  __setTlsUpgradeForTest((socket, servername) => {
+    tlsUpgradeServername = servername;
+    return Promise.resolve(socket); // stand-in: no real cert to validate here — asserting the servername argument is the fix under test
+  });
+  try {
+    const db = openJournal(join(TMP, "smtp-starttls.db"));
+    const { contract, contractDigest } = loadContract(join(HERE, "smtp-send.contract.json"));
+    const tampered = { ...contract, allowed_hosts: [`mock-smtp.test:${port}`] };
+
+    const connector = createSmtpConnector({ db, contract: tampered, contractDigest });
+    await connector.init({});
+
+    await connector.send({
+      host: "mock-smtp.test", port, secure: "starttls",
+      from: "helm@example.com", to: ["ops@example.com"], subject: "test",
+      text: "hello over starttls", runId: "run-1", workflowManifestDigest: "sha256:" + "a".repeat(64),
+    });
+
+    assert.equal(tlsUpgradeServername, "mock-smtp.test");
+    assert.notEqual(tlsUpgradeServername, "helm.local");
+    assert.match(getReceived(), /hello over starttls/);
+
+    await connector.dispose();
+    db.close();
+  } finally {
+    __setSocketConnectForTest(null);
+    __setTlsUpgradeForTest(null);
     server.close();
   }
 });
