@@ -4,9 +4,11 @@
 // re-derives the SAME guarded-egress decision sequence by hand, in the same
 // order, before ever opening a socket:
 //   1. contract allowlist check (assertEgressAllowed)
-//   2. DNS-resolved-IP deny-list check (assertResolvedIpAllowed — the exact
+//   2. DNS-resolved-IP deny-list check (resolveVettedIp — the exact
 //      function H9a's HTTP path uses, so the rebinding guard is shared,
-//      not reimplemented)
+//      not reimplemented) — then pinHostResolution pins the SAME vetted IP
+//      for the socket connect below, so the check and the connect can never
+//      resolve to different addresses (HELM-P2-R11-F1 DNS-rebinding fix).
 //   3. recordEgress — a blocked target is journaled BEFORE any TCP connect
 //      is attempted, matching every other connector's transcript shape.
 //
@@ -19,7 +21,7 @@
 import { connect as netConnect } from "node:net";
 import { connect as tlsConnect } from "node:tls";
 import { createHash } from "node:crypto";
-import { assertEgressAllowed, assertResolvedIpAllowed, recordEgress, buildConnectorAttestation } from "../connector.mjs";
+import { assertEgressAllowed, resolveVettedIp, pinHostResolution, recordEgress, buildConnectorAttestation } from "../connector.mjs";
 import { vaultGet } from "../vault.mjs";
 
 export const CONNECTOR_ID = "smtp.send";
@@ -200,8 +202,9 @@ export function createSmtpConnector({ db, contract, contractDigest }) {
         recordEgress(db, { connectorId: CONNECTOR_ID, destinationHost: hostPort, operation: "SEND", decision: "blocked", requestDigest });
         throw new Error(`egress blocked: ${CONNECTOR_ID} -> SEND ${hostPort} not in contract allowlist`);
       }
+      let vettedIp;
       try {
-        await assertResolvedIpAllowed(host);
+        vettedIp = await resolveVettedIp(host);
       } catch (err) {
         recordEgress(db, { connectorId: CONNECTOR_ID, destinationHost: hostPort, operation: "SEND", decision: "blocked", requestDigest });
         throw err;
@@ -217,7 +220,13 @@ export function createSmtpConnector({ db, contract, contractDigest }) {
         }
       }
 
-      const socket = await openSocket(host, port, secure === "tls");
+      const unpin = pinHostResolution(host, vettedIp);
+      let socket;
+      try {
+        socket = await openSocket(host, port, secure === "tls");
+      } finally {
+        unpin();
+      }
       const messageBytes = await runDialogue(socket, { heloHost: "helm.local", from, to, subject, text, authUser, authPass, secure });
 
       const responseDigest = sha256ref(messageBytes);

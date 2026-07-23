@@ -15,6 +15,7 @@ import { createHash } from "node:crypto";
 import { join, dirname } from "node:path";
 import { fileURLToPath } from "node:url";
 import { lookup as dnsLookup } from "node:dns/promises";
+import dns from "node:dns";
 import { isIP } from "node:net";
 import { cgCanon, assertIJson } from "./vendored/ocg/kernels/_hash.mjs";
 import { validate } from "../scripts/lib/schema-validator.mjs";
@@ -146,19 +147,86 @@ export function __setHostResolverForTest(fn) {
 }
 
 // Throws if `hostname` is itself a denied IP literal, or resolves to one.
-export async function assertResolvedIpAllowed(hostname) {
+// Returns the single vetted address the caller MUST connect to (never
+// re-resolve) — this is what closes the DNS-rebinding TOCTOU window
+// (HELM-P2-R11-F1): the guard's lookup and the connect's lookup must be the
+// exact same answer, not two independent DNS round-trips an attacker with a
+// short-TTL record can answer differently.
+export async function resolveVettedIp(hostname) {
   if (isIP(hostname)) {
     if (isDeniedIp(hostname)) {
       throw new Error(`egress blocked: ${hostname} is a private/link-local/metadata address`);
     }
-    return;
+    return hostname;
   }
   const addresses = await resolveHostIps(hostname);
+  if (addresses.length === 0) {
+    throw new Error(`egress blocked: ${hostname} did not resolve to any address`);
+  }
   for (const ip of addresses) {
     if (isDeniedIp(ip)) {
       throw new Error(`egress blocked: ${hostname} resolves to ${ip}, a private/link-local/metadata address (DNS rebinding guard)`);
     }
   }
+  return addresses[0];
+}
+
+// Back-compat wrapper (tests + smtp-send.mjs's pre-connect guard call this
+// for its throw-only behavior; production egress paths call
+// resolveVettedIp + pinHostResolution below instead).
+export async function assertResolvedIpAllowed(hostname) {
+  await resolveVettedIp(hostname);
+}
+
+// --- DNS-rebinding pin -------------------------------------------------
+// Node's net/tls/http/https/undici connect paths all funnel hostname
+// resolution through node:dns's callback `lookup()`. We patch it ONCE, at
+// module load, to consult a small pinned-hostname table before falling
+// through to the real resolver. A pin entry forces every connect for that
+// hostname (regardless of call site — fetch() or a raw net/tls socket) to
+// use the exact IP resolveVettedIp already vetted, closing the gap between
+// check and connect. Ref-counted so concurrent egress calls to the same
+// host don't stomp on each other's pin/unpin.
+const pinnedResolutions = new Map(); // lowercased hostname -> { ip, refs }
+const realDnsLookup = dns.lookup.bind(dns);
+dns.lookup = function pinnedDnsLookup(hostname, options, callback) {
+  if (typeof options === "function") {
+    callback = options;
+    options = {};
+  }
+  const pin = pinnedResolutions.get(String(hostname).toLowerCase());
+  if (pin) {
+    const family = isIP(pin.ip) === 6 ? 6 : 4;
+    if (options && options.all) {
+      process.nextTick(() => callback(null, [{ address: pin.ip, family }]));
+    } else {
+      process.nextTick(() => callback(null, pin.ip, family));
+    }
+    return;
+  }
+  return realDnsLookup(hostname, options, callback);
+};
+
+// Pins `hostname` to `ip` for every connect until the returned unpin() is
+// called. Call unpin() in a `finally` around the connect that must honor it.
+export function pinHostResolution(hostname, ip) {
+  const key = String(hostname).toLowerCase();
+  const existing = pinnedResolutions.get(key);
+  if (existing) {
+    existing.refs += 1;
+    existing.ip = ip;
+  } else {
+    pinnedResolutions.set(key, { ip, refs: 1 });
+  }
+  let released = false;
+  return function unpin() {
+    if (released) return;
+    released = true;
+    const entry = pinnedResolutions.get(key);
+    if (!entry) return;
+    entry.refs -= 1;
+    if (entry.refs <= 0) pinnedResolutions.delete(key);
+  };
 }
 
 // Exported so inbound-direction connectors (no outbound fetch of their own,
@@ -217,20 +285,27 @@ export async function performEgress(db, { contract, connectorId, url, method, he
       throw new Error(`egress blocked: ${connectorId} -> ${method} ${host} not in contract allowlist`);
     }
 
+    let vettedIp;
     try {
-      await assertResolvedIpAllowed(hostname);
+      vettedIp = await resolveVettedIp(hostname);
     } catch (err) {
       recordEgress(db, { connectorId, destinationHost: host, operation: method, decision: "blocked", requestDigest });
       throw err;
     }
 
-    const res = await fetch(currentUrl, {
-      method,
-      headers: resolvedHeaders,
-      body,
-      redirect: "manual",
-      signal: AbortSignal.timeout(EGRESS_TIMEOUT_MS),
-    });
+    const unpin = pinHostResolution(hostname, vettedIp);
+    let res;
+    try {
+      res = await fetch(currentUrl, {
+        method,
+        headers: resolvedHeaders,
+        body,
+        redirect: "manual",
+        signal: AbortSignal.timeout(EGRESS_TIMEOUT_MS),
+      });
+    } finally {
+      unpin();
+    }
 
     if (res.status >= 300 && res.status < 400 && res.headers.get("location")) {
       recordEgress(db, { connectorId, destinationHost: host, operation: method, decision: "allowed", requestDigest });
