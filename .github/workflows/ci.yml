@@ -26,3 +26,19 @@ jobs:
         run: node scripts/verify-vendored.mjs
       - name: sea build dry-run
         run: node scripts/sea-dry-run.mjs
+
+  # Live third-party coverage (FreeTSA / OTS). NON-BLOCKING by design:
+  # continue-on-error so a third-party outage never reddens main or blocks a
+  # PR. The blocking `ci` job stays fully offline (see test-support/live.mjs).
+  live-net:
+    runs-on: ubuntu-latest
+    continue-on-error: true
+    steps:
+      - uses: actions/checkout@9c091bb21b7c1c1d1991bb908d89e4e9dddfe3e0 # v7.0.0
+      - uses: actions/setup-node@249970729cb0ef3589644e2896645e5dc5ba9c38 # v6.5.0
+        with:
+          node-version: "22"
+      - name: test (live network)
+        env:
+          HELM_LIVE_NET: "1"
+        run: node scripts/test.mjs

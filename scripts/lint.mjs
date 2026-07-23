@@ -2,7 +2,7 @@
 // Zero-dep lint gate: syntax-checks every .mjs file via node --check.
 // No ESLint dep yet (D2/zero-dep-first discipline) — expand when hub/ui code lands.
 import { execFileSync } from "node:child_process";
-import { readdirSync } from "node:fs";
+import { readdirSync, readFileSync } from "node:fs";
 import { join, dirname } from "node:path";
 import { fileURLToPath } from "node:url";
 
@@ -35,4 +35,24 @@ if (failed > 0) {
   console.error(`lint: ${failed} file(s) failed --check`);
   process.exit(1);
 }
+
+// Live-network test guard (prevents the HELM-P2-S10 flaky-red-main class,
+// 2026-07-23): a test making a REAL anchor call (FreeTSA / OTS calendar) must
+// gate it via liveTest() from test-support/live.mjs, so the blocking suite
+// stays offline/deterministic and a third-party hiccup can't redden main.
+const LIVE_CALL = /\bawait\s+(?:anchorRfc3161|anchorOpenTimestamps)\s*\(/;
+let liveViol = 0;
+for (const file of walk(ROOT)) {
+  if (!file.endsWith(".test.mjs")) continue;
+  const src = readFileSync(file, "utf8");
+  if (LIVE_CALL.test(src) && !/\bliveTest\s*\(/.test(src)) {
+    liveViol++;
+    console.error(`LIVE-NET GATE: ${file} makes a live anchor call but has no liveTest() wrapper — wrap it via test-support/live.mjs so it can't redden main.`);
+  }
+}
+if (liveViol > 0) {
+  console.error(`lint: ${liveViol} live-network gate violation(s)`);
+  process.exit(1);
+}
+
 console.log("lint: OK");
