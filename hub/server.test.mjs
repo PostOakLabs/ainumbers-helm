@@ -85,3 +85,14 @@ test("negative: DNS-rebind Host rejected", async () => {
   const res = await get("/health", headers({ Host: "evil.example" }));
   assert.equal(res.status, 403);
 });
+
+test("GET /vault/connections is authenticated and starts empty", async () => {
+  const res = await get("/vault/connections", headers());
+  assert.equal(res.status, 200);
+  assert.deepEqual(JSON.parse(res.body), { connections: [] });
+});
+
+test("GET /vault/connections/flow/:id 404s for an unknown flow", async () => {
+  const res = await get("/vault/connections/flow/does-not-exist", headers());
+  assert.equal(res.status, 404);
+});
