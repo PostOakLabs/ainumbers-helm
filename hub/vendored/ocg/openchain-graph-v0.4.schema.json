@@ -1,0 +1,464 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://ainumbers.co/chaingraph/standard/openchain-graph-v0.4.schema.json",
+  "title": "OpenChainGraph v0.4 — artifact envelope + catalog node object",
+  "description": "NORMATIVE machine schema for OpenChainGraph v0.4. Source of truth pairs with standard/SPEC.md. spec_version of record lives in chaingraph.json.spec_version. Strict (additionalProperties:false) on BOTH the artifact envelope and the catalog node object: chaingraph.json is a single-producer internal catalog in this repo, so the forward-compat case for permissive request bodies does not apply — strictness catches our own typo/drift fields. Adding a new node field = a one-line schema update in the same PR.",
+  "spec_version": "0.8.8",
+  "$defs": {
+    "privateInputDeclaration": {
+      "description": "OCG Standard §25 Private-Input declaration — names a policy_parameters location that holds a HIDING COMMITMENT instead of cleartext, under a named commitment scheme. Optional; lives at the top-level private_inputs array. Attached AFTER hashing, EXCLUDED from execution_hash scope (like §20 anchor_bindings and §23 input_attestations) — the array is a machine-readable index, not the binding: the binding is the commitment sitting inside policy_parameters (in the §4 preimage) plus the §18 journal. pointer is an RFC 6901 JSON Pointer into policy_parameters; the value it resolves to MUST BE the commitment string (never plaintext) — §25.2 plaintext-exclusion. commitment is a sha256:-prefixed hiding commitment = SHA-256(salt ‖ cgCanon(input)); the ≥256-bit salt is prover-held disclosure material and NEVER appears in the artifact. This schema validates shape only; plaintext-exclusion + scheme validity + the journal-commits-the-commitment binding are enforced by validate-private-inputs.test.mjs (with the §18 pairing check in compute-proof.test.mjs).",
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["pointer", "commitment", "commitment_scheme"],
+      "properties": {
+        "pointer": { "type": "string", "pattern": "^(/([^/~]|~[01])*)+$", "description": "RFC 6901 JSON Pointer into policy_parameters naming the private input. The value it resolves to MUST be the commitment (§25.2)." },
+        "commitment": { "$ref": "#/$defs/sha256ref", "description": "The hiding commitment SHA-256(salt ‖ cgCanon(input)); sha256:-prefixed. This same string is what sits at pointer inside policy_parameters." },
+        "commitment_scheme": { "type": "string", "enum": ["sha256-salted@1"], "description": "The commitment construction. sha256-salted@1 is the sole scheme in this profile version; a new construction ships as ocg-private-input@<n>, never an in-place edit (§25.7)." }
+      }
+    },
+    "inputAttestation": {
+      "description": "OCG Standard §23 Input Attestation — portable per-input evidence that a named input value was vouched for by an external source. Optional; lives at the top-level input_attestations array. Attached AFTER hashing, EXCLUDED from execution_hash scope (like §16 audit_signature and §20 anchor_bindings). pointer is an RFC 6901 JSON Pointer evaluated against policy_parameters (naming WHICH input). Types vc-2.0 / c2pa-manifest / rfc3161-snapshot verify with shipped §16/§13.11/§20 machinery; zktls is defined with EXTERNAL verification (no vendored verifier). This schema validates shape only; digest binding + cryptographic verification are enforced by validate-input-attestations.test.mjs.",
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["type", "pointer", "proof", "source_ref"],
+      "properties": {
+        "type": { "type": "string", "enum": ["vc-2.0", "c2pa-manifest", "rfc3161-snapshot", "zktls"] },
+        "pointer": { "type": "string", "pattern": "^(/([^/~]|~[01])*)+$", "description": "RFC 6901 JSON Pointer into policy_parameters naming the attested input." },
+        "proof": {
+          "description": "The attestation payload. vc-2.0 = a W3C VC 2.0 credential object; rfc3161-snapshot = base64 verbatim RFC 3161 TST DER; c2pa-manifest = the C2PA manifest (object or base64); zktls = an opaque zkTLS proof string.",
+          "oneOf": [ { "type": "object" }, { "type": "string", "minLength": 1 } ]
+        },
+        "source_ref": { "type": "string", "minLength": 1, "description": "Issuer DID / URL / TLS origin string naming who vouches. Informative to the trust decision, never a substitute for verifying proof." }
+      }
+    },
+    "anchorBinding": {
+      "description": "OCG Standard §20 Anchor Binding — portable, offline-verifiable evidence that execution_hash was included in a transparency log or timestamp service by a point in time. Optional; lives at the top-level anchor_bindings array. Attached AFTER hashing, EXCLUDED from execution_hash scope (like §16 audit_signature). anchored_hash MUST equal the artifact's execution_hash (enforced by anchor-binding.test.mjs; this schema validates shape). rfc3161-tst carries four additional REQUIRED members; the DER in proof is stored verbatim, never re-encoded.",
+      "oneOf": [
+        {
+          "type": "object",
+          "additionalProperties": false,
+          "required": ["type", "anchored_hash", "log_origin", "proof", "policy_oid", "serial", "gen_time", "signer_cert_chain_b64"],
+          "properties": {
+            "type": { "const": "rfc3161-tst" },
+            "anchored_hash": { "type": "string", "pattern": "^sha256:[0-9a-f]{64}$" },
+            "log_origin": { "type": "string", "minLength": 1 },
+            "proof": { "type": "string", "minLength": 1, "description": "Base64 verbatim RFC 3161 TimeStampToken DER." },
+            "policy_oid": { "type": "string", "minLength": 1 },
+            "serial": { "type": "string", "minLength": 1 },
+            "gen_time": { "type": "string", "minLength": 1 },
+            "signer_cert_chain_b64": { "type": "array", "minItems": 1, "items": { "type": "string", "minLength": 1 } },
+            "merkle_inclusion": { "$ref": "#/$defs/merkleInclusion" }
+          }
+        },
+        {
+          "type": "object",
+          "additionalProperties": false,
+          "required": ["type", "anchored_hash", "log_origin", "proof"],
+          "properties": {
+            "type": { "const": "opentimestamps" },
+            "anchored_hash": { "type": "string", "pattern": "^sha256:[0-9a-f]{64}$" },
+            "log_origin": { "type": "string", "minLength": 1 },
+            "proof": { "type": "string", "minLength": 1, "description": "Base64 OTS proof." },
+            "merkle_inclusion": { "$ref": "#/$defs/merkleInclusion" }
+          }
+        },
+        {
+          "type": "object",
+          "additionalProperties": false,
+          "required": ["type", "anchored_hash", "log_origin", "proof"],
+          "properties": {
+            "type": { "enum": ["c2sp-tlog-proof-v1", "scitt-receipt-rfc9942"] },
+            "anchored_hash": { "type": "string", "pattern": "^sha256:[0-9a-f]{64}$" },
+            "log_origin": { "type": "string", "minLength": 1 },
+            "proof": { "type": "string", "minLength": 1, "description": "tlog-proof@v1 text | base64 COSE receipt (carries its own inclusion proof)." }
+          }
+        }
+      ]
+    },
+    "buildIdentity": {
+      "type": "object",
+      "description": "OCG Standard §17 Kernel Identity Binding — content digest of the kernel that produced the artifact. Optional; lives at audit_signature.build_identity. Hash-excluded; does not alter execution_hash or chaingraph_version. An advisory published claim of which kernel SOURCE ran (not a proof of execution — that is §18).",
+      "additionalProperties": false,
+      "required": ["kernel_digest", "buildType"],
+      "properties": {
+        "kernel_digest": { "$ref": "#/$defs/sha256ref" },
+        "buildType": { "type": "string", "description": "Algorithm URI that produced the digest." },
+        "source_ref": { "type": "string", "description": "Optional dereferenceable URL/commit pinning the source." }
+      }
+    },
+    "computeProof": {
+      "type": "object",
+      "description": "OCG Standard §18 Compute-Integrity Proof — a zkVM receipt proving the named guest program produced output_payload. Optional; lives at audit_signature.compute_proof. Hash-excluded; does not alter execution_hash or chaingraph_version. System-agnostic; groth16-bn254 is the RECOMMENDED interop receipt form. Cryptographic seal-verification is DELEGATED to the named zkVM's vetted verifier (§18.1); this schema validates the binding shape only.",
+      "additionalProperties": false,
+      "required": ["type", "system", "receiptFormat", "imageId", "seal", "journal"],
+      "properties": {
+        "type": { "const": "ZkVmReceipt" },
+        "system": { "type": "string", "minLength": 1, "description": "zkVM identifier: risc0 | sp1 | jolt | …" },
+        "receiptFormat": { "type": "string", "enum": ["groth16-bn254", "stark"] },
+        "imageId": { "$ref": "#/$defs/sha256ref" },
+        "seal": { "type": "string", "minLength": 1, "description": "Standard-base64 proof bytes." },
+        "journal": { "type": "object", "description": "Public outputs committed by the guest; MUST bind output_payload (§18.0)." }
+      }
+    },
+    "dataIntegrityProof": {
+      "type": "object",
+      "description": "OCG Standard §16 Proof Binding — a W3C Data Integrity proof (cryptosuite eddsa-jcs-2022) over the whole artifact (minus this proof). Optional; lives at audit_signature.proof. Hash-excluded; does not alter execution_hash or chaingraph_version. §16.5 (v0.7): optional id (referenceable by an endorsement) and previousProof (proof-chain endorsement — id(s) of the proof(s) this one countersigns).",
+      "additionalProperties": false,
+      "required": ["type", "cryptosuite", "verificationMethod", "proofPurpose", "created", "proofValue"],
+      "properties": {
+        "type": { "const": "DataIntegrityProof" },
+        "cryptosuite": { "const": "eddsa-jcs-2022" },
+        "verificationMethod": { "type": "string", "pattern": "^did:key:z6Mk" },
+        "proofPurpose": { "const": "assertionMethod" },
+        "created": { "type": "string", "format": "date-time" },
+        "proofValue": { "type": "string", "pattern": "^z" },
+        "id": { "type": "string", "minLength": 1 },
+        "previousProof": {
+          "oneOf": [
+            { "type": "string", "minLength": 1 },
+            { "type": "array", "minItems": 1, "items": { "type": "string", "minLength": 1 } }
+          ]
+        }
+      }
+    },
+    "proofSetOrChain": {
+      "description": "§16.5 (v0.7) — audit_signature.proof MAY be a single proof or an array (parallel proof set and/or previousProof endorsement chain).",
+      "oneOf": [
+        { "$ref": "#/$defs/dataIntegrityProof" },
+        { "type": "array", "minItems": 1, "items": { "$ref": "#/$defs/dataIntegrityProof" } }
+      ]
+    },
+    "sha256ref": {
+      "type": "string",
+      "description": "Either a bare 64-char hex digest or a sha256:-prefixed digest.",
+      "pattern": "^(sha256:)?[0-9a-f]{64}$"
+    },
+    "merkleInclusion": {
+      "type": "object",
+      "description": "OCG Standard §20 (v0.8) — OPTIONAL member on rfc3161-tst / opentimestamps anchor bindings. Batch anchoring: the artifact execution_hash is a LEAF of an RFC 6962 tree whose ROOT is the anchored value, so one timestamp covers many artifacts. When present a verifier MUST reconstruct the root from leaf+path and require root == anchored_hash AND leaf == artifact execution_hash (anchor-binding.test.mjs).",
+      "additionalProperties": false,
+      "required": ["leaf", "index", "path", "tree_size", "algorithm"],
+      "properties": {
+        "leaf": { "$ref": "#/$defs/sha256ref", "description": "The artifact execution_hash (a tree leaf entry)." },
+        "index": { "type": "integer", "minimum": 0 },
+        "path": { "type": "array", "items": { "$ref": "#/$defs/sha256ref" }, "description": "RFC 6962 inclusion-proof node hashes." },
+        "tree_size": { "type": "integer", "minimum": 1 },
+        "algorithm": { "const": "rfc6962" }
+      }
+    },
+    "decisionGate": {
+      "type": "object",
+      "description": "OCG Standard §21.4 (v0.8) — OPTIONAL decision gate on a chain step. Evaluated against THIS step's output_payload; routes control FORWARD (a later step id or \"end\"). First-match; default REQUIRED (total function). Closed op enum; strict typing, no coercion. Static-validated by validate-chains (forward-only, targets resolve, no unreachable step); evaluated by the shared kernels/_gateval.mjs on every surface.",
+      "additionalProperties": false,
+      "required": ["input", "rules", "default"],
+      "properties": {
+        "input": { "type": "string", "description": "RFC 6901 JSON Pointer into this step's output_payload." },
+        "rules": {
+          "type": "array",
+          "minItems": 1,
+          "items": {
+            "type": "object",
+            "additionalProperties": false,
+            "required": ["op", "next"],
+            "properties": {
+              "op": { "enum": ["eq", "neq", "gt", "gte", "lt", "lte", "in", "present", "absent"] },
+              "value": { "description": "Comparison operand (required for value ops; absent for present/absent). For gt/gte/lt/lte a finite number; for in a literal array." },
+              "next": { "type": "string", "minLength": 1, "description": "Target step id or the literal \"end\". MUST be forward-only." }
+            }
+          }
+        },
+        "default": { "type": "string", "minLength": 1, "description": "Target step id or \"end\" when no rule matches. REQUIRED and forward-only." }
+      }
+    },
+    "workMandateCondition": {
+      "type": "object",
+      "description": "OCG Standard §22.1 (v0.8.1) — one threshold condition / escalation trigger inside a Work Mandate document. { pointer, op, value }: pointer is an RFC 6901 JSON Pointer into a step's output_payload; op is the §21.4 closed gate-op enum; value is the operand (omitted for present/absent).",
+      "additionalProperties": false,
+      "required": ["pointer", "op"],
+      "properties": {
+        "pointer": { "type": "string", "description": "RFC 6901 JSON Pointer into a step's output_payload." },
+        "op": { "enum": ["eq", "neq", "gt", "gte", "lt", "lte", "in", "present", "absent"] },
+        "value": { "description": "Comparison operand (required for value ops; absent for present/absent). For gt/gte/lt/lte a finite number; for in a literal array." }
+      }
+    },
+    "workMandateDocument": {
+      "type": "object",
+      "description": "OCG Standard §22 (v0.8.1) — the output_payload of a Work Mandate artifact (mandate_type:\"work_mandate\"). SEPARATE from the frozen v0.4 artifact envelope ($defs/artifact) and NOT referenced by the top-level oneOf — additive, so it never alters existing artifact/catalog validation. A conformant Work Mandate is an $defs/artifact whose mandate_type is \"work_mandate\", whose output_payload matches this shape, and which carries a §16 eddsa-jcs-2022 proof (§22.2 — an unsigned mandate is a non-enforceable draft). scope authorizes nodes/chains; conditions name the auto-approval envelope; escalation_triggers route to the reserved \"escalate\" target (§22.3); validity bounds the window; principal is the signing authority.",
+      "additionalProperties": false,
+      "required": ["mandate_type", "scope", "conditions", "escalation_triggers", "validity", "principal"],
+      "properties": {
+        "mandate_type": { "const": "work_mandate" },
+        "scope": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": ["tool_ids", "chains"],
+          "description": "Authorized nodes and chains. At least one array MUST be non-empty (§22.1).",
+          "properties": {
+            "tool_ids": { "type": "array", "items": { "type": "string" } },
+            "chains": { "type": "array", "items": { "type": "string" } }
+          }
+        },
+        "conditions": { "type": "array", "items": { "$ref": "#/$defs/workMandateCondition" }, "description": "Auto-approval threshold conditions (MAY be empty)." },
+        "escalation_triggers": { "type": "array", "items": { "$ref": "#/$defs/workMandateCondition" }, "description": "Conditions that route the run to the reserved \"escalate\" target (MAY be empty)." },
+        "validity": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": ["not_before", "not_after"],
+          "properties": {
+            "not_before": { "type": "string", "format": "date-time" },
+            "not_after": { "type": "string", "format": "date-time" }
+          }
+        },
+        "principal": {
+          "type": "object",
+          "required": ["id"],
+          "description": "The authorizing party. id is a did:key or LEI (§9); the §16 signature MUST verify against it.",
+          "properties": { "id": { "type": "string", "minLength": 1 } }
+        },
+        "anchor": { "$ref": "#/$defs/anchorBinding", "description": "OPTIONAL §20 anchor over the mandate hash (§22.2)." }
+      }
+    },
+    "artifact": {
+      "type": "object",
+      "description": "A v0.4 OpenChainGraph artifact. execution_hash = SHA-256(JCS({policy_parameters, output_payload})); the hash preimage is exactly those two members and nothing else.",
+      "additionalProperties": false,
+      "required": [
+        "@context",
+        "chaingraph_version",
+        "tool_id",
+        "tool_version",
+        "generated_at",
+        "execution_hash",
+        "chain",
+        "policy_parameters",
+        "output_payload",
+        "audit_signature"
+      ],
+      "properties": {
+        "@context": {
+          "description": "JSON-LD context. NOT version-locked to the spec number — v0.3 context is valid under v0.4 (export profiles are hash-excluded and add no PROV vocabulary).",
+          "oneOf": [
+            { "type": "string" },
+            { "type": "array", "items": { "type": "string" } }
+          ]
+        },
+        "chaingraph_version": {
+          "type": "string",
+          "pattern": "^0\\.4\\.[0-9]+$",
+          "description": "MUST be 0.4.x for a v0.4 artifact."
+        },
+        "compute_mode": {
+          "type": "string",
+          "enum": ["server", "browser"],
+          "description": "New in v0.4 (§12). Excluded from the hash preimage."
+        },
+        "mandate_type": {
+          "type": "string",
+          "description": "§4 taxonomy (recommended) — prompt_template, payment_mandate, payment_policy, compliance_mandate, liquidity_mandate, capital_assessment, risk_control, settlement_mandate, infrastructure_mandate, credit_assessment, treasury_mandate, account_mandate, model_governance, attestation_mandate, cryptographic_mandate, aml_rule, risk_parameter. NOT a hard enum: live nodes also use agent_guardrail_mandate / scheme_rule (the enum is not CI-enforced)."
+        },
+        "tool_id": { "type": "string", "minLength": 1 },
+        "tool_version": { "type": "string", "pattern": "^[0-9]+\\.[0-9]+\\.[0-9]+$" },
+        "generated_at": { "type": "string", "description": "ISO 8601." },
+        "buildType": { "type": "string", "description": "Version-independent algorithm URI (e.g. …/v0.2#WebCryptoSHA256)." },
+        "semantic_profile": { "type": "string", "description": "Optional ISO 20022 alignment (§8)." },
+        "dct:conformsTo": {
+          "oneOf": [
+            { "type": "string" },
+            { "type": "array", "items": { "type": "string" } }
+          ]
+        },
+        "execution_hash": { "$ref": "#/$defs/sha256ref" },
+        "chain": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": ["parent_hashes", "parent_tool_ids", "chain_depth"],
+          "properties": {
+            "parent_hashes": { "type": "array", "items": { "$ref": "#/$defs/sha256ref" } },
+            "parent_tool_ids": { "type": "array", "items": { "type": "string" } },
+            "chain_depth": { "type": "integer", "minimum": 0 }
+          }
+        },
+        "policy_parameters": {
+          "type": "object",
+          "description": "Half of the hash preimage. Fold all decision inputs in here.",
+          "properties": {
+            "execution_backend": { "type": "string", "enum": ["webgpu", "cpu-fallback", "js", "server"] },
+            "input_parameters": { "type": "object" }
+          }
+        },
+        "output_payload": { "type": "object", "description": "Half of the hash preimage." },
+        "policy_parameters_hash": {
+          "$ref": "#/$defs/sha256ref",
+          "description": "OCG Standard §PPH-1, new in v0.8.10 — OPTIONAL JCS-SHA-256 of policy_parameters alone, via the one canonical _hash.mjs path. EXCLUDED from the execution_hash preimage; purely additive, absence is conformant and carries no meaning."
+        },
+        "supersedes": {
+          "type": "array",
+          "description": "OCG Standard §1, new in v0.7 — OPTIONAL execution_hashes of artifacts this artifact corrects or replaces. Declared at creation; no reverse link, no status registry.",
+          "items": { "type": "string", "pattern": "^sha256:[0-9a-f]{64}$" }
+        },
+        "anchor_bindings": {
+          "type": "array",
+          "description": "OCG Standard §20, new in v0.7 — OPTIONAL anchor-binding evidence entries. Attached after hashing; excluded from execution_hash scope.",
+          "items": { "$ref": "#/$defs/anchorBinding" }
+        },
+        "input_attestations": {
+          "type": "array",
+          "description": "OCG Standard §23, new in v0.8.3 — OPTIONAL per-input attestation entries. Attached after hashing; excluded from execution_hash scope. Zero attestations is fully conformant.",
+          "items": { "$ref": "#/$defs/inputAttestation" }
+        },
+        "private_inputs": {
+          "type": "array",
+          "description": "OCG Standard §25, new in v0.8.5 — OPTIONAL private-input declarations. Attached after hashing; excluded from execution_hash scope. Each entry names a policy_parameters pointer whose value is a hiding commitment (never plaintext). Zero entries is byte-identical to a plain v0.8.4 artifact and fully conformant.",
+          "items": { "$ref": "#/$defs/privateInputDeclaration" }
+        },
+        "compliance_flags": { "type": "array", "items": { "type": "string" } },
+        "audit_signature": {
+          "type": "object",
+          "properties": {
+            "client_side_executed": { "type": "boolean" },
+            "zero_pii_verified": { "type": "boolean" },
+            "deterministic_run": { "type": "boolean" },
+            "payloadType": { "type": "string" },
+            "payload": { "type": "string" },
+            "signatures": { "type": "array" },
+            "proof": { "$ref": "#/$defs/proofSetOrChain" },
+            "build_identity": { "$ref": "#/$defs/buildIdentity" },
+            "compute_proof": { "$ref": "#/$defs/computeProof" }
+          }
+        }
+      }
+    },
+    "node": {
+      "type": "object",
+      "description": "A chaingraph.json nodes[] entry. STRICT (additionalProperties:false): every key a node uses MUST be declared here, so a typo field (e.g. gpu_fallbck) fails CI. Adding a new node field = a one-line schema update in the same PR (the §4 meta-rule applied to fields). Single-producer internal catalog — the forward-compat argument for permissive request bodies does not apply.",
+      "additionalProperties": false,
+      "required": [
+        "tool_id",
+        "tool_version",
+        "display_name",
+        "mcp_name",
+        "mandate_type",
+        "wave",
+        "gpu",
+        "url",
+        "description",
+        "input_schema_ref",
+        "consumes",
+        "feeds",
+        "status",
+        "compute_capability"
+      ],
+      "properties": {
+        "tool_id": { "type": "string", "pattern": "^[a-z0-9]+(-[a-z0-9]+)*$" },
+        "tool_version": { "type": "string", "pattern": "^[0-9]+\\.[0-9]+\\.[0-9]+$" },
+        "display_name": { "type": "string", "minLength": 1 },
+        "mcp_name": { "type": "string", "pattern": "^[a-z][a-z0-9_]*$" },
+        "mandate_type": { "type": "string", "minLength": 1 },
+        "wave": { "description": "int or string label (e.g. 14 or \"A\")." },
+        "gpu": { "type": "boolean" },
+        "url": { "type": "string", "pattern": "^https://" },
+        "description": { "type": "string", "minLength": 1 },
+        "input_schema_ref": { "type": "string", "minLength": 1 },
+        "consumes": { "type": "array", "items": { "type": "string" } },
+        "feeds": { "type": "array", "items": { "type": "string" } },
+        "status": { "type": "string", "enum": ["live", "planned", "deprecated"] },
+        "compute_capability": { "type": "string", "enum": ["server", "browser", "client"] },
+        "export_capability": {
+          "type": "array",
+          "items": { "type": "string", "pattern": "^(json|pdf|xlsx|csv|vc|xbrl(:[a-z0-9:-]+)?)$" }
+        },
+        "conformance_fixtures": { "type": "boolean" },
+        "compute_images": {
+          "type": "array",
+          "description": "§17/§18 — published kernel/program identities for this node. system 'sha256-source' = §17 kernel-source digest; 'risc0'/'sp1'/… = §18 zkVM ImageID/vkey.",
+          "items": {
+            "type": "object",
+            "required": ["system", "image_id"],
+            "properties": {
+              "system": { "type": "string", "minLength": 1 },
+              "image_id": { "$ref": "#/$defs/sha256ref" },
+              "valid_from": { "type": "string" }
+            }
+          }
+        },
+        "compute_proof": {
+          "type": "object",
+          "description": "§18 — a real, offline-produced zkVM compute-integrity receipt for this node's canonical/proven input. The worker attaches it to a live artifact only when the produced output_payload JCS-equals journal.output. Hash-excluded; never alters execution_hash or chaingraph_version.",
+          "required": ["type", "system", "receiptFormat", "imageId", "seal", "journal"],
+          "properties": {
+            "type": { "type": "string", "enum": ["ZkVmReceipt"] },
+            "system": { "type": "string", "minLength": 1 },
+            "receiptFormat": { "type": "string", "enum": ["groth16-bn254", "stark"] },
+            "imageId": { "$ref": "#/$defs/sha256ref" },
+            "seal": { "type": "string", "minLength": 1 },
+            "journal": { "type": "object" }
+          }
+        },
+        "compute_proof_ready": {
+          "type": "string",
+          "enum": ["ready", "deferred"],
+          "description": "§18 tiered-rollout annotation (optional). 'deferred' = this gpu:false node has no §18 compute_proof yet and the reason is recorded in deferred_reason. Absence means no explicit annotation (a node with a compute_proof is implicitly ready). Advisory; hash-excluded."
+        },
+        "deferred_reason": { "type": "string", "description": "Why compute_proof_ready is 'deferred' (e.g. guest-capability gap or awaiting a runtime decision)." },
+        "deadline": { "type": ["string", "null"], "description": "ISO date, or null when N/A. Catalog convention: present-as-null rather than omitted." },
+        "deadline_note": { "type": "string" },
+        "semantic_profile": { "type": "string", "description": "ISO 20022 alignment label (e.g. iso20022:pacs.008-subset) (§8)." },
+        "dct:conformsTo": {
+          "oneOf": [
+            { "type": "string" },
+            { "type": "array", "items": { "type": "string" } }
+          ]
+        },
+        "feeds_stub": { "type": "array", "items": { "type": "string" }, "description": "Planned downstream tool_ids not yet live." },
+        "chain_depth": { "type": "integer", "minimum": 0 },
+        "protocols": { "type": "object", "description": "Free-form protocol label map (display metadata)." },
+        "educational_note": { "type": "string" },
+        "al_id": { "type": "string", "description": "ApexLogics sister-suite tool id (e.g. AL-97, AL-06+16). Optional; sister-suite catalogs only." },
+        "persona": { "type": "string", "description": "ApexLogics persona label (display metadata)." },
+        "category": { "type": "string", "description": "ApexLogics hub category (display metadata)." },
+        "all_mandate_types": { "type": "array", "items": { "type": "string" }, "description": "All AP2 mandate types a node emits (ApexLogics multi-mandate tools)." },
+        "data_vintage": { "type": ["string", "null"], "description": "Data vintage label, or null when N/A. Present-as-null convention." }
+      }
+    },
+    "chain": {
+      "type": "object",
+      "description": "A chaingraph.json chains[] entry (live shape — the old A3 node_id/page_url schema was never adopted).",
+      "additionalProperties": true,
+      "required": ["name", "steps"],
+      "properties": {
+        "name": { "type": "string", "pattern": "^[a-z0-9]+(-[a-z0-9]+)*$" },
+        "title": { "type": "string" },
+        "description": { "type": "string" },
+        "composer_url": { "type": "string" },
+        "steps": {
+          "type": "array",
+          "minItems": 1,
+          "items": {
+            "type": "object",
+            "required": ["tool_id"],
+            "properties": {
+              "tool_id": { "type": "string", "minLength": 1 },
+              "handoff": { "type": "string" },
+              "id": { "type": "string", "minLength": 1, "description": "OCG §21.4 (v0.8) OPTIONAL step id (defaults to tool_id; MUST be unique within a GATED chain). Gate targets reference step ids." },
+              "gate": { "$ref": "#/$defs/decisionGate" }
+            }
+          }
+        }
+      }
+    }
+  },
+  "oneOf": [
+    { "$ref": "#/$defs/artifact" },
+    {
+      "type": "object",
+      "description": "A chaingraph.json catalog document.",
+      "required": ["spec_version", "nodes", "chains"],
+      "properties": {
+        "spec_version": { "type": "string", "pattern": "^0\\.[45678]\\.[0-9]+$" },
+        "version": { "type": "string" },
+        "nodes": { "type": "array", "items": { "$ref": "#/$defs/node" } },
+        "chains": { "type": "array", "items": { "$ref": "#/$defs/chain" } }
+      }
+    }
+  ]
+}

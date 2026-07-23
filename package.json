@@ -1,0 +1,19 @@
+{
+  "name": "ainumbers-helm",
+  "version": "0.0.1",
+  "private": true,
+  "description": "Local-first control plane: helmd hub daemon + helm.html UI",
+  "type": "module",
+  "engines": {
+    "node": ">=22"
+  },
+  "scripts": {
+    "lint": "node scripts/lint.mjs",
+    "test": "node scripts/test.mjs",
+    "vendor": "node scripts/vendor.mjs",
+    "sea:dry-run": "node scripts/sea-dry-run.mjs"
+  },
+  "dependencies": {
+    "better-sqlite3": "^11.0.0"
+  }
+}

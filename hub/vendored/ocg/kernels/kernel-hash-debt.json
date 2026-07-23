@@ -1,0 +1,7 @@
+{
+  "_comment": "KNOWN-BROKEN backlog: live gpu:false kernels that do NOT emit a self-consistent canonical execution_hash (return hash_valid:false on the Worker). All 45 kernels were remediated to the art-12 contract on 2026-06-19. Debt list is now empty — kernel-hash-integrity.mjs and kernel-coverage.mjs both run in --strict mode permanently.",
+  "baseline_date": "2026-06-19",
+  "remediated_date": "2026-06-19",
+  "count": 0,
+  "debt": []
+}
