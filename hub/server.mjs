@@ -4,10 +4,15 @@
 //   3. Authorization: Bearer <token> must match                (pairing token)
 // GET handlers are read-only by construction — no side effects on GET.
 import { createServer } from "node:http";
+import { randomUUID } from "node:crypto";
 import { tokenMatches } from "./token.mjs";
 import { log } from "./log.mjs";
 import { startFlow, getFlowStatus, listConnections, revokeConnection, isSecureEndpoint } from "./oauth-pkce.mjs";
 import { serveStatic } from "./static.mjs";
+import { listPacks, getPack } from "./packs.mjs";
+import { executeRun } from "./run.mjs";
+import { createKernelStepRunner } from "./kernel-runner.mjs";
+import { publishRunEvent, subscribeRunEvents } from "./event-bus.mjs";
 
 const START = Date.now();
 
@@ -106,6 +111,8 @@ async function handleRevoke(req, res, params) {
 export const MAX_SSE_CONNECTIONS = 20; // HELM-SEC-5 hardening: unbounded /events connections could exhaust local handles
 let sseConnections = 0;
 
+// run_id-scoped progress: an EventSource with no ?run_id just gets ready +
+// heartbeats, same as before this WU (used by Connect/Operate today).
 function handleEvents(req, res) {
   if (sseConnections >= MAX_SSE_CONNECTIONS) {
     res.writeHead(503, { "Content-Type": "application/json" });
@@ -119,10 +126,83 @@ function handleEvents(req, res) {
   });
   res.write(`event: ready\ndata: {}\n\n`);
   const heartbeat = setInterval(() => res.write(`event: heartbeat\ndata: {}\n\n`), 15000);
+  const runId = new URL(req.url, "http://x").searchParams.get("run_id");
+  const unsubscribe = runId
+    ? subscribeRunEvents(runId, (data) => res.write(`event: progress\ndata: ${JSON.stringify(data)}\n\n`))
+    : () => {};
   req.on("close", () => {
     clearInterval(heartbeat);
+    unsubscribe();
     sseConnections--;
   });
+}
+
+// GET /workflows — Choose's catalog (P2-C1's compiled packs, listPacks()).
+function handleWorkflows(req, res) {
+  sendJson(res, 200, { workflows: listPacks() });
+}
+
+// GET /workflow-manifest?workflow_id=... — Canvas's DAG source. Returns the
+// pack's manifest field, not the pack wrapper — matches the shape
+// buildDag()/manifestDigest() and the run engine's executeRun() all expect.
+function handleWorkflowManifest(req, res) {
+  const workflowId = new URL(req.url, "http://x").searchParams.get("workflow_id");
+  if (!workflowId) return deny(res, 400, "missing_workflow_id");
+  const pack = getPack(workflowId);
+  if (!pack) return deny(res, 404, "workflow_not_found");
+  sendJson(res, 200, pack.manifest);
+}
+
+// POST /run/start {workflow_id, dry_run} — kicks off the H4 run engine
+// (run.mjs executeRun) against a compiled pack. Responds with the run_id
+// immediately (fire-and-forget) so the caller can open the /events?run_id=
+// SSE stream before the run finishes — that's what makes progress "live"
+// rather than a summary the client requests after the fact.
+async function handleRunStart(req, res, params, db) {
+  if (!db) return deny(res, 503, "engine_unavailable");
+  let body;
+  try {
+    body = await readJsonBody(req);
+  } catch {
+    return deny(res, 400, "invalid_json");
+  }
+  const workflowId = body.workflow_id;
+  if (!workflowId) return deny(res, 400, "missing_workflow_id");
+  const pack = getPack(workflowId);
+  if (!pack) return deny(res, 404, "workflow_not_found");
+
+  const runId = randomUUID();
+  const dryRun = !!body.dry_run;
+  const kernelStepRunner = createKernelStepRunner();
+  const stepRunner = async (step, ctx) => {
+    const output = await kernelStepRunner(step, ctx);
+    publishRunEvent(runId, { run_id: runId, state: "running", step_id: step.step_id });
+    return output;
+  };
+
+  executeRun(db, { runId, manifest: pack.manifest, dryRun, stepRunner })
+    .then((result) => publishRunEvent(runId, { run_id: runId, state: result.state, execution_hash: result.executionHash }))
+    .catch((err) => {
+      log.error("run engine: run failed", { runId, workflowId, error: String(err?.message || err) });
+      publishRunEvent(runId, { run_id: runId, state: "failed", error: String(err?.message || err) });
+    });
+
+  sendJson(res, 200, { run_id: runId, state: "queued" });
+}
+
+// GET /run/timeline?run_id=... — execution_state transitions straight off
+// the journal's run:<id> stream (already the durable, replay-verified
+// record — no separate projection table to keep in sync).
+function handleRunTimeline(req, res, params, db) {
+  if (!db) return deny(res, 503, "engine_unavailable");
+  const runId = new URL(req.url, "http://x").searchParams.get("run_id");
+  if (!runId) return sendJson(res, 200, { steps: [] });
+  const rows = db.prepare("SELECT entry_json FROM journal WHERE stream_id = ? ORDER BY seq ASC").all(`run:${runId}`);
+  const steps = rows.map((row) => {
+    const entry = JSON.parse(row.entry_json);
+    return { state: entry.state, recorded_at: entry.period_end };
+  });
+  sendJson(res, 200, { steps });
 }
 
 const ROUTES = {
@@ -130,6 +210,10 @@ const ROUTES = {
   "GET /events": handleEvents,
   "POST /vault/connections/begin": handleBeginConnection,
   "GET /vault/connections": handleListConnections,
+  "GET /workflows": handleWorkflows,
+  "GET /workflow-manifest": handleWorkflowManifest,
+  "POST /run/start": handleRunStart,
+  "GET /run/timeline": handleRunTimeline,
 };
 
 const DYNAMIC_ROUTES = [
@@ -137,7 +221,7 @@ const DYNAMIC_ROUTES = [
   { method: "POST", pattern: /^\/vault\/connections\/(?<id>[^/]+)\/revoke$/, handler: handleRevoke },
 ];
 
-export function createHelmServer({ port, allowedOrigin, token }) {
+export function createHelmServer({ port, allowedOrigin, token, db = null }) {
   const server = createServer((req, res) => {
     if (!checkHost(req, port)) {
       log.warn("rejected: host mismatch", { host: req.headers.host, path: req.url });
@@ -164,19 +248,26 @@ export function createHelmServer({ port, allowedOrigin, token }) {
     }
 
     const auth = req.headers.authorization || "";
-    const presented = auth.startsWith("Bearer ") ? auth.slice(7) : "";
+    let presented = auth.startsWith("Bearer ") ? auth.slice(7) : "";
+    // EventSource can't set an Authorization header. D8 loopback bind means
+    // this token only ever reaches 127.0.0.1 — carrying it in the query
+    // string is a deliberate, narrow exception scoped to this one GET route
+    // (matches ui/views/run.mjs's openProgressStream; flagged for HELM-R1).
+    if (!presented && req.method === "GET" && pathname === "/events") {
+      presented = new URL(req.url, "http://x").searchParams.get("token") || "";
+    }
     if (!tokenMatches(token, presented)) {
       log.warn("rejected: bad or missing token", { path: req.url });
       return deny(res, 401, "unauthorized");
     }
 
     const handler = ROUTES[`${req.method} ${pathname}`];
-    if (handler) return handler(req, res);
+    if (handler) return handler(req, res, {}, db);
 
     for (const route of DYNAMIC_ROUTES) {
       if (route.method !== req.method) continue;
       const match = pathname.match(route.pattern);
-      if (match) return route.handler(req, res, match.groups || {});
+      if (match) return route.handler(req, res, match.groups || {}, db);
     }
     return deny(res, 404, "not_found");
   });

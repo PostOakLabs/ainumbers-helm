@@ -48,7 +48,12 @@ async function triggerRun(port, token, workflowId, dryRun, resultEl) {
   resultEl.textContent = dryRun ? "Starting dry-run…" : "Starting run…";
   const res = await call("/run/start", { port, token, method: "POST", body: { workflow_id: workflowId, dry_run: dryRun } });
   if (res.ok) {
-    resultEl.textContent = `${dryRun ? "Dry-run" : "Run"} started: ${res.data?.run_id ?? "pending"}.`;
+    const runId = res.data?.run_id;
+    resultEl.textContent = `${dryRun ? "Dry-run" : "Run"} started: ${runId ?? "pending"}.`;
+    // Re-render this view with ?run=<id> so the timeline + SSE stream below
+    // pick it up — a hashchange, not a fresh navigation, so it lands on the
+    // same view with the run now attached.
+    if (runId) location.hash = `#/run?wf=${encodeURIComponent(workflowId)}&run=${encodeURIComponent(runId)}`;
   } else if (res.status === 404) {
     resultEl.textContent = "The run engine isn't available in this daemon version yet.";
   } else {

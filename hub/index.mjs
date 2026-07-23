@@ -42,20 +42,19 @@ function cmdStart({ open = false } = {}) {
   const token = loadOrCreateToken();
 
   // D6: replay-journal-on-restart integrity check. A daemon must never come
-  // up serving a journal it can't prove is unbroken.
+  // up serving a journal it can't prove is unbroken. Stays open for the
+  // process lifetime — the H4 run engine (HELM-P2-U4) needs the same handle.
   const journalPath = statePath("journal.db");
-  if (existsSync(journalPath)) {
-    const db = openJournal(journalPath);
-    const replay = replayVerify(db);
+  const db = openJournal(journalPath);
+  const replay = replayVerify(db);
+  if (!replay.ok) {
     db.close();
-    if (!replay.ok) {
-      log.error("journal replay integrity check FAILED — refusing to start", { brokenAt: replay.brokenAt });
-      process.exit(1);
-    }
-    log.info("journal replay integrity check passed");
+    log.error("journal replay integrity check FAILED — refusing to start", { brokenAt: replay.brokenAt });
+    process.exit(1);
   }
+  log.info("journal replay integrity check passed");
 
-  createHelmServer({ port: config.port, allowedOrigin: config.allowedOrigin, token });
+  createHelmServer({ port: config.port, allowedOrigin: config.allowedOrigin, token, db });
   createCliChannel({
     health: () => ({ status: "ok" }),
     // HELM-P2-B8 / DEC-3: the ONLY re-pair path. Gated by the pipe's OS ACL
