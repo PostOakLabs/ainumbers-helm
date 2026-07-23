@@ -211,6 +211,17 @@ details.disclosure summary {
   padding: var(--space-4) 0;
 }
 
+.steps {
+  margin: var(--space-2) 0 var(--space-3);
+  padding-left: var(--space-4);
+  color: var(--text);
+  max-width: 44rem;
+}
+.steps li {
+  margin-bottom: var(--space-2);
+  line-height: 1.55;
+}
+
 .welcome-title {
   font-size: 1.1rem;
   font-weight: 600;
