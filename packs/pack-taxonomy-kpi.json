@@ -1,0 +1,54 @@
+{
+  "workflow_id": "pack-taxonomy-kpi",
+  "name": "Taxonomy KPI & Green Asset Ratio",
+  "outcome": "Activity alignment (ART-73) -> entity revenue/CapEx/OpEx KPIs + Green Asset Ratio for financials (ART-74) -> audit receipt (cry-05). Rolls activity-level alignment into the entity disclosure KPIs an issuer/bank reports to investors and supervisors.",
+  "spec_version": "ocg-control-plane@1",
+  "manifest": {
+    "manifest_version": "1",
+    "workflow_id": "pack-taxonomy-kpi",
+    "trigger": {
+      "type": "manual"
+    },
+    "nodes": [
+      {
+        "node_id": "n1",
+        "kernel_id": "art-73-taxonomy-alignment-scorer",
+        "kernel_digest": "sha256:9b92c3c4c8082ee5def48e00030b928ad66b653ffea5f5dfb69b3356b9323ffa"
+      },
+      {
+        "node_id": "n2",
+        "kernel_id": "art-74-taxonomy-kpi-gar-aggregator",
+        "kernel_digest": "sha256:5810a300b83afde6fbf0bba7ce4da33b6fce0152cfdd4ccf02eb94258ea957d3"
+      },
+      {
+        "node_id": "n3",
+        "kernel_id": "cry-05-agent-action-audit-trail-aggregator",
+        "kernel_digest": "sha256:5f7f6ab0bb2e2b736805ecde518ca59ba9a83ad38b17545a8c7c133cffa1481f"
+      }
+    ],
+    "connectors": [],
+    "gates": [],
+    "actions": []
+  },
+  "workflow_manifest_digest": "sha256:eb7e07257d121682ce2b3b5d8ae238d2fd6187585fd4fa0624c2fdc7e2492819",
+  "declared_inputs": [
+    {
+      "from": "art-68-carbon-compliance-fit-diagnostic",
+      "kind": "external"
+    }
+  ],
+  "steps_meta": [
+    {
+      "node_id": "n1",
+      "data_classification": "compute"
+    },
+    {
+      "node_id": "n2",
+      "data_classification": "compute"
+    },
+    {
+      "node_id": "n3",
+      "data_classification": "compute"
+    }
+  ]
+}

@@ -1,0 +1,40 @@
+{
+  "workflow_id": "pack-cross-border-payment-prevalidation",
+  "name": "Cross-Border Payment Pre-Validation",
+  "outcome": "Gated two-step chain for CBPR+ payment pre-validation. Step 1 checks whether a purpose code is mandatory for the beneficiary jurisdiction (UAE, India, Bahrain, Jordan, China, Malaysia per BIS CPMI d218) and whether SwiftGo eligibility conditions are met. Step 2 runs aggregate pre-validation (IBAN mod-97, BIC format, LEI format, UETR UUIDv4, PostalAddress24 structure) and emits a /ready boolean. Gate on /ready: both branches terminate, recording in decisions[] which path was taken. ready=true = STP-eligible; ready=false = remediation required. ZERO PII BY CONSTRUCTION.",
+  "spec_version": "ocg-control-plane@1",
+  "manifest": {
+    "manifest_version": "1",
+    "workflow_id": "pack-cross-border-payment-prevalidation",
+    "trigger": {
+      "type": "manual"
+    },
+    "nodes": [
+      {
+        "node_id": "n1",
+        "kernel_id": "art-243-purpose-code-requirement-checker",
+        "kernel_digest": "sha256:2ff736927d33cc21662cf8751c9182933760e8d7bf20ec50e5dcbd5b93e48615"
+      },
+      {
+        "node_id": "n2",
+        "kernel_id": "art-247-prevalidation-readiness-scorer",
+        "kernel_digest": "sha256:5474f7090f70ee2ec83b77349b3e6a1aa511bfb76c6e43c9b8972f5556b752c7"
+      }
+    ],
+    "connectors": [],
+    "gates": [],
+    "actions": []
+  },
+  "workflow_manifest_digest": "sha256:0906a199cd87f2961a17ffff4ca05712c2acd73c83fb7081925ce70e289f8e50",
+  "declared_inputs": [],
+  "steps_meta": [
+    {
+      "node_id": "n1",
+      "data_classification": "compute"
+    },
+    {
+      "node_id": "n2",
+      "data_classification": "compute"
+    }
+  ]
+}

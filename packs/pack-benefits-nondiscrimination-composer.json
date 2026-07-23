@@ -1,0 +1,40 @@
+{
+  "workflow_id": "pack-benefits-nondiscrimination-composer",
+  "name": "Benefits Nondiscrimination Composer",
+  "outcome": "Bundled two-test evidence package: §125 cafeteria-plan nondiscrimination tests and 401(k) ADP/ACP nondiscrimination tests. Each test is independent (no data dependency); bundled here into one plan-year benefits-compliance evidence view.",
+  "spec_version": "ocg-control-plane@1",
+  "manifest": {
+    "manifest_version": "1",
+    "workflow_id": "pack-benefits-nondiscrimination-composer",
+    "trigger": {
+      "type": "manual"
+    },
+    "nodes": [
+      {
+        "node_id": "n1",
+        "kernel_id": "art-301-section125-ndt",
+        "kernel_digest": "sha256:88e54dc6a5136721213a32c5acbcb0563bf120ad2af4e3f8e9f58caadc9665da"
+      },
+      {
+        "node_id": "n2",
+        "kernel_id": "art-302-401k-adp-acp-test",
+        "kernel_digest": "sha256:b5846a6b36327671eca8553c1a075d732ce6a236e0cf86fbd688c4ee4e52a6ad"
+      }
+    ],
+    "connectors": [],
+    "gates": [],
+    "actions": []
+  },
+  "workflow_manifest_digest": "sha256:f9c9b30145e53581c59fcb5c9253d93f9b7a05f3a31abafdbaa4fecc25aeefad",
+  "declared_inputs": [],
+  "steps_meta": [
+    {
+      "node_id": "n1",
+      "data_classification": "compute"
+    },
+    {
+      "node_id": "n2",
+      "data_classification": "compute"
+    }
+  ]
+}

@@ -1,0 +1,58 @@
+{
+  "workflow_id": "pack-eugb-conformance",
+  "name": "EU Green Bond Factsheet & Allocation Conformance",
+  "outcome": "EuGB factsheet (Annex I) + allocation report (Annex II) completeness + proceeds-alignment validation (ART-75) -> use-of-proceeds Taxonomy alignment cross-check (ART-73) -> Merkle integrity over the bond evidence set (cry-04). The issuer-to-external-reviewer green-bond conformance pack. Decision-support draft, not a reviewer attestation.",
+  "spec_version": "ocg-control-plane@1",
+  "manifest": {
+    "manifest_version": "1",
+    "workflow_id": "pack-eugb-conformance",
+    "trigger": {
+      "type": "manual"
+    },
+    "nodes": [
+      {
+        "node_id": "n1",
+        "kernel_id": "art-75-eugb-factsheet-validator",
+        "kernel_digest": "sha256:6764ffb26c2786330c5c9ec5912f6c5c37ae6e0e6b3c69efa0576e0cdb1a269f"
+      },
+      {
+        "node_id": "n2",
+        "kernel_id": "art-73-taxonomy-alignment-scorer",
+        "kernel_digest": "sha256:9b92c3c4c8082ee5def48e00030b928ad66b653ffea5f5dfb69b3356b9323ffa"
+      },
+      {
+        "node_id": "n3",
+        "kernel_id": "cry-04-merkle-batch-verifier",
+        "kernel_digest": "sha256:7c89b9651f986ed6652903c6d41e9fbda29d12db9fbc0a6acd4f7270160b7ccb"
+      }
+    ],
+    "connectors": [],
+    "gates": [],
+    "actions": []
+  },
+  "workflow_manifest_digest": "sha256:2fd6881258d1c3af0744e8ac2b40e6a0c12d5c0b21c4ab912b8637dbc1a0ddf8",
+  "declared_inputs": [
+    {
+      "from": "art-68-carbon-compliance-fit-diagnostic",
+      "kind": "external"
+    },
+    {
+      "from": "art-73-taxonomy-alignment-scorer",
+      "kind": "external"
+    }
+  ],
+  "steps_meta": [
+    {
+      "node_id": "n1",
+      "data_classification": "compute"
+    },
+    {
+      "node_id": "n2",
+      "data_classification": "compute"
+    },
+    {
+      "node_id": "n3",
+      "data_classification": "compute"
+    }
+  ]
+}

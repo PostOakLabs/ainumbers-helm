@@ -1,0 +1,40 @@
+{
+  "workflow_id": "pack-retirement-decumulation-decisions",
+  "name": "Retirement Decumulation Decisions",
+  "outcome": "Social Security claiming-age optimization paired with the pension lump-sum-vs-annuity decision engine.",
+  "spec_version": "ocg-control-plane@1",
+  "manifest": {
+    "manifest_version": "1",
+    "workflow_id": "pack-retirement-decumulation-decisions",
+    "trigger": {
+      "type": "manual"
+    },
+    "nodes": [
+      {
+        "node_id": "n1",
+        "kernel_id": "art-282-social-security-claiming-optimizer",
+        "kernel_digest": "sha256:83b81f55de1dfe9bda0dc897482ce07935b420bc7f4b93f30ffd3e01d7ae7a35"
+      },
+      {
+        "node_id": "n2",
+        "kernel_id": "art-283-pension-lump-sum-vs-annuity-decision-engine",
+        "kernel_digest": "sha256:f6d1afb8e2ecf41c2176368c4f1383cba8b5ffe9cbfed4ac2b8f12760984e828"
+      }
+    ],
+    "connectors": [],
+    "gates": [],
+    "actions": []
+  },
+  "workflow_manifest_digest": "sha256:3877c26422e58a0254ec69e8cc0014ac35b7036def72ffefbc0279d29c274a2d",
+  "declared_inputs": [],
+  "steps_meta": [
+    {
+      "node_id": "n1",
+      "data_classification": "compute"
+    },
+    {
+      "node_id": "n2",
+      "data_classification": "compute"
+    }
+  ]
+}

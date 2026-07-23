@@ -1,0 +1,54 @@
+{
+  "workflow_id": "pack-cbam-precursor",
+  "name": "CBAM Precursor Emissions Roll-Up",
+  "outcome": "Precursor embedded-emissions aggregation incl. the 2028 scrap rule (ART-72) -> consignment embedded-emissions calculation (ART-69) -> Merkle integrity over the supplier data set (cry-04). Lets a complex-goods producer supply verifiable embedded emissions to its importer; pre-positions the downstream-180 scope extension.",
+  "spec_version": "ocg-control-plane@1",
+  "manifest": {
+    "manifest_version": "1",
+    "workflow_id": "pack-cbam-precursor",
+    "trigger": {
+      "type": "manual"
+    },
+    "nodes": [
+      {
+        "node_id": "n1",
+        "kernel_id": "art-72-cbam-precursor-emissions-aggregator",
+        "kernel_digest": "sha256:989771281b7268f99e74d59f151efd4deaf418e9c6e233529b873618190229fd"
+      },
+      {
+        "node_id": "n2",
+        "kernel_id": "art-69-cbam-embedded-emissions-calculator",
+        "kernel_digest": "sha256:41700ba84727c6ac4cb1f9fb130ed565723c48eb48cd03b94b3f3ac31e4d6f00"
+      },
+      {
+        "node_id": "n3",
+        "kernel_id": "cry-04-merkle-batch-verifier",
+        "kernel_digest": "sha256:7c89b9651f986ed6652903c6d41e9fbda29d12db9fbc0a6acd4f7270160b7ccb"
+      }
+    ],
+    "connectors": [],
+    "gates": [],
+    "actions": []
+  },
+  "workflow_manifest_digest": "sha256:26bf6a1cff341910fb6706aa743b6edcf9e9b2c1da6b4883fc4f071afd9907b3",
+  "declared_inputs": [
+    {
+      "from": "art-68-carbon-compliance-fit-diagnostic",
+      "kind": "external"
+    }
+  ],
+  "steps_meta": [
+    {
+      "node_id": "n1",
+      "data_classification": "compute"
+    },
+    {
+      "node_id": "n2",
+      "data_classification": "compute"
+    },
+    {
+      "node_id": "n3",
+      "data_classification": "compute"
+    }
+  ]
+}

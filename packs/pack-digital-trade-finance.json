@@ -1,0 +1,54 @@
+{
+  "workflow_id": "pack-digital-trade-finance",
+  "name": "Digital Trade Finance Credit & Eligibility",
+  "outcome": "W-E. Enforceable-eBL-as-collateral (ART-53) -> SME/obligor credit default risk (ml-02) -> repayment anomaly monitoring (ml-03). Frames the trade-finance-gap wedge: a digitally-verified trade as financeable collateral. Educational credit estimator, not a lending decision.",
+  "spec_version": "ocg-control-plane@1",
+  "manifest": {
+    "manifest_version": "1",
+    "workflow_id": "pack-digital-trade-finance",
+    "trigger": {
+      "type": "manual"
+    },
+    "nodes": [
+      {
+        "node_id": "n1",
+        "kernel_id": "art-53-mletr-ebl-conformance-validator",
+        "kernel_digest": "sha256:0f260f878472634095d299ddde16662204d6432e1b458c6afddc094d2bac7dd8"
+      },
+      {
+        "node_id": "n2",
+        "kernel_id": "ml-02-credit-default-risk-scorer",
+        "kernel_digest": "sha256:a2933b0418c10f52d341cae29d664e594f88937aa4ad42187f95eaf86af9bb2f"
+      },
+      {
+        "node_id": "n3",
+        "kernel_id": "ml-03-timeseries-anomaly-detector",
+        "kernel_digest": "sha256:ae20b291caf5eac025d4e7103782427565fe7cf0c99f4045122257c87db0d9c6"
+      }
+    ],
+    "connectors": [],
+    "gates": [],
+    "actions": []
+  },
+  "workflow_manifest_digest": "sha256:333f10d2c55b4fe6cae83c9a450201787f7c0911387f58e72eff2a582342b3b6",
+  "declared_inputs": [
+    {
+      "from": "art-52-digital-trade-fit-diagnostic",
+      "kind": "external"
+    }
+  ],
+  "steps_meta": [
+    {
+      "node_id": "n1",
+      "data_classification": "compute"
+    },
+    {
+      "node_id": "n2",
+      "data_classification": "compute"
+    },
+    {
+      "node_id": "n3",
+      "data_classification": "compute"
+    }
+  ]
+}

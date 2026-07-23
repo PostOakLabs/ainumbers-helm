@@ -1,0 +1,49 @@
+{
+  "workflow_id": "pack-ai-content-disclosure-conformance",
+  "name": "AI Content Disclosure Conformance (EU AI Act Art. 50)",
+  "outcome": "Check Art. 50(2) IPTC digitalSourceType marking adequacy and deepfake disclosure (art-126) then verify both C2PA metadata and imperceptible watermark dual-layer are present per Code of Practice (art-127) then validate hard-binding vs soft-binding consistency and confirm asset byte-hash matches (art-128). Applies 2 Aug 2026.",
+  "spec_version": "ocg-control-plane@1",
+  "manifest": {
+    "manifest_version": "1",
+    "workflow_id": "pack-ai-content-disclosure-conformance",
+    "trigger": {
+      "type": "manual"
+    },
+    "nodes": [
+      {
+        "node_id": "n1",
+        "kernel_id": "art-126-ai-act-art50-marking-checker",
+        "kernel_digest": "sha256:3baa21f9a81107596607b29ef5a324d8ef993842384da54dac31e65811e55479"
+      },
+      {
+        "node_id": "n2",
+        "kernel_id": "art-127-dual-layer-disclosure-verifier",
+        "kernel_digest": "sha256:5562ad0d21f0602d5f812fea8b7149afe980514fd642b2231bfb9e48713486c2"
+      },
+      {
+        "node_id": "n3",
+        "kernel_id": "art-128-content-binding-assertion-validator",
+        "kernel_digest": "sha256:37bac36fc216d5a8a8c3828b47eaa645982663dd39ebcbd34e14dfd78ddead1f"
+      }
+    ],
+    "connectors": [],
+    "gates": [],
+    "actions": []
+  },
+  "workflow_manifest_digest": "sha256:5285fd88197068a75320056c79ed04615802afbd30685d3007b5101af908f151",
+  "declared_inputs": [],
+  "steps_meta": [
+    {
+      "node_id": "n1",
+      "data_classification": "compute"
+    },
+    {
+      "node_id": "n2",
+      "data_classification": "compute"
+    },
+    {
+      "node_id": "n3",
+      "data_classification": "compute"
+    }
+  ]
+}

@@ -1,0 +1,49 @@
+{
+  "workflow_id": "pack-aca-226j-response-composer",
+  "name": "ACA 226J Response Composer",
+  "outcome": "Linear three-step evidence pipeline for responding to an IRS Letter 226J proposed Employer Shared Responsibility Payment assessment: affordability safe-harbor calculation, ESRP exposure recomputation, and a hash-anchored response evidence pack with a named-HR/benefits-officer attestation closure.",
+  "spec_version": "ocg-control-plane@1",
+  "manifest": {
+    "manifest_version": "1",
+    "workflow_id": "pack-aca-226j-response-composer",
+    "trigger": {
+      "type": "manual"
+    },
+    "nodes": [
+      {
+        "node_id": "n1",
+        "kernel_id": "art-298-aca-affordability-safe-harbor",
+        "kernel_digest": "sha256:517e7ad37c5723b7df461c5830be597d989342422f3c60cad22e15cdcd8d7695"
+      },
+      {
+        "node_id": "n2",
+        "kernel_id": "art-299-aca-esrp-exposure",
+        "kernel_digest": "sha256:d07a15cc7c7b3da43db92b15595249dcb3e8a81ca73d2e0144172de35b6e410e"
+      },
+      {
+        "node_id": "n3",
+        "kernel_id": "art-300-aca-226j-response-evidence-pack",
+        "kernel_digest": "sha256:4d4fb49f4aacbbbdeaa9aa38d119217e3cfd2e5234bb80c9fd6bb055afb5fcc9"
+      }
+    ],
+    "connectors": [],
+    "gates": [],
+    "actions": []
+  },
+  "workflow_manifest_digest": "sha256:7ecf97d6b7701fc81cae879472357e262b5be71a340b2cd0f7dcef8764933f46",
+  "declared_inputs": [],
+  "steps_meta": [
+    {
+      "node_id": "n1",
+      "data_classification": "compute"
+    },
+    {
+      "node_id": "n2",
+      "data_classification": "compute"
+    },
+    {
+      "node_id": "n3",
+      "data_classification": "compute"
+    }
+  ]
+}

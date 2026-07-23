@@ -1,0 +1,58 @@
+{
+  "workflow_id": "pack-basel-take2-impact-assessment",
+  "name": "Basel Endgame 2026 Reproposal Impact Assessment",
+  "outcome": "Run a bank's own exposure book and business-indicator inputs through the 2026 Basel Endgame reproposal (BCBS/US NPR, reproposed 2026-03-19, comments closed 2026-06-18, final expected ~Q4 2026): credit-risk ERBA/standardized RWA (art-355), operational-risk SMA business-indicator and internal-loss-multiplier component (art-356), and the output-floor phase-in path (art-358) run in parallel off the same book, then a 2023-vs-2026 capital-delta comparator (art-357) reproduces the headline relief story on the caller's own numbers. rule_status stays proposed throughout -- every stage carries the reproposal's provisional status and this chain is due for a re-pin WU at finalization (~Q4 2026).",
+  "spec_version": "ocg-control-plane@1",
+  "manifest": {
+    "manifest_version": "1",
+    "workflow_id": "pack-basel-take2-impact-assessment",
+    "trigger": {
+      "type": "manual"
+    },
+    "nodes": [
+      {
+        "node_id": "n1",
+        "kernel_id": "art-355-erba-standardized-rwa-calculator",
+        "kernel_digest": "sha256:99791def46ab9a59fb40a172849acf5aa989fe19c873d272759c2ddf8bcfd80d"
+      },
+      {
+        "node_id": "n2",
+        "kernel_id": "art-356-compute-oprisk-sma-2026",
+        "kernel_digest": "sha256:e67b9da9f48f588611dee11e1da315939919a5a8b20c287a02840be84ccad970"
+      },
+      {
+        "node_id": "n3",
+        "kernel_id": "art-358-simulate-output-floor",
+        "kernel_digest": "sha256:8f781a73d514cd1ee4db0e654c32b3a632a43e3a7fdd02cc1c2f881a6bfbd873"
+      },
+      {
+        "node_id": "n4",
+        "kernel_id": "art-357-basel-2023-vs-2026-capital-delta-comparator",
+        "kernel_digest": "sha256:afd75d6663426db39230590951e6f665c53303dff3f98827c91c30ff6fb6d1b6"
+      }
+    ],
+    "connectors": [],
+    "gates": [],
+    "actions": []
+  },
+  "workflow_manifest_digest": "sha256:34b3e566404dd86c4fe24fd436bd0505e56c4c82c0ae2c59d7f1b53a6e6f2660",
+  "declared_inputs": [],
+  "steps_meta": [
+    {
+      "node_id": "n1",
+      "data_classification": "compute"
+    },
+    {
+      "node_id": "n2",
+      "data_classification": "compute"
+    },
+    {
+      "node_id": "n3",
+      "data_classification": "compute"
+    },
+    {
+      "node_id": "n4",
+      "data_classification": "compute"
+    }
+  ]
+}

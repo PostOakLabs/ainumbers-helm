@@ -1,0 +1,49 @@
+{
+  "workflow_id": "pack-eudr-due-diligence-statement-validation",
+  "name": "EUDR Due Diligence Statement Validation",
+  "outcome": "Validate EUDR DDS required fields and EORI (art-165) -> validate GeoJSON plot geolocation against size rules and coordinate validity (art-166) -> classify HS code to EUDR Annex I commodity scope and determine operator role, deadline, and obligations (art-167). Full DDS pre-submission validation pipeline. Reg. EU 2023/1115, mandatory 2026-12-30 (large/medium) / 2027-06-30 (SME).",
+  "spec_version": "ocg-control-plane@1",
+  "manifest": {
+    "manifest_version": "1",
+    "workflow_id": "pack-eudr-due-diligence-statement-validation",
+    "trigger": {
+      "type": "manual"
+    },
+    "nodes": [
+      {
+        "node_id": "n1",
+        "kernel_id": "art-165-eudr-dds-field-validator",
+        "kernel_digest": "sha256:acd7dd7b0e4b050841535e867851410def190cd19b3c3965fea524418965bb8c"
+      },
+      {
+        "node_id": "n2",
+        "kernel_id": "art-166-eudr-geolocation-plot-validator",
+        "kernel_digest": "sha256:8f52903ef0106be3d988c08666ae2f0f87f7e1b19703d6d8c0a4dcfe6fd3079e"
+      },
+      {
+        "node_id": "n3",
+        "kernel_id": "art-167-eudr-commodity-scope-classifier",
+        "kernel_digest": "sha256:40d480ee243c1129a894f873de670a195ee2a65e7057d3c68c734f66227fb2da"
+      }
+    ],
+    "connectors": [],
+    "gates": [],
+    "actions": []
+  },
+  "workflow_manifest_digest": "sha256:5166339ceb47542d81031c50d97d6f3a847b80ea9e7b0ab467164d3624d04bc3",
+  "declared_inputs": [],
+  "steps_meta": [
+    {
+      "node_id": "n1",
+      "data_classification": "compute"
+    },
+    {
+      "node_id": "n2",
+      "data_classification": "compute"
+    },
+    {
+      "node_id": "n3",
+      "data_classification": "compute"
+    }
+  ]
+}

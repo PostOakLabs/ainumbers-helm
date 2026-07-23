@@ -1,0 +1,45 @@
+{
+  "workflow_id": "pack-mica-whitepaper",
+  "name": "Crypto-Asset Whitepaper Conformance",
+  "outcome": "Art 6/8 whitepaper Annex I completeness + iXBRL / ESMA MiCA taxonomy conformance (ART-102) -> Merkle integrity (cry-04). A hash-anchored conformance target distinct from any shipped tool.",
+  "spec_version": "ocg-control-plane@1",
+  "manifest": {
+    "manifest_version": "1",
+    "workflow_id": "pack-mica-whitepaper",
+    "trigger": {
+      "type": "manual"
+    },
+    "nodes": [
+      {
+        "node_id": "n1",
+        "kernel_id": "art-102-crypto-asset-whitepaper-linter",
+        "kernel_digest": "sha256:0d1c9a8705e0308f72420985fe902d83fa6bf9181650ec1939bfcc4d60dfd150"
+      },
+      {
+        "node_id": "n2",
+        "kernel_id": "cry-04-merkle-batch-verifier",
+        "kernel_digest": "sha256:7c89b9651f986ed6652903c6d41e9fbda29d12db9fbc0a6acd4f7270160b7ccb"
+      }
+    ],
+    "connectors": [],
+    "gates": [],
+    "actions": []
+  },
+  "workflow_manifest_digest": "sha256:f3b97ad4c2ceea37fdcf4ce522ba1966da114e8c02d154707f20155915a5be3d",
+  "declared_inputs": [
+    {
+      "from": "art-98-mica-casp-fit-diagnostic",
+      "kind": "external"
+    }
+  ],
+  "steps_meta": [
+    {
+      "node_id": "n1",
+      "data_classification": "compute"
+    },
+    {
+      "node_id": "n2",
+      "data_classification": "compute"
+    }
+  ]
+}

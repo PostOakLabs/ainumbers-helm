@@ -1,0 +1,31 @@
+{
+  "workflow_id": "pack-settlement-discipline-fit",
+  "name": "T+1 Settlement Readiness Diagnostic",
+  "outcome": "Single-node D0 diagnostic scoring a firm's readiness for the EU/UK/CH T+1 move (11 Oct 2027) and the Dec-2026 allocation/confirmation timing mandate, routing to the right settlement-discipline chain.",
+  "spec_version": "ocg-control-plane@1",
+  "manifest": {
+    "manifest_version": "1",
+    "workflow_id": "pack-settlement-discipline-fit",
+    "trigger": {
+      "type": "manual"
+    },
+    "nodes": [
+      {
+        "node_id": "n1",
+        "kernel_id": "art-77-t1-settlement-readiness-diagnostic",
+        "kernel_digest": "sha256:3152f3bd790393117c348ef2ecfd1f0eab68504808ece058103511bd988c616d"
+      }
+    ],
+    "connectors": [],
+    "gates": [],
+    "actions": []
+  },
+  "workflow_manifest_digest": "sha256:f6439abb071d2eabf38837fa196049515ebacd57b5fa9960a7ae0875642949cf",
+  "declared_inputs": [],
+  "steps_meta": [
+    {
+      "node_id": "n1",
+      "data_classification": "compute"
+    }
+  ]
+}

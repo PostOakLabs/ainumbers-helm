@@ -1,0 +1,40 @@
+{
+  "workflow_id": "pack-broker-dealer-ops-pack",
+  "name": "Broker-Dealer Operations Pack",
+  "outcome": "15c3-3 Exhibit A customer reserve formula > TRACE/CAT reporting lint.",
+  "spec_version": "ocg-control-plane@1",
+  "manifest": {
+    "manifest_version": "1",
+    "workflow_id": "pack-broker-dealer-ops-pack",
+    "trigger": {
+      "type": "manual"
+    },
+    "nodes": [
+      {
+        "node_id": "n1",
+        "kernel_id": "art-396-compute-15c3-3-reserve",
+        "kernel_digest": "sha256:4d4f69e7fa90f1983449c71e85bbf2446e5dae6ee6b77249b04fa5f8f891223a"
+      },
+      {
+        "node_id": "n2",
+        "kernel_id": "art-397-lint-trace-cat-reports",
+        "kernel_digest": "sha256:aa77f951451f7ca0f0491377f11ca36e72a6fbe9856e4575cfe2bba60e060379"
+      }
+    ],
+    "connectors": [],
+    "gates": [],
+    "actions": []
+  },
+  "workflow_manifest_digest": "sha256:fb37c41e0737c0ea4a54238fb0d42a195a0c03a6c39927e07e59ee63c77c9534",
+  "declared_inputs": [],
+  "steps_meta": [
+    {
+      "node_id": "n1",
+      "data_classification": "compute"
+    },
+    {
+      "node_id": "n2",
+      "data_classification": "compute"
+    }
+  ]
+}

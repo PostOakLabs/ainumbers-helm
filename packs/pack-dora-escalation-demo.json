@@ -1,0 +1,40 @@
+{
+  "workflow_id": "pack-dora-escalation-demo",
+  "name": "DORA Escalation Demo",
+  "outcome": "OCG §22.8 escalation-record demo. DORA readiness diagnostic gates on grade: grade F escalates to human review (run HALTs, open escalation record attached). Any passing grade (D or above) continues to DORA incident classification. Demonstrates skipped_by_escalation, deterministic record_hash, and both-branch fixture coverage.",
+  "spec_version": "ocg-control-plane@1",
+  "manifest": {
+    "manifest_version": "1",
+    "workflow_id": "pack-dora-escalation-demo",
+    "trigger": {
+      "type": "manual"
+    },
+    "nodes": [
+      {
+        "node_id": "n1",
+        "kernel_id": "art-29-dora-readiness-diagnostic",
+        "kernel_digest": "sha256:2fc2a970c1e7b9f554cbc414c18f307b5b950e11931a9861c342ced9253b8f71"
+      },
+      {
+        "node_id": "n2",
+        "kernel_id": "art-09-dora-incident-classifier",
+        "kernel_digest": "sha256:4ca4b897808a6d8852181840dd20aa62859b23b1ad3384d78cfcb7d8ddc9e4fa"
+      }
+    ],
+    "connectors": [],
+    "gates": [],
+    "actions": []
+  },
+  "workflow_manifest_digest": "sha256:60813e9dbe3e0d727988dd67d8c52ebcfbc3aeb85a7f88b08b0475a1d8a5f809",
+  "declared_inputs": [],
+  "steps_meta": [
+    {
+      "node_id": "n1",
+      "data_classification": "compute"
+    },
+    {
+      "node_id": "n2",
+      "data_classification": "compute"
+    }
+  ]
+}

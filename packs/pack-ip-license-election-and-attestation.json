@@ -1,0 +1,76 @@
+{
+  "workflow_id": "pack-ip-license-election-and-attestation",
+  "name": "IP License Election and Attestation",
+  "outcome": "License selection (CC / CBE / PIL / embedded) > rights matrix comparison > compatibility check > terms assembly > rights record > certified license VC with execution hash binding. The election step is interchangeable across license families; the compatibility check applies when a parent asset constrains the child license.",
+  "spec_version": "ocg-control-plane@1",
+  "manifest": {
+    "manifest_version": "1",
+    "workflow_id": "pack-ip-license-election-and-attestation",
+    "trigger": {
+      "type": "manual"
+    },
+    "nodes": [
+      {
+        "node_id": "n1",
+        "kernel_id": "art-195-creative-commons-license-chooser",
+        "kernel_digest": "sha256:e774c0903bee2e48da8fbe099e50e3004183c9ddd51777c75ccaedfa7011f32e"
+      },
+      {
+        "node_id": "n2",
+        "kernel_id": "art-198-cross-license-rights-comparator",
+        "kernel_digest": "sha256:24102c5196e98e7832f199ffd32f1801cda6dcf14ae89fb8e8d89fdfcd8963f2"
+      },
+      {
+        "node_id": "n3",
+        "kernel_id": "art-204-license-compatibility-checker",
+        "kernel_digest": "sha256:bfd5a5f39b32798e40fc9cc82a2029d902936a511baf42cbd99668b985cf56ae"
+      },
+      {
+        "node_id": "n4",
+        "kernel_id": "art-205-license-terms-assembler",
+        "kernel_digest": "sha256:bebb5b6028df2c00c50d629078971ca09785b5ca51b473d2515c05becc4ca1aa"
+      },
+      {
+        "node_id": "n5",
+        "kernel_id": "art-206-rights-record-builder",
+        "kernel_digest": "sha256:8f35e055dceefb5e3f15d1f661ea140e9414f44f8804e17f8a67f35739d0bfc2"
+      },
+      {
+        "node_id": "n6",
+        "kernel_id": "art-199-license-election-certifier",
+        "kernel_digest": "sha256:72d98f80efe5fb34421fb246ca4e8071db4f48d55a8e4abb445b06414241b441"
+      }
+    ],
+    "connectors": [],
+    "gates": [],
+    "actions": []
+  },
+  "workflow_manifest_digest": "sha256:69d4216808730e5ca4c6f38de996009bc9fd9b0af23f8a23cb0f0826220991ac",
+  "declared_inputs": [],
+  "steps_meta": [
+    {
+      "node_id": "n1",
+      "data_classification": "compute"
+    },
+    {
+      "node_id": "n2",
+      "data_classification": "compute"
+    },
+    {
+      "node_id": "n3",
+      "data_classification": "compute"
+    },
+    {
+      "node_id": "n4",
+      "data_classification": "compute"
+    },
+    {
+      "node_id": "n5",
+      "data_classification": "compute"
+    },
+    {
+      "node_id": "n6",
+      "data_classification": "compute"
+    }
+  ]
+}

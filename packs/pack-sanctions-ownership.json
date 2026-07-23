@@ -1,0 +1,54 @@
+{
+  "workflow_id": "pack-sanctions-ownership",
+  "name": "50%-Rule Ownership Screening",
+  "outcome": "W-A flagship. OFAC/EU/BIS 50%-rule aggregate-ownership traversal over a synthetic ownership graph (ART-91) -> sanctions list-coverage conformance (ART-92) -> audit receipt (cry-05). Determines constructively-blocked entities per BIS Affiliates Rule (29 Sep 2025) and OFAC 50% rule. Synthetic entities only.",
+  "spec_version": "ocg-control-plane@1",
+  "manifest": {
+    "manifest_version": "1",
+    "workflow_id": "pack-sanctions-ownership",
+    "trigger": {
+      "type": "manual"
+    },
+    "nodes": [
+      {
+        "node_id": "n1",
+        "kernel_id": "art-91-ownership-50pct-aggregator",
+        "kernel_digest": "sha256:f1505eeba83572c78e56a22d102dca7aae6db7cbefab4c87b98653969f191037"
+      },
+      {
+        "node_id": "n2",
+        "kernel_id": "art-92-screening-list-coverage-checker",
+        "kernel_digest": "sha256:d06a7bacc78c3440e850fc8bccdfc7b270f66c39e0a30d4696c558cf6e24e169"
+      },
+      {
+        "node_id": "n3",
+        "kernel_id": "cry-05-agent-action-audit-trail-aggregator",
+        "kernel_digest": "sha256:5f7f6ab0bb2e2b736805ecde518ca59ba9a83ad38b17545a8c7c133cffa1481f"
+      }
+    ],
+    "connectors": [],
+    "gates": [],
+    "actions": []
+  },
+  "workflow_manifest_digest": "sha256:da206c64eb3adb9189877136d669c936639fd20869729f4c97ee6e1ae1cf24d5",
+  "declared_inputs": [
+    {
+      "from": "art-90-sanctions-screening-fit-diagnostic",
+      "kind": "external"
+    }
+  ],
+  "steps_meta": [
+    {
+      "node_id": "n1",
+      "data_classification": "compute"
+    },
+    {
+      "node_id": "n2",
+      "data_classification": "compute"
+    },
+    {
+      "node_id": "n3",
+      "data_classification": "compute"
+    }
+  ]
+}

@@ -1,0 +1,54 @@
+{
+  "workflow_id": "pack-tempo-zone-disclosure",
+  "name": "Tempo Zone Disclosure",
+  "outcome": "W-F chain. Operator AML screen on full Zone tx set → selective-disclosure attestation → ZK compliance proof.",
+  "spec_version": "ocg-control-plane@1",
+  "manifest": {
+    "manifest_version": "1",
+    "workflow_id": "pack-tempo-zone-disclosure",
+    "trigger": {
+      "type": "manual"
+    },
+    "nodes": [
+      {
+        "node_id": "n1",
+        "kernel_id": "art-38-tempo-onchain-aml",
+        "kernel_digest": "sha256:9e0872728a1ce51e8fe58bb13bec82cc382a97584cd3fb9517db6f621072bbc7"
+      },
+      {
+        "node_id": "n2",
+        "kernel_id": "art-39-tempo-zone-disclosure",
+        "kernel_digest": "sha256:05bec4999682594eba3e6bccae123325059131b7d46c30a259ce4f0037610adf"
+      },
+      {
+        "node_id": "n3",
+        "kernel_id": "cry-01-zk-compliance-proof-generator",
+        "kernel_digest": "sha256:c5d758f79de7b13d3b76a0c77f4a5922703386c1dc80db64fb81a1829465a800"
+      }
+    ],
+    "connectors": [],
+    "gates": [],
+    "actions": []
+  },
+  "workflow_manifest_digest": "sha256:73993eaba1490bc0d130c39cbfb158d1d4eaa1477e94ffcf600831bb1e116b2a",
+  "declared_inputs": [
+    {
+      "from": "art-37-tempo-stablecoin-issuance",
+      "kind": "external"
+    }
+  ],
+  "steps_meta": [
+    {
+      "node_id": "n1",
+      "data_classification": "compute"
+    },
+    {
+      "node_id": "n2",
+      "data_classification": "compute"
+    },
+    {
+      "node_id": "n3",
+      "data_classification": "compute"
+    }
+  ]
+}

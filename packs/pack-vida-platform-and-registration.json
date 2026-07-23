@@ -1,0 +1,49 @@
+{
+  "workflow_id": "pack-vida-platform-and-registration",
+  "name": "ViDA Platform and Registration",
+  "outcome": "Classify a digital platform as a ViDA deemed supplier under Art. 46a: short-term accommodation (≤30 nights) or intra-EU road transport where underlying supplier has no valid VAT ID (art-162) -> route to correct ViDA Single VAT Registration scheme: Union OSS, Non-Union OSS, IOSS, or Domestic VAT (art-163) -> scored ViDA readiness diagnostic with 2028/2030/2035 phased obligation timeline (art-164). EU 2025/516, platform rule mandatory 2028-07-01.",
+  "spec_version": "ocg-control-plane@1",
+  "manifest": {
+    "manifest_version": "1",
+    "workflow_id": "pack-vida-platform-and-registration",
+    "trigger": {
+      "type": "manual"
+    },
+    "nodes": [
+      {
+        "node_id": "n1",
+        "kernel_id": "art-162-vida-platform-deemed-supplier-classifier",
+        "kernel_digest": "sha256:523805e9550b3f35628e46722c867689df3e80d5777a5961f2d8139922715403"
+      },
+      {
+        "node_id": "n2",
+        "kernel_id": "art-163-vida-oss-registration-router",
+        "kernel_digest": "sha256:e9b1818d3a4a679dc9585a58e6326dbccbfd2d60ea6a738cf3cd6b51adfb12ef"
+      },
+      {
+        "node_id": "n3",
+        "kernel_id": "art-164-vida-compliance-readiness-diagnostic",
+        "kernel_digest": "sha256:574ee6c374f1501a9f75ec34933461c9ed1a9829b3d0882eba36dd0d3c1e93c4"
+      }
+    ],
+    "connectors": [],
+    "gates": [],
+    "actions": []
+  },
+  "workflow_manifest_digest": "sha256:9b4ef8a9ee03f1775c30ea7cc9c158524be4829b8713312b9a12d73891558229",
+  "declared_inputs": [],
+  "steps_meta": [
+    {
+      "node_id": "n1",
+      "data_classification": "compute"
+    },
+    {
+      "node_id": "n2",
+      "data_classification": "compute"
+    },
+    {
+      "node_id": "n3",
+      "data_classification": "compute"
+    }
+  ]
+}

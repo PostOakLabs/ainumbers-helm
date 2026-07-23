@@ -1,0 +1,40 @@
+{
+  "workflow_id": "pack-stablecoin-remittance-corridor-economics",
+  "name": "Stablecoin Remittance Corridor Economics",
+  "outcome": "Linear two-step chain for stablecoin remittance corridor economics analysis. Step 1 models the all-in cost of a USDC-based corridor (on-ramp fee, chain gas fee, off-ramp/local-rail fee, FX spread, and pre-funding float savings vs correspondent banking). Step 2 benchmarks total cost against the World Bank RPW Q1 2026 snapshot for the same origin-destination pair and the SDG 10.c 3% target. Together they surface whether a stablecoin corridor meets the SDG 3% goal and how it compares to the World Bank corridor average. Both steps always run.",
+  "spec_version": "ocg-control-plane@1",
+  "manifest": {
+    "manifest_version": "1",
+    "workflow_id": "pack-stablecoin-remittance-corridor-economics",
+    "trigger": {
+      "type": "manual"
+    },
+    "nodes": [
+      {
+        "node_id": "n1",
+        "kernel_id": "art-250-model-stablecoin-corridor-economics",
+        "kernel_digest": "sha256:65998d555685be3e102ff17ae1fd898ca63aa688a69873358fa6d7a520660f2b"
+      },
+      {
+        "node_id": "n2",
+        "kernel_id": "art-249-compare-corridor-cost",
+        "kernel_digest": "sha256:5b97702d4128add63e1efcd5e53b18eb0f0c6775b5e0a7192e52492070064bec"
+      }
+    ],
+    "connectors": [],
+    "gates": [],
+    "actions": []
+  },
+  "workflow_manifest_digest": "sha256:d8121bb7793535bd4c0d16aeae92e5c9a075e0fb840f02202ad1e8e27b4e527b",
+  "declared_inputs": [],
+  "steps_meta": [
+    {
+      "node_id": "n1",
+      "data_classification": "compute"
+    },
+    {
+      "node_id": "n2",
+      "data_classification": "compute"
+    }
+  ]
+}

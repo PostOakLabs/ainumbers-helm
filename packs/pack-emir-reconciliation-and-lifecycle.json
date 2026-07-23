@@ -1,0 +1,49 @@
+{
+  "workflow_id": "pack-emir-reconciliation-and-lifecycle",
+  "name": "EMIR Reconciliation & Lifecycle",
+  "outcome": "Pair two counterparties EMIR Refit reports by UTI and reconcile up to 148 matching fields within configurable numeric tolerance, flagging reconciliation breaks (art-156) -> validate the action type against the prior reported state of the UTI (art-157) -> grade the firm overall EMIR Refit reporting readiness across five dimensions: ISO 20022 cutover, UPI sourcing, UTI sharing SLA, reconciliation tolerance, and lifecycle controls; returns A-F grade and gap list (art-158). Exports readiness attestation with execution_hash.",
+  "spec_version": "ocg-control-plane@1",
+  "manifest": {
+    "manifest_version": "1",
+    "workflow_id": "pack-emir-reconciliation-and-lifecycle",
+    "trigger": {
+      "type": "manual"
+    },
+    "nodes": [
+      {
+        "node_id": "n1",
+        "kernel_id": "art-156-emir-counterparty-pairing-reconciler",
+        "kernel_digest": "sha256:6fcd67412ed75171ed02a708b27a3f74129a434cdb9c66be88c7442e28c03910"
+      },
+      {
+        "node_id": "n2",
+        "kernel_id": "art-157-emir-lifecycle-event-validator",
+        "kernel_digest": "sha256:9d3b6b68b0c7bf0cd0b08b8e320a2f27a849be1e49c1044ee5a8fd4c432c9191"
+      },
+      {
+        "node_id": "n3",
+        "kernel_id": "art-158-emir-reporting-readiness-diagnostic",
+        "kernel_digest": "sha256:ba0317cc05e0610e68e6437fcb9a46d69ab6269f880d37d61987314c1142faed"
+      }
+    ],
+    "connectors": [],
+    "gates": [],
+    "actions": []
+  },
+  "workflow_manifest_digest": "sha256:a4c319292d60442492932890752546df476e8dd3eac5e4fd564a234950bc9bda",
+  "declared_inputs": [],
+  "steps_meta": [
+    {
+      "node_id": "n1",
+      "data_classification": "compute"
+    },
+    {
+      "node_id": "n2",
+      "data_classification": "compute"
+    },
+    {
+      "node_id": "n3",
+      "data_classification": "compute"
+    }
+  ]
+}

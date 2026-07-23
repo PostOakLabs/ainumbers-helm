@@ -1,0 +1,40 @@
+{
+  "workflow_id": "pack-hedge-effectiveness-documentation",
+  "name": "Hedge Effectiveness Documentation",
+  "outcome": "Gated two-step chain for ASC 815 hedge accounting designation. Step 1 applies the dollar-offset test (80-125%) and OLS R-squared regression (>=0.8) for retrospective effectiveness. Gate on /is_effective: if false (INEFFECTIVE), the chain ends -- hedge accounting not permitted. Default (true, EFFECTIVE): Step 2 scores AFP 2024 cash-flow forecast accuracy for prospective effectiveness documentation required by ASC 815-20-35. ZERO PII BY CONSTRUCTION.",
+  "spec_version": "ocg-control-plane@1",
+  "manifest": {
+    "manifest_version": "1",
+    "workflow_id": "pack-hedge-effectiveness-documentation",
+    "trigger": {
+      "type": "manual"
+    },
+    "nodes": [
+      {
+        "node_id": "n1",
+        "kernel_id": "art-261-test-hedge-effectiveness",
+        "kernel_digest": "sha256:2240e320a2d2880ca48fbe570ff159401593baa97abc367db0c558dc06cca5cd"
+      },
+      {
+        "node_id": "n2",
+        "kernel_id": "art-263-score-cash-forecast-accuracy",
+        "kernel_digest": "sha256:624814c99e28e6097a9caa57f6273ad1edc0501ba9c8e8473ca8a1caff6b94e6"
+      }
+    ],
+    "connectors": [],
+    "gates": [],
+    "actions": []
+  },
+  "workflow_manifest_digest": "sha256:73fbc376ceecc0be6c2ae7067ffc5635457cbbba23b5b71714fe40758d0d6c98",
+  "declared_inputs": [],
+  "steps_meta": [
+    {
+      "node_id": "n1",
+      "data_classification": "compute"
+    },
+    {
+      "node_id": "n2",
+      "data_classification": "compute"
+    }
+  ]
+}

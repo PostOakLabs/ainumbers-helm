@@ -1,0 +1,49 @@
+{
+  "workflow_id": "pack-nav-verification-pack",
+  "name": "NAV Verification Pack",
+  "outcome": "Fund NAV recomputation from declared inputs > NAV-error materiality testing against a declared policy > fee-waiver-aware expense-ratio check as an independent rider: composite fund NAV verification pack for administrators and auditors.",
+  "spec_version": "ocg-control-plane@1",
+  "manifest": {
+    "manifest_version": "1",
+    "workflow_id": "pack-nav-verification-pack",
+    "trigger": {
+      "type": "manual"
+    },
+    "nodes": [
+      {
+        "node_id": "n1",
+        "kernel_id": "art-373-recompute-fund-nav",
+        "kernel_digest": "sha256:3814c169b6e2757ca9d93f31022a7c6234d75676d9a66c7d253f672a4a4ae8ac"
+      },
+      {
+        "node_id": "n2",
+        "kernel_id": "art-374-test-nav-error-materiality",
+        "kernel_digest": "sha256:ea70af686a6a7920e78cc9a8c561971099404d2b051fae1c6f6fcf613ab89e7a"
+      },
+      {
+        "node_id": "n3",
+        "kernel_id": "art-375-compute-fund-expense-ratios",
+        "kernel_digest": "sha256:21e7330a4b9eb3f27ddcd9bbe5fb4dcf6e3143f9aa9c05faea150bb6c5a2c1c1"
+      }
+    ],
+    "connectors": [],
+    "gates": [],
+    "actions": []
+  },
+  "workflow_manifest_digest": "sha256:fb6667a9a724b9e09831a8e006e3454b1499b5473414ea8d4772d788c2db44d4",
+  "declared_inputs": [],
+  "steps_meta": [
+    {
+      "node_id": "n1",
+      "data_classification": "compute"
+    },
+    {
+      "node_id": "n2",
+      "data_classification": "compute"
+    },
+    {
+      "node_id": "n3",
+      "data_classification": "compute"
+    }
+  ]
+}

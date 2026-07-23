@@ -1,0 +1,40 @@
+{
+  "workflow_id": "pack-collections-compliance-pack",
+  "name": "Collections Compliance Pack",
+  "outcome": "Linear two-step chain for debt-collection compliance review. Step 1 checks a declared call log against the Regulation F 12 CFR 1006.14(b) 7-in-7 and post-conversation quiet-period rebuttable presumptions. Step 2 checks a debt-validation-notice content-element checklist against 12 CFR 1006.34 / Model Form B-1 and computes the 30-day response-period math. Both presumption and completeness checks are over DECLARED inputs -- neither determines that harassment occurred or that a notice's disclosed amounts are accurate.",
+  "spec_version": "ocg-control-plane@1",
+  "manifest": {
+    "manifest_version": "1",
+    "workflow_id": "pack-collections-compliance-pack",
+    "trigger": {
+      "type": "manual"
+    },
+    "nodes": [
+      {
+        "node_id": "n1",
+        "kernel_id": "art-402-validate-regf-call-frequency",
+        "kernel_digest": "sha256:49d5b68d9b602859352499b88b4a3748a4eb06f8c6e3e58b98c6198ca136bc9f"
+      },
+      {
+        "node_id": "n2",
+        "kernel_id": "art-403-check-debt-validation-notice",
+        "kernel_digest": "sha256:7587d455f6bdc2449925d27d42cc07a2660c799f4670d238cb0793af19d274fa"
+      }
+    ],
+    "connectors": [],
+    "gates": [],
+    "actions": []
+  },
+  "workflow_manifest_digest": "sha256:79ac139c6399f5da31fadf19640a2692c8545b020e7ecd582516d5286622a24e",
+  "declared_inputs": [],
+  "steps_meta": [
+    {
+      "node_id": "n1",
+      "data_classification": "compute"
+    },
+    {
+      "node_id": "n2",
+      "data_classification": "compute"
+    }
+  ]
+}

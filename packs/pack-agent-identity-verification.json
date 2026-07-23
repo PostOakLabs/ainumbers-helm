@@ -1,0 +1,49 @@
+{
+  "workflow_id": "pack-agent-identity-verification",
+  "name": "Agent Identity Verification (RFC 9421 Web Bot Auth)",
+  "outcome": "Reconstruct the RFC 9421 signature base and verify the Ed25519 Web Bot Auth signature against a caller-supplied public key (art-129) then validate the /.well-known/http-message-signatures-directory JWKS and keyid resolution (art-130) then validate the Signature Agent Card against the directory and emit an identity-trust verdict (art-131). Agent verifies agent, zero network, no human.",
+  "spec_version": "ocg-control-plane@1",
+  "manifest": {
+    "manifest_version": "1",
+    "workflow_id": "pack-agent-identity-verification",
+    "trigger": {
+      "type": "manual"
+    },
+    "nodes": [
+      {
+        "node_id": "n1",
+        "kernel_id": "art-129-webbotauth-signature-verifier",
+        "kernel_digest": "sha256:6e54e84c5d83d433fc37b31030c1fd5bc32d029f016f7ab3ea0a37883b3f8615"
+      },
+      {
+        "node_id": "n2",
+        "kernel_id": "art-130-signature-directory-validator",
+        "kernel_digest": "sha256:3826cbd5f7c8d26075aaa4ebe3fa0b1f62f959e159a28b2eb6a153d6f307efcb"
+      },
+      {
+        "node_id": "n3",
+        "kernel_id": "art-131-signature-agent-card-validator",
+        "kernel_digest": "sha256:02cc79e6816db16e1e31ee80ce2bf4101ab8959fbb51653651ac1a84084b1134"
+      }
+    ],
+    "connectors": [],
+    "gates": [],
+    "actions": []
+  },
+  "workflow_manifest_digest": "sha256:1f0adc714460bb6f543d2376e3a67831c33cf202db692f79440adbedb2f502d7",
+  "declared_inputs": [],
+  "steps_meta": [
+    {
+      "node_id": "n1",
+      "data_classification": "compute"
+    },
+    {
+      "node_id": "n2",
+      "data_classification": "compute"
+    },
+    {
+      "node_id": "n3",
+      "data_classification": "compute"
+    }
+  ]
+}

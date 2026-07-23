@@ -1,0 +1,31 @@
+{
+  "workflow_id": "pack-rhc-fit",
+  "name": "Robinhood Chain Fit Diagnostic",
+  "outcome": "Single-node entry-point diagnostic grading a firm A-F across four Robinhood Chain adoption paths (stock-token application, collateral venue, index/basket, agent-settlement) and routing to the relevant RHC verification chains.",
+  "spec_version": "ocg-control-plane@1",
+  "manifest": {
+    "manifest_version": "1",
+    "workflow_id": "pack-rhc-fit",
+    "trigger": {
+      "type": "manual"
+    },
+    "nodes": [
+      {
+        "node_id": "n1",
+        "kernel_id": "art-323-rhc-fit-diagnostic",
+        "kernel_digest": "sha256:e09470ce920af00e8494502ae75b0a5986c163b2150f95ec58478d93c87e1a47"
+      }
+    ],
+    "connectors": [],
+    "gates": [],
+    "actions": []
+  },
+  "workflow_manifest_digest": "sha256:43f7c7cd8ea2bf5d033969aa164b8b5b44ae1b8fe8c7bec6e27ef28398af577e",
+  "declared_inputs": [],
+  "steps_meta": [
+    {
+      "node_id": "n1",
+      "data_classification": "compute"
+    }
+  ]
+}

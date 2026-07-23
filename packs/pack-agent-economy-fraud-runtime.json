@@ -1,0 +1,58 @@
+{
+  "workflow_id": "pack-agent-economy-fraud-runtime",
+  "name": "Runtime Agent-Payment Fraud Surveillance",
+  "outcome": "W-E. Spend-policy violation detection (art-02) -> agent-network/collusion graph (mms-03) -> payment-velocity anomaly monitoring (ml-03). Runtime fraud surveillance over an autonomous agent's payment stream.",
+  "spec_version": "ocg-control-plane@1",
+  "manifest": {
+    "manifest_version": "1",
+    "workflow_id": "pack-agent-economy-fraud-runtime",
+    "trigger": {
+      "type": "manual"
+    },
+    "nodes": [
+      {
+        "node_id": "n1",
+        "kernel_id": "art-02-agent-spend-policy-simulator",
+        "kernel_digest": "sha256:236e163038383b05b4d5d18a1d3cf7d32a974a1035496ab1c00fbad3e84f412a"
+      },
+      {
+        "node_id": "n2",
+        "kernel_id": "mms-03-app-fraud-graph",
+        "kernel_digest": "sha256:e4475d26f24233cd44e35864937108b85615179add6786403c54a4540d903def"
+      },
+      {
+        "node_id": "n3",
+        "kernel_id": "ml-03-timeseries-anomaly-detector",
+        "kernel_digest": "sha256:ae20b291caf5eac025d4e7103782427565fe7cf0c99f4045122257c87db0d9c6"
+      }
+    ],
+    "connectors": [],
+    "gates": [],
+    "actions": []
+  },
+  "workflow_manifest_digest": "sha256:03edc4e12c52fc4981e900a83201686198eb371200fe7b2edf43494328acf37f",
+  "declared_inputs": [
+    {
+      "from": "art-01-ap2-mandate-chain-validator",
+      "kind": "external"
+    },
+    {
+      "from": "art-04-agent-identity-attestation-checker",
+      "kind": "external"
+    }
+  ],
+  "steps_meta": [
+    {
+      "node_id": "n1",
+      "data_classification": "compute"
+    },
+    {
+      "node_id": "n2",
+      "data_classification": "compute"
+    },
+    {
+      "node_id": "n3",
+      "data_classification": "compute"
+    }
+  ]
+}

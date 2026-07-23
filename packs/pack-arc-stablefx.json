@@ -1,0 +1,40 @@
+{
+  "workflow_id": "pack-arc-stablefx",
+  "name": "Arc StableFX Risk Elimination",
+  "outcome": "W-B chain. Quantify Herstatt risk and FX spread savings from Arc StableFX atomic PvP vs non-CLS bilateral settlement.",
+  "spec_version": "ocg-control-plane@1",
+  "manifest": {
+    "manifest_version": "1",
+    "workflow_id": "pack-arc-stablefx",
+    "trigger": {
+      "type": "manual"
+    },
+    "nodes": [
+      {
+        "node_id": "n1",
+        "kernel_id": "art-42-arc-fit-diagnostic",
+        "kernel_digest": "sha256:84cf3e4b4dd77ad8ed4f6425d9a623c51ae75b4855e2fb629505f1485387cee1"
+      },
+      {
+        "node_id": "n2",
+        "kernel_id": "art-44-arc-stablefx-model",
+        "kernel_digest": "sha256:7fcfd2624025beb441f4018775a81c7e1d967809adfaff6b96cdde238bbf8d73"
+      }
+    ],
+    "connectors": [],
+    "gates": [],
+    "actions": []
+  },
+  "workflow_manifest_digest": "sha256:cb06339e319d730c01325e9aff8905a1fd4e81d07bc21d07bba2ae63946c9e74",
+  "declared_inputs": [],
+  "steps_meta": [
+    {
+      "node_id": "n1",
+      "data_classification": "compute"
+    },
+    {
+      "node_id": "n2",
+      "data_classification": "compute"
+    }
+  ]
+}

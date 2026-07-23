@@ -4,10 +4,15 @@
   "vendoredPaths": [
     "chaingraph/kernels",
     "chaingraph/standard/SPEC.md",
-    "chaingraph/standard/openchain-graph-v0.4.schema.json"
+    "chaingraph/standard/openchain-graph-v0.4.schema.json",
+    "chaingraph/chaingraph.json"
   ],
-  "fileCount": 1227,
+  "fileCount": 1228,
   "files": [
+    {
+      "path": "chaingraph.json",
+      "sha256": "8b32b8b8d382939b651386b7115159eba16e8208db11aff8f4c59619acbde8e7"
+    },
     {
       "path": "kernels/_anchor-testutil.mjs",
       "sha256": "7676ab0d9a0d23841bd646735bf7812f83f72204072eb835597a01f4f3a2519c"

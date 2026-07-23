@@ -1,0 +1,45 @@
+{
+  "workflow_id": "pack-arc-reserve-compliance",
+  "name": "Arc Reserve Compliance",
+  "outcome": "W-F chain. Full reserve compliance workflow: xReserve linter for GENIUS/MiCA + StableFX risk elimination.",
+  "spec_version": "ocg-control-plane@1",
+  "manifest": {
+    "manifest_version": "1",
+    "workflow_id": "pack-arc-reserve-compliance",
+    "trigger": {
+      "type": "manual"
+    },
+    "nodes": [
+      {
+        "node_id": "n1",
+        "kernel_id": "art-45-arc-xreserve-linter",
+        "kernel_digest": "sha256:6c42f2e178d592ddca24ae38edae3baed3c67880f4f18ce29b79d11e0e46f4d4"
+      },
+      {
+        "node_id": "n2",
+        "kernel_id": "art-44-arc-stablefx-model",
+        "kernel_digest": "sha256:7fcfd2624025beb441f4018775a81c7e1d967809adfaff6b96cdde238bbf8d73"
+      }
+    ],
+    "connectors": [],
+    "gates": [],
+    "actions": []
+  },
+  "workflow_manifest_digest": "sha256:4f71b1d18de827f58b48efb064a21e0c0b1e0134ae465bacee8eef03eeea28d4",
+  "declared_inputs": [
+    {
+      "from": "art-42-arc-fit-diagnostic",
+      "kind": "external"
+    }
+  ],
+  "steps_meta": [
+    {
+      "node_id": "n1",
+      "data_classification": "compute"
+    },
+    {
+      "node_id": "n2",
+      "data_classification": "compute"
+    }
+  ]
+}

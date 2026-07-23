@@ -1,0 +1,40 @@
+{
+  "workflow_id": "pack-canton-deposit-compliance",
+  "name": "Canton Deposit Token Compliance Chain",
+  "outcome": "Classify the digital asset type and validate PvP settlement compliance for Canton deposit tokens. MiCA/MiFID II regulatory classification → multi-currency PvP finality check.",
+  "spec_version": "ocg-control-plane@1",
+  "manifest": {
+    "manifest_version": "1",
+    "workflow_id": "pack-canton-deposit-compliance",
+    "trigger": {
+      "type": "manual"
+    },
+    "nodes": [
+      {
+        "node_id": "n1",
+        "kernel_id": "510-digital-asset-regulatory-classifier",
+        "kernel_digest": "sha256:e70b5a1adf38189f6a6f09d6b4b0dcfaf16394beb5f30f8b397cadbb0ffa2a5f"
+      },
+      {
+        "node_id": "n2",
+        "kernel_id": "511-multi-currency-pvp-validator",
+        "kernel_digest": "sha256:2675f0d22096ace35e1dfb500c6f332c77fc66bba78a1e3878575bb466267925"
+      }
+    ],
+    "connectors": [],
+    "gates": [],
+    "actions": []
+  },
+  "workflow_manifest_digest": "sha256:a4235fdc97a8a4225bd92baad39a2633e43250d30f1ab2766e02c630b7d7422e",
+  "declared_inputs": [],
+  "steps_meta": [
+    {
+      "node_id": "n1",
+      "data_classification": "compute"
+    },
+    {
+      "node_id": "n2",
+      "data_classification": "compute"
+    }
+  ]
+}

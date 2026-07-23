@@ -1,0 +1,49 @@
+{
+  "workflow_id": "pack-agent-identity-trust",
+  "name": "Agent Identity & Trust-Chain",
+  "outcome": "A2A agent-card + delegated-authority trust-chain validation > KYA-OS identity attestation > spend-policy simulation.",
+  "spec_version": "ocg-control-plane@1",
+  "manifest": {
+    "manifest_version": "1",
+    "workflow_id": "pack-agent-identity-trust",
+    "trigger": {
+      "type": "manual"
+    },
+    "nodes": [
+      {
+        "node_id": "n1",
+        "kernel_id": "art-32-a2a-agent-card-trust-chain-validator",
+        "kernel_digest": "sha256:b559ef728aacf8aa3f1ee6cb9db684bf7b32b917bafcbcacb0cc88c16c76c008"
+      },
+      {
+        "node_id": "n2",
+        "kernel_id": "art-04-agent-identity-attestation-checker",
+        "kernel_digest": "sha256:f4e9e5aed913e80c7f97e3d0d2501e7349c523de4ffd433a1d29081620197b1f"
+      },
+      {
+        "node_id": "n3",
+        "kernel_id": "art-02-agent-spend-policy-simulator",
+        "kernel_digest": "sha256:236e163038383b05b4d5d18a1d3cf7d32a974a1035496ab1c00fbad3e84f412a"
+      }
+    ],
+    "connectors": [],
+    "gates": [],
+    "actions": []
+  },
+  "workflow_manifest_digest": "sha256:be0ee36a37c4c47744f093a87983534f5f83e6147815da15c4a46fed74431ed5",
+  "declared_inputs": [],
+  "steps_meta": [
+    {
+      "node_id": "n1",
+      "data_classification": "compute"
+    },
+    {
+      "node_id": "n2",
+      "data_classification": "compute"
+    },
+    {
+      "node_id": "n3",
+      "data_classification": "compute"
+    }
+  ]
+}

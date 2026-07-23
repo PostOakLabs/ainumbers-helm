@@ -1,0 +1,54 @@
+{
+  "workflow_id": "pack-wholesale-settlement-intraday-liquidity",
+  "name": "Intraday Liquidity & Capital under 24/7 Settlement",
+  "outcome": "W-E. Settlement-risk capital (504) -> intraday/HQLA liquidity stress (sim-01) -> liquidity-usage anomaly monitoring (ml-03). Models the liquidity and capital impact of moving from RTGS windows to 24/7 tokenized settlement. Educational estimator.",
+  "spec_version": "ocg-control-plane@1",
+  "manifest": {
+    "manifest_version": "1",
+    "workflow_id": "pack-wholesale-settlement-intraday-liquidity",
+    "trigger": {
+      "type": "manual"
+    },
+    "nodes": [
+      {
+        "node_id": "n1",
+        "kernel_id": "504-settlement-risk-capital-optimizer",
+        "kernel_digest": "sha256:57a3a1bd70235be6b46ba6d177b784665e1480eb8f0c59047d84f3498611cfe8"
+      },
+      {
+        "node_id": "n2",
+        "kernel_id": "sim-01-lcr-nsfr-liquidity-stress-test",
+        "kernel_digest": "sha256:e22635c466fd20d5fb8ff61aa494e70f70f958e303b5d52a90e0f0f22a6e930e"
+      },
+      {
+        "node_id": "n3",
+        "kernel_id": "ml-03-timeseries-anomaly-detector",
+        "kernel_digest": "sha256:ae20b291caf5eac025d4e7103782427565fe7cf0c99f4045122257c87db0d9c6"
+      }
+    ],
+    "connectors": [],
+    "gates": [],
+    "actions": []
+  },
+  "workflow_manifest_digest": "sha256:f6c11902f9e3ddabaeae0cbeb060ec16b1993ffcf38ce7ae25b7888c6b7a34ce",
+  "declared_inputs": [
+    {
+      "from": "503-canton-tokenization-readiness-diagnostic",
+      "kind": "external"
+    }
+  ],
+  "steps_meta": [
+    {
+      "node_id": "n1",
+      "data_classification": "compute"
+    },
+    {
+      "node_id": "n2",
+      "data_classification": "compute"
+    },
+    {
+      "node_id": "n3",
+      "data_classification": "compute"
+    }
+  ]
+}

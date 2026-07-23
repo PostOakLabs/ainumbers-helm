@@ -1,0 +1,58 @@
+{
+  "workflow_id": "pack-einvoice-validation-pipeline",
+  "name": "E-Invoice Validation Pipeline",
+  "outcome": "Gated four-step e-invoice validation pipeline: format conformance check, VAT arithmetic verification, jurisdiction mandate routing, and a hash-anchored transmission receipt. Exits early on a format-conformance failure or a VAT-arithmetic mismatch, so the receipt is only ever built for a document that passed both checks.",
+  "spec_version": "ocg-control-plane@1",
+  "manifest": {
+    "manifest_version": "1",
+    "workflow_id": "pack-einvoice-validation-pipeline",
+    "trigger": {
+      "type": "manual"
+    },
+    "nodes": [
+      {
+        "node_id": "n1",
+        "kernel_id": "art-293-einvoice-format-validator",
+        "kernel_digest": "sha256:a2ebeed8ccd9619e29ad9881e43eb8e60d93af64efa53d0bb1f7551ff7a1fb90"
+      },
+      {
+        "node_id": "n2",
+        "kernel_id": "art-294-einvoice-vat-calc-verifier",
+        "kernel_digest": "sha256:986d37866299487054398f63d3e4ea13b3ae3c3ccd2e7c315e21d8269f9696e2"
+      },
+      {
+        "node_id": "n3",
+        "kernel_id": "art-295-einvoice-jurisdiction-mandate-router",
+        "kernel_digest": "sha256:3ef99554992eca2b33337d6dce029234595500ec5a480e3dcc8d6dde20d04dc6"
+      },
+      {
+        "node_id": "n4",
+        "kernel_id": "art-296-einvoice-transmission-receipt-builder",
+        "kernel_digest": "sha256:b4d74d23dc88164802cbfefa68abfad52679a6a6f7693022b19bee34ce586d98"
+      }
+    ],
+    "connectors": [],
+    "gates": [],
+    "actions": []
+  },
+  "workflow_manifest_digest": "sha256:8de46f1d7cbddf368f72f0a61efd4ba2c1014d17215b3758f92335c86d9baf18",
+  "declared_inputs": [],
+  "steps_meta": [
+    {
+      "node_id": "n1",
+      "data_classification": "compute"
+    },
+    {
+      "node_id": "n2",
+      "data_classification": "compute"
+    },
+    {
+      "node_id": "n3",
+      "data_classification": "compute"
+    },
+    {
+      "node_id": "n4",
+      "data_classification": "compute"
+    }
+  ]
+}

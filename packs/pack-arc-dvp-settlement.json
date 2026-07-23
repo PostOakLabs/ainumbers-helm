@@ -1,0 +1,49 @@
+{
+  "workflow_id": "pack-arc-dvp-settlement",
+  "name": "Arc DvP Atomic Settlement",
+  "outcome": "W-D chain. Validate Arc DvP atomic settlement fit: StableFX + Paymaster for agentic settlement flows.",
+  "spec_version": "ocg-control-plane@1",
+  "manifest": {
+    "manifest_version": "1",
+    "workflow_id": "pack-arc-dvp-settlement",
+    "trigger": {
+      "type": "manual"
+    },
+    "nodes": [
+      {
+        "node_id": "n1",
+        "kernel_id": "art-42-arc-fit-diagnostic",
+        "kernel_digest": "sha256:84cf3e4b4dd77ad8ed4f6425d9a623c51ae75b4855e2fb629505f1485387cee1"
+      },
+      {
+        "node_id": "n2",
+        "kernel_id": "art-44-arc-stablefx-model",
+        "kernel_digest": "sha256:7fcfd2624025beb441f4018775a81c7e1d967809adfaff6b96cdde238bbf8d73"
+      },
+      {
+        "node_id": "n3",
+        "kernel_id": "art-46-arc-paymaster-model",
+        "kernel_digest": "sha256:86b52d9ce0d72966dc6be706fe6621eb0c036d9be967792292fb315dad560cbd"
+      }
+    ],
+    "connectors": [],
+    "gates": [],
+    "actions": []
+  },
+  "workflow_manifest_digest": "sha256:071edce3fac197a40c2a5577c4fe87a172c56555e585ddcce112d2f8132e1dfc",
+  "declared_inputs": [],
+  "steps_meta": [
+    {
+      "node_id": "n1",
+      "data_classification": "compute"
+    },
+    {
+      "node_id": "n2",
+      "data_classification": "compute"
+    },
+    {
+      "node_id": "n3",
+      "data_classification": "compute"
+    }
+  ]
+}

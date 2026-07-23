@@ -1,0 +1,49 @@
+{
+  "workflow_id": "pack-climate-scenario",
+  "name": "Climate Scenario Stress (NGFS / Fit-for-55)",
+  "outcome": "Apply an NGFS / Fit-for-55 scenario path to an exposure set -> stress-adjusted metrics (ART-76) -> audit receipt (cry-05). The bank/insurer climate-risk computation a supervisor re-verifies. Scenario paths are versioned reference data, not the suite financial-shock stress parameters.",
+  "spec_version": "ocg-control-plane@1",
+  "manifest": {
+    "manifest_version": "1",
+    "workflow_id": "pack-climate-scenario",
+    "trigger": {
+      "type": "manual"
+    },
+    "nodes": [
+      {
+        "node_id": "n1",
+        "kernel_id": "art-76-climate-scenario-applicator",
+        "kernel_digest": "sha256:b93b7309081c0f6c2d2a5f3e8728d9d2cd11f4701cc936c42efc0d4d29c7809a"
+      },
+      {
+        "node_id": "n2",
+        "kernel_id": "cry-05-agent-action-audit-trail-aggregator",
+        "kernel_digest": "sha256:5f7f6ab0bb2e2b736805ecde518ca59ba9a83ad38b17545a8c7c133cffa1481f"
+      }
+    ],
+    "connectors": [],
+    "gates": [],
+    "actions": []
+  },
+  "workflow_manifest_digest": "sha256:9091a0a563dc80c033237c15da0c037f7e8a94a9c864975c769235015fc5e895",
+  "declared_inputs": [
+    {
+      "from": "art-68-carbon-compliance-fit-diagnostic",
+      "kind": "external"
+    },
+    {
+      "from": "art-71-cbam-certificate-cost-engine",
+      "kind": "external"
+    }
+  ],
+  "steps_meta": [
+    {
+      "node_id": "n1",
+      "data_classification": "compute"
+    },
+    {
+      "node_id": "n2",
+      "data_classification": "compute"
+    }
+  ]
+}

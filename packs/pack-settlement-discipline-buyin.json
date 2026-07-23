@@ -1,0 +1,54 @@
+{
+  "workflow_id": "pack-settlement-discipline-buyin",
+  "name": "Mandatory Buy-In Exposure",
+  "outcome": "CSDR penalty accrual (ART-78) -> last-resort mandatory buy-in exposure/cost modeling under reformed CSDR Refit rules (ART-83) -> audit receipt (cry-05). Models the tail cost of persistent fails.",
+  "spec_version": "ocg-control-plane@1",
+  "manifest": {
+    "manifest_version": "1",
+    "workflow_id": "pack-settlement-discipline-buyin",
+    "trigger": {
+      "type": "manual"
+    },
+    "nodes": [
+      {
+        "node_id": "n1",
+        "kernel_id": "art-78-csdr-penalty-calculator",
+        "kernel_digest": "sha256:1a1ae5b7775cad6c3619104c909084bd1b203d852325759671f8a6ad7e46a80a"
+      },
+      {
+        "node_id": "n2",
+        "kernel_id": "art-83-buy-in-exposure-modeler",
+        "kernel_digest": "sha256:712b7d6c95243d64d2a14195636f2436a56610776c59001a266d2dcf1691ef04"
+      },
+      {
+        "node_id": "n3",
+        "kernel_id": "cry-05-agent-action-audit-trail-aggregator",
+        "kernel_digest": "sha256:5f7f6ab0bb2e2b736805ecde518ca59ba9a83ad38b17545a8c7c133cffa1481f"
+      }
+    ],
+    "connectors": [],
+    "gates": [],
+    "actions": []
+  },
+  "workflow_manifest_digest": "sha256:a5140393fa6523df4bf15dd4587bc59169f64344b25dcdc483b06f62e709c292",
+  "declared_inputs": [
+    {
+      "from": "art-77-t1-settlement-readiness-diagnostic",
+      "kind": "external"
+    }
+  ],
+  "steps_meta": [
+    {
+      "node_id": "n1",
+      "data_classification": "compute"
+    },
+    {
+      "node_id": "n2",
+      "data_classification": "compute"
+    },
+    {
+      "node_id": "n3",
+      "data_classification": "compute"
+    }
+  ]
+}

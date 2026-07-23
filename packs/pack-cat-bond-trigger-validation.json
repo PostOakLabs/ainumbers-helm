@@ -1,0 +1,45 @@
+{
+  "workflow_id": "pack-cat-bond-trigger-validation",
+  "name": "Cat Bond Trigger Validation",
+  "outcome": "Linear two-step chain for cat bond due diligence: validate trigger terms before running the trigger evaluation. Step 1 validates the attachment/exhaustion point structure and pro-rata arithmetic (cat bond terms). Step 2 evaluates the parametric trigger against the validated structure and computes payout. Designed for pre-issuance term review and post-event payout calculation where bond terms must be validated first. ZERO PII BY CONSTRUCTION.",
+  "spec_version": "ocg-control-plane@1",
+  "manifest": {
+    "manifest_version": "1",
+    "workflow_id": "pack-cat-bond-trigger-validation",
+    "trigger": {
+      "type": "manual"
+    },
+    "nodes": [
+      {
+        "node_id": "n1",
+        "kernel_id": "art-252-validate-cat-bond-trigger-terms",
+        "kernel_digest": "sha256:2d69f187e9c32ff8b2bcd4346e912a0546f39bd91839fd9b301e67c13e36a438"
+      },
+      {
+        "node_id": "n2",
+        "kernel_id": "art-251-compute-parametric-trigger-payout",
+        "kernel_digest": "sha256:21c850de44ea52edcd069ddb042c208ec8d8df8175a09b3fc3c9478245db8158"
+      }
+    ],
+    "connectors": [],
+    "gates": [],
+    "actions": []
+  },
+  "workflow_manifest_digest": "sha256:6e3a0a8880d5ba495567f0179fb5e3966dda37ee6e05b5514990ee55fba36b26",
+  "declared_inputs": [
+    {
+      "from": "art-251-compute-parametric-trigger-payout",
+      "kind": "external"
+    }
+  ],
+  "steps_meta": [
+    {
+      "node_id": "n1",
+      "data_classification": "compute"
+    },
+    {
+      "node_id": "n2",
+      "data_classification": "compute"
+    }
+  ]
+}

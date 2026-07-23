@@ -1,0 +1,31 @@
+{
+  "workflow_id": "pack-canton-counterparty-onboarding",
+  "name": "Canton Counterparty Onboarding Chain",
+  "outcome": "KYA screening and party allowlist validation for Canton Network onboarding.",
+  "spec_version": "ocg-control-plane@1",
+  "manifest": {
+    "manifest_version": "1",
+    "workflow_id": "pack-canton-counterparty-onboarding",
+    "trigger": {
+      "type": "manual"
+    },
+    "nodes": [
+      {
+        "node_id": "n1",
+        "kernel_id": "509-canton-party-allowlist-validator",
+        "kernel_digest": "sha256:83887e461c79e0e1d5966dc6ad1887b4f0e205494e6dda2381001970b364930a"
+      }
+    ],
+    "connectors": [],
+    "gates": [],
+    "actions": []
+  },
+  "workflow_manifest_digest": "sha256:f17174836da6910841017daceed8e9215f39c4064e098f286ae36040d79b965b",
+  "declared_inputs": [],
+  "steps_meta": [
+    {
+      "node_id": "n1",
+      "data_classification": "compute"
+    }
+  ]
+}

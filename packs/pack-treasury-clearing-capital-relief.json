@@ -1,0 +1,54 @@
+{
+  "workflow_id": "pack-treasury-clearing-capital-relief",
+  "name": "Central Clearing Capital & RWA Relief",
+  "outcome": "W-E. SA-CCR/QCCP capital impact of moving bilateral UST/repo to a CCP (504) -> Basel 3.1 RWA delta & output floor (art-07) -> RWA scenario modeling (sim-03). Bank/dealer capital case for clearing.",
+  "spec_version": "ocg-control-plane@1",
+  "manifest": {
+    "manifest_version": "1",
+    "workflow_id": "pack-treasury-clearing-capital-relief",
+    "trigger": {
+      "type": "manual"
+    },
+    "nodes": [
+      {
+        "node_id": "n1",
+        "kernel_id": "504-settlement-risk-capital-optimizer",
+        "kernel_digest": "sha256:57a3a1bd70235be6b46ba6d177b784665e1480eb8f0c59047d84f3498611cfe8"
+      },
+      {
+        "node_id": "n2",
+        "kernel_id": "art-07-basel31-reporting-delta-calculator",
+        "kernel_digest": "sha256:bb655f6f08ccd299198d1eff963940525ec31c073ef296bfce08503620cb28c7"
+      },
+      {
+        "node_id": "n3",
+        "kernel_id": "sim-03-basel-rwa-scenario-modeler",
+        "kernel_digest": "sha256:20305fc80c7e9f21ce85aaa35d67d4208e694fc0a45b1b9598d65046b4e9900a"
+      }
+    ],
+    "connectors": [],
+    "gates": [],
+    "actions": []
+  },
+  "workflow_manifest_digest": "sha256:4866a03684d2b5765b6be5f1dd92627ce47d03be119ec437a206372cbd91a244",
+  "declared_inputs": [
+    {
+      "from": "503-canton-tokenization-readiness-diagnostic",
+      "kind": "external"
+    }
+  ],
+  "steps_meta": [
+    {
+      "node_id": "n1",
+      "data_classification": "compute"
+    },
+    {
+      "node_id": "n2",
+      "data_classification": "compute"
+    },
+    {
+      "node_id": "n3",
+      "data_classification": "compute"
+    }
+  ]
+}

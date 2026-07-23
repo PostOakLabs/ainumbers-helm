@@ -1,0 +1,58 @@
+{
+  "workflow_id": "pack-agent-commerce-conformance",
+  "name": "Agent Commerce Cross-Protocol Conformance",
+  "outcome": "AP2 v0.2 mandate chain > ACP checkout conformance > x402 settlement modelling > unified cross-protocol conformance verdict.",
+  "spec_version": "ocg-control-plane@1",
+  "manifest": {
+    "manifest_version": "1",
+    "workflow_id": "pack-agent-commerce-conformance",
+    "trigger": {
+      "type": "manual"
+    },
+    "nodes": [
+      {
+        "node_id": "n1",
+        "kernel_id": "art-01-ap2-mandate-chain-validator",
+        "kernel_digest": "sha256:623495f9378cb65cb88c889831f43c2c82c8844af29dfaa32e3a5d1e6cfa5337"
+      },
+      {
+        "node_id": "n2",
+        "kernel_id": "art-12-acp-checkout-conformance-validator",
+        "kernel_digest": "sha256:4ee210e9f360aea1ea09609253ca4e223bc00065d42aa2a672f4ffb5a866afc2"
+      },
+      {
+        "node_id": "n3",
+        "kernel_id": "art-03-x402-settlement-modeler",
+        "kernel_digest": "sha256:5d693ae08f52fbf0719d500857977fff760b19d533358ae2f5edd6693854de81"
+      },
+      {
+        "node_id": "n4",
+        "kernel_id": "art-30-agent-commerce-conformance-validator",
+        "kernel_digest": "sha256:48228bd926421bc7b6d0b41aa34880912b7d96d3f048f2865ee2ba72a1b9a2f0"
+      }
+    ],
+    "connectors": [],
+    "gates": [],
+    "actions": []
+  },
+  "workflow_manifest_digest": "sha256:ae5527d51bf3d1cb90c4eefa15f5b01c16b982f743937196811086bff6a07258",
+  "declared_inputs": [],
+  "steps_meta": [
+    {
+      "node_id": "n1",
+      "data_classification": "compute"
+    },
+    {
+      "node_id": "n2",
+      "data_classification": "compute"
+    },
+    {
+      "node_id": "n3",
+      "data_classification": "compute"
+    },
+    {
+      "node_id": "n4",
+      "data_classification": "compute"
+    }
+  ]
+}

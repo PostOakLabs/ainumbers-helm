@@ -1,0 +1,45 @@
+{
+  "workflow_id": "pack-sanctions-fuzzy-calibration",
+  "name": "Fuzzy-Match Calibration",
+  "outcome": "Fuzzy-match FPR/recall scoring + threshold calibration on a synthetic labelled name-pair set (ART-93) -> audit receipt (cry-05). Tunes the matching engine without touching real names.",
+  "spec_version": "ocg-control-plane@1",
+  "manifest": {
+    "manifest_version": "1",
+    "workflow_id": "pack-sanctions-fuzzy-calibration",
+    "trigger": {
+      "type": "manual"
+    },
+    "nodes": [
+      {
+        "node_id": "n1",
+        "kernel_id": "art-93-fuzzy-match-calibration-scorer",
+        "kernel_digest": "sha256:280862d6b27e8364c05290b99e446bb8938364dc1c03fb90835464743ef0cdc8"
+      },
+      {
+        "node_id": "n2",
+        "kernel_id": "cry-05-agent-action-audit-trail-aggregator",
+        "kernel_digest": "sha256:5f7f6ab0bb2e2b736805ecde518ca59ba9a83ad38b17545a8c7c133cffa1481f"
+      }
+    ],
+    "connectors": [],
+    "gates": [],
+    "actions": []
+  },
+  "workflow_manifest_digest": "sha256:77dcbb9d472a1f38b48aae7bbb17d0e1d4d114b9596e870fac519ddfef5199b9",
+  "declared_inputs": [
+    {
+      "from": "art-90-sanctions-screening-fit-diagnostic",
+      "kind": "external"
+    }
+  ],
+  "steps_meta": [
+    {
+      "node_id": "n1",
+      "data_classification": "compute"
+    },
+    {
+      "node_id": "n2",
+      "data_classification": "compute"
+    }
+  ]
+}

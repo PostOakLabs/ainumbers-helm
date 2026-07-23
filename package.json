@@ -12,6 +12,8 @@
     "test": "node scripts/test.mjs",
     "vendor": "node scripts/vendor.mjs",
     "vendor:anchor": "node scripts/vendor-anchor.mjs",
+    "packs:compile": "node scripts/compile-packs.mjs",
+    "packs:check": "node scripts/compile-packs.mjs --check",
     "sea:dry-run": "node scripts/sea-dry-run.mjs",
     "build:sea": "node scripts/build-sea.mjs",
     "release:manifest": "node scripts/release-manifest.mjs",

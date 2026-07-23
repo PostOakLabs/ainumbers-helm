@@ -1,0 +1,49 @@
+{
+  "workflow_id": "pack-food-traceability-fsma204",
+  "name": "Food Traceability & 24-Hour Recall (FSMA 204 / GS1 EPCIS 2.0)",
+  "outcome": "Validate Critical Tracking Event KDEs (art-118) → link Traceability Lot Code chain across CTEs, detect transformation events (art-119) → one-up/one-back recall trace emitting the FDA 24-hour sortable list (art-120). Zero-egress alternative to a food safety consortium.",
+  "spec_version": "ocg-control-plane@1",
+  "manifest": {
+    "manifest_version": "1",
+    "workflow_id": "pack-food-traceability-fsma204",
+    "trigger": {
+      "type": "manual"
+    },
+    "nodes": [
+      {
+        "node_id": "n1",
+        "kernel_id": "art-118-fsma204-cte-validator",
+        "kernel_digest": "sha256:e34e3e945044a3bafac4c9c72d15227e4b0a89ddff995e5afb0f4ae661015922"
+      },
+      {
+        "node_id": "n2",
+        "kernel_id": "art-119-traceability-lot-code-linker",
+        "kernel_digest": "sha256:9c508df29c7b972a6c75f1ad355d117b4554a2b3faebc82012baddb301528df5"
+      },
+      {
+        "node_id": "n3",
+        "kernel_id": "art-120-recall-trace-resolver",
+        "kernel_digest": "sha256:572a3d1b5f06617e9230439c2f639209dc51f1969e4f7fa9709c23349334b9b2"
+      }
+    ],
+    "connectors": [],
+    "gates": [],
+    "actions": []
+  },
+  "workflow_manifest_digest": "sha256:2d0091299f444c8ad0013b06276e6071a66bee92f1ecca1556a0d2ce4381a60e",
+  "declared_inputs": [],
+  "steps_meta": [
+    {
+      "node_id": "n1",
+      "data_classification": "compute"
+    },
+    {
+      "node_id": "n2",
+      "data_classification": "compute"
+    },
+    {
+      "node_id": "n3",
+      "data_classification": "compute"
+    }
+  ]
+}

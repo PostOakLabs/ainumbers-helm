@@ -1,0 +1,49 @@
+{
+  "workflow_id": "pack-canton-cash-leg-assurance",
+  "name": "Canton Cash-Leg Assurance Chain",
+  "outcome": "Stress-test the cash leg: LCR/NSFR liquidity scenario → MiCA reserve adequacy → on-chain finality verification. Assures Canton settlement payments against Basel III, MiCA Art. 36, and PFMI P9.",
+  "spec_version": "ocg-control-plane@1",
+  "manifest": {
+    "manifest_version": "1",
+    "workflow_id": "pack-canton-cash-leg-assurance",
+    "trigger": {
+      "type": "manual"
+    },
+    "nodes": [
+      {
+        "node_id": "n1",
+        "kernel_id": "sim-01-lcr-nsfr-liquidity-stress-test",
+        "kernel_digest": "sha256:e22635c466fd20d5fb8ff61aa494e70f70f958e303b5d52a90e0f0f22a6e930e"
+      },
+      {
+        "node_id": "n2",
+        "kernel_id": "rca-02-mica-reserve-stress",
+        "kernel_digest": "sha256:6fce2ba734c51cd45d54192ce1f75dba7e32561d4e7ee9792a7bfae0cdfea260"
+      },
+      {
+        "node_id": "n3",
+        "kernel_id": "506-onchain-cash-leg-finality-checker",
+        "kernel_digest": "sha256:a8dc570f0262a6be9c06dc3b094353f70b4e87b7b379e93f7113086935456dbc"
+      }
+    ],
+    "connectors": [],
+    "gates": [],
+    "actions": []
+  },
+  "workflow_manifest_digest": "sha256:b3eb72bfb1e825d932a88d5ccc5109755e2c9379bd877bd96b0773655ebd6af7",
+  "declared_inputs": [],
+  "steps_meta": [
+    {
+      "node_id": "n1",
+      "data_classification": "compute"
+    },
+    {
+      "node_id": "n2",
+      "data_classification": "compute"
+    },
+    {
+      "node_id": "n3",
+      "data_classification": "compute"
+    }
+  ]
+}

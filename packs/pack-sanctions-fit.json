@@ -1,0 +1,31 @@
+{
+  "workflow_id": "pack-sanctions-fit",
+  "name": "Sanctions & Export-Control Screening Fit Diagnostic",
+  "outcome": "Single-node D0 diagnostic scoping a firm's screening/export-control program and routing to the right sanctions/export-control chain. Config-only, no customer data.",
+  "spec_version": "ocg-control-plane@1",
+  "manifest": {
+    "manifest_version": "1",
+    "workflow_id": "pack-sanctions-fit",
+    "trigger": {
+      "type": "manual"
+    },
+    "nodes": [
+      {
+        "node_id": "n1",
+        "kernel_id": "art-90-sanctions-screening-fit-diagnostic",
+        "kernel_digest": "sha256:38748fbbd98786a5c965a54c809622a7dd0d1f193507e321aa3ad9fa9f06c178"
+      }
+    ],
+    "connectors": [],
+    "gates": [],
+    "actions": []
+  },
+  "workflow_manifest_digest": "sha256:0ca7a5e398750d753b3f5a4725aa4a6a41802108683c572a6b81b944fbef181a",
+  "declared_inputs": [],
+  "steps_meta": [
+    {
+      "node_id": "n1",
+      "data_classification": "compute"
+    }
+  ]
+}

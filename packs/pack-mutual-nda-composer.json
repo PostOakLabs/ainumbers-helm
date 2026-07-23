@@ -1,0 +1,40 @@
+{
+  "workflow_id": "pack-mutual-nda-composer",
+  "name": "Mutual NDA Composer",
+  "outcome": "Assembles a Common Paper Mutual NDA from Cover Page Key Terms, then binds a party's acceptance to the assembled artifact by its execution_hash, template_id, and vendored body_sha256.",
+  "spec_version": "ocg-control-plane@1",
+  "manifest": {
+    "manifest_version": "1",
+    "workflow_id": "pack-mutual-nda-composer",
+    "trigger": {
+      "type": "manual"
+    },
+    "nodes": [
+      {
+        "node_id": "n1",
+        "kernel_id": "art-276-mutual-nda-composer",
+        "kernel_digest": "sha256:91212db29e804d760fdea1ab5633eeaae9a06c743518d3b746a30c50f026116d"
+      },
+      {
+        "node_id": "n2",
+        "kernel_id": "art-277-agreement-acceptance-binder",
+        "kernel_digest": "sha256:f89876aa4e8bd2c8202f42f53375dcaadcf311417577d08361dc752421a2a965"
+      }
+    ],
+    "connectors": [],
+    "gates": [],
+    "actions": []
+  },
+  "workflow_manifest_digest": "sha256:7c92d1c6a9f25e9a024bcd6fc2c4d367278290ae0c5f2a184dd9c60e7dd14f9f",
+  "declared_inputs": [],
+  "steps_meta": [
+    {
+      "node_id": "n1",
+      "data_classification": "compute"
+    },
+    {
+      "node_id": "n2",
+      "data_classification": "compute"
+    }
+  ]
+}

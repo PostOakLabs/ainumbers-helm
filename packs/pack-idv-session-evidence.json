@@ -1,0 +1,49 @@
+{
+  "workflow_id": "pack-idv-session-evidence",
+  "name": "IDV/KYC Session Evidence Chain",
+  "outcome": "Structural camera-provenance check on an IDV/KYC capture's C2PA manifest (art-361), feeding a hash-chained session receipt that binds the verifier's declared results, capture-chain digest, and injection/liveness/document/device verdicts into a single tamper-evident record (art-359). Every verifier-sourced field is labeled asserted: the chain attests the session record as declared, never detection quality or subject genuineness, and consumes only digests, booleans, and scores -- zero PII by construction. Gate: an asserted injection-detection verdict of true routes to the verification-failure incident composer (art-418) for fraud-team/regulator/insurer evidence; a clean session ends the chain.",
+  "spec_version": "ocg-control-plane@1",
+  "manifest": {
+    "manifest_version": "1",
+    "workflow_id": "pack-idv-session-evidence",
+    "trigger": {
+      "type": "manual"
+    },
+    "nodes": [
+      {
+        "node_id": "n1",
+        "kernel_id": "art-361-camera-provenance-check",
+        "kernel_digest": "sha256:66a38ec12dbba452a125bf4d8d7e48439c603c7307af287f274e17bac14aa6eb"
+      },
+      {
+        "node_id": "n2",
+        "kernel_id": "art-359-idv-session-receipt-builder",
+        "kernel_digest": "sha256:26c871dce0c13abab30f09deb7464533b71aeb0efca02e190a0bd388dd7274a1"
+      },
+      {
+        "node_id": "n3",
+        "kernel_id": "art-418-idv-verification-failure-incident-composer",
+        "kernel_digest": "sha256:90527f7f3f2c9cb095cea22dcaef24642147eb19350d1a0d12bc4eeccc168822"
+      }
+    ],
+    "connectors": [],
+    "gates": [],
+    "actions": []
+  },
+  "workflow_manifest_digest": "sha256:b7cdafc6983e7f1ca92494500ae6588a5f76d06d87c04cf751634e70bd0bc56b",
+  "declared_inputs": [],
+  "steps_meta": [
+    {
+      "node_id": "n1",
+      "data_classification": "compute"
+    },
+    {
+      "node_id": "n2",
+      "data_classification": "compute"
+    },
+    {
+      "node_id": "n3",
+      "data_classification": "compute"
+    }
+  ]
+}

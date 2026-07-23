@@ -1,0 +1,49 @@
+{
+  "workflow_id": "pack-traiga-safe-harbor",
+  "name": "TRAIGA Safe Harbor",
+  "outcome": "Gated three-step chain for the Texas Responsible AI Governance Act affirmative defense. Step 1 flags TRAIGA applicability and intentional prohibited-use assertions (gate: a prohibited use exits immediately, no defense evidence assembled). Step 2 (shipped map_nist_ai_rmf_functions) maps supplied controls to NIST AI RMF coverage (gate: Minimal or Partial coverage band exits, Substantial or Comprehensive continues). Step 3 assembles the affirmative-defense evidence pack. Evidence toward the Tex. Bus. & Com. Code §553.106 statutory defense, never a guarantee the defense succeeds.",
+  "spec_version": "ocg-control-plane@1",
+  "manifest": {
+    "manifest_version": "1",
+    "workflow_id": "pack-traiga-safe-harbor",
+    "trigger": {
+      "type": "manual"
+    },
+    "nodes": [
+      {
+        "node_id": "n1",
+        "kernel_id": "art-313-traiga-exposure-assessor",
+        "kernel_digest": "sha256:46ddb72f43e3a33e75b6718621bc06971855f36c96ee9be5c32f9d28277ca6ac"
+      },
+      {
+        "node_id": "n2",
+        "kernel_id": "art-174-nist-ai-rmf-function-mapper",
+        "kernel_digest": "sha256:a4ebaa6b0d2dc5a1fe2ef52ae2850bc85dcbea7221acd8dbae939d00039b6f9e"
+      },
+      {
+        "node_id": "n3",
+        "kernel_id": "art-314-traiga-safe-harbor-pack-builder",
+        "kernel_digest": "sha256:cda8ec3e208db10583b64a541b161952225891579c887aa1c900f1ab1e317f20"
+      }
+    ],
+    "connectors": [],
+    "gates": [],
+    "actions": []
+  },
+  "workflow_manifest_digest": "sha256:40e21ae95c09e7e93e11d6ccf3a9ad0626026718e0a81a2005205b0349e29d38",
+  "declared_inputs": [],
+  "steps_meta": [
+    {
+      "node_id": "n1",
+      "data_classification": "compute"
+    },
+    {
+      "node_id": "n2",
+      "data_classification": "compute"
+    },
+    {
+      "node_id": "n3",
+      "data_classification": "compute"
+    }
+  ]
+}

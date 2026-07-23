@@ -1,0 +1,45 @@
+{
+  "workflow_id": "pack-export-control-eccn",
+  "name": "ECCN / Dual-Use Classification",
+  "outcome": "Product attributes -> ECCN (EAR) + EU Annex I + controlling regime + licence logic including 2025 emerging-tech controls (ART-94) -> Merkle integrity (cry-04). EU Annex I updated 15 Nov 2025.",
+  "spec_version": "ocg-control-plane@1",
+  "manifest": {
+    "manifest_version": "1",
+    "workflow_id": "pack-export-control-eccn",
+    "trigger": {
+      "type": "manual"
+    },
+    "nodes": [
+      {
+        "node_id": "n1",
+        "kernel_id": "art-94-eccn-dual-use-classifier",
+        "kernel_digest": "sha256:be06d9a1450ca87a837b96284af6b98dbae8ddc68d252ca54240734fc8e1d778"
+      },
+      {
+        "node_id": "n2",
+        "kernel_id": "cry-04-merkle-batch-verifier",
+        "kernel_digest": "sha256:7c89b9651f986ed6652903c6d41e9fbda29d12db9fbc0a6acd4f7270160b7ccb"
+      }
+    ],
+    "connectors": [],
+    "gates": [],
+    "actions": []
+  },
+  "workflow_manifest_digest": "sha256:55a8f123a4fba9ba0c5c6fe848995ec1a487619f2b450c250f691ad0dfff1e9b",
+  "declared_inputs": [
+    {
+      "from": "art-90-sanctions-screening-fit-diagnostic",
+      "kind": "external"
+    }
+  ],
+  "steps_meta": [
+    {
+      "node_id": "n1",
+      "data_classification": "compute"
+    },
+    {
+      "node_id": "n2",
+      "data_classification": "compute"
+    }
+  ]
+}

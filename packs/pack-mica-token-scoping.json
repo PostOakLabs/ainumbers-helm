@@ -1,0 +1,45 @@
+{
+  "workflow_id": "pack-mica-token-scoping",
+  "name": "MiCA Token & Service Scoping",
+  "outcome": "Disambiguation router (ART-105) classifying ART/EMT-issuer cases (delegated to the existing stablecoin-compliance/reserve chains) vs CASP-service cases -> audit receipt (cry-05). Prevents overlap; packages the MiCA suite.",
+  "spec_version": "ocg-control-plane@1",
+  "manifest": {
+    "manifest_version": "1",
+    "workflow_id": "pack-mica-token-scoping",
+    "trigger": {
+      "type": "manual"
+    },
+    "nodes": [
+      {
+        "node_id": "n1",
+        "kernel_id": "art-105-mica-token-service-scoper",
+        "kernel_digest": "sha256:d0eebd3034d330eb5b1a17311674632a9254db5a191bde8f9508ca7f16d2b615"
+      },
+      {
+        "node_id": "n2",
+        "kernel_id": "cry-05-agent-action-audit-trail-aggregator",
+        "kernel_digest": "sha256:5f7f6ab0bb2e2b736805ecde518ca59ba9a83ad38b17545a8c7c133cffa1481f"
+      }
+    ],
+    "connectors": [],
+    "gates": [],
+    "actions": []
+  },
+  "workflow_manifest_digest": "sha256:5e6636e72bec78ae455da85c3d8491deb5e2d8bdb66abeef7c219c2ab7a5d618",
+  "declared_inputs": [
+    {
+      "from": "art-98-mica-casp-fit-diagnostic",
+      "kind": "external"
+    }
+  ],
+  "steps_meta": [
+    {
+      "node_id": "n1",
+      "data_classification": "compute"
+    },
+    {
+      "node_id": "n2",
+      "data_classification": "compute"
+    }
+  ]
+}

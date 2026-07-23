@@ -1,0 +1,49 @@
+{
+  "workflow_id": "pack-treasury-clearing-onboarding",
+  "name": "Sponsored/Agent Clearing Onboarding",
+  "outcome": "W-G. Counterparty allowlist (LEI/OFAC/FATF Rec 16, 509) -> AML typology screen (art-10) -> Merkle-root onboarding receipt (cry-05). KYC/AML/audit pack for sponsored or agent clearing onboarding.",
+  "spec_version": "ocg-control-plane@1",
+  "manifest": {
+    "manifest_version": "1",
+    "workflow_id": "pack-treasury-clearing-onboarding",
+    "trigger": {
+      "type": "manual"
+    },
+    "nodes": [
+      {
+        "node_id": "n1",
+        "kernel_id": "509-canton-party-allowlist-validator",
+        "kernel_digest": "sha256:83887e461c79e0e1d5966dc6ad1887b4f0e205494e6dda2381001970b364930a"
+      },
+      {
+        "node_id": "n2",
+        "kernel_id": "art-10-amla-transaction-typology-risk-scorer",
+        "kernel_digest": "sha256:c02483af798b9da4593d70b071619e12487bbd02e21b016eb9d46ced84c5ab90"
+      },
+      {
+        "node_id": "n3",
+        "kernel_id": "cry-05-agent-action-audit-trail-aggregator",
+        "kernel_digest": "sha256:5f7f6ab0bb2e2b736805ecde518ca59ba9a83ad38b17545a8c7c133cffa1481f"
+      }
+    ],
+    "connectors": [],
+    "gates": [],
+    "actions": []
+  },
+  "workflow_manifest_digest": "sha256:83e57c297d3663a763df606650ec974e1ca921d3bb5a2ce5e94bdc907628b3d6",
+  "declared_inputs": [],
+  "steps_meta": [
+    {
+      "node_id": "n1",
+      "data_classification": "compute"
+    },
+    {
+      "node_id": "n2",
+      "data_classification": "compute"
+    },
+    {
+      "node_id": "n3",
+      "data_classification": "compute"
+    }
+  ]
+}

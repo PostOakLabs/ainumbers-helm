@@ -1,0 +1,40 @@
+{
+  "workflow_id": "pack-fair-lending-disparity-audit",
+  "name": "Fair Lending Disparity Audit",
+  "outcome": "Gated two-step chain for fair lending disparate impact audit. Step 1 computes the HMDA rate spread and classifies reportability. Step 2 computes disparate impact metrics from aggregate approval counts (4/5ths rule, z-statistic, standardised mean difference). Gate: adverse_impact_ratio < 0.8 exits to remediation path (4/5ths rule violation). All inputs are aggregate counts only. ZERO PII BY CONSTRUCTION.",
+  "spec_version": "ocg-control-plane@1",
+  "manifest": {
+    "manifest_version": "1",
+    "workflow_id": "pack-fair-lending-disparity-audit",
+    "trigger": {
+      "type": "manual"
+    },
+    "nodes": [
+      {
+        "node_id": "n1",
+        "kernel_id": "art-230-compute-hmda-rate-spread",
+        "kernel_digest": "sha256:bf8ab4e43a576fd89244c8f1a43a0adb3c8ae4fb433d163a90773584efe86b9b"
+      },
+      {
+        "node_id": "n2",
+        "kernel_id": "art-229-compute-disparity-metrics",
+        "kernel_digest": "sha256:1dc8545c4d3f629c66a7ba5ecc65ad105f855135774e745190e7d089b5ad9b27"
+      }
+    ],
+    "connectors": [],
+    "gates": [],
+    "actions": []
+  },
+  "workflow_manifest_digest": "sha256:25f55248e948d0706027630c7faa9a7a7f63ce6cb9eb9d0673f2b120191e7082",
+  "declared_inputs": [],
+  "steps_meta": [
+    {
+      "node_id": "n1",
+      "data_classification": "compute"
+    },
+    {
+      "node_id": "n2",
+      "data_classification": "compute"
+    }
+  ]
+}

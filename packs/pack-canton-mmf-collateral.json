@@ -1,0 +1,45 @@
+{
+  "workflow_id": "pack-canton-mmf-collateral",
+  "name": "Canton MMF Collateral Eligibility Chain",
+  "outcome": "Validate a tokenized money-market fund as eligible collateral for Canton settlement. Fund-level NAV and eligibility check → HQLA tier and haircut verdict.",
+  "spec_version": "ocg-control-plane@1",
+  "manifest": {
+    "manifest_version": "1",
+    "workflow_id": "pack-canton-mmf-collateral",
+    "trigger": {
+      "type": "manual"
+    },
+    "nodes": [
+      {
+        "node_id": "n1",
+        "kernel_id": "514-tokenized-fund-collateral-validator",
+        "kernel_digest": "sha256:0ffd03e4aa9960ce7c1c4b4ed9d985e33b3a166f5f96942ff5eb419487a0e62b"
+      },
+      {
+        "node_id": "n2",
+        "kernel_id": "505-tokenized-collateral-eligibility-checker",
+        "kernel_digest": "sha256:37bbe20bf9c7e913038c93cc07f1425e4956c47da12a2663b58e35f50c3173c2"
+      }
+    ],
+    "connectors": [],
+    "gates": [],
+    "actions": []
+  },
+  "workflow_manifest_digest": "sha256:008afe2261647da669f50ec1a90ffeca4832dccbd03e29a9d79919cb416d78ad",
+  "declared_inputs": [
+    {
+      "from": "505-tokenized-collateral-eligibility-checker",
+      "kind": "external"
+    }
+  ],
+  "steps_meta": [
+    {
+      "node_id": "n1",
+      "data_classification": "compute"
+    },
+    {
+      "node_id": "n2",
+      "data_classification": "compute"
+    }
+  ]
+}

@@ -1,0 +1,54 @@
+{
+  "workflow_id": "pack-digital-trade-ebl-enforceability",
+  "name": "eBL MLETR Conformance & Corridor Enforceability",
+  "outcome": "W-A. MLETR functional-equivalence + cross-corridor enforceability (ART-53) -> instrument/jurisdiction classification (510) -> Merkle integrity over the authoritative copy (cry-04). The flagship decision chain: will this electronic bill of lading hold up at both ends?",
+  "spec_version": "ocg-control-plane@1",
+  "manifest": {
+    "manifest_version": "1",
+    "workflow_id": "pack-digital-trade-ebl-enforceability",
+    "trigger": {
+      "type": "manual"
+    },
+    "nodes": [
+      {
+        "node_id": "n1",
+        "kernel_id": "art-53-mletr-ebl-conformance-validator",
+        "kernel_digest": "sha256:0f260f878472634095d299ddde16662204d6432e1b458c6afddc094d2bac7dd8"
+      },
+      {
+        "node_id": "n2",
+        "kernel_id": "510-digital-asset-regulatory-classifier",
+        "kernel_digest": "sha256:e70b5a1adf38189f6a6f09d6b4b0dcfaf16394beb5f30f8b397cadbb0ffa2a5f"
+      },
+      {
+        "node_id": "n3",
+        "kernel_id": "cry-04-merkle-batch-verifier",
+        "kernel_digest": "sha256:7c89b9651f986ed6652903c6d41e9fbda29d12db9fbc0a6acd4f7270160b7ccb"
+      }
+    ],
+    "connectors": [],
+    "gates": [],
+    "actions": []
+  },
+  "workflow_manifest_digest": "sha256:ea2b8e24872a5262dfb4ba436f4af5ebf9ea356721eadaa4a45468641065be23",
+  "declared_inputs": [
+    {
+      "from": "art-52-digital-trade-fit-diagnostic",
+      "kind": "external"
+    }
+  ],
+  "steps_meta": [
+    {
+      "node_id": "n1",
+      "data_classification": "compute"
+    },
+    {
+      "node_id": "n2",
+      "data_classification": "compute"
+    },
+    {
+      "node_id": "n3",
+      "data_classification": "compute"
+    }
+  ]
+}

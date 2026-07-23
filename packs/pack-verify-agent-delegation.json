@@ -1,0 +1,45 @@
+{
+  "workflow_id": "pack-verify-agent-delegation",
+  "name": "Agent Identity & Delegation Chain Verifier",
+  "outcome": "Verifies the two most-cited emerging agent-identity primitives in sequence: a did:webvh DID log's hash-chain and update-key authorization, then an ACDC credential chain's SAID integrity and issuer-to-issuee edge linkage back to a stated root AID. Verify-only across both steps.",
+  "spec_version": "ocg-control-plane@1",
+  "manifest": {
+    "manifest_version": "1",
+    "workflow_id": "pack-verify-agent-delegation",
+    "trigger": {
+      "type": "manual"
+    },
+    "nodes": [
+      {
+        "node_id": "n1",
+        "kernel_id": "art-284-did-webvh-log-verifier",
+        "kernel_digest": "sha256:e224c8b26c16b08b7d1cbb8bd0c036358387aa3c7c091ba3cd25f769c2d5d888"
+      },
+      {
+        "node_id": "n2",
+        "kernel_id": "art-285-acdc-delegation-chain-verifier",
+        "kernel_digest": "sha256:c2e7514896d7266effdbb7716fefc7f39377a555f3f45bb847ec9250a184c7db"
+      }
+    ],
+    "connectors": [],
+    "gates": [],
+    "actions": []
+  },
+  "workflow_manifest_digest": "sha256:50209ee92add5a2e1f372bda494c55f71eded10891ef538e369f595d8eb079e3",
+  "declared_inputs": [
+    {
+      "from": "art-04-agent-identity-attestation-checker",
+      "kind": "external"
+    }
+  ],
+  "steps_meta": [
+    {
+      "node_id": "n1",
+      "data_classification": "compute"
+    },
+    {
+      "node_id": "n2",
+      "data_classification": "compute"
+    }
+  ]
+}

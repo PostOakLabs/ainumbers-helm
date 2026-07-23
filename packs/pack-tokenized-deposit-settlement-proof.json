@@ -1,0 +1,58 @@
+{
+  "workflow_id": "pack-tokenized-deposit-settlement-proof",
+  "name": "Tokenized Deposit Settlement Proof",
+  "outcome": "Settled-compliantly proof for a tokenized-deposit transfer on a shared orchestration layer, without leaking counterparty data: tokenized-settlement fit check, L2/L1 asset-finality classification, and a zk compliance proof compose into a receipt an auditor can independently verify.",
+  "spec_version": "ocg-control-plane@1",
+  "manifest": {
+    "manifest_version": "1",
+    "workflow_id": "pack-tokenized-deposit-settlement-proof",
+    "trigger": {
+      "type": "manual"
+    },
+    "nodes": [
+      {
+        "node_id": "n1",
+        "kernel_id": "art-56-tokenized-settlement-fit-diagnostic",
+        "kernel_digest": "sha256:b52a79f937c901786a32dcae3e275f3e2a4bb308cb0fb844998c5cf1268da1ff"
+      },
+      {
+        "node_id": "n2",
+        "kernel_id": "art-59-settlement-asset-finality-classifier",
+        "kernel_digest": "sha256:6e5f40137139c4daa1f923ead6929ad30a66ce97c477702730064bc683fb6f05"
+      },
+      {
+        "node_id": "n3",
+        "kernel_id": "cry-01-zk-compliance-proof-generator",
+        "kernel_digest": "sha256:c5d758f79de7b13d3b76a0c77f4a5922703386c1dc80db64fb81a1829465a800"
+      },
+      {
+        "node_id": "n4",
+        "kernel_id": "art-121-document-integrity-anchor",
+        "kernel_digest": "sha256:7f6d0e49c1eeb8c26e4d0453f504f575f36b4547315236e2d5796bea05076cb0"
+      }
+    ],
+    "connectors": [],
+    "gates": [],
+    "actions": []
+  },
+  "workflow_manifest_digest": "sha256:78d17b140c8e297ce2efb61e05ab24da112816e01a6a2266818e5605fc35f5cb",
+  "declared_inputs": [],
+  "steps_meta": [
+    {
+      "node_id": "n1",
+      "data_classification": "compute"
+    },
+    {
+      "node_id": "n2",
+      "data_classification": "compute"
+    },
+    {
+      "node_id": "n3",
+      "data_classification": "compute"
+    },
+    {
+      "node_id": "n4",
+      "data_classification": "compute"
+    }
+  ]
+}

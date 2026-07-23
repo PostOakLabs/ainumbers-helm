@@ -1,0 +1,54 @@
+{
+  "workflow_id": "pack-mortgage-apr-accuracy-and-tolerance-cure",
+  "name": "Mortgage APR Accuracy and Tolerance Cure",
+  "outcome": "Actuarial APR solve followed by TRID APR accuracy check and TRID fee tolerance cure calculation. Linear chain: computes APR, verifies it against disclosed APR within §1026.22(a) tolerance, then computes the cure amount required for any fee tolerance violation under §1026.19(e)(3).",
+  "spec_version": "ocg-control-plane@1",
+  "manifest": {
+    "manifest_version": "1",
+    "workflow_id": "pack-mortgage-apr-accuracy-and-tolerance-cure",
+    "trigger": {
+      "type": "manual"
+    },
+    "nodes": [
+      {
+        "node_id": "n1",
+        "kernel_id": "art-215-reg-z-appendix-j-apr",
+        "kernel_digest": "sha256:429bfe0fa27879e429bbd5129f57243ebc99b4e6dc016f0ffebacd35acdd9219"
+      },
+      {
+        "node_id": "n2",
+        "kernel_id": "art-217-trid-apr-accuracy",
+        "kernel_digest": "sha256:a74ebe7cdb837e03a939cbe160d49a4f412192f9c98d5d928c8daddda570f8fd"
+      },
+      {
+        "node_id": "n3",
+        "kernel_id": "art-216-trid-tolerance-cure",
+        "kernel_digest": "sha256:9be448c7f2f02ca2d2b223550734fe431b0dacf6d93db36ccae0cb6963e83cb3"
+      }
+    ],
+    "connectors": [],
+    "gates": [],
+    "actions": []
+  },
+  "workflow_manifest_digest": "sha256:43bc1e6d0334bde508fe027aa43dc7266f2413049499d7343cfbdfbf21ade7b6",
+  "declared_inputs": [
+    {
+      "from": "art-332-build-amortization-schedule",
+      "kind": "external"
+    }
+  ],
+  "steps_meta": [
+    {
+      "node_id": "n1",
+      "data_classification": "compute"
+    },
+    {
+      "node_id": "n2",
+      "data_classification": "compute"
+    },
+    {
+      "node_id": "n3",
+      "data_classification": "compute"
+    }
+  ]
+}

@@ -1,0 +1,40 @@
+{
+  "workflow_id": "pack-claim-dispute-bundle-assembly",
+  "name": "Claim Dispute Bundle Assembly",
+  "outcome": "Two-step agent-insurability evidence flow: score an agent execution evidence bundle for underwriter-facing evidence completeness, then build a two-sided replay-challenge dossier for a disputed execution_claim, optionally testing a warranty KPI breach.",
+  "spec_version": "ocg-control-plane@1",
+  "manifest": {
+    "manifest_version": "1",
+    "workflow_id": "pack-claim-dispute-bundle-assembly",
+    "trigger": {
+      "type": "manual"
+    },
+    "nodes": [
+      {
+        "node_id": "n1",
+        "kernel_id": "art-306-agent-insurability-evidence-scorer",
+        "kernel_digest": "sha256:f50363027fceb9b9a98ba34c1f35c4327444cc91359d34e351167d15f2812013"
+      },
+      {
+        "node_id": "n2",
+        "kernel_id": "art-307-claim-dispute-bundle-builder",
+        "kernel_digest": "sha256:1daef6202ad1566e6f94d6f395e4e645e4d15288589e2864a84c2c2e33415211"
+      }
+    ],
+    "connectors": [],
+    "gates": [],
+    "actions": []
+  },
+  "workflow_manifest_digest": "sha256:686843884086b480cada7cf9b96095b1db209a16e097fc17dc0f8af245204081",
+  "declared_inputs": [],
+  "steps_meta": [
+    {
+      "node_id": "n1",
+      "data_classification": "compute"
+    },
+    {
+      "node_id": "n2",
+      "data_classification": "compute"
+    }
+  ]
+}

@@ -1,0 +1,67 @@
+{
+  "workflow_id": "pack-ai-vendor-onboarding-packet",
+  "name": "AI Vendor Onboarding Packet",
+  "outcome": "Risk-classify an AI vendor against the EU AI Act, pull the matching Model Contractual AI Clauses, assemble the Common Paper AI Addendum from Cover Page Key Terms, confirm the DPA is GDPR Art 28 complete, and emit a countersigned agent-acceptance receipt. End-to-end verifiable AI-vendor onboarding.",
+  "spec_version": "ocg-control-plane@1",
+  "manifest": {
+    "manifest_version": "1",
+    "workflow_id": "pack-ai-vendor-onboarding-packet",
+    "trigger": {
+      "type": "manual"
+    },
+    "nodes": [
+      {
+        "node_id": "n1",
+        "kernel_id": "art-64-ai-act-highrisk-fit-diagnostic",
+        "kernel_digest": "sha256:586d2012166bfe8fc88259c3ca7e325a06b321e423167347d5b97ef049eaa88d"
+      },
+      {
+        "node_id": "n2",
+        "kernel_id": "art-412-ai-act-procurement-clause-mapper",
+        "kernel_digest": "sha256:892f0f32b3889153f5a40251ad7cf96f85b3588942c675d4f91008061a33927a"
+      },
+      {
+        "node_id": "n3",
+        "kernel_id": "art-411-ai-addendum-assembler",
+        "kernel_digest": "sha256:acbbbf9e75cae616381dcbdd06684f7b930a4717cb5966d6de4438ede3f04201"
+      },
+      {
+        "node_id": "n4",
+        "kernel_id": "art-409-dpa-art28-completeness-checker",
+        "kernel_digest": "sha256:640dfd01155c133e833f96c9b7304ae863c00abeb361a3d1d707e96fc85e9b40"
+      },
+      {
+        "node_id": "n5",
+        "kernel_id": "art-277-agreement-acceptance-binder",
+        "kernel_digest": "sha256:f89876aa4e8bd2c8202f42f53375dcaadcf311417577d08361dc752421a2a965"
+      }
+    ],
+    "connectors": [],
+    "gates": [],
+    "actions": []
+  },
+  "workflow_manifest_digest": "sha256:d797f34824631b1000a565cec80406a1654e70cab72d4392b24fce699dcd4552",
+  "declared_inputs": [],
+  "steps_meta": [
+    {
+      "node_id": "n1",
+      "data_classification": "compute"
+    },
+    {
+      "node_id": "n2",
+      "data_classification": "compute"
+    },
+    {
+      "node_id": "n3",
+      "data_classification": "compute"
+    },
+    {
+      "node_id": "n4",
+      "data_classification": "compute"
+    },
+    {
+      "node_id": "n5",
+      "data_classification": "compute"
+    }
+  ]
+}

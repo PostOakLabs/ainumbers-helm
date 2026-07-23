@@ -1,0 +1,58 @@
+{
+  "workflow_id": "pack-ai-governance-audit-pack",
+  "name": "AI Governance Conformity Audit Pack",
+  "outcome": "W-G convergence terminal. Merkle integrity over the AI-governance decision set (cry-04) -> one Merkle-root audit receipt (cry-05) -> regulator/notified-body-framed cover memo (ptg-01). Other chains can feed in.",
+  "spec_version": "ocg-control-plane@1",
+  "manifest": {
+    "manifest_version": "1",
+    "workflow_id": "pack-ai-governance-audit-pack",
+    "trigger": {
+      "type": "manual"
+    },
+    "nodes": [
+      {
+        "node_id": "n1",
+        "kernel_id": "cry-04-merkle-batch-verifier",
+        "kernel_digest": "sha256:7c89b9651f986ed6652903c6d41e9fbda29d12db9fbc0a6acd4f7270160b7ccb"
+      },
+      {
+        "node_id": "n2",
+        "kernel_id": "cry-05-agent-action-audit-trail-aggregator",
+        "kernel_digest": "sha256:5f7f6ab0bb2e2b736805ecde518ca59ba9a83ad38b17545a8c7c133cffa1481f"
+      },
+      {
+        "node_id": "n3",
+        "kernel_id": "ptg-01-ap2-prompt-template-generator",
+        "kernel_digest": "sha256:5f23d03d4d538507b92a3f3461e5d0ebb6987227fd3a7ae41281216fc2fabe8e"
+      }
+    ],
+    "connectors": [],
+    "gates": [],
+    "actions": []
+  },
+  "workflow_manifest_digest": "sha256:06d669827426cf618fa96cd380c5d4c6d0602f67a0606b66ab8a33707f871489",
+  "declared_inputs": [
+    {
+      "from": "rca-02-mica-reserve-stress",
+      "kind": "external"
+    },
+    {
+      "from": "pnr-01-dora-ict-cascade-simulator",
+      "kind": "external"
+    }
+  ],
+  "steps_meta": [
+    {
+      "node_id": "n1",
+      "data_classification": "compute"
+    },
+    {
+      "node_id": "n2",
+      "data_classification": "compute"
+    },
+    {
+      "node_id": "n3",
+      "data_classification": "compute"
+    }
+  ]
+}

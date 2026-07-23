@@ -1,0 +1,416 @@
+{
+  "pinnedSha": "bfa1bd621ca7147d2dc32f34326444159dfb0387",
+  "generatedFrom": "hub/vendored/ocg/chaingraph.json",
+  "compiledCount": 207,
+  "skippedCount": 102,
+  "skips": [
+    {
+      "name": "a2a-payment-rail-compliance",
+      "reason": "non-kernel or unvendored step(s): 01-a2a-fee-route-optimizer, 09-a2a-reconciliation-workbench, 18-a2a-compliance-checklist, 82-a2a-rail-command-center"
+    },
+    {
+      "name": "ach-fraud-monitoring",
+      "reason": "non-kernel or unvendored step(s): 492-ach-fraud-monitoring-procedure-builder, 493-ach-false-pretenses-credit-entry-simulator, 494-ach-fraud-monitoring-audit-pack-generator"
+    },
+    {
+      "name": "agentic-checkout",
+      "reason": "non-kernel or unvendored step(s): 495-agentic-checkout-protocol-selector, 496-acp-ucp-product-feed-conformance-auditor, 498-agent-traffic-acceptance-policy-builder"
+    },
+    {
+      "name": "agentic-commerce-checkout",
+      "reason": "non-kernel or unvendored step(s): 495-agentic-checkout-protocol-selector, 26-app-fraud-matrix, 498-agent-traffic-acceptance-policy-builder"
+    },
+    {
+      "name": "agentic-payment-protocol-audit",
+      "reason": "non-kernel or unvendored step(s): 283-a2a-agent-card-validator, 285-google-ap2-mandate-builder, 277-x402-payload-decoder-flow-simulator, 286-visa-trusted-agent-protocol-inspector"
+    },
+    {
+      "name": "agentic-policy",
+      "reason": "non-kernel or unvendored step(s): rbe-06-agentic-mandate-sandbox, 285-google-ap2-mandate-builder, 320-ap2-mcp-policy-validator, 288-mcp-developer-readiness-scorecard"
+    },
+    {
+      "name": "agentic-rail-standards",
+      "reason": "non-kernel or unvendored step(s): 276-agentic-payments-protocol-comparator, 287-mastercard-agentic-token-builder, 374-visa-vic-agent-token-scope-builder, 375-visa-agentic-ready-issuer-readiness-scorer"
+    },
+    {
+      "name": "ai-act-for-fs",
+      "reason": "non-kernel or unvendored step(s): 327-eu-ai-act-risk-class-mapper, 333-eu-ai-act-article9-risk-mgmt-builder, 451-sr11-7-model-risk-management-gap-assessor"
+    },
+    {
+      "name": "ai-governance-conformity",
+      "reason": "non-kernel or unvendored step(s): 333-eu-ai-act-article9-risk-mgmt-builder"
+    },
+    {
+      "name": "ai-governance-credit-ai-conformity",
+      "reason": "non-kernel or unvendored step(s): 327-eu-ai-act-risk-class-mapper"
+    },
+    {
+      "name": "ai-governance-fairness-bias",
+      "reason": "non-kernel or unvendored step(s): 452-fair-lending-ai-bias-assessment"
+    },
+    {
+      "name": "ai-governance-fria-monitoring",
+      "reason": "non-kernel or unvendored step(s): 451-sr11-7-model-risk-management-gap-assessor"
+    },
+    {
+      "name": "aml-programme",
+      "reason": "non-kernel or unvendored step(s): 110-customer-risk-rating, 116-tm-rule-builder, 119-ctr-sar-threshold-simulator, 131-ap2-aml-mandate-builder"
+    },
+    {
+      "name": "amlr-single-rulebook",
+      "reason": "non-kernel or unvendored step(s): 485-amlr-obliged-entity-scope-mapper, 486-amlr-ubo-beneficial-ownership-mapper, 487-amlr-cash-limit-edd-classifier, 488-amlr-cdd-policy-builder, 350-amla-2027-readiness-gap-analyzer"
+    },
+    {
+      "name": "b2b-payments-ap-automation",
+      "reason": "non-kernel or unvendored step(s): 132-invoice-to-payment-orchestrator, 134-ap-automation-savings-calculator, 135-supplier-payment-terms-optimiser, 137-payment-orchestration-vendor-scorecard, 139-erp-payment-integration-scorer"
+    },
+    {
+      "name": "baas-programme",
+      "reason": "non-kernel or unvendored step(s): 152-baas-provider-comparator, 160-embedded-lending-unit-economics, 158-fintech-compliance-control-mapper, 140-b2b-payment-fraud-detector"
+    },
+    {
+      "name": "baas-sponsor-bank",
+      "reason": "non-kernel or unvendored step(s): 152-baas-provider-comparator, 153-fbo-account-structure-simulator, 154-ledger-architecture-builder, 158-fintech-compliance-control-mapper, 162-sponsor-bank-readiness-scorer"
+    },
+    {
+      "name": "bank-capital-liquidity",
+      "reason": "non-kernel or unvendored step(s): 201-basel-rwa-calculator, 469-lcr-calculator, 470-nsfr-calculator, 471-leverage-ratio-calculator, 472-pillar-3-disclosure-builder"
+    },
+    {
+      "name": "basel-endgame-frtb-capital",
+      "reason": "non-kernel or unvendored step(s): 339-sr2602-model-risk-mgmt-gap-analyzer, 340-frtb-internal-model-eligibility-checker, 341-basel-iii-endgame-capital-impact-estimator, 357-crr3-output-floor-phase-in-calculator, 398-frtb-trading-desk-ima-eligibility-assessor"
+    },
+    {
+      "name": "basel-iv-capital-stress",
+      "reason": "non-kernel or unvendored step(s): 201-basel-rwa-calculator, 202-credit-stress-testing-workbench, 203-raroc-loan-pricing-model, 204-ifrs9-credit-migration-matrix"
+    },
+    {
+      "name": "bnpl-programme",
+      "reason": "non-kernel or unvendored step(s): 187-bnpl-fca-readiness-checker, 190-bnpl-affordability-assessment-modeller, 193-bnpl-apr-calculator, 191-bnpl-disclosure-template-generator, 192-bnpl-arrears-collections-checker"
+    },
+    {
+      "name": "bond-mandate-receipt",
+      "reason": "non-kernel or unvendored step(s): rbe-06-agentic-mandate-sandbox"
+    },
+    {
+      "name": "card-interchange",
+      "reason": "non-kernel or unvendored step(s): 52-interchange-optimizer, 225-visa-mc-interchange-qualification-tester, 233-card-scheme-fee-benchmarking, 228-3ds-emv-compliance-checker"
+    },
+    {
+      "name": "card-programme",
+      "reason": "non-kernel or unvendored step(s): 163-card-programme-launch-readiness-checker, 225-visa-mc-interchange-qualification-tester, 226-pci-dss-v4-scope-wizard, 228-3ds-emv-compliance-checker, 233-card-scheme-fee-benchmarking"
+    },
+    {
+      "name": "card-scheme-dispute-management",
+      "reason": "non-kernel or unvendored step(s): 227-card-dispute-reason-code-mapper, 85-card-economics-optimizer, 41-chargeback-representment-builder"
+    },
+    {
+      "name": "cbdc-dlt-architecture",
+      "reason": "non-kernel or unvendored step(s): 53-cbdc-architecture-comparator, 57-iso20022-dlt-mapper, 58-cbdc-interop-modeler, 68-dlt-platform-comparator, 73-dlt-decision-lab"
+    },
+    {
+      "name": "cbpr-cutover",
+      "reason": "non-kernel or unvendored step(s): 02-iso20022-builder, 144-iso20022-remittance-validator, 254-iso20022-cross-rail-compatibility, 98-iso20022-validator"
+    },
+    {
+      "name": "ccd2-consumer-credit",
+      "reason": "non-kernel or unvendored step(s): 481-ccd2-scope-classifier, 482-ccd2-creditworthiness-assessment-builder, 483-ccd2-secci-precontractual-disclosure-generator, 484-ccd2-readiness-scorer"
+    },
+    {
+      "name": "cfpb-1033-open-banking",
+      "reason": "non-kernel or unvendored step(s): 165-cfpb-1033-institution-classifier, 166-cfpb-1033-data-rights-scoper, 167-cfpb-1033-tppp-mapper"
+    },
+    {
+      "name": "consumer-protection",
+      "reason": "non-kernel or unvendored step(s): 395-consumer-duty-vulnerability-assessment-builder, 396-consumer-duty-price-value-assessment, 428-mifid-costs-charges-calculator, 448-priips-kid-compliance-checker, 397-consumer-duty-mi-framework-builder"
+    },
+    {
+      "name": "counterparty-capital-margin",
+      "reason": "non-kernel or unvendored step(s): 400-sa-ccr-exposure-calculator, 401-cva-capital-framework-selector, 516-sa-im-initial-margin-calculator, 200-cva-calculator"
+    },
+    {
+      "name": "credit-decisioning",
+      "reason": "non-kernel or unvendored step(s): 198-pd-lgd-ead-modeller, 201-basel-rwa-calculator, 437-raroc-loan-pricing, 199-financial-covenant-compliance-checker, 435-credit-facility-structuring"
+    },
+    {
+      "name": "credit-ecl-valuation",
+      "reason": "non-kernel or unvendored step(s): 196-ifrs9-macro-overlay-calculator, 197-credit-risk-rating-calculator, 200-cva-calculator"
+    },
+    {
+      "name": "crypto-tax-reporting",
+      "reason": "non-kernel or unvendored step(s): 465-carf-dac8-reportable-classifier, 466-crypto-cost-basis-gain-calculator, 467-form-1099-da-generator, 468-casp-tax-reporting-readiness-scorer"
+    },
+    {
+      "name": "digital-trade-counterparty-aml",
+      "reason": "non-kernel or unvendored step(s): 110-customer-risk-rating"
+    },
+    {
+      "name": "dlt-network-governance",
+      "reason": "non-kernel or unvendored step(s): 69-dlt-privacy-selector, 70-node-topology-modeler, 71-dlt-guardrail-builder, 72-dlt-readiness-checklist"
+    },
+    {
+      "name": "dlt-settlement-compliance",
+      "reason": "non-kernel or unvendored step(s): 55-dvp-reconciliation, 63-tokenized-asset-compliance, 65-settlement-finality-auditor, 67-dlt-tco-calculator, 74-dlt-settlement-verifier"
+    },
+    {
+      "name": "dora-operational-resilience",
+      "reason": "non-kernel or unvendored step(s): 311-gdpr-dsr-workflow-generator, 312-bcbs239-model-risk-readiness-scorer, 313-mifid2-transaction-reporting-checker, 314-operational-resilience-self-assessment, 315-fca-consumer-duty-outcome-dashboard"
+    },
+    {
+      "name": "dora-readiness",
+      "reason": "non-kernel or unvendored step(s): 300-dora-ict-risk-gap-analyser, 304-dora-resilience-testing-designer, 307-dora-proportionality-assessment, 310-ap2-dora-policy-mandate-builder"
+    },
+    {
+      "name": "dora-resilience",
+      "reason": "non-kernel or unvendored step(s): 303-dora-incident-classification-engine, rbe-11-dora-incident-classifier, 306-dora-ict-concentration-risk-modeller, 358-dora-ict-tpp-register-builder, 359-dora-tlpt-scope-assessor, 304-dora-resilience-testing-designer, 308-dora-nca-submission-tracker"
+    },
+    {
+      "name": "dora-third-party-ict-risk",
+      "reason": "non-kernel or unvendored step(s): 301-dora-roi-structure-builder, 302-dora-cif-identifier, 305-dora-third-party-contract-checker, 309-nis2-dora-overlap-mapper"
+    },
+    {
+      "name": "einvoicing-vida",
+      "reason": "non-kernel or unvendored step(s): 179-vida-drr-readiness-scorer, 180-b2b-einvoice-compliance-scorer, 174-peppol-xml-auditor, 178-invoice-to-iso20022-bridge"
+    },
+    {
+      "name": "embedded-finance-licensing",
+      "reason": "non-kernel or unvendored step(s): 149-seller-onboarding-classifier, 150-mtl-licensing-risk-mapper, 158-fintech-compliance-control-mapper, 162-sponsor-bank-readiness-scorer"
+    },
+    {
+      "name": "emerging-market-fx-corridor",
+      "reason": "non-kernel or unvendored step(s): 157-settlement-orchestration-simulator, 217-em-fx-risk-classifier, 218-pvp-settlement-sync-model, 220-correspondent-derisking-modeler, 221-cross-border-finality-comparator, 325-payment-cutoff-settlement-atlas"
+    },
+    {
+      "name": "eu-ai-act-provider-obligations",
+      "reason": "non-kernel or unvendored step(s): 327-eu-ai-act-risk-class-mapper, 333-eu-ai-act-article9-risk-mgmt-builder, 334-eu-ai-act-article10-data-governance-mapper, 335-eu-ai-act-provider-deployer-obligations-splitter"
+    },
+    {
+      "name": "eudi-wallet-acceptance",
+      "reason": "non-kernel or unvendored step(s): 489-eudi-attribute-attestation-mapper, 490-eudi-kyc-flow-designer, 491-eudi-relying-party-registration-checker, 348-eidas2-eudi-wallet-relying-party-readiness-scorer"
+    },
+    {
+      "name": "fca-bnpl-dpc",
+      "reason": "non-kernel or unvendored step(s): 329-fca-dpc-scope-classifier, 330-fca-dpc-creditworthiness-assessment-builder, 331-fca-consumer-duty-dpc-mapper"
+    },
+    {
+      "name": "fedwire-address-migration",
+      "reason": "non-kernel or unvendored step(s): 548-fedwire-remediation-diff-receipt"
+    },
+    {
+      "name": "fida-data-monetisation",
+      "reason": "non-kernel or unvendored step(s): 377-open-finance-data-product-revenue-modeler, 409-open-finance-api-monetisation-calculator, 411-open-finance-business-case-roi-modeller, 413-eu-data-act-financial-services-scope-mapper"
+    },
+    {
+      "name": "fida-open-finance-readiness",
+      "reason": "non-kernel or unvendored step(s): 273-fida-open-finance-readiness, 360-fida-open-finance-data-scope-mapper, 407-fida-fip-authorisation-readiness-builder, 408-fida-permission-scheme-scope-checker, 410-fida-cross-sector-data-scope-mapper"
+    },
+    {
+      "name": "financial-crime-compliance",
+      "reason": "non-kernel or unvendored step(s): 110-customer-risk-rating, 477-fatf-customer-risk-rating, 316-sanctions-programme-health-checker, 112-pep-sanctions-simulator, 43-batch-sanctions-screening, 120-layering-typology-identifier, 117-structuring-pattern-detector, 316-sanctions-programme-health-checker"
+    },
+    {
+      "name": "fraud-decisioning",
+      "reason": "non-kernel or unvendored step(s): 256-rtp-fraud-velocity-rule-builder, 117-structuring-pattern-detector, 80-fraud-investigation-lab, 322-app-scam-risk-assessor"
+    },
+    {
+      "name": "fx-corridor",
+      "reason": "non-kernel or unvendored step(s): 209-fx-margin-cost-transparency, 210-cross-border-payment-failure-model, 216-corridor-cost-ranker, 95-payment-corridor-optimizer"
+    },
+    {
+      "name": "fx-risk-management",
+      "reason": "non-kernel or unvendored step(s): 211-fx-hedging-instrument-comparison, 212-swift-gpi-rail-comparator, 213-currency-risk-exposure-heatmap, 214-ibor-transition-reference-checker"
+    },
+    {
+      "name": "genius-act-issuer-licensing",
+      "reason": "non-kernel or unvendored step(s): 336-genius-act-issuer-classification-mapper, 337-genius-act-reserve-attestation-checklist, 338-genius-act-aml-sanctions-scope-builder, 387-genius-act-state-federal-licensing-path-selector, 389-genius-act-disclosure-reporting-builder"
+    },
+    {
+      "name": "green-finance-transition",
+      "reason": "non-kernel or unvendored step(s): 365-greenwashing-risk-assessor, 366-sll-kpi-adequacy-checker, 381-eu-green-bond-standard-screener, 382-net-zero-alignment-scorer, 385-transition-plan-adequacy-checker"
+    },
+    {
+      "name": "instant-payments-compliance",
+      "reason": "non-kernel or unvendored step(s): 06-fednow-lookup, 17-instant-payment-limits, 08-pay-by-bank-prototyper"
+    },
+    {
+      "name": "instant-payments-vop",
+      "reason": "non-kernel or unvendored step(s): 229-rtp-network-participation-checker, 289-verification-of-payee-simulator, 258-intraday-credit-facility-sizer, 349-sepa-ipr-annual-report-builder, 259-ap2-rtp-policy-builder"
+    },
+    {
+      "name": "insurance-capital-pricing",
+      "reason": "non-kernel or unvendored step(s): 446-embedded-insurance-pricing-modeller, 447-solvency-ii-scr-calculator, 457-naic-rbc-calculator, 459-insurance-ratemaking-adequacy, 462-claims-reserve-adequacy-checker"
+    },
+    {
+      "name": "iso20022-cross-border-readiness",
+      "reason": "non-kernel or unvendored step(s): 219-pacs008-cross-border-generator, 248-iso20022-validator, 81-iso20022-migration-navigator"
+    },
+    {
+      "name": "iso20022-cutover",
+      "reason": "non-kernel or unvendored step(s): 77-iso-truncation-auditor, 101-iso20022-migration-scorer, 254-iso20022-cross-rail-compatibility"
+    },
+    {
+      "name": "kyc-onboarding-cdd",
+      "reason": "non-kernel or unvendored step(s): 109-cdd-edd-checklist, 111-kyb-ubo-mapper, 112-pep-sanctions-simulator, 113-adverse-media-profiler, 114-kyc-document-checklist"
+    },
+    {
+      "name": "marketplace-platform-payments",
+      "reason": "non-kernel or unvendored step(s): 138-marketplace-fee-waterfall-designer, 146-virtual-account-structure-simulator, 147-payout-rail-cost-finality-modeller, 151-split-payment-escrow-simulator, 159-marketplace-payout-flow-designer"
+    },
+    {
+      "name": "mcp-publish-readiness",
+      "reason": "non-kernel or unvendored step(s): 275-mcp-server-json-validator, 274-mcp-tool-definition-linter, 278-mcp-oauth-authorization-auditor, 282-mcp-tool-poisoning-scanner, 288-mcp-developer-readiness-scorecard"
+    },
+    {
+      "name": "mcp-security-hardening",
+      "reason": "non-kernel or unvendored step(s): 274-mcp-tool-definition-linter, 275-mcp-server-json-validator, 278-mcp-oauth-authorization-auditor, 282-mcp-tool-poisoning-scanner, 284-mcp-transport-dns-rebinding-auditor"
+    },
+    {
+      "name": "mcp-server-attestation",
+      "reason": "non-kernel or unvendored step(s): art-18-mcp-developer-readiness-scorecard"
+    },
+    {
+      "name": "mica-passporting-surveillance",
+      "reason": "non-kernel or unvendored step(s): 332-mica-casp-authorization-checker, 393-mica-casp-passporting-readiness-checker, 392-mica-market-abuse-surveillance-mapper, 394-mica-periodic-reporting-obligation-mapper, 391-mica-significant-token-threshold-calculator"
+    },
+    {
+      "name": "model-risk-governance",
+      "reason": "non-kernel or unvendored step(s): 327-eu-ai-act-risk-class-mapper, 451-sr11-7-model-risk-management-gap-assessor, 452-fair-lending-ai-bias-assessment, 333-eu-ai-act-article9-risk-mgmt-builder"
+    },
+    {
+      "name": "nacha-ach-rules-compliance",
+      "reason": "non-kernel or unvendored step(s): 07-ach-nacha-validator, 224-nacha-ach-rule-compliance-checker"
+    },
+    {
+      "name": "neobank-baas",
+      "reason": "non-kernel or unvendored step(s): 152-baas-provider-comparator, 168-baas-provider-comparison, 343-psd3-psr2-transition-impact-assessor, 414-psd3-sca-transition-checker, 289-verification-of-payee-simulator, 26-app-fraud-matrix, 322-app-scam-risk-assessor, 406-psr-app-reimbursement-liability-splitter, 43-batch-sanctions-screening, 112-pep-sanctions-simulator, 149-seller-onboarding-classifier, 114-kyc-document-checklist, 162-sponsor-bank-readiness-scorer, 163-card-programme-launch-readiness-checker"
+    },
+    {
+      "name": "open-banking-api-lifecycle",
+      "reason": "non-kernel or unvendored step(s): 10-open-banking-api-explorer, 11-vrp-mandate-sepa-validator, 03-consent-compliance-auditor"
+    },
+    {
+      "name": "payment-economics-benchmarking",
+      "reason": "non-kernel or unvendored step(s): 12-fee-benchmark-report, 46-payment-roi-business-case, 85-card-economics-optimizer"
+    },
+    {
+      "name": "payment-operations-health",
+      "reason": "non-kernel or unvendored step(s): 13-payment-journey-mapper, 14-realtime-ops-dashboard, 20-failure-analyser, 22-decline-code-decoder"
+    },
+    {
+      "name": "pd-lgd-covenant",
+      "reason": "non-kernel or unvendored step(s): 198-pd-lgd-ead-modeller, 201-basel-rwa-calculator, 199-financial-covenant-compliance-checker"
+    },
+    {
+      "name": "pi-emi-authorisation",
+      "reason": "non-kernel or unvendored step(s): 404-payment-institution-authorisation-readiness-checker, 405-emi-capital-requirements-calculator, 418-pi-own-funds-calculator, 269-psp-safeguarding-assessment, 406-psr-app-reimbursement-liability-splitter"
+    },
+    {
+      "name": "pillar-two-globe",
+      "reason": "non-kernel or unvendored step(s): 473-globe-etr-jurisdiction-calculator, 474-topup-tax-qdmtt-calculator, 475-pillar-two-safe-harbour-checker, 476-gir-builder"
+    },
+    {
+      "name": "pqc-blockchain-risk",
+      "reason": "non-kernel or unvendored step(s): 499-crypto-asset-inventory-classifier"
+    },
+    {
+      "name": "pqc-hndl-protocol-plan",
+      "reason": "non-kernel or unvendored step(s): 499-crypto-asset-inventory-classifier, 500-hndl-quantum-risk-scorer"
+    },
+    {
+      "name": "pqc-migration",
+      "reason": "non-kernel or unvendored step(s): 499-crypto-asset-inventory-classifier, 500-hndl-quantum-risk-scorer, 501-pqc-migration-roadmap-builder, 502-crypto-agility-readiness-scorer"
+    },
+    {
+      "name": "pqc-swift-iso20022",
+      "reason": "non-kernel or unvendored step(s): 500-hndl-quantum-risk-scorer"
+    },
+    {
+      "name": "pqc-tls-pki",
+      "reason": "non-kernel or unvendored step(s): 499-crypto-asset-inventory-classifier"
+    },
+    {
+      "name": "psd3-psr2-transition",
+      "reason": "non-kernel or unvendored step(s): 342-eu-ipr-iso20022-address-validator, 343-psd3-psr2-transition-impact-assessor, 92-sca-exemption-mapper, 93-vrp-mandate-builder"
+    },
+    {
+      "name": "psr-app-fraud-reimbursement",
+      "reason": "non-kernel or unvendored step(s): 257-psr-reimbursement-workflow-builder, 04-fraud-score-simulator, 20-failure-analyser"
+    },
+    {
+      "name": "regulatory-impact",
+      "reason": "non-kernel or unvendored step(s): 318-regulatory-change-impact-assessor, 309-nis2-dora-overlap-mapper, 310-ap2-dora-policy-mandate-builder"
+    },
+    {
+      "name": "reinsurance-catastrophe",
+      "reason": "non-kernel or unvendored step(s): 456-reinsurance-burning-cost-pricer, 458-parametric-trigger-designer, 461-cyber-insurance-accumulation-modeler, 455-pc-combined-ratio-analyzer"
+    },
+    {
+      "name": "rtp-participation",
+      "reason": "non-kernel or unvendored step(s): 255-fednow-participation-readiness-scorer, 229-rtp-network-participation-checker, 258-intraday-credit-facility-sizer, 259-ap2-rtp-policy-builder"
+    },
+    {
+      "name": "sca-consent-fapi",
+      "reason": "non-kernel or unvendored step(s): 92-sca-exemption-mapper, 91-consent-dashboard-builder, 97-fapi-security-validator, 96-consent-receipt-generator"
+    },
+    {
+      "name": "securities-lending-impact",
+      "reason": "non-kernel or unvendored step(s): 371-securities-lending-recall-revenue-impact-modeler, 373-non-dvp-retail-fund-settlement-impact-assessor, 378-us-eu-settlement-mismatch-impact-estimator"
+    },
+    {
+      "name": "sme-credit-intelligence",
+      "reason": "non-kernel or unvendored step(s): 239-sme-credit-risk-scoring, 240-working-capital-gap-calculator, 241-business-loan-readiness-checker, 243-open-finance-credit-signal-mapper, 246-sme-cashflow-stress-test"
+    },
+    {
+      "name": "sme-finance-lending",
+      "reason": "non-kernel or unvendored step(s): 239-sme-credit-risk-scoring, 240-working-capital-gap-calculator, 242-invoice-finance-eligibility, 244-revenue-based-finance-calculator, 247-lending-covenant-monitoring"
+    },
+    {
+      "name": "sme-government-grants-funding",
+      "reason": "non-kernel or unvendored step(s): 245-government-funding-grant-mapper, 239-sme-credit-risk-scoring, 244-revenue-based-finance-calculator"
+    },
+    {
+      "name": "stablecoin-compliance",
+      "reason": "non-kernel or unvendored step(s): 53-cbdc-architecture-comparator, 388-stablecoin-reserve-stress-test-modeller, 386-genius-act-payment-stablecoin-compliance-checker, 390-mica-white-paper-builder"
+    },
+    {
+      "name": "stablecoin-issuer-genius-mica",
+      "reason": "non-kernel or unvendored step(s): 336-genius-act-issuer-classification-mapper, 388-stablecoin-reserve-stress-test-modeller, 328-genius-act-reserve-optimizer, 346-mica-emt-reserve-compliance-calculator, 337-genius-act-reserve-attestation-checklist, 390-mica-white-paper-builder"
+    },
+    {
+      "name": "stablecoin-reserve",
+      "reason": "non-kernel or unvendored step(s): 328-genius-act-reserve-optimizer, 54-smart-contract-validator, 66-rwa-tokenization-cost-model"
+    },
+    {
+      "name": "sustainability-disclosure-sfdr",
+      "reason": "non-kernel or unvendored step(s): 353-sfdr-article89-fund-classification-checker, 354-eu-taxonomy-capex-revenue-alignment-scorer, 355-csrd-double-materiality-assessment-builder, 364-tcfd-issb-climate-risk-builder, 384-sfdr-pai-indicator-calculator"
+    },
+    {
+      "name": "t1-csdr-settlement",
+      "reason": "non-kernel or unvendored step(s): 351-t1-settlement-operational-readiness-assessor, 215-fx-settlement-fails-assessor, 368-csdr-settlement-fails-penalty-calculator, 370-settlement-efficiency-rate-calculator, 372-buyin-scope-classifier-cost-penalty-estimator"
+    },
+    {
+      "name": "trade-finance-lc-lifecycle",
+      "reason": "non-kernel or unvendored step(s): 50-trade-finance-lc-analyser, 420-mt700-lc-field-validator, 423-dc-vs-lc-analyzer, 425-forfaiting-factoring-economics, 426-trade-sanctions-compliance-checker"
+    },
+    {
+      "name": "transaction-screening",
+      "reason": "non-kernel or unvendored step(s): 43-batch-sanctions-screening, 222-fatf-travel-rule-checker, 80-fraud-investigation-lab"
+    },
+    {
+      "name": "treasury-corridor",
+      "reason": "non-kernel or unvendored step(s): 105-fx-netting-simulator, 76-fx-hedge-optimizer, 23-corridor-savings-calc"
+    },
+    {
+      "name": "us-banking-compliance",
+      "reason": "non-kernel or unvendored step(s): 444-hmda-reportability-checker, 445-bsa-sar-filing-adequacy-checker, 442-reg-e-dispute-workflow-builder, 443-durbin-amendment-interchange-analyzer"
+    },
+    {
+      "name": "wealth-advisory-regbi",
+      "reason": "non-kernel or unvendored step(s): 429-model-portfolio-risk-analytics, 463-reg-bi-best-interest-checker, 432-portfolio-drift-rebalancing, 428-mifid-costs-charges-calculator, 464-form-crs-generator"
+    },
+    {
+      "name": "wholesale-settlement-participant-onboarding",
+      "reason": "non-kernel or unvendored step(s): 110-customer-risk-rating"
+    }
+  ]
+}

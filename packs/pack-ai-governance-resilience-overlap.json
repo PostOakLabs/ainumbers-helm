@@ -1,0 +1,49 @@
+{
+  "workflow_id": "pack-ai-governance-resilience-overlap",
+  "name": "AI-as-ICT Resilience (DORA x AI Act Overlap)",
+  "outcome": "W-F. DORA readiness for the AI system as ICT (art-29) -> AI Act Article 15 robustness/cybersecurity conformity (ART-65) -> integrity over the combined evidence (cry-04). Maps where DORA ICT-risk duties and AI Act high-risk duties overlap for a financial AI system.",
+  "spec_version": "ocg-control-plane@1",
+  "manifest": {
+    "manifest_version": "1",
+    "workflow_id": "pack-ai-governance-resilience-overlap",
+    "trigger": {
+      "type": "manual"
+    },
+    "nodes": [
+      {
+        "node_id": "n1",
+        "kernel_id": "art-29-dora-readiness-diagnostic",
+        "kernel_digest": "sha256:2fc2a970c1e7b9f554cbc414c18f307b5b950e11931a9861c342ced9253b8f71"
+      },
+      {
+        "node_id": "n2",
+        "kernel_id": "art-65-ai-conformity-pack-builder",
+        "kernel_digest": "sha256:4d9a56ae5ea8a88287765b48baed1e6137e5d8cac49886082c0a07310239f74e"
+      },
+      {
+        "node_id": "n3",
+        "kernel_id": "cry-04-merkle-batch-verifier",
+        "kernel_digest": "sha256:7c89b9651f986ed6652903c6d41e9fbda29d12db9fbc0a6acd4f7270160b7ccb"
+      }
+    ],
+    "connectors": [],
+    "gates": [],
+    "actions": []
+  },
+  "workflow_manifest_digest": "sha256:e51d92d2cefff8ab4690dd4cfb5c01c5fdf3c058c78f085290c08474a300f3dc",
+  "declared_inputs": [],
+  "steps_meta": [
+    {
+      "node_id": "n1",
+      "data_classification": "compute"
+    },
+    {
+      "node_id": "n2",
+      "data_classification": "compute"
+    },
+    {
+      "node_id": "n3",
+      "data_classification": "compute"
+    }
+  ]
+}

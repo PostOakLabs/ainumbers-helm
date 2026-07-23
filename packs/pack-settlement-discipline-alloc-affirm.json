@@ -1,0 +1,54 @@
+{
+  "workflow_id": "pack-settlement-discipline-alloc-affirm",
+  "name": "Allocation/Affirmation Timing & Message Conformance",
+  "outcome": "Allocation/confirmation timing + format conformance vs the 23:00 CET trade-date mandate (ART-81) -> ISO 20022 securities-settlement message linting (ART-82) -> Merkle integrity (cry-04). Covers the binding Dec-2026 same-day machine-readable requirement.",
+  "spec_version": "ocg-control-plane@1",
+  "manifest": {
+    "manifest_version": "1",
+    "workflow_id": "pack-settlement-discipline-alloc-affirm",
+    "trigger": {
+      "type": "manual"
+    },
+    "nodes": [
+      {
+        "node_id": "n1",
+        "kernel_id": "art-81-allocation-affirmation-conformance",
+        "kernel_digest": "sha256:bfd9eea1801c12c0b1358e111e33f08fcc221f3e847edd481053c5e90f81cd12"
+      },
+      {
+        "node_id": "n2",
+        "kernel_id": "art-82-securities-settlement-message-linter",
+        "kernel_digest": "sha256:2ad79af4b3bfd8d91a04886d9edfee8f37018b827cc9fb189caa66583cfebcc3"
+      },
+      {
+        "node_id": "n3",
+        "kernel_id": "cry-04-merkle-batch-verifier",
+        "kernel_digest": "sha256:7c89b9651f986ed6652903c6d41e9fbda29d12db9fbc0a6acd4f7270160b7ccb"
+      }
+    ],
+    "connectors": [],
+    "gates": [],
+    "actions": []
+  },
+  "workflow_manifest_digest": "sha256:11d38a71709dd7159c5416eca33df4551f28d6dfd37f5ca82c1a95d2bdd0ad58",
+  "declared_inputs": [
+    {
+      "from": "art-77-t1-settlement-readiness-diagnostic",
+      "kind": "external"
+    }
+  ],
+  "steps_meta": [
+    {
+      "node_id": "n1",
+      "data_classification": "compute"
+    },
+    {
+      "node_id": "n2",
+      "data_classification": "compute"
+    },
+    {
+      "node_id": "n3",
+      "data_classification": "compute"
+    }
+  ]
+}

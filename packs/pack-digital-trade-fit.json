@@ -1,0 +1,31 @@
+{
+  "workflow_id": "pack-digital-trade-fit",
+  "name": "Digital Trade Corridor Fit Diagnostic",
+  "outcome": "Single-node D0 diagnostic grading a firm/corridor A–F across legality, document digitisation, platform connectivity, trade-rule basis (eUCP/URDTT), financing, and AML/TBML for digital trade (MLETR); routes to the right chain.",
+  "spec_version": "ocg-control-plane@1",
+  "manifest": {
+    "manifest_version": "1",
+    "workflow_id": "pack-digital-trade-fit",
+    "trigger": {
+      "type": "manual"
+    },
+    "nodes": [
+      {
+        "node_id": "n1",
+        "kernel_id": "art-52-digital-trade-fit-diagnostic",
+        "kernel_digest": "sha256:77e46eb235dae3d94185744d9e44a284d15fe90eac9988e6d32b3162804dd663"
+      }
+    ],
+    "connectors": [],
+    "gates": [],
+    "actions": []
+  },
+  "workflow_manifest_digest": "sha256:60c1b4cd232f8061c44b7c8b3f5380af048665f381971d895470481cbaa928e9",
+  "declared_inputs": [],
+  "steps_meta": [
+    {
+      "node_id": "n1",
+      "data_classification": "compute"
+    }
+  ]
+}

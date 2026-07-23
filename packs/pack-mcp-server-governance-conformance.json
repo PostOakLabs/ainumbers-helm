@@ -1,0 +1,49 @@
+{
+  "workflow_id": "pack-mcp-server-governance-conformance",
+  "name": "MCP Server Governance Conformance",
+  "outcome": "Validate a new-spec MCP server identity document including subject, issuer, serverInfo, and attestation reference at the well-known path (art-147) → validate OAuth 2.0 Protected Resource Metadata per RFC 9728: resource URI, authorization servers, scopes, and bearer methods (art-148) → validate the MCP Registry server.json entry for schema, reverse-DNS name, semver version, and endpoint (art-149). Full governance attestation with execution_hash: final stage.",
+  "spec_version": "ocg-control-plane@1",
+  "manifest": {
+    "manifest_version": "1",
+    "workflow_id": "pack-mcp-server-governance-conformance",
+    "trigger": {
+      "type": "manual"
+    },
+    "nodes": [
+      {
+        "node_id": "n1",
+        "kernel_id": "art-147-mcp-server-identity-attestation-validator",
+        "kernel_digest": "sha256:53a835c4eb29c70aecbe5a595bc2d64466e1391b6c0fcf4a2be48f795a51f73d"
+      },
+      {
+        "node_id": "n2",
+        "kernel_id": "art-148-mcp-authorization-metadata-validator",
+        "kernel_digest": "sha256:3165d9c916ead557ee007631e3a0dd32f84782a04aa5df796c776d31c963bd8b"
+      },
+      {
+        "node_id": "n3",
+        "kernel_id": "art-149-mcp-registry-entry-conformance",
+        "kernel_digest": "sha256:490f01e12e64fd3fd247586762fcc49a28e499af0f6bff4bbe0cc992e630448e"
+      }
+    ],
+    "connectors": [],
+    "gates": [],
+    "actions": []
+  },
+  "workflow_manifest_digest": "sha256:3d6bfb028478abe88abbd770b7b36b388709d4e43643b0123ce03c2ee7120430",
+  "declared_inputs": [],
+  "steps_meta": [
+    {
+      "node_id": "n1",
+      "data_classification": "compute"
+    },
+    {
+      "node_id": "n2",
+      "data_classification": "compute"
+    },
+    {
+      "node_id": "n3",
+      "data_classification": "compute"
+    }
+  ]
+}

@@ -1,0 +1,54 @@
+{
+  "workflow_id": "pack-agent-economy-batch-settlement",
+  "name": "x402 V2 Batch-Settlement Reconciliation",
+  "outcome": "W-A. Voucher-to-onchain batch reconciliation + settlement-risk window (ART-61) -> independent Merkle re-verification (cry-04) -> one Merkle-root settlement receipt (cry-05). The flagship runtime decision: did this batch of agent micro-payments settle correctly?",
+  "spec_version": "ocg-control-plane@1",
+  "manifest": {
+    "manifest_version": "1",
+    "workflow_id": "pack-agent-economy-batch-settlement",
+    "trigger": {
+      "type": "manual"
+    },
+    "nodes": [
+      {
+        "node_id": "n1",
+        "kernel_id": "art-61-x402-batch-settlement-reconciler",
+        "kernel_digest": "sha256:93f57377ae56edc40fdb3e1381a0bc126350b4fa9584d9b59a931175ef17d054"
+      },
+      {
+        "node_id": "n2",
+        "kernel_id": "cry-04-merkle-batch-verifier",
+        "kernel_digest": "sha256:7c89b9651f986ed6652903c6d41e9fbda29d12db9fbc0a6acd4f7270160b7ccb"
+      },
+      {
+        "node_id": "n3",
+        "kernel_id": "cry-05-agent-action-audit-trail-aggregator",
+        "kernel_digest": "sha256:5f7f6ab0bb2e2b736805ecde518ca59ba9a83ad38b17545a8c7c133cffa1481f"
+      }
+    ],
+    "connectors": [],
+    "gates": [],
+    "actions": []
+  },
+  "workflow_manifest_digest": "sha256:9e5a8616417d309bcadc2c78703873d03e1d59226f65cb4905d6d635aa423cb1",
+  "declared_inputs": [
+    {
+      "from": "art-60-agent-economy-runtime-fit-diagnostic",
+      "kind": "external"
+    }
+  ],
+  "steps_meta": [
+    {
+      "node_id": "n1",
+      "data_classification": "compute"
+    },
+    {
+      "node_id": "n2",
+      "data_classification": "compute"
+    },
+    {
+      "node_id": "n3",
+      "data_classification": "compute"
+    }
+  ]
+}

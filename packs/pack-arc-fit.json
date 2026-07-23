@@ -1,0 +1,31 @@
+{
+  "workflow_id": "pack-arc-fit",
+  "name": "Arc Fit Diagnostic",
+  "outcome": "D0 entry chain. 12-question diagnostic scoring CPN, StableFX, DvP, and agentic commerce fit for Circle Arc L1.",
+  "spec_version": "ocg-control-plane@1",
+  "manifest": {
+    "manifest_version": "1",
+    "workflow_id": "pack-arc-fit",
+    "trigger": {
+      "type": "manual"
+    },
+    "nodes": [
+      {
+        "node_id": "n1",
+        "kernel_id": "art-42-arc-fit-diagnostic",
+        "kernel_digest": "sha256:84cf3e4b4dd77ad8ed4f6425d9a623c51ae75b4855e2fb629505f1485387cee1"
+      }
+    ],
+    "connectors": [],
+    "gates": [],
+    "actions": []
+  },
+  "workflow_manifest_digest": "sha256:400bcd13fcec763c8f9b920b0f1ae214bd6f9fc4c448bcf7023573958d25e2e1",
+  "declared_inputs": [],
+  "steps_meta": [
+    {
+      "node_id": "n1",
+      "data_classification": "compute"
+    }
+  ]
+}

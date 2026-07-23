@@ -1,0 +1,40 @@
+{
+  "workflow_id": "pack-agent-audit-trail-conformance",
+  "name": "Agent Audit Trail Conformance",
+  "outcome": "Linear two-step chain for agent audit trail conformance. Step 1 builds an EU AI Act Art 12(2)-conformant decision log record (art-236) with completeness score, chain_position, and anchor instructions. Step 2 validates the record against IETF draft-sharif-agent-audit-trail-00 (art-237), confirming AAT field conformance, sha256_prev_record chain-link format, and trust level. Both steps always run. Use as the lightweight audit-trail path when Annex III high-risk classification (art-238) is already resolved upstream.",
+  "spec_version": "ocg-control-plane@1",
+  "manifest": {
+    "manifest_version": "1",
+    "workflow_id": "pack-agent-audit-trail-conformance",
+    "trigger": {
+      "type": "manual"
+    },
+    "nodes": [
+      {
+        "node_id": "n1",
+        "kernel_id": "art-236-build-ai-decision-log-record",
+        "kernel_digest": "sha256:3f9c0dade487f4d6dafb35d97ebc3fe9b0f51656ea4e010caee2a8bf35aa159d"
+      },
+      {
+        "node_id": "n2",
+        "kernel_id": "art-237-validate-agent-audit-trail",
+        "kernel_digest": "sha256:4b708c0479222377ddaec18a19c7c15708dac8a9bc59d4e6e6b53661301c9801"
+      }
+    ],
+    "connectors": [],
+    "gates": [],
+    "actions": []
+  },
+  "workflow_manifest_digest": "sha256:7a84c1da937b12f6efc8c7c39b34cdea512f411c4c154e68765262b4bc90fe8a",
+  "declared_inputs": [],
+  "steps_meta": [
+    {
+      "node_id": "n1",
+      "data_classification": "compute"
+    },
+    {
+      "node_id": "n2",
+      "data_classification": "compute"
+    }
+  ]
+}

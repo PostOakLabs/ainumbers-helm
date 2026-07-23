@@ -1,0 +1,54 @@
+{
+  "workflow_id": "pack-tempo-issuance",
+  "name": "Tempo Stablecoin Issuance",
+  "outcome": "W-B chain. TIP-20 config lint + TIP-403 policy design → GENIUS Act reserve pre-check → AML typology pre-screen. Dual US GENIUS PPSI + EU MiCA EMT compliance.",
+  "spec_version": "ocg-control-plane@1",
+  "manifest": {
+    "manifest_version": "1",
+    "workflow_id": "pack-tempo-issuance",
+    "trigger": {
+      "type": "manual"
+    },
+    "nodes": [
+      {
+        "node_id": "n1",
+        "kernel_id": "art-37-tempo-stablecoin-issuance",
+        "kernel_digest": "sha256:252b8f7b8a64ab8a59613d891c4849f52fdc3322a68a98de86dd032a2305f6ae"
+      },
+      {
+        "node_id": "n2",
+        "kernel_id": "art-06-genius-act-reserve-attestation",
+        "kernel_digest": "sha256:8e520c99a42e6c53799b4c14a5d31d7face65414f1d0fd590a089488f621dc24"
+      },
+      {
+        "node_id": "n3",
+        "kernel_id": "art-10-amla-transaction-typology-risk-scorer",
+        "kernel_digest": "sha256:c02483af798b9da4593d70b071619e12487bbd02e21b016eb9d46ced84c5ab90"
+      }
+    ],
+    "connectors": [],
+    "gates": [],
+    "actions": []
+  },
+  "workflow_manifest_digest": "sha256:1aa375a87d4846e6779b8d125f199e24d5537fd12fc572110f0e221a3a184e6d",
+  "declared_inputs": [
+    {
+      "from": "art-34-tempo-fit-diagnostic",
+      "kind": "external"
+    }
+  ],
+  "steps_meta": [
+    {
+      "node_id": "n1",
+      "data_classification": "compute"
+    },
+    {
+      "node_id": "n2",
+      "data_classification": "compute"
+    },
+    {
+      "node_id": "n3",
+      "data_classification": "compute"
+    }
+  ]
+}

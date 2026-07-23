@@ -1,0 +1,40 @@
+{
+  "workflow_id": "pack-adverse-action-notice-compliance",
+  "name": "Adverse Action Notice Compliance",
+  "outcome": "Gated two-step chain for adverse action notice compliance. Step 1 builds the notice skeleton from SHAP-ranked FICO or VantageScore factor codes. Gate: action_taken=approved exits immediately (no notice required for approved applications). Denied, counteroffer, or incomplete applications continue to Step 2 notice validation against Reg B §1002.9 completeness requirements and CFPB Circular prohibited-vague-code list.",
+  "spec_version": "ocg-control-plane@1",
+  "manifest": {
+    "manifest_version": "1",
+    "workflow_id": "pack-adverse-action-notice-compliance",
+    "trigger": {
+      "type": "manual"
+    },
+    "nodes": [
+      {
+        "node_id": "n1",
+        "kernel_id": "art-228-build-adverse-action-notice",
+        "kernel_digest": "sha256:f6fa0d528022c256b20f095c3a94e08923c4338008aba9689e96eea2395612ad"
+      },
+      {
+        "node_id": "n2",
+        "kernel_id": "art-227-validate-adverse-action-notice",
+        "kernel_digest": "sha256:68a2b118857650ebe9fb5729f49dad91a524e942c1634d0ac6b6e7997dd2a667"
+      }
+    ],
+    "connectors": [],
+    "gates": [],
+    "actions": []
+  },
+  "workflow_manifest_digest": "sha256:58f26bc331fc6b3817e019089cd888bba9cbd45f233a5a07488c89e91cdeb8b7",
+  "declared_inputs": [],
+  "steps_meta": [
+    {
+      "node_id": "n1",
+      "data_classification": "compute"
+    },
+    {
+      "node_id": "n2",
+      "data_classification": "compute"
+    }
+  ]
+}

@@ -1,0 +1,58 @@
+{
+  "workflow_id": "pack-arc-partner-onboarding",
+  "name": "Arc Partner Stablecoin Onboarding & Conformance",
+  "outcome": "Score a non-USD issuer readiness to join Circle Partner Stablecoins on Arc against technical/operational, reserve-management, and risk-management standards. Arc fit diagnostic (art-42) → partner-stablecoin eligibility scorer with A–F grade and gap list (art-110) → xReserve reserve-composition lint (art-45) → MiCA reserve stress for the non-USD EMT (rca-02). Optional Ed25519 §16 proof binds the conformance attestation to a key.",
+  "spec_version": "ocg-control-plane@1",
+  "manifest": {
+    "manifest_version": "1",
+    "workflow_id": "pack-arc-partner-onboarding",
+    "trigger": {
+      "type": "manual"
+    },
+    "nodes": [
+      {
+        "node_id": "n1",
+        "kernel_id": "art-42-arc-fit-diagnostic",
+        "kernel_digest": "sha256:84cf3e4b4dd77ad8ed4f6425d9a623c51ae75b4855e2fb629505f1485387cee1"
+      },
+      {
+        "node_id": "n2",
+        "kernel_id": "art-110-arc-partner-stablecoin-onboarding",
+        "kernel_digest": "sha256:4c76567c95da056626e68881f858c95c745ad333d94f0fbe078b53ac95ca3f49"
+      },
+      {
+        "node_id": "n3",
+        "kernel_id": "art-45-arc-xreserve-linter",
+        "kernel_digest": "sha256:6c42f2e178d592ddca24ae38edae3baed3c67880f4f18ce29b79d11e0e46f4d4"
+      },
+      {
+        "node_id": "n4",
+        "kernel_id": "rca-02-mica-reserve-stress",
+        "kernel_digest": "sha256:6fce2ba734c51cd45d54192ce1f75dba7e32561d4e7ee9792a7bfae0cdfea260"
+      }
+    ],
+    "connectors": [],
+    "gates": [],
+    "actions": []
+  },
+  "workflow_manifest_digest": "sha256:2ac174657b962354ca2d2aba82d06bc807095d3e72f508dfc28a1966fad1b6ea",
+  "declared_inputs": [],
+  "steps_meta": [
+    {
+      "node_id": "n1",
+      "data_classification": "compute"
+    },
+    {
+      "node_id": "n2",
+      "data_classification": "compute"
+    },
+    {
+      "node_id": "n3",
+      "data_classification": "compute"
+    },
+    {
+      "node_id": "n4",
+      "data_classification": "compute"
+    }
+  ]
+}

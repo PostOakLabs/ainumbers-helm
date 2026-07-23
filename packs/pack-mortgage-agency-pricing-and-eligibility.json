@@ -1,0 +1,49 @@
+{
+  "workflow_id": "pack-mortgage-agency-pricing-and-eligibility",
+  "name": "Mortgage Agency Pricing and Eligibility",
+  "outcome": "Gated three-step chain: conforming loan limit check feeds agency eligibility matrix (gate: INELIGIBLE routes to non-conforming referral terminal step; ELIGIBLE continues to LLPA pricing stack). Determines agency deliverability and computes the LLPA cost grid for eligible loans. FHFA CLL 2026 + Fannie/Freddie DU/LPA eligibility + LLPA FNM-2025-11-01.",
+  "spec_version": "ocg-control-plane@1",
+  "manifest": {
+    "manifest_version": "1",
+    "workflow_id": "pack-mortgage-agency-pricing-and-eligibility",
+    "trigger": {
+      "type": "manual"
+    },
+    "nodes": [
+      {
+        "node_id": "n1",
+        "kernel_id": "art-223-conforming-loan-limit",
+        "kernel_digest": "sha256:114e209f4a992a5b64a0357a6263fe467420738e6ac70b6c238b17987521fb40"
+      },
+      {
+        "node_id": "n2",
+        "kernel_id": "art-222-agency-eligibility-matrix",
+        "kernel_digest": "sha256:1974e5147a75759c71c8deb05d10e26b2803fb3ce6c5947cabd998c089cf0e49"
+      },
+      {
+        "node_id": "n3",
+        "kernel_id": "art-221-llpa-stack",
+        "kernel_digest": "sha256:7221a3468182a878ebf517663153a90e4973b4125fe3d77c8a44789898b785ad"
+      }
+    ],
+    "connectors": [],
+    "gates": [],
+    "actions": []
+  },
+  "workflow_manifest_digest": "sha256:8d47304e58b058bf82af3f927ebc9c79d1ccca90ed1067f8185a7b47d3464708",
+  "declared_inputs": [],
+  "steps_meta": [
+    {
+      "node_id": "n1",
+      "data_classification": "compute"
+    },
+    {
+      "node_id": "n2",
+      "data_classification": "compute"
+    },
+    {
+      "node_id": "n3",
+      "data_classification": "compute"
+    }
+  ]
+}

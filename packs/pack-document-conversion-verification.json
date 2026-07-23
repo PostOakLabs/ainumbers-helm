@@ -1,0 +1,49 @@
+{
+  "workflow_id": "pack-document-conversion-verification",
+  "name": "Document Conversion Verification",
+  "outcome": "Convert a document locally, bind the conversion into a receipt, and independently verify the receipt. Stage 1 converts Markdown to HTML and plain text (art-189), or tabular data across CSV, JSON, and Markdown tables on the tabular branch (art-190). Stage 2 binds the input digest, converter identity, parameters, and output digest into a canonical receipt (art-191). Stage 3 recomputes the binding and re-hashes the files to return a valid, binding_mismatch, digest_mismatch, or malformed verdict (art-192). Every stage produces a SHA-256 execution hash. Zero network, zero PII.",
+  "spec_version": "ocg-control-plane@1",
+  "manifest": {
+    "manifest_version": "1",
+    "workflow_id": "pack-document-conversion-verification",
+    "trigger": {
+      "type": "manual"
+    },
+    "nodes": [
+      {
+        "node_id": "n1",
+        "kernel_id": "art-189-markdown-document-converter",
+        "kernel_digest": "sha256:a207d209c504b5fd261aae969d2c9ed362c95df104378ec95e84ce2c4acece89"
+      },
+      {
+        "node_id": "n2",
+        "kernel_id": "art-191-conversion-receipt-builder",
+        "kernel_digest": "sha256:e9c4a6255342b4fb2f2bd3687128e671dad4028f95ca277ee482fabe7b2b83ce"
+      },
+      {
+        "node_id": "n3",
+        "kernel_id": "art-192-conversion-receipt-verifier",
+        "kernel_digest": "sha256:77570734c4be05d8e8a9f816845247675a55ed85b3e6ce17165b857dfd39da02"
+      }
+    ],
+    "connectors": [],
+    "gates": [],
+    "actions": []
+  },
+  "workflow_manifest_digest": "sha256:9bf9767ccfbc53df88a813bd8a3bc555152522831a4dbb83848b0a261b0f9718",
+  "declared_inputs": [],
+  "steps_meta": [
+    {
+      "node_id": "n1",
+      "data_classification": "compute"
+    },
+    {
+      "node_id": "n2",
+      "data_classification": "compute"
+    },
+    {
+      "node_id": "n3",
+      "data_classification": "compute"
+    }
+  ]
+}

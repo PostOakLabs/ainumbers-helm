@@ -1,0 +1,49 @@
+{
+  "workflow_id": "pack-irrbb-measurement-and-disclosure",
+  "name": "IRRBB Measurement and Disclosure",
+  "outcome": "Map non-maturing deposit positions to EBA standardised-approach behavioural caps (art-186) -> identify Credit Spread Risk in the Banking Book (CSRBB) scope and governance gaps (art-187) -> A-F IRRBB disclosure readiness diagnostic across shock calc, SOT, standardised approach, CSRBB, and Pillar 3 IRRBB1 dimensions (art-188). Full IRRBB measurement and disclosure pipeline. BCBS d368 + EBA GL/2022/14 + Pillar 3 IRRBB1.",
+  "spec_version": "ocg-control-plane@1",
+  "manifest": {
+    "manifest_version": "1",
+    "workflow_id": "pack-irrbb-measurement-and-disclosure",
+    "trigger": {
+      "type": "manual"
+    },
+    "nodes": [
+      {
+        "node_id": "n1",
+        "kernel_id": "art-186-irrbb-standardised-approach-mapper",
+        "kernel_digest": "sha256:3687fcacedfebe176360464c1aaed42703249cb1305e2538b3058ef6a417c271"
+      },
+      {
+        "node_id": "n2",
+        "kernel_id": "art-187-irrbb-csrbb-scope-checker",
+        "kernel_digest": "sha256:fea6edb4b186ef335fd7e3df37d128065a18992ad5cfb21893345d0ed47e2a22"
+      },
+      {
+        "node_id": "n3",
+        "kernel_id": "art-188-irrbb-disclosure-readiness-diagnostic",
+        "kernel_digest": "sha256:9339e768762bca73b88956e51e3ffc9500c8f2a6a54cba095f989992be265292"
+      }
+    ],
+    "connectors": [],
+    "gates": [],
+    "actions": []
+  },
+  "workflow_manifest_digest": "sha256:fe918ded93963165ca02944a27861c7c06142e5307769c9e43250c0428062a81",
+  "declared_inputs": [],
+  "steps_meta": [
+    {
+      "node_id": "n1",
+      "data_classification": "compute"
+    },
+    {
+      "node_id": "n2",
+      "data_classification": "compute"
+    },
+    {
+      "node_id": "n3",
+      "data_classification": "compute"
+    }
+  ]
+}

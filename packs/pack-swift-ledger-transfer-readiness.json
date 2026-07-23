@@ -1,0 +1,58 @@
+{
+  "workflow_id": "pack-swift-ledger-transfer-readiness",
+  "name": "Shared-Ledger Transfer Readiness Receipt",
+  "outcome": "Gated four-step preflight for a shared-ledger tokenized-deposit transfer: ISO 20022-to-EVM calldata mapping, batch sanctions and purpose-code screen, L2 finality window classification, and cash-leg finality check compose into one receipt. An unmapped required field or a screening hit halts the chain before commit.",
+  "spec_version": "ocg-control-plane@1",
+  "manifest": {
+    "manifest_version": "1",
+    "workflow_id": "pack-swift-ledger-transfer-readiness",
+    "trigger": {
+      "type": "manual"
+    },
+    "nodes": [
+      {
+        "node_id": "n1",
+        "kernel_id": "art-288-map-iso20022-to-evm-calldata",
+        "kernel_digest": "sha256:c434dd10ec7cc8e96757d0f1679f3dc90861bb065ca053bfa7646a8afa6e0a6c"
+      },
+      {
+        "node_id": "n2",
+        "kernel_id": "art-291-screen-onledger-transfer-batch",
+        "kernel_digest": "sha256:8b96056cb0c7a9e5152efaff0a3b8d4eb6cf558db3e7627a0aef99ed7511841b"
+      },
+      {
+        "node_id": "n3",
+        "kernel_id": "art-290-check-linea-l2-finality-window",
+        "kernel_digest": "sha256:96bc4cfa0b4c4dc33183c6c6c36cb074ef7ecf0c8a4e10dbd7552fefa7eeeb97"
+      },
+      {
+        "node_id": "n4",
+        "kernel_id": "506-onchain-cash-leg-finality-checker",
+        "kernel_digest": "sha256:a8dc570f0262a6be9c06dc3b094353f70b4e87b7b379e93f7113086935456dbc"
+      }
+    ],
+    "connectors": [],
+    "gates": [],
+    "actions": []
+  },
+  "workflow_manifest_digest": "sha256:65314353025d79707e98bed2a6870edffe0eb6e60db69c607838d99a09ef4bd4",
+  "declared_inputs": [],
+  "steps_meta": [
+    {
+      "node_id": "n1",
+      "data_classification": "compute"
+    },
+    {
+      "node_id": "n2",
+      "data_classification": "compute"
+    },
+    {
+      "node_id": "n3",
+      "data_classification": "compute"
+    },
+    {
+      "node_id": "n4",
+      "data_classification": "compute"
+    }
+  ]
+}

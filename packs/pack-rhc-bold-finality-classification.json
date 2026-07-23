@@ -1,0 +1,45 @@
+{
+  "workflow_id": "pack-rhc-bold-finality-classification",
+  "name": "Robinhood Chain BoLD Finality Classification",
+  "outcome": "Gated two-step chain classifying settlement finality on Robinhood Chain. Step 1 classifies the underlying settlement asset finality, step 2 classifies the BoLD challenge-window state. Gate on /claim_verdict: overstated routes to a false-finality-claim flag, default proceeds to the finality class record.",
+  "spec_version": "ocg-control-plane@1",
+  "manifest": {
+    "manifest_version": "1",
+    "workflow_id": "pack-rhc-bold-finality-classification",
+    "trigger": {
+      "type": "manual"
+    },
+    "nodes": [
+      {
+        "node_id": "n1",
+        "kernel_id": "art-59-settlement-asset-finality-classifier",
+        "kernel_digest": "sha256:6e5f40137139c4daa1f923ead6929ad30a66ce97c477702730064bc683fb6f05"
+      },
+      {
+        "node_id": "n2",
+        "kernel_id": "art-321-rhc-bold-finality-classifier",
+        "kernel_digest": "sha256:843562f81f65f23041c7aed365bb1e7119591065931b82e37682c2ad6489ea93"
+      }
+    ],
+    "connectors": [],
+    "gates": [],
+    "actions": []
+  },
+  "workflow_manifest_digest": "sha256:297f6ba0ac2783bc748f52836e2d4e1ea3ff775ac4f09f915fde4fb14afd41fd",
+  "declared_inputs": [
+    {
+      "from": "art-56-tokenized-settlement-fit-diagnostic",
+      "kind": "external"
+    }
+  ],
+  "steps_meta": [
+    {
+      "node_id": "n1",
+      "data_classification": "compute"
+    },
+    {
+      "node_id": "n2",
+      "data_classification": "compute"
+    }
+  ]
+}

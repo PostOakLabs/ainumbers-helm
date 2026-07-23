@@ -1,0 +1,40 @@
+{
+  "workflow_id": "pack-multilateral-netting-settlement",
+  "name": "Multilateral Netting Settlement",
+  "outcome": "Linear two-step chain for IHB settlement cycles. Step 1 computes N-entity corporate cash netting (gross positions to net positions to minimum settlement legs, BIS CPMI greedy algorithm). Step 2 allocates IHB overnight interest on the net settlement balances per OECD TP Guidelines 2022 Chapter X arm's-length rate, with ACT/360 day-count and per-member withholding tax. Corporate cash netting only -- NOT FICC clearing margin netting. ZERO PII BY CONSTRUCTION.",
+  "spec_version": "ocg-control-plane@1",
+  "manifest": {
+    "manifest_version": "1",
+    "workflow_id": "pack-multilateral-netting-settlement",
+    "trigger": {
+      "type": "manual"
+    },
+    "nodes": [
+      {
+        "node_id": "n1",
+        "kernel_id": "art-259-compute-multilateral-netting",
+        "kernel_digest": "sha256:b7089aa25886b5b582762b25cc7ac53e5df80ad74303d473ee1f0a86788e6b9d"
+      },
+      {
+        "node_id": "n2",
+        "kernel_id": "art-260-allocate-ihb-interest",
+        "kernel_digest": "sha256:79e7ffc0ec59dd6cc416d286ba26ebaaf057bcd30156e46466f2e900423fb64b"
+      }
+    ],
+    "connectors": [],
+    "gates": [],
+    "actions": []
+  },
+  "workflow_manifest_digest": "sha256:c8d81f071f6f2d5c8104920fd3c52ace0e6c5d2571133b7cb2898cbdf00de296",
+  "declared_inputs": [],
+  "steps_meta": [
+    {
+      "node_id": "n1",
+      "data_classification": "compute"
+    },
+    {
+      "node_id": "n2",
+      "data_classification": "compute"
+    }
+  ]
+}

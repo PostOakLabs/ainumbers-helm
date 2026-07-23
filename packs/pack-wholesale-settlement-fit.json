@@ -1,0 +1,31 @@
+{
+  "workflow_id": "pack-wholesale-settlement-fit",
+  "name": "Wholesale Tokenized Settlement Fit Diagnostic",
+  "outcome": "Single-node D0 diagnostic grading a firm/desk A-F across settlement asset, finality regime, cross-network atomicity, asset-leg type, cash-leg issuer, intraday liquidity, and controls for wholesale tokenized settlement; routes to the right wholesale-settlement chain.",
+  "spec_version": "ocg-control-plane@1",
+  "manifest": {
+    "manifest_version": "1",
+    "workflow_id": "pack-wholesale-settlement-fit",
+    "trigger": {
+      "type": "manual"
+    },
+    "nodes": [
+      {
+        "node_id": "n1",
+        "kernel_id": "art-56-tokenized-settlement-fit-diagnostic",
+        "kernel_digest": "sha256:b52a79f937c901786a32dcae3e275f3e2a4bb308cb0fb844998c5cf1268da1ff"
+      }
+    ],
+    "connectors": [],
+    "gates": [],
+    "actions": []
+  },
+  "workflow_manifest_digest": "sha256:21f940a4c180a54389217a782845efeb3a17460faba5ff5918082bd0ce740e83",
+  "declared_inputs": [],
+  "steps_meta": [
+    {
+      "node_id": "n1",
+      "data_classification": "compute"
+    }
+  ]
+}

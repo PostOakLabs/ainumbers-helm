@@ -1,0 +1,58 @@
+{
+  "workflow_id": "pack-agent-economy-marketplace",
+  "name": "Agent-Service Marketplace Onboarding & Metering",
+  "outcome": "W-F. Agent identity & authorization attestation (art-04) -> agent-traffic acceptance policy (art-21) -> service metering/pricing (ART-63). Onboards an agent service into a micropayment marketplace with a metered, policy-gated listing.",
+  "spec_version": "ocg-control-plane@1",
+  "manifest": {
+    "manifest_version": "1",
+    "workflow_id": "pack-agent-economy-marketplace",
+    "trigger": {
+      "type": "manual"
+    },
+    "nodes": [
+      {
+        "node_id": "n1",
+        "kernel_id": "art-04-agent-identity-attestation-checker",
+        "kernel_digest": "sha256:f4e9e5aed913e80c7f97e3d0d2501e7349c523de4ffd433a1d29081620197b1f"
+      },
+      {
+        "node_id": "n2",
+        "kernel_id": "art-21-agent-traffic-acceptance-policy-builder",
+        "kernel_digest": "sha256:6243000aa7fa78f35081606c6c9c5dd114268e7a28e879dcb7f96f2be704cd76"
+      },
+      {
+        "node_id": "n3",
+        "kernel_id": "art-63-agent-service-metering-modeler",
+        "kernel_digest": "sha256:db80ef83629be0220c5b3db867b3911ee1a7817bb6e530149ec725258b0edafe"
+      }
+    ],
+    "connectors": [],
+    "gates": [],
+    "actions": []
+  },
+  "workflow_manifest_digest": "sha256:af51f518eb904912692e7cafa5d15c744aa8d6dd8f7c72732933738b11505b1a",
+  "declared_inputs": [
+    {
+      "from": "art-01-ap2-mandate-chain-validator",
+      "kind": "external"
+    },
+    {
+      "from": "art-13-eudi-wallet-credential-readiness-checker",
+      "kind": "external"
+    }
+  ],
+  "steps_meta": [
+    {
+      "node_id": "n1",
+      "data_classification": "compute"
+    },
+    {
+      "node_id": "n2",
+      "data_classification": "compute"
+    },
+    {
+      "node_id": "n3",
+      "data_classification": "compute"
+    }
+  ]
+}

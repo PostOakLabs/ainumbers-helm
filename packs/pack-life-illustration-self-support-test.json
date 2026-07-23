@@ -1,0 +1,40 @@
+{
+  "workflow_id": "pack-life-illustration-self-support-test",
+  "name": "Life Illustration Self-Support Test",
+  "outcome": "Linear two-step chain for life insurance illustration compliance and insurer capital review. Step 1 runs the NAIC Model 582 §8C self-support test (year 15 and year 20) and §8D lapse-support check per ASOP 24 -- certifies the illustration is not lapse-supported and maintains a non-negative account value. Step 2 computes the RBC action level for the issuing insurer to confirm adequate capital supports the product offering. ZERO PII BY CONSTRUCTION.",
+  "spec_version": "ocg-control-plane@1",
+  "manifest": {
+    "manifest_version": "1",
+    "workflow_id": "pack-life-illustration-self-support-test",
+    "trigger": {
+      "type": "manual"
+    },
+    "nodes": [
+      {
+        "node_id": "n1",
+        "kernel_id": "art-253-run-illustration-selfsupport-test",
+        "kernel_digest": "sha256:7752a4c0f60362741de571e3a2ec25b3797b26ca9da1f2d301742e230dc2a91e"
+      },
+      {
+        "node_id": "n2",
+        "kernel_id": "art-254-compute-rbc-action-level",
+        "kernel_digest": "sha256:a55fcead8d91066d4678479d0792b6faacc67a98b724625025533952be8d0ec3"
+      }
+    ],
+    "connectors": [],
+    "gates": [],
+    "actions": []
+  },
+  "workflow_manifest_digest": "sha256:120084471d3a4405a5145bbf74341d0e05d62b94d4c7713d7f7c57cc3148709d",
+  "declared_inputs": [],
+  "steps_meta": [
+    {
+      "node_id": "n1",
+      "data_classification": "compute"
+    },
+    {
+      "node_id": "n2",
+      "data_classification": "compute"
+    }
+  ]
+}

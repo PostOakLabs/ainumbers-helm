@@ -1,0 +1,45 @@
+{
+  "workflow_id": "pack-mica-mar-surveillance",
+  "name": "MAR-Crypto Surveillance Readiness",
+  "outcome": "Market-abuse arrangements (PPAET/STOR/insider-list/manipulation) per Arts 86-92 + Dec-2024 RTS, assessed on synthetic order batches (ART-103) -> audit receipt (cry-05). Synthetic data only.",
+  "spec_version": "ocg-control-plane@1",
+  "manifest": {
+    "manifest_version": "1",
+    "workflow_id": "pack-mica-mar-surveillance",
+    "trigger": {
+      "type": "manual"
+    },
+    "nodes": [
+      {
+        "node_id": "n1",
+        "kernel_id": "art-103-mar-crypto-surveillance-readiness",
+        "kernel_digest": "sha256:ccfc18748b7ec8fa614b64c2704c277dbf6424b1634d54850f579057588da7a9"
+      },
+      {
+        "node_id": "n2",
+        "kernel_id": "cry-05-agent-action-audit-trail-aggregator",
+        "kernel_digest": "sha256:5f7f6ab0bb2e2b736805ecde518ca59ba9a83ad38b17545a8c7c133cffa1481f"
+      }
+    ],
+    "connectors": [],
+    "gates": [],
+    "actions": []
+  },
+  "workflow_manifest_digest": "sha256:e17316923f93bef9addd44a22f21f116a208933b76e34bc638dd062dbe004d4d",
+  "declared_inputs": [
+    {
+      "from": "art-98-mica-casp-fit-diagnostic",
+      "kind": "external"
+    }
+  ],
+  "steps_meta": [
+    {
+      "node_id": "n1",
+      "data_classification": "compute"
+    },
+    {
+      "node_id": "n2",
+      "data_classification": "compute"
+    }
+  ]
+}

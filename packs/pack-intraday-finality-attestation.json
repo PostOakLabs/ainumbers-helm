@@ -1,0 +1,72 @@
+{
+  "workflow_id": "pack-intraday-finality-attestation",
+  "name": "Intraday Finality Attestation Receipt",
+  "outcome": "Five-step shared-ledger intraday finality receipt: settlement-asset finality-regime classification, Linea L2 finality-window classification, on-chain cash-leg finality check, settlement-orchestrator ship-readiness attestation, and a document-integrity anchor over the composite digest. Composes into replayable evidence of \"final at window Y\" for a correspondent bank or auditor. Verify-only -- never asserts on-chain settlement it did not observe. The receipt does not yet carry a receipt:// resolver link (pending the N1 MCP Resources work); this is a planned upgrade, not a missing requirement.",
+  "spec_version": "ocg-control-plane@1",
+  "manifest": {
+    "manifest_version": "1",
+    "workflow_id": "pack-intraday-finality-attestation",
+    "trigger": {
+      "type": "manual"
+    },
+    "nodes": [
+      {
+        "node_id": "n1",
+        "kernel_id": "art-59-settlement-asset-finality-classifier",
+        "kernel_digest": "sha256:6e5f40137139c4daa1f923ead6929ad30a66ce97c477702730064bc683fb6f05"
+      },
+      {
+        "node_id": "n2",
+        "kernel_id": "art-290-check-linea-l2-finality-window",
+        "kernel_digest": "sha256:96bc4cfa0b4c4dc33183c6c6c36cb074ef7ecf0c8a4e10dbd7552fefa7eeeb97"
+      },
+      {
+        "node_id": "n3",
+        "kernel_id": "506-onchain-cash-leg-finality-checker",
+        "kernel_digest": "sha256:a8dc570f0262a6be9c06dc3b094353f70b4e87b7b379e93f7113086935456dbc"
+      },
+      {
+        "node_id": "n4",
+        "kernel_id": "art-292-attest-settlement-orchestrator",
+        "kernel_digest": "sha256:4e7ce5129e31667f5c70ae5a5beb2d34564f5217b8e87133a8732f2bfdfee90d"
+      },
+      {
+        "node_id": "n5",
+        "kernel_id": "art-121-document-integrity-anchor",
+        "kernel_digest": "sha256:7f6d0e49c1eeb8c26e4d0453f504f575f36b4547315236e2d5796bea05076cb0"
+      }
+    ],
+    "connectors": [],
+    "gates": [],
+    "actions": []
+  },
+  "workflow_manifest_digest": "sha256:43f4e5439ebc028f6bb78ca65912a82e9042bd7ae056e38c7c06768414a0a11d",
+  "declared_inputs": [
+    {
+      "from": "art-56-tokenized-settlement-fit-diagnostic",
+      "kind": "external"
+    }
+  ],
+  "steps_meta": [
+    {
+      "node_id": "n1",
+      "data_classification": "compute"
+    },
+    {
+      "node_id": "n2",
+      "data_classification": "compute"
+    },
+    {
+      "node_id": "n3",
+      "data_classification": "compute"
+    },
+    {
+      "node_id": "n4",
+      "data_classification": "compute"
+    },
+    {
+      "node_id": "n5",
+      "data_classification": "compute"
+    }
+  ]
+}

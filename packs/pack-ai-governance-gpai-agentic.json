@@ -1,0 +1,54 @@
+{
+  "workflow_id": "pack-ai-governance-gpai-agentic",
+  "name": "Agentic AI & GPAI Governance",
+  "outcome": "W-D. Agentic-AI autonomy + GPAI/systemic-risk classification (ART-67, Arts 53-55 IN FORCE 2 Aug 2025) -> agent identity & authorization (art-04) -> agent/MCP self-attestation (art-33). Governs the autonomous AI agents that transact on the runtime -- the reflexive tie between AINumbers' agent rails and AI governance.",
+  "spec_version": "ocg-control-plane@1",
+  "manifest": {
+    "manifest_version": "1",
+    "workflow_id": "pack-ai-governance-gpai-agentic",
+    "trigger": {
+      "type": "manual"
+    },
+    "nodes": [
+      {
+        "node_id": "n1",
+        "kernel_id": "art-67-agentic-ai-risk-classifier",
+        "kernel_digest": "sha256:e54de58d609e2ca40d3ef029fc40d7560ae0d23ce483dc067fbe7ed9f60165af"
+      },
+      {
+        "node_id": "n2",
+        "kernel_id": "art-04-agent-identity-attestation-checker",
+        "kernel_digest": "sha256:f4e9e5aed913e80c7f97e3d0d2501e7349c523de4ffd433a1d29081620197b1f"
+      },
+      {
+        "node_id": "n3",
+        "kernel_id": "art-33-mcp-server-self-attestation-pack",
+        "kernel_digest": "sha256:0fa24d32f68661ef9900f03ddab76d94fc674c6cf4327d809bd7bd5d2451c316"
+      }
+    ],
+    "connectors": [],
+    "gates": [],
+    "actions": []
+  },
+  "workflow_manifest_digest": "sha256:33cbdc30f06be149f7e1c107aa1461689c3813a91314764dbae61d66df4a6928",
+  "declared_inputs": [
+    {
+      "from": "art-64-ai-act-highrisk-fit-diagnostic",
+      "kind": "external"
+    }
+  ],
+  "steps_meta": [
+    {
+      "node_id": "n1",
+      "data_classification": "compute"
+    },
+    {
+      "node_id": "n2",
+      "data_classification": "compute"
+    },
+    {
+      "node_id": "n3",
+      "data_classification": "compute"
+    }
+  ]
+}

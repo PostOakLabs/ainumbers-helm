@@ -1,0 +1,31 @@
+{
+  "workflow_id": "pack-rhc-multiplier-reconciliation",
+  "name": "Robinhood Chain Multiplier Reconciliation",
+  "outcome": "Single-step chain reconciling a declared Robinhood Chain stock-token corporate action against its ERC-8056 uiMultiplier transition, event log, and raw-balance invariance.",
+  "spec_version": "ocg-control-plane@1",
+  "manifest": {
+    "manifest_version": "1",
+    "workflow_id": "pack-rhc-multiplier-reconciliation",
+    "trigger": {
+      "type": "manual"
+    },
+    "nodes": [
+      {
+        "node_id": "n1",
+        "kernel_id": "art-317-rhc-multiplier-reconciler",
+        "kernel_digest": "sha256:429e977403062feed23c749598080acc370be7c4fbe83704b1c1884bccc3a94f"
+      }
+    ],
+    "connectors": [],
+    "gates": [],
+    "actions": []
+  },
+  "workflow_manifest_digest": "sha256:79c81877b89bb15061afb9528035e3baf58688219b2311579209147e8b3dd539",
+  "declared_inputs": [],
+  "steps_meta": [
+    {
+      "node_id": "n1",
+      "data_classification": "compute"
+    }
+  ]
+}

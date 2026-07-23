@@ -1,0 +1,49 @@
+{
+  "workflow_id": "pack-document-sanitization-integrity",
+  "name": "Document Sanitization Integrity",
+  "outcome": "Strip file metadata locally, prove what was removed, bind the sanitization into a receipt, and record the cleaned files in a digest manifest. Stage 1 produces a proof-of-sanitization record binding the original digest to the removed, redacted, or retained findings and the sanitized digest, with a residual-risk analysis by file type (art-193). Stage 2 binds the sanitization edge into a canonical conversion receipt (art-191). Stage 3 records the original and cleaned file digests in one canonical, hash-anchored manifest (art-194). Every stage produces a SHA-256 execution hash. Zero network, zero PII.",
+  "spec_version": "ocg-control-plane@1",
+  "manifest": {
+    "manifest_version": "1",
+    "workflow_id": "pack-document-sanitization-integrity",
+    "trigger": {
+      "type": "manual"
+    },
+    "nodes": [
+      {
+        "node_id": "n1",
+        "kernel_id": "art-193-metadata-sanitization-prover",
+        "kernel_digest": "sha256:2d8ae35efdc10161078c887a54e33ac94a5faba77d639714ebe390c32a9759b0"
+      },
+      {
+        "node_id": "n2",
+        "kernel_id": "art-191-conversion-receipt-builder",
+        "kernel_digest": "sha256:e9c4a6255342b4fb2f2bd3687128e671dad4028f95ca277ee482fabe7b2b83ce"
+      },
+      {
+        "node_id": "n3",
+        "kernel_id": "art-194-digest-manifest-builder",
+        "kernel_digest": "sha256:f7773f9cb20b6ccffd83c7dc8eadff91a541c6046f38620c66139db89449959b"
+      }
+    ],
+    "connectors": [],
+    "gates": [],
+    "actions": []
+  },
+  "workflow_manifest_digest": "sha256:309200fd3182a2da7314b3c54d5391af305e67f2ce9e177aead67f0868502fb2",
+  "declared_inputs": [],
+  "steps_meta": [
+    {
+      "node_id": "n1",
+      "data_classification": "compute"
+    },
+    {
+      "node_id": "n2",
+      "data_classification": "compute"
+    },
+    {
+      "node_id": "n3",
+      "data_classification": "compute"
+    }
+  ]
+}

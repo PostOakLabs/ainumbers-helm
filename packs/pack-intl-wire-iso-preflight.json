@@ -1,0 +1,58 @@
+{
+  "workflow_id": "pack-intl-wire-iso-preflight",
+  "name": "International Wires ISO Migration Preflight",
+  "outcome": "Per-template preflight for the Nov 16 2026 ISO 20022 structured-address harmonization deadline: CBPR+ structured-address lint, purpose-code requirement check, LEI payment-binding lint, and MT-MX translation fidelity score. PASS only when all four checks pass; FAIL surfaces the failing check(s). Each receipt records which template/version was checked so re-runs show drift toward compliance across receipts.",
+  "spec_version": "ocg-control-plane@1",
+  "manifest": {
+    "manifest_version": "1",
+    "workflow_id": "pack-intl-wire-iso-preflight",
+    "trigger": {
+      "type": "manual"
+    },
+    "nodes": [
+      {
+        "node_id": "n1",
+        "kernel_id": "art-241-cbpr-structured-address-linter",
+        "kernel_digest": "sha256:63e488bc42ce3ecf75573b02a8fae9dd4044c91928f1f019e53895bf08f6bf86"
+      },
+      {
+        "node_id": "n2",
+        "kernel_id": "art-243-purpose-code-requirement-checker",
+        "kernel_digest": "sha256:2ff736927d33cc21662cf8751c9182933760e8d7bf20ec50e5dcbd5b93e48615"
+      },
+      {
+        "node_id": "n3",
+        "kernel_id": "art-246-lei-payment-binding-linter",
+        "kernel_digest": "sha256:3eb46ada4f435f3207e14efe0cd5349dd78613e1b50bbe42bb85cd95e2cd3c05"
+      },
+      {
+        "node_id": "n4",
+        "kernel_id": "art-245-mt-mx-translation-fidelity-scorer",
+        "kernel_digest": "sha256:df068aac811711ab2100e95147d96ce76694c32836ca079e405fbd586fbe351a"
+      }
+    ],
+    "connectors": [],
+    "gates": [],
+    "actions": []
+  },
+  "workflow_manifest_digest": "sha256:718162ec2fb88adee891b4e879036e85e224077b3e800e9ea07e45f744347c99",
+  "declared_inputs": [],
+  "steps_meta": [
+    {
+      "node_id": "n1",
+      "data_classification": "compute"
+    },
+    {
+      "node_id": "n2",
+      "data_classification": "compute"
+    },
+    {
+      "node_id": "n3",
+      "data_classification": "compute"
+    },
+    {
+      "node_id": "n4",
+      "data_classification": "compute"
+    }
+  ]
+}

@@ -1,0 +1,58 @@
+{
+  "workflow_id": "pack-digital-trade-doc-integrity",
+  "name": "Trade Document-Set Integrity & Consistency",
+  "outcome": "W-C. Cross-document consistency + Merkle provenance (ART-55) -> independent Merkle re-verification (cry-04) -> invoicing/volume anomaly monitoring (ml-03). Detects inconsistent or tampered trade-document sets.",
+  "spec_version": "ocg-control-plane@1",
+  "manifest": {
+    "manifest_version": "1",
+    "workflow_id": "pack-digital-trade-doc-integrity",
+    "trigger": {
+      "type": "manual"
+    },
+    "nodes": [
+      {
+        "node_id": "n1",
+        "kernel_id": "art-55-trade-document-provenance-verifier",
+        "kernel_digest": "sha256:1328cfacdcf71d0f8ba4acb5a20ac1da41eccca4e7b940bea943d4de82db2193"
+      },
+      {
+        "node_id": "n2",
+        "kernel_id": "cry-04-merkle-batch-verifier",
+        "kernel_digest": "sha256:7c89b9651f986ed6652903c6d41e9fbda29d12db9fbc0a6acd4f7270160b7ccb"
+      },
+      {
+        "node_id": "n3",
+        "kernel_id": "ml-03-timeseries-anomaly-detector",
+        "kernel_digest": "sha256:ae20b291caf5eac025d4e7103782427565fe7cf0c99f4045122257c87db0d9c6"
+      }
+    ],
+    "connectors": [],
+    "gates": [],
+    "actions": []
+  },
+  "workflow_manifest_digest": "sha256:bfb09f83a8037bd3c5d7c1e7b1ad4347d75a1473d1152885129a9ba17dacd944",
+  "declared_inputs": [
+    {
+      "from": "art-52-digital-trade-fit-diagnostic",
+      "kind": "external"
+    },
+    {
+      "from": "art-54-digital-trade-rules-checker",
+      "kind": "external"
+    }
+  ],
+  "steps_meta": [
+    {
+      "node_id": "n1",
+      "data_classification": "compute"
+    },
+    {
+      "node_id": "n2",
+      "data_classification": "compute"
+    },
+    {
+      "node_id": "n3",
+      "data_classification": "compute"
+    }
+  ]
+}

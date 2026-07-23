@@ -1,0 +1,45 @@
+{
+  "workflow_id": "pack-insurer-rbc-action-level",
+  "name": "Insurer RBC Action Level Assessment",
+  "outcome": "Gated two-step chain for NAIC RBC capital adequacy assessment and claims STP economics. Step 1 computes the RBC action level (TAC/ACL ratio) and classifies into NO_ACTION / COMPANY_ACTION / REGULATORY_ACTION / AUTHORIZED_CONTROL / MANDATORY_CONTROL per NAIC Model Laws #312/#315/#315H. Gate on /action_level_code: if NO_ACTION (above 200% ACL), the chain ends -- insurer is well-capitalised and no corrective action is required. Default (below 200% ACL): Step 2 computes claims STP economics to model the financial impact of automation investment as a capital restoration pathway. ZERO PII BY CONSTRUCTION.",
+  "spec_version": "ocg-control-plane@1",
+  "manifest": {
+    "manifest_version": "1",
+    "workflow_id": "pack-insurer-rbc-action-level",
+    "trigger": {
+      "type": "manual"
+    },
+    "nodes": [
+      {
+        "node_id": "n1",
+        "kernel_id": "art-254-compute-rbc-action-level",
+        "kernel_digest": "sha256:a55fcead8d91066d4678479d0792b6faacc67a98b724625025533952be8d0ec3"
+      },
+      {
+        "node_id": "n2",
+        "kernel_id": "art-257-calculate-claims-stp-economics",
+        "kernel_digest": "sha256:705011effaaf8ceec89ff5d39d51b1a8bf478dbd66ded2dfe68639036e90ef20"
+      }
+    ],
+    "connectors": [],
+    "gates": [],
+    "actions": []
+  },
+  "workflow_manifest_digest": "sha256:5b9fc6c2cd7db9ad61f5b1686e2006026ca51059d2ae0f8bb98d540d84850e36",
+  "declared_inputs": [
+    {
+      "from": "art-253-run-illustration-selfsupport-test",
+      "kind": "external"
+    }
+  ],
+  "steps_meta": [
+    {
+      "node_id": "n1",
+      "data_classification": "compute"
+    },
+    {
+      "node_id": "n2",
+      "data_classification": "compute"
+    }
+  ]
+}

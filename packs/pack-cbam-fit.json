@@ -1,0 +1,31 @@
+{
+  "workflow_id": "pack-cbam-fit",
+  "name": "Carbon & Climate Compliance Fit Diagnostic",
+  "outcome": "Single-node D0 diagnostic classifying which carbon/climate obligations bind a firm (CBAM authorised-declarant duty, EU Taxonomy alignment, EU Green Bond conformance, climate stress) and routing to the right carbon-compliance chain; separates in-force CBAM liability (since 1 Jan 2026) from prepare-ahead items.",
+  "spec_version": "ocg-control-plane@1",
+  "manifest": {
+    "manifest_version": "1",
+    "workflow_id": "pack-cbam-fit",
+    "trigger": {
+      "type": "manual"
+    },
+    "nodes": [
+      {
+        "node_id": "n1",
+        "kernel_id": "art-68-carbon-compliance-fit-diagnostic",
+        "kernel_digest": "sha256:a8f0b6c702c3793a684793530ccd427f11067b356e3c3c899f614c15de976da2"
+      }
+    ],
+    "connectors": [],
+    "gates": [],
+    "actions": []
+  },
+  "workflow_manifest_digest": "sha256:36c2b847410ee82456828e0f1bd6fb4091aa942ad2b3a00392024078716c85cf",
+  "declared_inputs": [],
+  "steps_meta": [
+    {
+      "node_id": "n1",
+      "data_classification": "compute"
+    }
+  ]
+}

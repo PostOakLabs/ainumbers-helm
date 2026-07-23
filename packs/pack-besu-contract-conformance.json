@@ -1,0 +1,49 @@
+{
+  "workflow_id": "pack-besu-contract-conformance",
+  "name": "Besu Settlement Contract Conformance Gate",
+  "outcome": "Pre-deployment gate for a bank’s Besu-permissioned settlement contract and its off-chain orchestrator: static contract lint, orchestrator attestation, and receipt aggregation compose into one conformance record before go-live.",
+  "spec_version": "ocg-control-plane@1",
+  "manifest": {
+    "manifest_version": "1",
+    "workflow_id": "pack-besu-contract-conformance",
+    "trigger": {
+      "type": "manual"
+    },
+    "nodes": [
+      {
+        "node_id": "n1",
+        "kernel_id": "art-289-lint-besu-settlement-contract",
+        "kernel_digest": "sha256:8452fcfb980e34593a3e46cab2d75a620d9e598ea12e618b94c74b04ff1f4ce7"
+      },
+      {
+        "node_id": "n2",
+        "kernel_id": "art-292-attest-settlement-orchestrator",
+        "kernel_digest": "sha256:4e7ce5129e31667f5c70ae5a5beb2d34564f5217b8e87133a8732f2bfdfee90d"
+      },
+      {
+        "node_id": "n3",
+        "kernel_id": "cry-05-agent-action-audit-trail-aggregator",
+        "kernel_digest": "sha256:5f7f6ab0bb2e2b736805ecde518ca59ba9a83ad38b17545a8c7c133cffa1481f"
+      }
+    ],
+    "connectors": [],
+    "gates": [],
+    "actions": []
+  },
+  "workflow_manifest_digest": "sha256:5ba96b62278519d2640a549fd4fff34d0d2475d37b6f0a253eb372161a46f798",
+  "declared_inputs": [],
+  "steps_meta": [
+    {
+      "node_id": "n1",
+      "data_classification": "compute"
+    },
+    {
+      "node_id": "n2",
+      "data_classification": "compute"
+    },
+    {
+      "node_id": "n3",
+      "data_classification": "compute"
+    }
+  ]
+}

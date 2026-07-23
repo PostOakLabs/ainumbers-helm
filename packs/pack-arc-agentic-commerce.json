@@ -1,0 +1,49 @@
+{
+  "workflow_id": "pack-arc-agentic-commerce",
+  "name": "Arc Agentic Commerce",
+  "outcome": "W-E chain. Model agentic commerce economics on Arc: Paymaster gas abstraction + CPN settlement for autonomous agent payment flows.",
+  "spec_version": "ocg-control-plane@1",
+  "manifest": {
+    "manifest_version": "1",
+    "workflow_id": "pack-arc-agentic-commerce",
+    "trigger": {
+      "type": "manual"
+    },
+    "nodes": [
+      {
+        "node_id": "n1",
+        "kernel_id": "art-42-arc-fit-diagnostic",
+        "kernel_digest": "sha256:84cf3e4b4dd77ad8ed4f6425d9a623c51ae75b4855e2fb629505f1485387cee1"
+      },
+      {
+        "node_id": "n2",
+        "kernel_id": "art-46-arc-paymaster-model",
+        "kernel_digest": "sha256:86b52d9ce0d72966dc6be706fe6621eb0c036d9be967792292fb315dad560cbd"
+      },
+      {
+        "node_id": "n3",
+        "kernel_id": "art-43-arc-cpn-model",
+        "kernel_digest": "sha256:b63c0541028ab8fc4734ed626c01d898b2248c38df45a7136d68bc76669a4f91"
+      }
+    ],
+    "connectors": [],
+    "gates": [],
+    "actions": []
+  },
+  "workflow_manifest_digest": "sha256:cc2f911a92b9eab5c53a79caf173bb13399d72b9df464ea1faffba136cfbcad3",
+  "declared_inputs": [],
+  "steps_meta": [
+    {
+      "node_id": "n1",
+      "data_classification": "compute"
+    },
+    {
+      "node_id": "n2",
+      "data_classification": "compute"
+    },
+    {
+      "node_id": "n3",
+      "data_classification": "compute"
+    }
+  ]
+}

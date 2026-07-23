@@ -1,0 +1,54 @@
+{
+  "workflow_id": "pack-settlement-discipline-penalty",
+  "name": "CSDR Penalty Calculation & Exposure",
+  "outcome": "W-A flagship. CSDR cash-penalty calculation incl. the Oct-2025 RTS rate increases (ART-78) -> settlement-efficiency / penalty-cost aggregation (ART-84) -> audit receipt (cry-05). Computes per-fail penalties and forward book exposure. Decision-support draft.",
+  "spec_version": "ocg-control-plane@1",
+  "manifest": {
+    "manifest_version": "1",
+    "workflow_id": "pack-settlement-discipline-penalty",
+    "trigger": {
+      "type": "manual"
+    },
+    "nodes": [
+      {
+        "node_id": "n1",
+        "kernel_id": "art-78-csdr-penalty-calculator",
+        "kernel_digest": "sha256:1a1ae5b7775cad6c3619104c909084bd1b203d852325759671f8a6ad7e46a80a"
+      },
+      {
+        "node_id": "n2",
+        "kernel_id": "art-84-settlement-efficiency-kpi",
+        "kernel_digest": "sha256:6689dbe2c2f23a87ca2ee46102cd5d983d628b2edebd17f51773a2749d6aa9e6"
+      },
+      {
+        "node_id": "n3",
+        "kernel_id": "cry-05-agent-action-audit-trail-aggregator",
+        "kernel_digest": "sha256:5f7f6ab0bb2e2b736805ecde518ca59ba9a83ad38b17545a8c7c133cffa1481f"
+      }
+    ],
+    "connectors": [],
+    "gates": [],
+    "actions": []
+  },
+  "workflow_manifest_digest": "sha256:ff829939ef32035ac4de9461cf63a4315de29dc4cc32b3444a2fb06f8283ca96",
+  "declared_inputs": [
+    {
+      "from": "art-77-t1-settlement-readiness-diagnostic",
+      "kind": "external"
+    }
+  ],
+  "steps_meta": [
+    {
+      "node_id": "n1",
+      "data_classification": "compute"
+    },
+    {
+      "node_id": "n2",
+      "data_classification": "compute"
+    },
+    {
+      "node_id": "n3",
+      "data_classification": "compute"
+    }
+  ]
+}

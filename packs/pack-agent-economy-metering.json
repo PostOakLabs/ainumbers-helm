@@ -1,0 +1,54 @@
+{
+  "workflow_id": "pack-agent-economy-metering",
+  "name": "Agent-Service Metering & Marketplace Economics",
+  "outcome": "W-D. Metering + marketplace unit economics (ART-63) -> x402 settlement cost/finality (art-03) -> usage/billing anomaly monitoring (ml-03). Models the economics of an agent-service micropayment marketplace. Educational estimator.",
+  "spec_version": "ocg-control-plane@1",
+  "manifest": {
+    "manifest_version": "1",
+    "workflow_id": "pack-agent-economy-metering",
+    "trigger": {
+      "type": "manual"
+    },
+    "nodes": [
+      {
+        "node_id": "n1",
+        "kernel_id": "art-63-agent-service-metering-modeler",
+        "kernel_digest": "sha256:db80ef83629be0220c5b3db867b3911ee1a7817bb6e530149ec725258b0edafe"
+      },
+      {
+        "node_id": "n2",
+        "kernel_id": "art-03-x402-settlement-modeler",
+        "kernel_digest": "sha256:5d693ae08f52fbf0719d500857977fff760b19d533358ae2f5edd6693854de81"
+      },
+      {
+        "node_id": "n3",
+        "kernel_id": "ml-03-timeseries-anomaly-detector",
+        "kernel_digest": "sha256:ae20b291caf5eac025d4e7103782427565fe7cf0c99f4045122257c87db0d9c6"
+      }
+    ],
+    "connectors": [],
+    "gates": [],
+    "actions": []
+  },
+  "workflow_manifest_digest": "sha256:a04d12715bc7234961171642f4fafbe232db80bc3c78fffab8a49a53ce87228e",
+  "declared_inputs": [
+    {
+      "from": "art-60-agent-economy-runtime-fit-diagnostic",
+      "kind": "external"
+    }
+  ],
+  "steps_meta": [
+    {
+      "node_id": "n1",
+      "data_classification": "compute"
+    },
+    {
+      "node_id": "n2",
+      "data_classification": "compute"
+    },
+    {
+      "node_id": "n3",
+      "data_classification": "compute"
+    }
+  ]
+}
