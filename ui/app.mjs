@@ -4,8 +4,10 @@ import { renderCanvas } from "./views/canvas.mjs";
 import { renderConnect } from "./views/connect.mjs";
 import { renderRun } from "./views/run.mjs";
 import { renderOperate } from "./views/operate.mjs";
+import { renderVerify } from "./views/verify.mjs";
+import { renderReview } from "./views/review.mjs";
 
-const VIEWS = { choose: renderChoose, canvas: renderCanvas, connect: renderConnect, run: renderRun, operate: renderOperate };
+const VIEWS = { choose: renderChoose, canvas: renderCanvas, connect: renderConnect, run: renderRun, verify: renderVerify, review: renderReview, operate: renderOperate };
 const DEFAULT_VIEW = "choose";
 
 function currentRoute() {
