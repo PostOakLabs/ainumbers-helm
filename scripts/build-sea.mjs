@@ -11,6 +11,7 @@ import { copyFileSync, mkdirSync, mkdtempSync, rmSync, writeFileSync, existsSync
 import { join, dirname } from "node:path";
 import { tmpdir, platform, arch } from "node:os";
 import { fileURLToPath } from "node:url";
+import { seaAssetMap } from "../hub/ui-manifest.mjs";
 
 const ROOT = join(dirname(fileURLToPath(import.meta.url)), "..");
 const ENTRY = join(ROOT, "hub", "index.mjs");
@@ -39,7 +40,11 @@ function main() {
     const blobPath = join(tmp, "helmd.blob");
     writeFileSync(
       configPath,
-      JSON.stringify({ main: ENTRY, output: blobPath, disableExperimentalSEAWarning: true }, null, 2)
+      JSON.stringify(
+        { main: ENTRY, output: blobPath, disableExperimentalSEAWarning: true, assets: seaAssetMap() },
+        null,
+        2
+      )
     );
     execFileSync(process.execPath, ["--experimental-sea-config", configPath], { stdio: "inherit" });
 

@@ -7,6 +7,7 @@ import { createServer } from "node:http";
 import { tokenMatches } from "./token.mjs";
 import { log } from "./log.mjs";
 import { startFlow, getFlowStatus, listConnections, revokeConnection, isSecureEndpoint } from "./oauth-pkce.mjs";
+import { serveStatic } from "./static.mjs";
 
 const START = Date.now();
 
@@ -142,6 +143,13 @@ export function createHelmServer({ port, allowedOrigin, token }) {
       log.warn("rejected: host mismatch", { host: req.headers.host, path: req.url });
       return deny(res, 403, "host_mismatch");
     }
+
+    const pathname = new URL(req.url, `http://x`).pathname;
+    // Static UI shell: served pre-CORS, pre-auth (see static.mjs for why).
+    // Only exact allowlisted paths match — anything else falls through to
+    // the API router below and gets its normal 404.
+    if (serveStatic(req, res, pathname)) return;
+
     if (!checkOrigin(req, allowedOrigin)) {
       log.warn("rejected: origin mismatch", { origin: req.headers.origin, path: req.url });
       return deny(res, 403, "origin_mismatch");
@@ -162,7 +170,6 @@ export function createHelmServer({ port, allowedOrigin, token }) {
       return deny(res, 401, "unauthorized");
     }
 
-    const pathname = new URL(req.url, `http://x`).pathname;
     const handler = ROUTES[`${req.method} ${pathname}`];
     if (handler) return handler(req, res);
 

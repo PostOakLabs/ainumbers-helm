@@ -160,6 +160,82 @@ test("HELM-SEC-5 hardening: /events refuses a connection past MAX_SSE_CONNECTION
   }
 });
 
+// HELM-U4: served-UI shell. Deliberately no Origin/Authorization headers —
+// a real top-level navigation can't send either.
+test("static: GET / serves the shell UI with no Origin/Authorization headers", async () => {
+  const res = await get("/", { Host: `127.0.0.1:${PORT}` });
+  assert.equal(res.status, 200);
+  assert.match(res.body, /<title>Helm<\/title>/);
+});
+
+test("static: GET /app.mjs serves as a JS module, no auth required", async () => {
+  const res = await get("/app.mjs", { Host: `127.0.0.1:${PORT}` });
+  assert.equal(res.status, 200);
+});
+
+test("static: CSP blocks inline script (no unsafe-inline, script-src 'self')", async () => {
+  const res = await new Promise((resolve, reject) => {
+    const req = request({ host: "127.0.0.1", port: PORT, path: "/", method: "GET", headers: { Host: `127.0.0.1:${PORT}` } }, resolve);
+    req.on("error", reject);
+    req.end();
+  });
+  const csp = res.headers["content-security-policy"];
+  assert.ok(csp, "CSP header must be present");
+  assert.doesNotMatch(csp, /unsafe-inline/);
+  assert.match(csp, /script-src 'self'/);
+});
+
+test("static: nosniff + no cookie on every static response", async () => {
+  const res = await new Promise((resolve, reject) => {
+    const req = request({ host: "127.0.0.1", port: PORT, path: "/theme.css", method: "GET", headers: { Host: `127.0.0.1:${PORT}` } }, resolve);
+    req.on("error", reject);
+    req.end();
+  });
+  assert.equal(res.headers["x-content-type-options"], "nosniff");
+  assert.equal(res.headers["set-cookie"], undefined);
+});
+
+test("static: traversal-style path is not servable, falls through to normal 404", async () => {
+  const res = await get("/../../hub/token.mjs", headers());
+  assert.equal(res.status, 404);
+  assert.equal(JSON.parse(res.body).error, "not_found");
+});
+
+test("static: unknown path under a real UI directory (e.g. /views/does-not-exist.mjs) 404s, not served", async () => {
+  const res = await get("/views/does-not-exist.mjs", headers());
+  assert.equal(res.status, 404);
+});
+
+// Served-UI mode: allowedOrigin is a real http://127.0.0.1:port origin, so a
+// request presenting the old file:// "null" Origin must be rejected — that
+// legacy allowance is gone (HELM-U4 item 5). Own server + own port: the rest
+// of this file deliberately configures allowedOrigin: "null" to cover the
+// pre-U4 shape, so this needs a second instance with a real origin to prove
+// "null" is no longer accepted anywhere.
+test("negative: null Origin rejected against a served-UI (non-null) allowedOrigin", async () => {
+  const port2 = PORT + 1;
+  const origin2 = `http://127.0.0.1:${port2}`;
+  const server2 = createHelmServer({ port: port2, allowedOrigin: origin2, token });
+  try {
+    const res = await new Promise((resolve, reject) => {
+      const req = request(
+        { host: "127.0.0.1", port: port2, path: "/health", method: "GET", headers: { Host: `127.0.0.1:${port2}`, Origin: "null", Authorization: `Bearer ${token}` } },
+        (r) => {
+          let body = "";
+          r.on("data", (c) => (body += c));
+          r.on("end", () => resolve({ status: r.statusCode, body }));
+        }
+      );
+      req.on("error", reject);
+      req.end();
+    });
+    assert.equal(res.status, 403);
+    assert.equal(JSON.parse(res.body).error, "origin_mismatch");
+  } finally {
+    server2.close();
+  }
+});
+
 test("negative: POST /vault/connections/begin with http authorizationEndpoint rejected (F4)", async () => {
   const res = await post(
     "/vault/connections/begin",

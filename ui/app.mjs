@@ -27,16 +27,28 @@ async function refreshConnectivity(port, token, dot, label) {
   else setStatus(dot, label, "down", "helmd unreachable (dormant)");
 }
 
+// Friendly welcome/empty state (Tim, 2026-07-23): first thing an unpaired
+// visitor sees is "waiting for Helm," not a bare paste-a-token form. Manual
+// pairing still works — it's tucked behind an <details> disclosure, since
+// `helmd start` opens this page pre-paired for the normal first-run flow and
+// this screen is mostly seen by people who closed that tab or lost the link.
 function mountTokenForm(root, onPaired) {
   root.innerHTML = `
-    <form class="token-form" aria-label="Pair with helmd">
-      <label for="token-input">Pairing token</label>
-      <input id="token-input" name="token" type="password" autocomplete="off" placeholder="paste token or open the CLI pairing link" />
-      <label for="port-input">Port</label>
-      <input id="port-input" name="port" type="number" min="1" max="65535" value="${loadPort()}" style="width:6rem" />
-      <button type="submit">Pair</button>
-    </form>
-    <p class="empty-state">No token yet. Run <code>helmd start</code> and paste the token it prints, or open its printed <code>#token=</code> link directly.</p>`;
+    <div class="welcome-state" aria-live="polite">
+      <p class="welcome-title">Waiting for Helm on this computer&hellip;</p>
+      <p class="empty-state">Run <code>helmd start</code> — it opens this page paired automatically.</p>
+      <p class="empty-state"><a href="https://ainumbers.co/helm" rel="noopener">Don't have Helm installed yet?</a></p>
+      <details class="disclosure">
+        <summary>Advanced: pair by hand</summary>
+        <form class="token-form" aria-label="Pair with helmd">
+          <label for="token-input">Pairing token</label>
+          <input id="token-input" name="token" type="password" autocomplete="off" placeholder="paste token or open the CLI pairing link" />
+          <label for="port-input">Port</label>
+          <input id="port-input" name="port" type="number" min="1" max="65535" value="${loadPort()}" style="width:6rem" />
+          <button type="submit">Pair</button>
+        </form>
+      </details>
+    </div>`;
   root.querySelector("form").addEventListener("submit", (ev) => {
     ev.preventDefault();
     const token = root.querySelector("#token-input").value.trim();
