@@ -77,7 +77,14 @@ function personaCard(persona) {
 function dormantHome() {
   return `
     <h2>Operate</h2>
-    <p class="empty-state">helmd isn't running yet. Start it with <code>helmd start</code> — these cards fill in once it's connected.</p>
+    <p class="empty-state">helmd isn't running yet. These cards fill in once it's connected. To connect:</p>
+    <ol class="steps">
+      <li>Open a terminal (Command Prompt or PowerShell on Windows, Terminal on macOS or Linux).</li>
+      <li>Type <code>helmd start</code> and press Enter. The daemon launches and opens a fresh, paired browser tab for you.</li>
+      <li>If a paired tab is already open, switch back to it. If you closed it or lost the link, run <code>helmd open</code> instead to get a new paired link for this browser.</li>
+      <li>Once connected, the status pill at the top right reads "helmd connected" and this page populates.</li>
+    </ol>
+    <p class="empty-state">Don't have helmd installed yet? Get it at <a href="https://ainumbers.co/helm" rel="noopener">ainumbers.co/helm</a>.</p>
     <div class="card-grid">
       ${PERSONAS.map(personaCard).join("")}
     </div>`;
