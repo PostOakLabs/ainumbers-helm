@@ -1,0 +1,40 @@
+{
+  "workflow_id": "pack-card-act-ability-to-pay",
+  "name": "CARD Act Ability to Pay",
+  "outcome": "Gated two-step chain for CARD Act ability-to-pay compliance. Step 1 evaluates ATP per §1026.51 (DTI threshold 45%, under-21 income restriction, penalty fee safe harbor $32/$43). Gate: atp_passes=true exits immediately (approved). Failed ATP continues to Step 2: adverse action notice build per Reg B §1002.9 with SHAP-ranked factor codes. CFPB $8 late fee rule vacated January 17, 2025 (Fifth Circuit No. 24-10266); $32/$43 remain in effect.",
+  "spec_version": "ocg-control-plane@1",
+  "manifest": {
+    "manifest_version": "1",
+    "workflow_id": "pack-card-act-ability-to-pay",
+    "trigger": {
+      "type": "manual"
+    },
+    "nodes": [
+      {
+        "node_id": "n1",
+        "kernel_id": "art-233-check-card-act-ability-to-pay",
+        "kernel_digest": "sha256:d86f9301b3835cd8d80c1ed5bfa8cc607bbeb1876e91b2482c16eb64316db228"
+      },
+      {
+        "node_id": "n2",
+        "kernel_id": "art-228-build-adverse-action-notice",
+        "kernel_digest": "sha256:f6fa0d528022c256b20f095c3a94e08923c4338008aba9689e96eea2395612ad"
+      }
+    ],
+    "connectors": [],
+    "gates": [],
+    "actions": []
+  },
+  "workflow_manifest_digest": "sha256:da09141b7e1617f52f67e137437ef9e4d6d9a0f99108e39ec711201c62f7d2f0",
+  "declared_inputs": [],
+  "steps_meta": [
+    {
+      "node_id": "n1",
+      "data_classification": "compute"
+    },
+    {
+      "node_id": "n2",
+      "data_classification": "compute"
+    }
+  ]
+}

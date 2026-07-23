@@ -1,0 +1,31 @@
+{
+  "workflow_id": "pack-state-proof-verification",
+  "name": "State-Proof Verification",
+  "outcome": "Single-node diagnostic verifying an EIP-1186 account and storage Merkle-Patricia-Trie proof against a caller-supplied trusted state root.",
+  "spec_version": "ocg-control-plane@1",
+  "manifest": {
+    "manifest_version": "1",
+    "workflow_id": "pack-state-proof-verification",
+    "trigger": {
+      "type": "manual"
+    },
+    "nodes": [
+      {
+        "node_id": "n1",
+        "kernel_id": "art-279-state-proof-verifier",
+        "kernel_digest": "sha256:cdf00978c1f9c8e64aa49fd927d7dab925a232f49b3f745381396674785ce592"
+      }
+    ],
+    "connectors": [],
+    "gates": [],
+    "actions": []
+  },
+  "workflow_manifest_digest": "sha256:a6d24230d3c05de22d437a8b6900f06247c31da84ef65a94642a824030c99b99",
+  "declared_inputs": [],
+  "steps_meta": [
+    {
+      "node_id": "n1",
+      "data_classification": "compute"
+    }
+  ]
+}

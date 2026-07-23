@@ -1,0 +1,58 @@
+{
+  "workflow_id": "pack-mica-audit-pack",
+  "name": "MiCA CASP Compliance Audit Pack",
+  "outcome": "W-G convergence terminal. Merkle integrity over the CASP-lifecycle decision set (cry-04) -> Merkle-root audit receipt (cry-05) -> NCA/auditor-framed cover memo (ptg-01). Other chains feed in.",
+  "spec_version": "ocg-control-plane@1",
+  "manifest": {
+    "manifest_version": "1",
+    "workflow_id": "pack-mica-audit-pack",
+    "trigger": {
+      "type": "manual"
+    },
+    "nodes": [
+      {
+        "node_id": "n1",
+        "kernel_id": "cry-04-merkle-batch-verifier",
+        "kernel_digest": "sha256:7c89b9651f986ed6652903c6d41e9fbda29d12db9fbc0a6acd4f7270160b7ccb"
+      },
+      {
+        "node_id": "n2",
+        "kernel_id": "cry-05-agent-action-audit-trail-aggregator",
+        "kernel_digest": "sha256:5f7f6ab0bb2e2b736805ecde518ca59ba9a83ad38b17545a8c7c133cffa1481f"
+      },
+      {
+        "node_id": "n3",
+        "kernel_id": "ptg-01-ap2-prompt-template-generator",
+        "kernel_digest": "sha256:5f23d03d4d538507b92a3f3461e5d0ebb6987227fd3a7ae41281216fc2fabe8e"
+      }
+    ],
+    "connectors": [],
+    "gates": [],
+    "actions": []
+  },
+  "workflow_manifest_digest": "sha256:1009526ff4a8bd88c2b5f1b9fc1fe47fd64705a9ca445c7f7e6d3a96388eb601",
+  "declared_inputs": [
+    {
+      "from": "rca-02-mica-reserve-stress",
+      "kind": "external"
+    },
+    {
+      "from": "pnr-01-dora-ict-cascade-simulator",
+      "kind": "external"
+    }
+  ],
+  "steps_meta": [
+    {
+      "node_id": "n1",
+      "data_classification": "compute"
+    },
+    {
+      "node_id": "n2",
+      "data_classification": "compute"
+    },
+    {
+      "node_id": "n3",
+      "data_classification": "compute"
+    }
+  ]
+}

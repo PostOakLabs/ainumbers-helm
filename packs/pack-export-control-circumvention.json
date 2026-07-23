@@ -1,0 +1,54 @@
+{
+  "workflow_id": "pack-export-control-circumvention",
+  "name": "Anti-Circumvention Diligence & No-Russia Clause",
+  "outcome": "ECCN classification (ART-94) -> circumvention due-diligence + liability-allocation assessment vs the EU 20th-package no-Russia clause (ART-95) -> no-Russia-clause + DD-evidence pack (ART-96). The export-control diligence lifecycle. Decision-support draft.",
+  "spec_version": "ocg-control-plane@1",
+  "manifest": {
+    "manifest_version": "1",
+    "workflow_id": "pack-export-control-circumvention",
+    "trigger": {
+      "type": "manual"
+    },
+    "nodes": [
+      {
+        "node_id": "n1",
+        "kernel_id": "art-94-eccn-dual-use-classifier",
+        "kernel_digest": "sha256:be06d9a1450ca87a837b96284af6b98dbae8ddc68d252ca54240734fc8e1d778"
+      },
+      {
+        "node_id": "n2",
+        "kernel_id": "art-95-circumvention-diligence-assessor",
+        "kernel_digest": "sha256:75587c9e280c8c0b45a80f7846a3c176999cf769b7f62fd36dc96e732b79a75b"
+      },
+      {
+        "node_id": "n3",
+        "kernel_id": "art-96-no-russia-clause-pack-builder",
+        "kernel_digest": "sha256:cf2d6111233a0f8a580756c5e1c03e7832d67ddf9c6582393a9c90d819dbaa7a"
+      }
+    ],
+    "connectors": [],
+    "gates": [],
+    "actions": []
+  },
+  "workflow_manifest_digest": "sha256:6b3f733a0d91a8baa007affe622a43055826d1a524c949523660e02260e0f304",
+  "declared_inputs": [
+    {
+      "from": "art-90-sanctions-screening-fit-diagnostic",
+      "kind": "external"
+    }
+  ],
+  "steps_meta": [
+    {
+      "node_id": "n1",
+      "data_classification": "compute"
+    },
+    {
+      "node_id": "n2",
+      "data_classification": "compute"
+    },
+    {
+      "node_id": "n3",
+      "data_classification": "compute"
+    }
+  ]
+}

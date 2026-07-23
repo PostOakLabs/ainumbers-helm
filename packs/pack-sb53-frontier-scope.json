@@ -1,0 +1,31 @@
+{
+  "workflow_id": "pack-sb53-frontier-scope",
+  "name": "SB 53 Frontier Scope",
+  "outcome": "Single-step obligation router for the California SB 53 Transparency in Frontier Artificial Intelligence Act (eff. 2026-01-01). Kept as its own composer rather than folded into the CAIA/TRAIGA/AB2013 chains -- SB 53 serves a narrow frontier-lab audience, distinct from the general deployer/developer compliance-owner persona of the other state-AI chains.",
+  "spec_version": "ocg-control-plane@1",
+  "manifest": {
+    "manifest_version": "1",
+    "workflow_id": "pack-sb53-frontier-scope",
+    "trigger": {
+      "type": "manual"
+    },
+    "nodes": [
+      {
+        "node_id": "n1",
+        "kernel_id": "art-316-sb53-frontier-scope-checker",
+        "kernel_digest": "sha256:bf76db6dbd58cc21042569b32a4e5b60d9f4e3b31a1cded90fb40558f07ff584"
+      }
+    ],
+    "connectors": [],
+    "gates": [],
+    "actions": []
+  },
+  "workflow_manifest_digest": "sha256:f7dc06ca5c2c934fafbf207674e0aedd605e672a5df591298225a807ebb8c64c",
+  "declared_inputs": [],
+  "steps_meta": [
+    {
+      "node_id": "n1",
+      "data_classification": "compute"
+    }
+  ]
+}

@@ -1,0 +1,31 @@
+{
+  "workflow_id": "pack-treasury-clearing-fit",
+  "name": "Treasury Clearing Fit Diagnostic",
+  "outcome": "D0 single-node diagnostic grading a firm A-F for the SEC US Treasury clearing mandate; routes to treasury-clearing-access-model / treasury-clearing-repo-margin / treasury-clearing-cross-margin / treasury-clearing-collateral / treasury-clearing-capital-relief / treasury-clearing-liquidity / treasury-clearing-onboarding.",
+  "spec_version": "ocg-control-plane@1",
+  "manifest": {
+    "manifest_version": "1",
+    "workflow_id": "pack-treasury-clearing-fit",
+    "trigger": {
+      "type": "manual"
+    },
+    "nodes": [
+      {
+        "node_id": "n1",
+        "kernel_id": "art-48-treasury-clearing-fit-diagnostic",
+        "kernel_digest": "sha256:48d3f8ff6142ab47abccdd219b65da278eebaad04d4e8a1857dba56447eab906"
+      }
+    ],
+    "connectors": [],
+    "gates": [],
+    "actions": []
+  },
+  "workflow_manifest_digest": "sha256:fb8973afd55021ceca0e0ce56b27cb64f7a98c26150b423905911f76150877c3",
+  "declared_inputs": [],
+  "steps_meta": [
+    {
+      "node_id": "n1",
+      "data_classification": "compute"
+    }
+  ]
+}

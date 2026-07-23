@@ -1,0 +1,31 @@
+{
+  "workflow_id": "pack-ai-governance-fit",
+  "name": "EU AI Act High-Risk Fit & Classification Diagnostic",
+  "outcome": "Single-node D0 diagnostic classifying a financial AI system's high-risk status (Annex III) and grading Article 9-15 readiness + provider/deployer split; screens in-force obligations first (Art 5, Art 4, GPAI) and routes to the right ai-governance chain with a do-now vs prepare-ahead checklist.",
+  "spec_version": "ocg-control-plane@1",
+  "manifest": {
+    "manifest_version": "1",
+    "workflow_id": "pack-ai-governance-fit",
+    "trigger": {
+      "type": "manual"
+    },
+    "nodes": [
+      {
+        "node_id": "n1",
+        "kernel_id": "art-64-ai-act-highrisk-fit-diagnostic",
+        "kernel_digest": "sha256:586d2012166bfe8fc88259c3ca7e325a06b321e423167347d5b97ef049eaa88d"
+      }
+    ],
+    "connectors": [],
+    "gates": [],
+    "actions": []
+  },
+  "workflow_manifest_digest": "sha256:a2bf828be9d3d3aa8d0149f23fa053518792ab4181141df85b159fb26ea31bc2",
+  "declared_inputs": [],
+  "steps_meta": [
+    {
+      "node_id": "n1",
+      "data_classification": "compute"
+    }
+  ]
+}

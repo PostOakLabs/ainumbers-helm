@@ -1,0 +1,40 @@
+{
+  "workflow_id": "pack-treasury-account-lifecycle-ebam",
+  "name": "Treasury Account Lifecycle (eBAM)",
+  "outcome": "Gated two-step chain for TMS account lifecycle straight-through processing. Step 1 validates the CGI-MP eBAM 2023 acmt state machine (acmt.007/010/011/017/019) and detects orphan messages. Gate on /acmt_state: OPENING_CONFIRMED -> Step 2 (IHB interest pool onboarding for the new account). All other states (CLOSURE_CONFIRMED, MODIFICATION_CONFIRMED, PENDING, INVALID) -> END. Automates TMS account lifecycle STP with automatic pool interest setup for newly confirmed accounts. ZERO PII BY CONSTRUCTION.",
+  "spec_version": "ocg-control-plane@1",
+  "manifest": {
+    "manifest_version": "1",
+    "workflow_id": "pack-treasury-account-lifecycle-ebam",
+    "trigger": {
+      "type": "manual"
+    },
+    "nodes": [
+      {
+        "node_id": "n1",
+        "kernel_id": "art-262-validate-ebam-acmt-flow",
+        "kernel_digest": "sha256:4c2c59094077b7f535e7fc1557867c48c163b79d2f4ddf7a001b0d15daf4b1e5"
+      },
+      {
+        "node_id": "n2",
+        "kernel_id": "art-260-allocate-ihb-interest",
+        "kernel_digest": "sha256:79e7ffc0ec59dd6cc416d286ba26ebaaf057bcd30156e46466f2e900423fb64b"
+      }
+    ],
+    "connectors": [],
+    "gates": [],
+    "actions": []
+  },
+  "workflow_manifest_digest": "sha256:350881a14471e7200fe624554161678396929be8e68758d81e4efd8bc1f03fbb",
+  "declared_inputs": [],
+  "steps_meta": [
+    {
+      "node_id": "n1",
+      "data_classification": "compute"
+    },
+    {
+      "node_id": "n2",
+      "data_classification": "compute"
+    }
+  ]
+}

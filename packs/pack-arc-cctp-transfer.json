@@ -1,0 +1,40 @@
+{
+  "workflow_id": "pack-arc-cctp-transfer",
+  "name": "Arc CCTP v2 Transfer",
+  "outcome": "W-G chain. Validate CCTP v2 cross-chain USDC transfer: fires when ≥2 Arc fit dimensions score >0.",
+  "spec_version": "ocg-control-plane@1",
+  "manifest": {
+    "manifest_version": "1",
+    "workflow_id": "pack-arc-cctp-transfer",
+    "trigger": {
+      "type": "manual"
+    },
+    "nodes": [
+      {
+        "node_id": "n1",
+        "kernel_id": "art-42-arc-fit-diagnostic",
+        "kernel_digest": "sha256:84cf3e4b4dd77ad8ed4f6425d9a623c51ae75b4855e2fb629505f1485387cee1"
+      },
+      {
+        "node_id": "n2",
+        "kernel_id": "art-47-arc-cctp-transfer",
+        "kernel_digest": "sha256:5d628b9e3200e3791c5152e7eb5d6bbe34b3e278f43cd24ebc497eea062d9d15"
+      }
+    ],
+    "connectors": [],
+    "gates": [],
+    "actions": []
+  },
+  "workflow_manifest_digest": "sha256:83f27976e1be66df5cf991130c92096a6dc4d8b8cd16ddc7421c99d4e2722382",
+  "declared_inputs": [],
+  "steps_meta": [
+    {
+      "node_id": "n1",
+      "data_classification": "compute"
+    },
+    {
+      "node_id": "n2",
+      "data_classification": "compute"
+    }
+  ]
+}

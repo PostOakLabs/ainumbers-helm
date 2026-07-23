@@ -1,0 +1,31 @@
+{
+  "workflow_id": "pack-anchored-extract-verification",
+  "name": "Anchored Extract Verification",
+  "outcome": "Single-node diagnostic verifying an extract's Merkle inclusion against a root only when that root is externally anchored (RFC 3161, OpenTimestamps, Sigstore, or on-chain via VR-1) or is a recognized OCG artifact envelope.",
+  "spec_version": "ocg-control-plane@1",
+  "manifest": {
+    "manifest_version": "1",
+    "workflow_id": "pack-anchored-extract-verification",
+    "trigger": {
+      "type": "manual"
+    },
+    "nodes": [
+      {
+        "node_id": "n1",
+        "kernel_id": "art-286-anchored-extract-verifier",
+        "kernel_digest": "sha256:7532df2eced1bf011b8bb608c7ca0038e116d7d554d5439e90d09905d997091c"
+      }
+    ],
+    "connectors": [],
+    "gates": [],
+    "actions": []
+  },
+  "workflow_manifest_digest": "sha256:a7f804feb27f6469e8bc444e4fa82eb3886b0acb1874f7e2de6e954c92166c7f",
+  "declared_inputs": [],
+  "steps_meta": [
+    {
+      "node_id": "n1",
+      "data_classification": "compute"
+    }
+  ]
+}

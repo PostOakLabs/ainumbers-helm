@@ -1,0 +1,36 @@
+{
+  "workflow_id": "pack-tempo-payments",
+  "name": "Tempo Payments Business Case",
+  "outcome": "W-A chain. Models CFO-level cost savings of migrating payroll, remittance, or merchant settlement to Tempo vs card/SWIFT/ACH/SEPA.",
+  "spec_version": "ocg-control-plane@1",
+  "manifest": {
+    "manifest_version": "1",
+    "workflow_id": "pack-tempo-payments",
+    "trigger": {
+      "type": "manual"
+    },
+    "nodes": [
+      {
+        "node_id": "n1",
+        "kernel_id": "art-35-tempo-payments-business-case",
+        "kernel_digest": "sha256:983a22594a38514987c18253d6efe800adb9ffb96148357f3deb80975f46837c"
+      }
+    ],
+    "connectors": [],
+    "gates": [],
+    "actions": []
+  },
+  "workflow_manifest_digest": "sha256:ff95c0ddb6a7007b6d7aa673e6e3c7c72a203e883045fe2c454126252a6ec36e",
+  "declared_inputs": [
+    {
+      "from": "art-34-tempo-fit-diagnostic",
+      "kind": "external"
+    }
+  ],
+  "steps_meta": [
+    {
+      "node_id": "n1",
+      "data_classification": "compute"
+    }
+  ]
+}

@@ -1,0 +1,49 @@
+{
+  "workflow_id": "pack-digital-product-passport-lineage",
+  "name": "Digital Product Passport Lineage (EU ESPR / CIRPASS-2 / GS1 Digital Link)",
+  "outcome": "Validate DPP data carrier against CIRPASS-2 Core Ontology (art-115) → build cradle-to-gate hash-only supplier lineage with carbon aggregation (art-116) → verify consumer/resale authenticity + ownership continuity (art-117). EU Central DPP Registry live 19 Jul 2026.",
+  "spec_version": "ocg-control-plane@1",
+  "manifest": {
+    "manifest_version": "1",
+    "workflow_id": "pack-digital-product-passport-lineage",
+    "trigger": {
+      "type": "manual"
+    },
+    "nodes": [
+      {
+        "node_id": "n1",
+        "kernel_id": "art-115-dpp-data-carrier-validator",
+        "kernel_digest": "sha256:7d2f0c60cd204d6e7a54daef6611623df431e3924739025376b1277e3461c343"
+      },
+      {
+        "node_id": "n2",
+        "kernel_id": "art-116-product-lineage-builder",
+        "kernel_digest": "sha256:c90285303f490a09ce2e73fc197bc99fb23ca31e2db96426f18f373ba021c574"
+      },
+      {
+        "node_id": "n3",
+        "kernel_id": "art-117-product-authenticity-verifier",
+        "kernel_digest": "sha256:eccd83a646d2c8ea26dd08a3afd2982697f9bef25047dba10eff238e27f185d4"
+      }
+    ],
+    "connectors": [],
+    "gates": [],
+    "actions": []
+  },
+  "workflow_manifest_digest": "sha256:eeb801ad594450b14cd469ecd3ae1057b3827bc2257d348e20cf2113b2c6d09c",
+  "declared_inputs": [],
+  "steps_meta": [
+    {
+      "node_id": "n1",
+      "data_classification": "compute"
+    },
+    {
+      "node_id": "n2",
+      "data_classification": "compute"
+    },
+    {
+      "node_id": "n3",
+      "data_classification": "compute"
+    }
+  ]
+}

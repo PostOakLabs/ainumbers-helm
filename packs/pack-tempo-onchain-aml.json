@@ -1,0 +1,54 @@
+{
+  "workflow_id": "pack-tempo-onchain-aml",
+  "name": "Tempo On-Chain AML",
+  "outcome": "W-E chain. TIP-403 freeze/allowlist pre-check → TIP-20 batch AML + FATF Travel Rule screening → typology risk scoring.",
+  "spec_version": "ocg-control-plane@1",
+  "manifest": {
+    "manifest_version": "1",
+    "workflow_id": "pack-tempo-onchain-aml",
+    "trigger": {
+      "type": "manual"
+    },
+    "nodes": [
+      {
+        "node_id": "n1",
+        "kernel_id": "art-37-tempo-stablecoin-issuance",
+        "kernel_digest": "sha256:252b8f7b8a64ab8a59613d891c4849f52fdc3322a68a98de86dd032a2305f6ae"
+      },
+      {
+        "node_id": "n2",
+        "kernel_id": "art-38-tempo-onchain-aml",
+        "kernel_digest": "sha256:9e0872728a1ce51e8fe58bb13bec82cc382a97584cd3fb9517db6f621072bbc7"
+      },
+      {
+        "node_id": "n3",
+        "kernel_id": "art-10-amla-transaction-typology-risk-scorer",
+        "kernel_digest": "sha256:c02483af798b9da4593d70b071619e12487bbd02e21b016eb9d46ced84c5ab90"
+      }
+    ],
+    "connectors": [],
+    "gates": [],
+    "actions": []
+  },
+  "workflow_manifest_digest": "sha256:f1eb273dded909d46ebb03a295f8ad37b1c907ee89f1b09092b56bbfc39abe58",
+  "declared_inputs": [
+    {
+      "from": "art-34-tempo-fit-diagnostic",
+      "kind": "external"
+    }
+  ],
+  "steps_meta": [
+    {
+      "node_id": "n1",
+      "data_classification": "compute"
+    },
+    {
+      "node_id": "n2",
+      "data_classification": "compute"
+    },
+    {
+      "node_id": "n3",
+      "data_classification": "compute"
+    }
+  ]
+}

@@ -1,0 +1,40 @@
+{
+  "workflow_id": "pack-servicemember-lending-protections",
+  "name": "Servicemember Lending Protections",
+  "outcome": "Linear two-step chain covering both servicemember lending protections in sequence. Step 1 computes the MLA MAPR and checks the 36% cap (applies at origination for covered borrowers). Step 2 computes the SCRA 6% rate cap and excess interest forgiveness (applies during active duty on pre-service obligations). Both steps always run.",
+  "spec_version": "ocg-control-plane@1",
+  "manifest": {
+    "manifest_version": "1",
+    "workflow_id": "pack-servicemember-lending-protections",
+    "trigger": {
+      "type": "manual"
+    },
+    "nodes": [
+      {
+        "node_id": "n1",
+        "kernel_id": "art-231-compute-mla-mapr",
+        "kernel_digest": "sha256:e9b9b082247169960162cead0f1a9f635aa7316903b963cd3f500366aafc3625"
+      },
+      {
+        "node_id": "n2",
+        "kernel_id": "art-232-compute-scra-rate-cap",
+        "kernel_digest": "sha256:0a3d8bc33a4d50ca92a1673b6b23e5bcb483ad80dc375dfba12094440fc0d32d"
+      }
+    ],
+    "connectors": [],
+    "gates": [],
+    "actions": []
+  },
+  "workflow_manifest_digest": "sha256:f2c781a6af5ec9360c7c0c28c0aa1cb0485e5f21194668c45487e668c09c47b1",
+  "declared_inputs": [],
+  "steps_meta": [
+    {
+      "node_id": "n1",
+      "data_classification": "compute"
+    },
+    {
+      "node_id": "n2",
+      "data_classification": "compute"
+    }
+  ]
+}

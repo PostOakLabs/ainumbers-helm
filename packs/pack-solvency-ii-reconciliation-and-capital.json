@@ -1,0 +1,49 @@
+{
+  "workflow_id": "pack-solvency-ii-reconciliation-and-capital",
+  "name": "Solvency II Reconciliation and Capital",
+  "outcome": "Calculate SCR and MCR coverage ratios and check Tier-1/Tier-3 tiering limits under Solvency II Delegated Regulation 2015/35 (art-180) -> bridge SII technical provisions to IFRS 17 insurance contract liabilities and flag gaps outside 10% tolerance using EIOPA benchmarks (art-181) -> A-F insurance reporting readiness diagnostic across IFRS 17, SII Pillar-3 QRT, reconciliation, and ICS dimensions (art-182). Full Solvency II capital and reconciliation pipeline. Solvency II Dir. 2009/138/EC + IFRS 17.",
+  "spec_version": "ocg-control-plane@1",
+  "manifest": {
+    "manifest_version": "1",
+    "workflow_id": "pack-solvency-ii-reconciliation-and-capital",
+    "trigger": {
+      "type": "manual"
+    },
+    "nodes": [
+      {
+        "node_id": "n1",
+        "kernel_id": "art-180-solvency2-scr-ratio-calculator",
+        "kernel_digest": "sha256:58ddc09d3c1b6bccab424d5392e51c690e34d0466a76b885b19a819ef7f7875f"
+      },
+      {
+        "node_id": "n2",
+        "kernel_id": "art-181-sii-ifrs17-reconciliation-bridger",
+        "kernel_digest": "sha256:83afe488b0820b034337102a6031f5e0e2ead582faf4d3998b0d65dabc2def33"
+      },
+      {
+        "node_id": "n3",
+        "kernel_id": "art-182-insurance-reporting-readiness-diagnostic",
+        "kernel_digest": "sha256:b782a726871e3099cb51e0210048566f971438e63256bf61e5a39aec96bc4a90"
+      }
+    ],
+    "connectors": [],
+    "gates": [],
+    "actions": []
+  },
+  "workflow_manifest_digest": "sha256:842bbcc3c08449e79eb0857d5262e8017194915760cd2b060adaf52d2cc6eb01",
+  "declared_inputs": [],
+  "steps_meta": [
+    {
+      "node_id": "n1",
+      "data_classification": "compute"
+    },
+    {
+      "node_id": "n2",
+      "data_classification": "compute"
+    },
+    {
+      "node_id": "n3",
+      "data_classification": "compute"
+    }
+  ]
+}

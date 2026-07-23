@@ -1,0 +1,31 @@
+{
+  "workflow_id": "pack-basel-sco60-crypto-exposure-classification",
+  "name": "Basel SCO60 Crypto-Asset Exposure Classification",
+  "outcome": "Single-node classifier mapping a crypto-asset position to its Basel SCO60 Group (1a/1b/2a/2b), applying the infrastructure-risk add-on and the Group 2 exposure limit check.",
+  "spec_version": "ocg-control-plane@1",
+  "manifest": {
+    "manifest_version": "1",
+    "workflow_id": "pack-basel-sco60-crypto-exposure-classification",
+    "trigger": {
+      "type": "manual"
+    },
+    "nodes": [
+      {
+        "node_id": "n1",
+        "kernel_id": "art-281-sco60-crypto-asset-exposure-classifier",
+        "kernel_digest": "sha256:27ca4b94e8f9b63be974894cab2c35fdb00b72b8c405455fead9dc3a6de0cdd9"
+      }
+    ],
+    "connectors": [],
+    "gates": [],
+    "actions": []
+  },
+  "workflow_manifest_digest": "sha256:e7c174de6949a92e33a08b25ee489424776b1aed399e82ed18f6b28946e5064a",
+  "declared_inputs": [],
+  "steps_meta": [
+    {
+      "node_id": "n1",
+      "data_classification": "compute"
+    }
+  ]
+}

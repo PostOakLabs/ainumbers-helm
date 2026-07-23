@@ -1,0 +1,40 @@
+{
+  "workflow_id": "pack-canton-capital-efficiency",
+  "name": "Canton Capital Efficiency Chain",
+  "outcome": "Assess Canton pilot readiness and compute settlement-risk capital savings.",
+  "spec_version": "ocg-control-plane@1",
+  "manifest": {
+    "manifest_version": "1",
+    "workflow_id": "pack-canton-capital-efficiency",
+    "trigger": {
+      "type": "manual"
+    },
+    "nodes": [
+      {
+        "node_id": "n1",
+        "kernel_id": "503-canton-tokenization-readiness-diagnostic",
+        "kernel_digest": "sha256:cd83aaa98a7055cdc55b74bf14d81e559e4797625a9796e5d8deaa43a9021157"
+      },
+      {
+        "node_id": "n2",
+        "kernel_id": "504-settlement-risk-capital-optimizer",
+        "kernel_digest": "sha256:57a3a1bd70235be6b46ba6d177b784665e1480eb8f0c59047d84f3498611cfe8"
+      }
+    ],
+    "connectors": [],
+    "gates": [],
+    "actions": []
+  },
+  "workflow_manifest_digest": "sha256:384f5ea2a3e38a66a4a84f3423dda425ab58bf458ef0585d7fe3b73ade4c8719",
+  "declared_inputs": [],
+  "steps_meta": [
+    {
+      "node_id": "n1",
+      "data_classification": "compute"
+    },
+    {
+      "node_id": "n2",
+      "data_classification": "compute"
+    }
+  ]
+}

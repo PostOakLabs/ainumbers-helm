@@ -1,0 +1,31 @@
+{
+  "workflow_id": "pack-reserve-proof-verification",
+  "name": "Reserve Proof Verification",
+  "outcome": "Single-node D0 diagnostic verifying a Merkle-sum Proof-of-Reserves customer-inclusion proof against a declared root, plus a Chainlink PoR / NAVLink round staleness and deviation check.",
+  "spec_version": "ocg-control-plane@1",
+  "manifest": {
+    "manifest_version": "1",
+    "workflow_id": "pack-reserve-proof-verification",
+    "trigger": {
+      "type": "manual"
+    },
+    "nodes": [
+      {
+        "node_id": "n1",
+        "kernel_id": "art-280-reserve-proof-verifier",
+        "kernel_digest": "sha256:309081fd66892352af23884e11bc1173c96b88fc3bbebe8ffce1db60bb235dba"
+      }
+    ],
+    "connectors": [],
+    "gates": [],
+    "actions": []
+  },
+  "workflow_manifest_digest": "sha256:4fa61515a18de2212b6549614dccda1361993ac36e7d49ac66fa2addc0341c79",
+  "declared_inputs": [],
+  "steps_meta": [
+    {
+      "node_id": "n1",
+      "data_classification": "compute"
+    }
+  ]
+}

@@ -1,0 +1,63 @@
+{
+  "workflow_id": "pack-tempo-mpp-agent",
+  "name": "Tempo MPP Agent Mandate",
+  "outcome": "W-C chain. Decode MPP session → AP2 mandate chain validation → agent spend-policy simulation → KYA identity attestation.",
+  "spec_version": "ocg-control-plane@1",
+  "manifest": {
+    "manifest_version": "1",
+    "workflow_id": "pack-tempo-mpp-agent",
+    "trigger": {
+      "type": "manual"
+    },
+    "nodes": [
+      {
+        "node_id": "n1",
+        "kernel_id": "art-36-tempo-mpp-agent-mandate",
+        "kernel_digest": "sha256:4967b7d4af80a186fa8374e13f61c4f6a14a94ef7f74474dc4fd840ddf488608"
+      },
+      {
+        "node_id": "n2",
+        "kernel_id": "art-01-ap2-mandate-chain-validator",
+        "kernel_digest": "sha256:623495f9378cb65cb88c889831f43c2c82c8844af29dfaa32e3a5d1e6cfa5337"
+      },
+      {
+        "node_id": "n3",
+        "kernel_id": "art-02-agent-spend-policy-simulator",
+        "kernel_digest": "sha256:236e163038383b05b4d5d18a1d3cf7d32a974a1035496ab1c00fbad3e84f412a"
+      },
+      {
+        "node_id": "n4",
+        "kernel_id": "art-04-agent-identity-attestation-checker",
+        "kernel_digest": "sha256:f4e9e5aed913e80c7f97e3d0d2501e7349c523de4ffd433a1d29081620197b1f"
+      }
+    ],
+    "connectors": [],
+    "gates": [],
+    "actions": []
+  },
+  "workflow_manifest_digest": "sha256:266f076199d39daaa36f20fdda6360bcd685bbf6a4c65225525289c368903d3a",
+  "declared_inputs": [
+    {
+      "from": "art-34-tempo-fit-diagnostic",
+      "kind": "external"
+    }
+  ],
+  "steps_meta": [
+    {
+      "node_id": "n1",
+      "data_classification": "compute"
+    },
+    {
+      "node_id": "n2",
+      "data_classification": "compute"
+    },
+    {
+      "node_id": "n3",
+      "data_classification": "compute"
+    },
+    {
+      "node_id": "n4",
+      "data_classification": "compute"
+    }
+  ]
+}

@@ -1,0 +1,40 @@
+{
+  "workflow_id": "pack-document-integrity-anchor",
+  "name": "Document Integrity & Timestamp Anchor (eIDAS Art.41 / RFC 3161)",
+  "outcome": "Anchor document SHA-256 + claimed timestamp as an eIDAS Art.41-aligned electronic timestamp (art-121) → verify that the anchor recomputes correctly and all claims are internally consistent (art-122). W3C VC export via §13.11.",
+  "spec_version": "ocg-control-plane@1",
+  "manifest": {
+    "manifest_version": "1",
+    "workflow_id": "pack-document-integrity-anchor",
+    "trigger": {
+      "type": "manual"
+    },
+    "nodes": [
+      {
+        "node_id": "n1",
+        "kernel_id": "art-121-document-integrity-anchor",
+        "kernel_digest": "sha256:7f6d0e49c1eeb8c26e4d0453f504f575f36b4547315236e2d5796bea05076cb0"
+      },
+      {
+        "node_id": "n2",
+        "kernel_id": "art-122-timestamp-attestation-verifier",
+        "kernel_digest": "sha256:88a9d131ffff2a2a578a46cabdc2f1b0987df22f56462b7eee51dedc4fb65120"
+      }
+    ],
+    "connectors": [],
+    "gates": [],
+    "actions": []
+  },
+  "workflow_manifest_digest": "sha256:9a5cb1c97c9c6dd88474dbbcaed17258a540d8cc4cd6238962f9d60225eff49a",
+  "declared_inputs": [],
+  "steps_meta": [
+    {
+      "node_id": "n1",
+      "data_classification": "compute"
+    },
+    {
+      "node_id": "n2",
+      "data_classification": "compute"
+    }
+  ]
+}

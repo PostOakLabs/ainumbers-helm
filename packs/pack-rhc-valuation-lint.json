@@ -1,0 +1,31 @@
+{
+  "workflow_id": "pack-rhc-valuation-lint",
+  "name": "Robinhood Chain Valuation Lint",
+  "outcome": "Single-step chain linting a Robinhood Chain stock-token USD valuation expression for the corporate-action double-count bug against the Chainlink 8-decimal feed.",
+  "spec_version": "ocg-control-plane@1",
+  "manifest": {
+    "manifest_version": "1",
+    "workflow_id": "pack-rhc-valuation-lint",
+    "trigger": {
+      "type": "manual"
+    },
+    "nodes": [
+      {
+        "node_id": "n1",
+        "kernel_id": "art-319-rhc-valuation-linter",
+        "kernel_digest": "sha256:1b2549c6c23eeff309d070117288897e871490b446375f87875bd6d973e25a31"
+      }
+    ],
+    "connectors": [],
+    "gates": [],
+    "actions": []
+  },
+  "workflow_manifest_digest": "sha256:24dfe375de943f221cbceee9fecd0992455a374e16c0f3d0610f108921339c79",
+  "declared_inputs": [],
+  "steps_meta": [
+    {
+      "node_id": "n1",
+      "data_classification": "compute"
+    }
+  ]
+}

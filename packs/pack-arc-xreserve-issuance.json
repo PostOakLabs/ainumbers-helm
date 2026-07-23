@@ -1,0 +1,40 @@
+{
+  "workflow_id": "pack-arc-xreserve-issuance",
+  "name": "Arc xReserve Issuance Compliance",
+  "outcome": "W-C chain. Lint Arc xReserve config for GENIUS Act §4 eligible assets, yield prohibition (§4(a)(11)), MiCA Art. 54, and USYC composition.",
+  "spec_version": "ocg-control-plane@1",
+  "manifest": {
+    "manifest_version": "1",
+    "workflow_id": "pack-arc-xreserve-issuance",
+    "trigger": {
+      "type": "manual"
+    },
+    "nodes": [
+      {
+        "node_id": "n1",
+        "kernel_id": "art-42-arc-fit-diagnostic",
+        "kernel_digest": "sha256:84cf3e4b4dd77ad8ed4f6425d9a623c51ae75b4855e2fb629505f1485387cee1"
+      },
+      {
+        "node_id": "n2",
+        "kernel_id": "art-45-arc-xreserve-linter",
+        "kernel_digest": "sha256:6c42f2e178d592ddca24ae38edae3baed3c67880f4f18ce29b79d11e0e46f4d4"
+      }
+    ],
+    "connectors": [],
+    "gates": [],
+    "actions": []
+  },
+  "workflow_manifest_digest": "sha256:5ac882c2e5268e4288d9f0e94c743ebd82117d37ea811f78582e25542b8ff28c",
+  "declared_inputs": [],
+  "steps_meta": [
+    {
+      "node_id": "n1",
+      "data_classification": "compute"
+    },
+    {
+      "node_id": "n2",
+      "data_classification": "compute"
+    }
+  ]
+}

@@ -1,0 +1,49 @@
+{
+  "workflow_id": "pack-cra-product-conformance",
+  "name": "CRA Product Conformance (EU CRA Annex I + Art. 14)",
+  "outcome": "Validate an SPDX SBOM against EU CRA Annex I machine-readable requirement (art-138) → check Annex I essential requirements: sbom_machine_readable, top-level dep coverage, vuln handling policy, secure-by-default, conformity route (art-139) → assess CRA Article 14 vulnerability reporting readiness: 24-hour early warning, 72-hour notification, CSIRT/ENISA endpoint (art-140). Obligation date Art.14: 11 Sep 2026. Full CRA product conformance pipeline. Zero network.",
+  "spec_version": "ocg-control-plane@1",
+  "manifest": {
+    "manifest_version": "1",
+    "workflow_id": "pack-cra-product-conformance",
+    "trigger": {
+      "type": "manual"
+    },
+    "nodes": [
+      {
+        "node_id": "n1",
+        "kernel_id": "art-138-spdx-sbom-validator",
+        "kernel_digest": "sha256:72aba0699f8a03e3cc099b887c437ef7f1a801c5284b6e00d616419870a71ef6"
+      },
+      {
+        "node_id": "n2",
+        "kernel_id": "art-139-cra-annex1-completeness-checker",
+        "kernel_digest": "sha256:8d0924a6bc66cc3c3c6e9211692dd759285b3c07143163946ef596a4b48c6235"
+      },
+      {
+        "node_id": "n3",
+        "kernel_id": "art-140-cra-vuln-reporting-readiness",
+        "kernel_digest": "sha256:1f1af6d462795616cf87a1f261b777582c1188b28d24a8324ac7f3f180011b58"
+      }
+    ],
+    "connectors": [],
+    "gates": [],
+    "actions": []
+  },
+  "workflow_manifest_digest": "sha256:f09041021a0d3669053324a86598015a4bf537ecd4af18b7526c824abdd66c02",
+  "declared_inputs": [],
+  "steps_meta": [
+    {
+      "node_id": "n1",
+      "data_classification": "compute"
+    },
+    {
+      "node_id": "n2",
+      "data_classification": "compute"
+    },
+    {
+      "node_id": "n3",
+      "data_classification": "compute"
+    }
+  ]
+}

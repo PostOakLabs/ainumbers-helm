@@ -1,0 +1,54 @@
+{
+  "workflow_id": "pack-wholesale-settlement-settlement-asset",
+  "name": "Settlement-Asset & Legal-Finality Classification",
+  "outcome": "W-C. Settlement-asset class + legal-finality tier + singleness-of-money (ART-59) -> regulatory classification (510) -> on-chain cash-leg finality (506). Determines which settlement asset and which finality regime gate a tokenized settlement.",
+  "spec_version": "ocg-control-plane@1",
+  "manifest": {
+    "manifest_version": "1",
+    "workflow_id": "pack-wholesale-settlement-settlement-asset",
+    "trigger": {
+      "type": "manual"
+    },
+    "nodes": [
+      {
+        "node_id": "n1",
+        "kernel_id": "art-59-settlement-asset-finality-classifier",
+        "kernel_digest": "sha256:6e5f40137139c4daa1f923ead6929ad30a66ce97c477702730064bc683fb6f05"
+      },
+      {
+        "node_id": "n2",
+        "kernel_id": "510-digital-asset-regulatory-classifier",
+        "kernel_digest": "sha256:e70b5a1adf38189f6a6f09d6b4b0dcfaf16394beb5f30f8b397cadbb0ffa2a5f"
+      },
+      {
+        "node_id": "n3",
+        "kernel_id": "506-onchain-cash-leg-finality-checker",
+        "kernel_digest": "sha256:a8dc570f0262a6be9c06dc3b094353f70b4e87b7b379e93f7113086935456dbc"
+      }
+    ],
+    "connectors": [],
+    "gates": [],
+    "actions": []
+  },
+  "workflow_manifest_digest": "sha256:98b2dca986a3a9ecce032d5c17986ce8f919188a5d7a477551acb11c32bf3aad",
+  "declared_inputs": [
+    {
+      "from": "art-56-tokenized-settlement-fit-diagnostic",
+      "kind": "external"
+    }
+  ],
+  "steps_meta": [
+    {
+      "node_id": "n1",
+      "data_classification": "compute"
+    },
+    {
+      "node_id": "n2",
+      "data_classification": "compute"
+    },
+    {
+      "node_id": "n3",
+      "data_classification": "compute"
+    }
+  ]
+}

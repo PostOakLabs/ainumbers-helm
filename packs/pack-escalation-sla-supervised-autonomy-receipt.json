@@ -1,0 +1,49 @@
+{
+  "workflow_id": "pack-escalation-sla-supervised-autonomy-receipt",
+  "name": "Escalation SLA / Supervised-Autonomy Receipt",
+  "outcome": "\"Agent halted -> human X answered in T -> decision D\" as protocol-native evidence for EU AI Act Art 12 supervised-autonomy obligations. Compiles a work mandate with escalation triggers (art-274), classifies the agent's autonomy/oversight tier (art-67), then GATES: an overall grade of F escalates (HALT, opens an OCG Section 22.8 escalation record, closed via verify_escalation_closure on the anchor worker, with the closing decision available as an AuthZEN 1.0-mapped Policy Decision Point evaluation at anchor.ainumbers.co); any passing grade routes directly to building the Art 12(2)-conformant decision log record (art-236). An ISO 24970 field mapping is DRAFT-PINNED honesty only, never a claim of conformance to a ratified standard. The SEP-2322 InputRequired transport binding for the escalation itself is a planned upgrade (rides the MCP-728 Track A Section T3 work); this receipt composes the live mandate, classification, and decision-log evidence today. Verify-only; asserts only that the mandate, classification, and decision-log steps it ran are internally consistent, never a broader safe-to-deploy guarantee.",
+  "spec_version": "ocg-control-plane@1",
+  "manifest": {
+    "manifest_version": "1",
+    "workflow_id": "pack-escalation-sla-supervised-autonomy-receipt",
+    "trigger": {
+      "type": "manual"
+    },
+    "nodes": [
+      {
+        "node_id": "n1",
+        "kernel_id": "art-274-compile-work-mandate",
+        "kernel_digest": "sha256:dfaeb21e94c9b39448879e93b1365cb0b50c1251a16b57a90133275b8739d6ad"
+      },
+      {
+        "node_id": "n2",
+        "kernel_id": "art-67-agentic-ai-risk-classifier",
+        "kernel_digest": "sha256:e54de58d609e2ca40d3ef029fc40d7560ae0d23ce483dc067fbe7ed9f60165af"
+      },
+      {
+        "node_id": "n3",
+        "kernel_id": "art-236-build-ai-decision-log-record",
+        "kernel_digest": "sha256:3f9c0dade487f4d6dafb35d97ebc3fe9b0f51656ea4e010caee2a8bf35aa159d"
+      }
+    ],
+    "connectors": [],
+    "gates": [],
+    "actions": []
+  },
+  "workflow_manifest_digest": "sha256:7f6ce3bff4ff42b56012a6c4385b0e046f8d48f24335f2df635ac8175efaa3a9",
+  "declared_inputs": [],
+  "steps_meta": [
+    {
+      "node_id": "n1",
+      "data_classification": "compute"
+    },
+    {
+      "node_id": "n2",
+      "data_classification": "compute"
+    },
+    {
+      "node_id": "n3",
+      "data_classification": "compute"
+    }
+  ]
+}

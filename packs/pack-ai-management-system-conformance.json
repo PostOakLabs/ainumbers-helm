@@ -1,0 +1,49 @@
+{
+  "workflow_id": "pack-ai-management-system-conformance",
+  "name": "AI Management System Conformance",
+  "outcome": "Assess ISO/IEC 42001 AIMS clause and Annex A control conformance with maturity scoring (art-171) -> validate AI impact assessment completeness across seven ISO 42005 elements (art-172) -> classify AI system to EU AI Act risk tier, NIST RMF profile, and ISO 42001 control set (art-173). Full AIMS conformance pipeline. ISO/IEC 42001 mandatory via enterprise AI-vendor RFP requirements (~40% EU, ~25% NA mid-2026); EU AI Act Art. 6-17 enforcement Aug 2026.",
+  "spec_version": "ocg-control-plane@1",
+  "manifest": {
+    "manifest_version": "1",
+    "workflow_id": "pack-ai-management-system-conformance",
+    "trigger": {
+      "type": "manual"
+    },
+    "nodes": [
+      {
+        "node_id": "n1",
+        "kernel_id": "art-171-iso42001-aims-clause-conformance",
+        "kernel_digest": "sha256:6cf5102a16176e735d0a61a46e5bd06191bbc7ef5d12c2ce96cea472cd55e14f"
+      },
+      {
+        "node_id": "n2",
+        "kernel_id": "art-172-ai-risk-impact-assessment-validator",
+        "kernel_digest": "sha256:835086c93c872c7e1171afce4a0956dacbfd52fa9918c7d11cd23b4218fd07bd"
+      },
+      {
+        "node_id": "n3",
+        "kernel_id": "art-173-ai-system-governance-classifier",
+        "kernel_digest": "sha256:5caa326f1f78233acb0b409deb37a1a0a943cd726640f2c145b2ddcfb4f632e6"
+      }
+    ],
+    "connectors": [],
+    "gates": [],
+    "actions": []
+  },
+  "workflow_manifest_digest": "sha256:62e643c99505e7607bb8d859ab715efed511a17ccc086e3dfc32b4d54b0648e0",
+  "declared_inputs": [],
+  "steps_meta": [
+    {
+      "node_id": "n1",
+      "data_classification": "compute"
+    },
+    {
+      "node_id": "n2",
+      "data_classification": "compute"
+    },
+    {
+      "node_id": "n3",
+      "data_classification": "compute"
+    }
+  ]
+}

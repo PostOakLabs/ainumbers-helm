@@ -1,0 +1,54 @@
+{
+  "workflow_id": "pack-agent-economy-payment-receipt",
+  "name": "AP2 PaymentReceipt Verification & HNP Guardrail",
+  "outcome": "W-B. PaymentReceipt-to-mandate verification + Human-Not-Present autonomy gate (ART-62) -> mandate-chain re-validation (art-01) -> receipt aggregation (cry-05). Verifies an autonomous AP2 payment after the fact: valid receipt, intact mandate chain, in-policy autonomy.",
+  "spec_version": "ocg-control-plane@1",
+  "manifest": {
+    "manifest_version": "1",
+    "workflow_id": "pack-agent-economy-payment-receipt",
+    "trigger": {
+      "type": "manual"
+    },
+    "nodes": [
+      {
+        "node_id": "n1",
+        "kernel_id": "art-62-ap2-payment-receipt-verifier",
+        "kernel_digest": "sha256:ca4201c7c2cff9069746a1e76dc3f53f390845654f2049dfb8769857a7ae12b9"
+      },
+      {
+        "node_id": "n2",
+        "kernel_id": "art-01-ap2-mandate-chain-validator",
+        "kernel_digest": "sha256:623495f9378cb65cb88c889831f43c2c82c8844af29dfaa32e3a5d1e6cfa5337"
+      },
+      {
+        "node_id": "n3",
+        "kernel_id": "cry-05-agent-action-audit-trail-aggregator",
+        "kernel_digest": "sha256:5f7f6ab0bb2e2b736805ecde518ca59ba9a83ad38b17545a8c7c133cffa1481f"
+      }
+    ],
+    "connectors": [],
+    "gates": [],
+    "actions": []
+  },
+  "workflow_manifest_digest": "sha256:78f86167477e39a43c27d653d5d3cbe772f9e0481febd538593e89583fbbe2b0",
+  "declared_inputs": [
+    {
+      "from": "art-60-agent-economy-runtime-fit-diagnostic",
+      "kind": "external"
+    }
+  ],
+  "steps_meta": [
+    {
+      "node_id": "n1",
+      "data_classification": "compute"
+    },
+    {
+      "node_id": "n2",
+      "data_classification": "compute"
+    },
+    {
+      "node_id": "n3",
+      "data_classification": "compute"
+    }
+  ]
+}

@@ -1,0 +1,67 @@
+{
+  "workflow_id": "pack-treasury-clearing-repo-margin",
+  "name": "Cleared Repo Margin & Haircut",
+  "outcome": "W-B. FICC VaR-margin estimate (ART-50) -> CRE22/d349 repo haircuts (508) -> margin-call collateral mobilization (513) -> portfolio VaR distribution (qfa-02).",
+  "spec_version": "ocg-control-plane@1",
+  "manifest": {
+    "manifest_version": "1",
+    "workflow_id": "pack-treasury-clearing-repo-margin",
+    "trigger": {
+      "type": "manual"
+    },
+    "nodes": [
+      {
+        "node_id": "n1",
+        "kernel_id": "art-50-ficc-margin-netting-estimator",
+        "kernel_digest": "sha256:fcea3a670c5ee043f842757592ea575bbe5426b8f825016d4ec0c0d18d2e304b"
+      },
+      {
+        "node_id": "n2",
+        "kernel_id": "508-repo-haircut-collateral-calculator",
+        "kernel_digest": "sha256:7acd49f6f660a85da84398f65f694822d18b97e1241d8b3fc15fc177b11285a5"
+      },
+      {
+        "node_id": "n3",
+        "kernel_id": "513-margin-call-collateral-mobilizer",
+        "kernel_digest": "sha256:d7af04d366f7112be98e4d1735226212639a7f1ffcc97014858f47e83c9c79f3"
+      },
+      {
+        "node_id": "n4",
+        "kernel_id": "qfa-02-portfolio-var-engine",
+        "kernel_digest": "sha256:9051ffa2fd22d389890aa26c21be6f7d3f32a0da1de5ba47890946271487ebe3"
+      }
+    ],
+    "connectors": [],
+    "gates": [],
+    "actions": []
+  },
+  "workflow_manifest_digest": "sha256:5aa7089a9edd6fcf2ea7f75757e29d6744211b8fc646250597017b8bbbe0ba75",
+  "declared_inputs": [
+    {
+      "from": "art-48-treasury-clearing-fit-diagnostic",
+      "kind": "external"
+    },
+    {
+      "from": "art-49-clearing-access-model-selector",
+      "kind": "external"
+    }
+  ],
+  "steps_meta": [
+    {
+      "node_id": "n1",
+      "data_classification": "compute"
+    },
+    {
+      "node_id": "n2",
+      "data_classification": "compute"
+    },
+    {
+      "node_id": "n3",
+      "data_classification": "compute"
+    },
+    {
+      "node_id": "n4",
+      "data_classification": "compute"
+    }
+  ]
+}

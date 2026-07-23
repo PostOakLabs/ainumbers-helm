@@ -1,0 +1,31 @@
+{
+  "workflow_id": "pack-producer-license-reciprocity",
+  "name": "Producer License Reciprocity",
+  "outcome": "Linear one-step chain checking NAIC producer license reciprocity for non-resident filing across target states. Identifies non-standard states (CA, FL, NJ, NY, HI, MN, WI) requiring independent filing, background checks, or state exams outside the standard reciprocity path. Per NAIC MDL-218 and NIPR Reciprocity Matrix 2024. State codes and LOA enum inputs only. Zero PII by construction.",
+  "spec_version": "ocg-control-plane@1",
+  "manifest": {
+    "manifest_version": "1",
+    "workflow_id": "pack-producer-license-reciprocity",
+    "trigger": {
+      "type": "manual"
+    },
+    "nodes": [
+      {
+        "node_id": "n1",
+        "kernel_id": "art-267-check-producer-license-reciprocity",
+        "kernel_digest": "sha256:0120faf130b1725fa559dce448a0de45da7826fbc88e6b8377b94f361601beea"
+      }
+    ],
+    "connectors": [],
+    "gates": [],
+    "actions": []
+  },
+  "workflow_manifest_digest": "sha256:0dad93e164e294fbd9cb5cc815a2c8f81dada3cbc2e4985a61d0f4da9b1f2d04",
+  "declared_inputs": [],
+  "steps_meta": [
+    {
+      "node_id": "n1",
+      "data_classification": "compute"
+    }
+  ]
+}

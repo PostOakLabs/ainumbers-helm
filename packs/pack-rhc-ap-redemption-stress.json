@@ -1,0 +1,31 @@
+{
+  "workflow_id": "pack-rhc-ap-redemption-stress",
+  "name": "Robinhood Chain AP Redemption Stress",
+  "outcome": "Single-step chain stress-testing the economic-exposure claim for Robinhood Chain stock tokens against Authorised Participant concentration and redemption-path reachability.",
+  "spec_version": "ocg-control-plane@1",
+  "manifest": {
+    "manifest_version": "1",
+    "workflow_id": "pack-rhc-ap-redemption-stress",
+    "trigger": {
+      "type": "manual"
+    },
+    "nodes": [
+      {
+        "node_id": "n1",
+        "kernel_id": "art-322-rhc-ap-redemption-stress",
+        "kernel_digest": "sha256:043b1b5c17986181cd446d5ffa5594209cc4cf4e29416c72e3a47a436160ea2d"
+      }
+    ],
+    "connectors": [],
+    "gates": [],
+    "actions": []
+  },
+  "workflow_manifest_digest": "sha256:ff17528d024debc41b50a1defa2058b64f155fa4b736ef42f50da6b769313627",
+  "declared_inputs": [],
+  "steps_meta": [
+    {
+      "node_id": "n1",
+      "data_classification": "compute"
+    }
+  ]
+}

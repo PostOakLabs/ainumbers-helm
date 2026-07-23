@@ -1,0 +1,40 @@
+{
+  "workflow_id": "pack-license-compatibility-check",
+  "name": "License Compatibility Check",
+  "outcome": "Cross-framework rights matrix comparison > compatibility analysis with reason codes and required child license. Also usable as a standalone entry point for checking whether a child license can derive from a parent asset.",
+  "spec_version": "ocg-control-plane@1",
+  "manifest": {
+    "manifest_version": "1",
+    "workflow_id": "pack-license-compatibility-check",
+    "trigger": {
+      "type": "manual"
+    },
+    "nodes": [
+      {
+        "node_id": "n1",
+        "kernel_id": "art-198-cross-license-rights-comparator",
+        "kernel_digest": "sha256:24102c5196e98e7832f199ffd32f1801cda6dcf14ae89fb8e8d89fdfcd8963f2"
+      },
+      {
+        "node_id": "n2",
+        "kernel_id": "art-204-license-compatibility-checker",
+        "kernel_digest": "sha256:bfd5a5f39b32798e40fc9cc82a2029d902936a511baf42cbd99668b985cf56ae"
+      }
+    ],
+    "connectors": [],
+    "gates": [],
+    "actions": []
+  },
+  "workflow_manifest_digest": "sha256:f4847a3d4ac40c3762d38b97430de980f9c8f0035c479021f08e663e5e1bc1ca",
+  "declared_inputs": [],
+  "steps_meta": [
+    {
+      "node_id": "n1",
+      "data_classification": "compute"
+    },
+    {
+      "node_id": "n2",
+      "data_classification": "compute"
+    }
+  ]
+}

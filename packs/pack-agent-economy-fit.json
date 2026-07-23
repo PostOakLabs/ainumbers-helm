@@ -1,0 +1,31 @@
+{
+  "workflow_id": "pack-agent-economy-fit",
+  "name": "Agent Economy Runtime Fit Diagnostic",
+  "outcome": "Single-node D0 diagnostic grading an agent platform/operator A-F across settlement rail, receipt & mandate, HNP autonomy, reconciliation, metering, and runtime fraud for the agent-economy runtime layer; routes to the right agent-economy chain.",
+  "spec_version": "ocg-control-plane@1",
+  "manifest": {
+    "manifest_version": "1",
+    "workflow_id": "pack-agent-economy-fit",
+    "trigger": {
+      "type": "manual"
+    },
+    "nodes": [
+      {
+        "node_id": "n1",
+        "kernel_id": "art-60-agent-economy-runtime-fit-diagnostic",
+        "kernel_digest": "sha256:05da7b2247131bc9f19b998edc08d9be543cdf7507b90012e036e3e7b28289f1"
+      }
+    ],
+    "connectors": [],
+    "gates": [],
+    "actions": []
+  },
+  "workflow_manifest_digest": "sha256:e83ba731b6aca010b4edcdffdb24feeb1b37f5a880afad175fbcedfea1b06a0e",
+  "declared_inputs": [],
+  "steps_meta": [
+    {
+      "node_id": "n1",
+      "data_classification": "compute"
+    }
+  ]
+}

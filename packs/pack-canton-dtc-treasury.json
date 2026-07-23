@@ -1,0 +1,58 @@
+{
+  "workflow_id": "pack-canton-dtc-treasury",
+  "name": "Canton DTC Tokenized Treasury Issuance & Settlement",
+  "outcome": "Validate a DTCC/ComposerX tokenized U.S. Treasury for issuance and atomic settlement. Regulatory/asset classification (510) → DTC-custody link, Fed-eligibility, ComposerX DAML lifecycle and programmable-collateral-at-issuance (art-109) → PFMI P12 atomic DvP (507) → tokenized-collateral eligibility for reuse (505). Treasury/DTC-custody-specific; not generic securities lifecycle, not FICC clearing economics.",
+  "spec_version": "ocg-control-plane@1",
+  "manifest": {
+    "manifest_version": "1",
+    "workflow_id": "pack-canton-dtc-treasury",
+    "trigger": {
+      "type": "manual"
+    },
+    "nodes": [
+      {
+        "node_id": "n1",
+        "kernel_id": "510-digital-asset-regulatory-classifier",
+        "kernel_digest": "sha256:e70b5a1adf38189f6a6f09d6b4b0dcfaf16394beb5f30f8b397cadbb0ffa2a5f"
+      },
+      {
+        "node_id": "n2",
+        "kernel_id": "art-109-dtc-tokenized-treasury",
+        "kernel_digest": "sha256:1064b510a277f498468a1e9a05d051d01137cda668f04abae974c0db753376fc"
+      },
+      {
+        "node_id": "n3",
+        "kernel_id": "507-canton-dvp-atomicity-validator",
+        "kernel_digest": "sha256:e8b30471c1feafecb89b5283df71ad9b4f2aeafe3b4606af46ae14e48849f55c"
+      },
+      {
+        "node_id": "n4",
+        "kernel_id": "505-tokenized-collateral-eligibility-checker",
+        "kernel_digest": "sha256:37bbe20bf9c7e913038c93cc07f1425e4956c47da12a2663b58e35f50c3173c2"
+      }
+    ],
+    "connectors": [],
+    "gates": [],
+    "actions": []
+  },
+  "workflow_manifest_digest": "sha256:f423bb28a1962c68e9fd470ec9332bd5d370e53df48e20ba3fac1ada6e9bc311",
+  "declared_inputs": [],
+  "steps_meta": [
+    {
+      "node_id": "n1",
+      "data_classification": "compute"
+    },
+    {
+      "node_id": "n2",
+      "data_classification": "compute"
+    },
+    {
+      "node_id": "n3",
+      "data_classification": "compute"
+    },
+    {
+      "node_id": "n4",
+      "data_classification": "compute"
+    }
+  ]
+}

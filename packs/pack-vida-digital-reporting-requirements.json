@@ -1,0 +1,49 @@
+{
+  "workflow_id": "pack-vida-digital-reporting-requirements",
+  "name": "ViDA Digital Reporting Requirements",
+  "outcome": "Validate EN 16931-1:2026 structured e-invoice conformance (art-159) -> assess intra-EU B2B DRR scope and 10-calendar-day reporting deadline (art-160) -> assess EC Sales List to DRR migration readiness and harmonization deadline (art-161). Full ViDA digital reporting pipeline. EU 2025/516, mandatory 2030-07-01.",
+  "spec_version": "ocg-control-plane@1",
+  "manifest": {
+    "manifest_version": "1",
+    "workflow_id": "pack-vida-digital-reporting-requirements",
+    "trigger": {
+      "type": "manual"
+    },
+    "nodes": [
+      {
+        "node_id": "n1",
+        "kernel_id": "art-159-vida-einvoice-en16931-conformance-validator",
+        "kernel_digest": "sha256:03f4ebd802b04ae45993fa918c7bfb974304e19186c9a139961b6cf700258d1d"
+      },
+      {
+        "node_id": "n2",
+        "kernel_id": "art-160-vida-drr-transaction-reporter",
+        "kernel_digest": "sha256:d7f2833446d60e8f7303219930929c8108dd595e8e1574ddb37f60d366d375c8"
+      },
+      {
+        "node_id": "n3",
+        "kernel_id": "art-161-vida-recapitulative-statement-migration-assessor",
+        "kernel_digest": "sha256:057a79e66cb2603cd0a4c91cc179046b19ebe82956a4c3a37cf10e5a3ecd1cfb"
+      }
+    ],
+    "connectors": [],
+    "gates": [],
+    "actions": []
+  },
+  "workflow_manifest_digest": "sha256:2506b0541e04cce23035dd1547d105c6c805509e6fb2e9322222a323a03ca2de",
+  "declared_inputs": [],
+  "steps_meta": [
+    {
+      "node_id": "n1",
+      "data_classification": "compute"
+    },
+    {
+      "node_id": "n2",
+      "data_classification": "compute"
+    },
+    {
+      "node_id": "n3",
+      "data_classification": "compute"
+    }
+  ]
+}

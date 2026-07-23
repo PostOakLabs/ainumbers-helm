@@ -1,0 +1,54 @@
+{
+  "workflow_id": "pack-settlement-discipline-failpredict",
+  "name": "Settlement-Fail Prediction Pipeline",
+  "outcome": "SSI conformance check (ART-80) -> fail-probability scoring on anonymized features (ART-79) -> Merkle integrity over the scored batch (cry-04). Ranks pending trades for pre-settlement intervention; targets the ~30%-of-fails SSI root cause. No PII -- features are band-level.",
+  "spec_version": "ocg-control-plane@1",
+  "manifest": {
+    "manifest_version": "1",
+    "workflow_id": "pack-settlement-discipline-failpredict",
+    "trigger": {
+      "type": "manual"
+    },
+    "nodes": [
+      {
+        "node_id": "n1",
+        "kernel_id": "art-80-ssi-conformance-checker",
+        "kernel_digest": "sha256:659829e3ae373c2b2984bd7be749ccc18790106ac4bbfca7a0fc0884047ad958"
+      },
+      {
+        "node_id": "n2",
+        "kernel_id": "art-79-settlement-fail-predictor",
+        "kernel_digest": "sha256:660bc62de036808e6dcb648dd7ef377f3d403d9f3b2771459507ff4c7702ea0c"
+      },
+      {
+        "node_id": "n3",
+        "kernel_id": "cry-04-merkle-batch-verifier",
+        "kernel_digest": "sha256:7c89b9651f986ed6652903c6d41e9fbda29d12db9fbc0a6acd4f7270160b7ccb"
+      }
+    ],
+    "connectors": [],
+    "gates": [],
+    "actions": []
+  },
+  "workflow_manifest_digest": "sha256:908f7d85130061ed09244d557306b9f5025121286f9624cb5773994003e64dbd",
+  "declared_inputs": [
+    {
+      "from": "art-77-t1-settlement-readiness-diagnostic",
+      "kind": "external"
+    }
+  ],
+  "steps_meta": [
+    {
+      "node_id": "n1",
+      "data_classification": "compute"
+    },
+    {
+      "node_id": "n2",
+      "data_classification": "compute"
+    },
+    {
+      "node_id": "n3",
+      "data_classification": "compute"
+    }
+  ]
+}

@@ -1,0 +1,54 @@
+{
+  "workflow_id": "pack-ai-decision-log-conformance",
+  "name": "AI Decision Log Conformance",
+  "outcome": "Gated three-step chain for EU AI Act Art 12 decision-log conformance in financial services. Step 1 classifies Annex III FS obligations (art-238); gate on is_high_risk=true to proceed (OUT_OF_SCOPE exits). Step 2 builds the Art 12(2)-conformant decision log record (art-236), including art12_completeness_score and anchor_surface instructions. Step 3 validates the record as an IETF AAT agent audit trail (art-237), confirming chain_position and aat_completeness_score. Covers EU AI Act Art 12(2) logging, Art 26(6) FRIA, and Art 27(1) EU database registration.",
+  "spec_version": "ocg-control-plane@1",
+  "manifest": {
+    "manifest_version": "1",
+    "workflow_id": "pack-ai-decision-log-conformance",
+    "trigger": {
+      "type": "manual"
+    },
+    "nodes": [
+      {
+        "node_id": "n1",
+        "kernel_id": "art-238-classify-annex3-decisioning-obligations",
+        "kernel_digest": "sha256:8bc32901d512c613154fd05bc8dba90a59d45911b83c8c2b2174ad8fddce59cb"
+      },
+      {
+        "node_id": "n2",
+        "kernel_id": "art-236-build-ai-decision-log-record",
+        "kernel_digest": "sha256:3f9c0dade487f4d6dafb35d97ebc3fe9b0f51656ea4e010caee2a8bf35aa159d"
+      },
+      {
+        "node_id": "n3",
+        "kernel_id": "art-237-validate-agent-audit-trail",
+        "kernel_digest": "sha256:4b708c0479222377ddaec18a19c7c15708dac8a9bc59d4e6e6b53661301c9801"
+      }
+    ],
+    "connectors": [],
+    "gates": [],
+    "actions": []
+  },
+  "workflow_manifest_digest": "sha256:f8b396b7f0e53ce68eddb08ec0f2300dbb8db0b70396aa42c5f44df3d2437126",
+  "declared_inputs": [
+    {
+      "from": "art-64-ai-act-highrisk-fit-diagnostic",
+      "kind": "external"
+    }
+  ],
+  "steps_meta": [
+    {
+      "node_id": "n1",
+      "data_classification": "compute"
+    },
+    {
+      "node_id": "n2",
+      "data_classification": "compute"
+    },
+    {
+      "node_id": "n3",
+      "data_classification": "compute"
+    }
+  ]
+}

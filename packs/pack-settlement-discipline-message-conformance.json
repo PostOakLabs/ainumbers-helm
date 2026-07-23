@@ -1,0 +1,54 @@
+{
+  "workflow_id": "pack-settlement-discipline-message-conformance",
+  "name": "ISO 20022 Securities-Settlement Message Conformance",
+  "outcome": "ISO 20022 securities-settlement / penalty message linting (ART-82) -> Merkle integrity over the message batch (cry-04) -> CSD/counterparty-framed cover memo (ptg-01). Scoped to the sese/semt securities family, distinct from the payments CBPR+ migration.",
+  "spec_version": "ocg-control-plane@1",
+  "manifest": {
+    "manifest_version": "1",
+    "workflow_id": "pack-settlement-discipline-message-conformance",
+    "trigger": {
+      "type": "manual"
+    },
+    "nodes": [
+      {
+        "node_id": "n1",
+        "kernel_id": "art-82-securities-settlement-message-linter",
+        "kernel_digest": "sha256:2ad79af4b3bfd8d91a04886d9edfee8f37018b827cc9fb189caa66583cfebcc3"
+      },
+      {
+        "node_id": "n2",
+        "kernel_id": "cry-04-merkle-batch-verifier",
+        "kernel_digest": "sha256:7c89b9651f986ed6652903c6d41e9fbda29d12db9fbc0a6acd4f7270160b7ccb"
+      },
+      {
+        "node_id": "n3",
+        "kernel_id": "ptg-01-ap2-prompt-template-generator",
+        "kernel_digest": "sha256:5f23d03d4d538507b92a3f3461e5d0ebb6987227fd3a7ae41281216fc2fabe8e"
+      }
+    ],
+    "connectors": [],
+    "gates": [],
+    "actions": []
+  },
+  "workflow_manifest_digest": "sha256:61cf82781106cde9d354976b968c21579c9fb49f68e60dcd34caf9753aab84f8",
+  "declared_inputs": [
+    {
+      "from": "art-81-allocation-affirmation-conformance",
+      "kind": "external"
+    }
+  ],
+  "steps_meta": [
+    {
+      "node_id": "n1",
+      "data_classification": "compute"
+    },
+    {
+      "node_id": "n2",
+      "data_classification": "compute"
+    },
+    {
+      "node_id": "n3",
+      "data_classification": "compute"
+    }
+  ]
+}

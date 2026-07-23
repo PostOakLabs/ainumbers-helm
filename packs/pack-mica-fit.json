@@ -1,0 +1,31 @@
+{
+  "workflow_id": "pack-mica-fit",
+  "name": "MiCA CASP Fit Diagnostic",
+  "outcome": "Single-node D0 diagnostic scoping a CASP's MiCA Title-V lifecycle readiness and routing to the right MiCA chain; ART/EMT-issuer cases route to the existing stablecoin chains.",
+  "spec_version": "ocg-control-plane@1",
+  "manifest": {
+    "manifest_version": "1",
+    "workflow_id": "pack-mica-fit",
+    "trigger": {
+      "type": "manual"
+    },
+    "nodes": [
+      {
+        "node_id": "n1",
+        "kernel_id": "art-98-mica-casp-fit-diagnostic",
+        "kernel_digest": "sha256:f3a4a041f414fd77b5a45a8fa5814804ca22ab1df00e883c54a47a0d3d676035"
+      }
+    ],
+    "connectors": [],
+    "gates": [],
+    "actions": []
+  },
+  "workflow_manifest_digest": "sha256:5dccf869e5b26e262977c53d138f1a980f53e0f06024429a40e2bd3e013a28fb",
+  "declared_inputs": [],
+  "steps_meta": [
+    {
+      "node_id": "n1",
+      "data_classification": "compute"
+    }
+  ]
+}

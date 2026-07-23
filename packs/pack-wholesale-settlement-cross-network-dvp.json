@@ -1,0 +1,58 @@
+{
+  "workflow_id": "pack-wholesale-settlement-cross-network-dvp",
+  "name": "Cross-Network Atomic DvP/PvP Settlement",
+  "outcome": "W-A. Cross-network atomicity + finality-compatibility + settlement-risk window (ART-58) -> asset-leg DvP atomicity (507) -> FX-leg PvP (511). The flagship decision chain: is this tokenized settlement all-or-nothing across the cash network and the asset network?",
+  "spec_version": "ocg-control-plane@1",
+  "manifest": {
+    "manifest_version": "1",
+    "workflow_id": "pack-wholesale-settlement-cross-network-dvp",
+    "trigger": {
+      "type": "manual"
+    },
+    "nodes": [
+      {
+        "node_id": "n1",
+        "kernel_id": "art-58-cross-network-settlement-validator",
+        "kernel_digest": "sha256:3bd0c00f1525794b85021aa94d28caed825ccbf0bae6d32f38092cb2ec96bc8b"
+      },
+      {
+        "node_id": "n2",
+        "kernel_id": "507-canton-dvp-atomicity-validator",
+        "kernel_digest": "sha256:e8b30471c1feafecb89b5283df71ad9b4f2aeafe3b4606af46ae14e48849f55c"
+      },
+      {
+        "node_id": "n3",
+        "kernel_id": "511-multi-currency-pvp-validator",
+        "kernel_digest": "sha256:2675f0d22096ace35e1dfb500c6f332c77fc66bba78a1e3878575bb466267925"
+      }
+    ],
+    "connectors": [],
+    "gates": [],
+    "actions": []
+  },
+  "workflow_manifest_digest": "sha256:163c3bc85965af83df67379ba26d26cf1876b9de2a4ff1b2c11773226e28d070",
+  "declared_inputs": [
+    {
+      "from": "art-56-tokenized-settlement-fit-diagnostic",
+      "kind": "external"
+    },
+    {
+      "from": "art-59-settlement-asset-finality-classifier",
+      "kind": "external"
+    }
+  ],
+  "steps_meta": [
+    {
+      "node_id": "n1",
+      "data_classification": "compute"
+    },
+    {
+      "node_id": "n2",
+      "data_classification": "compute"
+    },
+    {
+      "node_id": "n3",
+      "data_classification": "compute"
+    }
+  ]
+}

@@ -1,0 +1,63 @@
+{
+  "workflow_id": "pack-tempo-subscription-settlement",
+  "name": "Tempo Subscription & Streaming Settlement Reconciliation",
+  "outcome": "Reconcile executed MPP recurring/streamed draws against the authorized mandate envelope, prove draw-set integrity, and aggregate receipts. Decode granted MPP mandate (art-36) → reconcile draws vs per-cycle and cumulative caps incl. expiry/revocation (art-106) → Merkle batch integrity over the draw set (cry-04) → audit-trail receipt aggregation (cry-05).",
+  "spec_version": "ocg-control-plane@1",
+  "manifest": {
+    "manifest_version": "1",
+    "workflow_id": "pack-tempo-subscription-settlement",
+    "trigger": {
+      "type": "manual"
+    },
+    "nodes": [
+      {
+        "node_id": "n1",
+        "kernel_id": "art-36-tempo-mpp-agent-mandate",
+        "kernel_digest": "sha256:4967b7d4af80a186fa8374e13f61c4f6a14a94ef7f74474dc4fd840ddf488608"
+      },
+      {
+        "node_id": "n2",
+        "kernel_id": "art-106-tempo-subscription-reconciler",
+        "kernel_digest": "sha256:1995b8044643af3b0040b0141b607050d90479fefaa911f9b9134eecc99cf250"
+      },
+      {
+        "node_id": "n3",
+        "kernel_id": "cry-04-merkle-batch-verifier",
+        "kernel_digest": "sha256:7c89b9651f986ed6652903c6d41e9fbda29d12db9fbc0a6acd4f7270160b7ccb"
+      },
+      {
+        "node_id": "n4",
+        "kernel_id": "cry-05-agent-action-audit-trail-aggregator",
+        "kernel_digest": "sha256:5f7f6ab0bb2e2b736805ecde518ca59ba9a83ad38b17545a8c7c133cffa1481f"
+      }
+    ],
+    "connectors": [],
+    "gates": [],
+    "actions": []
+  },
+  "workflow_manifest_digest": "sha256:2d18fe0ca6e9c4b398a9be1db37b5babfb2791dbc13df1cc91e65f27e277c03a",
+  "declared_inputs": [
+    {
+      "from": "art-34-tempo-fit-diagnostic",
+      "kind": "external"
+    }
+  ],
+  "steps_meta": [
+    {
+      "node_id": "n1",
+      "data_classification": "compute"
+    },
+    {
+      "node_id": "n2",
+      "data_classification": "compute"
+    },
+    {
+      "node_id": "n3",
+      "data_classification": "compute"
+    },
+    {
+      "node_id": "n4",
+      "data_classification": "compute"
+    }
+  ]
+}

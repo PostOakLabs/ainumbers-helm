@@ -1,0 +1,58 @@
+{
+  "workflow_id": "pack-agent-economy-autonomous-guardrail",
+  "name": "Human-Not-Present Autonomous-Payment Guardrail",
+  "outcome": "W-C. Spend-policy envelope (art-02) -> mandate scope & freshness (art-01) -> HNP guardrail verdict on the executed payment (ART-62). End-to-end gate for an agent paying with no human present.",
+  "spec_version": "ocg-control-plane@1",
+  "manifest": {
+    "manifest_version": "1",
+    "workflow_id": "pack-agent-economy-autonomous-guardrail",
+    "trigger": {
+      "type": "manual"
+    },
+    "nodes": [
+      {
+        "node_id": "n1",
+        "kernel_id": "art-02-agent-spend-policy-simulator",
+        "kernel_digest": "sha256:236e163038383b05b4d5d18a1d3cf7d32a974a1035496ab1c00fbad3e84f412a"
+      },
+      {
+        "node_id": "n2",
+        "kernel_id": "art-01-ap2-mandate-chain-validator",
+        "kernel_digest": "sha256:623495f9378cb65cb88c889831f43c2c82c8844af29dfaa32e3a5d1e6cfa5337"
+      },
+      {
+        "node_id": "n3",
+        "kernel_id": "art-62-ap2-payment-receipt-verifier",
+        "kernel_digest": "sha256:ca4201c7c2cff9069746a1e76dc3f53f390845654f2049dfb8769857a7ae12b9"
+      }
+    ],
+    "connectors": [],
+    "gates": [],
+    "actions": []
+  },
+  "workflow_manifest_digest": "sha256:801a88d1d8a7aeff7a5b3594f546c839bae292750fbe1772ae1c8aff8cc5ca74",
+  "declared_inputs": [
+    {
+      "from": "art-01-ap2-mandate-chain-validator",
+      "kind": "external"
+    },
+    {
+      "from": "art-04-agent-identity-attestation-checker",
+      "kind": "external"
+    }
+  ],
+  "steps_meta": [
+    {
+      "node_id": "n1",
+      "data_classification": "compute"
+    },
+    {
+      "node_id": "n2",
+      "data_classification": "compute"
+    },
+    {
+      "node_id": "n3",
+      "data_classification": "compute"
+    }
+  ]
+}

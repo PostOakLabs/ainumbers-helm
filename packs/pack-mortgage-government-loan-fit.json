@@ -1,0 +1,49 @@
+{
+  "workflow_id": "pack-mortgage-government-loan-fit",
+  "name": "Mortgage Government Loan Fit",
+  "outcome": "Gated two-step government loan program router. First step surfaces the target loan program into output_payload (loan_program field). Gate routes VA program to VA funding fee and residual income calculation; all other programs (FHA and others) continue to FHA MIP eligibility and cost calculation. Both branches are reachable: VA path computes funding fee + 38 USC §3729 table; FHA/default path computes HUD 4000.1 MIP. Total function with mandatory default.",
+  "spec_version": "ocg-control-plane@1",
+  "manifest": {
+    "manifest_version": "1",
+    "workflow_id": "pack-mortgage-government-loan-fit",
+    "trigger": {
+      "type": "manual"
+    },
+    "nodes": [
+      {
+        "node_id": "n1",
+        "kernel_id": "art-223-conforming-loan-limit",
+        "kernel_digest": "sha256:114e209f4a992a5b64a0357a6263fe467420738e6ac70b6c238b17987521fb40"
+      },
+      {
+        "node_id": "n2",
+        "kernel_id": "art-225-va-funding-fee-residual",
+        "kernel_digest": "sha256:0a2c6c768159e004a4be516f27462520d1e1459d4323169d1530a336a0172053"
+      },
+      {
+        "node_id": "n3",
+        "kernel_id": "art-224-fha-mip-eligibility",
+        "kernel_digest": "sha256:0188afefdc40d10dd5d1058b02fdf32126f50994c6cdfc0389f7e1cf93cfe295"
+      }
+    ],
+    "connectors": [],
+    "gates": [],
+    "actions": []
+  },
+  "workflow_manifest_digest": "sha256:b6515e8abfcc92fc20cf7e08f95fa974d2e948e6bf4408eefb0e86fabcbc6195",
+  "declared_inputs": [],
+  "steps_meta": [
+    {
+      "node_id": "n1",
+      "data_classification": "compute"
+    },
+    {
+      "node_id": "n2",
+      "data_classification": "compute"
+    },
+    {
+      "node_id": "n3",
+      "data_classification": "compute"
+    }
+  ]
+}

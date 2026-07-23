@@ -1,0 +1,31 @@
+{
+  "workflow_id": "pack-reputation-score-aggregate",
+  "name": "Provable Reputation Score Aggregate",
+  "outcome": "Single-node diagnostic aggregating OCG execution receipts into a deterministic, groth16-provable reputation score: exponential decay, self-issued exclusion, dedupe.",
+  "spec_version": "ocg-control-plane@1",
+  "manifest": {
+    "manifest_version": "1",
+    "workflow_id": "pack-reputation-score-aggregate",
+    "trigger": {
+      "type": "manual"
+    },
+    "nodes": [
+      {
+        "node_id": "n1",
+        "kernel_id": "art-278-reputation-score-aggregator",
+        "kernel_digest": "sha256:7d2c98e83ecc6bbe23df123d45d26fe3f2b31d5dc6484e5983f535fdbd271c86"
+      }
+    ],
+    "connectors": [],
+    "gates": [],
+    "actions": []
+  },
+  "workflow_manifest_digest": "sha256:274e7e7ab74b7ec58f39e11163af4e7dcc7afc4b1ef97c18136227420823cb8d",
+  "declared_inputs": [],
+  "steps_meta": [
+    {
+      "node_id": "n1",
+      "data_classification": "compute"
+    }
+  ]
+}

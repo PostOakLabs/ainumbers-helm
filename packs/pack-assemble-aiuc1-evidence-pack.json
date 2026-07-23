@@ -1,0 +1,49 @@
+{
+  "workflow_id": "pack-assemble-aiuc1-evidence-pack",
+  "name": "Assemble AIUC-1 Evidence Pack",
+  "outcome": "Three-step AIUC-1 evidence pipeline: lint a control-evidence bundle against the 23 automatable AIUC-1 v2026-Q1 controls, assemble a signed control-keyed evidence pack with an OSCAL export, then lint the pack for evidence freshness against the AIUC-1 quarterly re-test cadence and cert expiry.",
+  "spec_version": "ocg-control-plane@1",
+  "manifest": {
+    "manifest_version": "1",
+    "workflow_id": "pack-assemble-aiuc1-evidence-pack",
+    "trigger": {
+      "type": "manual"
+    },
+    "nodes": [
+      {
+        "node_id": "n1",
+        "kernel_id": "art-303-aiuc1-control-evidence-linter",
+        "kernel_digest": "sha256:6f0ccad9827533502bb1df8c0b7beedc187822ea5f7bf07363637c00336b8f21"
+      },
+      {
+        "node_id": "n2",
+        "kernel_id": "art-304-aiuc1-evidence-pack-assembler",
+        "kernel_digest": "sha256:bde1926d75bbc6dbc37f1d43332bd1684a077131e61b89d6e99929a12b8cf33c"
+      },
+      {
+        "node_id": "n3",
+        "kernel_id": "art-305-aiuc1-evidence-freshness-lint",
+        "kernel_digest": "sha256:8dbc646bb29e68a985eb5fdcf053ed106137917d9b89dd4ec179f792589bf9cf"
+      }
+    ],
+    "connectors": [],
+    "gates": [],
+    "actions": []
+  },
+  "workflow_manifest_digest": "sha256:f1ee9a7ad9a60086c7bde0b6537df1c377d944b2207d5cfe3c70f99500bb2678",
+  "declared_inputs": [],
+  "steps_meta": [
+    {
+      "node_id": "n1",
+      "data_classification": "compute"
+    },
+    {
+      "node_id": "n2",
+      "data_classification": "compute"
+    },
+    {
+      "node_id": "n3",
+      "data_classification": "compute"
+    }
+  ]
+}

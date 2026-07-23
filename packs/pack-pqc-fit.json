@@ -1,0 +1,31 @@
+{
+  "workflow_id": "pack-pqc-fit",
+  "name": "PQC Timeline & Migration Fit Diagnostic",
+  "outcome": "Single-node D0 diagnostic mapping a crypto estate to CNSA 2.0 / EU-2030 / G7 / DORA milestones. Routes to the existing pqc-migration chain (inventory/HNDL/roadmap/agility, tools 499-502) and to the new protocol chains.",
+  "spec_version": "ocg-control-plane@1",
+  "manifest": {
+    "manifest_version": "1",
+    "workflow_id": "pack-pqc-fit",
+    "trigger": {
+      "type": "manual"
+    },
+    "nodes": [
+      {
+        "node_id": "n1",
+        "kernel_id": "art-85-pqc-timeline-fit-diagnostic",
+        "kernel_digest": "sha256:84c05753ffb3bd7d71bd9af2b7dece0ba0c23b3e3aae66ac296f39975d339f23"
+      }
+    ],
+    "connectors": [],
+    "gates": [],
+    "actions": []
+  },
+  "workflow_manifest_digest": "sha256:f7e26ca4b09895b9ee8a0dd5d5c670bcdaa90065db958f678020db42f616993a",
+  "declared_inputs": [],
+  "steps_meta": [
+    {
+      "node_id": "n1",
+      "data_classification": "compute"
+    }
+  ]
+}

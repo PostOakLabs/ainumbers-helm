@@ -1,0 +1,31 @@
+{
+  "workflow_id": "pack-tempo-validator-readiness",
+  "name": "Tempo Validator Readiness",
+  "outcome": "ART-41 standalone node. 12-question infrastructure readiness scorer for prospective Tempo validators.",
+  "spec_version": "ocg-control-plane@1",
+  "manifest": {
+    "manifest_version": "1",
+    "workflow_id": "pack-tempo-validator-readiness",
+    "trigger": {
+      "type": "manual"
+    },
+    "nodes": [
+      {
+        "node_id": "n1",
+        "kernel_id": "art-41-tempo-validator-readiness",
+        "kernel_digest": "sha256:461449fa5c72e430c60d8e1b07c67491bbdffd14488d14d27e85671017ce0d01"
+      }
+    ],
+    "connectors": [],
+    "gates": [],
+    "actions": []
+  },
+  "workflow_manifest_digest": "sha256:92f91dc15f5caf5443421c07a7021d7186ecc9e01cd29b019a6f85d0eb06c0c8",
+  "declared_inputs": [],
+  "steps_meta": [
+    {
+      "node_id": "n1",
+      "data_classification": "compute"
+    }
+  ]
+}

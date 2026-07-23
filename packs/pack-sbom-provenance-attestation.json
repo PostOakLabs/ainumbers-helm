@@ -1,0 +1,49 @@
+{
+  "workflow_id": "pack-sbom-provenance-attestation",
+  "name": "SBOM Provenance Attestation (EU CRA / SLSA / OpenVEX)",
+  "outcome": "Validate a CycloneDX SBOM against EU CRA Annex I machine-readable SBOM requirement (art-135) → verify the SLSA provenance in-toto statement: subject digest match, builder.id present, claimed build level (art-136) → validate the OpenVEX vulnerability disclosure statement including not_affected justification (art-137). Full EU CRA supply-chain attestation pipeline. Zero network.",
+  "spec_version": "ocg-control-plane@1",
+  "manifest": {
+    "manifest_version": "1",
+    "workflow_id": "pack-sbom-provenance-attestation",
+    "trigger": {
+      "type": "manual"
+    },
+    "nodes": [
+      {
+        "node_id": "n1",
+        "kernel_id": "art-135-cyclonedx-sbom-validator",
+        "kernel_digest": "sha256:3f160ab65134e8918e39f71151aed591c8cd27e82ed90f22cff146f7fa75fcd1"
+      },
+      {
+        "node_id": "n2",
+        "kernel_id": "art-136-slsa-provenance-verifier",
+        "kernel_digest": "sha256:e68457cfcfc0229b4029a1579bdd6871ecb20daf0abd9743c2627eccb3a51e5d"
+      },
+      {
+        "node_id": "n3",
+        "kernel_id": "art-137-openvex-statement-validator",
+        "kernel_digest": "sha256:676d999d882d7e4a0d0e97841723ed8a0c8b3440fd079227c910c1945058a0de"
+      }
+    ],
+    "connectors": [],
+    "gates": [],
+    "actions": []
+  },
+  "workflow_manifest_digest": "sha256:b605db5df54ee3b07324b261165b66b12b2ff2dbbd55f5dfd493d0b0e1134a0c",
+  "declared_inputs": [],
+  "steps_meta": [
+    {
+      "node_id": "n1",
+      "data_classification": "compute"
+    },
+    {
+      "node_id": "n2",
+      "data_classification": "compute"
+    },
+    {
+      "node_id": "n3",
+      "data_classification": "compute"
+    }
+  ]
+}

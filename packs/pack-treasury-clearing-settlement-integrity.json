@@ -1,0 +1,58 @@
+{
+  "workflow_id": "pack-treasury-clearing-settlement-integrity",
+  "name": "Cleared Settlement Integrity & Fails",
+  "outcome": "W-H convergence terminal. Merkle batch integrity over the cleared settlement set (cry-04) -> PFMI P12 DvP atomicity & CRE70 fail charge (507) -> settlement-fail-rate anomaly monitoring (ml-03).",
+  "spec_version": "ocg-control-plane@1",
+  "manifest": {
+    "manifest_version": "1",
+    "workflow_id": "pack-treasury-clearing-settlement-integrity",
+    "trigger": {
+      "type": "manual"
+    },
+    "nodes": [
+      {
+        "node_id": "n1",
+        "kernel_id": "cry-04-merkle-batch-verifier",
+        "kernel_digest": "sha256:7c89b9651f986ed6652903c6d41e9fbda29d12db9fbc0a6acd4f7270160b7ccb"
+      },
+      {
+        "node_id": "n2",
+        "kernel_id": "507-canton-dvp-atomicity-validator",
+        "kernel_digest": "sha256:e8b30471c1feafecb89b5283df71ad9b4f2aeafe3b4606af46ae14e48849f55c"
+      },
+      {
+        "node_id": "n3",
+        "kernel_id": "ml-03-timeseries-anomaly-detector",
+        "kernel_digest": "sha256:ae20b291caf5eac025d4e7103782427565fe7cf0c99f4045122257c87db0d9c6"
+      }
+    ],
+    "connectors": [],
+    "gates": [],
+    "actions": []
+  },
+  "workflow_manifest_digest": "sha256:a4919b3af27f04b3c199a4ae44d5a8f6ca6b412a4f22e05e0994963f5782307d",
+  "declared_inputs": [
+    {
+      "from": "rca-02-mica-reserve-stress",
+      "kind": "external"
+    },
+    {
+      "from": "pnr-01-dora-ict-cascade-simulator",
+      "kind": "external"
+    }
+  ],
+  "steps_meta": [
+    {
+      "node_id": "n1",
+      "data_classification": "compute"
+    },
+    {
+      "node_id": "n2",
+      "data_classification": "compute"
+    },
+    {
+      "node_id": "n3",
+      "data_classification": "compute"
+    }
+  ]
+}

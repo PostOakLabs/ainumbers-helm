@@ -1,0 +1,49 @@
+{
+  "workflow_id": "pack-ifrs17-measurement-conformance",
+  "name": "IFRS 17 Measurement Conformance",
+  "outcome": "Classify insurance contracts to GMM/VFA/PAA measurement model from coverage period and direct-participating features (art-177) -> validate CSM roll-forward mechanics and flag onerous contracts where computed closing CSM is negative (art-178) -> check risk-adjustment disclosure technique, confidence level, and onerous-contract loss-component recognition (art-179). Full IFRS 17 measurement conformance pipeline. IFRS 17 live Jan 1 2023; mandatory for all IFRS reporters.",
+  "spec_version": "ocg-control-plane@1",
+  "manifest": {
+    "manifest_version": "1",
+    "workflow_id": "pack-ifrs17-measurement-conformance",
+    "trigger": {
+      "type": "manual"
+    },
+    "nodes": [
+      {
+        "node_id": "n1",
+        "kernel_id": "art-177-ifrs17-measurement-model-classifier",
+        "kernel_digest": "sha256:722f77361c37a5635fe5deb2077fcc3faccb5ec84a872dc0cdbfebc3027e0037"
+      },
+      {
+        "node_id": "n2",
+        "kernel_id": "art-178-ifrs17-csm-rollforward-validator",
+        "kernel_digest": "sha256:6d63a964418acbc17998ddac7014b0d42e3a09197ea4e1ffe32feeea586fb11f"
+      },
+      {
+        "node_id": "n3",
+        "kernel_id": "art-179-ifrs17-risk-adjustment-checker",
+        "kernel_digest": "sha256:970c7d775e817baef21991c6c87e7dfecaf2829b129990bf7fdd268efe1fa610"
+      }
+    ],
+    "connectors": [],
+    "gates": [],
+    "actions": []
+  },
+  "workflow_manifest_digest": "sha256:c96d4d509a5ca79283246c4d29be3dddcddef572b30d8cdd25064fc4d3741ac0",
+  "declared_inputs": [],
+  "steps_meta": [
+    {
+      "node_id": "n1",
+      "data_classification": "compute"
+    },
+    {
+      "node_id": "n2",
+      "data_classification": "compute"
+    },
+    {
+      "node_id": "n3",
+      "data_classification": "compute"
+    }
+  ]
+}

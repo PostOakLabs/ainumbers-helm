@@ -1,0 +1,40 @@
+{
+  "workflow_id": "pack-corporate-treasury-statement-reconciliation",
+  "name": "Corporate Treasury Statement Reconciliation",
+  "outcome": "Linear two-step chain for TMS straight-through reconciliation. Step 1 classifies ISO 20022 camt.053 BkTxCd entries (Domain/Family/SubFamily per CGI-MP v5.0), validates the OPBD+sum(movements)=CLBD balance equation, and scores structured-remittance match rate. Step 2 scores AFP 2024 MAPE and timing-bias of cash forecasts against the reconciled actual transaction amounts, closing the TMS forecast-vs-actual cycle. ZERO PII BY CONSTRUCTION.",
+  "spec_version": "ocg-control-plane@1",
+  "manifest": {
+    "manifest_version": "1",
+    "workflow_id": "pack-corporate-treasury-statement-reconciliation",
+    "trigger": {
+      "type": "manual"
+    },
+    "nodes": [
+      {
+        "node_id": "n1",
+        "kernel_id": "art-258-parse-camt053-reconciliation",
+        "kernel_digest": "sha256:483a887df68aeec8656fdaced42c4550167da3ee49bfb2273f2076c6fcaf1dd4"
+      },
+      {
+        "node_id": "n2",
+        "kernel_id": "art-263-score-cash-forecast-accuracy",
+        "kernel_digest": "sha256:624814c99e28e6097a9caa57f6273ad1edc0501ba9c8e8473ca8a1caff6b94e6"
+      }
+    ],
+    "connectors": [],
+    "gates": [],
+    "actions": []
+  },
+  "workflow_manifest_digest": "sha256:70c4067011224d943b94f67d5416e65dd7ad3f57608a88cb80761eb94b2f0dff",
+  "declared_inputs": [],
+  "steps_meta": [
+    {
+      "node_id": "n1",
+      "data_classification": "compute"
+    },
+    {
+      "node_id": "n2",
+      "data_classification": "compute"
+    }
+  ]
+}

@@ -1,0 +1,81 @@
+{
+  "workflow_id": "pack-us-treasury-clearing",
+  "name": "US Treasury Clearing Chain",
+  "outcome": "Model clearing access economics → estimate FICC margin netting benefit → calculate repo haircut and collateral eligibility → estimate cross-margining benefit → mobilize margin call collateral and verify tokenized collateral eligibility. End-to-end US Treasury clearing and SEC Rule 17ad-22 journey.",
+  "spec_version": "ocg-control-plane@1",
+  "manifest": {
+    "manifest_version": "1",
+    "workflow_id": "pack-us-treasury-clearing",
+    "trigger": {
+      "type": "manual"
+    },
+    "nodes": [
+      {
+        "node_id": "n1",
+        "kernel_id": "art-49-clearing-access-model-selector",
+        "kernel_digest": "sha256:ff9e78cf7128918984b55cbf858c74f3ca3a6e818389e067899863b8cd570034"
+      },
+      {
+        "node_id": "n2",
+        "kernel_id": "art-50-ficc-margin-netting-estimator",
+        "kernel_digest": "sha256:fcea3a670c5ee043f842757592ea575bbe5426b8f825016d4ec0c0d18d2e304b"
+      },
+      {
+        "node_id": "n3",
+        "kernel_id": "508-repo-haircut-collateral-calculator",
+        "kernel_digest": "sha256:7acd49f6f660a85da84398f65f694822d18b97e1241d8b3fc15fc177b11285a5"
+      },
+      {
+        "node_id": "n4",
+        "kernel_id": "art-51-cross-margining-benefit-estimator",
+        "kernel_digest": "sha256:830bc39ca270ab8fec28d7bbd220b84a37787e3dfc4e61110e95816a63d70da1"
+      },
+      {
+        "node_id": "n5",
+        "kernel_id": "513-margin-call-collateral-mobilizer",
+        "kernel_digest": "sha256:d7af04d366f7112be98e4d1735226212639a7f1ffcc97014858f47e83c9c79f3"
+      },
+      {
+        "node_id": "n6",
+        "kernel_id": "505-tokenized-collateral-eligibility-checker",
+        "kernel_digest": "sha256:37bbe20bf9c7e913038c93cc07f1425e4956c47da12a2663b58e35f50c3173c2"
+      }
+    ],
+    "connectors": [],
+    "gates": [],
+    "actions": []
+  },
+  "workflow_manifest_digest": "sha256:0ea5e90925f6d338bef7eb1274fc1036e52a0bdb6f8e9a00650cc55bbfdcb22f",
+  "declared_inputs": [
+    {
+      "from": "art-48-treasury-clearing-fit-diagnostic",
+      "kind": "external"
+    }
+  ],
+  "steps_meta": [
+    {
+      "node_id": "n1",
+      "data_classification": "compute"
+    },
+    {
+      "node_id": "n2",
+      "data_classification": "compute"
+    },
+    {
+      "node_id": "n3",
+      "data_classification": "compute"
+    },
+    {
+      "node_id": "n4",
+      "data_classification": "compute"
+    },
+    {
+      "node_id": "n5",
+      "data_classification": "compute"
+    },
+    {
+      "node_id": "n6",
+      "data_classification": "compute"
+    }
+  ]
+}

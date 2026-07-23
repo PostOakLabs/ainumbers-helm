@@ -1,0 +1,49 @@
+{
+  "workflow_id": "pack-emir-trade-report-validation",
+  "name": "EMIR Trade Report Validation",
+  "outcome": "Validate the required-field subset of an EMIR Refit ISO 20022 auth.030 derivative trade report: action type, counterparty LEIs, UTI, UPI, notional, currency, effective date, and asset class (art-153) -> validate UTI format (ISO 23897, 52 chars max), generating-party identity, and T+1 10:00 CET sharing timing (art-154) -> validate UPI format (ISO 4914, 12-char ANNA DSB) and product classification consistency against asset class and instrument type (art-155). Exports field-level validity verdict with execution_hash.",
+  "spec_version": "ocg-control-plane@1",
+  "manifest": {
+    "manifest_version": "1",
+    "workflow_id": "pack-emir-trade-report-validation",
+    "trigger": {
+      "type": "manual"
+    },
+    "nodes": [
+      {
+        "node_id": "n1",
+        "kernel_id": "art-153-emir-trade-report-field-validator",
+        "kernel_digest": "sha256:b3a2970b68c72ff427673d0a3b075bf03c85055a724acf7605b9358b55973c22"
+      },
+      {
+        "node_id": "n2",
+        "kernel_id": "art-154-emir-uti-completeness-checker",
+        "kernel_digest": "sha256:a1345c863f22e1fa2e33494af805aa71608d1f4bf3f5d8a484ace002f1cb5601"
+      },
+      {
+        "node_id": "n3",
+        "kernel_id": "art-155-emir-upi-validator",
+        "kernel_digest": "sha256:2be3027f20c68ebb83ae9bccb958a04a894f56b2b7acda2a0ff5bf0e091d6f0f"
+      }
+    ],
+    "connectors": [],
+    "gates": [],
+    "actions": []
+  },
+  "workflow_manifest_digest": "sha256:43948246cead8bd92a4359a8e218e3707a474fa3d48c5921212ef2e16b5060eb",
+  "declared_inputs": [],
+  "steps_meta": [
+    {
+      "node_id": "n1",
+      "data_classification": "compute"
+    },
+    {
+      "node_id": "n2",
+      "data_classification": "compute"
+    },
+    {
+      "node_id": "n3",
+      "data_classification": "compute"
+    }
+  ]
+}

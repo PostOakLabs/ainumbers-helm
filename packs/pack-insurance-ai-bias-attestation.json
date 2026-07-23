@@ -1,0 +1,40 @@
+{
+  "workflow_id": "pack-insurance-ai-bias-attestation",
+  "name": "Insurance AI Bias Attestation",
+  "outcome": "Gated two-step chain for Colorado SB 21-169 / Reg. 10-1-1 annual bias attestation for insurance AI models. Step 1 tests BIFSG proxy bias thresholds (art-239) from aggregate regression outputs (ZERO PII). Gate: bias_detected=true proceeds to NAIC AIS readiness assessment (art-240) for remediation planning. When bias is not detected, chain terminates (annual attestation evidence is the execution_hash anchored at anchor.ainumbers.co/mcp). Step 2 (art-240) scores insurance AI program readiness across 6 NAIC AIS dimensions and produces exam-ready gap list.",
+  "spec_version": "ocg-control-plane@1",
+  "manifest": {
+    "manifest_version": "1",
+    "workflow_id": "pack-insurance-ai-bias-attestation",
+    "trigger": {
+      "type": "manual"
+    },
+    "nodes": [
+      {
+        "node_id": "n1",
+        "kernel_id": "art-239-test-bifsg-bias-thresholds",
+        "kernel_digest": "sha256:701d442f76691b38e5ab0fce5525b2d882260a259477651757e4f1cf0c4f9638"
+      },
+      {
+        "node_id": "n2",
+        "kernel_id": "art-240-assess-naic-ais-program-readiness",
+        "kernel_digest": "sha256:7bbd2591b01471a5c18d0b0706ce8211fe977fd328b6bf0edbecf10b0a65da03"
+      }
+    ],
+    "connectors": [],
+    "gates": [],
+    "actions": []
+  },
+  "workflow_manifest_digest": "sha256:abe4105a07e68e22f9558a2642babaed663a47c6eea0a117de0a1b4388f503b8",
+  "declared_inputs": [],
+  "steps_meta": [
+    {
+      "node_id": "n1",
+      "data_classification": "compute"
+    },
+    {
+      "node_id": "n2",
+      "data_classification": "compute"
+    }
+  ]
+}

@@ -1,0 +1,45 @@
+{
+  "workflow_id": "pack-mica-travel-rule",
+  "name": "TFR Travel-Rule Batch Conformance",
+  "outcome": "Originator/beneficiary field completeness on hashed/synthetic transfer batches incl. unhosted-wallet branch (ART-104) -> Merkle integrity (cry-04). Reuses the shipped synthetic-batch screening pattern; no real PII.",
+  "spec_version": "ocg-control-plane@1",
+  "manifest": {
+    "manifest_version": "1",
+    "workflow_id": "pack-mica-travel-rule",
+    "trigger": {
+      "type": "manual"
+    },
+    "nodes": [
+      {
+        "node_id": "n1",
+        "kernel_id": "art-104-tfr-travel-rule-batch-validator",
+        "kernel_digest": "sha256:5d9d7105b7d6a2e1265f3c02ee2c2b2bb573c7d0e5fc816dac04771392117b30"
+      },
+      {
+        "node_id": "n2",
+        "kernel_id": "cry-04-merkle-batch-verifier",
+        "kernel_digest": "sha256:7c89b9651f986ed6652903c6d41e9fbda29d12db9fbc0a6acd4f7270160b7ccb"
+      }
+    ],
+    "connectors": [],
+    "gates": [],
+    "actions": []
+  },
+  "workflow_manifest_digest": "sha256:7c39f56653be1665696956470ad527ac38a3d0ea9d675bb8eca066069e5974ea",
+  "declared_inputs": [
+    {
+      "from": "art-98-mica-casp-fit-diagnostic",
+      "kind": "external"
+    }
+  ],
+  "steps_meta": [
+    {
+      "node_id": "n1",
+      "data_classification": "compute"
+    },
+    {
+      "node_id": "n2",
+      "data_classification": "compute"
+    }
+  ]
+}

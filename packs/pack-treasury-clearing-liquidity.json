@@ -1,0 +1,49 @@
+{
+  "workflow_id": "pack-treasury-clearing-liquidity",
+  "name": "Clearing Margin-Funding Liquidity Stress",
+  "outcome": "W-F. LCR/NSFR liquidity stress (sim-01) -> margin-call collateral mobilization (513) -> stress test of margin-call size under 6 historical crises (qfa-03). Models the intraday liquidity drain of meeting CCP margin calls.",
+  "spec_version": "ocg-control-plane@1",
+  "manifest": {
+    "manifest_version": "1",
+    "workflow_id": "pack-treasury-clearing-liquidity",
+    "trigger": {
+      "type": "manual"
+    },
+    "nodes": [
+      {
+        "node_id": "n1",
+        "kernel_id": "sim-01-lcr-nsfr-liquidity-stress-test",
+        "kernel_digest": "sha256:e22635c466fd20d5fb8ff61aa494e70f70f958e303b5d52a90e0f0f22a6e930e"
+      },
+      {
+        "node_id": "n2",
+        "kernel_id": "513-margin-call-collateral-mobilizer",
+        "kernel_digest": "sha256:d7af04d366f7112be98e4d1735226212639a7f1ffcc97014858f47e83c9c79f3"
+      },
+      {
+        "node_id": "n3",
+        "kernel_id": "qfa-03-stress-test-engine",
+        "kernel_digest": "sha256:16acc10c94489a5127aab924048c6903c4df2ac6bb1acb5f2d1b2ed1982769d4"
+      }
+    ],
+    "connectors": [],
+    "gates": [],
+    "actions": []
+  },
+  "workflow_manifest_digest": "sha256:c52bae48f30ad71f95448bca1749955a77dc360c5907c128e267602c0b8fde45",
+  "declared_inputs": [],
+  "steps_meta": [
+    {
+      "node_id": "n1",
+      "data_classification": "compute"
+    },
+    {
+      "node_id": "n2",
+      "data_classification": "compute"
+    },
+    {
+      "node_id": "n3",
+      "data_classification": "compute"
+    }
+  ]
+}

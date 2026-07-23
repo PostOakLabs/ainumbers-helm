@@ -1,0 +1,49 @@
+{
+  "workflow_id": "pack-cbpr-address-lint-chain",
+  "name": "CBPR+ Address Lint Chain",
+  "outcome": "Linear three-step chain for CBPR+ November 2026 structured address migration. Step 1 lints a PostalAddress24 block for structure type (FULLY_STRUCTURED, HYBRID, UNSTRUCTURED) and silent-fail duplication. Step 2 validates BIS CPMI d218 party completeness (UETR UUIDv4, party names, BIC, LEI format, purpose code format). Step 3 validates originator and beneficiary LEIs via ISO 17442 mod-97 and scores Wolfsberg payment transparency. All three steps always run. ZERO PII BY CONSTRUCTION: addresses are structural fields only, LEIs are public GLEIF registry data.",
+  "spec_version": "ocg-control-plane@1",
+  "manifest": {
+    "manifest_version": "1",
+    "workflow_id": "pack-cbpr-address-lint-chain",
+    "trigger": {
+      "type": "manual"
+    },
+    "nodes": [
+      {
+        "node_id": "n1",
+        "kernel_id": "art-241-cbpr-structured-address-linter",
+        "kernel_digest": "sha256:63e488bc42ce3ecf75573b02a8fae9dd4044c91928f1f019e53895bf08f6bf86"
+      },
+      {
+        "node_id": "n2",
+        "kernel_id": "art-242-pacs008-party-completeness-validator",
+        "kernel_digest": "sha256:a003fc6cc8dfa80d68668f62938102ca8f06da330407616dc9d04f146303706e"
+      },
+      {
+        "node_id": "n3",
+        "kernel_id": "art-246-lei-payment-binding-linter",
+        "kernel_digest": "sha256:3eb46ada4f435f3207e14efe0cd5349dd78613e1b50bbe42bb85cd95e2cd3c05"
+      }
+    ],
+    "connectors": [],
+    "gates": [],
+    "actions": []
+  },
+  "workflow_manifest_digest": "sha256:6fcde215f0c785ba934514be86ed05ca7f0eb01222d7c8724a3393362aabad50",
+  "declared_inputs": [],
+  "steps_meta": [
+    {
+      "node_id": "n1",
+      "data_classification": "compute"
+    },
+    {
+      "node_id": "n2",
+      "data_classification": "compute"
+    },
+    {
+      "node_id": "n3",
+      "data_classification": "compute"
+    }
+  ]
+}

@@ -1,0 +1,49 @@
+{
+  "workflow_id": "pack-irrbb-supervisory-outlier-test",
+  "name": "IRRBB Supervisory Outlier Test",
+  "outcome": "Calculate delta EVE under the 6 BCBS d368 standardised shock scenarios from bucketed repricing cash flow gaps (art-183) -> evaluate the EVE leg of the EBA Supervisory Outlier Test against the hard 15%-of-Tier-1 threshold (art-184) -> evaluate the NII leg of the SOT against a caller-supplied threshold (art-185). Full IRRBB supervisory outlier test pipeline. BCBS d368 (2024 recalibration, effective 1 Jan 2026) + EBA GL/2022/14.",
+  "spec_version": "ocg-control-plane@1",
+  "manifest": {
+    "manifest_version": "1",
+    "workflow_id": "pack-irrbb-supervisory-outlier-test",
+    "trigger": {
+      "type": "manual"
+    },
+    "nodes": [
+      {
+        "node_id": "n1",
+        "kernel_id": "art-183-irrbb-eve-shock-calculator",
+        "kernel_digest": "sha256:688cc0519d212cdc48f08b6a4d5ebce07750de7562edc9abad7f91202ba38bf9"
+      },
+      {
+        "node_id": "n2",
+        "kernel_id": "art-184-irrbb-sot-eve-evaluator",
+        "kernel_digest": "sha256:83f3aad85600dfd0e80b47b86e5d42e5774e39b792077038e2debae508d10ed5"
+      },
+      {
+        "node_id": "n3",
+        "kernel_id": "art-185-irrbb-sot-nii-evaluator",
+        "kernel_digest": "sha256:2d05e7c0659fd1f50c44dfda82c85033da1c389295bdad27c99998a4077f98cc"
+      }
+    ],
+    "connectors": [],
+    "gates": [],
+    "actions": []
+  },
+  "workflow_manifest_digest": "sha256:129b8d9586336eb2eaaf391ad56d0eb1b930d1a63cce0991149fc107aed1537c",
+  "declared_inputs": [],
+  "steps_meta": [
+    {
+      "node_id": "n1",
+      "data_classification": "compute"
+    },
+    {
+      "node_id": "n2",
+      "data_classification": "compute"
+    },
+    {
+      "node_id": "n3",
+      "data_classification": "compute"
+    }
+  ]
+}

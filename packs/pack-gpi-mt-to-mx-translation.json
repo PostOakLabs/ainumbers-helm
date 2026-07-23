@@ -1,0 +1,40 @@
+{
+  "workflow_id": "pack-gpi-mt-to-mx-translation",
+  "name": "GPI MT-to-MX Translation",
+  "outcome": "Linear two-step chain for SWIFT GPI MT103 to pacs.008 migration fidelity. Step 1 simulates the GPI tracker lifecycle for the payment status transition and Universal Confirmation SLA (ACSP to ACCC within 24h). Step 2 scores MT103-to-pacs.008 field mapping fidelity (ordering customer, beneficiary, agent BICs, remittance info, charge bearer code mapping OUR=DEBT/SHA=SHAR/BEN=CRED). Both steps always run. Use to diagnose translation quality before CBPR+ November 2026 go-live.",
+  "spec_version": "ocg-control-plane@1",
+  "manifest": {
+    "manifest_version": "1",
+    "workflow_id": "pack-gpi-mt-to-mx-translation",
+    "trigger": {
+      "type": "manual"
+    },
+    "nodes": [
+      {
+        "node_id": "n1",
+        "kernel_id": "art-244-gpi-tracker-lifecycle-simulator",
+        "kernel_digest": "sha256:95a121c21ae663021a54823e43d3f181762a899c730c31f7d5356f12cd1ba043"
+      },
+      {
+        "node_id": "n2",
+        "kernel_id": "art-245-mt-mx-translation-fidelity-scorer",
+        "kernel_digest": "sha256:df068aac811711ab2100e95147d96ce76694c32836ca079e405fbd586fbe351a"
+      }
+    ],
+    "connectors": [],
+    "gates": [],
+    "actions": []
+  },
+  "workflow_manifest_digest": "sha256:87cdbaa5289da9f70f49238672bc21acdcea563e7764b6d880f5b83444cdac0b",
+  "declared_inputs": [],
+  "steps_meta": [
+    {
+      "node_id": "n1",
+      "data_classification": "compute"
+    },
+    {
+      "node_id": "n2",
+      "data_classification": "compute"
+    }
+  ]
+}

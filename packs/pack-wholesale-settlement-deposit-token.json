@@ -1,0 +1,54 @@
+{
+  "workflow_id": "pack-wholesale-settlement-deposit-token",
+  "name": "Tokenized Deposit / Deposit-Token Compliance",
+  "outcome": "W-B. Deposit-token classification, at-par redemption and holder-eligibility tests (ART-57) -> instrument/regime classification (510) -> Merkle integrity over the issuance/redemption set (cry-04). Distinguishes a redeemable bank-liability deposit token (JPMD/RLN) from a reserve-backed stablecoin or e-money token.",
+  "spec_version": "ocg-control-plane@1",
+  "manifest": {
+    "manifest_version": "1",
+    "workflow_id": "pack-wholesale-settlement-deposit-token",
+    "trigger": {
+      "type": "manual"
+    },
+    "nodes": [
+      {
+        "node_id": "n1",
+        "kernel_id": "art-57-deposit-token-compliance-validator",
+        "kernel_digest": "sha256:2fd5b0a6674a558949495837e3105a855ebde50c43c0441c61008f9a10204f44"
+      },
+      {
+        "node_id": "n2",
+        "kernel_id": "510-digital-asset-regulatory-classifier",
+        "kernel_digest": "sha256:e70b5a1adf38189f6a6f09d6b4b0dcfaf16394beb5f30f8b397cadbb0ffa2a5f"
+      },
+      {
+        "node_id": "n3",
+        "kernel_id": "cry-04-merkle-batch-verifier",
+        "kernel_digest": "sha256:7c89b9651f986ed6652903c6d41e9fbda29d12db9fbc0a6acd4f7270160b7ccb"
+      }
+    ],
+    "connectors": [],
+    "gates": [],
+    "actions": []
+  },
+  "workflow_manifest_digest": "sha256:446f1f9a8540cf44ba8ca0ff9c1dfbcdb9cae74b02e3c68d31b9289d4d9728b1",
+  "declared_inputs": [
+    {
+      "from": "art-56-tokenized-settlement-fit-diagnostic",
+      "kind": "external"
+    }
+  ],
+  "steps_meta": [
+    {
+      "node_id": "n1",
+      "data_classification": "compute"
+    },
+    {
+      "node_id": "n2",
+      "data_classification": "compute"
+    },
+    {
+      "node_id": "n3",
+      "data_classification": "compute"
+    }
+  ]
+}

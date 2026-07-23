@@ -1,0 +1,49 @@
+{
+  "workflow_id": "pack-canton-selective-disclosure",
+  "name": "Canton Selective-Disclosure DvP Attestation",
+  "outcome": "Attest that a Canton DvP privacy partition is sound: each counterparty sees only its leg, both views reconcile to one atomic commitment, no cross-leg leakage. PFMI P12 atomic DvP (507) → selective-disclosure partition and view-reconciliation attestation (art-108) → off-protocol zero-knowledge compliance proof that the views reconcile without revealing the counter-leg (cry-01). Optional Ed25519 §16 proof binds each party attestation to a key.",
+  "spec_version": "ocg-control-plane@1",
+  "manifest": {
+    "manifest_version": "1",
+    "workflow_id": "pack-canton-selective-disclosure",
+    "trigger": {
+      "type": "manual"
+    },
+    "nodes": [
+      {
+        "node_id": "n1",
+        "kernel_id": "507-canton-dvp-atomicity-validator",
+        "kernel_digest": "sha256:e8b30471c1feafecb89b5283df71ad9b4f2aeafe3b4606af46ae14e48849f55c"
+      },
+      {
+        "node_id": "n2",
+        "kernel_id": "art-108-canton-selective-disclosure",
+        "kernel_digest": "sha256:a255de01b67ae52790e981e245331dbb46ba3aeeec9c86f951688603f24bff64"
+      },
+      {
+        "node_id": "n3",
+        "kernel_id": "cry-01-zk-compliance-proof-generator",
+        "kernel_digest": "sha256:c5d758f79de7b13d3b76a0c77f4a5922703386c1dc80db64fb81a1829465a800"
+      }
+    ],
+    "connectors": [],
+    "gates": [],
+    "actions": []
+  },
+  "workflow_manifest_digest": "sha256:438f820d4e9d461f0a68777bd919aa77da3c72d9db74926133678fdc1abc7ba5",
+  "declared_inputs": [],
+  "steps_meta": [
+    {
+      "node_id": "n1",
+      "data_classification": "compute"
+    },
+    {
+      "node_id": "n2",
+      "data_classification": "compute"
+    },
+    {
+      "node_id": "n3",
+      "data_classification": "compute"
+    }
+  ]
+}

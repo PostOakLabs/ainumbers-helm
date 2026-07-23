@@ -1,0 +1,53 @@
+{
+  "workflow_id": "pack-agent-session-receipt",
+  "name": "Agent Session Receipt",
+  "outcome": "Aggregate N execution_hashes from an agent session into one SHA-256 Merkle-root session receipt (CRY-05) > regulator-framed prompt (PTG-01). One tamper-evident audit object for EU AI Act Art. 12 / DORA.",
+  "spec_version": "ocg-control-plane@1",
+  "manifest": {
+    "manifest_version": "1",
+    "workflow_id": "pack-agent-session-receipt",
+    "trigger": {
+      "type": "manual"
+    },
+    "nodes": [
+      {
+        "node_id": "n1",
+        "kernel_id": "cry-05-agent-action-audit-trail-aggregator",
+        "kernel_digest": "sha256:5f7f6ab0bb2e2b736805ecde518ca59ba9a83ad38b17545a8c7c133cffa1481f"
+      },
+      {
+        "node_id": "n2",
+        "kernel_id": "ptg-01-ap2-prompt-template-generator",
+        "kernel_digest": "sha256:5f23d03d4d538507b92a3f3461e5d0ebb6987227fd3a7ae41281216fc2fabe8e"
+      }
+    ],
+    "connectors": [],
+    "gates": [],
+    "actions": []
+  },
+  "workflow_manifest_digest": "sha256:366656b5ab9bb86f13b819a25b5c989a5b7f5f1c227ffc4a3f6e26cab510830e",
+  "declared_inputs": [
+    {
+      "from": "art-30-agent-commerce-conformance-validator",
+      "kind": "external"
+    },
+    {
+      "from": "art-31-a2a-x402-extension-mandate-validator",
+      "kind": "external"
+    },
+    {
+      "from": "art-33-mcp-server-self-attestation-pack",
+      "kind": "external"
+    }
+  ],
+  "steps_meta": [
+    {
+      "node_id": "n1",
+      "data_classification": "compute"
+    },
+    {
+      "node_id": "n2",
+      "data_classification": "compute"
+    }
+  ]
+}

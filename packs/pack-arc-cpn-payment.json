@@ -1,0 +1,40 @@
+{
+  "workflow_id": "pack-arc-cpn-payment",
+  "name": "Arc CPN Payment",
+  "outcome": "W-A chain. Model CPN corridor economics vs SWIFT/ACH/card for cross-border USD flows.",
+  "spec_version": "ocg-control-plane@1",
+  "manifest": {
+    "manifest_version": "1",
+    "workflow_id": "pack-arc-cpn-payment",
+    "trigger": {
+      "type": "manual"
+    },
+    "nodes": [
+      {
+        "node_id": "n1",
+        "kernel_id": "art-42-arc-fit-diagnostic",
+        "kernel_digest": "sha256:84cf3e4b4dd77ad8ed4f6425d9a623c51ae75b4855e2fb629505f1485387cee1"
+      },
+      {
+        "node_id": "n2",
+        "kernel_id": "art-43-arc-cpn-model",
+        "kernel_digest": "sha256:b63c0541028ab8fc4734ed626c01d898b2248c38df45a7136d68bc76669a4f91"
+      }
+    ],
+    "connectors": [],
+    "gates": [],
+    "actions": []
+  },
+  "workflow_manifest_digest": "sha256:3a1bd0c659624688f03a22b76959315142de2c17e49d9d5e9633b841bbf9c522",
+  "declared_inputs": [],
+  "steps_meta": [
+    {
+      "node_id": "n1",
+      "data_classification": "compute"
+    },
+    {
+      "node_id": "n2",
+      "data_classification": "compute"
+    }
+  ]
+}

@@ -1,0 +1,58 @@
+{
+  "workflow_id": "pack-mortgage-compliance-preflight",
+  "name": "Mortgage Compliance Preflight",
+  "outcome": "Gated four-step preflight: Reg Z threshold lookup -> TRID APR accuracy check (gate: exit on understated_violation) -> QM points-and-fees test (gate: exit on fail) -> QM APR-APOR spread classification. First live OCG gated chain using OCG §21.4 decision gates.",
+  "spec_version": "ocg-control-plane@1",
+  "manifest": {
+    "manifest_version": "1",
+    "workflow_id": "pack-mortgage-compliance-preflight",
+    "trigger": {
+      "type": "manual"
+    },
+    "nodes": [
+      {
+        "node_id": "n1",
+        "kernel_id": "art-220-reg-z-threshold-lookup",
+        "kernel_digest": "sha256:224b7fe562fe4671cc165a1228afc28e82d8abbdfc5ec4c9e93ee480e50587a5"
+      },
+      {
+        "node_id": "n2",
+        "kernel_id": "art-217-trid-apr-accuracy",
+        "kernel_digest": "sha256:a74ebe7cdb837e03a939cbe160d49a4f412192f9c98d5d928c8daddda570f8fd"
+      },
+      {
+        "node_id": "n3",
+        "kernel_id": "art-218-qm-points-and-fees",
+        "kernel_digest": "sha256:d7ba34da2e378662fbb05bc23d6aad6b0b4660bbae6f3111e0dd1c471209029b"
+      },
+      {
+        "node_id": "n4",
+        "kernel_id": "art-219-qm-apr-apor-spread",
+        "kernel_digest": "sha256:9a3c7fb7f2a17cb3b8ba3e352f32b1d77d7d51093e23fa65165e7d3d594b106b"
+      }
+    ],
+    "connectors": [],
+    "gates": [],
+    "actions": []
+  },
+  "workflow_manifest_digest": "sha256:beb0904d9867214218e1ec9530e6c723f098d58f68e54d3b443bba07dd7165dd",
+  "declared_inputs": [],
+  "steps_meta": [
+    {
+      "node_id": "n1",
+      "data_classification": "compute"
+    },
+    {
+      "node_id": "n2",
+      "data_classification": "compute"
+    },
+    {
+      "node_id": "n3",
+      "data_classification": "compute"
+    },
+    {
+      "node_id": "n4",
+      "data_classification": "compute"
+    }
+  ]
+}

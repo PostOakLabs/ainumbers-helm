@@ -1,0 +1,31 @@
+{
+  "workflow_id": "pack-genius-reserve-disclosure",
+  "name": "GENIUS Act Monthly Reserve Disclosure",
+  "outcome": "Single-node D0 diagnostic linting an extracted monthly reserve disclosure against GENIUS Act S.394 §4: composition, tenor, custody, certification, examiner, MoM diff, on-chain supply cross-check.",
+  "spec_version": "ocg-control-plane@1",
+  "manifest": {
+    "manifest_version": "1",
+    "workflow_id": "pack-genius-reserve-disclosure",
+    "trigger": {
+      "type": "manual"
+    },
+    "nodes": [
+      {
+        "node_id": "n1",
+        "kernel_id": "art-275-genius-reserve-disclosure-checker",
+        "kernel_digest": "sha256:6dc1841eacba4fe724eda818961bfbb1248bde713c6b8dd204be34bc2cb37b4e"
+      }
+    ],
+    "connectors": [],
+    "gates": [],
+    "actions": []
+  },
+  "workflow_manifest_digest": "sha256:ea69f6ce399e55a77bb6d64c627e58d7c96eeaaa3f52624d0eda10f275945f15",
+  "declared_inputs": [],
+  "steps_meta": [
+    {
+      "node_id": "n1",
+      "data_classification": "compute"
+    }
+  ]
+}

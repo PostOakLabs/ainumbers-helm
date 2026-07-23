@@ -1,0 +1,49 @@
+{
+  "workflow_id": "pack-nis2-entity-scope-and-obligations",
+  "name": "NIS2 Entity Scope & Obligations",
+  "outcome": "Determine NIS2 entity classification (Essential/Important/Out-of-scope), assess Article 21 cybersecurity risk-management measure maturity across all ten controls, and calculate maximum penalty exposure under Article 34 including mitigating-factor adjustment. Full chain exports a board-ready PDF with execution_hash.",
+  "spec_version": "ocg-control-plane@1",
+  "manifest": {
+    "manifest_version": "1",
+    "workflow_id": "pack-nis2-entity-scope-and-obligations",
+    "trigger": {
+      "type": "manual"
+    },
+    "nodes": [
+      {
+        "node_id": "n1",
+        "kernel_id": "art-141-nis2-entity-scope-classifier",
+        "kernel_digest": "sha256:f5cdbd302bc819281ca45b0324490e3843d98a3ff0912db8177a323a66c79336"
+      },
+      {
+        "node_id": "n2",
+        "kernel_id": "art-142-nis2-art21-gap-checker",
+        "kernel_digest": "sha256:1e2ae5da118e19c5c3b8960fcc173a82582f8ecc9952ef30fb521b8d5e0a16b7"
+      },
+      {
+        "node_id": "n3",
+        "kernel_id": "art-143-nis2-penalty-exposure-calculator",
+        "kernel_digest": "sha256:1e050fdce69b0aa2eeb1cbcca0c6b09530edfc86980ab96104181ae460bbb60a"
+      }
+    ],
+    "connectors": [],
+    "gates": [],
+    "actions": []
+  },
+  "workflow_manifest_digest": "sha256:33e26f7e29974bfc44dbec06e33b9a8f620bf3ffc7cca1f8c3aa5db675d40f4f",
+  "declared_inputs": [],
+  "steps_meta": [
+    {
+      "node_id": "n1",
+      "data_classification": "compute"
+    },
+    {
+      "node_id": "n2",
+      "data_classification": "compute"
+    },
+    {
+      "node_id": "n3",
+      "data_classification": "compute"
+    }
+  ]
+}

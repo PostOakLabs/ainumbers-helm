@@ -1,0 +1,49 @@
+{
+  "workflow_id": "pack-sanctions-list-coverage",
+  "name": "Screening List-Coverage Conformance",
+  "outcome": "Screening config conformance vs EU consolidated + UN + UK Sanctions List (post-OFSI-closure 28 Jan 2026) + OFAC SDN with nexus gating (ART-92) -> Merkle integrity (cry-04).",
+  "spec_version": "ocg-control-plane@1",
+  "manifest": {
+    "manifest_version": "1",
+    "workflow_id": "pack-sanctions-list-coverage",
+    "trigger": {
+      "type": "manual"
+    },
+    "nodes": [
+      {
+        "node_id": "n1",
+        "kernel_id": "art-92-screening-list-coverage-checker",
+        "kernel_digest": "sha256:d06a7bacc78c3440e850fc8bccdfc7b270f66c39e0a30d4696c558cf6e24e169"
+      },
+      {
+        "node_id": "n2",
+        "kernel_id": "cry-04-merkle-batch-verifier",
+        "kernel_digest": "sha256:7c89b9651f986ed6652903c6d41e9fbda29d12db9fbc0a6acd4f7270160b7ccb"
+      }
+    ],
+    "connectors": [],
+    "gates": [],
+    "actions": []
+  },
+  "workflow_manifest_digest": "sha256:b89d4ca00a1d3709fd9d705b0b18a00712d4518cf8cc5dc09dfc661c1f1a0240",
+  "declared_inputs": [
+    {
+      "from": "art-90-sanctions-screening-fit-diagnostic",
+      "kind": "external"
+    },
+    {
+      "from": "art-91-ownership-50pct-aggregator",
+      "kind": "external"
+    }
+  ],
+  "steps_meta": [
+    {
+      "node_id": "n1",
+      "data_classification": "compute"
+    },
+    {
+      "node_id": "n2",
+      "data_classification": "compute"
+    }
+  ]
+}

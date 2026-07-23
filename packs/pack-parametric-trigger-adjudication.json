@@ -1,0 +1,40 @@
+{
+  "workflow_id": "pack-parametric-trigger-adjudication",
+  "name": "Parametric Trigger Adjudication",
+  "outcome": "Gated two-step chain for parametric insurance trigger adjudication and cat bond term validation. Step 1 evaluates the parametric trigger (threshold / tiered / linear_index) and emits trigger_hit and payout_amount. Gate on /trigger_hit: if false (trigger not fired), the chain ends -- no payout, no bond validation needed. If true (default), Step 2 validates the cat bond trigger terms (attachment/exhaustion ordering, pro-rata arithmetic, layer position). Outputs a tamper-evident trigger receipt anchored at anchor.ainumbers.co/mcp for neutral dispute adjudication per IAIS ICP 19. ZERO PII BY CONSTRUCTION.",
+  "spec_version": "ocg-control-plane@1",
+  "manifest": {
+    "manifest_version": "1",
+    "workflow_id": "pack-parametric-trigger-adjudication",
+    "trigger": {
+      "type": "manual"
+    },
+    "nodes": [
+      {
+        "node_id": "n1",
+        "kernel_id": "art-251-compute-parametric-trigger-payout",
+        "kernel_digest": "sha256:21c850de44ea52edcd069ddb042c208ec8d8df8175a09b3fc3c9478245db8158"
+      },
+      {
+        "node_id": "n2",
+        "kernel_id": "art-252-validate-cat-bond-trigger-terms",
+        "kernel_digest": "sha256:2d69f187e9c32ff8b2bcd4346e912a0546f39bd91839fd9b301e67c13e36a438"
+      }
+    ],
+    "connectors": [],
+    "gates": [],
+    "actions": []
+  },
+  "workflow_manifest_digest": "sha256:2eb7811e6db01e837593ea17b79f85bf0d8590ed1d7701f25915a796deceeffe",
+  "declared_inputs": [],
+  "steps_meta": [
+    {
+      "node_id": "n1",
+      "data_classification": "compute"
+    },
+    {
+      "node_id": "n2",
+      "data_classification": "compute"
+    }
+  ]
+}

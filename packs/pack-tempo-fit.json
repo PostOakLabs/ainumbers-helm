@@ -1,0 +1,31 @@
+{
+  "workflow_id": "pack-tempo-fit",
+  "name": "Tempo Fit Diagnostic",
+  "outcome": "Single-node D0 diagnostic grading an organisation A–F across four Tempo use cases (Issue/TIP-20, Payments rail, Agent/MPP, Commerce/checkout).",
+  "spec_version": "ocg-control-plane@1",
+  "manifest": {
+    "manifest_version": "1",
+    "workflow_id": "pack-tempo-fit",
+    "trigger": {
+      "type": "manual"
+    },
+    "nodes": [
+      {
+        "node_id": "n1",
+        "kernel_id": "art-34-tempo-fit-diagnostic",
+        "kernel_digest": "sha256:b9ed479a76b0cfcc9a781b741f7a696e6a3cfd4f0cb99ed6621677702cf2d82c"
+      }
+    ],
+    "connectors": [],
+    "gates": [],
+    "actions": []
+  },
+  "workflow_manifest_digest": "sha256:a09bbc29d51296ea13a43dff114b75736eff4fb76665c2fe9101e179faf5e4bf",
+  "declared_inputs": [],
+  "steps_meta": [
+    {
+      "node_id": "n1",
+      "data_classification": "compute"
+    }
+  ]
+}

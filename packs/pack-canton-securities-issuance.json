@@ -1,0 +1,40 @@
+{
+  "workflow_id": "pack-canton-securities-issuance",
+  "name": "Canton Securities Issuance Chain",
+  "outcome": "Regulatory classification and Daml lifecycle validation for tokenized securities.",
+  "spec_version": "ocg-control-plane@1",
+  "manifest": {
+    "manifest_version": "1",
+    "workflow_id": "pack-canton-securities-issuance",
+    "trigger": {
+      "type": "manual"
+    },
+    "nodes": [
+      {
+        "node_id": "n1",
+        "kernel_id": "510-digital-asset-regulatory-classifier",
+        "kernel_digest": "sha256:e70b5a1adf38189f6a6f09d6b4b0dcfaf16394beb5f30f8b397cadbb0ffa2a5f"
+      },
+      {
+        "node_id": "n2",
+        "kernel_id": "512-tokenized-security-lifecycle-validator",
+        "kernel_digest": "sha256:f17b5982d127f5ae1fcc3d3dc4be5844c49a6c73de4e12e41815b25215350270"
+      }
+    ],
+    "connectors": [],
+    "gates": [],
+    "actions": []
+  },
+  "workflow_manifest_digest": "sha256:fddfd1138029923a8d0c59aac539dc27e32c5d910ceecff48a2a05e1500cf406",
+  "declared_inputs": [],
+  "steps_meta": [
+    {
+      "node_id": "n1",
+      "data_classification": "compute"
+    },
+    {
+      "node_id": "n2",
+      "data_classification": "compute"
+    }
+  ]
+}

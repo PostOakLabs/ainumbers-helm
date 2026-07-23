@@ -1,0 +1,49 @@
+{
+  "workflow_id": "pack-arc-multicurrency-corridor",
+  "name": "Arc Multi-Currency Corridor Jurisdiction & Settlement",
+  "outcome": "Route a multi-currency Arc corridor to its per-currency home regimes and validate cross-currency settlement and Travel Rule: compliance layer, no FX economics. Per-currency jurisdiction/regime router across the partner-stablecoin set (art-111) → multi-currency PvP atomicity (511) → cross-border Travel-Rule batch validation (art-104). FX pricing is handled separately by the Arc StableFX economics chain.",
+  "spec_version": "ocg-control-plane@1",
+  "manifest": {
+    "manifest_version": "1",
+    "workflow_id": "pack-arc-multicurrency-corridor",
+    "trigger": {
+      "type": "manual"
+    },
+    "nodes": [
+      {
+        "node_id": "n1",
+        "kernel_id": "art-111-arc-corridor-jurisdiction-router",
+        "kernel_digest": "sha256:71061d2cb76db82787091a1621aabb6fdba5b88d31db5d6b378f9ea1b5826f72"
+      },
+      {
+        "node_id": "n2",
+        "kernel_id": "511-multi-currency-pvp-validator",
+        "kernel_digest": "sha256:2675f0d22096ace35e1dfb500c6f332c77fc66bba78a1e3878575bb466267925"
+      },
+      {
+        "node_id": "n3",
+        "kernel_id": "art-104-tfr-travel-rule-batch-validator",
+        "kernel_digest": "sha256:5d9d7105b7d6a2e1265f3c02ee2c2b2bb573c7d0e5fc816dac04771392117b30"
+      }
+    ],
+    "connectors": [],
+    "gates": [],
+    "actions": []
+  },
+  "workflow_manifest_digest": "sha256:d0d09375b5abae8bc11dc1f812f5284ef26e50460dcbe8cebb50034a4ca65175",
+  "declared_inputs": [],
+  "steps_meta": [
+    {
+      "node_id": "n1",
+      "data_classification": "compute"
+    },
+    {
+      "node_id": "n2",
+      "data_classification": "compute"
+    },
+    {
+      "node_id": "n3",
+      "data_classification": "compute"
+    }
+  ]
+}

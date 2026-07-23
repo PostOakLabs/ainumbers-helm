@@ -1,0 +1,54 @@
+{
+  "workflow_id": "pack-digital-trade-letter-of-credit",
+  "name": "Digital Letter-of-Credit Presentation Compliance",
+  "outcome": "W-B. eUCP/eURC/URDTT discrepancy check (ART-54) -> commercial-invoice data validation (art-08) -> cross-document consistency + provenance (ART-55). Machine-checks a digital LC presentation end-to-end.",
+  "spec_version": "ocg-control-plane@1",
+  "manifest": {
+    "manifest_version": "1",
+    "workflow_id": "pack-digital-trade-letter-of-credit",
+    "trigger": {
+      "type": "manual"
+    },
+    "nodes": [
+      {
+        "node_id": "n1",
+        "kernel_id": "art-54-digital-trade-rules-checker",
+        "kernel_digest": "sha256:a7e25b5ced7deecbe2bfaf3ff54f75fec09c0b0058aaa4f1308c175e4f477344"
+      },
+      {
+        "node_id": "n2",
+        "kernel_id": "art-08-en16931-einvoice-batch-validator",
+        "kernel_digest": "sha256:2ae638995633cb25dd6ef2c645f6246c8aef863054019213ba1424a7509c4c7e"
+      },
+      {
+        "node_id": "n3",
+        "kernel_id": "art-55-trade-document-provenance-verifier",
+        "kernel_digest": "sha256:1328cfacdcf71d0f8ba4acb5a20ac1da41eccca4e7b940bea943d4de82db2193"
+      }
+    ],
+    "connectors": [],
+    "gates": [],
+    "actions": []
+  },
+  "workflow_manifest_digest": "sha256:e313a57d9351bc3fd9dc1a288b7420e9f7404cacce9f56d9f7d52c5596ded497",
+  "declared_inputs": [
+    {
+      "from": "art-52-digital-trade-fit-diagnostic",
+      "kind": "external"
+    }
+  ],
+  "steps_meta": [
+    {
+      "node_id": "n1",
+      "data_classification": "compute"
+    },
+    {
+      "node_id": "n2",
+      "data_classification": "compute"
+    },
+    {
+      "node_id": "n3",
+      "data_classification": "compute"
+    }
+  ]
+}

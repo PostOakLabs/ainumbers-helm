@@ -1,0 +1,31 @@
+{
+  "workflow_id": "pack-ca-genai-disclosure",
+  "name": "California GenAI Training Data Disclosure",
+  "outcome": "Single-step lint of a supplied generative-AI training-data disclosure against the 12 datapoint categories required by California AB 2013 (Cal. Bus. & Prof. Code §22757.7, eff. 2026-01-01). The present/missing verdict is the lint's own terminal output, not a mid-chain branch -- linear per the wave's non-branching evidence-lint pattern.",
+  "spec_version": "ocg-control-plane@1",
+  "manifest": {
+    "manifest_version": "1",
+    "workflow_id": "pack-ca-genai-disclosure",
+    "trigger": {
+      "type": "manual"
+    },
+    "nodes": [
+      {
+        "node_id": "n1",
+        "kernel_id": "art-315-ab2013-training-data-disclosure-linter",
+        "kernel_digest": "sha256:669f7fe95b37812eccdd1636cf1b71298e1b1e396e96e5b505afa035a479631e"
+      }
+    ],
+    "connectors": [],
+    "gates": [],
+    "actions": []
+  },
+  "workflow_manifest_digest": "sha256:22c26d424a1153b706ba267392461a35d09280abe9be41c54b9c1b6f9e40b68c",
+  "declared_inputs": [],
+  "steps_meta": [
+    {
+      "node_id": "n1",
+      "data_classification": "compute"
+    }
+  ]
+}

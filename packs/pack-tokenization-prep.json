@@ -1,0 +1,67 @@
+{
+  "workflow_id": "pack-tokenization-prep",
+  "name": "Tokenization Prep",
+  "outcome": "ISCC content fingerprint > AI-training rights reservation > royalty split validation > TASL attribution string > certified tokenization-ready license VC. The royalty-split step is optional and can be skipped if no on-chain split applies.",
+  "spec_version": "ocg-control-plane@1",
+  "manifest": {
+    "manifest_version": "1",
+    "workflow_id": "pack-tokenization-prep",
+    "trigger": {
+      "type": "manual"
+    },
+    "nodes": [
+      {
+        "node_id": "n1",
+        "kernel_id": "art-201-iscc-content-code-generator",
+        "kernel_digest": "sha256:4dfd4472b91697eea65c4241ac425e012eeff7afe0d270e7da548a4904d9b4bc"
+      },
+      {
+        "node_id": "n2",
+        "kernel_id": "art-202-tdmrep-reservation-builder",
+        "kernel_digest": "sha256:77d5d176f6eb5aa056509c41f30ed50029f753eba0fb68413759e38b7b670e08"
+      },
+      {
+        "node_id": "n3",
+        "kernel_id": "art-208-royalty-split-validator",
+        "kernel_digest": "sha256:e264583d242ab0d715775d7f1ac1a87d7a26916f3fa44a5082a6c2facfa61705"
+      },
+      {
+        "node_id": "n4",
+        "kernel_id": "art-207-attribution-string-generator",
+        "kernel_digest": "sha256:93ef8ec9fa4ffdc03b213bad686e8ed98f183bbb707fce9629bf0721e6cff2a5"
+      },
+      {
+        "node_id": "n5",
+        "kernel_id": "art-199-license-election-certifier",
+        "kernel_digest": "sha256:72d98f80efe5fb34421fb246ca4e8071db4f48d55a8e4abb445b06414241b441"
+      }
+    ],
+    "connectors": [],
+    "gates": [],
+    "actions": []
+  },
+  "workflow_manifest_digest": "sha256:c22f0d0572b0382e0cbef0a70db282f360f90d40e4096b67fb0ebdd7b78dea4e",
+  "declared_inputs": [],
+  "steps_meta": [
+    {
+      "node_id": "n1",
+      "data_classification": "compute"
+    },
+    {
+      "node_id": "n2",
+      "data_classification": "compute"
+    },
+    {
+      "node_id": "n3",
+      "data_classification": "compute"
+    },
+    {
+      "node_id": "n4",
+      "data_classification": "compute"
+    },
+    {
+      "node_id": "n5",
+      "data_classification": "compute"
+    }
+  ]
+}

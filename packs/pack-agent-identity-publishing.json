@@ -1,0 +1,49 @@
+{
+  "workflow_id": "pack-agent-identity-publishing",
+  "name": "Agent Identity Publishing Readiness (Visa TAP / Mastercard Agent Pay)",
+  "outcome": "Audit key freshness and rotation posture (art-132) then crosswalk identity posture to Visa TAP, Mastercard Agent Pay, and Web Bot Auth acceptance criteria (art-133) then emit a directory-publish readiness verdict with a precise gap list (art-134). Supply-side of the Ed25519 identity substrate.",
+  "spec_version": "ocg-control-plane@1",
+  "manifest": {
+    "manifest_version": "1",
+    "workflow_id": "pack-agent-identity-publishing",
+    "trigger": {
+      "type": "manual"
+    },
+    "nodes": [
+      {
+        "node_id": "n1",
+        "kernel_id": "art-132-agent-key-rotation-auditor",
+        "kernel_digest": "sha256:25ff3998171f39653fb0799f0c1892c148031af3615a59fe45b4a7e1ab3cecd3"
+      },
+      {
+        "node_id": "n2",
+        "kernel_id": "art-133-agent-payment-rail-trust-crosswalk",
+        "kernel_digest": "sha256:a7e15f563cd47402550a3b4c1164e8dcc35ca0576feb53d0ab18cf0971a9b8bf"
+      },
+      {
+        "node_id": "n3",
+        "kernel_id": "art-134-agent-directory-publish-readiness",
+        "kernel_digest": "sha256:46abd179f6af07c11f97b205b1762ce25fc640e75366b96c65663b338f3b9f7b"
+      }
+    ],
+    "connectors": [],
+    "gates": [],
+    "actions": []
+  },
+  "workflow_manifest_digest": "sha256:63e0e77196cedc55522cda952bfbfa2f6f8fd663369c3101cd4d8183eb115f4b",
+  "declared_inputs": [],
+  "steps_meta": [
+    {
+      "node_id": "n1",
+      "data_classification": "compute"
+    },
+    {
+      "node_id": "n2",
+      "data_classification": "compute"
+    },
+    {
+      "node_id": "n3",
+      "data_classification": "compute"
+    }
+  ]
+}

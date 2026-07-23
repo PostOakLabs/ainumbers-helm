@@ -1,0 +1,54 @@
+{
+  "workflow_id": "pack-treasury-clearing-access-model",
+  "name": "Treasury Clearing Access Model Selector",
+  "outcome": "W-A. Access-model selection & economics (ART-49) -> SA-CCR/QCCP capital impact (504) -> FICC VaR-margin & netting estimate (ART-50). The flagship decision chain.",
+  "spec_version": "ocg-control-plane@1",
+  "manifest": {
+    "manifest_version": "1",
+    "workflow_id": "pack-treasury-clearing-access-model",
+    "trigger": {
+      "type": "manual"
+    },
+    "nodes": [
+      {
+        "node_id": "n1",
+        "kernel_id": "art-49-clearing-access-model-selector",
+        "kernel_digest": "sha256:ff9e78cf7128918984b55cbf858c74f3ca3a6e818389e067899863b8cd570034"
+      },
+      {
+        "node_id": "n2",
+        "kernel_id": "504-settlement-risk-capital-optimizer",
+        "kernel_digest": "sha256:57a3a1bd70235be6b46ba6d177b784665e1480eb8f0c59047d84f3498611cfe8"
+      },
+      {
+        "node_id": "n3",
+        "kernel_id": "art-50-ficc-margin-netting-estimator",
+        "kernel_digest": "sha256:fcea3a670c5ee043f842757592ea575bbe5426b8f825016d4ec0c0d18d2e304b"
+      }
+    ],
+    "connectors": [],
+    "gates": [],
+    "actions": []
+  },
+  "workflow_manifest_digest": "sha256:63308dc506fb26b1ec13934008c3f472159d37c69b53ec236e6772e3fc4135d8",
+  "declared_inputs": [
+    {
+      "from": "art-48-treasury-clearing-fit-diagnostic",
+      "kind": "external"
+    }
+  ],
+  "steps_meta": [
+    {
+      "node_id": "n1",
+      "data_classification": "compute"
+    },
+    {
+      "node_id": "n2",
+      "data_classification": "compute"
+    },
+    {
+      "node_id": "n3",
+      "data_classification": "compute"
+    }
+  ]
+}

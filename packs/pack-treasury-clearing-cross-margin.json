@@ -1,0 +1,54 @@
+{
+  "workflow_id": "pack-treasury-clearing-cross-margin",
+  "name": "FICC-CME Cross-Margining Benefit",
+  "outcome": "W-C. Cross-margining IM-reduction estimate (ART-51, FICC-CME customer expansion Dec 2025) -> combined-netting-set VaR (qfa-02) -> stress test of the offset under 6 historical crises (qfa-03).",
+  "spec_version": "ocg-control-plane@1",
+  "manifest": {
+    "manifest_version": "1",
+    "workflow_id": "pack-treasury-clearing-cross-margin",
+    "trigger": {
+      "type": "manual"
+    },
+    "nodes": [
+      {
+        "node_id": "n1",
+        "kernel_id": "art-51-cross-margining-benefit-estimator",
+        "kernel_digest": "sha256:830bc39ca270ab8fec28d7bbd220b84a37787e3dfc4e61110e95816a63d70da1"
+      },
+      {
+        "node_id": "n2",
+        "kernel_id": "qfa-02-portfolio-var-engine",
+        "kernel_digest": "sha256:9051ffa2fd22d389890aa26c21be6f7d3f32a0da1de5ba47890946271487ebe3"
+      },
+      {
+        "node_id": "n3",
+        "kernel_id": "qfa-03-stress-test-engine",
+        "kernel_digest": "sha256:16acc10c94489a5127aab924048c6903c4df2ac6bb1acb5f2d1b2ed1982769d4"
+      }
+    ],
+    "connectors": [],
+    "gates": [],
+    "actions": []
+  },
+  "workflow_manifest_digest": "sha256:e52bf861a6a43893b21b15b84a3e7a0fc0fcf3473e7ca87eab69bc2ceacd9d9f",
+  "declared_inputs": [
+    {
+      "from": "art-48-treasury-clearing-fit-diagnostic",
+      "kind": "external"
+    }
+  ],
+  "steps_meta": [
+    {
+      "node_id": "n1",
+      "data_classification": "compute"
+    },
+    {
+      "node_id": "n2",
+      "data_classification": "compute"
+    },
+    {
+      "node_id": "n3",
+      "data_classification": "compute"
+    }
+  ]
+}

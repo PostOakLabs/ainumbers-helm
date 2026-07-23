@@ -1,0 +1,67 @@
+{
+  "workflow_id": "pack-assemble-agent-dispute-evidence",
+  "name": "Assemble Agent Dispute Evidence",
+  "outcome": "Five-step agentic-transaction compelling-evidence pack, mapped to Visa CE3.0: documents authorization at the point of delegation (AP2 mandate), inspects the Visa Trusted Agent Protocol signature, binds the Mastercard Agent Pay agentic token, aggregates a session execution receipt for fulfillment, then terminates in a deterministic evidence lint checking presence and digest-binding of every element.",
+  "spec_version": "ocg-control-plane@1",
+  "manifest": {
+    "manifest_version": "1",
+    "workflow_id": "pack-assemble-agent-dispute-evidence",
+    "trigger": {
+      "type": "manual"
+    },
+    "nodes": [
+      {
+        "node_id": "n1",
+        "kernel_id": "art-01-ap2-mandate-chain-validator",
+        "kernel_digest": "sha256:623495f9378cb65cb88c889831f43c2c82c8844af29dfaa32e3a5d1e6cfa5337"
+      },
+      {
+        "node_id": "n2",
+        "kernel_id": "art-23-visa-trusted-agent-protocol-inspector",
+        "kernel_digest": "sha256:121d2bbc225f22b9f647b43ef1310b168a6b6bd0a3e0d1e45dba0bc500fc213a"
+      },
+      {
+        "node_id": "n3",
+        "kernel_id": "art-24-mastercard-agentic-token-builder",
+        "kernel_digest": "sha256:c3fc5f06ba67952f984a4b92f4a19b72dc85afedb761aaa7dace3b61ae13cc1e"
+      },
+      {
+        "node_id": "n4",
+        "kernel_id": "cry-05-agent-action-audit-trail-aggregator",
+        "kernel_digest": "sha256:5f7f6ab0bb2e2b736805ecde518ca59ba9a83ad38b17545a8c7c133cffa1481f"
+      },
+      {
+        "node_id": "n5",
+        "kernel_id": "art-297-agentic-dispute-ce30-linter",
+        "kernel_digest": "sha256:d3eda08f22ed67d0de0b0d7d5ca2877c9954ecff416aae4cf51d9906260ae374"
+      }
+    ],
+    "connectors": [],
+    "gates": [],
+    "actions": []
+  },
+  "workflow_manifest_digest": "sha256:b0d2f6bae3bdfb06849507305506f7999c705a58e7d665f4ed3b200dd4378cac",
+  "declared_inputs": [],
+  "steps_meta": [
+    {
+      "node_id": "n1",
+      "data_classification": "compute"
+    },
+    {
+      "node_id": "n2",
+      "data_classification": "compute"
+    },
+    {
+      "node_id": "n3",
+      "data_classification": "compute"
+    },
+    {
+      "node_id": "n4",
+      "data_classification": "compute"
+    },
+    {
+      "node_id": "n5",
+      "data_classification": "compute"
+    }
+  ]
+}

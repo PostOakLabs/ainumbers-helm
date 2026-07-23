@@ -1,0 +1,58 @@
+{
+  "workflow_id": "pack-fiusd-reserve-attestation",
+  "name": "FIUSD Reserve Attestation Receipt",
+  "outcome": "VERIFY-SIDE ONLY: reserve-attestation precheck, stablecoin reserve stress simulation, partner-jurisdiction routing, and partner-stablecoin readiness score compose into a daily reserve-precheck receipt a regulator or auditor of a community bank can independently replay. Optionally anchors the receipt digest. Asserts only that these inputs replay to this readiness verdict, never that the underlying reserves are attested or cryptographically proven; no claim of verifying an issuer's reserve PDF.",
+  "spec_version": "ocg-control-plane@1",
+  "manifest": {
+    "manifest_version": "1",
+    "workflow_id": "pack-fiusd-reserve-attestation",
+    "trigger": {
+      "type": "manual"
+    },
+    "nodes": [
+      {
+        "node_id": "n1",
+        "kernel_id": "art-06-genius-act-reserve-attestation",
+        "kernel_digest": "sha256:8e520c99a42e6c53799b4c14a5d31d7face65414f1d0fd590a089488f621dc24"
+      },
+      {
+        "node_id": "n2",
+        "kernel_id": "rca-02-mica-reserve-stress",
+        "kernel_digest": "sha256:6fce2ba734c51cd45d54192ce1f75dba7e32561d4e7ee9792a7bfae0cdfea260"
+      },
+      {
+        "node_id": "n3",
+        "kernel_id": "art-111-arc-corridor-jurisdiction-router",
+        "kernel_digest": "sha256:71061d2cb76db82787091a1621aabb6fdba5b88d31db5d6b378f9ea1b5826f72"
+      },
+      {
+        "node_id": "n4",
+        "kernel_id": "art-110-arc-partner-stablecoin-onboarding",
+        "kernel_digest": "sha256:4c76567c95da056626e68881f858c95c745ad333d94f0fbe078b53ac95ca3f49"
+      }
+    ],
+    "connectors": [],
+    "gates": [],
+    "actions": []
+  },
+  "workflow_manifest_digest": "sha256:4dc9fba7aa46b2b4626327ee8c8526dae1cfd583c9041642e1a497ee64f7f334",
+  "declared_inputs": [],
+  "steps_meta": [
+    {
+      "node_id": "n1",
+      "data_classification": "compute"
+    },
+    {
+      "node_id": "n2",
+      "data_classification": "compute"
+    },
+    {
+      "node_id": "n3",
+      "data_classification": "compute"
+    },
+    {
+      "node_id": "n4",
+      "data_classification": "compute"
+    }
+  ]
+}

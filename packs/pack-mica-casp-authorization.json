@@ -1,0 +1,58 @@
+{
+  "workflow_id": "pack-mica-casp-authorization",
+  "name": "CASP Authorization & Own-Funds",
+  "outcome": "W-A flagship. CASP authorization-readiness (governance, custody segregation, conflicts) (ART-100) -> Art 67 own-funds calculation (ART-101) -> audit receipt (cry-05). The CASP licensing lifecycle end-to-end. Decision-support draft.",
+  "spec_version": "ocg-control-plane@1",
+  "manifest": {
+    "manifest_version": "1",
+    "workflow_id": "pack-mica-casp-authorization",
+    "trigger": {
+      "type": "manual"
+    },
+    "nodes": [
+      {
+        "node_id": "n1",
+        "kernel_id": "art-100-mica-casp-authorization-readiness",
+        "kernel_digest": "sha256:83af4fb729adb2375b158401895030ed23a4469569312c67aa80c1240640c70e"
+      },
+      {
+        "node_id": "n2",
+        "kernel_id": "art-101-mica-art67-own-funds-calculator",
+        "kernel_digest": "sha256:7128ee0185f75fbe40c14da89571121926b7e634ea5764267e21766fe999983b"
+      },
+      {
+        "node_id": "n3",
+        "kernel_id": "cry-05-agent-action-audit-trail-aggregator",
+        "kernel_digest": "sha256:5f7f6ab0bb2e2b736805ecde518ca59ba9a83ad38b17545a8c7c133cffa1481f"
+      }
+    ],
+    "connectors": [],
+    "gates": [],
+    "actions": []
+  },
+  "workflow_manifest_digest": "sha256:c0be0e01131d0a67b0060cc1cddbf734d950731aeca94113f37a7e54c5170aa9",
+  "declared_inputs": [
+    {
+      "from": "art-98-mica-casp-fit-diagnostic",
+      "kind": "external"
+    },
+    {
+      "from": "art-99-mica-transitional-deadline-router",
+      "kind": "external"
+    }
+  ],
+  "steps_meta": [
+    {
+      "node_id": "n1",
+      "data_classification": "compute"
+    },
+    {
+      "node_id": "n2",
+      "data_classification": "compute"
+    },
+    {
+      "node_id": "n3",
+      "data_classification": "compute"
+    }
+  ]
+}

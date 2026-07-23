@@ -1,0 +1,31 @@
+{
+  "workflow_id": "pack-rhc-regime-mapping",
+  "name": "Robinhood Chain Regime Mapping",
+  "outcome": "Single-step chain mapping the regulatory regime implied by a Robinhood Chain stock-token characterization, inverting the MiCA/GENIUS assumption that applies to the estate's other digital-asset-rail chains.",
+  "spec_version": "ocg-control-plane@1",
+  "manifest": {
+    "manifest_version": "1",
+    "workflow_id": "pack-rhc-regime-mapping",
+    "trigger": {
+      "type": "manual"
+    },
+    "nodes": [
+      {
+        "node_id": "n1",
+        "kernel_id": "art-318-rhc-regime-mapper",
+        "kernel_digest": "sha256:a254b7eb00a32b29a66ec968198d5fcaf29bff88a1a9881739f2a25b5ec59856"
+      }
+    ],
+    "connectors": [],
+    "gates": [],
+    "actions": []
+  },
+  "workflow_manifest_digest": "sha256:c77c0367dd69adee006f70dff15ead3cda7953e797fe9a41a58eadbd820c8c29",
+  "declared_inputs": [],
+  "steps_meta": [
+    {
+      "node_id": "n1",
+      "data_classification": "compute"
+    }
+  ]
+}

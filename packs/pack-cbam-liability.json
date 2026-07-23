@@ -1,0 +1,54 @@
+{
+  "workflow_id": "pack-cbam-liability",
+  "name": "CBAM Import Liability & Certificate Declaration",
+  "outcome": "W-A flagship. Embedded-emissions calculation (ART-69) -> default-value resolution (ART-70) -> certificate cost + free-allocation phase-out + holding/surrender schedule (ART-71). The importer-to-customs CBAM declaration lifecycle end-to-end. Decision-support draft, not a filed declaration.",
+  "spec_version": "ocg-control-plane@1",
+  "manifest": {
+    "manifest_version": "1",
+    "workflow_id": "pack-cbam-liability",
+    "trigger": {
+      "type": "manual"
+    },
+    "nodes": [
+      {
+        "node_id": "n1",
+        "kernel_id": "art-70-cbam-default-value-resolver",
+        "kernel_digest": "sha256:749508d39ecd4cd00b1a5edd8752b21cd96eabf325052c24702fe3b2124624a0"
+      },
+      {
+        "node_id": "n2",
+        "kernel_id": "art-69-cbam-embedded-emissions-calculator",
+        "kernel_digest": "sha256:41700ba84727c6ac4cb1f9fb130ed565723c48eb48cd03b94b3f3ac31e4d6f00"
+      },
+      {
+        "node_id": "n3",
+        "kernel_id": "art-71-cbam-certificate-cost-engine",
+        "kernel_digest": "sha256:80df4fc1195a5177c803aad81d51aabbfad003ca7e5c117591b4f557b278f2d9"
+      }
+    ],
+    "connectors": [],
+    "gates": [],
+    "actions": []
+  },
+  "workflow_manifest_digest": "sha256:6b815aff795512884f52f7ae37e841c4cfdecb98c04a20521e735a67b08b5c28",
+  "declared_inputs": [
+    {
+      "from": "art-68-carbon-compliance-fit-diagnostic",
+      "kind": "external"
+    }
+  ],
+  "steps_meta": [
+    {
+      "node_id": "n1",
+      "data_classification": "compute"
+    },
+    {
+      "node_id": "n2",
+      "data_classification": "compute"
+    },
+    {
+      "node_id": "n3",
+      "data_classification": "compute"
+    }
+  ]
+}

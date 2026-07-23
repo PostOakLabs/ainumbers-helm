@@ -1,0 +1,45 @@
+{
+  "workflow_id": "pack-tempo-gas-economics",
+  "name": "Tempo Fee-Sponsorship & Gas-AMM Economics",
+  "outcome": "Model Tempo enshrined-AMM gas cost paid in any major stablecoin plus server-paid fee sponsorship, vs card/SWIFT/ACH baselines. Payments business case (art-35) → gas-AMM slippage, sponsorship break-even, and net per-tx saving (art-107). Distinct from Arc Paymaster: Tempo has no native gas token and uses an enshrined AMM, not ERC-4337.",
+  "spec_version": "ocg-control-plane@1",
+  "manifest": {
+    "manifest_version": "1",
+    "workflow_id": "pack-tempo-gas-economics",
+    "trigger": {
+      "type": "manual"
+    },
+    "nodes": [
+      {
+        "node_id": "n1",
+        "kernel_id": "art-35-tempo-payments-business-case",
+        "kernel_digest": "sha256:983a22594a38514987c18253d6efe800adb9ffb96148357f3deb80975f46837c"
+      },
+      {
+        "node_id": "n2",
+        "kernel_id": "art-107-tempo-gas-economics",
+        "kernel_digest": "sha256:73a3fb7dd9a7cccfa836d175216241be5000575c71fbea673621cf661401b806"
+      }
+    ],
+    "connectors": [],
+    "gates": [],
+    "actions": []
+  },
+  "workflow_manifest_digest": "sha256:90374a759ff58343533bc7fa7b967db698d09a8e08971cd6978b11f571f0d3c6",
+  "declared_inputs": [
+    {
+      "from": "art-34-tempo-fit-diagnostic",
+      "kind": "external"
+    }
+  ],
+  "steps_meta": [
+    {
+      "node_id": "n1",
+      "data_classification": "compute"
+    },
+    {
+      "node_id": "n2",
+      "data_classification": "compute"
+    }
+  ]
+}

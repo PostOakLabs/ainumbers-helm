@@ -1,0 +1,49 @@
+{
+  "workflow_id": "pack-digital-trade-tbml-surveillance",
+  "name": "Trade-Based Money-Laundering Surveillance",
+  "outcome": "W-F. TBML typology screen (art-10) -> network/phantom-entity & circular-trade graph (mms-03) -> invoicing/volume anomaly monitoring (ml-03). Surveillance over a trade flow for TBML patterns.",
+  "spec_version": "ocg-control-plane@1",
+  "manifest": {
+    "manifest_version": "1",
+    "workflow_id": "pack-digital-trade-tbml-surveillance",
+    "trigger": {
+      "type": "manual"
+    },
+    "nodes": [
+      {
+        "node_id": "n1",
+        "kernel_id": "art-10-amla-transaction-typology-risk-scorer",
+        "kernel_digest": "sha256:c02483af798b9da4593d70b071619e12487bbd02e21b016eb9d46ced84c5ab90"
+      },
+      {
+        "node_id": "n2",
+        "kernel_id": "mms-03-app-fraud-graph",
+        "kernel_digest": "sha256:e4475d26f24233cd44e35864937108b85615179add6786403c54a4540d903def"
+      },
+      {
+        "node_id": "n3",
+        "kernel_id": "ml-03-timeseries-anomaly-detector",
+        "kernel_digest": "sha256:ae20b291caf5eac025d4e7103782427565fe7cf0c99f4045122257c87db0d9c6"
+      }
+    ],
+    "connectors": [],
+    "gates": [],
+    "actions": []
+  },
+  "workflow_manifest_digest": "sha256:da2c76660ffbb411a7caafedb5ead89395e70e71e9900d4fabb286824ff01e41",
+  "declared_inputs": [],
+  "steps_meta": [
+    {
+      "node_id": "n1",
+      "data_classification": "compute"
+    },
+    {
+      "node_id": "n2",
+      "data_classification": "compute"
+    },
+    {
+      "node_id": "n3",
+      "data_classification": "compute"
+    }
+  ]
+}

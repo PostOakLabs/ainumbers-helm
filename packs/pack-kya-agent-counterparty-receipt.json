@@ -1,0 +1,67 @@
+{
+  "workflow_id": "pack-kya-agent-counterparty-receipt",
+  "name": "Agent Counterparty Due-Diligence Receipt (KYA)",
+  "outcome": "Know-Your-Agent (KYA) receipt for onboarding an autonomous agent counterparty: checks the agent's key is not revoked against a supplied BitstringStatusList credential (art-287), verifies its delegated-authority attestation chain (art-04), audits its key rotation posture (art-132), then GATES on a provable reputation score composed from prior OCG execution receipts (art-278). GATE: a composite reputation score below the tunable threshold theta ends the chain with no acceptance receipt issued; a score at or above theta continues to bind an NDA acceptance receipt referenced by hash (art-277). Theta is a composer policy_parameter, never a literal baked into kernel code, so it can be retuned without a rebuild. The receipt asserts unrevoked key, unexpired mandate, reputation at or above theta, and NDA accepted, each with its own evidence class; composite claim_strength honestly reports the weakest verification class among its steps. A Web Bot Auth signed-agent verification tail is an optional planned upgrade (rides the AGENTIC-NAV Section N2 landing, whose bypass-half is still unverified) and is omitted here, not missing. Verify-only; asserts only the four conditions it checked, never a broader safe-to-transact guarantee.",
+  "spec_version": "ocg-control-plane@1",
+  "manifest": {
+    "manifest_version": "1",
+    "workflow_id": "pack-kya-agent-counterparty-receipt",
+    "trigger": {
+      "type": "manual"
+    },
+    "nodes": [
+      {
+        "node_id": "n1",
+        "kernel_id": "art-287-revocation-status-verifier",
+        "kernel_digest": "sha256:1bba28fe16295e569ea0581670c5d95070c8d2057df9d9b6f24da30624c4c6f6"
+      },
+      {
+        "node_id": "n2",
+        "kernel_id": "art-04-agent-identity-attestation-checker",
+        "kernel_digest": "sha256:f4e9e5aed913e80c7f97e3d0d2501e7349c523de4ffd433a1d29081620197b1f"
+      },
+      {
+        "node_id": "n3",
+        "kernel_id": "art-132-agent-key-rotation-auditor",
+        "kernel_digest": "sha256:25ff3998171f39653fb0799f0c1892c148031af3615a59fe45b4a7e1ab3cecd3"
+      },
+      {
+        "node_id": "n4",
+        "kernel_id": "art-278-reputation-score-aggregator",
+        "kernel_digest": "sha256:7d2c98e83ecc6bbe23df123d45d26fe3f2b31d5dc6484e5983f535fdbd271c86"
+      },
+      {
+        "node_id": "n5",
+        "kernel_id": "art-277-agreement-acceptance-binder",
+        "kernel_digest": "sha256:f89876aa4e8bd2c8202f42f53375dcaadcf311417577d08361dc752421a2a965"
+      }
+    ],
+    "connectors": [],
+    "gates": [],
+    "actions": []
+  },
+  "workflow_manifest_digest": "sha256:c3fbefb5c0e7ac319612ba8a8d2faf6fce8cda525800b35c5f8e2e3d2d27ad1d",
+  "declared_inputs": [],
+  "steps_meta": [
+    {
+      "node_id": "n1",
+      "data_classification": "compute"
+    },
+    {
+      "node_id": "n2",
+      "data_classification": "compute"
+    },
+    {
+      "node_id": "n3",
+      "data_classification": "compute"
+    },
+    {
+      "node_id": "n4",
+      "data_classification": "compute"
+    },
+    {
+      "node_id": "n5",
+      "data_classification": "compute"
+    }
+  ]
+}

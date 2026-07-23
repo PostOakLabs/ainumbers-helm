@@ -4,7 +4,8 @@
   "paths": [
     "chaingraph/kernels",
     "chaingraph/standard/SPEC.md",
-    "chaingraph/standard/openchain-graph-v0.4.schema.json"
+    "chaingraph/standard/openchain-graph-v0.4.schema.json",
+    "chaingraph/chaingraph.json"
   ],
   "destination": "hub/vendored/ocg"
 }

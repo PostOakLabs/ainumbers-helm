@@ -1,0 +1,45 @@
+{
+  "workflow_id": "pack-settlement-discipline-ssi-hygiene",
+  "name": "SSI Hygiene & Match-Rate",
+  "outcome": "SSI completeness/staleness/format conformance + golden-source match-rate scoring (ART-80) -> audit receipt (cry-05). The single highest-leverage T+1 prep: clean SSIs prevent ~30% of fails.",
+  "spec_version": "ocg-control-plane@1",
+  "manifest": {
+    "manifest_version": "1",
+    "workflow_id": "pack-settlement-discipline-ssi-hygiene",
+    "trigger": {
+      "type": "manual"
+    },
+    "nodes": [
+      {
+        "node_id": "n1",
+        "kernel_id": "art-80-ssi-conformance-checker",
+        "kernel_digest": "sha256:659829e3ae373c2b2984bd7be749ccc18790106ac4bbfca7a0fc0884047ad958"
+      },
+      {
+        "node_id": "n2",
+        "kernel_id": "cry-05-agent-action-audit-trail-aggregator",
+        "kernel_digest": "sha256:5f7f6ab0bb2e2b736805ecde518ca59ba9a83ad38b17545a8c7c133cffa1481f"
+      }
+    ],
+    "connectors": [],
+    "gates": [],
+    "actions": []
+  },
+  "workflow_manifest_digest": "sha256:ede0d0476ab6e7f923513bfb7aee7a8c3eac1485cfda76d05711aa2973dea153",
+  "declared_inputs": [
+    {
+      "from": "art-77-t1-settlement-readiness-diagnostic",
+      "kind": "external"
+    }
+  ],
+  "steps_meta": [
+    {
+      "node_id": "n1",
+      "data_classification": "compute"
+    },
+    {
+      "node_id": "n2",
+      "data_classification": "compute"
+    }
+  ]
+}

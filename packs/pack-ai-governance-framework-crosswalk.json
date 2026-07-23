@@ -1,0 +1,49 @@
+{
+  "workflow_id": "pack-ai-governance-framework-crosswalk",
+  "name": "AI Governance Framework Crosswalk",
+  "outcome": "Map AI controls and evidence to NIST AI RMF Govern/Map/Measure/Manage functions with per-function coverage scores (art-174) -> check GPAI provider obligations under EU AI Act Art. 53/55 and voluntary Code of Practice (art-175) -> A-F AI governance readiness diagnostic across ISO 42001, NIST RMF, and EU AI Act convergence (art-176). Full multi-framework governance crosswalk. GPAI enforcement Aug 2026.",
+  "spec_version": "ocg-control-plane@1",
+  "manifest": {
+    "manifest_version": "1",
+    "workflow_id": "pack-ai-governance-framework-crosswalk",
+    "trigger": {
+      "type": "manual"
+    },
+    "nodes": [
+      {
+        "node_id": "n1",
+        "kernel_id": "art-174-nist-ai-rmf-function-mapper",
+        "kernel_digest": "sha256:a4ebaa6b0d2dc5a1fe2ef52ae2850bc85dcbea7221acd8dbae939d00039b6f9e"
+      },
+      {
+        "node_id": "n2",
+        "kernel_id": "art-175-gpai-code-of-practice-conformance",
+        "kernel_digest": "sha256:2d637077ba70bc4b83f6fac794cc8969d09aefb67b7e5db694afbe5d9ffe8907"
+      },
+      {
+        "node_id": "n3",
+        "kernel_id": "art-176-ai-governance-readiness-diagnostic",
+        "kernel_digest": "sha256:9eade7087913b370413de5a95c491f8c88aa907701afba40c373dc637beef62d"
+      }
+    ],
+    "connectors": [],
+    "gates": [],
+    "actions": []
+  },
+  "workflow_manifest_digest": "sha256:1ce1996a1194a9a1ccd5d26f2801127b9d44ecccd7cfbae9cae54041458c53d9",
+  "declared_inputs": [],
+  "steps_meta": [
+    {
+      "node_id": "n1",
+      "data_classification": "compute"
+    },
+    {
+      "node_id": "n2",
+      "data_classification": "compute"
+    },
+    {
+      "node_id": "n3",
+      "data_classification": "compute"
+    }
+  ]
+}

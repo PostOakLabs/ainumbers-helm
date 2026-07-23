@@ -1,0 +1,49 @@
+{
+  "workflow_id": "pack-pharma-serialization-custody",
+  "name": "Pharma Serialization & Saleable-Returns Custody (DSCSA / EU FMD)",
+  "outcome": "Verify DSCSA T3 + GS1 SGTIN and EPCIS event (art-112) → verify saleable returns against the original transaction (art-113) → assess suspect/illegitimate product and required FDA actions (art-114). Client-side, zero-egress alternative to a permissioned serialization consortium.",
+  "spec_version": "ocg-control-plane@1",
+  "manifest": {
+    "manifest_version": "1",
+    "workflow_id": "pack-pharma-serialization-custody",
+    "trigger": {
+      "type": "manual"
+    },
+    "nodes": [
+      {
+        "node_id": "n1",
+        "kernel_id": "art-112-dscsa-transaction-statement-verifier",
+        "kernel_digest": "sha256:050a30a2760caae0cac020f44dd26cfe3f9be9ec02e89386c12b22dbe18f791c"
+      },
+      {
+        "node_id": "n2",
+        "kernel_id": "art-113-saleable-returns-verifier",
+        "kernel_digest": "sha256:37fb88e02fb51dff2a85a09a2f98bcba462e1ed90a7dbd5612953ffa0a61c8b0"
+      },
+      {
+        "node_id": "n3",
+        "kernel_id": "art-114-suspect-product-quarantine",
+        "kernel_digest": "sha256:69c6f567735fc1a35f728f1f226793ff94b9664813a2c9dfbcfe3569c93f1ed6"
+      }
+    ],
+    "connectors": [],
+    "gates": [],
+    "actions": []
+  },
+  "workflow_manifest_digest": "sha256:0b89fb89888b69ddac7f66a35c6bf00181f1f266497272e8d398a96be36703e8",
+  "declared_inputs": [],
+  "steps_meta": [
+    {
+      "node_id": "n1",
+      "data_classification": "compute"
+    },
+    {
+      "node_id": "n2",
+      "data_classification": "compute"
+    },
+    {
+      "node_id": "n3",
+      "data_classification": "compute"
+    }
+  ]
+}

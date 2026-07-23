@@ -1,0 +1,49 @@
+{
+  "workflow_id": "pack-nis2-incident-and-supply-chain-readiness",
+  "name": "NIS2 Incident Reporting & Supply-Chain Readiness",
+  "outcome": "Score whether an operational event meets the NIS2 Article 23 significant-incident threshold (firing the 24h/72h/30-day reporting clocks), assess ICT vendor due-diligence posture against Art. 21(2)(d) and ENISA supply-chain guidance, and check Art. 20 management-body governance readiness including personal-liability risk flag. Terminal stage exports governance attestation with execution_hash.",
+  "spec_version": "ocg-control-plane@1",
+  "manifest": {
+    "manifest_version": "1",
+    "workflow_id": "pack-nis2-incident-and-supply-chain-readiness",
+    "trigger": {
+      "type": "manual"
+    },
+    "nodes": [
+      {
+        "node_id": "n1",
+        "kernel_id": "art-144-nis2-incident-significance-scorer",
+        "kernel_digest": "sha256:3cedfccda08a549a70693a65306d63f4593eb7be89533f956fd171400b76bfd2"
+      },
+      {
+        "node_id": "n2",
+        "kernel_id": "art-145-nis2-ict-supply-chain-diligence-scorer",
+        "kernel_digest": "sha256:5568ba2aecf8ca9923d20122d22c9cfd8950d2e781ea7cc58041c885e3de85b4"
+      },
+      {
+        "node_id": "n3",
+        "kernel_id": "art-146-nis2-governance-readiness-checker",
+        "kernel_digest": "sha256:6492a6a83f4e5bbfcd5e1a759af227e26770c5c65a70fc8fe7028c150712f280"
+      }
+    ],
+    "connectors": [],
+    "gates": [],
+    "actions": []
+  },
+  "workflow_manifest_digest": "sha256:72181ff6f3a7ac77ee7bb1f847371de28110d9262267e189ed91e99cdf20ef5c",
+  "declared_inputs": [],
+  "steps_meta": [
+    {
+      "node_id": "n1",
+      "data_classification": "compute"
+    },
+    {
+      "node_id": "n2",
+      "data_classification": "compute"
+    },
+    {
+      "node_id": "n3",
+      "data_classification": "compute"
+    }
+  ]
+}

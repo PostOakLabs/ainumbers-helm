@@ -1,0 +1,45 @@
+{
+  "workflow_id": "pack-taxonomy-align",
+  "name": "EU Taxonomy Activity Alignment",
+  "outcome": "Activity-level Taxonomy alignment: substantial-contribution + DNSH + minimum-safeguards scoring (ART-73) -> audit receipt (cry-05). The activity-by-activity alignment decision an undertaking emits and an auditor re-verifies.",
+  "spec_version": "ocg-control-plane@1",
+  "manifest": {
+    "manifest_version": "1",
+    "workflow_id": "pack-taxonomy-align",
+    "trigger": {
+      "type": "manual"
+    },
+    "nodes": [
+      {
+        "node_id": "n1",
+        "kernel_id": "art-73-taxonomy-alignment-scorer",
+        "kernel_digest": "sha256:9b92c3c4c8082ee5def48e00030b928ad66b653ffea5f5dfb69b3356b9323ffa"
+      },
+      {
+        "node_id": "n2",
+        "kernel_id": "cry-05-agent-action-audit-trail-aggregator",
+        "kernel_digest": "sha256:5f7f6ab0bb2e2b736805ecde518ca59ba9a83ad38b17545a8c7c133cffa1481f"
+      }
+    ],
+    "connectors": [],
+    "gates": [],
+    "actions": []
+  },
+  "workflow_manifest_digest": "sha256:1c9d7128a6cd384311e3242aff75d90b6d164a56e61fd1c883e157651a2d356c",
+  "declared_inputs": [
+    {
+      "from": "art-68-carbon-compliance-fit-diagnostic",
+      "kind": "external"
+    }
+  ],
+  "steps_meta": [
+    {
+      "node_id": "n1",
+      "data_classification": "compute"
+    },
+    {
+      "node_id": "n2",
+      "data_classification": "compute"
+    }
+  ]
+}

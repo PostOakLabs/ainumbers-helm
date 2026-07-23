@@ -1,0 +1,45 @@
+{
+  "workflow_id": "pack-pqc-fido-webauthn",
+  "name": "FIDO2 / WebAuthn PQC Conformance",
+  "outcome": "FIDO2/WebAuthn/COSE ML-DSA conformance vs IANA identifiers + CTAP2.3 (ART-88) -> audit receipt (cry-05). Credential crypto-suite migration; credential FORMAT/protocol conformance belongs to any future EUDI wave.",
+  "spec_version": "ocg-control-plane@1",
+  "manifest": {
+    "manifest_version": "1",
+    "workflow_id": "pack-pqc-fido-webauthn",
+    "trigger": {
+      "type": "manual"
+    },
+    "nodes": [
+      {
+        "node_id": "n1",
+        "kernel_id": "art-88-fido-pqc-conformance-checker",
+        "kernel_digest": "sha256:92b325e20fa5a4e60b6cc1b0080285af19bf639951c96ec6a0b76d69a57b823b"
+      },
+      {
+        "node_id": "n2",
+        "kernel_id": "cry-05-agent-action-audit-trail-aggregator",
+        "kernel_digest": "sha256:5f7f6ab0bb2e2b736805ecde518ca59ba9a83ad38b17545a8c7c133cffa1481f"
+      }
+    ],
+    "connectors": [],
+    "gates": [],
+    "actions": []
+  },
+  "workflow_manifest_digest": "sha256:2b506568283c8694105ce0d2620bf648f5f8a9a899f47fdf609359a2f14f0584",
+  "declared_inputs": [
+    {
+      "from": "art-85-pqc-timeline-fit-diagnostic",
+      "kind": "external"
+    }
+  ],
+  "steps_meta": [
+    {
+      "node_id": "n1",
+      "data_classification": "compute"
+    },
+    {
+      "node_id": "n2",
+      "data_classification": "compute"
+    }
+  ]
+}
