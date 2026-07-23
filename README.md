@@ -26,6 +26,10 @@ verification, and how the version-check notice works (never an auto-updater).
 
 OCG kernels and verify code are vendored pinned from `PostOakLabs/ainumbers` — never edited here; fix upstream and re-vendor.
 
+## Contributing
+
+Run `node scripts/setup-hooks.mjs` once per clone to enable local shift-left gates (commit-msg + pre-push mirror CI — see `docs/RELEASING.md`). Open PRs with `gh pr create --fill` so the title inherits the already-validated commit subject.
+
 ## Security
 
 Loopback-only daemon, bearer-token pairing, Host/Origin validation, OS-keychain secret storage, default-deny egress. See `SECURITY.md` (HELM-0) for the disclosure contact.

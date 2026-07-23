@@ -1,0 +1,49 @@
+#!/bin/sh
+# Pre-push shift-left gate (HELM-SHIFTLEFT-1). Runs the CI gates in CI order
+# (.github/workflows/ci.yml) plus a Conventional-Commit check over the
+# commits being pushed, so a red tree never reaches CI (green here == green
+# in CI). Enabled per-clone via `core.hooksPath = .githooks`; run
+# `node scripts/setup-hooks.mjs` once after cloning (worktrees inherit it).
+#
+# Emergency bypass (use sparingly): git push --no-verify
+#
+# CI remains the real backstop — this hook only enforces locally and can be
+# bypassed.
+#
+# NOTE: a PR TITLE cannot be validated here — it doesn't exist until
+# `gh pr create` runs, after the push. Always open PRs with
+# `gh pr create --fill` so the title inherits the (already-validated)
+# top commit subject instead of a hand-typed one.
+
+set -e
+
+remote="$1"
+range="origin/main..HEAD"
+
+# First push of a new remote/branch: fall back to the default remote-tracking base.
+if ! git rev-parse --verify origin/main >/dev/null 2>&1; then
+  range="HEAD"
+fi
+
+echo "pre-push: commit subjects ($range) ..."
+node scripts/check-pushed-commits.mjs "$range"
+
+echo "pre-push: lint ..."
+node scripts/lint.mjs
+
+echo "pre-push: test ..."
+node scripts/test.mjs
+
+echo "pre-push: validate control-plane schemas ..."
+node scripts/validate-schemas.mjs
+
+echo "pre-push: verify vendored OCG integrity ..."
+node scripts/verify-vendored.mjs
+
+echo "pre-push: compile parity gate ..."
+node scripts/compile-parity-gate.mjs
+
+echo "pre-push: sea build dry-run ..."
+node scripts/sea-dry-run.mjs
+
+echo "pre-push: all gates green."
