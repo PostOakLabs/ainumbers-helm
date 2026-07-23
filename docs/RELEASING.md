@@ -23,9 +23,20 @@ PR titles are enforced as Conventional Commits (`.github/workflows/pr-title-lint
 
 Add a `Release-As: X.Y.Z` footer to a commit (or PR title body) to force the next release PR to that exact version, overriding the computed bump. Used once, at program start, to pin the first public GA to **v0.2.0** (A2 — minor over the 0.1.0 pre-release, reflecting Phase-2 packs + connectors) rather than whatever `fix`/`feat` commits would have computed.
 
+## Local shift-left gates (HELM-SHIFTLEFT-1)
+
+Run `node scripts/setup-hooks.mjs` once per clone (worktrees inherit it). It points `core.hooksPath` at the version-controlled `.githooks/`:
+
+- `.githooks/commit-msg` validates the commit subject against the same Conventional Commit rule `PR Title Lint` enforces in CI, via the shared `lintTitle()` in `scripts/pr-title-lint.mjs` — one validator, so local and CI can never drift.
+- `.githooks/pre-push` runs the full `ci.yml` job in order (lint → test → schemas → vendored integrity → parity gate → sea dry-run) plus a Conventional-Commit check over every commit in the push, so green locally means green in CI.
+
+**A PR title can't be validated pre-push — it doesn't exist until `gh pr create` runs.** The fix is upstream of that: validate the commit subject locally, then always open PRs with `gh pr create --fill` so the title inherits the already-validated subject. That combination is what actually prevents a red `PR Title Lint` (see PR #48, which failed because the PR title was hand-typed instead of inherited).
+
+Both hooks accept `--no-verify` as an emergency bypass; CI stays the real backstop.
+
 ## Merge flow
 
-1. Land normal feature/fix PRs against `main` with Conventional-Commit titles.
+1. Land normal feature/fix PRs against `main` with Conventional-Commit titles — open them with `gh pr create --fill` (see above) so the title is inherited from an already-validated commit subject.
 2. release-please keeps its release PR current automatically — no manual editing of `CHANGELOG.md` or the manifest.
 3. When ready to cut a release, review and squash-merge the release PR. That's the only manual step besides the release approval click.
 

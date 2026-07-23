@@ -1,0 +1,11 @@
+#!/bin/sh
+# Commit-msg shift-left gate (HELM-SHIFTLEFT-1). Validates the commit subject
+# against the SAME rule `PR Title Lint` enforces in CI, via lintTitle() in
+# scripts/pr-title-lint.mjs — no duplicated regex, so local and CI can never
+# drift. Combined with `gh pr create --fill`, the PR title inherits an
+# already-validated commit subject, which is what actually prevents a red
+# PR Title Lint (see PR #48).
+#
+# Emergency bypass: git commit --no-verify
+
+node scripts/check-commit-msg.mjs "$1"
