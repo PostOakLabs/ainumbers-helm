@@ -1,0 +1,9 @@
+{
+  "connector_id": "http.send",
+  "connector_version": "1.0.0",
+  "publisher": "user-declared",
+  "allowed_hosts": ["api.example.com"],
+  "allowed_methods": ["GET", "POST"],
+  "scopes": ["http.send"],
+  "vault_scope": ["vault://helm/connectors/http/example/credential"]
+}

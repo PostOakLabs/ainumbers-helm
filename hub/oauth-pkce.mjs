@@ -91,7 +91,11 @@ function closeListener(flow) {
 async function exchangeCode({ tokenEndpoint, code, codeVerifier, redirectUri, clientId }) {
   const res = await fetch(tokenEndpoint, {
     method: "POST",
-    headers: { "Content-Type": "application/x-www-form-urlencoded" },
+    // Accept: application/json (HELM-P2-H9b) — GitHub's token endpoint
+    // replies form-urlencoded by default and only switches to JSON when
+    // asked; every other RFC 6749 endpoint already replies JSON regardless,
+    // so this is safe to send unconditionally rather than per-provider.
+    headers: { "Content-Type": "application/x-www-form-urlencoded", Accept: "application/json" },
     body: new URLSearchParams({
       grant_type: "authorization_code",
       code,
