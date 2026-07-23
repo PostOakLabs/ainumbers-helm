@@ -1,0 +1,12 @@
+# Deterministic line endings for vendored-integrity hashing (HELM-REL-2).
+#
+# hub/vendored/** is byte-hashed against MANIFEST.json (scripts/verify-vendored.mjs,
+# HELM-SEC-3 / THREAT-MODEL §5 F3). Without this file, a Windows clone with
+# core.autocrlf=true rewrites LF->CRLF on checkout and every hash mismatches, while
+# Linux CI stays green (known CRLF-vendor trap, memory project-ainumbers-gpu3-land-lessons).
+#
+# `* text=auto eol=lf` (repo-wide) chosen over a path-scoped `hub/vendored/** -text`:
+# it normalizes ALL tracked text to LF on checkout regardless of platform or local
+# core.autocrlf, so every future vendor path/kernel drop is covered automatically
+# instead of requiring a new attributes line each time.
+* text=auto eol=lf
