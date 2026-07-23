@@ -160,9 +160,19 @@ jobs:
           path: dist/packaging/npm
           if-no-files-found: error
 
+  # HELM-REL-NPM-DEFER: ainumbers-helm is unregistered on npm and npm only
+  # lets you attach a trusted publisher from an EXISTING package's settings
+  # page, so there is no way to configure OIDC trusted publishing before a
+  # first manual bootstrap publish. Tim decision 2026-07-23: defer npm
+  # distribution — the signed GitHub release stands alone for GA. Gate this
+  # job behind an explicit opt-in var (default unset/false) so it SKIPS
+  # cleanly instead of red-failing the first GA tag. Revive trigger: once
+  # the npm trusted publisher is attached (requires the package to exist
+  # first), flip vars.NPM_PUBLISH_ENABLED to 'true' in repo settings — no
+  # other change needed, the OIDC wiring below stays intact.
   publish-npm:
     needs: sign-and-release
-    if: needs.sign-and-release.outputs.is_ga == 'true'
+    if: needs.sign-and-release.outputs.is_ga == 'true' && vars.NPM_PUBLISH_ENABLED == 'true'
     runs-on: ubuntu-latest
     environment: release
     permissions:

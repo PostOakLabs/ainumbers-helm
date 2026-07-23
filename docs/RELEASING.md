@@ -33,6 +33,8 @@ Add a `Release-As: X.Y.Z` footer to a commit (or PR title body) to force the nex
 
 GA tags (`vN.N.N`, not `-rc`) publish `@ainumbers/helm-cli` to npm via the `publish-npm` job in `release.yml`. It uses **OIDC trusted publishing** — no npm token lives in this repo. The npm package (`packaging/npm/`) is a thin launcher: `postinstall` downloads the platform-matched `helmd` SEA binary from the matching GitHub release and verifies it against a sha256 baked in from the signed release manifest at build time (HELM-H8) — no source is trusted at install time beyond that pinned digest.
 
+**Deferred (HELM-REL-NPM-DEFER, 2026-07-23):** `publish-npm` is gated behind repo variable `vars.NPM_PUBLISH_ENABLED` (default unset/false), so it skips cleanly instead of red-failing — npm has no way to attach a trusted publisher to a package that doesn't exist yet, and the signed GitHub release stands on its own for GA. **Revive trigger:** once the npm trusted publisher is attached (below) via a one-time bootstrap publish, set `vars.NPM_PUBLISH_ENABLED = 'true'` in repo settings → Variables. No workflow change needed — OIDC wiring is already in place.
+
 ### One-time setup (Tim, manual — cannot be automated from this repo)
 
 Trusted publishing is configured on the **npm side**, once, after the repo goes public:
@@ -44,4 +46,4 @@ Trusted publishing is configured on the **npm side**, once, after the repo goes 
    - **Environment:** `release`
 3. No token is stored anywhere — the `publish-npm` job's `id-token: write` permission lets npm verify the run's OIDC identity against this config at publish time.
 
-Until this is configured, `publish-npm` will fail on the first GA release; re-run the job (`gh run rerun`) once npm trust is set up — the GitHub release itself is unaffected since it publishes in the job before `publish-npm`.
+Until this is configured AND `vars.NPM_PUBLISH_ENABLED` is flipped to `'true'`, `publish-npm` skips on every GA release — the GitHub release itself is unaffected since it publishes in the job before `publish-npm`.
