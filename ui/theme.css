@@ -1,0 +1,215 @@
+/* Semantic token architecture (retrofit is expensive — do it day one).
+   color-scheme + light-dark() pick the palette; density is a separate,
+   independently overridable axis. */
+:root {
+  color-scheme: light dark;
+
+  --surface: light-dark(#ffffff, #16181d);
+  --surface-raised: light-dark(#f5f6f8, #1e2129);
+  --border: light-dark(#d7dae0, #33363f);
+  --text: light-dark(#14161a, #e7e9ee);
+  --text-muted: light-dark(#5b6270, #9aa1b0);
+  --accent: light-dark(#1a5fd6, #6d9dff);
+  --accent-contrast: light-dark(#ffffff, #0b1020);
+  --danger: light-dark(#b3261e, #ff8a80);
+  --warning: light-dark(#8a5a00, #ffcc66);
+  --ok: light-dark(#1e7a3d, #7fe0a0);
+
+  --space-1: 0.25rem;
+  --space-2: 0.5rem;
+  --space-3: 1rem;
+  --space-4: 1.5rem;
+
+  --radius: 8px;
+  --focus-ring: 2px solid var(--accent);
+}
+
+:root[data-density="compact"] {
+  --space-2: 0.35rem;
+  --space-3: 0.65rem;
+  --space-4: 1rem;
+}
+
+@media (prefers-contrast: more) {
+  :root {
+    --border: light-dark(#000000, #ffffff);
+    --text-muted: var(--text);
+  }
+}
+
+* {
+  box-sizing: border-box;
+}
+
+body {
+  margin: 0;
+  background: var(--surface);
+  color: var(--text);
+  font: 15px/1.5 system-ui, -apple-system, "Segoe UI", sans-serif;
+}
+
+/* Working surface, not a content page: minimal chrome, work area above the
+   fold (memory feedback-workbench-canvas-ux). */
+header.shell-header {
+  display: flex;
+  align-items: center;
+  gap: var(--space-3);
+  padding: var(--space-2) var(--space-3);
+  border-bottom: 1px solid var(--border);
+}
+
+.wordmark {
+  font-weight: 600;
+  letter-spacing: 0.01em;
+}
+
+nav.shell-nav {
+  display: flex;
+  gap: var(--space-2);
+}
+
+nav.shell-nav a {
+  color: var(--text-muted);
+  text-decoration: none;
+  padding: var(--space-1) var(--space-2);
+  border-radius: var(--radius);
+}
+
+nav.shell-nav a:hover,
+nav.shell-nav a:focus-visible {
+  color: var(--text);
+  background: var(--surface-raised);
+}
+
+nav.shell-nav a[aria-current="page"] {
+  color: var(--accent-contrast);
+  background: var(--accent);
+}
+
+a:focus-visible,
+button:focus-visible,
+[tabindex]:focus-visible {
+  outline: var(--focus-ring);
+  outline-offset: 2px;
+}
+
+.status-pill {
+  margin-left: auto;
+  display: flex;
+  align-items: center;
+  gap: var(--space-1);
+  font-size: 0.85rem;
+  color: var(--text-muted);
+}
+
+.status-dot {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: var(--text-muted);
+}
+.status-dot[data-state="live"] {
+  background: var(--ok);
+}
+.status-dot[data-state="dormant"] {
+  background: var(--warning);
+}
+.status-dot[data-state="down"] {
+  background: var(--danger);
+}
+
+main.shell-main {
+  padding: var(--space-3);
+  max-width: 72rem;
+  margin: 0 auto;
+}
+
+.card {
+  background: var(--surface-raised);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  padding: var(--space-3);
+  margin-bottom: var(--space-3);
+}
+
+.card-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(20rem, 1fr));
+  gap: var(--space-3);
+}
+
+.stale-badge {
+  display: inline-block;
+  font-size: 0.75rem;
+  color: var(--warning);
+  border: 1px solid var(--warning);
+  border-radius: var(--radius);
+  padding: 0 var(--space-1);
+  margin-left: var(--space-2);
+}
+
+.field-row {
+  display: flex;
+  justify-content: space-between;
+  gap: var(--space-2);
+  padding: var(--space-1) 0;
+  border-bottom: 1px solid var(--border);
+  font-size: 0.9rem;
+}
+.field-row:last-child {
+  border-bottom: none;
+}
+.field-row dt {
+  color: var(--text-muted);
+}
+.field-row dd {
+  margin: 0;
+  text-align: right;
+  word-break: break-word;
+}
+
+details.disclosure summary {
+  cursor: pointer;
+  color: var(--accent);
+  font-size: 0.9rem;
+}
+
+.empty-state,
+.unavailable-state {
+  color: var(--text-muted);
+  font-style: normal;
+}
+
+.token-form {
+  display: flex;
+  gap: var(--space-2);
+  align-items: center;
+  flex-wrap: wrap;
+}
+
+.token-form input {
+  background: var(--surface);
+  color: var(--text);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  padding: var(--space-1) var(--space-2);
+}
+
+button {
+  background: var(--accent);
+  color: var(--accent-contrast);
+  border: none;
+  border-radius: var(--radius);
+  padding: var(--space-1) var(--space-3);
+  font: inherit;
+  cursor: pointer;
+}
+button:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+button.secondary {
+  background: transparent;
+  color: var(--text);
+  border: 1px solid var(--border);
+}
