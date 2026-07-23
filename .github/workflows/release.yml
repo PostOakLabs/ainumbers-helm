@@ -10,10 +10,29 @@ on:
       - "v*"
 
 permissions:
-  contents: write
+  contents: read
 
 jobs:
+  test:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+    steps:
+      - uses: actions/checkout@9c091bb21b7c1c1d1991bb908d89e4e9dddfe3e0 # v7.0.0
+      - uses: actions/setup-node@249970729cb0ef3589644e2896645e5dc5ba9c38 # v6.5.0
+        with:
+          node-version: "22"
+      - name: lint
+        run: node scripts/lint.mjs
+      - name: test
+        run: node scripts/test.mjs
+      - name: validate control-plane schemas
+        run: node scripts/validate-schemas.mjs
+      - name: sea build dry-run
+        run: node scripts/sea-dry-run.mjs
+
   build:
+    needs: test
     strategy:
       matrix:
         include:
@@ -21,11 +40,15 @@ jobs:
             tag: linux-x64
           - os: windows-latest
             tag: windows-x64
-          - os: macos-13
+          # macos-13 (Intel) was retired by GitHub 2025-12-04; macos-15-intel
+          # is the current Intel image (supported through Aug 2027).
+          - os: macos-15-intel
             tag: macos-x64
           - os: macos-14
             tag: macos-arm64
     runs-on: ${{ matrix.os }}
+    permissions:
+      contents: read
     steps:
       - uses: actions/checkout@9c091bb21b7c1c1d1991bb908d89e4e9dddfe3e0 # v7.0.0
       - uses: actions/setup-node@249970729cb0ef3589644e2896645e5dc5ba9c38 # v6.5.0
@@ -42,6 +65,8 @@ jobs:
   sign-and-release:
     needs: build
     runs-on: ubuntu-latest
+    permissions:
+      contents: write
     steps:
       - uses: actions/checkout@9c091bb21b7c1c1d1991bb908d89e4e9dddfe3e0 # v7.0.0
       - uses: actions/setup-node@249970729cb0ef3589644e2896645e5dc5ba9c38 # v6.5.0

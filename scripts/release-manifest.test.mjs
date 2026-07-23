@@ -18,10 +18,11 @@ writeFileSync(join(distDir, "linux-x64", "helmd"), "fake sea binary bytes");
 
 const testKeys = generateKeys();
 const secretB64 = Buffer.from(JSON.stringify(serializeKeys(testKeys))).toString("base64");
+const pkgVersion = JSON.parse(readFileSync(join(ROOT, "package.json"), "utf8")).version;
 
 test("release-manifest: build script signs dist/, verify-release-manifest confirms it", () => {
   execFileSync(process.execPath, [join(ROOT, "scripts", "release-manifest.mjs")], {
-    env: { ...process.env, HELM_RELEASE_SIGNING_KEY_B64: secretB64, HELM_RELEASE_VERSION: "0.1.0-test", HELM_RELEASE_DIST_DIR: distDir },
+    env: { ...process.env, HELM_RELEASE_SIGNING_KEY_B64: secretB64, HELM_RELEASE_VERSION: pkgVersion, HELM_RELEASE_DIST_DIR: distDir },
     stdio: "pipe",
   });
 
@@ -29,8 +30,17 @@ test("release-manifest: build script signs dist/, verify-release-manifest confir
   assert.ok(existsSync(join(distDir, "release-manifest.dsse.json")));
 
   const statement = JSON.parse(readFileSync(join(distDir, "release-manifest.json"), "utf8"));
-  assert.equal(statement.predicate.version, "0.1.0-test");
+  assert.equal(statement.predicate.version, pkgVersion);
   assert.equal(statement.subject.length, 1);
+});
+
+test("release-manifest: tag version mismatching package.json refuses to sign", () => {
+  assert.throws(() => {
+    execFileSync(process.execPath, [join(ROOT, "scripts", "release-manifest.mjs")], {
+      env: { ...process.env, HELM_RELEASE_SIGNING_KEY_B64: secretB64, HELM_RELEASE_VERSION: "9.9.9-mismatch", HELM_RELEASE_DIST_DIR: distDir },
+      stdio: "pipe",
+    });
+  }, /Command failed/);
 });
 
 test("verify-release-manifest: tampered artifact bytes fail digest check", () => {
