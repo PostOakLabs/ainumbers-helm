@@ -6,7 +6,7 @@
 import { createServer } from "node:http";
 import { tokenMatches } from "./token.mjs";
 import { log } from "./log.mjs";
-import { startFlow, getFlowStatus, listConnections, revokeConnection } from "./oauth-pkce.mjs";
+import { startFlow, getFlowStatus, listConnections, revokeConnection, isSecureEndpoint } from "./oauth-pkce.mjs";
 
 const START = Date.now();
 
@@ -68,6 +68,9 @@ async function handleBeginConnection(req, res) {
   }
   for (const field of ["provider", "authorizationEndpoint", "tokenEndpoint", "clientId", "scopes"]) {
     if (!body[field]) return deny(res, 400, `missing_${field}`);
+  }
+  if (!isSecureEndpoint(body.authorizationEndpoint) || !isSecureEndpoint(body.tokenEndpoint)) {
+    return deny(res, 400, "insecure_endpoint");
   }
   try {
     const flow = await startFlow(body);
