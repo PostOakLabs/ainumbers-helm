@@ -48,6 +48,41 @@ async function runBackup(port, token, resultEl) {
   }
 }
 
+// Persona starter presets (LANDING §3.1 borrow) — curated preview of what
+// Operate shows once helmd is running, so the dormant state has a home
+// screen instead of a wall of empty cards.
+const PERSONAS = [
+  {
+    name: "Compliance officer",
+    blurb: "Journal head, anchor status, and backup history for audit review.",
+  },
+  {
+    name: "Trader",
+    blurb: "Live daemon health and the running hash for a fast pass/fail check.",
+  },
+  {
+    name: "Deal team",
+    blurb: "Anchor status per document set, with backup as the paper trail.",
+  },
+];
+
+function personaCard(persona) {
+  return `
+    <section class="card" aria-labelledby="persona-${persona.name.replace(/\s+/g, "-").toLowerCase()}">
+      <h3 id="persona-${persona.name.replace(/\s+/g, "-").toLowerCase()}">${persona.name}</h3>
+      <p class="empty-state">${persona.blurb}</p>
+    </section>`;
+}
+
+function dormantHome() {
+  return `
+    <h2>Operate</h2>
+    <p class="empty-state">helmd isn't running yet. Start it with <code>helmd start</code> — these cards fill in once it's connected.</p>
+    <div class="card-grid">
+      ${PERSONAS.map(personaCard).join("")}
+    </div>`;
+}
+
 export async function renderOperate(root, { port, token }) {
   root.innerHTML = `<p aria-live="polite">Checking helmd…</p>`;
 
@@ -56,6 +91,12 @@ export async function renderOperate(root, { port, token }) {
     fetchWithFallback("/journal/head", { port, token }),
     fetchWithFallback("/anchor/status", { port, token }),
   ]);
+
+  const allMissing = [health, journal, anchors].every((r) => r.state === "missing");
+  if (allMissing) {
+    root.innerHTML = dormantHome();
+    return;
+  }
 
   root.innerHTML = `
     <h2>Operate</h2>
