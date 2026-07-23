@@ -1,0 +1,9 @@
+{
+  "connector_id": "inbound-webhook",
+  "connector_version": "1.0.0",
+  "publisher": "ainumbers-helm",
+  "allowed_hosts": ["hooks.n8n.example", "hooks.zapier.example"],
+  "allowed_methods": ["POST"],
+  "scopes": ["governed-step.receive"],
+  "vault_scope": ["vault://helm/connectors/inbound-webhook/shared-secret"]
+}
