@@ -9,5 +9,8 @@
     { "connector_id": "google-drive.fetch", "contract_digest": "sha256:af2c0d0db5baec3e06592c51e073a7606955a005fe70bbbce5c0f85c08fe2f0b" }
   ],
   "gates": [],
-  "actions": []
+  "actions": [],
+  "connector_inputs": [
+    { "step_id": "ci1", "connector_id": "google-drive.fetch", "feeds_node_id": "n1" }
+  ]
 }
