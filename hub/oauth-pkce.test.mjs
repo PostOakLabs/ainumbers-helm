@@ -162,3 +162,12 @@ test("revoke: deletes vault secret, calls provider revocation, marks connection 
 test("revoke: unknown connection id returns null", async () => {
   assert.equal(await revokeConnection("does-not-exist"), null);
 });
+
+test("HELM-SEC-5 hardening: exchangeCode and revocation fetch calls carry a timeout signal", async () => {
+  const src = await import("node:fs").then((fs) => fs.readFileSync(new URL("./oauth-pkce.mjs", import.meta.url), "utf8"));
+  const exchangeBody = src.slice(src.indexOf("async function exchangeCode"), src.indexOf("function completeFlow"));
+  const revokeBody = src.slice(src.indexOf("export async function revokeConnection"));
+  for (const body of [exchangeBody, revokeBody]) {
+    assert.match(body, /signal:\s*AbortSignal\.timeout\(/, "fetch call must carry an AbortSignal timeout");
+  }
+});

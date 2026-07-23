@@ -20,6 +20,7 @@ import { vaultSet, vaultGet, vaultDelete } from "./vault.mjs";
 import { log } from "./log.mjs";
 
 const FLOW_TTL_MS = 5 * 60 * 1000; // RFC 8252 loopback flows are short-lived by nature
+const FETCH_TIMEOUT_MS = 15 * 1000; // HELM-SEC-5 hardening: a hung provider endpoint must not stall the flow forever
 
 // In-memory only — a flow is meaningless across a daemon restart (the
 // ephemeral listener that could complete it is gone too).
@@ -98,6 +99,7 @@ async function exchangeCode({ tokenEndpoint, code, codeVerifier, redirectUri, cl
       client_id: clientId,
       code_verifier: codeVerifier,
     }),
+    signal: AbortSignal.timeout(FETCH_TIMEOUT_MS),
   });
   if (!res.ok) throw new Error(`token exchange failed: ${res.status}`);
   return res.json();
@@ -266,6 +268,7 @@ export async function revokeConnection(connectionId) {
           method: "POST",
           headers: { "Content-Type": "application/x-www-form-urlencoded" },
           body: new URLSearchParams({ token: tokens.access_token, client_id: conn.clientId }),
+          signal: AbortSignal.timeout(FETCH_TIMEOUT_MS),
         });
       } catch (error) {
         log.warn("provider revocation call failed (still revoking locally)", { connectionId, error: String(error) });

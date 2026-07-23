@@ -76,6 +76,25 @@ test("performEgress: approved host is allowed and the transcript records the all
   db.close();
 });
 
+test("performEgress: fetch call carries a timeout signal (HELM-SEC-5 hardening)", async () => {
+  const { contract } = loadContract(CONTRACT_PATH);
+  const db = openJournal(join(TMP, "timeout-signal.db"));
+  const originalFetch = globalThis.fetch;
+  let seenSignal;
+  globalThis.fetch = async (u, opts) => {
+    seenSignal = opts.signal;
+    return new Response(Buffer.from("ok"), { status: 200 });
+  };
+
+  await performEgress(db, {
+    contract, connectorId: "google-drive.fetch", url: "https://www.googleapis.com/drive/v3/files/abc?alt=media", method: "GET",
+  });
+  assert.ok(seenSignal instanceof AbortSignal, "performEgress must pass an AbortSignal to fetch");
+
+  globalThis.fetch = originalFetch;
+  db.close();
+});
+
 test("performEgress: redirect to a non-allowlisted host is blocked, not silently followed", async () => {
   const { contract } = loadContract(CONTRACT_PATH);
   const db = openJournal(join(TMP, "redirect-blocked.db"));

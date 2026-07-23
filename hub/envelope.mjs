@@ -70,7 +70,9 @@ export function emitEnvelope(statement, keys) {
 // Ed25519 is MUST: its absence or failure always fails the envelope.
 // ML-DSA-44 is SHOULD: absence doesn't fail verification, but a present-and-wrong
 // signature does (mldsa44 === false), so a tampered PQC co-signature is still caught.
-export function verifyEnvelope(envelope, publicKeys) {
+// opts.strict (HELM-SEC-5, F6): flip to requiring BOTH signatures present-and-valid,
+// for the day PQC becomes mandatory (D5). Default stays SHOULD/MUST per THREAT-MODEL §5.
+export function verifyEnvelope(envelope, publicKeys, { strict = false } = {}) {
   if (envelope.payloadType !== DSSE_PAYLOAD_TYPE) {
     return { valid: false, ed25519: false, mldsa44: null, statement: null };
   }
@@ -87,7 +89,7 @@ export function verifyEnvelope(envelope, publicKeys) {
     ? ml_dsa44.verify(new Uint8Array(Buffer.from(mldsaEntry.sig, "base64")), toVerify, publicKeys.mldsa44)
     : null;
 
-  const valid = ed25519 === true && mldsa44 !== false;
+  const valid = strict ? ed25519 === true && mldsa44 === true : ed25519 === true && mldsa44 !== false;
   let statement = null;
   if (valid) {
     try {

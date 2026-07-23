@@ -74,6 +74,7 @@ export function recordEgress(db, { connectorId, destinationHost, operation, deci
 }
 
 const MAX_REDIRECTS = 5;
+const EGRESS_TIMEOUT_MS = 15 * 1000; // HELM-SEC-5 hardening: a hung connector endpoint must not stall the runtime forever
 
 // The single egress choke point every connector implementation MUST route
 // through — a blocked call throws (never returns a fake response) AND is
@@ -98,7 +99,13 @@ export async function performEgress(db, { contract, connectorId, url, method, he
       throw new Error(`egress blocked: ${connectorId} -> ${method} ${host} not in contract allowlist`);
     }
 
-    const res = await fetch(currentUrl, { method, headers, body, redirect: "manual" });
+    const res = await fetch(currentUrl, {
+      method,
+      headers,
+      body,
+      redirect: "manual",
+      signal: AbortSignal.timeout(EGRESS_TIMEOUT_MS),
+    });
 
     if (res.status >= 300 && res.status < 400 && res.headers.get("location")) {
       recordEgress(db, { connectorId, destinationHost: host, operation: method, decision: "allowed", requestDigest });

@@ -53,6 +53,33 @@ test("windows-dpapi: secret/ciphertext reach powershell.exe only via stdin, neve
   }
 });
 
+test("HELM_VAULT_PASSPHRASE (HELM-SEC-5, F5): round trip works when set", () => {
+  process.env.HELM_VAULT_PASSPHRASE = "correct horse battery staple";
+  try {
+    const secret = { access_token: "PASSPHRASE-DERIVED-KEY-CHECK" };
+    const { ref } = vaultSet("test:passphrase", secret);
+    assert.deepEqual(vaultGet(ref), secret);
+    vaultDelete(ref);
+  } finally {
+    delete process.env.HELM_VAULT_PASSPHRASE;
+  }
+});
+
+test("HELM_VAULT_PASSPHRASE (HELM-SEC-5, F5): a value encrypted under one passphrase does not decrypt under another", () => {
+  process.env.HELM_VAULT_PASSPHRASE = "passphrase-one";
+  const { ref } = vaultSet("test:passphrase-mismatch", { access_token: "SHOULD-NOT-DECRYPT" });
+  if (vaultBackendFor(ref) !== "file-fallback") {
+    delete process.env.HELM_VAULT_PASSPHRASE;
+    return; // only meaningful for the file-fallback tier
+  }
+  process.env.HELM_VAULT_PASSPHRASE = "passphrase-two";
+  try {
+    assert.throws(() => vaultGet(ref));
+  } finally {
+    delete process.env.HELM_VAULT_PASSPHRASE;
+  }
+});
+
 test("file-fallback tier never writes the secret in plaintext to disk", () => {
   vaultSet("test:no-plaintext", { access_token: "SECRET-PLAINTEXT-CHECK" });
   if (vaultBackendFor("test:no-plaintext") !== "file-fallback") return; // only applies to this tier
