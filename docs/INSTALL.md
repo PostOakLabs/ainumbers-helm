@@ -49,6 +49,20 @@ the committed public key, (2) every artifact's SHA-256 on disk matches the
 digest the release key attested to. A tampered binary or a manifest signed
 by any other key fails closed.
 
+## First run
+
+```
+helmd start
+```
+
+`helmd` serves its own UI at `http://127.0.0.1:<port>/` (default port 4173)
+— no separate download, no `file://` page. On first run it opens your
+default browser at that URL, pre-paired with a one-time token in the
+fragment (`#token=...`, stripped from the address bar immediately, never
+sent to the server). If nothing opens (headless box, no default browser)
+copy the printed URL yourself. Later starts stay silent; run `helmd start
+--open` to force the browser open again.
+
 ## After installing
 
 ```
