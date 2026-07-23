@@ -7,6 +7,9 @@ import { createHelmServer } from "./server.mjs";
 import { createCliChannel } from "./cli-channel.mjs";
 import { runDoctor } from "./doctor.mjs";
 import { log } from "./log.mjs";
+import { existsSync } from "node:fs";
+import { statePath } from "./state-dir.mjs";
+import { openJournal, replayVerify } from "./journal.mjs";
 
 async function cmdDoctor() {
   const report = await runDoctor();
@@ -19,6 +22,20 @@ async function cmdDoctor() {
 function cmdStart() {
   const config = loadConfig();
   const token = loadOrCreateToken();
+
+  // D6: replay-journal-on-restart integrity check. A daemon must never come
+  // up serving a journal it can't prove is unbroken.
+  const journalPath = statePath("journal.db");
+  if (existsSync(journalPath)) {
+    const db = openJournal(journalPath);
+    const replay = replayVerify(db);
+    db.close();
+    if (!replay.ok) {
+      log.error("journal replay integrity check FAILED — refusing to start", { brokenAt: replay.brokenAt });
+      process.exit(1);
+    }
+    log.info("journal replay integrity check passed");
+  }
 
   createHelmServer({ port: config.port, allowedOrigin: config.allowedOrigin, token });
   createCliChannel({

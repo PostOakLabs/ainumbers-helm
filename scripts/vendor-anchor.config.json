@@ -1,0 +1,9 @@
+{
+  "sourceRepo": "https://github.com/PostOakLabs/anchor-suite.git",
+  "pinnedSha": "1aa6d2222b64ff9b5f53245e6be244ddc091d401",
+  "paths": [
+    "public/lib/tsq.mjs",
+    "public/vendor/pkijs.bundle.mjs"
+  ],
+  "destination": "hub/vendored/anchor-suite"
+}
