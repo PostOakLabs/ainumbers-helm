@@ -4,8 +4,10 @@ import { mkdtempSync, rmSync, writeFileSync } from "node:fs";
 import { tmpdir } from "node:os";
 import { join, dirname } from "node:path";
 import { fileURLToPath } from "node:url";
+import { createServer } from "node:http";
+import dns from "node:dns";
 import { openJournal } from "./journal.mjs";
-import { loadContract, assertEgressAllowed, performEgress, assertResolvedIpAllowed, __setHostResolverForTest } from "./connector.mjs";
+import { loadContract, assertEgressAllowed, performEgress, assertResolvedIpAllowed, pinHostResolution, __setHostResolverForTest } from "./connector.mjs";
 
 const HERE = dirname(fileURLToPath(import.meta.url));
 const TMP = mkdtempSync(join(tmpdir(), "helm-connector-test-"));
@@ -196,6 +198,68 @@ test("performEgress: credential is attached at the boundary, connector caller ne
     credential: { ref, scheme: "bearer" },
   });
   assert.equal(seenAuth, "Bearer boundary-secret-xyz");
+
+  globalThis.fetch = originalFetch;
+  db.close();
+});
+
+test("pinHostResolution: forces node:dns lookups for the pinned hostname to the vetted IP, reverts on unpin (HELM-P2-R11-F1)", async () => {
+  const server = createServer((req, res) => res.end("pinned-ok"));
+  await new Promise((resolve) => server.listen(0, "127.0.0.1", resolve));
+  const port = server.address().port;
+  const hostname = "pin-primitive-test.invalid"; // no real DNS entry anywhere
+
+  const unpin = pinHostResolution(hostname, "127.0.0.1");
+  const res = await fetch(`http://${hostname}:${port}/`);
+  assert.equal(await res.text(), "pinned-ok", "fetch must connect via the pinned IP, not real (nonexistent) DNS");
+  unpin();
+
+  await assert.rejects(
+    () => fetch(`http://${hostname}:${port}/`, { signal: AbortSignal.timeout(2000) }),
+    "once unpinned, the hostname must fall back to real DNS resolution and fail (no such domain)"
+  );
+
+  await new Promise((resolve) => server.close(resolve));
+});
+
+test("performEgress: DNS-rebinding regression — pins the guard-vetted IP for the connect and unpins after (HELM-P2-R11-F1)", async () => {
+  const { contract } = loadContract(CONTRACT_PATH);
+  const db = openJournal(join(TMP, "rebind-pin.db"));
+
+  const originalFetch = globalThis.fetch;
+  let seenLookupIp;
+  globalThis.fetch = async () => {
+    // While the guarded fetch is "in flight", a real node:dns lookup for
+    // the same hostname must resolve to the vetted IP the guard just
+    // checked — proving the connect is pinned to that exact answer rather
+    // than free to re-resolve (and land on whatever an attacker's
+    // short-TTL DNS rebind answers next).
+    seenLookupIp = await new Promise((resolve, reject) =>
+      dns.lookup("www.googleapis.com", (err, address) => (err ? reject(err) : resolve(address)))
+    );
+    return new Response(Buffer.from("ok"), { status: 200 });
+  };
+
+  await performEgress(db, {
+    contract, connectorId: "google-drive.fetch",
+    url: "https://www.googleapis.com/drive/v3/files/abc?alt=media", method: "GET",
+  });
+  assert.equal(seenLookupIp, "142.250.0.100", "the connect-time lookup must return the exact IP the guard vetted");
+
+  // Pin must be released once performEgress returns — a later, unrelated
+  // lookup for the same hostname is no longer forced to the stale answer
+  // (whether that lookup now succeeds via real DNS or fails outright
+  // depends on this sandbox's network reachability — either is fine, as
+  // long as it's not still the vetted test IP).
+  let afterUnpinIp = null;
+  try {
+    afterUnpinIp = await new Promise((resolve, reject) =>
+      dns.lookup("www.googleapis.com", (err, address) => (err ? reject(err) : resolve(address)))
+    );
+  } catch {
+    // no network in this sandbox — also proves the pin is no longer forcing an answer
+  }
+  assert.notEqual(afterUnpinIp, "142.250.0.100", "pin must be released once performEgress returns");
 
   globalThis.fetch = originalFetch;
   db.close();
