@@ -106,3 +106,8 @@ export function loadOrCreateKeys() {
 export function publicKeysOf(keys) {
   return { ed25519: keys.ed25519.publicKey, mldsa44: keys.mldsa44.publicKey };
 }
+
+// Exposed for release-keys.mjs (HELM-H8): the release signing keypair uses
+// the same DER/base64 shape as the daemon keypair but is provisioned via
+// env vars (CI secrets), not the at-rest passphrase-encrypted file.
+export { serializeKeys, deserializeKeys, generateKeys };

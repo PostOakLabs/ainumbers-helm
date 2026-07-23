@@ -1,0 +1,16 @@
+{
+  "_type": "https://in-toto.io/Statement/v1",
+  "subject": [
+    {
+      "name": "linux-x64/helmd",
+      "digest": { "sha256": "not-a-valid-hex-digest" },
+      "size": 84213760
+    }
+  ],
+  "predicateType": "https://ainumbers.co/helm/attestation/v1#release-manifest",
+  "predicate": {
+    "version": "0.1.0",
+    "node_version": "v22.5.0",
+    "platforms": ["linux-x64"]
+  }
+}

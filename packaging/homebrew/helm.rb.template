@@ -1,0 +1,25 @@
+class Helm < Formula
+  desc "AINumbers Helm — local-first control plane for verifiable connected workflows"
+  homepage "https://ainumbers.co/helm"
+  version "{{VERSION}}"
+  license :cannot_represent
+
+  on_macos do
+    on_arm do
+      url "https://github.com/PostOakLabs/ainumbers-helm/releases/download/v{{VERSION}}/helmd-macos-arm64"
+      sha256 "{{SHA256_MACOS_ARM64}}"
+    end
+    on_intel do
+      url "https://github.com/PostOakLabs/ainumbers-helm/releases/download/v{{VERSION}}/helmd-macos-x64"
+      sha256 "{{SHA256_MACOS_X64}}"
+    end
+  end
+
+  def install
+    bin.install Dir["helmd-*"].first => "helmd"
+  end
+
+  test do
+    system "#{bin}/helmd", "doctor"
+  end
+end

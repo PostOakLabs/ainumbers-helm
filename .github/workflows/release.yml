@@ -1,0 +1,96 @@
+name: Release
+
+# HELM-H8: tag-triggered three-platform SEA build + signed release manifest
+# + packaging manifests, published as a GitHub pre-release. Never runs on
+# push to main — only on an explicit `v*` tag, so cutting a release is a
+# deliberate act (git tag + push), not a side effect of merging.
+on:
+  push:
+    tags:
+      - "v*"
+
+permissions:
+  contents: write
+
+jobs:
+  build:
+    strategy:
+      matrix:
+        include:
+          - os: ubuntu-latest
+            tag: linux-x64
+          - os: windows-latest
+            tag: windows-x64
+          - os: macos-13
+            tag: macos-x64
+          - os: macos-14
+            tag: macos-arm64
+    runs-on: ${{ matrix.os }}
+    steps:
+      - uses: actions/checkout@9c091bb21b7c1c1d1991bb908d89e4e9dddfe3e0 # v7.0.0
+      - uses: actions/setup-node@249970729cb0ef3589644e2896645e5dc5ba9c38 # v6.5.0
+        with:
+          node-version: "22"
+      - name: build SEA binary (${{ matrix.tag }})
+        run: node scripts/build-sea.mjs
+      - uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4.6.2
+        with:
+          name: helmd-${{ matrix.tag }}
+          path: dist/${{ matrix.tag }}/*
+          if-no-files-found: error
+
+  sign-and-release:
+    needs: build
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@9c091bb21b7c1c1d1991bb908d89e4e9dddfe3e0 # v7.0.0
+      - uses: actions/setup-node@249970729cb0ef3589644e2896645e5dc5ba9c38 # v6.5.0
+        with:
+          node-version: "22"
+      - uses: actions/download-artifact@018cc2cf5baa6db3ef3c5f8a56943fffe632ef53 # v6.0.0
+        with:
+          path: dist
+          pattern: helmd-*
+          merge-multiple: false
+
+      # download-artifact lands each matrix artifact under dist/helmd-<tag>/;
+      # release-manifest.mjs expects dist/<tag>/. Flatten the prefix.
+      - name: flatten artifact layout
+        run: |
+          for d in dist/helmd-*; do
+            tag="${d#dist/helmd-}"
+            mkdir -p "dist/$tag"
+            mv "$d"/* "dist/$tag"/
+            rmdir "$d"
+          done
+          ls -R dist
+
+      - name: derive release version from tag
+        run: echo "HELM_RELEASE_VERSION=${GITHUB_REF_NAME#v}" >> "$GITHUB_ENV"
+
+      - name: sign release manifest
+        env:
+          HELM_RELEASE_SIGNING_KEY_B64: ${{ secrets.HELM_RELEASE_SIGNING_KEY_B64 }}
+        run: node scripts/release-manifest.mjs
+
+      - name: verify release manifest (fail closed before publishing)
+        run: node scripts/verify-release-manifest.mjs dist
+
+      - name: generate packaging manifests
+        run: node scripts/gen-packaging-manifests.mjs
+
+      - name: create GitHub pre-release
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          gh release create "$GITHUB_REF_NAME" \
+            --repo "$GITHUB_REPOSITORY" \
+            --title "Helm $GITHUB_REF_NAME" \
+            --prerelease \
+            --generate-notes \
+            dist/linux-x64/helmd \
+            dist/macos-x64/helmd \
+            dist/macos-arm64/helmd \
+            dist/windows-x64/helmd.exe \
+            dist/release-manifest.json \
+            dist/release-manifest.dsse.json

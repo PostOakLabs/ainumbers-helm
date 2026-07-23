@@ -1,0 +1,65 @@
+#!/usr/bin/env node
+// Postinstall: downloads the platform-matched helmd SEA binary from the
+// tagged GitHub release matching this npm package's own version, then
+// verifies it against the sha256 baked into this file at packaging time
+// (from the signed release-manifest — HELM-H8). No source is trusted at
+// install time beyond that pinned digest; a mismatch aborts the install.
+import { createWriteStream, chmodSync, existsSync, mkdirSync, unlinkSync } from "node:fs";
+import { createHash } from "node:crypto";
+import { join, dirname } from "node:path";
+import { fileURLToPath } from "node:url";
+import { pipeline } from "node:stream/promises";
+
+const VERSION = "{{VERSION}}";
+const SHA256 = {
+  "linux-x64": "{{SHA256_LINUX_X64}}",
+  "macos-arm64": "{{SHA256_MACOS_ARM64}}",
+  "macos-x64": "{{SHA256_MACOS_X64}}",
+  "windows-x64": "{{SHA256_WINDOWS_X64}}",
+};
+
+function platformTag() {
+  const p = process.platform === "win32" ? "windows" : process.platform === "darwin" ? "macos" : "linux";
+  return `${p}-${process.arch}`;
+}
+
+async function main() {
+  const tag = platformTag();
+  const expected = SHA256[tag];
+  if (!expected) {
+    console.error(`helm-cli: no published helmd binary for platform ${tag}`);
+    process.exit(1);
+  }
+
+  const HERE = dirname(fileURLToPath(import.meta.url));
+  const outDir = join(HERE, "..", "vendor");
+  mkdirSync(outDir, { recursive: true });
+  const outPath = join(outDir, process.platform === "win32" ? "helmd.exe" : "helmd");
+
+  const filename = `helmd-${tag}${process.platform === "win32" ? ".exe" : ""}`;
+  const url = `https://github.com/PostOakLabs/ainumbers-helm/releases/download/v${VERSION}/${filename}`;
+
+  const response = await fetch(url);
+  if (!response.ok) {
+    console.error(`helm-cli: download failed (${response.status}) for ${url}`);
+    process.exit(1);
+  }
+
+  await pipeline(response.body, createWriteStream(outPath));
+
+  const { readFileSync } = await import("node:fs");
+  const actual = createHash("sha256").update(readFileSync(outPath)).digest("hex");
+  if (actual !== expected) {
+    unlinkSync(outPath);
+    console.error(`helm-cli: SHA-256 mismatch for ${filename} — expected ${expected}, got ${actual}. Refusing to install.`);
+    process.exit(1);
+  }
+
+  if (process.platform !== "win32") chmodSync(outPath, 0o755);
+  console.log(`helm-cli: installed helmd ${VERSION} (${tag}), sha256 verified`);
+}
+
+main().catch((err) => {
+  console.error(`helm-cli: install failed: ${err.message}`);
+  process.exit(1);
+});
