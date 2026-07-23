@@ -131,14 +131,31 @@ function dpapiFile(ref) {
   return `${fallbackDir()}/${Buffer.from(ref, "utf8").toString("base64url")}.dpapi`;
 }
 
+// Secret bytes are piped via stdin, never interpolated into the command
+// line — argv is visible to any process (Get-CimInstance Win32_Process) and
+// PowerShell ScriptBlock/transcription logging (Event 4104) (HELM-R1 F2).
+const DPAPI_PROTECT_SCRIPT =
+  `Add-Type -AssemblyName System.Security; ` +
+  `$b64 = [Console]::In.ReadToEnd(); ` +
+  `$bytes = [Convert]::FromBase64String($b64); ` +
+  `$enc = [System.Security.Cryptography.ProtectedData]::Protect($bytes, $null, ` +
+  `[System.Security.Cryptography.DataProtectionScope]::CurrentUser); ` +
+  `[Convert]::ToBase64String($enc)`;
+
+const DPAPI_UNPROTECT_SCRIPT =
+  `Add-Type -AssemblyName System.Security; ` +
+  `$b64 = [Console]::In.ReadToEnd(); ` +
+  `$bytes = [Convert]::FromBase64String($b64); ` +
+  `$dec = [System.Security.Cryptography.ProtectedData]::Unprotect($bytes, $null, ` +
+  `[System.Security.Cryptography.DataProtectionScope]::CurrentUser); ` +
+  `[Convert]::ToBase64String($dec)`;
+
 function windowsSet(ref, secret) {
   const plaintextB64 = Buffer.from(JSON.stringify(secret), "utf8").toString("base64");
-  const script =
-    `$bytes = [Convert]::FromBase64String('${plaintextB64}'); ` +
-    `$enc = [System.Security.Cryptography.ProtectedData]::Protect($bytes, $null, ` +
-    `[System.Security.Cryptography.DataProtectionScope]::CurrentUser); ` +
-    `[Convert]::ToBase64String($enc)`;
-  const r = spawnSync("powershell.exe", ["-NoProfile", "-NonInteractive", "-Command", script], { encoding: "utf8" });
+  const r = spawnSync("powershell.exe", ["-NoProfile", "-NonInteractive", "-Command", DPAPI_PROTECT_SCRIPT], {
+    input: plaintextB64,
+    encoding: "utf8",
+  });
   if (r.error || r.status !== 0 || !r.stdout) throw new Error("dpapi encrypt failed");
   writeFileSync(dpapiFile(ref), r.stdout.trim(), { mode: 0o600 });
 }
@@ -147,12 +164,10 @@ function windowsGet(ref) {
   const p = dpapiFile(ref);
   if (!existsSync(p)) return null;
   const encB64 = readFileSync(p, "utf8").trim();
-  const script =
-    `$bytes = [Convert]::FromBase64String('${encB64}'); ` +
-    `$dec = [System.Security.Cryptography.ProtectedData]::Unprotect($bytes, $null, ` +
-    `[System.Security.Cryptography.DataProtectionScope]::CurrentUser); ` +
-    `[Convert]::ToBase64String($dec)`;
-  const r = spawnSync("powershell.exe", ["-NoProfile", "-NonInteractive", "-Command", script], { encoding: "utf8" });
+  const r = spawnSync("powershell.exe", ["-NoProfile", "-NonInteractive", "-Command", DPAPI_UNPROTECT_SCRIPT], {
+    input: encB64,
+    encoding: "utf8",
+  });
   if (r.error || r.status !== 0 || !r.stdout) return null;
   return JSON.parse(Buffer.from(r.stdout.trim(), "base64").toString("utf8"));
 }
