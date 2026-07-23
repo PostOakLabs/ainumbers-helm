@@ -1,0 +1,23 @@
+name: release-please
+
+# HELM-REL-AUTO-1: maintains a standing release PR from Conventional-Commit
+# squash-merge titles. Merging that PR creates the vN.N.N tag + GitHub
+# Release, which triggers the existing tag-triggered release.yml pipeline
+# (signed SEA binaries). SHA-pinned per SO #17 — this is the only
+# third-party action in the program; never move it to a tag.
+on:
+  push:
+    branches: [main]
+
+permissions:
+  contents: write
+  pull-requests: write
+
+jobs:
+  release-please:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: googleapis/release-please-action@45996ed1f6d02564a971a2fa1b5860e934307cf7 # v5.0.0
+        with:
+          config-file: release-please-config.json
+          manifest-file: .release-please-manifest.json
