@@ -37,6 +37,7 @@ function mountTokenForm(root, onPaired) {
     <div class="welcome-state" aria-live="polite">
       <p class="welcome-title">Waiting for Helm on this computer&hellip;</p>
       <p class="empty-state">Run <code>helmd start</code> — it opens this page paired automatically.</p>
+      <p class="empty-state">Lost this tab, or opened a bookmark? Run <code>helmd open</code> to get a fresh paired link.</p>
       <p class="empty-state"><a href="https://ainumbers.co/helm" rel="noopener">Don't have Helm installed yet?</a></p>
       <details class="disclosure">
         <summary>Advanced: pair by hand</summary>
