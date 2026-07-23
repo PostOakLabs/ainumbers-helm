@@ -22,5 +22,7 @@ jobs:
         run: node scripts/test.mjs
       - name: validate control-plane schemas
         run: node scripts/validate-schemas.mjs
+      - name: verify vendored OCG integrity
+        run: node scripts/verify-vendored.mjs
       - name: sea build dry-run
         run: node scripts/sea-dry-run.mjs
