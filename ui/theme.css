@@ -195,6 +195,145 @@ details.disclosure summary {
   padding: var(--space-1) var(--space-2);
 }
 
+.field-row-note {
+  color: var(--text-muted);
+  font-size: 0.9rem;
+  margin: var(--space-1) 0 var(--space-2);
+}
+
+.button-link {
+  display: inline-block;
+  color: var(--accent-contrast);
+  background: var(--accent);
+  border-radius: var(--radius);
+  padding: var(--space-1) var(--space-3);
+  text-decoration: none;
+  font-size: 0.9rem;
+}
+
+.dag-frame {
+  background: var(--surface-raised);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  padding: var(--space-3);
+  margin-bottom: var(--space-3);
+  overflow-x: auto;
+}
+
+.dag-frame svg {
+  max-width: 100%;
+  height: auto;
+  display: block;
+}
+
+.dag-frame .dag-col-label {
+  fill: var(--text-muted);
+  font-size: 11px;
+}
+
+.dag-frame .dag-node rect {
+  fill: var(--surface);
+  stroke: var(--border);
+  stroke-width: 1;
+}
+
+.dag-frame .dag-node text {
+  fill: var(--text);
+  font-size: 11px;
+}
+
+.dag-frame .dag-edge {
+  stroke: var(--border);
+  stroke-width: 1.5;
+}
+
+.dag-frame .dag-arrowhead {
+  fill: var(--border);
+}
+
+.canvas-source {
+  background: var(--surface-raised);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  padding: var(--space-3);
+}
+
+.canvas-source-toggle {
+  display: flex;
+  gap: var(--space-1);
+  margin-bottom: var(--space-2);
+}
+
+.canvas-source-toggle button {
+  background: transparent;
+  color: var(--text-muted);
+  border: 1px solid var(--border);
+}
+
+.canvas-source-toggle button[aria-selected="true"] {
+  background: var(--accent);
+  color: var(--accent-contrast);
+  border-color: var(--accent);
+}
+
+.canvas-source pre {
+  margin: 0;
+  overflow-x: auto;
+  font-size: 0.85rem;
+}
+
+.timeline {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+
+.timeline-entry {
+  display: flex;
+  align-items: center;
+  gap: var(--space-2);
+  padding: var(--space-2) 0;
+  border-bottom: 1px solid var(--border);
+  font-size: 0.9rem;
+}
+.timeline-entry:last-child {
+  border-bottom: none;
+}
+
+.timeline-state {
+  font-weight: 600;
+}
+.timeline-entry[data-state="failed"] .timeline-state {
+  color: var(--danger);
+}
+.timeline-entry[data-state="completed"] .timeline-state {
+  color: var(--ok);
+}
+
+.timeline-time {
+  color: var(--text-muted);
+  font-size: 0.8rem;
+  margin-left: auto;
+}
+
+.classification-badge {
+  font-size: 0.7rem;
+  border: 1px solid var(--warning);
+  color: var(--warning);
+  border-radius: var(--radius);
+  padding: 0 var(--space-1);
+  text-transform: uppercase;
+}
+.classification-badge[data-level="public"] {
+  border-color: var(--ok);
+  color: var(--ok);
+}
+.classification-badge[data-level="confidential"],
+.classification-badge[data-level="restricted"] {
+  border-color: var(--danger);
+  color: var(--danger);
+}
+
 button {
   background: var(--accent);
   color: var(--accent-contrast);

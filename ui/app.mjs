@@ -1,13 +1,16 @@
 import { readTokenFromLocation, loadToken, saveToken, clearToken, loadPort, savePort, call } from "./api.mjs";
+import { renderChoose } from "./views/choose.mjs";
+import { renderCanvas } from "./views/canvas.mjs";
 import { renderConnect } from "./views/connect.mjs";
+import { renderRun } from "./views/run.mjs";
 import { renderOperate } from "./views/operate.mjs";
 
-const VIEWS = { connect: renderConnect, operate: renderOperate };
-const DEFAULT_VIEW = "connect";
+const VIEWS = { choose: renderChoose, canvas: renderCanvas, connect: renderConnect, run: renderRun, operate: renderOperate };
+const DEFAULT_VIEW = "choose";
 
-function currentView() {
-  const hash = location.hash.replace(/^#\/?/, "").split("&")[0];
-  return VIEWS[hash] ? hash : DEFAULT_VIEW;
+function currentRoute() {
+  const [view, query] = location.hash.replace(/^#\/?/, "").split("?");
+  return { view: VIEWS[view] ? view : DEFAULT_VIEW, params: new URLSearchParams(query || "") };
 }
 
 function setStatus(dot, label, state, text) {
@@ -47,7 +50,7 @@ function mountTokenForm(root, onPaired) {
 async function render(app) {
   const port = loadPort();
   const token = loadToken();
-  const view = currentView();
+  const { view, params } = currentRoute();
 
   app.navLinks.forEach((a) => {
     if (a.dataset.view === view) a.setAttribute("aria-current", "page");
@@ -60,7 +63,7 @@ async function render(app) {
     return;
   }
 
-  await VIEWS[view](app.main, { port, token });
+  await VIEWS[view](app.main, { port, token, params });
   refreshConnectivity(port, token, app.statusDot, app.statusLabel);
 }
 

@@ -50,13 +50,16 @@ async function safeJson(res) {
   }
 }
 
-export async function call(path, { port, token, method = "GET", timeoutMs = 3000 } = {}) {
+export async function call(path, { port, token, method = "GET", body: reqBody, timeoutMs = 3000 } = {}) {
   const controller = new AbortController();
   const timer = setTimeout(() => controller.abort(), timeoutMs);
   try {
+    const headers = token ? { Authorization: `Bearer ${token}` } : {};
+    if (reqBody !== undefined) headers["Content-Type"] = "application/json";
     const res = await fetch(`http://127.0.0.1:${port}${path}`, {
       method,
-      headers: token ? { Authorization: `Bearer ${token}` } : {},
+      headers,
+      body: reqBody !== undefined ? JSON.stringify(reqBody) : undefined,
       signal: controller.signal,
     });
     const body = await safeJson(res);
