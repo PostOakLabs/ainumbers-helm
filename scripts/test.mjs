@@ -28,5 +28,7 @@ if (files.length === 0) {
 }
 
 const stream = run({ files });
-await pipeline(stream, tap(), process.stdout);
-process.exitCode = stream.fail ? 1 : 0;
+let failed = false;
+stream.on("test:fail", () => (failed = true));
+await pipeline(stream, tap, process.stdout);
+process.exitCode = failed ? 1 : 0;
