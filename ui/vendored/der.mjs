@@ -1,7 +1,9 @@
 // Structural-only RFC 3161 TimeStampToken reader, ported for the browser Verify
-// view (HELM-U3) from hub/vendored/ocg/kernels/_rfc3161.mjs's parseRfc3161Token.
-// Only the byte-parsing half travels here: DER reader + OID decoder (originally
-// Buffer-based, no crypto) run unchanged on Uint8Array, and Buffer.from(...,
+// view (HELM-U3) from TWO hub sources: the DER reader + OID decoder are
+// hub/vendored/ocg/kernels/_anchor-testutil.mjs's derRead/derChildrenOf/
+// derOidToString (originally Buffer-based, no crypto — run unchanged on
+// Uint8Array here), and the CMS/TSTInfo field-walking structure below mirrors
+// hub/vendored/ocg/kernels/_rfc3161.mjs's parseRfc3161Token. Buffer.from(...,
 // "base64") is replaced with atob()-based decoding since ui/ has no Node
 // builtins. The CMS SignedData signature/chain-of-trust verification in the hub
 // copy uses node:crypto (X509Certificate, sign/verify) and does NOT travel —
@@ -10,7 +12,10 @@
 // anchored digest (this module) but cannot prove the token's signature chains to
 // a trusted TSA root. The Verify view's copy fence says so explicitly (§26.7:
 // "what was checked / what was NOT"). DO NOT hand-edit the DER/OID primitives —
-// resync from the hub copy if they change.
+// resync from the hub copy if they change. Reconciliation gate:
+// ui/lib/verify-vendored-reconcile.test.mjs proves this module's
+// parseRfc3161MessageImprint agrees field-for-field with the hub's
+// parseRfc3161Token on a real pinned fixture, so drift can't land silently.
 
 export function base64ToBytes(b64) {
   const bin = atob(b64.replace(/\s+/g, ""));
