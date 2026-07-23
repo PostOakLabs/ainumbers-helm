@@ -5,6 +5,7 @@ import { createServer } from "node:net";
 import { stateDir, statePath } from "./state-dir.mjs";
 import { loadConfig } from "./config.mjs";
 import { loadOrCreateToken } from "./token.mjs";
+import { openJournal, replayVerify } from "./journal.mjs";
 
 function checkPortFree(port) {
   return new Promise((resolve) => {
@@ -32,6 +33,19 @@ export async function runDoctor() {
 
   const portFree = await checkPortFree(config.port);
   checks.push({ name: "port_available", pass: portFree, detail: config.port });
+
+  // D6 replay-journal-on-restart integrity check: recompute every stream's
+  // running hash from scratch and compare to what's stored. A missing
+  // journal.db is not a failure (fresh install, nothing to replay yet).
+  const journalPath = statePath("journal.db");
+  if (existsSync(journalPath)) {
+    const db = openJournal(journalPath);
+    const replay = replayVerify(db);
+    checks.push({ name: "journal_replay_integrity", pass: replay.ok, detail: replay.ok ? undefined : JSON.stringify(replay.brokenAt) });
+    db.close();
+  } else {
+    checks.push({ name: "journal_replay_integrity", pass: true, detail: "no journal.db yet" });
+  }
 
   const allPass = checks.every((c) => c.pass);
   return { ok: allPass, checks };

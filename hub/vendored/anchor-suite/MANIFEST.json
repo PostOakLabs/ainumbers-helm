@@ -1,0 +1,19 @@
+{
+  "sourceRepo": "https://github.com/PostOakLabs/anchor-suite.git",
+  "pinnedSha": "1aa6d2222b64ff9b5f53245e6be244ddc091d401",
+  "vendoredPaths": [
+    "public/lib/tsq.mjs",
+    "public/vendor/pkijs.bundle.mjs"
+  ],
+  "fileCount": 2,
+  "files": [
+    {
+      "path": "lib/tsq.mjs",
+      "sha256": "555c326ea98dd2cffd60b81b0a90eea860dadb1e1d191febacf890abda30e8a2"
+    },
+    {
+      "path": "vendor/pkijs.bundle.mjs",
+      "sha256": "f1c2f9e8991bb28c76812ae5eda25b0693373609ef21748e4775bf902e0f1e40"
+    }
+  ]
+}
