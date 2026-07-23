@@ -47,6 +47,28 @@ function get(path, headers) {
   });
 }
 
+function post(path, body, headers) {
+  return new Promise((resolve, reject) => {
+    const data = JSON.stringify(body);
+    const req = request(
+      {
+        host: "127.0.0.1",
+        port: PORT,
+        path,
+        method: "POST",
+        headers: { ...headers, "Content-Type": "application/json", "Content-Length": Buffer.byteLength(data) },
+      },
+      (res) => {
+        let resBody = "";
+        res.on("data", (c) => (resBody += c));
+        res.on("end", () => resolve({ status: res.statusCode, body: resBody }));
+      }
+    );
+    req.on("error", reject);
+    req.end(data);
+  });
+}
+
 function headers(overrides = {}) {
   return {
     Host: `127.0.0.1:${PORT}`,
@@ -95,4 +117,36 @@ test("GET /vault/connections is authenticated and starts empty", async () => {
 test("GET /vault/connections/flow/:id 404s for an unknown flow", async () => {
   const res = await get("/vault/connections/flow/does-not-exist", headers());
   assert.equal(res.status, 404);
+});
+
+test("negative: POST /vault/connections/begin with http tokenEndpoint rejected (F4)", async () => {
+  const res = await post(
+    "/vault/connections/begin",
+    {
+      provider: "test",
+      authorizationEndpoint: "https://provider.example/authorize",
+      tokenEndpoint: "http://provider.example/token",
+      clientId: "abc",
+      scopes: ["read"],
+    },
+    headers()
+  );
+  assert.equal(res.status, 400);
+  assert.equal(JSON.parse(res.body).error, "insecure_endpoint");
+});
+
+test("negative: POST /vault/connections/begin with http authorizationEndpoint rejected (F4)", async () => {
+  const res = await post(
+    "/vault/connections/begin",
+    {
+      provider: "test",
+      authorizationEndpoint: "http://provider.example/authorize",
+      tokenEndpoint: "https://provider.example/token",
+      clientId: "abc",
+      scopes: ["read"],
+    },
+    headers()
+  );
+  assert.equal(res.status, 400);
+  assert.equal(JSON.parse(res.body).error, "insecure_endpoint");
 });

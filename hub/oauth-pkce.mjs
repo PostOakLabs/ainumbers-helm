@@ -29,6 +29,20 @@ function base64url(buf) {
   return buf.toString("base64url");
 }
 
+// F4 (THREAT-MODEL §5): authorizationEndpoint/tokenEndpoint must be https —
+// an http: tokenEndpoint sends the auth code + PKCE code_verifier in
+// cleartext. Loopback is exempt (127.0.0.1 mock provider used by tests).
+export function isSecureEndpoint(urlString) {
+  let url;
+  try {
+    url = new URL(urlString);
+  } catch {
+    return false;
+  }
+  if (url.protocol === "https:") return true;
+  return url.protocol === "http:" && url.hostname === "127.0.0.1";
+}
+
 export function generatePkce() {
   const codeVerifier = base64url(randomBytes(32));
   const codeChallenge = base64url(createHash("sha256").update(codeVerifier).digest());
