@@ -73,25 +73,48 @@ export function recordEgress(db, { connectorId, destinationHost, operation, deci
   });
 }
 
+const MAX_REDIRECTS = 5;
+
 // The single egress choke point every connector implementation MUST route
 // through — a blocked call throws (never returns a fake response) AND is
 // journaled before the throw, so the transcript records the block even
 // though the caller sees only an exception.
+//
+// redirect:"manual" so every hop (including redirect targets) gets its own
+// allowlist check + journal entry — Node's default redirect:"follow" would
+// silently egress to a redirect target never checked against the contract
+// (HELM-R1 finding F1: allowlisted host -> 3xx -> blocked host bypassed §5
+// gate #3, transcript recorded only the original host).
 export async function performEgress(db, { contract, connectorId, url, method, headers = {}, body = null }) {
-  const host = new URL(url).host;
-  const requestDigest = sha256ref(jcsDigestHex({ url, method, headerNames: Object.keys(headers).sort() }));
+  let currentUrl = url;
+  let hops = 0;
 
-  if (!assertEgressAllowed(contract, { host, method })) {
-    recordEgress(db, { connectorId, destinationHost: host, operation: method, decision: "blocked", requestDigest });
-    throw new Error(`egress blocked: ${connectorId} -> ${method} ${host} not in contract allowlist`);
+  for (;;) {
+    const host = new URL(currentUrl).host;
+    const requestDigest = sha256ref(jcsDigestHex({ url: currentUrl, method, headerNames: Object.keys(headers).sort() }));
+
+    if (!assertEgressAllowed(contract, { host, method })) {
+      recordEgress(db, { connectorId, destinationHost: host, operation: method, decision: "blocked", requestDigest });
+      throw new Error(`egress blocked: ${connectorId} -> ${method} ${host} not in contract allowlist`);
+    }
+
+    const res = await fetch(currentUrl, { method, headers, body, redirect: "manual" });
+
+    if (res.status >= 300 && res.status < 400 && res.headers.get("location")) {
+      recordEgress(db, { connectorId, destinationHost: host, operation: method, decision: "allowed", requestDigest });
+      if (++hops > MAX_REDIRECTS) {
+        throw new Error(`egress blocked: ${connectorId} -> too many redirects (>${MAX_REDIRECTS}) from ${host}`);
+      }
+      currentUrl = new URL(res.headers.get("location"), currentUrl).toString();
+      continue;
+    }
+
+    const bodyBytes = Buffer.from(await res.arrayBuffer());
+    const responseDigest = sha256ref(createHash("sha256").update(bodyBytes).digest("hex"));
+    recordEgress(db, { connectorId, destinationHost: host, operation: method, decision: "allowed", requestDigest, responseDigest });
+
+    return { status: res.status, headers: res.headers, body: bodyBytes };
   }
-
-  const res = await fetch(url, { method, headers, body });
-  const bodyBytes = Buffer.from(await res.arrayBuffer());
-  const responseDigest = sha256ref(createHash("sha256").update(bodyBytes).digest("hex"));
-  recordEgress(db, { connectorId, destinationHost: host, operation: method, decision: "allowed", requestDigest, responseDigest });
-
-  return { status: res.status, headers: res.headers, body: bodyBytes };
 }
 
 // Builds a connector_attestation object (SPEC.md §26.4): trust label
