@@ -5,11 +5,20 @@ import { tmpdir } from "node:os";
 import { join, dirname } from "node:path";
 import { fileURLToPath } from "node:url";
 import { openJournal } from "./journal.mjs";
-import { loadContract, assertEgressAllowed, performEgress } from "./connector.mjs";
+import { loadContract, assertEgressAllowed, performEgress, assertResolvedIpAllowed, __setHostResolverForTest } from "./connector.mjs";
 
 const HERE = dirname(fileURLToPath(import.meta.url));
 const TMP = mkdtempSync(join(tmpdir(), "helm-connector-test-"));
+process.env.HELM_HOME = join(TMP, "home");
 const CONTRACT_PATH = join(HERE, "connectors", "google-drive-fetch.contract.json");
+
+// Real DNS isn't reachable/deterministic in the sandboxed test runner, so
+// tests map the fixed hostnames they use to fixed, non-denied public IPs.
+__setHostResolverForTest(async (hostname) => {
+  if (hostname === "www.googleapis.com") return ["142.250.0.100"];
+  throw new Error(`test resolver: unexpected hostname ${hostname}`);
+});
+process.on("exit", () => __setHostResolverForTest(null));
 
 test("loadContract validates the schema and computes a stable contract_digest", () => {
   const { contract, contractDigest } = loadContract(CONTRACT_PATH);
@@ -124,6 +133,69 @@ test("performEgress: redirect to a non-allowlisted host is blocked, not silently
   assert.equal(entries[0].decision, "allowed");
   assert.equal(entries[1].destination_host, "evil.example.com");
   assert.equal(entries[1].decision, "blocked");
+
+  globalThis.fetch = originalFetch;
+  db.close();
+});
+
+test("assertResolvedIpAllowed: rejects private/link-local/metadata IPs", async () => {
+  await assert.rejects(() => assertResolvedIpAllowed("127.0.0.1"), /egress blocked/);
+  await assert.rejects(() => assertResolvedIpAllowed("169.254.169.254"), /egress blocked/); // cloud metadata
+  await assert.rejects(() => assertResolvedIpAllowed("10.0.0.5"), /egress blocked/);
+  await assert.rejects(() => assertResolvedIpAllowed("192.168.1.1"), /egress blocked/);
+  await assert.rejects(() => assertResolvedIpAllowed("::1"), /egress blocked/);
+  await assert.rejects(() => assertResolvedIpAllowed("::ffff:127.0.0.1"), /egress blocked/); // IPv4-mapped
+  await assert.rejects(() => assertResolvedIpAllowed("fe80::1"), /egress blocked/);
+  await assert.doesNotReject(() => assertResolvedIpAllowed("8.8.8.8"));
+});
+
+test("performEgress: DNS-rebinding — allowlisted hostname resolving to a private IP is blocked, not fetched", async () => {
+  const { contract } = loadContract(CONTRACT_PATH);
+  const db = openJournal(join(TMP, "rebind-blocked.db"));
+  __setHostResolverForTest(async (hostname) => {
+    assert.equal(hostname, "www.googleapis.com");
+    return ["169.254.169.254"]; // rebound to cloud metadata
+  });
+  const originalFetch = globalThis.fetch;
+  globalThis.fetch = async () => { throw new Error("must not be called"); };
+
+  await assert.rejects(
+    () => performEgress(db, {
+      contract, connectorId: "google-drive.fetch", url: "https://www.googleapis.com/drive/v3/files/abc?alt=media", method: "GET",
+    }),
+    /egress blocked/
+  );
+
+  const rows = db.prepare("SELECT * FROM journal WHERE stream_id = ?").all("egress:google-drive.fetch");
+  assert.equal(rows.length, 1);
+  assert.equal(JSON.parse(rows[0].entry_json).decision, "blocked");
+
+  globalThis.fetch = originalFetch;
+  __setHostResolverForTest(async (hostname) => {
+    if (hostname === "www.googleapis.com") return ["142.250.0.100"];
+    throw new Error(`test resolver: unexpected hostname ${hostname}`);
+  });
+  db.close();
+});
+
+test("performEgress: credential is attached at the boundary, connector caller never builds the header itself", async () => {
+  const { contract } = loadContract(CONTRACT_PATH);
+  const db = openJournal(join(TMP, "credential-boundary.db"));
+  const { vaultSet } = await import("./vault.mjs");
+  const { ref } = vaultSet("test:egress-boundary-token", { access_token: "boundary-secret-xyz" });
+
+  const originalFetch = globalThis.fetch;
+  let seenAuth;
+  globalThis.fetch = async (u, opts) => {
+    seenAuth = opts.headers.Authorization;
+    return new Response(Buffer.from("ok"), { status: 200 });
+  };
+
+  await performEgress(db, {
+    contract, connectorId: "google-drive.fetch", url: "https://www.googleapis.com/drive/v3/files/abc?alt=media", method: "GET",
+    credential: { ref, scheme: "bearer" },
+  });
+  assert.equal(seenAuth, "Bearer boundary-secret-xyz");
 
   globalThis.fetch = originalFetch;
   db.close();

@@ -6,8 +6,12 @@
 // Lifecycle kept as init -> selfTest -> send -> dispose (borrowed shape, §4)
 // even though "send" here means "perform the read": the borrowed contract is
 // about the connector's calling convention, not the HTTP verb.
+//
+// HELM-P2-H9a: the token is never read into this module's own scope — it
+// passes a vault ref to performEgress, which resolves+attaches it at the
+// egress boundary via credential-provider.mjs.
 import { performEgress, buildConnectorAttestation } from "../connector.mjs";
-import { vaultGet } from "../vault.mjs";
+import { credentialExists } from "../credential-provider.mjs";
 
 export const CONNECTOR_ID = "google-drive.fetch";
 export const CONNECTOR_VERSION = "1.0.0";
@@ -24,14 +28,12 @@ export function createGoogleDriveFetchConnector({ db, contract, contractDigest }
 
     async selfTest() {
       if (!vaultSlice?.tokenRef) return { ok: false, reason: "no vault slice" };
-      const token = vaultGet(vaultSlice.tokenRef);
-      return { ok: !!token?.access_token };
+      return { ok: credentialExists(vaultSlice.tokenRef) };
     },
 
     // payload: { fileId, runId, workflowManifestDigest, classification? }
     async send({ fileId, runId, workflowManifestDigest, classification }) {
-      const token = vaultGet(vaultSlice.tokenRef);
-      if (!token?.access_token) throw new Error("google-drive.fetch: no access token in vault slice");
+      if (!vaultSlice?.tokenRef) throw new Error("google-drive.fetch: no vault slice");
 
       const url = `https://www.googleapis.com/drive/v3/files/${encodeURIComponent(fileId)}?alt=media`;
       const result = await performEgress(db, {
@@ -39,7 +41,7 @@ export function createGoogleDriveFetchConnector({ db, contract, contractDigest }
         connectorId: CONNECTOR_ID,
         url,
         method: "GET",
-        headers: { Authorization: `Bearer ${token.access_token}` },
+        credential: { ref: vaultSlice.tokenRef, scheme: "bearer" },
       });
 
       const attestation = buildConnectorAttestation({

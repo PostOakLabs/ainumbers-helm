@@ -11,9 +11,16 @@ const TMP = mkdtempSync(join(tmpdir(), "helm-gdrive-test-"));
 process.env.HELM_HOME = TMP;
 
 const { openJournal } = await import("../journal.mjs");
-const { loadContract } = await import("../connector.mjs");
+const { loadContract, __setHostResolverForTest } = await import("../connector.mjs");
 const { vaultSet } = await import("../vault.mjs");
 const { createGoogleDriveFetchConnector, CONNECTOR_ID } = await import("./google-drive-fetch.mjs");
+
+// Real DNS isn't reachable/deterministic in the sandboxed test runner.
+__setHostResolverForTest(async (hostname) => {
+  if (hostname === "www.googleapis.com") return ["142.250.0.100"];
+  throw new Error(`test resolver: unexpected hostname ${hostname}`);
+});
+process.on("exit", () => __setHostResolverForTest(null));
 
 const ATTESTATION_SCHEMA = JSON.parse(
   readFileSync(join(HERE, "..", "..", "schema", "objects", "connector_attestation.schema.json"), "utf8")
