@@ -1,0 +1,9 @@
+{
+  "run_id": "run-9f1c2b",
+  "workflow_manifest_digest": "sha256:cf34ecd7b8eeff090b776cb06ab3742e15e4b739e7f6eac14d7fb02d2999c5b7",
+  "recorded_at": "2026-07-23T06:00:07Z",
+  "action": "email.notify",
+  "target_host": "smtp.postoaklabs.com",
+  "request_digest": "sha256:2ca2ac613d4d7c2aab7190dcb452b1b4efe3994cdae36d67b69986f43e3866fb",
+  "idempotency_key": "run-9f1c2b:action:a1:1"
+}

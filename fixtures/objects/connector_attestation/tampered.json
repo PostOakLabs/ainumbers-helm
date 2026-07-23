@@ -1,0 +1,12 @@
+{
+  "run_id": "run-9f1c2b",
+  "workflow_manifest_digest": "sha256:cf34ecd7b8eeff090b776cb06ab3742e15e4b739e7f6eac14d7fb02d2999c5b7",
+  "recorded_at": "2026-07-23T06:00:01Z",
+  "connector_id": "google-drive.fetch",
+  "connector_version": "1.0.0",
+  "contract_digest": "sha256:af2c0d0db5baec3e06592c51e073a7606955a005fe70bbbce5c0f85c08fe2f0b",
+  "operation": "files.get",
+  "scope": ["drive.readonly"],
+  "endpoint_host": "www.googleapis.com",
+  "classification": "confidential"
+}

@@ -1,0 +1,10 @@
+{
+  "connector_id": "google-drive.fetch",
+  "connector_version": "1.0.0",
+  "publisher": "ainumbers-helm",
+  "allowed_hosts": ["www.googleapis.com"],
+  "allowed_methods": ["GET"],
+  "scopes": ["drive.readonly"],
+  "vault_scope": ["vault://helm/connectors/google-drive/oauth-token"],
+  "allowed_hosts_wildcard": "*"
+}

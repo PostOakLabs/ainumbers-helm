@@ -1,0 +1,11 @@
+{
+  "checkpoint_seq": 3,
+  "streams": [
+    { "stream_id": "run:wf-invoice-reconcile-01:2026-07-23", "journal_seq": 42, "rh": "d78dff200aa19cf0f138bf54c8c88cb4f5bf3982b3b473aaf5bfa0c016fcf221" }
+  ],
+  "journal_root_digest": "sha256:af2c0d0db5baec3e06592c51e073a7606955a005fe70bbbce5c0f85c08fe2f0b",
+  "anchors": [
+    { "type": "rfc3161", "proof": "MIIC...base64der...==", "log_origin": "freetsa.org" },
+    { "type": "opentimestamps", "proof": "AQ...base64ots...==", "log_origin": "calendar.opentimestamps.org" }
+  ]
+}

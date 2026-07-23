@@ -1,0 +1,8 @@
+{
+  "checkpoint_seq": 3,
+  "streams": [
+    { "stream_id": "run:wf-invoice-reconcile-01:2026-07-23", "journal_seq": 42, "rh": "d78dff200aa19cf0f138bf54c8c88cb4f5bf3982b3b473aaf5bfa0c016fcf221" }
+  ],
+  "journal_root_digest": "not-a-sha256-digest",
+  "anchors": []
+}
