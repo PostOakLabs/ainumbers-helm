@@ -59,7 +59,9 @@ async function importEd25519(spkiB64) {
 // Mirrors hub/envelope.mjs verifyEnvelope(): Ed25519 is MUST (its absence or
 // failure always fails the envelope), ML-DSA-44 is SHOULD (absent doesn't fail,
 // present-and-wrong does, so a tampered PQC co-signature is still caught).
-export async function verifyEnvelope(envelope, publicKeys) {
+// opts.strict (HELM-SEC-5, F6): mirrors the hub-side strict mode — requires
+// both signatures present-and-valid.
+export async function verifyEnvelope(envelope, publicKeys, { strict = false } = {}) {
   if (envelope.payloadType !== DSSE_PAYLOAD_TYPE) {
     return { valid: false, ed25519: false, mldsa44: null, statement: null };
   }
@@ -88,7 +90,7 @@ export async function verifyEnvelope(envelope, publicKeys) {
     }
   }
 
-  const valid = ed25519 === true && mldsa44 !== false;
+  const valid = strict ? ed25519 === true && mldsa44 === true : ed25519 === true && mldsa44 !== false;
   let statement = null;
   if (valid) {
     try {

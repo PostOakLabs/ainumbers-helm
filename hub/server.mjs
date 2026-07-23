@@ -102,7 +102,15 @@ async function handleRevoke(req, res, params) {
   }
 }
 
+export const MAX_SSE_CONNECTIONS = 20; // HELM-SEC-5 hardening: unbounded /events connections could exhaust local handles
+let sseConnections = 0;
+
 function handleEvents(req, res) {
+  if (sseConnections >= MAX_SSE_CONNECTIONS) {
+    res.writeHead(503, { "Content-Type": "application/json" });
+    return res.end(JSON.stringify({ error: "too_many_connections" }));
+  }
+  sseConnections++;
   res.writeHead(200, {
     "Content-Type": "text/event-stream",
     "Cache-Control": "no-cache",
@@ -110,7 +118,10 @@ function handleEvents(req, res) {
   });
   res.write(`event: ready\ndata: {}\n\n`);
   const heartbeat = setInterval(() => res.write(`event: heartbeat\ndata: {}\n\n`), 15000);
-  req.on("close", () => clearInterval(heartbeat));
+  req.on("close", () => {
+    clearInterval(heartbeat);
+    sseConnections--;
+  });
 }
 
 const ROUTES = {

@@ -35,7 +35,15 @@ function fallbackDir() {
   return dir;
 }
 
+// HELM-SEC-5 (F5): if the operator sets HELM_VAULT_PASSPHRASE, derive the
+// fallback key from it instead of the auto-generated file — a local read of
+// the vault dir alone no longer decrypts anything. Without it, the key
+// still lives beside the ciphertext (accepted for Phase 1; native
+// keychain/DPAPI is the real protection — see THREAT-MODEL.md §5 F5).
 function fallbackPassphrase() {
+  const envPass = process.env.HELM_VAULT_PASSPHRASE;
+  if (envPass) return Buffer.from(envPass, "utf8");
+
   const p = statePath("vault-fallback.key");
   if (existsSync(p)) {
     chmodSync(p, 0o600);
@@ -87,6 +95,12 @@ function fileDelete(ref) {
 
 // --- macOS Keychain tier (security(1)) ---
 
+// HELM-SEC-5 hardening note: `security add-generic-password` has no stdin
+// input mode (unlike secret-tool/powershell below) — `-w` is the only way to
+// pass the value, so it is briefly visible via argv to same-user processes
+// (ps, Get-CimInstance-equivalent). Lower severity than the DPAPI argv issue
+// fixed in HELM-SEC-2/F2 (no ScriptBlock transcription logging on macOS) and
+// there is no CLI-level fix available; documented per THREAT-MODEL.md §5.
 function macosSet(ref, secret) {
   spawnSync("security", ["delete-generic-password", "-s", SERVICE, "-a", ref], { stdio: "ignore" });
   const r = spawnSync("security", ["add-generic-password", "-s", SERVICE, "-a", ref, "-w", JSON.stringify(secret)], {

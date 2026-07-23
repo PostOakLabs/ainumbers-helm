@@ -15,7 +15,7 @@ writeFileSync(join(TMP, "config.json"), JSON.stringify({ port: PORT, allowedOrig
 
 const { loadConfig } = await import("./config.mjs");
 const { loadOrCreateToken } = await import("./token.mjs");
-const { createHelmServer } = await import("./server.mjs");
+const { createHelmServer, MAX_SSE_CONNECTIONS } = await import("./server.mjs");
 
 const config = loadConfig();
 const token = loadOrCreateToken();
@@ -133,6 +133,31 @@ test("negative: POST /vault/connections/begin with http tokenEndpoint rejected (
   );
   assert.equal(res.status, 400);
   assert.equal(JSON.parse(res.body).error, "insecure_endpoint");
+});
+
+test("HELM-SEC-5 hardening: /events refuses a connection past MAX_SSE_CONNECTIONS", async () => {
+  const openReqs = [];
+  const openConns = [];
+  const openSse = (n) =>
+    new Promise((resolve, reject) => {
+      const req = request({ host: "127.0.0.1", port: PORT, path: "/events", method: "GET", headers: headers() });
+      req.on("socket", (socket) => openConns.push(socket));
+      req.on("response", (res) => resolve(res.statusCode));
+      req.on("error", reject);
+      req.end();
+      openReqs.push(req);
+    });
+
+  try {
+    for (let i = 0; i < MAX_SSE_CONNECTIONS; i++) {
+      const status = await openSse(i);
+      assert.equal(status, 200, `connection ${i} should be accepted`);
+    }
+    const overflowStatus = await openSse(MAX_SSE_CONNECTIONS);
+    assert.equal(overflowStatus, 503, "connection past the cap should be refused");
+  } finally {
+    for (const socket of openConns) socket.destroy();
+  }
 });
 
 test("negative: POST /vault/connections/begin with http authorizationEndpoint rejected (F4)", async () => {

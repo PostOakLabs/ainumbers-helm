@@ -69,6 +69,21 @@ test("envelope: missing ML-DSA-44 co-signature still verifies (SHOULD, not MUST)
   assert.equal(result.mldsa44, null);
 });
 
+test("envelope: strict mode (HELM-SEC-5, F6) rejects a missing ML-DSA-44 co-signature", () => {
+  const envelope = emitEnvelope(sampleStatement(), keys);
+  const edOnly = { ...envelope, signatures: envelope.signatures.filter((s) => s.alg === "EdDSA") };
+  const result = verifyEnvelope(edOnly, publicKeys, { strict: true });
+  assert.equal(result.valid, false);
+  assert.equal(result.ed25519, true);
+  assert.equal(result.mldsa44, null);
+});
+
+test("envelope: strict mode still verifies a genuinely dual-signed envelope", () => {
+  const envelope = emitEnvelope(sampleStatement(), keys);
+  const result = verifyEnvelope(envelope, publicKeys, { strict: true });
+  assert.equal(result.valid, true);
+});
+
 // Cross-verify fixture (HELM-H2 contract): a Node-signed envelope must verify
 // via the same WebCrypto surface browsers expose (globalThis.crypto.subtle),
 // and a WebCrypto-signed payload must verify via the node:crypto path
