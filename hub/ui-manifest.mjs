@@ -46,6 +46,7 @@ const FILES = [
   "views/choose.mjs",
   "views/connect.mjs",
   "views/operate.mjs",
+  "views/help.mjs",
   "views/review.mjs",
   "views/run.mjs",
   "views/verify.mjs",

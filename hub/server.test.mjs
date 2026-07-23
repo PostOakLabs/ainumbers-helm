@@ -206,6 +206,15 @@ test("static: unknown path under a real UI directory (e.g. /views/does-not-exist
   assert.equal(res.status, 404);
 });
 
+// HELM-P2-LAUNCH regression: app.mjs statically imports every entry in
+// VIEWS (including help), so each one must be in ui-manifest's FILES
+// allowlist or the whole ES module graph 401s and <main> never mounts —
+// the same failure mode already documented for fixtures/verify-demo.mjs.
+test("static: GET /views/help.mjs serves as a JS module, no auth required (regression: was missing from ui-manifest FILES)", async () => {
+  const res = await get("/views/help.mjs", { Host: `127.0.0.1:${PORT}` });
+  assert.equal(res.status, 200);
+});
+
 // Served-UI mode: allowedOrigin is a real http://127.0.0.1:port origin, so a
 // request presenting the old file:// "null" Origin must be rejected — that
 // legacy allowance is gone (HELM-U4 item 5). Own server + own port: the rest
