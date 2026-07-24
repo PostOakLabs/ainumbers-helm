@@ -6,6 +6,7 @@
 // should be able to read what a trust label does and does NOT claim in under
 // two minutes — the copy fence below is written for that reader, not for us.
 import { verifyBundle, verifyAnchorBinding } from "../lib/verify-bundle.mjs";
+import { buildCommitteePackHtml } from "../lib/committee-pack.mjs";
 import { DEMO_PUBLIC_KEYS, DEMO_GOLDEN_BUNDLE, DEMO_TAMPERED_BUNDLE } from "../fixtures/verify-demo.mjs";
 
 const TRUST_LABEL_COPY = {
@@ -88,6 +89,18 @@ function renderCheckpoints(checkpoints) {
     .join("")}</ul>`;
 }
 
+function downloadHtml(html, filename) {
+  const blob = new Blob([html], { type: "text/html" });
+  const url = URL.createObjectURL(blob);
+  const a = document.createElement("a");
+  a.href = url;
+  a.download = filename;
+  document.body.appendChild(a);
+  a.click();
+  a.remove();
+  URL.revokeObjectURL(url);
+}
+
 async function runVerify(root, { bundle, publicKeys }) {
   const resultEl = root.querySelector("#verify-result");
   resultEl.innerHTML = `<p aria-live="polite">Verifying — nothing here leaves this browser tab.</p>`;
@@ -106,7 +119,24 @@ async function runVerify(root, { bundle, publicKeys }) {
     <h3>Objects</h3>
     ${renderEntries(result.detail.entries)}
     <h3>Checkpoints</h3>
-    ${renderCheckpoints(result.detail.checkpoints)}`;
+    ${renderCheckpoints(result.detail.checkpoints)}
+    <p class="field-row"><button type="button" id="verify-export-committee-pack">Export Committee Pack (print to PDF)</button></p>`;
+
+  root.querySelector("#verify-export-committee-pack").addEventListener("click", () => {
+    const checkpointsWithBinding = result.detail.checkpoints.map((cp) => {
+      if (!cp.predicate) return cp;
+      const anchors = (cp.predicate.anchors ?? []).map((a) => ({ ...a, binding: verifyAnchorBinding(a, cp.predicate.journal_root_digest) }));
+      return { ...cp, predicate: { ...cp.predicate, anchors } };
+    });
+    const html = buildCommitteePackHtml({
+      bundle,
+      entries: result.detail.entries,
+      checkpoints: checkpointsWithBinding,
+      manifestDigest: bundle.manifest?.predicate?.workflow_manifest_digest,
+      generatedAt: new Date().toISOString(),
+    });
+    downloadHtml(html, `committee-pack-${bundle.manifest?.predicate?.bundle_id ?? "export"}.html`);
+  });
 }
 
 function wireInputs(root) {
