@@ -23,6 +23,7 @@ import { renderKernelCardHtml, renderEucEntryHtml } from "../ui/lib/euc-html.mjs
 import { renderKernelDecisionTableHtml, buildKernelDecisionTableDmn } from "../ui/lib/decision-table.mjs";
 import { importMigrationBundle } from "./migration-import.mjs";
 import { buildWorkflowExport, parseWorkflowExport } from "./workflow-export.mjs";
+import { checkVersion, DEFAULT_VERSION_CHECK_URL } from "./version-check.mjs";
 
 const START = Date.now();
 const HERE = dirname(fileURLToPath(import.meta.url));
@@ -90,7 +91,18 @@ function readJsonBody(req) {
 
 function handleHealth(req, res) {
   res.writeHead(200, { "Content-Type": "application/json" });
-  res.end(JSON.stringify({ status: "ok", uptimeMs: Date.now() - START }));
+  res.end(JSON.stringify({ status: "ok", uptimeMs: Date.now() - START, version: DAEMON_VERSION }));
+}
+
+// GET /version-check (HELM-P4-J4): authenticated wrapper around the same
+// passive notice `helmd doctor` already surfaces (version-check.mjs, D10) —
+// the paired UI polls this to power the skew banner's "download new
+// installer" prompt. Same non-blocking contract: unreachable/disabled never
+// errors, it just reports checked:false.
+async function handleVersionCheck(req, res, versionCheckUrl) {
+  if (!versionCheckUrl) return sendJson(res, 200, { checked: false, reason: "disabled" });
+  const result = await checkVersion({ currentVersion: DAEMON_VERSION, url: versionCheckUrl });
+  sendJson(res, 200, result);
 }
 
 // POST /vault/connections/begin — starts an OAuth PKCE loopback flow (D9,
@@ -418,6 +430,7 @@ async function handleMigrationImport(req, res, params, db) {
 // dispatches on, instead of a hand-copied list that can silently drift.
 export const ROUTES = {
   "GET /health": handleHealth,
+  "GET /version-check": (req, res) => handleVersionCheck(req, res, DEFAULT_VERSION_CHECK_URL),
   "GET /events": handleEvents,
   "POST /vault/connections/begin": handleBeginConnection,
   "GET /vault/connections": handleListConnections,
@@ -442,7 +455,8 @@ export const DYNAMIC_ROUTES = [
   { method: "GET", pattern: /^\/templates\/(?<slug>[^/]+)$/, docPath: "/templates/{slug}", handler: handleTemplateDetail },
 ];
 
-export function createHelmServer({ port, allowedOrigin, token, db = null, identityKeys = null }) {
+export function createHelmServer({ port, allowedOrigin, token, db = null, identityKeys = null, versionCheckUrl = DEFAULT_VERSION_CHECK_URL }) {
+  const routes = { ...ROUTES, "GET /version-check": (req, res) => handleVersionCheck(req, res, versionCheckUrl) };
   const server = createServer((req, res) => {
     if (!checkHost(req, port)) {
       log.warn("rejected: host mismatch", { host: req.headers.host, path: req.url });
@@ -491,7 +505,7 @@ export function createHelmServer({ port, allowedOrigin, token, db = null, identi
       return deny(res, 401, "unauthorized");
     }
 
-    const handler = ROUTES[`${req.method} ${pathname}`];
+    const handler = routes[`${req.method} ${pathname}`];
     if (handler) return handler(req, res, {}, db);
 
     for (const route of DYNAMIC_ROUTES) {

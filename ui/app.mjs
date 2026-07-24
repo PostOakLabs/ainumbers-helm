@@ -1,6 +1,7 @@
 import { readTokenFromLocation, loadToken, saveToken, clearToken, loadFp, saveFp, clearFp, loadPort, savePort, call } from "./api.mjs";
 import { initCompanyProfile } from "./lib/company-profile.mjs";
 import { BrowserJournalClient, offerJsonBundleDownload } from "./lib/browser-journal-client.mjs";
+import { skewBannerHtml, isDismissed, dismiss } from "./lib/version-skew.mjs";
 import { renderChoose } from "./views/choose.mjs";
 import { renderCanvas } from "./views/canvas.mjs";
 import { renderConnect } from "./views/connect.mjs";
@@ -44,17 +45,18 @@ async function refreshConnectivity(port, token, dot, label) {
 // pairing still works — it's tucked behind an <details> disclosure, since
 // `helmd start` opens this page pre-paired for the normal first-run flow and
 // this screen is mostly seen by people who closed that tab or lost the link.
+//
+// HELM-P4-J4: with autostart installed, the daemon relaunching is the OS's
+// job now — this recovery copy deliberately never mentions a terminal or a
+// command to type. If autostart genuinely isn't running (fresh install
+// before its first login, or an unsupported OS), the fix is "open the Helm
+// app" / reinstall, not a CLI incantation.
 function mountTokenForm(root, onPaired) {
   root.innerHTML = `
     <div class="welcome-state" aria-live="polite">
       <p class="welcome-title">Waiting for Helm on this computer&hellip;</p>
-      <p class="empty-state">This tab isn't paired with helmd yet. To connect:</p>
-      <ol class="steps">
-        <li>Open a terminal (Command Prompt or PowerShell on Windows, Terminal on macOS or Linux).</li>
-        <li>Type <code>helmd start</code> and press Enter. It opens a freshly paired tab automatically.</li>
-        <li>Lost this tab or opened a bookmark? Run <code>helmd open</code> instead to get a fresh paired link.</li>
-      </ol>
-      <p class="empty-state">Don't have Helm installed yet? Get it at <a href="https://ainumbers.co/helm" rel="noopener">ainumbers.co/helm</a>.</p>
+      <p class="empty-state">This tab isn't paired with helmd yet. Helm starts automatically and this page will reconnect on its own — no action needed.</p>
+      <p class="empty-state">Still waiting after a minute? Open the Helm app (check your login items or Start menu), or reinstall from <a href="https://ainumbers.co/helm" rel="noopener">ainumbers.co/helm</a> if it isn't there.</p>
       <details class="disclosure">
         <summary>Advanced: pair by hand</summary>
         <form class="token-form" aria-label="Pair with helmd">
@@ -120,6 +122,24 @@ function initDensityToggle(btn) {
   });
 }
 
+// HELM-P4-J4: skew banner — polls the daemon's own /version-check (which
+// does the real comparison server-side, since the page's CSP is
+// `connect-src 'self'` and can't reach ainumbers.co directly). Best-effort:
+// a token-less or unreachable daemon just renders nothing, same as the
+// connectivity dot.
+async function refreshVersionSkew(port, token, slot) {
+  if (!token || !slot) return;
+  const res = await call("/version-check", { port, token, timeoutMs: 5000 });
+  if (!res.ok) return;
+  const vc = res.data;
+  if (vc?.checked && !vc.upToDate && isDismissed(vc.latestVersion)) return;
+  slot.innerHTML = skewBannerHtml(vc);
+  slot.querySelector("#version-skew-dismiss")?.addEventListener("click", () => {
+    dismiss(vc.latestVersion);
+    slot.innerHTML = "";
+  });
+}
+
 // P3-D7: OPFS journal cache runs independently of daemon pairing — browser
 // mode has no daemon at all. Best-effort: a browser without OPFS/Web Locks
 // just never shows a banner and never records locally (daemon/export remain
@@ -176,6 +196,16 @@ export function boot() {
     const token = loadToken();
     if (token) refreshConnectivity(loadPort(), token, app.statusDot, app.statusLabel);
   }, 10000);
+
+  // HELM-P4-J4: once at boot, then hourly — the daemon proxies the actual
+  // check (D10 passive-notice cadence), so this is cheap to leave running.
+  const versionSkewSlot = document.getElementById("version-skew-banner-slot");
+  const checkSkew = () => {
+    const token = loadToken();
+    if (token) refreshVersionSkew(loadPort(), token, versionSkewSlot).catch(() => {});
+  };
+  checkSkew();
+  setInterval(checkSkew, 60 * 60 * 1000);
 }
 
 boot();

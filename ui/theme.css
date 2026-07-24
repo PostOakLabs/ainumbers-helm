@@ -222,6 +222,25 @@ details.disclosure summary {
   color: var(--warning);
 }
 
+.version-skew-banner {
+  padding: var(--space-2) var(--space-3);
+  margin: 0;
+  font-size: 0.9rem;
+  display: flex;
+  align-items: center;
+  gap: var(--space-3);
+}
+.version-skew-banner[data-state="info"] {
+  background: color-mix(in srgb, var(--accent) 12%, var(--surface));
+  border-bottom: 1px solid var(--accent);
+  color: var(--accent);
+}
+.version-skew-banner[data-state="warning"] {
+  background: color-mix(in srgb, var(--warning) 15%, var(--surface));
+  border-bottom: 1px solid var(--warning);
+  color: var(--warning);
+}
+
 .steps {
   margin: var(--space-2) 0 var(--space-3);
   padding-left: var(--space-4);

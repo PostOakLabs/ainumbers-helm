@@ -15,6 +15,7 @@ import { platform } from "node:os";
 import { createConnection } from "node:net";
 import { statePath } from "./state-dir.mjs";
 import { openJournal, replayVerify } from "./journal.mjs";
+import { installAutostart, uninstallAutostart } from "./autostart.mjs";
 
 // No "open" package (zero-dep, D2) — shell out to each OS's native opener.
 // Best-effort: a failure here (headless box, no default browser configured)
@@ -63,7 +64,7 @@ async function cmdStart({ open = false } = {}) {
   }
   log.info("journal replay integrity check passed");
 
-  const server = createHelmServer({ port: config.port, allowedOrigin: config.allowedOrigin, token, db, identityKeys });
+  const server = createHelmServer({ port: config.port, allowedOrigin: config.allowedOrigin, token, db, identityKeys, versionCheckUrl: config.versionCheckUrl });
   // P3-D9: refuse to start on a squatted port — never silently bind
   // elsewhere. Must resolve BEFORE the CLI channel opens or any browser tab
   // is auto-launched, or a squatted port would open onto whatever's
@@ -96,6 +97,33 @@ async function cmdStart({ open = false } = {}) {
   // opens itself. `--open` forces the same behavior on any later start
   // (e.g. a future `helm open` wrapper shelling out to `helmd start --open`).
   if (isFirstRun || open) openBrowser(url);
+
+  // HELM-P4-J4: the last CLI moment. First run also installs the per-user
+  // autostart entry (macOS LaunchAgent / Windows HKCU Run key) so the next
+  // launch is the OS's job, not the user's — best-effort, never fatal (an
+  // unsupported platform or a sandboxed/CI environment just skips it).
+  if (isFirstRun) {
+    try {
+      installAutostart();
+    } catch (err) {
+      log.warn("autostart install failed (non-fatal)", { error: String(err?.message || err) });
+    }
+  }
+}
+
+// helmd uninstall: removes the autostart entry this same install wrote.
+// Zoom-orphan lesson (P3 robustness #8) — an uninstall that leaves a
+// LaunchAgent/Run-key pointing at a deleted binary is the failure mode this
+// exists to prevent. Does not touch ~/.helm state (journal/keys/config) —
+// that's a separate, deliberately manual decision the user hasn't asked for
+// here.
+function cmdUninstall() {
+  const result = uninstallAutostart();
+  if (result.supported === false) {
+    console.log("helmd uninstall: no autostart entry on this platform, nothing to remove.");
+  } else {
+    console.log("helmd uninstall: autostart entry removed.");
+  }
 }
 
 // Client side of the re-pair path (DEC-3): connects to the ALREADY-RUNNING
@@ -135,7 +163,8 @@ const cmd = args[0] || "start";
 if (cmd === "doctor") await cmdDoctor();
 else if (cmd === "start") await cmdStart({ open: args.includes("--open") });
 else if (cmd === "open") cmdOpen();
+else if (cmd === "uninstall") cmdUninstall();
 else {
-  console.error(`helmd: unknown command "${cmd}" (expected: start | doctor | open)`);
+  console.error(`helmd: unknown command "${cmd}" (expected: start | doctor | open | uninstall)`);
   process.exit(1);
 }

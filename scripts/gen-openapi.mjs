@@ -21,6 +21,7 @@ const VERSION = JSON.parse(readFileSync(join(ROOT, "package.json"), "utf8")).ver
 // loudly (build() throws) instead of shipping an undocumented endpoint.
 const ROUTE_DOCS = {
   "GET /health": { summary: "Daemon liveness check.", tags: ["Daemon"] },
+  "GET /version-check": { summary: "Passive daemon-vs-latest-release version notice (HELM-P4-J4 skew banner).", tags: ["Daemon"] },
   "GET /events": { summary: "Server-Sent Events stream of run progress (optionally ?run_id=).", tags: ["Runs"] },
   "POST /vault/connections/begin": { summary: "Start an OAuth PKCE loopback connection flow.", tags: ["Vault"] },
   "GET /vault/connections": { summary: "List connected OAuth providers.", tags: ["Vault"] },
