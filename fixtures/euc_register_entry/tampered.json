@@ -1,0 +1,18 @@
+{
+  "workflow_id": "pack-aca-226j-response-composer",
+  "name": "ACA 226J Response Composer",
+  "owner": "Benefits Compliance Officer",
+  "purpose": "Linear three-step evidence pipeline for responding to an IRS Letter 226J proposed Employer Shared Responsibility Payment assessment: affordability safe-harbor calculation, ESRP exposure recomputation, and a hash-anchored response evidence pack with a named-HR/benefits-officer attestation closure.",
+  "control_description": "Reviewed quarterly against published IRS thresholds.",
+  "last_validated": "2026-07-01",
+  "kernels": "not-an-array",
+  "declared_inputs": [],
+  "declared_outputs": [
+    {
+      "node_id": "n3",
+      "kernel_id": "art-300-aca-226j-response-evidence-pack",
+      "note": "terminal node of a linear compiled chain"
+    }
+  ],
+  "generated_at": "2026-07-23T00:00:00.000Z"
+}
