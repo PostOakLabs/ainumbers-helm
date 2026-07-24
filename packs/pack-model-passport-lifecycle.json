@@ -1,0 +1,49 @@
+{
+  "workflow_id": "pack-model-passport-lifecycle",
+  "name": "Model Passport Lifecycle",
+  "outcome": "Linear three-step chain building an SR 26-2 model passport. Step 1 registers a model-inventory record with a completeness score and proportionality tier (art-450). Step 2 backtests the model's period predicted-vs-actual outcomes against a caller-declared error tolerance (art-451). Step 3 determines the model's SR 26-2 validation status from its tier, last-validation date, and the outcome-analysis result, applying a tier-based revalidation cadence (art-453). No routing gate -- validation_status branching lives inside art-453's own output, not chain-level routing.",
+  "spec_version": "ocg-control-plane@1",
+  "manifest": {
+    "manifest_version": "1",
+    "workflow_id": "pack-model-passport-lifecycle",
+    "trigger": {
+      "type": "manual"
+    },
+    "nodes": [
+      {
+        "node_id": "n1",
+        "kernel_id": "art-450-model-inventory-entry",
+        "kernel_digest": "sha256:2de5269cd7ce2153d49d282c65e7561c5f097c2fc88f86daeb66ea327ad21a6e"
+      },
+      {
+        "node_id": "n2",
+        "kernel_id": "art-451-model-outcome-analysis",
+        "kernel_digest": "sha256:0109055fc8041ae9b972ed952fe72e0763d5a5ae8b30ff92ef63886e762d102f"
+      },
+      {
+        "node_id": "n3",
+        "kernel_id": "art-453-model-validation-status",
+        "kernel_digest": "sha256:63eb1d7394a4cafde3fcd6102e610ec0ff1a0ab83c0eb65ad5b704bcaf777ddc"
+      }
+    ],
+    "connectors": [],
+    "gates": [],
+    "actions": []
+  },
+  "workflow_manifest_digest": "sha256:5dac57f41dfe4c4433460fe7ea6755345b579f9a2d6d77b2b1def15620347ede",
+  "declared_inputs": [],
+  "steps_meta": [
+    {
+      "node_id": "n1",
+      "data_classification": "compute"
+    },
+    {
+      "node_id": "n2",
+      "data_classification": "compute"
+    },
+    {
+      "node_id": "n3",
+      "data_classification": "compute"
+    }
+  ]
+}

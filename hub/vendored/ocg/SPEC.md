@@ -410,6 +410,59 @@ NORMATIVE limitation (MUST be stated by presenting UIs): a redacted export is NO
 does NOT permit `execution_hash` recomputation; its verification yields (a) issuer-signature integrity
 and (b) hash-binding of each disclosed claim. The full envelope remains the artifact of record.
 
+### §13.13 xBRL-JSON export profile `ocg-xbrl-json@1` — NORMATIVE, new in v0.8.12
+A regulatory-reporting export profile that renders a verified artifact as **[xBRL-JSON](https://www.xbrl.org/Specification/xbrl-json/REC-2021-10-13/xbrl-json-REC-2021-10-13.html)**
+(OIM 1.0, REC 2021-10-13) — the JSON serialization of the XBRL Open Information Model. Like every §13
+profile it is a **view, not a fact**: generated after `execution_hash`, excluded from the hash
+preimage, mints no new hash, and MUST NOT bump `chaingraph_version`.
+
+1. **Canonical form.** The document MUST set `xbrl:canonicalValues: true` (OIM's own
+   canonical-lexical-value mode — every fact value serialized per its datatype's canonical lexical
+   representation, e.g. no trailing-zero drift, ISO 8601 durations/instants in canonical form) AND
+   apply **JCS (RFC 8785)** key ordering on top, since the xBRL-JSON spec itself leaves member order
+   undefined. The two together make the document byte-identical for byte-identical inputs — the
+   profile's own determinism guarantee, independent of and additional to OIM's. `execution_hash` is
+   embedded in the document's metadata block (alongside `tool_id`, `chaingraph_version`,
+   `compute_mode`), per the §13 umbrella metadata rule — never inside a `fact`.
+2. **Taxonomy metadata is INPUT, not derived.** Concept QNames, dimensions, units, and decimals for a
+   given regime are supplied to the exporter as taxonomy metadata (the same never-fabricate discipline
+   as §13.8 XBRL/EBA COREP: a concept is emitted only when it maps to a published taxonomy element, or
+   an explicit `ocg-ext:*` element where no regulator taxonomy exists yet). DTS discovery, XDT
+   dimensional validation, and formula-linkbase execution are **explicitly OUT OF SCOPE** for this
+   profile — it emits a structurally valid OIM document; a conformant OIM processor performs full
+   taxonomy-aware validation downstream.
+3. **Normative caveat (MUST be surfaced by any presenting UI): this profile is NOT a submittable wire
+   format for any regime named below.** FFIEC Call Report submission is XBRL 2.1 XML; EBA submission
+   is xBRL-CSV (mandatory from its own reference date, 2026-03); SEC/ESEF submission is iXBRL. This
+   profile's output is a **canonical interchange form** — conversion to a regime's wire format is
+   lossless via a certified OIM processor (e.g. [Arelle](https://arelle.org/), Apache-2.0). An
+   implementation MUST NOT label `ocg-xbrl-json@1` output "submittable" or "regulator-accepted."
+4. **Validation is EXTERNAL, by pointer.** This spec does not vendor an OIM/XBRL validator (mirrors
+   §18.1's stark-verifier delegation and §13's general "generated view" posture). The normative pointer
+   is: validate or convert with a certified OIM processor. §15's fixture gate checks the
+   structural/determinism properties this repo CAN check standalone; full DTS/XDT/formula conformance
+   is Arelle's (or an equivalent processor's) job, exercised against the committed Annex 1 fixture.
+5. **Annex 1 — FFIEC Call Report mapping.** Concept namespace = the FFIEC Call Report (FFIEC 031/041)
+   published taxonomy; item alignment keys off **MDRM** (Micro Data Reference Manual) item codes,
+   which are public-domain regulatory identifiers, not fabricated concepts — e.g. `RCON2170` (Total
+   assets), `RCON3210` (Total equity capital). Required dimensions/units follow the taxonomy's own
+   `xbrli:context`/`xbrli:unit` equivalents restated in OIM's `dimensions`/`decimals` members. Annex
+   slots are reserved for a future EBA DPM 2.0 (xBRL-CSV) mapping and other regimes; an unpopulated
+   slot returns a clear "pending" error exactly as §13.8's COREP maps do, rather than emit an invented
+   concept.
+6. **§15 fixtures (this profile's conformance surface until its exporter lands):** round-trip
+   determinism (`fixtures/xbrl-json/sample.oim.json` re-canonicalized twice MUST be byte-identical),
+   `canonicalValues` conformance (every fact value is a canonical-lexical string, no raw numbers/
+   booleans in `facts[].value`), and the Annex 1 sample instance
+   (`fixtures/xbrl-json/annex1-ffiec-callreport.sample.json`) structurally loadable — real MDRM
+   concept names, required OIM members present, no placeholder/null concept slipped into a fact.
+
+Fence: this profile ships as SPEC.md text + schema (`export_capability` pattern gains
+`xbrl-json(:[a-z0-9:-]+)?`) + the two committed fixtures above + their gate. The exporter
+implementation (`exporters/xbrl-json.mjs`, worker wiring, MCP `export_artifact` format arm) is a
+separate, later work unit — this WU's normative surface stands on its own per fixture-only
+conformance, the same pattern the §PPH-1 shape gate used before its runtime landed.
+
 ## §16 Proof Binding (NORMATIVE — new in v0.5)
 A node or chain page **MAY** bind authenticity to a verified artifact by attaching a **W3C Data Integrity
 proof** ([Data Integrity EdDSA Cryptosuites v1.0](https://www.w3.org/TR/vc-di-eddsa/), Rec 2025-05) at
@@ -1632,6 +1685,74 @@ separator) ships as `ocg-private-input@<n>`, never an in-place edit, so a privat
 `@1` re-verifies bit-for-bit forever. Like §18, the profile **defaults OFF**: a node MUST surface to consumers
 that it withholds an input (§18.3), and MUST NOT auto-apply commitment mode.
 
+## §26 Control Plane Profile — `ocg-control-plane@1` (NORMATIVE, OPTIONAL, profile-scoped — new in v0.9-draft)
+
+### §26.1 Purpose and scope
+
+This profile defines the artifact vocabulary for **connected, operated workflows**: executions that involve external data retrieval, durable local state, scheduling, human review, or agent delegation — operated by the artifact producer on infrastructure the producer controls (e.g. the AINumbers Helm Local Hub). It is a superset layered beside a conformant OCG artifact: a control-plane deployment produces ordinary OCG artifacts for its deterministic compute steps and additionally emits the objects defined here. A verifier ignorant of this profile remains fully correct for the core artifact.
+
+Nothing in this profile makes AINumbers an operator of any log, registry, or authority. All durable journals defined here are producer-local; their integrity claims derive from (a) internal hash-chaining and (b) anchoring to **external** authorities per §20.
+
+### §26.2 Envelope (NORMATIVE)
+
+Every signed object in this profile is an **in-toto Statement v1** (`_type: "https://in-toto.io/Statement/v1"`) carried in a **DSSE envelope**.
+
+- `subject[]` — digests of the bound artifacts (e.g. `manifest_digest`, `execution_hash`), `sha256` hex.
+- `predicateType` — `https://ainumbers.co/helm/attestation/v1#<kind>` where `<kind>` is one of the object kinds in §26.4.
+- Signatures: producers MUST sign with Ed25519 and SHOULD additionally sign with ML-DSA-44. Algorithm identifiers MUST be the RFC 9964 JOSE registrations. Verifiers MUST accept an envelope as verified when at least one signature from a trusted key verifies; conformance reports MUST state which families verified.
+- Payload JSON is JCS-canonicalized before signing.
+
+### §26.3 Workflow manifest binding
+
+A control-plane execution MUST record `workflow_manifest_digest`: the SHA-256 of the JCS-canonical workflow manifest (the machine-readable graph of trigger, connectors, compute nodes, gates, and actions, including per-node kernel ids/digests and connector contract digests, environment overlays by reference only — never secret values). Every object in §26.4 that pertains to a run MUST carry `run_id` and `workflow_manifest_digest`.
+
+### §26.4 Object kinds (NORMATIVE shapes; JSON Schemas are the SSOT in the Helm repo, mirrored by fixture)
+
+| `#<kind>` | Purpose | Required members (beyond `run_id`, `workflow_manifest_digest`, timestamps) |
+|---|---|---|
+| `connector_attestation` | An authorized connector retrieved/received a payload | `connector_id`, `connector_version`, `contract_digest`, `operation`, `scope[]`, `endpoint_host`, `payload_digest`, `classification` |
+| `execution_state` | A signed lifecycle transition | `state` (enum §26.5), `prev_state`, `journal_seq` |
+| `policy_decision` † | Policy pack evaluation outcome | `policy_bundle_digest`, `decision`, `reason_codes[]`, `effective_inputs_digest` |
+| `review_task` † | Exception routed to a human role | `role`, `reason`, `evidence_refs[]` |
+| `review_decision` † | Accountable human outcome | `reviewer_id`, `authority`, `decision`, `rationale` |
+| `override` † | Bounded authorized exception | `authority`, `reason`, `scope`, `expiry`, `superseded_ref` |
+| `agent_delegation` † | Machine principal grant (mirrors RFC 8693 exchange-chain shape: `sub`/`act` chain) | `principal`, `delegation_chain[]`, `allowed_tools[]`, `limits`, `prohibitions[]` |
+| `external_action_intent` † | Proposed side effect (pre-execution) | `action`, `target_host`, `request_digest`, `idempotency_key` |
+| `external_action_receipt` † | Side effect acknowledged | `idempotency_key`, `request_digest`, `response_digest`, `external_ref` |
+| `disclosure_receipt` † | Evidence/data released | `recipient`, `purpose`, `released_digests[]`, `redaction_profile` |
+
+† = reserved in `@1`: schema is normative, production is OPTIONAL (Helm Phase 2+). A `@1` verifier MUST parse and verify any of these it encounters.
+
+### §26.5 Journal and checkpoints
+
+The producer-local journal is append-only. Each entry carries: `journal_seq` (monotonic), `stream_id`, `entry_digest`, running hash `rh_n = SHA-256(rh_{n-1} ‖ stream_id ‖ journal_seq ‖ entry_digest)` (per-stream; `rh_0 = SHA-256(stream_id)`), and the **record-keeping fields**: `period_start`, `period_end`, `reference_db_version`, `triggering_input_digest`, `humans_involved[]` (each `{id_ref, role}`; MAY be empty, MUST be present). These fields are named to satisfy EU AI Act Art. 12(2)/(3) logging minima directly.
+
+Run lifecycle states (`execution_state.state`): `draft` `validated` `queued` `running` `awaiting_data` `awaiting_review` `approved` `rejected` `overridden` `executing_action` `submitted` `acknowledged` `completed` `failed` `cancelled`.
+
+**Checkpoints** are signed (§26.2) summaries emitted periodically and at run completion: `{checkpoint_seq, per-stream {stream_id, journal_seq, rh}, journal_root_digest, anchors[]}`. Each `anchors[]` member is `{type, ...}` with `type` ∈ `rfc3161` | `opentimestamps` | `scitt-receipt` (reserved; SCITT is not yet an RFC — producers MUST NOT emit it under `@1`). Checkpoints SHOULD be anchored per §20 to at least one external authority. Unknown `anchors[].type` values MUST be reported as unrecognized, not as failures.
+
+### §26.6 Trust labels (NORMATIVE vocabulary)
+
+Verification surfaces and evidence bundles MUST classify every claim with exactly one of:
+
+- `hash_verified` — artifact unchanged relative to stated preimage.
+- `kernel_verified` — recorded deterministic kernel/version reproduced the recorded result from recorded inputs (per §24 where applicable, including §18 compute proofs where present).
+- `connector_asserted` — an authorized connector reported a payload/response at a time; **no claim about payload truth**.
+- `human_attested` — an identified authority reviewed/approved/overrode a defined evidence package.
+- `external_ack_captured` — an external service returned the stated reference/receipt.
+
+Surfaces MUST NOT collapse these into an undifferentiated "verified" indicator and MUST NOT present any label as establishing source-data truth or regulatory acceptance.
+
+### §26.7 Evidence bundles
+
+An evidence bundle is a self-contained, offline-verifiable archive: bundle manifest (§26.2-signed) listing every included object by digest and trust label, the objects themselves, checkpoints covering their journal entries, and anchor proofs. Default exports MUST apply the redaction profile: no secret values, no raw credential material, no unredacted payloads classified above the export's disclosure level. A conformant verifier evaluates a bundle with **zero network access**; anchor freshness checks are OPTIONAL and clearly separated.
+
+### §26.8 Conformance
+
+A producer conforms to `ocg-control-plane@1` iff: (1) all emitted profile objects validate against the published schemas; (2) all envelopes verify per §26.2; (3) running hashes and checkpoints verify for every exported journal segment; (4) the gate suite's control-plane fixtures pass, **including tampered negative fixtures** (an envelope, a journal segment, and a bundle each proven to fail verification when altered). A verifier conforms iff it correctly accepts the golden fixtures, rejects all tampered fixtures, and reports trust labels per §26.6.
+
+This profile is entirely additive: core §4 preimage members and `chaingraph_version` `0.4.0` are UNTOUCHED, and no existing `execution_hash` changes. A verifier correct for v0.8.12 validates every existing artifact unchanged and MAY ignore §26 entirely.
+
 ## §HASHRES-1 Ledger hash-resolution contract (NORMATIVE, addressing-scoped — additive, lands as v0.8.7 at the coordinated record bump)
 Defines how a §4 `execution_hash` (and any §16/§18-secured artifact addressed by it) is **dereferenced** at
 `ledger.ainumbers.co/<execution_hash>`. This is an addressing contract over content the standard already
@@ -1862,6 +1983,139 @@ it uses a hash-chaining convention that includes the signature — differing fro
 is attached after hashing and is excluded from the preimage. Re-verify this observation against the
 project's current public material before relying on any row of it.
 
+## §27 Human Accountability (NORMATIVE, OPTIONAL — new in v0.8.12)
+The §4 hash proves *what computed*; §16/§18 prove *that it computed correctly*; §22 proves *who was
+authorized to run it*. None of them records **which named human took responsibility for the result** —
+the preparer/reviewer/approver act that a bank examiner, an auditor, or a court actually asks for. §27
+adds that layer as a first-class, signed, machine-checkable artifact type WITHOUT touching any existing
+hash, envelope, or gate. It follows the standards-precedent verdict directly: the C2PA→CAWG identity split
+(assertions about content are SEPARATE from the content), in-toto's integer `threshold` for dual control,
+SCITT's *statements about statements* (a receipt about a receipt), and the ZCAP over-abstraction failure
+(so §27 defines banking-concrete record types, NOT a generic workflow-authorization calculus). §27 is the
+"human" half of the estate loop that §22 mandates automate: §22 is authority granted once and enforced
+deterministically; §27 is the individual accountable act evidenced per result. **§26 is reserved for the
+control-plane profile (`SPEC-S26-CONTROL-PLANE-PROFILE-DRAFT`); §27 deliberately leaves the gap.**
+
+**§27.0 Additivity and scope (NORMATIVE — the defining constraint).** Every construct below is **attached
+after hashing and EXCLUDED from every existing `execution_hash` preimage**, exactly as §20 `anchor_bindings`,
+§23 `input_attestations`, and §25 `private_inputs` are. An **approval record is a NEW artifact ABOUT an
+existing sealed artifact** (SCITT-style), never a mutation of it: minting, revising, or discarding approval
+records leaves the subject artifact's `execution_hash` byte-identical, `$defs/artifact.required` UNTOUCHED,
+and `chaingraph_version` at `"0.4.0"`. A verifier correct for v0.8.11 validates every existing artifact
+unchanged and MAY ignore §27 entirely. Scope is **banking-concrete record types only** — preparer/reviewer/
+approver/submitter over a reporting artifact — and §27 defines **no generic workflow-engine, no delegation
+calculus, no policy DSL** (the ZCAP lesson). It is a FORMAT for evidencing human acts, never a runtime, a
+queue, an approver directory, or a timer (those are implementations that consume §27, per §22.11's scope
+limit).
+
+**§27.1 Roles (NORMATIVE).** §27 defines a closed set of accountability roles: `preparer` (assembles the
+reporting artifact), `reviewer` (checks it), `approver`/`attestor` (accepts responsibility — the
+legally-effective sign-off), `submitter` (transmits it), and the OPTIONAL `model_owner` (owns a model whose
+output fed the artifact), `compliance_officer`, and `examiner` (READ-ONLY — an examiner role binding grants
+inspection, never approval authority). A **role binding** is a signed record that ties one §9 identity
+(`did:key` or LEI) to one role for one subject; the binding's §16 `eddsa-jcs-2022` proof MUST verify against
+that identity. Roles are the vocabulary the gate policy (§27.4) and thresholds (§27.3) count over. An
+identity MAY hold more than one role, but §27.3 distinctness is by identity, so one human cannot satisfy a
+dual-control threshold alone by wearing two role hats.
+
+**§27.2 Approval records (NORMATIVE — SCITT-style statements about statements).** An **approval record** is
+a conformant OCG artifact whose `mandate_type` is the accepted envelope value `"human_accountability_record"`
+and whose `output_payload` matches `$defs/humanAccountabilityRecord`. Its authority payload carries:
+`record_type` (`role_binding` | `approval` | `rejection` | `override` | `annotation`), `role` (§27.1),
+`subject_hash` (the `sha256:`-prefixed `execution_hash` of the artifact being acted upon — the SCITT
+reference), the acting `identity: { id }` (§9), a `decision` where applicable, a `reason_code`, and a
+`timestamp`. The approval record is **itself a first-class artifact**: it has its own §4 `execution_hash`
+over its own `{policy_parameters, output_payload}`, JCS-canonical via the one `_hash.mjs` `cgCanon`, and it
+MUST carry a §16 whole-artifact proof bound to the named human (an unsigned approval record is NOT
+conformant §27 evidence — exactly the §22.11 rule for resume artifacts). Because the record only *references*
+`subject_hash` and never contains the subject's preimage, it has **zero impact on the subject's hash or
+canonicalization**: the accountability trail is portable, tamper-evident, and offline-verifiable rather than
+a row locked inside one vendor's queue.
+
+**§27.3 Dual control and thresholds (NORMATIVE — in-toto integer threshold).** A gate MAY require **N
+distinct role-bound identities** to have signed approval records over the SAME `subject_hash` before it is
+satisfied. This is the in-toto `threshold` construction: an integer `threshold: N` on the required
+`role`, satisfied when **≥ N distinct identities** (counted by `identity.id`, NEVER by key — a single human
+rotating keys, or signing twice, counts once) have each emitted an `approval` record naming that role and
+that subject. `dual_control(2)` is the N=2 case (the FDIC GENIUS CEO/CFO certification is its first
+production use). A threshold gate over fewer than N distinct approvers is UNSATISFIED and MUST NOT auto-pass.
+
+**§27.4 Gate-policy vocabulary (NORMATIVE — wired to §21.4).** §27 defines a closed gate-policy enum, the
+`$defs/haGatePolicy` value applied to a §21.4 decision gate as an OPTIONAL precondition: `auto_pass` (no
+human act required), `review_required` (≥1 `approval` from a `reviewer`), `dual_control(N)` (§27.3 threshold
+N), `escalate` (route to the §22.3 reserved escalation target), `hold` (suspend pending a human act),
+`reject` (terminal human rejection), `emergency_override` (§27.5). A gate carrying a policy is satisfied ONLY
+when the named approval record(s) exist at the stated threshold over the gate's subject; **absent the
+required record(s), the gate does NOT fall through to its §21.4 `default`** — the human precondition is a
+hard predicate evaluated before the routing rules, and an unmet precondition holds the step. This composes
+with §21.4 without changing its evaluator: the policy is a precondition ANNOTATION consumed by the
+accountability layer, the §21.4 `_gateval.mjs` routing math is untouched, and a chain with no HA policy
+evaluates byte-identically to today.
+
+**§27.5 Override and waiver (NORMATIVE — time-boxed §22.10 attenuation + mandatory evidence).** An
+`emergency_override` is NOT an unconditional bypass. It is a **time-boxed §22.10 attenuated mandate** paired
+with a **mandatory evidence bundle** carrying, at minimum: a `reason_code`, an explicit `scope` (which
+gate/subject the override covers — narrowing only, never widening, per §22.10 and §SIDECAR.2), an `expiry`
+(ISO 8601), the authorizing `identity` (§9), and an **immutable link to the overridden artifact's
+`subject_hash`**. The override is itself a signed `record_type:"override"` approval record. **On `expiry` the
+override lapses and the underlying gate policy REVERTS** — an expired override MUST be treated as absent, so
+the gate returns to `review_required`/`dual_control(N)`/`hold` as originally specified. A timeout MUST NEVER
+resolve to a silent permanent auto-pass (the §22.11 counted-resume timeout rule, applied to overrides).
+
+**§27.6 Evidence bundle (NORMATIVE — §13.12 SD-JWT export profile).** The **evidence bundle** is a profile
+object, `$defs/haEvidenceBundle`, that aggregates the accountability trail for one subject: `input_hashes`
+(lineage), `kernel_version` (§12/§17 build identity), `policy_version`, `subject_hash` (the §4 execution
+artifact), `verification_result` (the §16/§18/§20 verdict), `exception_rationale`, `annotations`, the
+`reviewers[]`/`approvers[]` (identities + their signed approval-record hashes), `timestamps` (with OPTIONAL
+§20 anchor bindings), and a `submission_receipt` slot (populated only after a real transmission, never
+fabricated). The bundle is **exportable via §13**, and specifically via **§13.12 SD-JWT selective disclosure**
+so an examiner receives exactly the fields their remit requires and no others: the approver identities and
+the verdict are always-disclosed, while selectively-disclosable input values follow §13.12's rule
+(disclosure salts are the sole permitted nondeterminism and never touch any `execution_hash`). A redacted
+bundle is NOT re-executable (§13.12's stated limitation) — it evidences the human trail, not a recomputation.
+
+**§27.7 Separation of concerns (NORMATIVE — four distinct artifact types).** §27 keeps four things that are
+routinely conflated **structurally separate**, each its own artifact type: (a) **calculation/validation** (a
+§4/§18 compute result — what the numbers are); (b) **recommendation** (a machine or model suggestion — what
+*could* be decided); (c) **human judgment** (a `reviewer`/`annotation` record — a person's assessment); and
+(d) **legally-effective sign-off** (an `approver`/`attestor` `approval` record — a person accepting
+responsibility). An `approval` record is **evidence OF a human act, NOT a claim of regulator acceptance**:
+§27 produces the accountable-signature artifact a filing requires, and explicitly does NOT assert that the
+artifact is regulator-submittable or that the computation is a substitute for the human's judgment (the §0
+"no filing claims" and §18.3 "evidence, not a claim of unsupervised automation" doctrine, made concrete for
+the sign-off layer).
+
+**§27.8 Agent-parity clause (NORMATIVE).** An agent MAY **create review tasks** and MAY **submit approval
+records** — but ONLY under a §22 mandate whose `scope` explicitly grants the corresponding §27.1 role to that
+agent's identity. An agent **MUST NOT satisfy a `review_required` or `dual_control(N)` gate absent an
+explicit human-role mandate**: the default posture is that these gates require a NAMED HUMAN, and an
+agent-signed approval record counts toward a threshold only when a human principal has, in a signed mandate,
+delegated that exact role to the agent within a validity window. Counted-resume (§22.11) is the mechanism for
+human approval events and is REFERENCED here, not duplicated — a §27 `dual_control(N)` threshold and a
+§22.11 `resume_approval.required_events: N` are the same integer-threshold discipline viewed from the
+accountability side. This closes the obvious failure mode: an autonomous agent MUST NOT quietly become both
+preparer and approver of its own output.
+
+**§27.9 Conformance (profile-scoped).** An implementation MAY declare human-accountability support for a node
+or chain. The declaration asserts §27.0–§27.8 hold for that surface's approval records and evidence bundles.
+Conformance is machine-checked by `validate-ha-records.test.mjs` (§15): the approval-record shape
+(`$defs/humanAccountabilityRecord`, closed `record_type`/`role`/gate-policy enums, `subject_hash` a valid
+`sha256ref`); the **additivity invariant** (an approval record's presence leaves the subject artifact's
+`execution_hash` byte-identical, and a subject with zero HA records is byte-identical to a plain v0.8.11
+artifact); **threshold distinctness** (N identical-identity signatures satisfy `dual_control(N)` only for
+N=1; two distinct identities satisfy N=2; a repeated identity does NOT); **override expiry** (an expired
+override reverts the gate policy, never a silent permanent pass); and the **signed-named-human** requirement
+(an unsigned approval record is rejected, layered on the §16 `proof-binding.test.mjs` round-trip). Like §18
+and §25, the layer **defaults OFF**: a node MUST NOT synthesize accountability records, and absence of §27
+records is fully conformant and carries no meaning. Backward compatible and purely additive: no existing
+artifact, hash, gate, or golden vector moves.
+
+**Attribution.** The identity-split shape follows **C2PA / CAWG** (assertions about content, separated from
+content; design pattern only). The integer `threshold` follows **in-toto** (the ITE-5 threshold construction;
+concept only). The statement-about-statement framing follows **IETF SCITT** (a receipt about a receipt).
+**ZCAP-LD** is cited as the anti-pattern the scope discipline (§27.0) deliberately avoids. No text or code
+is copied from any of them.
+
 ## §14 Changelog
 See `standard/CHANGELOG.md`. **v0.8.9 (2026-07-18 — SPEC-TEXT PASS; the record `spec_version` in
 `chaingraph.json` stays 0.8.8 until the next coordinated K landing bumps it, exactly as the v0.8.7 and
@@ -2009,6 +2263,7 @@ hash-remediation incident, where canonical `execution_hash` had no end-to-end ga
 | §18 compute-integrity proof: object structure, `imageId` ↔ Graph Index `compute_images`, journal ↔ `output_payload`, no new hash, version stays 0.4.0, default-off; PLUS the shipped self-contained BN254 Groth16 verifier accepts a real receipt fixture and rejects a tampered seal / wrong journal (stark stays vendor-delegated per §18.1) | `compute-proof.test.mjs` (unit: binding + real-receipt verify + tamper-detect + backward-compat) | validate |
 | §20 anchor binding: per-type proof verification (`rfc3161-tst` real TST vs pinned TSA root incl. messageImprint/CMS/chain/EKU/genTime, `opentimestamps` completed proof vs pinned Bitcoin block header, `c2sp-tlog-proof-v1` vs pinned test log key + cosigners + Merkle inclusion, `scitt-receipt-rfc9942` COSE receipt), `anchored_hash` == recomputed `execution_hash`, tampered proof / mismatched hash MUST fail, outside hash scope | `anchor-binding.test.mjs` | validate |
 | §13.12 SD-JWT export: redact→verify round-trip with disclosures, digest mismatch fails, always-disclosed set complete (no input leaks into always-disclosed, no output becomes redactable), fresh CSPRNG salts the only nondeterminism, JWS EdDSA under the §16 key | `sd-export-roundtrip.test.mjs` | validate |
+| §13.13 xBRL-JSON export profile `ocg-xbrl-json@1`: fixture round-trip determinism (re-canonicalize twice ⇒ byte-identical), `canonicalValues` conformance (every fact value canonical-lexical string, no raw number/boolean), Annex 1 FFIEC Call Report sample structurally valid (real MDRM concept names, no placeholder/null concept), never labeled submittable | `xbrl-json-fixtures.test.mjs` | validate |
 | §16.5 proof sets/chains: parallel proof set verifies, endorsement `previousProof` chain verifies in dependency order, broken `previousProof` MUST fail | `proof-binding.test.mjs` | validate |
 | §1 `supersedes` shape: array of `sha256:`-prefixed execution_hashes | `schema-validate.mjs` | validate |
 | §PPH-1 `policy_parameters_hash`: JCS-SHA-256 over `policy_parameters` alone through the one canonical `cgCanon` path, key-order independent and **mutation-sensitive** (catches the `cgCanon`-returns-an-object constant-digest trap), unmoved by an `output_payload` change; hash-EXCLUDED — the member demonstrably changes the artifact's canonical form yet the §4 preimage and `execution_hash` stay byte-identical (both halves asserted, either alone is vacuous), reinforced by `executionHash()`'s arity; `#/$defs/sha256ref` value form with **prefix-insensitive** verification (bare and `sha256:`-prefixed both accepted); absence conformant; tampered and stale digests detected | `policy-params-hash.test.mjs` (unit) + `schema-validate.mjs` (shape, exercised by `fixtures/policy-params-hash.fixture.json`) | validate |
@@ -2031,6 +2286,7 @@ hash-remediation incident, where canonical `execution_hash` had no end-to-end ga
 | §REVOKE-1 revocation reference: OPTIONAL W3C BitstringStatusList `credentialStatus` object under `audit_signature` (tolerated added property), hash-excluded — a receipt without it is byte-identical and fully conformant; `chaingraph_version` 0.4.0 UNCHANGED; frozen v0.4 root schema still validates | `schema-validate.mjs` | validate |
 | §SIDECAR.2 resource-narrowing invariant (reserved): a future delegated mandate's resource set MUST be a subset of its parent's — stated now, unenforced until multi-hop mandates ship; §22 single-hop mandate gates UNCHANGED | `mandate-binding.test.mjs` | validate |
 | §24.6.2 `seeded-stochastic` replay: a kernel declaring the class re-runs at its own declared seed to a byte-identical `execution_hash`; the SAME kernel re-run at a tampered seed MUST produce a DIFFERENT hash (the seed is load-bearing, not decorative); `prng_algorithm` + integer `seed` + `draw_count` all present; the replay and tamper-detect paths are exercised unconditionally against a committed reference vector, so they stay proven in an estate with zero `seeded-stochastic` kernels; no envelope change, no new hash, `chaingraph_version` 0.4.0 UNCHANGED | `seed-replay.test.mjs` | validate |
+| §27 human-accountability records: `$defs/humanAccountabilityRecord` shape (closed `record_type`/`role`/`haGatePolicy` enums, `subject_hash` a valid `sha256ref`); ADDITIVITY — an approval record referencing a subject leaves that subject's `execution_hash` byte-identical and a subject with zero HA records is byte-identical to a plain v0.8.11 artifact (`$defs/artifact.required` + `chaingraph_version` 0.4.0 UNCHANGED); THRESHOLD DISTINCTNESS — `dual_control(N)` counts DISTINCT `identity.id`, so a repeated identity satisfies only N=1 and two distinct identities satisfy N=2; OVERRIDE EXPIRY — an expired `emergency_override` reverts the gate policy, never a silent permanent pass; SIGNED-NAMED-HUMAN — an unsigned approval record is rejected (§16 pairing check stays with `proof-binding.test.mjs`); defaults OFF, absence conformant | `validate-ha-records.test.mjs`, `schema-validate.mjs` | validate |
 | every rule above has a gate (meta) | `spec-gate-coverage.mjs` | validate |
 
 **Meta-rule:** a PR that adds a normative MUST to this file without a referenced gate in this table

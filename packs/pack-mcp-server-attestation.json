@@ -1,0 +1,40 @@
+{
+  "workflow_id": "pack-mcp-server-attestation",
+  "name": "MCP Server Attestation",
+  "outcome": "MCP deployability diagnostic > signed server self-attestation (composite A-F grade).",
+  "spec_version": "ocg-control-plane@1",
+  "manifest": {
+    "manifest_version": "1",
+    "workflow_id": "pack-mcp-server-attestation",
+    "trigger": {
+      "type": "manual"
+    },
+    "nodes": [
+      {
+        "node_id": "n1",
+        "kernel_id": "art-28-mcp-server-deployability-diagnostic",
+        "kernel_digest": "sha256:9cb70b02e660f0da7401030929a6059c40e2e3fd4868b86226b71eaf9d1d7394"
+      },
+      {
+        "node_id": "n2",
+        "kernel_id": "art-33-mcp-server-self-attestation-pack",
+        "kernel_digest": "sha256:0fa24d32f68661ef9900f03ddab76d94fc674c6cf4327d809bd7bd5d2451c316"
+      }
+    ],
+    "connectors": [],
+    "gates": [],
+    "actions": []
+  },
+  "workflow_manifest_digest": "sha256:a474be22da1434be4a6ec5c8e1ef91f95927f8241b46811bf9fb4081dc0976d1",
+  "declared_inputs": [],
+  "steps_meta": [
+    {
+      "node_id": "n1",
+      "data_classification": "compute"
+    },
+    {
+      "node_id": "n2",
+      "data_classification": "compute"
+    }
+  ]
+}

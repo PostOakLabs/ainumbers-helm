@@ -13671,7 +13671,7 @@
       "tool_id": "art-209-nft-metadata-validator",
       "tool_version": "1.0.0",
       "display_name": "NFT Metadata Validator",
-      "mcp_name": "validate_nft_metadata",
+      "mcp_name": "validate_nft_metadata_art209",
       "mandate_type": "compliance_mandate",
       "wave": 35,
       "gpu": false,
@@ -18115,7 +18115,7 @@
       "wave": 48,
       "gpu": false,
       "url": "https://ainumbers.co/chaingraph/art-275-genius-reserve-disclosure-checker.html",
-      "description": "Lints an extracted monthly reserve disclosure against GENIUS Act S.394 §4: composition-category eligibility, tenor, custody locations, CEO/CFO certification, registered-examiner presence, month-over-month diff, and an on-chain supply cross-check against a pasted figure. Successor to the pre-issuance precheck_reserve_attestation (art-06): that tool is the pre-issuance readiness gate, this is the recurring post-issuance monthly filing check. Never claims cryptographic verification of the source PDF.",
+      "description": "Lints an extracted monthly reserve disclosure against GENIUS Act S.394 §4: composition-category eligibility, tenor, custody locations, a dual_control(2) CEO/CFO certification gate (distinct CEO and CFO identities required, per FDIC NPR 2026-04-10 and OCG SPEC.md §27.3), registered-examiner presence, month-over-month diff, and an on-chain supply cross-check against a pasted figure. Successor to the pre-issuance precheck_reserve_attestation (art-06): that tool is the pre-issuance readiness gate, this is the recurring post-issuance monthly filing check. Never claims cryptographic verification of the source PDF.",
       "input_schema_ref": "chaingraph/art-275-genius-reserve-disclosure-checker.html#manifest",
       "deadline": "2027-01-18",
       "deadline_note": "GENIUS Act effective ≤ January 2027; monthly reserve composition reports required for licensed issuers; >$50B issuers subject to annual PCAOB audit. Re-verify against final-rule text on/after 2026-07-18.",
@@ -18126,24 +18126,26 @@
       "status": "live",
       "conformance_fixtures": true,
       "compute_capability": "server",
-      "compute_images": [{"system":"sha256-source","image_id":"sha256:6dc1841eacba4fe724eda818961bfbb1248bde713c6b8dd204be34bc2cb37b4e","valid_from":"2026-07-10"},{"system":"risc0","image_id":"sha256:a1a0bc89b5b1febaeda3519f6dbade0fa5ac16beeb143c4e1b01689573567bc6","valid_from":"2026-07-10"}],
+      "compute_images": [{"system":"sha256-source","image_id":"sha256:0f28358a1106be5fd951174ff9984a32af17133642481706a056f43ce6fe0d22","valid_from":"2026-07-10"},{"system":"risc0","image_id":"sha256:a1a0bc89b5b1febaeda3519f6dbade0fa5ac16beeb143c4e1b01689573567bc6","valid_from":"2026-07-10"}],
       "compute_proof": {
         "type": "ZkVmReceipt",
         "system": "risc0",
         "receiptFormat": "groth16-bn254",
         "imageId": "sha256:a1a0bc89b5b1febaeda3519f6dbade0fa5ac16beeb143c4e1b01689573567bc6",
-        "seal": "I7f6nW6HAR/d4VgDWucJVg/uUr4yHuAIPziCQNOaJ6Uq2oCr4yotLOEzwsyrmmynK+cwtMEQzkl/pROzL59f6wf3cci9MJ6wfL0RsA/4hTqVx3adpn7BLF6q8vxEZDCAAfyzPVmOCgYWB1qfbOLpr/ZynKUM+S9ZQgCsT/wvvJUqjmawNbM3TKG9tmzxmSpObhlFUaq6DVtdDPvrYsjJVgGSV06vAMAVf47cFpxIBWvPxwKWWpTM2xNbUy/b50aoH/T1njtJmBJpvEpwDQUBZBYBg89hdN9ttsslaSi41gISAJ7O7zFdtH7vM72OE1ARqgsdsFiS0zhzx9kygJseiw==",
+        "seal": "A0BSd+yshPOT0VRmB/MqzwHJtFWFXoPiRNxfvrRvCbwS+oJAY8sv5PP0nofWfKi8pS/pElzRsOdmUQMqdOUZjS6iYzub02DTTc1DU9HnBIccEUoaFydXddcAA4yWBSQhEDuLlhcIYk8/txHCHx5/d3zrUz+h15oin4pUvbBeyAkwSWYa98DvZ5jhfuxCDkTeFyl1E+KRc1B0B4Huh0oPKg58LysrPplcN28mbTL7LfKuDCYB2AQIbmxS4XgShTX+BDAJwKgJ8iUxP/dTrloMLwv8OhzhSLFAJWDaT6DktJgnsNM8SE1/MiWeu4a/h+rv8wO7HX6iD+FjlDQBBT+zyw==",
         "journal": {
           "chaingraph_version": "0.4.0",
-          "kernel_digest": "sha256:6dc1841eacba4fe724eda818961bfbb1248bde713c6b8dd204be34bc2cb37b4e",
+          "kernel_digest": "sha256:0f28358a1106be5fd951174ff9984a32af17133642481706a056f43ce6fe0d22",
           "output": {
             "applicable_deadline": "2027-01-18",
             "asset_results": [],
-            "ceo_cfo_certification_present": false,
+            "ceo_certified": false,
+            "cfo_certified": false,
             "conditional_assets_usd": 0,
             "coverage_ratio_pct": 0,
             "custody_disclosed": false,
             "custody_locations": [],
+            "dual_control_satisfied": false,
             "examiner_name": null,
             "failing_dimensions": [
               {
@@ -18152,9 +18154,9 @@
                 "ref": "GENIUS Act S.394 §4(a)"
               },
               {
-                "detail": "Monthly report is missing the required CEO/CFO certification.",
+                "detail": "Monthly report requires a dual_control(2) CEO/CFO certification. CEO certification missing. CFO certification missing.",
                 "dim": "CEO/CFO certification",
-                "ref": "GENIUS Act S.394 §4"
+                "ref": "GENIUS Act S.394 §4; FDIC NPR 2026-04-10; OCG SPEC.md §27.3 dual_control(2)"
               },
               {
                 "detail": "No registered public accounting firm named as examiner for this report.",
@@ -18162,6 +18164,7 @@
                 "ref": "GENIUS Act S.394 §4"
               }
             ],
+            "gate_policy": "dual_control(2)",
             "mom_diff": null,
             "monthly_disclosure_determination": "FAIL",
             "onchain_supply_check": {
@@ -25567,6 +25570,2656 @@
   }
 },
     {
+  "tool_id": "art-425-large-exposures-limit-check",
+  "tool_version": "1.0.0",
+  "display_name": "Large Exposures Limit Check",
+  "mcp_name": "compute_large_exposures_limit",
+  "mandate_type": "compliance_mandate",
+  "wave": 70,
+  "gpu": false,
+  "url": "https://ainumbers.co/chaingraph/art-425-large-exposures-limit-check.html",
+  "description": "Basel III large exposures framework (BCBS 283) and U.S. single-counterparty credit limits (Regulation YY, 12 CFR 252 Subpart H) limit check: aggregates each counterparty's gross exposure net of eligible credit-risk-mitigation, rolls connected/economically-interdependent counterparties into one group exposure, then checks the group against Tier 1 capital under the general 25% limit or the tighter 15% GSIB-to-GSIB limit. Emits a breach-list artifact of every group exceeding its applicable limit. Deterministic point-in-time calculation from caller-supplied exposure, CRM, and capital figures for a single reporting date.",
+  "input_schema_ref": "chaingraph/art-425-large-exposures-limit-check.html#manifest",
+  "consumes": [],
+  "feeds": [],
+  "status": "live",
+  "conformance_fixtures": true,
+  "compute_capability": "server",
+  "compute_images": [
+    {
+      "system": "sha256-source",
+      "image_id": "sha256:eea6976089a31b050d82c8bc25f5fb90f8f7e2b464627acc89bb16e5d58c859e",
+      "valid_from": "2026-07-10"
+    },
+    {
+      "system": "risc0",
+      "image_id": "sha256:a1a0bc89b5b1febaeda3519f6dbade0fa5ac16beeb143c4e1b01689573567bc6",
+      "valid_from": "2026-07-23"
+    }
+  ],
+  "compute_proof_ready": "ready",
+  "export_capability": [
+    "json"
+  ],
+  "compute_proof": {
+    "type": "ZkVmReceipt",
+    "system": "risc0",
+    "receiptFormat": "groth16-bn254",
+    "imageId": "sha256:a1a0bc89b5b1febaeda3519f6dbade0fa5ac16beeb143c4e1b01689573567bc6",
+    "seal": "Jvb9PwnKMNfsY+vbr4Lsj//yY1s0LfvX9Rf/InHZMO4avSvCKzuaX6MSBNxjuipGQ3tsKOg6Lk9WNOWcJFRjDiSpZiwA85it58knuQh0u2MHcH5z9OXhEjYuNnUWfUE/CvNgiSspZ0/YOyBXpgg0F4pwT01t3HxLO7EDKscT95oHROqDALzmymAAypj+5Q4H3nW7qsHjNtKbrQkaMhg8ECdjOy8tITCgOw+H4RhSJlW2Hd1sHXrN2hRhSf2v+WUlHfcToqfnTN/cFxeTBN6e8AlNwQTp3MTpQkj1DXyU7KQvDFeGhexCjersDFW/0adI8hopfZ27tUdWCRsFGI9GZw==",
+    "journal": {
+      "chaingraph_version": "0.4.0",
+      "kernel_digest": "sha256:eea6976089a31b050d82c8bc25f5fb90f8f7e2b464627acc89bb16e5d58c859e",
+      "output": {
+        "breach_list": [],
+        "caller_is_gsib": true,
+        "counterparties": [
+          {
+            "connected_group_id": null,
+            "counterparty_id": "cp-A",
+            "counterparty_name": "Standalone Corp A",
+            "is_gsib": false,
+            "net_exposure_total_musd": 1600
+          },
+          {
+            "connected_group_id": "grp1",
+            "counterparty_id": "cp-B",
+            "counterparty_name": "Group B Sub 1",
+            "is_gsib": false,
+            "net_exposure_total_musd": 1000
+          },
+          {
+            "connected_group_id": "grp1",
+            "counterparty_id": "cp-C",
+            "counterparty_name": "Group B Sub 2",
+            "is_gsib": false,
+            "net_exposure_total_musd": 500
+          }
+        ],
+        "groups": [
+          {
+            "applicable_limit_musd": 2500,
+            "applicable_limit_pct": 25,
+            "breached": false,
+            "exposure_pct_of_tier1": 16,
+            "group_id": null,
+            "gsib_to_gsib": false,
+            "is_connected_group": false,
+            "member_counterparty_ids": [
+              "cp-A"
+            ],
+            "net_exposure_total_musd": 1600
+          },
+          {
+            "applicable_limit_musd": 2500,
+            "applicable_limit_pct": 25,
+            "breached": false,
+            "exposure_pct_of_tier1": 15,
+            "group_id": "grp1",
+            "gsib_to_gsib": false,
+            "is_connected_group": true,
+            "member_counterparty_ids": [
+              "cp-B",
+              "cp-C"
+            ],
+            "net_exposure_total_musd": 1500
+          }
+        ],
+        "note": "Deterministic point calculation from caller-supplied gross exposure, eligible CRM, and connected-group rollup for a single reporting date.",
+        "regulatory_basis": "Basel III large exposures framework (BCBS 283); U.S. single-counterparty credit limits (Regulation YY, 12 CFR 252 Subpart H): 25% of Tier 1 capital general limit, 15% for GSIB-to-GSIB exposures.",
+        "tier1_capital_musd": 10000
+      }
+    }
+  }
+},
+    {
+  "tool_id": "art-426-cecl-ecl-calculator",
+  "tool_version": "1.0.0",
+  "display_name": "CECL Expected Credit Loss & Allowance Calculator",
+  "mcp_name": "calculate_cecl_ecl_allowance",
+  "mandate_type": "credit_assessment",
+  "wave": 70,
+  "gpu": false,
+  "url": "https://ainumbers.co/chaingraph/art-426-cecl-ecl-calculator.html",
+  "description": "Computes a deterministic CECL (Current Expected Credit Loss, ASC 326) allowance given caller-supplied PD/LGD/EAD curves, segment exposures, and forecast scenario weights, and reconciles the result against the prior period's allowance balance. Supports WARM (Weighted-Average Remaining Maturity -- an annualized historical loss rate x remaining life practical-expedient approach), DCF (full contractual cash-flow projection, discounted at the effective interest rate, with period expected shortfall = contractual payment x PD x LGD), and straight loss-rate (a lifetime historical loss rate applied directly to exposure, no discounting) methods. BOUNDARY: PD/LGD/EAD curves and forecast scenario weights are policy inputs supplied by the caller -- human or model judgment -- and this kernel performs only the arithmetic combination into per-segment ECL and the allowance rollforward (beginning balance + provision expense - charge-offs + recoveries = ending allowance, checked against the newly computed required allowance). It does not estimate, calibrate, back-test, or validate any PD/LGD/EAD model. Distinct from IFRS9's 3-stage staging regime (see tools 196/198/204, a different accounting standard) -- CECL recognizes lifetime expected credit losses from origination with no staging transfer logic.",
+  "input_schema_ref": "chaingraph/art-426-cecl-ecl-calculator.html#manifest",
+  "consumes": [],
+  "feeds": [],
+  "status": "live",
+  "conformance_fixtures": true,
+  "compute_capability": "server",
+  "compute_images": [
+    {
+      "system": "sha256-source",
+      "image_id": "sha256:3a945610238be19cfb66bb261bdb544507d2eb0d978c45a98d4f4570da40e6f8",
+      "valid_from": "2026-07-10"
+    },
+    {
+      "system": "risc0",
+      "image_id": "sha256:a1a0bc89b5b1febaeda3519f6dbade0fa5ac16beeb143c4e1b01689573567bc6",
+      "valid_from": "2026-07-23"
+    }
+  ],
+  "compute_proof_ready": "ready",
+  "export_capability": [
+    "json"
+  ],
+  "compute_proof": {
+    "type": "ZkVmReceipt",
+    "system": "risc0",
+    "receiptFormat": "groth16-bn254",
+    "imageId": "sha256:a1a0bc89b5b1febaeda3519f6dbade0fa5ac16beeb143c4e1b01689573567bc6",
+    "seal": "H/anMqZvuJvs/TMllUSY2P7uK1mpS9v6kZiE42WRoI4IybCf0A93Pb+MFf4P4Q3PL0orDeD5jVRvpIkCdfrQih54/Pb6I3Ol8zaBF6tBC3fTY2dxPrZi1pgwOYXmf4n4LbSPj+KqG47bJ0kAmtkQBUk4v10VzRRrhSc1hy/+lMIEIEUx5Kts0syLtD+lcqrKkoM3UndQmeY8uzR2OdZjBiZzLy22uZKaG6zit8+32FLHHV/dzhljByxlVu1v1lftJKshCJnRknw5PF8Q5HeItEBHnaenKKOilNMYoNFWdDAptNtAzkL1EsOzQlGWYHHK/NrswsFbpfIQhWSSwrNa1Q==",
+    "journal": {
+      "chaingraph_version": "0.4.0",
+      "kernel_digest": "sha256:3a945610238be19cfb66bb261bdb544507d2eb0d978c45a98d4f4570da40e6f8",
+      "output": {
+        "boundary_note": "PD/LGD/EAD curves and forecast scenario weights are policy inputs supplied by the caller (human/model judgment); this kernel performs only the arithmetic combination into ECL and allowance reconciliation. It does not estimate, calibrate, or validate any PD/LGD/EAD model.",
+        "charge_offs_usd": 20000,
+        "constants_version": "2026-07-23.cecl-warm-v1",
+        "delta_vs_required_usd": 0,
+        "disambiguation": "CECL (ASC 326) recognizes lifetime expected credit losses from origination -- there is no 3-stage staging transfer regime here, unlike IFRS9 (see tools 196/198/204, a distinct standard). WARM applies an annualized historical loss rate x remaining life; loss-rate applies a lifetime historical loss rate directly (no discounting); DCF discounts period expected shortfalls (contractual cash flow x PD x LGD) at the effective interest rate.",
+        "forecast_weights": [
+          {
+            "scenario": "baseline",
+            "weight": 0.6
+          },
+          {
+            "scenario": "downside",
+            "weight": 0.4
+          }
+        ],
+        "method": "warm",
+        "prior_allowance_balance_usd": 500000,
+        "provision_expense_usd": 451000,
+        "reconciled_ending_allowance_usd": 936000,
+        "reconciliation_balanced": true,
+        "recoveries_usd": 5000,
+        "segment_count": 2,
+        "segments": [
+          {
+            "ead_usd": 10000000,
+            "exposure_balance_usd": 10000000,
+            "lgd_pct": 0,
+            "remaining_life_years": 3,
+            "scenario_count": 2,
+            "scenarios": [
+              {
+                "scenario": "baseline",
+                "scenario_ecl_usd": 360000,
+                "weight": 0.6
+              },
+              {
+                "scenario": "downside",
+                "scenario_ecl_usd": 750000,
+                "weight": 0.4
+              }
+            ],
+            "segment_ecl_usd": 516000,
+            "segment_id": "retail-auto"
+          },
+          {
+            "ead_usd": 5000000,
+            "exposure_balance_usd": 5000000,
+            "lgd_pct": 0,
+            "remaining_life_years": 2,
+            "scenario_count": 2,
+            "scenarios": [
+              {
+                "scenario": "baseline",
+                "scenario_ecl_usd": 300000,
+                "weight": 0.6
+              },
+              {
+                "scenario": "downside",
+                "scenario_ecl_usd": 600000,
+                "weight": 0.4
+              }
+            ],
+            "segment_ecl_usd": 420000,
+            "segment_id": "retail-card"
+          }
+        ],
+        "total_required_allowance_usd": 936000
+      }
+    }
+  }
+},
+    {
+  "tool_id": "art-427-discount-window-capacity",
+  "tool_version": "1.0.0",
+  "display_name": "Discount Window Borrowing-Capacity Calculator",
+  "mcp_name": "compute_discount_window_capacity",
+  "mandate_type": "compliance_mandate",
+  "wave": 63,
+  "gpu": false,
+  "url": "https://ainumbers.co/chaingraph/art-427-discount-window-capacity.html",
+  "description": "Federal Reserve Discount Window borrowing-capacity calculator: lendable value = sum of pledged collateral positions x published Fed collateral margins (margin table effective date is caller-supplied policy input, not hardcoded) compared against a runnable-liability / uninsured-deposit coverage target. Timely given the pending Discount Window Preparedness Act and the Treasury LCR-recognition push for pre-positioned collateral; no existing vendor tool covers this calculation.",
+  "input_schema_ref": "chaingraph/art-427-discount-window-capacity.html#manifest",
+  "deadline": null,
+  "deadline_note": "Discount Window Preparedness Act pending; Treasury LCR-recognition push for pre-positioned DW collateral.",
+  "consumes": [],
+  "feeds": [],
+  "status": "live",
+  "conformance_fixtures": true,
+  "compute_capability": "server",
+  "compute_images": [
+    {
+      "system": "sha256-source",
+      "image_id": "sha256:9229d3650b52b9385576c8f0c878c174906804fb4ccca5ae197016f655fa4aea",
+      "valid_from": "2026-07-10"
+    },
+    {
+      "system": "risc0",
+      "image_id": "sha256:a1a0bc89b5b1febaeda3519f6dbade0fa5ac16beeb143c4e1b01689573567bc6",
+      "valid_from": "2026-07-23"
+    }
+  ],
+  "export_capability": [
+    "json"
+  ],
+  "compute_proof_ready": "ready",
+  "compute_proof": {
+    "type": "ZkVmReceipt",
+    "system": "risc0",
+    "receiptFormat": "groth16-bn254",
+    "imageId": "sha256:a1a0bc89b5b1febaeda3519f6dbade0fa5ac16beeb143c4e1b01689573567bc6",
+    "seal": "K99lkbLG8znUkABAISQ+aIaUTyKO4XhiFhl9DWxntK0qov9L4S04D825q7mcLrWxt7Kyx5xkKr0jBo7DPsRt1R9gG6gGXdrBs464DC3NkoIG6xPyiC2Uaist65+n4C5YC/0cnz1X20uzmLKPeQ1wn47jlwfliz4GNAugcICKmIgQWlD2kQCEo7Er4mNIo9VkBOKuJO+e8Lfb8g1bvQOWXCNPHx9dHbogxZ1ylnYP61llnKm44KlnksphSbX+dXXEJXIpUuz9ua1F1s2VScGc8x0+cC7k615Hq/odaqONjncv77yVQLIS0cjVJvQ5jR4ObootmE/kz9DEjCENR8HrBA==",
+    "journal": {
+      "chaingraph_version": "0.4.0",
+      "kernel_digest": "sha256:9229d3650b52b9385576c8f0c878c174906804fb4ccca5ae197016f655fa4aea",
+      "output": {
+        "capacity_compliant": true,
+        "capacity_surplus_shortfall_musd": 1690,
+        "collateral_par_value_musd": 5000,
+        "coverage_pct": 156.33,
+        "coverage_target_pct": 100,
+        "lendable_value_musd": 4690,
+        "margin_table_version": "2026-07-01",
+        "note": "Lendable value = sum(collateral par value x published Fed margin, policy-input margin table). Compared against caller-supplied runnable-liability / uninsured-deposit balance. Not a claim of actual Fed collateral eligibility or advance approval.",
+        "runnable_liabilities_musd": 3000
+      }
+    }
+  }
+},
+    {
+  "tool_id": "art-428-cyber-incident-clock",
+  "tool_version": "1.0.0",
+  "display_name": "Cyber Incident Notification Clock",
+  "mcp_name": "compute_cyber_incident_notification_clock",
+  "mandate_type": "attestation_mandate",
+  "wave": 70,
+  "gpu": false,
+  "url": "https://ainumbers.co/chaingraph/art-428-cyber-incident-clock.html",
+  "description": "Starts three parallel regulatory notification-deadline clocks from one hash-anchored cyber-incident determination timestamp: the 36-hour interagency banking-regulator rule (12 CFR 53/225/304), the 4-business-day SEC Form 8-K Item 1.05 notification (weekends-only business-day arithmetic; no federal holiday calendar is applied, a documented scope limit), and the 72-hour NYDFS 23 NYCRR 500.17(a) notice. Each obligation carries its own decision-tree attestation slot (applicable, deadline, completion state, a §22.11-shaped optional exception for an at-risk or missed deadline) and a stable obligation_id ready to be cited by a future Human-Accountability (BANK-SPEC-HA-1) approval record, without embedding a mutable reference inside its own hashed output. A pending SEC Item 1.05 rescission petition (flagged Apr 2026) is carried as an annotation only; it does not alter the computed deadline. Complementary to tools/incident-response-runbook-builder.html. This tool computes deadlines and attestation slots only; it does not itself transmit, file, or submit any regulatory notification, and it is not legal advice.",
+  "input_schema_ref": "chaingraph/art-428-cyber-incident-clock.html#manifest",
+  "consumes": [],
+  "feeds": [],
+  "status": "live",
+  "conformance_fixtures": true,
+  "compute_capability": "server",
+  "compute_images": [{"system":"sha256-source","image_id":"sha256:6bbd5af5d5a8f8a001a6b5e62fde257a5a22943d218e038ce6c4ae78bb142c8e","valid_from":"2026-07-10"},{"system":"risc0","image_id":"sha256:a1a0bc89b5b1febaeda3519f6dbade0fa5ac16beeb143c4e1b01689573567bc6","valid_from":"2026-07-23"}],
+  "compute_proof_ready": "ready",
+  "export_capability": [
+    "json"
+  ],
+  "compute_proof": {
+    "type": "ZkVmReceipt",
+    "system": "risc0",
+    "receiptFormat": "groth16-bn254",
+    "imageId": "sha256:a1a0bc89b5b1febaeda3519f6dbade0fa5ac16beeb143c4e1b01689573567bc6",
+    "seal": "CMYCH33Wu2HK866jygv1bdg+VMS9Y6WIcAsmC3xHkyoUkLuNAkFXM2FF3MHK7paAgkokkVvwftTgB4aPBVlJjyFoOCDzPfWW5tqvUMJFaixn2NV0ptzpLMaPSCvgoF4ZDvaK6jx7j8oo5V5K+FuZbIRlnISUIS5EfbqUryA6wyQQOKtq/mbSQfAqTO2W6QWjVR1GB4G3UfyJx0gd9+1+rA+L581JFPPOiRvpFSE5trtn+KSzfKbBU4ppl92LqK2KGW5rF0CYU2ar+qSE6ib2vSXsE+CPcLHxwMk+mztsQp8ac9wcQkzAf3vK+cg3mYmuofo0IPGzLQOifaWySd/pSQ==",
+    "journal": {
+      "chaingraph_version": "0.4.0",
+      "kernel_digest": "sha256:d4f785fe961f2b21635d4c79e97fc6843c9db6d688d81be0b6a7223d1f63ac95",
+      "output": {
+        "determination_at": null,
+        "determination_at_parsed": false,
+        "determination_evidence_hash": null,
+        "determination_evidence_hash_well_formed": false,
+        "determinations": [
+          {
+            "applicable": false,
+            "completed_late": false,
+            "deadline_iso": null,
+            "exception": null,
+            "ha_note": "Not yet an approval record. Once BANK-SPEC-HA-1 (SPEC.md Human Accountability section) lands, a human reviewer/approver MAY create a separate, signed §1 approval record over this artifact's execution_hash + this obligation_id; this kernel does not fabricate or reserve a mutable slot for that record inside its own hashed output.",
+            "item_state": "not_applicable",
+            "note": "Calendar-hour deadline (36 hours from determination); the rule carries no business-day exception.",
+            "notification_completed_at": null,
+            "obligation_id": "banking_regulator_36hr",
+            "regulator": "OCC (national banks) / FRB (bank holding companies, state member banks) / FDIC (insured state non-member banks): harmonized interagency rule",
+            "statute_citation": "12 CFR pt. 53 (OCC) / 12 CFR pt. 225 (FRB, Regulation Y) / 12 CFR pt. 304 (FDIC) — Interagency Computer-Security Incident Notification Requirements"
+          },
+          {
+            "applicable": false,
+            "completed_late": false,
+            "deadline_iso": null,
+            "exception": null,
+            "ha_note": "Not yet an approval record. Once BANK-SPEC-HA-1 (SPEC.md Human Accountability section) lands, a human reviewer/approver MAY create a separate, signed §1 approval record over this artifact's execution_hash + this obligation_id; this kernel does not fabricate or reserve a mutable slot for that record inside its own hashed output.",
+            "item_state": "not_applicable",
+            "note": "Four-business-day deadline; weekends-only business-day arithmetic (see kernel scope-limit note); no SEC-closure holiday calendar is consulted.",
+            "notification_completed_at": null,
+            "obligation_id": "sec_8k_item_1_05",
+            "regulator": "U.S. Securities and Exchange Commission",
+            "statute_citation": "17 CFR 249.308 (Form 8-K), Item 1.05 (Material Cybersecurity Incidents); \"business day\" per Exchange Act Rule 0-3(a)"
+          },
+          {
+            "applicable": false,
+            "completed_late": false,
+            "deadline_iso": null,
+            "exception": null,
+            "ha_note": "Not yet an approval record. Once BANK-SPEC-HA-1 (SPEC.md Human Accountability section) lands, a human reviewer/approver MAY create a separate, signed §1 approval record over this artifact's execution_hash + this obligation_id; this kernel does not fabricate or reserve a mutable slot for that record inside its own hashed output.",
+            "item_state": "not_applicable",
+            "note": "Calendar-hour deadline (72 hours from determination).",
+            "notification_completed_at": null,
+            "obligation_id": "nydfs_72hr_500",
+            "regulator": "New York State Department of Financial Services",
+            "statute_citation": "23 NYCRR 500.17(a): Notice of Cybersecurity Incident"
+          }
+        ],
+        "evaluated_at": null,
+        "incident_id": "",
+        "note": "Deterministic notification-deadline clock over a caller-declared incident determination timestamp. Business-day arithmetic (SEC 8-K leg) is weekends-only; no federal/SEC holiday calendar is applied (see kernel header). This tool computes deadlines and attestation slots; it does not itself transmit, file, or submit any regulatory notification, and it is not legal advice."
+      }
+    }
+  }
+},
+    {
+  "tool_id": "art-429-var-backtest-traffic-light",
+  "tool_version": "1.0.0",
+  "display_name": "VaR Backtesting Traffic-Light Zone Calculator",
+  "mcp_name": "compute_var_backtest_traffic_light",
+  "mandate_type": "capital_assessment",
+  "wave": 70,
+  "gpu": false,
+  "url": "https://ainumbers.co/chaingraph/art-429-var-backtest-traffic-light.html",
+  "description": "Counts Basel VaR backtesting exceptions (actual daily P&L loss exceeding the model's 1-day VaR estimate) over a rolling up-to-250-trading-day window, then looks up the green/yellow/red traffic-light zone and capital multiplier per the Basel Committee's 1996 Amendment to the Capital Accord to Incorporate Market Risks, Part V, retained under BCBS d457 (Jan 2019) internal-models-approach backtesting. Exception-count plus zone plus multiplier lookup only -- does NOT compute VaR itself and does NOT apply the multiplier to a capital charge.",
+  "input_schema_ref": "chaingraph/art-429-var-backtest-traffic-light.html#manifest",
+  "consumes": [],
+  "feeds": [],
+  "status": "live",
+  "conformance_fixtures": true,
+  "compute_capability": "server",
+  "compute_images": [
+    {
+      "system": "sha256-source",
+      "image_id": "sha256:25b20c0e87bf44b54d5c7f92e3ac4994db2af88a5fcb98ee3755972234fafe6b",
+      "valid_from": "2026-07-10"
+    },
+    {
+      "system": "risc0",
+      "image_id": "sha256:a1a0bc89b5b1febaeda3519f6dbade0fa5ac16beeb143c4e1b01689573567bc6",
+      "valid_from": "2026-07-23"
+    }
+  ],
+  "export_capability": [
+    "json"
+  ],
+  "compute_proof_ready": "ready",
+  "compute_proof": {
+    "type": "ZkVmReceipt",
+    "system": "risc0",
+    "receiptFormat": "groth16-bn254",
+    "imageId": "sha256:a1a0bc89b5b1febaeda3519f6dbade0fa5ac16beeb143c4e1b01689573567bc6",
+    "seal": "EGFqfEJ2Ol9Y4PxCvK6DJEZKP/1CdT5Hy+SrhQEtt2wds1fIoThEsxq2JsLDEtdpdiKQK2ToiKO6YMsXbTpJOy1UqFfOvyWFrBEuYSr+P5IgIEohVG680r6GyXtxCjDoEvXBBcYoPPvCB8ZQlurAuZtdGi+zzwCo8rm6wTarhpcaIMIQxF863Lk0dV3Jn3CVdmufCFPJLTZiDAcLxEGEsSkcpGV7sWEuP21c1pScbCC6dOwo3SOTr88XfdroZVilGo7+2uGkZ7KooC9gFyN3cHrmquSUoM7d6gmWcEImsGILTBIWxjf+aH/IXKa1Ut4lpRkey+l+tw9/HTOW1iHMrQ==",
+    "journal": {
+      "chaingraph_version": "0.4.0",
+      "kernel_digest": "sha256:25b20c0e87bf44b54d5c7f92e3ac4994db2af88a5fcb98ee3755972234fafe6b",
+      "output": {
+        "constants_version": "BASEL-VAR-BACKTEST-TRAFFIC-LIGHT-2026-07-23-V1",
+        "disambiguation": "compute_var_backtest_traffic_light performs ONLY the Basel traffic-light exception count + zone + multiplier lookup over a supplied <=250-trading-day P&L/VaR series. It does NOT compute VaR itself, does NOT apply the multiplier to a capital charge (RWA/capital math is left to the bank's market-risk capital engine), and is not a hypothetical-vs-actual P&L attribution tool.",
+        "exception_count": 3,
+        "exception_indices": [
+          10,
+          80,
+          200
+        ],
+        "full_window": true,
+        "multiplier": 3,
+        "rule_status": "final",
+        "source": "Basel Committee on Banking Supervision, Amendment to the Capital Accord to Incorporate Market Risks (Jan 1996), Part V, \"The Basel Committee's backtesting framework\" -- 250 trading-day rolling window comparing actual daily P&L against the 99% 1-day VaR estimate; green (0-4 exceptions, multiplier 3.00), yellow (5-9 exceptions, stepped multiplier 3.40-3.85), red (10+ exceptions, multiplier 4.00 floor). Retained under BCBS d457 \"Minimum capital requirements for market risk\" (Jan 2019) internal-models-approach backtesting provisions.",
+        "truncated_to_250": false,
+        "window_days": 250,
+        "zone": "GREEN"
+      }
+    }
+  }
+},
+    {
+  "tool_id": "art-431-fdic-assessment-rate-calculator",
+  "tool_version": "1.0.0",
+  "display_name": "FDIC Deposit-Insurance Assessment Rate Calculator",
+  "mcp_name": "compute_fdic_assessment_rate",
+  "mandate_type": "compliance_mandate",
+  "wave": 71,
+  "gpu": false,
+  "url": "https://ainumbers.co/chaingraph/art-431-fdic-assessment-rate-calculator.html",
+  "description": "FDIC deposit-insurance assessment rate calculator (12 CFR 327): looks up the base assessment rate for a supplied composite CAMELS + financial-ratio score against a caller-supplied rate schedule, then applies the unsecured-debt and brokered-deposit adjustments and floors/caps the result to a caller-supplied statutory range. The rate schedule is caller-supplied policy input, not hardcoded, so a future FDIC rate-schedule update (including a pending assessments rulemaking) is a policy_parameters change, not a kernel change. Does not compute the composite CAMELS score itself.",
+  "input_schema_ref": "chaingraph/art-431-fdic-assessment-rate-calculator.html#manifest",
+  "deadline": null,
+  "deadline_note": "A pending FDIC assessments rulemaking (NPR, June 2026) may revise the published rate schedule; verify the current schedule at fdic.gov before relying on this output for any live filing decision.",
+  "consumes": [],
+  "feeds": [],
+  "status": "live",
+  "conformance_fixtures": true,
+  "compute_capability": "server",
+  "compute_images": [
+    {
+      "system": "sha256-source",
+      "image_id": "sha256:b1df1b03484fa6c52ac635f0e59f3d0c3f8d2fade923f4ad223a7d39202d1e26",
+      "valid_from": "2026-07-10"
+    },
+    {
+      "system": "risc0",
+      "image_id": "sha256:a1a0bc89b5b1febaeda3519f6dbade0fa5ac16beeb143c4e1b01689573567bc6",
+      "valid_from": "2026-07-23"
+    }
+  ],
+  "export_capability": [
+    "json"
+  ],
+  "compute_proof_ready": "ready",
+  "compute_proof": {
+    "type": "ZkVmReceipt",
+    "system": "risc0",
+    "receiptFormat": "groth16-bn254",
+    "imageId": "sha256:a1a0bc89b5b1febaeda3519f6dbade0fa5ac16beeb143c4e1b01689573567bc6",
+    "seal": "K+7s3S2iyu1o7ko/XHTpWk2DiIX4RuEF4vYXkx+ISA4MeqAIBZ9gp7uo1ROosOwzNJcXe5A75E9R/4rD79r0AQxVZjmDDvxyfZxJidghV6BxxDJbUJup3MgMz2fMrKptKu/NQ7RpFE3utHLYfZwyH/V5+Qhn30p4zXAb9tWPnE0JoFtP+7sF2UhlOR2EsPRqLar+9xuYJQtu/3m1V3HL4x0XGzE706TQ/pqjEXYB7dEBq8KdIcHQ5NkyY+9OIowuK76nPxG2WWlO0j2mmLUmeKsMFuBS3ugR/2hsucGEY0oXXtoWaC1VqUTkiYQbY/xRfuZPp4ebKMUsM0GBttFm2Q==",
+    "journal": {
+      "chaingraph_version": "0.4.0",
+      "kernel_digest": "sha256:b1df1b03484fa6c52ac635f0e59f3d0c3f8d2fade923f4ad223a7d39202d1e26",
+      "output": {
+        "assessment_base_musd": 8000,
+        "base_rate_bp": 7,
+        "brokered_deposit_adjustment_bp": 0.5,
+        "estimated_quarterly_assessment_musd": 1.3,
+        "note": "Base rate = lookup of the supplied composite CAMELS + financial-ratio score against a caller-supplied rate-bracket schedule (policy input, not hardcoded), then adjusted for unsecured debt and brokered deposits and floored/capped to the caller-supplied statutory range. Does NOT compute the composite score itself and is NOT a filing-ready assessment invoice.",
+        "npr_banner": "A pending FDIC assessments rulemaking (NPR, June 2026) may revise this rate schedule -- verify the current published schedule at fdic.gov before relying on this output for any live filing decision.",
+        "rate_cap_bp": 40,
+        "rate_floor_bp": 1.5,
+        "rate_floor_or_cap_applied": false,
+        "rate_schedule_version": "FDIC-2023-FINAL-RULE-SAMPLE-V1",
+        "total_rate_bp": 6.5,
+        "total_score": 62,
+        "unsecured_debt_adjustment_bp": -1
+      }
+    }
+  }
+},
+    {
+  "tool_id": "art-432-call-report-rc-balance-sheet",
+  "tool_version": "1.0.0",
+  "display_name": "Call Report Schedule RC (Balance Sheet) Mapper",
+  "mcp_name": "map_call_report_schedule_rc",
+  "mandate_type": "regulatory_reporting",
+  "wave": 71,
+  "gpu": false,
+  "url": "https://ainumbers.co/chaingraph/art-432-call-report-rc-balance-sheet.html",
+  "description": "Maps caller-declared FFIEC Call Report (FFIEC 031) Schedule RC line items -- cash, securities, loans and leases, other assets; deposits, borrowings, other liabilities; common stock, surplus, retained earnings, AOCI -- into Schedule RC totals (Total assets RCON2170, Total liabilities RCON2948, Total equity capital RCON3210, real public MDRM item codes) and checks the RC balance-sheet identity (Total assets == Total liabilities + Total equity capital) within a caller-set rounding tolerance. Not a filer -- produces evidence artifacts and form-shaped totals only, never a submission. Line-item values are caller-declared from the institution's own books; this tool performs only arithmetic aggregation and the identity check, never estimation or audit of individual line items. Feeds art-433 (Schedule RC-R capital) and art-434 (Call Report edit-check gate) for cross-schedule validation. Not for Y-9C (see the separate Y-9C kernel, which uses instruction-text-encoded edits, not a public taxonomy).",
+  "input_schema_ref": "chaingraph/art-432-call-report-rc-balance-sheet.html#manifest",
+  "consumes": [],
+  "feeds": [
+    "art-434-call-report-edit-check-gate"
+  ],
+  "status": "live",
+  "conformance_fixtures": true,
+  "compute_capability": "server",
+  "compute_images": [
+    {
+      "system": "sha256-source",
+      "image_id": "sha256:ebdcc54a5a9f44bae3307929b2c226e91666a2929a99fb42e15eb5f0df79c7d1",
+      "valid_from": "2026-07-10"
+    },
+    {
+      "system": "risc0",
+      "image_id": "sha256:a1a0bc89b5b1febaeda3519f6dbade0fa5ac16beeb143c4e1b01689573567bc6",
+      "valid_from": "2026-07-23"
+    }
+  ],
+  "compute_proof_ready": "ready",
+  "export_capability": [
+    "json"
+  ],
+  "compute_proof": {
+    "type": "ZkVmReceipt",
+    "system": "risc0",
+    "receiptFormat": "groth16-bn254",
+    "imageId": "sha256:a1a0bc89b5b1febaeda3519f6dbade0fa5ac16beeb143c4e1b01689573567bc6",
+    "seal": "Hqpx9CIYCJ54uxelmSZixvqOWFPeiGlMyVOG10y476UawSqjpbVeYxyFL9qxYswDvCn+UaQUnrEvTzqnUxtsawSkzl0PzCc1gs1OEXYwiJyJxmKaB6OaoZtQO8po0Cz8J9KEb2cRPx+6f5kDFyJ0407Vhgq4YGe78DP25VkJJRkQ0uYhTLS6x7Nj0NZDf7b3j5/unZZ17NWMCO8ruM3uHSU8fqNgGIhOePQTo5DG0+GARjKPB7qZi62/wxAfpEKyGbxWaJ2z4G/oankBhjwN7TjGZjxZIzpcWAw60TMciW8JOfzXwOkyq0C5ex4bk7gTcGSSPH3Sz8m8Of0eEn/PrQ==",
+    "journal": {
+      "chaingraph_version": "0.4.0",
+      "kernel_digest": "sha256:ebdcc54a5a9f44bae3307929b2c226e91666a2929a99fb42e15eb5f0df79c7d1",
+      "output": {
+        "assets": [
+          {
+            "key": "cash_and_due_from_usd",
+            "label": "Cash and balances due from depository institutions",
+            "mdrm": "RCON0071",
+            "value_usd": 226409000
+          },
+          {
+            "key": "securities_htm_usd",
+            "label": "Held-to-maturity securities",
+            "mdrm": "RCON1754",
+            "value_usd": 0
+          },
+          {
+            "key": "securities_afs_usd",
+            "label": "Available-for-sale securities",
+            "mdrm": "RCON1773",
+            "value_usd": 864213000
+          },
+          {
+            "key": "loans_and_leases_net_usd",
+            "label": "Total loans and leases, net of unearned income and allowance",
+            "mdrm": "RCON2122",
+            "value_usd": 1191560000
+          },
+          {
+            "key": "bank_premises_usd",
+            "label": "Bank premises and fixed assets",
+            "mdrm": "RCON2145",
+            "value_usd": 21670000
+          },
+          {
+            "key": "other_assets_usd",
+            "label": "Other assets",
+            "mdrm": "RCON2160",
+            "value_usd": 368340000
+          }
+        ],
+        "boundary_note": "Line-item values are caller-declared from the institution's own books; this kernel performs only the arithmetic aggregation into Schedule RC totals and the Total assets == Total liabilities + Total equity capital identity check. It does not derive, estimate, or audit any individual line item.",
+        "entity_id": "FDIC-CERT-3510",
+        "equity": [
+          {
+            "key": "common_stock_usd",
+            "label": "Common stock",
+            "mdrm": "RCON3230",
+            "value_usd": 3020000
+          },
+          {
+            "key": "surplus_usd",
+            "label": "Surplus",
+            "mdrm": "RCON3839",
+            "value_usd": 177631000
+          },
+          {
+            "key": "retained_earnings_usd",
+            "label": "Retained earnings",
+            "mdrm": "RCON3632",
+            "value_usd": 61059000
+          },
+          {
+            "key": "aoci_usd",
+            "label": "Accumulated other comprehensive income",
+            "mdrm": "RCON3216",
+            "value_usd": 0
+          }
+        ],
+        "identity_balanced": true,
+        "identity_delta_usd": 0,
+        "liabilities": [
+          {
+            "key": "total_deposits_usd",
+            "label": "Total deposits",
+            "mdrm": "RCON2200",
+            "value_usd": 2128004000
+          },
+          {
+            "key": "borrowings_usd",
+            "label": "Total borrowings",
+            "mdrm": "RCON2800",
+            "value_usd": 250000000
+          },
+          {
+            "key": "other_liabilities_usd",
+            "label": "Other liabilities",
+            "mdrm": "RCON2930",
+            "value_usd": 52478000
+          }
+        ],
+        "report_form": "FFIEC 031",
+        "reporting_period": "2026-03-31",
+        "rounding_tolerance_usd": 1,
+        "schedule": "RC",
+        "total_assets_mdrm": "RCON2170",
+        "total_assets_usd": 2672192000,
+        "total_equity_capital_mdrm": "RCON3210",
+        "total_equity_capital_usd": 241710000,
+        "total_liabilities_and_equity_usd": 2672192000,
+        "total_liabilities_mdrm": "RCON2948",
+        "total_liabilities_usd": 2430482000,
+        "xbrl_json_annex1_note": "MDRM concept codes above (RCON2170/RCON2948/RCON3210) align with the §13.13 xBRL-JSON export profile's Annex 1 FFIEC Call Report mapping; rendering to that profile is a separate exporter work unit, not performed by this kernel."
+      }
+    }
+  }
+},
+    {
+  "tool_id": "art-433-call-report-rcr-capital",
+  "tool_version": "1.0.0",
+  "display_name": "Call Report Schedule RC-R (Regulatory Capital) Mapper",
+  "mcp_name": "map_call_report_schedule_rcr",
+  "mandate_type": "regulatory_reporting",
+  "wave": 71,
+  "gpu": false,
+  "url": "https://ainumbers.co/chaingraph/art-433-call-report-rcr-capital.html",
+  "description": "Maps caller-declared FFIEC Call Report (FFIEC 031) Schedule RC-R regulatory-capital components -- CET1, additional Tier 1, Tier 2 capital, total risk-weighted assets, total leverage exposure -- into the standard capital ratios (CET1, Tier 1, Total capital, supplementary leverage ratio) and the 2026-04-01 eSLR final rule's GSIB buffer requirement (§0.2), each checked against caller-declared, version-pinned minimums. Not a filer -- produces evidence artifacts and form-shaped totals only, never a submission. Capital-component and RWA values are caller-declared; this tool performs only ratio arithmetic and threshold comparison, never risk-weight calculation, exposure classification, or GSIB-status derivation. Feeds art-434 (Call Report edit-check gate) for cross-schedule validation against art-432 (Schedule RC). Not for Y-9C HC-R (see the separate Y-9C kernel).",
+  "input_schema_ref": "chaingraph/art-433-call-report-rcr-capital.html#manifest",
+  "consumes": [],
+  "feeds": [
+    "art-434-call-report-edit-check-gate"
+  ],
+  "status": "live",
+  "conformance_fixtures": true,
+  "compute_capability": "server",
+  "compute_images": [
+    {
+      "system": "sha256-source",
+      "image_id": "sha256:c62ba6456819dce8756770a395024a9508cf9685dd9d3ca1409ebe2d6e01546c",
+      "valid_from": "2026-07-10"
+    },
+    {
+      "system": "risc0",
+      "image_id": "sha256:a1a0bc89b5b1febaeda3519f6dbade0fa5ac16beeb143c4e1b01689573567bc6",
+      "valid_from": "2026-07-23"
+    }
+  ],
+  "compute_proof_ready": "ready",
+  "export_capability": [
+    "json"
+  ],
+  "compute_proof": {
+    "type": "ZkVmReceipt",
+    "system": "risc0",
+    "receiptFormat": "groth16-bn254",
+    "imageId": "sha256:a1a0bc89b5b1febaeda3519f6dbade0fa5ac16beeb143c4e1b01689573567bc6",
+    "seal": "K+N2X+ehRuMDbJnSEeih/8X/4iQ9877jyqNMOrZtYz8nsk33dVA+9V51HWf0LHFyJYfNGmT8OzQG85LnG6CpsxoH/UtP4WeeWs3b2uyxM4lfOZVh0kd6xQYyFMeZ9FyDDOABv7va9Ys3o0i24+hXNotLHYf15yOw9lE/dP/pEwglNvQO1DTKr1zaLzPJvWY5IAIpOBydixM3FqSwOi+3CwRK0oJ/ysy+L8ttGYE/2lT6p1H1KSfxnTLG5+WkMXlGEKZxlTTb4tJNHlTttqoICdy49tJBv18TQEM4KV/QsDAYIjKag/+W6ZiI6e3GC1jQ9uqg0u+AjsokIZTUsnQiEg==",
+    "journal": {
+      "chaingraph_version": "0.4.0",
+      "kernel_digest": "sha256:c62ba6456819dce8756770a395024a9508cf9685dd9d3ca1409ebe2d6e01546c",
+      "output": {
+        "additional_tier1_capital_usd": 0,
+        "boundary_note": "Capital component and RWA values are caller-declared; this kernel performs only ratio arithmetic and threshold comparison against caller-declared, version-pinned minimums. It does not calculate risk weights, classify exposures, or derive GSIB status.",
+        "cet1_capital_usd": 186870000,
+        "constants_version": "2026-07-23.basel3-standardized-v1",
+        "entity_id": "FDIC-CERT-3510",
+        "eslr": {
+          "applicable": false,
+          "buffer_pct": 0,
+          "final_rule_citation": "eSLR final rule, published 2025-12-01, effective 2026-04-01 (§0.2)",
+          "pass": true,
+          "required_slr_pct": null
+        },
+        "is_gsib": false,
+        "mdrm_note": "Schedule RC-R MDRM item prefixes vary by advanced vs. standardized approach and reporting vintage; capital-component field names here mirror the FDIC BankFind Suite mnemonics (RBCT1J tier1, RBCT2 tier2, RWAJT total RWA), which the FDIC itself derives from filed Call Report Schedule RC-R submissions.",
+        "ratios": {
+          "cet1_min_pct": 0.045,
+          "cet1_pass": true,
+          "cet1_ratio_pct": 0.121695,
+          "slr_min_pct": 0.03,
+          "slr_pass": true,
+          "supplementary_leverage_ratio_pct": 0.069931,
+          "tier1_min_pct": 0.06,
+          "tier1_pass": true,
+          "tier1_ratio_pct": 0.121695,
+          "total_capital_min_pct": 0.08,
+          "total_capital_pass": true,
+          "total_capital_ratio_pct": 0.13194
+        },
+        "report_form": "FFIEC 031",
+        "reporting_period": "2026-03-31",
+        "schedule": "RC-R",
+        "tier1_capital_usd": 186870000,
+        "tier2_capital_usd": 15731000,
+        "total_capital_usd": 202601000,
+        "total_leverage_exposure_usd": 2672192000,
+        "total_rwa_usd": 1535559000
+      }
+    }
+  }
+},
+    {
+  "tool_id": "art-434-call-report-edit-check-gate",
+  "tool_version": "1.0.0",
+  "display_name": "Call Report Published Edit-Check Gate",
+  "mcp_name": "run_call_report_edit_checks",
+  "mandate_type": "regulatory_reporting",
+  "wave": 71,
+  "gpu": false,
+  "url": "https://ainumbers.co/chaingraph/art-434-call-report-edit-check-gate.html",
+  "description": "Runs a curated battery of FFIEC-style published Call Report edit checks -- balance-sheet identity, capital-stack ordering (CET1 <= Tier 1 <= Total capital), ratio-vs-component consistency, cross-schedule entity/period match -- against art-432 (Schedule RC) and art-433 (Schedule RC-R) output payloads, the same class of check FFIEC's own edit-check system runs against filed data before CDR publication. Emits a per-check pass/fail verdict list plus an overall gate_status (auto_pass | review_required) using the §27 Human Accountability gate-policy vocabulary, so this node can sit directly ahead of a §27 dual_control/review_required gate on downstream export or submission-evidence chains. Curated representative battery, not the FFIEC's full published edit-check catalog (thousands of checks) -- does not claim FFIEC edit-check completeness. Not a filer -- produces evidence artifacts only, never a submission.",
+  "input_schema_ref": "chaingraph/art-434-call-report-edit-check-gate.html#manifest",
+  "consumes": [
+    "art-432-call-report-rc-balance-sheet",
+    "art-433-call-report-rcr-capital"
+  ],
+  "feeds": [],
+  "status": "live",
+  "conformance_fixtures": true,
+  "compute_capability": "server",
+  "compute_images": [
+    {
+      "system": "sha256-source",
+      "image_id": "sha256:fc730e1410814863f534802d3bcd7d948ac232f8f1fb5ddcf9078e4c97dd075d",
+      "valid_from": "2026-07-10"
+    },
+    {
+      "system": "risc0",
+      "image_id": "sha256:a1a0bc89b5b1febaeda3519f6dbade0fa5ac16beeb143c4e1b01689573567bc6",
+      "valid_from": "2026-07-23"
+    }
+  ],
+  "compute_proof_ready": "ready",
+  "export_capability": [
+    "json"
+  ],
+  "compute_proof": {
+    "type": "ZkVmReceipt",
+    "system": "risc0",
+    "receiptFormat": "groth16-bn254",
+    "imageId": "sha256:a1a0bc89b5b1febaeda3519f6dbade0fa5ac16beeb143c4e1b01689573567bc6",
+    "seal": "A6P6f1ZGWD/HB0Gdx9KrWt9QS7azrHTOdnaIuoAD634Zt6VWwTwVxqb1vrLMeI0zFW67hqSi0QxDosS2UCDhPBdZlDw44Yr316/5rgdVl4N6A5uqQlR+ruzCz+2ux02kIQrbr0uJ9BY61NtxnjKS9qAcGIcIPlp36a9fq5et8nwQZWFbWA71gTU+7KHLMnV/EOBBjgsZ54vsU5Oi4BnxVy9YX/n/+xUIzuxEKgy7DqFm+WpC0gA76pcK5B6VKOvgHfzixDid51izb34ERyRETWxaIUuQEFlM+CN4u9NmjSspZN7FsGROzRB0ywCsBnKqMPG5wk9ltNy+G6cppwJarA==",
+    "journal": {
+      "chaingraph_version": "0.4.0",
+      "kernel_digest": "sha256:fc730e1410814863f534802d3bcd7d948ac232f8f1fb5ddcf9078e4c97dd075d",
+      "output": {
+        "all_fatal_passed": true,
+        "check_count": 10,
+        "checks": [
+          {
+            "description": "Total assets (RCON2170) equals Total liabilities (RCON2948) plus Total equity capital (RCON3210), within rounding tolerance.",
+            "id": "EDIT-RC-01",
+            "passed": true,
+            "severity": "fatal"
+          },
+          {
+            "description": "Total assets is non-negative.",
+            "id": "EDIT-RC-02",
+            "passed": true,
+            "severity": "fatal"
+          },
+          {
+            "description": "Total equity capital is non-negative.",
+            "id": "EDIT-RC-03",
+            "passed": true,
+            "severity": "fatal"
+          },
+          {
+            "description": "CET1 capital does not exceed Tier 1 capital.",
+            "id": "EDIT-RCR-01",
+            "passed": true,
+            "severity": "fatal"
+          },
+          {
+            "description": "Tier 1 capital does not exceed Total capital.",
+            "id": "EDIT-RCR-02",
+            "passed": true,
+            "severity": "fatal"
+          },
+          {
+            "description": "Total risk-weighted assets is positive.",
+            "id": "EDIT-RCR-03",
+            "passed": true,
+            "severity": "fatal"
+          },
+          {
+            "description": "Reported CET1 ratio is arithmetically consistent with CET1 capital / total RWA.",
+            "id": "EDIT-RCR-04",
+            "passed": true,
+            "severity": "warning"
+          },
+          {
+            "description": "Reported total capital ratio is arithmetically consistent with Total capital / total RWA.",
+            "id": "EDIT-RCR-05",
+            "passed": true,
+            "severity": "warning"
+          },
+          {
+            "description": "Schedule RC and RC-R report the same entity_id.",
+            "id": "EDIT-META-01",
+            "passed": true,
+            "severity": "fatal"
+          },
+          {
+            "description": "Schedule RC and RC-R report the same reporting_period.",
+            "id": "EDIT-META-02",
+            "passed": true,
+            "severity": "fatal"
+          }
+        ],
+        "coverage_note": "Curated representative edit-check battery (balance identity, capital-stack ordering, ratio-vs-component consistency, cross-schedule entity/period match) -- not the FFIEC published edit-check catalog's full check count.",
+        "entity_id": "FDIC-CERT-3510",
+        "fatal_failure_count": 0,
+        "gate_status": "auto_pass",
+        "report_form": "FFIEC 031",
+        "reporting_period": "2026-03-31",
+        "rounding_tolerance_usd": 1,
+        "warning_failure_count": 0
+      }
+    }
+  }
+},
+    {
+  "tool_id": "art-435-bhc-schedule-hc-balance-sheet",
+  "tool_version": "1.0.0",
+  "display_name": "FR Y-9C Schedule HC (Consolidated Balance Sheet) Mapper",
+  "mcp_name": "map_bhc_schedule_hc",
+  "mandate_type": "regulatory_reporting",
+  "wave": 71,
+  "gpu": false,
+  "url": "https://ainumbers.co/chaingraph/art-435-bhc-schedule-hc-balance-sheet.html",
+  "description": "Maps caller-declared FR Y-9C (Financial Statements for Holding Companies) Schedule HC line items -- cash, securities, loans and leases, other assets; deposits, borrowings, other liabilities; common stock, surplus, retained earnings, AOCI -- into Schedule HC totals (Total assets BHCK2170, Total liabilities BHCK2948, Total equity capital BHCK3210, real public MDRM item codes shared with the Call Report Schedule RC schema under the BHCK consolidated-holding-company prefix) and checks the HC balance-sheet identity within a caller-set rounding tolerance. Y-9C panel = top-tier bank holding companies with total consolidated assets >= $3B (§0.2). NO public XBRL edit taxonomy exists for Y-9C (FFIEC CDR taxonomy covers Call Reports 031/041/051 + UBPR only) -- edits are hand-encoded from FR Y-9C instruction text, not sourced from a machine-readable taxonomy. Schedule mapping logic mirrors art-432 (Call Report Schedule RC) 1:1; only the MDRM prefix (BHCK vs RCON) and report_form differ. Not a filer -- produces evidence artifacts and form-shaped totals only, never a submission. Line-item values are caller-declared from the holding company's own books; this tool performs only arithmetic aggregation and the identity check, never estimation or audit of individual line items. Feeds art-436 (Schedule HC-R capital).",
+  "input_schema_ref": "chaingraph/art-435-bhc-schedule-hc-balance-sheet.html#manifest",
+  "consumes": [],
+  "feeds": [
+    "art-436-bhc-schedule-hcr-capital"
+  ],
+  "status": "live",
+  "conformance_fixtures": true,
+  "compute_capability": "server",
+  "compute_images": [
+    {
+      "system": "sha256-source",
+      "image_id": "sha256:82f0207a25a6122e68a398fa7e274529843c39c73a82287c072e77a414b0e7fe",
+      "valid_from": "2026-07-23"
+    },
+    {
+      "system": "risc0",
+      "image_id": "sha256:a1a0bc89b5b1febaeda3519f6dbade0fa5ac16beeb143c4e1b01689573567bc6",
+      "valid_from": "2026-07-23"
+    }
+  ],
+  "compute_proof_ready": "ready",
+  "export_capability": [
+    "json"
+  ],
+  "compute_proof": {
+    "type": "ZkVmReceipt",
+    "system": "risc0",
+    "receiptFormat": "groth16-bn254",
+    "imageId": "sha256:a1a0bc89b5b1febaeda3519f6dbade0fa5ac16beeb143c4e1b01689573567bc6",
+    "seal": "EfwQbmAj6mNsQ3TtIKDAzv6PNRPiNcO9oyqYseccgHAV7tCzGVkDtBCjQtRdC/Wy2fWfvapcqhSPTCp/0jLYMiPAX6Va8Iz2+ZR+OoiNe/dDkD/ApW4ye6NhjW4eKM4YBLd59nalxPGPpTYfEdNhFRM8qdlDyd+m2stYjq8UgKYR1n7zUWBCZejd0zoXagdQtdQuE6U5bvQylL9d4NMS4QNafd15Mog3fCRWrgo6prNwYpi2JCaTTXvhRuzEKl/eAzxLrk3O/o8X/coz4D0zObs+jWOJIvFNoTcVjK4uxDEbNcIzV29U5TVTlO6ZjwxIxaadXzyheIJmv99bNPe2Ag==",
+    "journal": {
+      "chaingraph_version": "0.4.0",
+      "kernel_digest": "sha256:82f0207a25a6122e68a398fa7e274529843c39c73a82287c072e77a414b0e7fe",
+      "output": {
+        "assets": [
+          {
+            "key": "cash_and_due_from_usd",
+            "label": "Cash and balances due from depository institutions",
+            "mdrm": "BHCK0071",
+            "value_usd": 226409000
+          },
+          {
+            "key": "securities_htm_usd",
+            "label": "Held-to-maturity securities",
+            "mdrm": "BHCK1754",
+            "value_usd": 0
+          },
+          {
+            "key": "securities_afs_usd",
+            "label": "Available-for-sale securities",
+            "mdrm": "BHCK1773",
+            "value_usd": 864213000
+          },
+          {
+            "key": "loans_and_leases_net_usd",
+            "label": "Total loans and leases, net of unearned income and allowance",
+            "mdrm": "BHCK2122",
+            "value_usd": 1191560000
+          },
+          {
+            "key": "bank_premises_usd",
+            "label": "Bank premises and fixed assets",
+            "mdrm": "BHCK2145",
+            "value_usd": 21670000
+          },
+          {
+            "key": "other_assets_usd",
+            "label": "Other assets",
+            "mdrm": "BHCK2160",
+            "value_usd": 368340000
+          }
+        ],
+        "boundary_note": "Line-item values are caller-declared from the holding company's own consolidated books; this kernel performs only the arithmetic aggregation into Schedule HC totals and the Total assets == Total liabilities + Total equity capital identity check. It does not derive, estimate, or audit any individual line item.",
+        "entity_id": "RSSD-1073757",
+        "equity": [
+          {
+            "key": "common_stock_usd",
+            "label": "Common stock",
+            "mdrm": "BHCK3230",
+            "value_usd": 3020000
+          },
+          {
+            "key": "surplus_usd",
+            "label": "Surplus",
+            "mdrm": "BHCK3839",
+            "value_usd": 177631000
+          },
+          {
+            "key": "retained_earnings_usd",
+            "label": "Retained earnings",
+            "mdrm": "BHCK3632",
+            "value_usd": 61059000
+          },
+          {
+            "key": "aoci_usd",
+            "label": "Accumulated other comprehensive income",
+            "mdrm": "BHCK3216",
+            "value_usd": 0
+          }
+        ],
+        "identity_balanced": true,
+        "identity_delta_usd": 0,
+        "liabilities": [
+          {
+            "key": "total_deposits_usd",
+            "label": "Total deposits",
+            "mdrm": "BHCK2200",
+            "value_usd": 2128004000
+          },
+          {
+            "key": "borrowings_usd",
+            "label": "Total borrowings",
+            "mdrm": "BHCK2800",
+            "value_usd": 250000000
+          },
+          {
+            "key": "other_liabilities_usd",
+            "label": "Other liabilities",
+            "mdrm": "BHCK2930",
+            "value_usd": 52478000
+          }
+        ],
+        "report_form": "FR Y-9C",
+        "reporting_period": "2026-03-31",
+        "rounding_tolerance_usd": 1,
+        "schedule": "HC",
+        "taxonomy_note": "No public XBRL edit taxonomy exists for FR Y-9C (§0.2); this mapping is hand-encoded from FR Y-9C instruction text, not sourced from a machine-readable taxonomy. Panel: top-tier bank holding companies, total consolidated assets >= $3B.",
+        "total_assets_mdrm": "BHCK2170",
+        "total_assets_usd": 2672192000,
+        "total_equity_capital_mdrm": "BHCK3210",
+        "total_equity_capital_usd": 241710000,
+        "total_liabilities_and_equity_usd": 2672192000,
+        "total_liabilities_mdrm": "BHCK2948",
+        "total_liabilities_usd": 2430482000
+      }
+    }
+  }
+},
+    {
+  "tool_id": "art-436-bhc-schedule-hcr-capital",
+  "tool_version": "1.0.0",
+  "display_name": "FR Y-9C Schedule HC-R (Regulatory Capital) Calculator",
+  "mcp_name": "map_bhc_schedule_hcr",
+  "mandate_type": "regulatory_reporting",
+  "wave": 71,
+  "gpu": false,
+  "url": "https://ainumbers.co/chaingraph/art-436-bhc-schedule-hcr-capital.html",
+  "description": "Given caller-supplied CET1/Tier1/Tier2 capital components and risk-weighted assets, computes FR Y-9C Schedule HC-R standard capital ratios plus the supplementary leverage ratio (SLR), including the enhanced-SLR (eSLR) buffer effective 2026-04-01 (§0.2), for top-tier bank holding companies (Y-9C panel = total consolidated assets >= $3B). Schedule mapping and ratio-calculation logic mirrors art-433 (Call Report Schedule RC-R) 1:1 -- same thresholds, same eSLR buffer treatment; only report_form and entity type (consolidated holding company vs insured depository institution) differ. NO public XBRL edit taxonomy exists for Y-9C (§0.2) -- capital-component field names mirror the FR Y-9/FFIEC BHCK consolidated mnemonic convention, hand-encoded from FR Y-9C instruction text. BOUNDARY: capital component and RWA values are caller-declared; this tool performs only ratio arithmetic and threshold comparison against caller-declared, version-pinned minimums -- it does not calculate risk weights, classify exposures, or derive GSIB status. Not a filer -- produces evidence artifacts only, never a submission.",
+  "input_schema_ref": "chaingraph/art-436-bhc-schedule-hcr-capital.html#manifest",
+  "consumes": [
+    "art-435-bhc-schedule-hc-balance-sheet"
+  ],
+  "feeds": [],
+  "status": "live",
+  "conformance_fixtures": true,
+  "compute_capability": "server",
+  "compute_images": [
+    {
+      "system": "sha256-source",
+      "image_id": "sha256:3eb8ae80e279ce36b74155e260a9f47adda9dd53dc62f3668ff6dd3a1e90b295",
+      "valid_from": "2026-07-23"
+    },
+    {
+      "system": "risc0",
+      "image_id": "sha256:a1a0bc89b5b1febaeda3519f6dbade0fa5ac16beeb143c4e1b01689573567bc6",
+      "valid_from": "2026-07-23"
+    }
+  ],
+  "compute_proof_ready": "ready",
+  "export_capability": [
+    "json"
+  ],
+  "compute_proof": {
+    "type": "ZkVmReceipt",
+    "system": "risc0",
+    "receiptFormat": "groth16-bn254",
+    "imageId": "sha256:a1a0bc89b5b1febaeda3519f6dbade0fa5ac16beeb143c4e1b01689573567bc6",
+    "seal": "IakOaYhVGA/uWdUba/y646CmlpLsA/VxZ2vmAZvkBeItrI9Dt/CKxZl7psv1k+rJv5lp9clwpciQtItSxAw/WSh+QDinEV0jwy/S3ojBe6Sdg5EVbJtSvM394eW7ttIQErbbSscNaYZEG5le2mt3Z3veT+m48iPlVw4isDgPEn4rxA83c2kznJqdXknu7zfSwQ8wYHs1oQkaE2kB9yIo+Bu9K2ko4aAff+QcThEX6lUGVwD2c9VXtGuYWsC/ADLQAkfe/yuV8bHuM0hyad76ejcMrkmG4F+o6PbNbLPd5MUYrTLINzGSf0dc958NaSrvTNyrYdYYQrLMJgrcInDQcg==",
+    "journal": {
+      "chaingraph_version": "0.4.0",
+      "kernel_digest": "sha256:3eb8ae80e279ce36b74155e260a9f47adda9dd53dc62f3668ff6dd3a1e90b295",
+      "output": {
+        "additional_tier1_capital_usd": 10000000,
+        "boundary_note": "Capital component and RWA values are caller-declared; this kernel performs only ratio arithmetic and threshold comparison against caller-declared, version-pinned minimums. It does not calculate risk weights, classify exposures, or derive GSIB status.",
+        "cet1_capital_usd": 220000000,
+        "constants_version": "basel3-std-2026.1",
+        "entity_id": "RSSD-1073757",
+        "eslr": {
+          "applicable": false,
+          "buffer_pct": 0,
+          "final_rule_citation": "eSLR final rule, published 2025-12-01, effective 2026-04-01 (§0.2)",
+          "pass": true,
+          "required_slr_pct": null
+        },
+        "is_gsib": false,
+        "ratios": {
+          "cet1_min_pct": 0.045,
+          "cet1_pass": true,
+          "cet1_ratio_pct": 0.122222,
+          "slr_min_pct": 0.03,
+          "slr_pass": true,
+          "supplementary_leverage_ratio_pct": 0.085185,
+          "tier1_min_pct": 0.06,
+          "tier1_pass": true,
+          "tier1_ratio_pct": 0.127778,
+          "total_capital_min_pct": 0.08,
+          "total_capital_pass": true,
+          "total_capital_ratio_pct": 0.136111
+        },
+        "report_form": "FR Y-9C",
+        "reporting_period": "2026-03-31",
+        "schedule": "HC-R",
+        "taxonomy_note": "No public XBRL edit taxonomy exists for FR Y-9C (§0.2); capital-component field names mirror the FR Y-9/FFIEC BHCK consolidated mnemonic convention, hand-encoded from FR Y-9C instruction text.",
+        "tier1_capital_usd": 230000000,
+        "tier2_capital_usd": 15000000,
+        "total_capital_usd": 245000000,
+        "total_leverage_exposure_usd": 2700000000,
+        "total_rwa_usd": 1800000000
+      }
+    }
+  }
+},
+    {
+  "tool_id": "art-437-fr2052a-inflow-outflow-classifier",
+  "tool_version": "1.0.0",
+  "display_name": "FR 2052a Inflow/Outflow Bucket Classifier",
+  "mcp_name": "compute_fr2052a_inflow_outflow_classification",
+  "mandate_type": "regulatory_reporting",
+  "wave": 71,
+  "gpu": false,
+  "url": "https://ainumbers.co/chaingraph/art-437-fr2052a-inflow-outflow-classifier.html",
+  "description": "FR 2052a complex-institution liquidity monitoring filing-layer kernel, scoped to the inflow/outflow section: product/maturity-bucket classification against a caller-supplied Appendix IV-style boundary table (versioned policy input, not hardcoded), intercompany elimination (excluded from external aggregation, reported separately), and form-shaped JSON export by bucket (inflow/outflow/net). A bucket override without a reason_code is flagged -- the row-level basis for a separate signed §27 human_accountability_record, not minted by this kernel. Not a filing tool -- evidence artifact and form-shaped export only, never regulator-submittable. Not check_conforming_loan_limit or a Call Report/Y-9C schedule kernel.",
+  "input_schema_ref": "chaingraph/art-437-fr2052a-inflow-outflow-classifier.html#manifest",
+  "deadline": null,
+  "deadline_note": "FR 2052a: $100B panel, 18 daily / 23 monthly filers, deadline 3:00pm ET (FR notice 2025-02-07).",
+  "consumes": [],
+  "feeds": [],
+  "status": "live",
+  "conformance_fixtures": true,
+  "compute_capability": "server",
+  "compute_images": [
+    {
+      "system": "sha256-source",
+      "image_id": "sha256:e6b15395a2f44a43b2968b7f10f6d7ef12137cd68b1a0ff292e5031b775f4f97",
+      "valid_from": "2026-07-10"
+    },
+    {
+      "system": "risc0",
+      "image_id": "sha256:a1a0bc89b5b1febaeda3519f6dbade0fa5ac16beeb143c4e1b01689573567bc6",
+      "valid_from": "2026-07-23"
+    }
+  ],
+  "export_capability": [
+    "json"
+  ],
+  "compute_proof_ready": "ready",
+  "compute_proof": {
+    "type": "ZkVmReceipt",
+    "system": "risc0",
+    "receiptFormat": "groth16-bn254",
+    "imageId": "sha256:a1a0bc89b5b1febaeda3519f6dbade0fa5ac16beeb143c4e1b01689573567bc6",
+    "seal": "Kh2K0VH45aIISbOROXZ/16Hg7Agd3nyGjzFvKkmazR4LRFBkTiqZ54nfvCMuOD1AM7MH4XffIGDQ6U8ZXBovGA9E6FgPYbR/9sZufwkO4EjsQ1xaozU6wCY33e6WB2haCMb3pBGBv9Z4T3vOd/3FwuQYmMlLsPJMce15S+zTtkYc4JNCvt5s52z1/dx5/eFTOW1TeSvAhTXF463PGTdyEAzbTDP0oggn7HaeILAdotJmLpadzgxGteC6RC5j0r3GKvsFlitfxlY1Seaqc+AohwJwDYKFtTy7GXNDDashlikqn+CthNJrYrVpt2OvdhbkUVuysWmmVP2RSpiUM8cEHQ==",
+    "journal": {
+      "chaingraph_version": "0.4.0",
+      "kernel_digest": "sha256:e6b15395a2f44a43b2968b7f10f6d7ef12137cd68b1a0ff292e5031b775f4f97",
+      "output": {
+        "boundary_table_version": "2026-07-01",
+        "elimination_total_musd": 300,
+        "form_2052a": [
+          {
+            "bucket": "Overnight",
+            "inflow_musd": 1200,
+            "net_musd": 1200,
+            "outflow_musd": 0
+          },
+          {
+            "bucket": "31-90 days",
+            "inflow_musd": 650,
+            "net_musd": -250,
+            "outflow_musd": 900
+          },
+          {
+            "bucket": "2-30 days",
+            "inflow_musd": 0,
+            "net_musd": -400,
+            "outflow_musd": 400
+          }
+        ],
+        "note": "Product/maturity-bucket classification against a versioned Appendix IV-style boundary table (policy input); an overridden bucket without a reason_code is flagged and is the row-level basis for a separate signed §27 human_accountability_record (this kernel does not mint that record). Intercompany rows are eliminated from the external aggregation and reported only in elimination_total_musd. Evidence artifact and form-shaped export only -- not a filing, not regulator-submittable.",
+        "override_count": 0,
+        "override_missing_reason_count": 0,
+        "row_count": 5,
+        "rows": [
+          {
+            "amount_musd": 1200,
+            "bucket": "Overnight",
+            "flow_type": "inflow",
+            "is_intercompany": false,
+            "maturity_days": 1,
+            "override_applied": false,
+            "override_reason_code": null,
+            "row_id": "r0",
+            "table_bucket": "Overnight"
+          },
+          {
+            "amount_musd": 900,
+            "bucket": "31-90 days",
+            "flow_type": "outflow",
+            "is_intercompany": false,
+            "maturity_days": 45,
+            "override_applied": false,
+            "override_reason_code": null,
+            "row_id": "r1",
+            "table_bucket": "31-90 days"
+          },
+          {
+            "amount_musd": 400,
+            "bucket": "2-30 days",
+            "flow_type": "outflow",
+            "is_intercompany": false,
+            "maturity_days": 7,
+            "override_applied": false,
+            "override_reason_code": null,
+            "row_id": "r2",
+            "table_bucket": "2-30 days"
+          },
+          {
+            "amount_musd": 650,
+            "bucket": "31-90 days",
+            "flow_type": "inflow",
+            "is_intercompany": false,
+            "maturity_days": 90,
+            "override_applied": false,
+            "override_reason_code": null,
+            "row_id": "r3",
+            "table_bucket": "31-90 days"
+          },
+          {
+            "amount_musd": 300,
+            "bucket": "2-30 days",
+            "flow_type": "outflow",
+            "is_intercompany": true,
+            "maturity_days": 30,
+            "override_applied": false,
+            "override_reason_code": null,
+            "row_id": "r4",
+            "table_bucket": "2-30 days"
+          }
+        ],
+        "total_inflow_musd": 1850,
+        "total_net_musd": 550,
+        "total_outflow_musd": 1300
+      }
+    }
+  }
+},
+    {
+  "tool_id": "art-438-eval-attestation-receipt-composer",
+  "tool_version": "1.0.0",
+  "display_name": "Eval Attestation Receipt Composer",
+  "mcp_name": "compose_eval_attestation_receipt",
+  "mandate_type": "governance_mandate",
+  "wave": 72,
+  "gpu": false,
+  "url": "https://ainumbers.co/chaingraph/art-438-eval-attestation-receipt-composer.html",
+  "description": "Hashes a third-party eval log (e.g. an Inspect AI transcript) and binds it into a receipt that a compiled Work Mandate (art-274) can reference. VERIFY-ONLY: never executes, re-runs, or re-scores the eval -- composes shipped §4 hash, §16 signature, and §20 anchor carriers around a digest the caller already produced. claim_strength is the weakest-link status across the eval log hash and the mandate reference, never inflated by one strong leg covering a missing other.",
+  "input_schema_ref": "chaingraph/art-438-eval-attestation-receipt-composer.html#manifest",
+  "deadline": null,
+  "consumes": [],
+  "feeds": [],
+  "status": "live",
+  "conformance_fixtures": true,
+  "compute_capability": "server",
+  "compute_images": [
+    {
+      "system": "sha256-source",
+      "image_id": "sha256:4dd15343a439bc1a1a1212c58f21fed27dd330d9f8cf4476bfdd468f67a7624e",
+      "valid_from": "2026-07-23"
+    },
+    {
+      "system": "risc0",
+      "image_id": "sha256:a1a0bc89b5b1febaeda3519f6dbade0fa5ac16beeb143c4e1b01689573567bc6",
+      "valid_from": "2026-07-23"
+    }
+  ],
+  "export_capability": [
+    "json",
+    "vc"
+  ],
+  "compute_proof_ready": "ready",
+  "compute_proof": {
+    "type": "ZkVmReceipt",
+    "system": "risc0",
+    "receiptFormat": "groth16-bn254",
+    "imageId": "sha256:a1a0bc89b5b1febaeda3519f6dbade0fa5ac16beeb143c4e1b01689573567bc6",
+    "seal": "A+o1yff4OzGcFAtOODaUeOkI9mk/ObxCUvqtIL8PtUgNsTyU2oZSeTQvKtUrDSDjNk2uUPplSFord6pK0KUWWyU5FsM0e9PNZA+A/SOpno6FRnBtXqJ9q4lZguOwrxKsHGYTu0KKZ3wV6fPLGievwtubAug5YwrCRLdTt24uYCAELSIOo/ZlgdCi73+zmcfdBs2fC16OvfQx4TLD5VVJHS5pT5a1lgdB46Zwl1/r9Wk+JJVJNa23I+JimujHtNMEAlzNxuyovEsch21rPof56RAVIRdxKj3Mxt7AhDMplpsbkJdMrOBWNcHWV+94mrDNQt8n4sl4RWmXCFivrAndQQ==",
+    "journal": {
+      "chaingraph_version": "0.4.0",
+      "kernel_digest": "sha256:4dd15343a439bc1a1a1212c58f21fed27dd330d9f8cf4476bfdd468f67a7624e",
+      "output": {
+        "attestation_determination": "ATTESTED",
+        "claim_strength": "mandate-bound",
+        "eval_format": "inspect_ai_eval_log",
+        "eval_id": "inspect-eval-2026-07-23-001",
+        "eval_log_hash": "sha256:aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+        "mandate_reference": {
+          "policy_id": "governance-policy-eval-gate-v1",
+          "work_mandate_hash": "sha256:bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb"
+        },
+        "not_proven": [
+          {
+            "detail": "This receipt attests only that a specific eval log digest was produced; it does not re-run, re-score, or otherwise validate the underlying evaluation.",
+            "item": "Eval correctness or scoring validity"
+          },
+          {
+            "detail": "The hash covers exactly the log bytes supplied by the caller. A truncated, redacted, or cherry-picked log hashes correctly too.",
+            "item": "Eval log completeness"
+          },
+          {
+            "detail": "mandate_reference records a pointer to a compiled Work Mandate (art-274); whether the eval actually satisfies that mandate's policy conditions is a separate judgment, not made by this kernel.",
+            "item": "Mandate satisfaction"
+          },
+          {
+            "detail": "A §16 signature attests the artifact at generated_at; a §20 anchor (if attached) proves inclusion by a time. Neither proves the eval log is still current.",
+            "item": "Currency beyond generation time"
+          }
+        ],
+        "verify_instructions": "Recompute SHA-256 of the referenced inspect_ai_eval_log eval log bytes and confirm it equals sha256:aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa; this receipt is VERIFY-ONLY and does not re-run, re-score, or grade the eval."
+      }
+    }
+  }
+},
+    {
+  "tool_id": "art-439-y14-capital-worksheet-rollforward",
+  "tool_version": "1.0.0",
+  "display_name": "FR Y-14 Capital Worksheet Roll-Forward & Cross-Check",
+  "mcp_name": "rollforward_y14_capital_worksheet",
+  "mandate_type": "regulatory_reporting",
+  "wave": 71,
+  "gpu": false,
+  "url": "https://ainumbers.co/chaingraph/art-439-y14-capital-worksheet-rollforward.html",
+  "description": "Rolls forward a caller-declared FR Y-14A/Q capital worksheet (CET1, additional Tier 1, Tier 2) from beginning balance through period additions and deductions to an ending balance, applies a caller-declared published-scenario adjustment (e.g. a Federal Reserve DFAST/CCAR severely-adverse published-scenario delta), and cross-checks the computed ending total capital against a caller-declared reported total-capital figure sourced from another schedule (e.g. FR Y-9C Schedule HC-R, art-436) within a caller-declared tolerance. Not a filer -- produces evidence artifacts and worksheet totals only, never a submission. All roll-forward line items, the scenario adjustment amount, and the cross-check reference figure are caller-declared; this tool performs only roll-forward arithmetic (beginning + additions - deductions + scenario adjustment = ending) and a tolerance comparison, never capital-component classification, scenario modeling, or projection -- firm capital-planning models (PPNR, loss forecasts, scenario translation into balance-sheet impact) stay strictly outside this boundary. Complements art-436 (BHC Schedule HC-R capital) as an independent roll-forward/cross-check, not a replacement for it.",
+  "input_schema_ref": "chaingraph/art-439-y14-capital-worksheet-rollforward.html#manifest",
+  "consumes": [],
+  "feeds": [],
+  "status": "live",
+  "conformance_fixtures": true,
+  "compute_capability": "server",
+  "compute_images": [
+    {
+      "system": "sha256-source",
+      "image_id": "sha256:c6c4a22b53316a6e6ccebc23773eb8e8509b3aea2dd9591b8ac65c6cd03e31db",
+      "valid_from": "2026-07-10"
+    },
+    {
+      "system": "risc0",
+      "image_id": "sha256:a1a0bc89b5b1febaeda3519f6dbade0fa5ac16beeb143c4e1b01689573567bc6",
+      "valid_from": "2026-07-23"
+    }
+  ],
+  "compute_proof_ready": "ready",
+  "export_capability": [
+    "json"
+  ],
+  "compute_proof": {
+    "type": "ZkVmReceipt",
+    "system": "risc0",
+    "receiptFormat": "groth16-bn254",
+    "imageId": "sha256:a1a0bc89b5b1febaeda3519f6dbade0fa5ac16beeb143c4e1b01689573567bc6",
+    "seal": "AQnuzA3ytmdw3CeMHmBidk0kAiaHoXKE/cjuk5FIr/0Uu0nXkTCF7Vv6cIQuuO4J3O7+SHmbfUwfqCqLXYUNgAJb/sa/l1WT50TGpuxSieZdJg2z6dSs2P0eiEobAvjqHRlmvuE6t84H72EnZ/IDp1IpnPy9rP7n7GRuBwAMkkIDrxes+7PfbOlfIjUBHuLLBWNymO5jjOa5maHm1XuAXjAR7wNIaHvEAZx5mdGEpjNSAZim+nZoZl5kB9ybmkCAMF9gAuxe7q852IZQxd2UXEWp4RMjQGUtQnJ6ilZsdAURZw4tbnwDUtvwp17ZTi11HqngSJdb2hpg2vG9FlJChw==",
+    "journal": {
+      "chaingraph_version": "0.4.0",
+      "kernel_digest": "sha256:c6c4a22b53316a6e6ccebc23773eb8e8509b3aea2dd9591b8ac65c6cd03e31db",
+      "output": {
+        "boundary_note": "Every roll-forward line item, the scenario adjustment amount, and the cross-check reference figure are caller-declared; this kernel performs only roll-forward arithmetic and a tolerance comparison. It does not model capital plans, forecast PPNR/losses, or translate a scenario into balance-sheet impact -- firm capital-planning models stay strictly outside this boundary.",
+        "constants_version": "2026-07-23.y14-capital-rollforward-v1",
+        "cross_check": {
+          "delta_usd": 0,
+          "pass": true,
+          "reported_total_capital_usd": 209870000,
+          "tolerance_usd": 1000
+        },
+        "ending_tier1_capital_usd": 194870000,
+        "ending_total_capital_usd": 209870000,
+        "entity_id": "FDIC-CERT-3510",
+        "published_scenario": {
+          "citation": "12 CFR 252.146; FRB DFAST 2026 Scenarios, published 2026-02-06",
+          "name": "2026 Federal Reserve Severely Adverse Scenario"
+        },
+        "report_form": "FR Y-14A/Q",
+        "reporting_period": "2026-03-31",
+        "rollforward": {
+          "at1": {
+            "additions_usd": 0,
+            "beginning_usd": 8000000,
+            "deductions_usd": 0,
+            "ending_usd": 8000000,
+            "scenario_adjustment_usd": 0
+          },
+          "cet1": {
+            "additions_usd": 9000000,
+            "beginning_usd": 180000000,
+            "deductions_usd": 2130000,
+            "ending_usd": 186870000,
+            "scenario_adjustment_usd": 0
+          },
+          "t2": {
+            "additions_usd": 1000000,
+            "beginning_usd": 14000000,
+            "deductions_usd": 0,
+            "ending_usd": 15000000,
+            "scenario_adjustment_usd": 0
+          }
+        },
+        "worksheet": "Regulatory Capital Instruments and Components Roll-Forward"
+      }
+    }
+  }
+},
+    {
+  "tool_id": "art-442-nmd-behavioral-repricing-mapper",
+  "tool_version": "1.0.0",
+  "display_name": "NMD Behavioral Repricing Mapper",
+  "mcp_name": "map_nmd_behavioral_repricing",
+  "mandate_type": "analytics_mandate",
+  "wave": 73,
+  "gpu": false,
+  "url": "https://ainumbers.co/chaingraph/art-442-nmd-behavioral-repricing-mapper.html",
+  "description": "OCC 2010-1 Interagency Advisory on IRR: maps non-maturity deposit (NMD) segment balances into a bucketed net-repricing-gap schedule using a caller-declared behavioral allocation (per-bucket repricing fractions) and a deposit beta -- never a baked-in regulatory decay curve. Feeds directly into art-369's repricing_gaps input, which art-369 itself requires as a GIVEN and does not derive. Distinct from art-369 (Rate Shock Ladder Replay), which sweeps shocks over an already-bucketed gap schedule; this kernel builds that schedule from underlying deposit balances. NaN-safe. Zero network, zero PII.",
+  "input_schema_ref": "chaingraph/art-442-nmd-behavioral-repricing-mapper.html#manifest",
+  "consumes": [],
+  "feeds": [],
+  "status": "live",
+  "conformance_fixtures": true,
+  "compute_capability": "server",
+  "compute_images": [
+    {
+      "system": "sha256-source",
+      "image_id": "sha256:388900a314f4d9e05be9bfcf9909a1b89a67b9c482c057d9434cb200f7bef94d",
+      "valid_from": "2026-07-10"
+    },
+    {
+      "system": "risc0",
+      "image_id": "sha256:a1a0bc89b5b1febaeda3519f6dbade0fa5ac16beeb143c4e1b01689573567bc6",
+      "valid_from": "2026-07-23"
+    }
+  ],
+  "export_capability": [
+    "json"
+  ],
+  "compute_proof_ready": "ready",
+  "compute_proof": {
+    "type": "ZkVmReceipt",
+    "system": "risc0",
+    "receiptFormat": "groth16-bn254",
+    "imageId": "sha256:a1a0bc89b5b1febaeda3519f6dbade0fa5ac16beeb143c4e1b01689573567bc6",
+    "seal": "LH1x6Zs6trhiGPJU4cM/CFCSoYjofPXFQRWYa5IEHr4J1YFUnLGb/NpKKsyE/le9WKx4bfGC5gaIzQQkr4HIIybZJ/77jRGJb4oJg2p4tLvNQH9fTXnTXwulLNyM1wujI9LR+PpdBPTN3AaZK5v1RoYSCNqfuSTVeKsKMNG1QX0qiTslJuvV5mOzAYd/DNIRuYd65VUUD4oRqkGF4n82ThAE1RvXCvYsWS/H3nTwN7fAA/hyf4i70rSSmB2zRoVfJ26pgvQJkrOD6SYssR4IGOjxdVTeW9jaVGMA1dkAUNEwGuHwvHDDGR6m+hY9NTNP9Fj7V8DUyooC3T/r3/NFIQ==",
+    "journal": {
+      "chaingraph_version": "0.4.0",
+      "kernel_digest": "sha256:388900a314f4d9e05be9bfcf9909a1b89a67b9c482c057d9434cb200f7bef94d",
+      "output": {
+        "buckets_used": [
+          "on_1m",
+          "m1_y1",
+          "y1_y3",
+          "y3_y5",
+          "y5_y10",
+          "y10_plus"
+        ],
+        "convention": "OCC 2010-1 NMD core/volatile behavioral repricing mapper (caller-declared allocation)",
+        "net_repricing_gap": {
+          "m1_y1": -150000,
+          "on_1m": -150000,
+          "y10_plus": -80000,
+          "y1_y3": -20000,
+          "y3_y5": -40000,
+          "y5_y10": -60000
+        },
+        "segment_results": [
+          {
+            "allocation_sum": 1,
+            "balance": 1000000,
+            "beta": 0.2,
+            "bucket_gaps": {
+              "m1_y1": 0,
+              "on_1m": 0,
+              "y10_plus": -80000,
+              "y1_y3": -20000,
+              "y3_y5": -40000,
+              "y5_y10": -60000
+            },
+            "name": "checking_core",
+            "rate_sensitive_balance": 200000,
+            "sums_to_one": true
+          },
+          {
+            "allocation_sum": 1,
+            "balance": 500000,
+            "beta": 0.6,
+            "bucket_gaps": {
+              "m1_y1": -150000,
+              "on_1m": -150000,
+              "y10_plus": 0,
+              "y1_y3": 0,
+              "y3_y5": 0,
+              "y5_y10": 0
+            },
+            "name": "savings_volatile",
+            "rate_sensitive_balance": 300000,
+            "sums_to_one": true
+          }
+        ],
+        "total_balance": 1500000,
+        "total_net_repricing_gap": -500000,
+        "total_rate_sensitive_balance": 500000,
+        "weighted_avg_beta": 0.33
+      }
+    }
+  }
+},
+    {
+  "tool_id": "art-443-irrbb-basis-risk-nii-shock-calculator",
+  "tool_version": "1.0.0",
+  "display_name": "IRRBB Basis-Risk NII Shock Calculator",
+  "mcp_name": "calculate_basis_risk_nii_shock",
+  "mandate_type": "analytics_mandate",
+  "wave": 73,
+  "gpu": false,
+  "url": "https://ainumbers.co/chaingraph/art-443-irrbb-basis-risk-nii-shock-calculator.html",
+  "description": "Comptroller's Handbook IRR basis-risk delta-NII calculator: sweeps a single reference-rate shock across multiple priced indices (Prime, SOFR, Fed Funds, CD portfolio, etc.), each with a caller-declared historical beta vs the reference rate, and isolates the incremental delta-NII from indices not moving in lockstep. Distinct from art-369 (Rate Shock Ladder Replay), whose parallel-curve convention assumes one shock moves the entire gap schedule uniformly and cannot see basis risk. Complements art-369 and art-442 as the third leg of a full NII/EVE-shock toolkit. NaN-safe. Zero network, zero PII.",
+  "input_schema_ref": "chaingraph/art-443-irrbb-basis-risk-nii-shock-calculator.html#manifest",
+  "consumes": [],
+  "feeds": [],
+  "status": "live",
+  "conformance_fixtures": true,
+  "compute_capability": "server",
+  "compute_images": [
+    {
+      "system": "sha256-source",
+      "image_id": "sha256:6a53b2b9e42a854d9801a6759fcc8e62fbd7ee5f0585ea83b9c43165bf2d9bcc",
+      "valid_from": "2026-07-10"
+    },
+    {
+      "system": "risc0",
+      "image_id": "sha256:a1a0bc89b5b1febaeda3519f6dbade0fa5ac16beeb143c4e1b01689573567bc6",
+      "valid_from": "2026-07-23"
+    }
+  ],
+  "export_capability": [
+    "json"
+  ],
+  "compute_proof_ready": "ready",
+  "compute_proof": {
+    "type": "ZkVmReceipt",
+    "system": "risc0",
+    "receiptFormat": "groth16-bn254",
+    "imageId": "sha256:a1a0bc89b5b1febaeda3519f6dbade0fa5ac16beeb143c4e1b01689573567bc6",
+    "seal": "CiP82+xLKQZXRRU84ZJ1OrGN5ABOnuE7DB0lGNK8dhMiQS+bglGG4KoGvRew9yvm3+QeJiK/gm1yGP0F6RP4dgKQBIg8t/Ip4ToVCe7l6XZS7ikDQeYxDrlVERxbesukG4n2xbeW5hC/RqiUDlic7NIaIQA0qJM8fsr6N2UoHBYqfdQTH/xrSDcd6Kk6wF1geCTKdmjKt3W3lve0dOQscxZhhICcc84WWbgiQEnJjz/IyGBTQk/DPKJzE1x5x1FhJJIinMLf51g/PPek/Tqn4eP9x+KG2LFpnvgf3Cb6hPYQ21Sk2wCSoj087AteSiwZsBl97m6yGpwjCM+3mG708Q==",
+    "journal": {
+      "chaingraph_version": "0.4.0",
+      "kernel_digest": "sha256:6a53b2b9e42a854d9801a6759fcc8e62fbd7ee5f0585ea83b9c43165bf2d9bcc",
+      "output": {
+        "basis_risk_delta_nii": 4500,
+        "basis_risk_pct_of_parallel": 0.3,
+        "convention": "Comptroller's Handbook IRR basis-risk delta-NII (per-index beta vs single reference shock)",
+        "horizon_months": 12,
+        "index_results": [
+          {
+            "asset_balance": 2000000,
+            "beta_vs_reference": 1,
+            "index_name": "prime",
+            "index_shock_bps": 100,
+            "liability_balance": 0,
+            "net_exposure": 2000000,
+            "nii_contribution": 20000
+          },
+          {
+            "asset_balance": 500000,
+            "beta_vs_reference": 0.9,
+            "index_name": "sofr",
+            "index_shock_bps": 90,
+            "liability_balance": 0,
+            "net_exposure": 500000,
+            "nii_contribution": 4500
+          },
+          {
+            "asset_balance": 0,
+            "beta_vs_reference": 0.5,
+            "index_name": "cd_portfolio",
+            "index_shock_bps": 50,
+            "liability_balance": 1000000,
+            "net_exposure": -1000000,
+            "nii_contribution": -5000
+          }
+        ],
+        "is_material": true,
+        "material_threshold_pct": 0.1,
+        "parallel_delta_nii": 15000,
+        "reference_shock_bps": 100,
+        "total_net_exposure": 1500000,
+        "total_nii_contribution": 19500
+      }
+    }
+  }
+},
+    {
+  "tool_id": "art-444-collateral-haircut-engine",
+  "tool_version": "1.0.0",
+  "display_name": "Collateral Haircut Engine (Basel CRE22)",
+  "mcp_name": "compute_basel_haircut_adjusted_exposure",
+  "mandate_type": "regulatory_reporting",
+  "wave": 71,
+  "gpu": false,
+  "url": "https://ainumbers.co/chaingraph/art-444-collateral-haircut-engine.html",
+  "description": "Basel CRE22 comprehensive-approach collateral haircut engine for counterparty credit risk: applies a caller-supplied, versioned supervisory haircut table (policy input, not hardcoded) to each collateral item's asset class/maturity bucket, scales for a non-standard holding period via the CRE22.68 square-root-of-time rule, adds an FX-mismatch haircut where collateral currency differs from exposure currency, and computes net exposure E* = max(0, E*(1+He) - sum(C*(1-Hc-Hfx))). An item haircut override without a reason_code is flagged -- the item-level basis for a separate signed §27 human_accountability_record, not minted by this kernel. An unmatched asset_class/maturity_bucket defaults to a conservative 100% haircut, flagged, never silently valued. Deterministic per-item haircut application and summation only -- no collateral-to-exposure allocation/optimization solver. Not calculate_repo_haircut (508, Canton 24/7 timing-gap-specific SFT calculator) or compute_stock_token_collateral_haircut (art-320, RHC liquidation-risk layering) -- this is the generic Basel comprehensive-approach net-exposure engine across asset classes and currencies. Not a capital-return filing tool -- evidence artifact only, never regulator-submittable.",
+  "input_schema_ref": "chaingraph/art-444-collateral-haircut-engine.html#manifest",
+  "deadline": null,
+  "deadline_note": "Basel CRE22 comprehensive approach for financial collateral, standardised supervisory haircuts (BCBS d424 CRE22.68 as implemented via 12 CFR 217 Subpart D / EU CRR2 Art 224) -- ongoing capital-treatment standard, no filing deadline.",
+  "consumes": [],
+  "feeds": [],
+  "status": "live",
+  "conformance_fixtures": true,
+  "compute_capability": "server",
+  "compute_images": [
+    {
+      "system": "sha256-source",
+      "image_id": "sha256:1d708d8172b54b003ff2da60df4711a8999f6e0d8f327a28ef3538e1eae84cb7",
+      "valid_from": "2026-07-23"
+    },
+    {
+      "system": "risc0",
+      "image_id": "sha256:a1a0bc89b5b1febaeda3519f6dbade0fa5ac16beeb143c4e1b01689573567bc6",
+      "valid_from": "2026-07-23"
+    }
+  ],
+  "export_capability": [
+    "json"
+  ],
+  "compute_proof_ready": "ready",
+  "compute_proof": {
+    "type": "ZkVmReceipt",
+    "system": "risc0",
+    "receiptFormat": "groth16-bn254",
+    "imageId": "sha256:a1a0bc89b5b1febaeda3519f6dbade0fa5ac16beeb143c4e1b01689573567bc6",
+    "seal": "IoPY4tVmqw8IW9flqUbru2y89di9DnEkzpYJVM50rscpdAYFVayv/XSxzN1PZYHHDQjIAcwmmaMGWxIEvKvwpS3N7HKhPRdl44f/+pQgAjZk3OK0KcgpI1IG0nQmTtm5B543NZitCuyzEewTQNWPJp+jXQqv6bK7Zdn+UZllgtMN596DmPlVBYOdoUs3Fn0JWBmX8Lv8I7eRNYlyJigihw+li50sjLQ05j/A6wBsnEaTeFvA34Gl1XksSnW7uPOsCDIhiyVUtSQi6Bde6T6i5FKa/t13DVjtsIVb7VPApnYbHsRmO9M0F3P4daJV6E6Dbv1TDy1BP5XmqgfBc/7hgg==",
+    "journal": {
+      "chaingraph_version": "0.4.0",
+      "kernel_digest": "sha256:1d708d8172b54b003ff2da60df4711a8999f6e0d8f327a28ef3538e1eae84cb7",
+      "output": {
+        "collateral_adjusted_total": 103000000,
+        "collateral_items": [
+          {
+            "adjusted_value": 58800000,
+            "asset_class": "sovereign_aaa_aa",
+            "combined_haircut_pct": 2,
+            "currency": "USD",
+            "currency_mismatch": false,
+            "fx_haircut_scaled_pct": 0,
+            "haircut_pct": 2,
+            "haircut_scaled_pct": 2,
+            "item_id": "c0",
+            "market_value": 60000000,
+            "maturity_bucket": "1-5y",
+            "override_applied": false,
+            "override_reason_code": null,
+            "table_haircut_pct": 2,
+            "unclassified": false
+          },
+          {
+            "adjusted_value": 28800000,
+            "asset_class": "corporate_aaa_a",
+            "combined_haircut_pct": 4,
+            "currency": "USD",
+            "currency_mismatch": false,
+            "fx_haircut_scaled_pct": 0,
+            "haircut_pct": 4,
+            "haircut_scaled_pct": 4,
+            "item_id": "c1",
+            "market_value": 30000000,
+            "maturity_bucket": "1-5y",
+            "override_applied": false,
+            "override_reason_code": null,
+            "table_haircut_pct": 4,
+            "unclassified": false
+          },
+          {
+            "adjusted_value": 15400000,
+            "asset_class": "equity_main_index",
+            "combined_haircut_pct": 23,
+            "currency": "EUR",
+            "currency_mismatch": true,
+            "fx_haircut_scaled_pct": 8,
+            "haircut_pct": 15,
+            "haircut_scaled_pct": 15,
+            "item_id": "c2",
+            "market_value": 20000000,
+            "maturity_bucket": null,
+            "override_applied": false,
+            "override_reason_code": null,
+            "table_haircut_pct": 15,
+            "unclassified": false
+          }
+        ],
+        "exposure_adjusted": 100000000,
+        "exposure_amount": 100000000,
+        "exposure_asset_class": "cash",
+        "exposure_currency": "USD",
+        "exposure_haircut_scaled_pct": 0,
+        "haircut_table_version": "2026-07-01",
+        "holding_period_days": 10,
+        "item_count": 3,
+        "net_exposure": 0,
+        "note": "Basel CRE22 comprehensive-approach standardized supervisory haircuts (versioned table = policy input), scaled to the supplied holding period via the square-root-of-time rule. An overridden item haircut without a reason_code is flagged and is the item-level basis for a separate signed §27 human_accountability_record (this kernel does not mint that record). An unmatched asset_class/maturity_bucket defaults to a conservative 100% haircut, flagged, never silently valued. No allocation/optimization across collateral items -- deterministic per-item haircut application and summation only. Evidence artifact only -- not a capital-return filing, never regulator-submittable.",
+        "override_count": 0,
+        "override_missing_reason_count": 0,
+        "time_scale_factor": 1,
+        "unclassified_count": 0
+      }
+    }
+  }
+},
+    {
+  "tool_id": "art-445-credit-concentration-topn-sector",
+  "tool_version": "1.0.0",
+  "display_name": "Credit Concentration Top-N / Sector Checker",
+  "mcp_name": "check_credit_concentration_topn_sector",
+  "mandate_type": "analytics_mandate",
+  "wave": 72,
+  "gpu": false,
+  "url": "https://ainumbers.co/chaingraph/art-445-credit-concentration-topn-sector.html",
+  "description": "Credit-concentration screen over a flat exposure list (name, sector, amount): returns the top-N single-name exposures by amount, a per-sector rollup, single-name and sector Herfindahl-Hirschman Index (0-10000 scale), and a breach list against caller-declared single-name and sector limit percentages. Concentration limits are your own institution's risk-appetite policy, not a fixed regulatory threshold, so nothing is baked in. Distinct from the shipped IRRBB/NII shock kernels (art-183/art-185/art-369), which measure rate-risk exposure rather than name/sector diversification. NaN-safe. Zero network, zero PII.",
+  "input_schema_ref": "chaingraph/art-445-credit-concentration-topn-sector.html#manifest",
+  "consumes": [],
+  "feeds": [],
+  "status": "live",
+  "conformance_fixtures": true,
+  "compute_capability": "server",
+  "compute_images": [
+    {
+      "system": "sha256-source",
+      "image_id": "sha256:2c48c891970145492a64a3005f4756cbe485a5a8f04738cc43b59eea9453bb0b",
+      "valid_from": "2026-07-10"
+    },
+    {
+      "system": "risc0",
+      "image_id": "sha256:a1a0bc89b5b1febaeda3519f6dbade0fa5ac16beeb143c4e1b01689573567bc6",
+      "valid_from": "2026-07-23"
+    }
+  ],
+  "export_capability": [
+    "json"
+  ],
+  "compute_proof_ready": "ready",
+  "compute_proof": {
+    "type": "ZkVmReceipt",
+    "system": "risc0",
+    "receiptFormat": "groth16-bn254",
+    "imageId": "sha256:a1a0bc89b5b1febaeda3519f6dbade0fa5ac16beeb143c4e1b01689573567bc6",
+    "seal": "E4/jCtDAgTqNvu0oACCPYNBg1ktm7C+e+4mbHSlu3XgR0LJqJ/A9HAnFWghTfnLD1Vb+oMGWp8K7RNOMsEYYyisbxg6mZavHyYhsWvUy/62gZ2V4evhniw9bAsg+jxt1DvLixDzotbqxD5LBZklEY/9yONshg///lhxDMebS4uwaEOiEcbsz7tA2EFlLLoyN5Hvk4TngebmUj2QfNtIUyyOw6h6KDLQi6Nqe7/zscurmNjZCT0n9RXVQlDFC2/oZBH3TOE8vCjqZF0lGF3bZHjo6zKJ2xZbkIsJMbCeYdbUdiUSA7HF/cLR1q223cKBoPWeh4VQ6cUwulM22TGJHcg==",
+    "journal": {
+      "chaingraph_version": "0.4.0",
+      "kernel_digest": "sha256:2c48c891970145492a64a3005f4756cbe485a5a8f04738cc43b59eea9453bb0b",
+      "output": {
+        "portfolio_total": 6000000,
+        "sector_breaches": [
+          {
+            "pct_of_portfolio": 50,
+            "sector": "Energy"
+          },
+          {
+            "pct_of_portfolio": 33.33,
+            "sector": "Retail"
+          }
+        ],
+        "sector_hhi": 3755.56,
+        "sector_limit_pct": 25,
+        "sector_totals": [
+          {
+            "amount": 3000000,
+            "pct_of_portfolio": 50,
+            "sector": "Energy"
+          },
+          {
+            "amount": 2000000,
+            "pct_of_portfolio": 33.33,
+            "sector": "Retail"
+          },
+          {
+            "amount": 600000,
+            "pct_of_portfolio": 10,
+            "sector": "Healthcare"
+          },
+          {
+            "amount": 400000,
+            "pct_of_portfolio": 6.67,
+            "sector": "Tech"
+          }
+        ],
+        "single_name_breaches": [
+          {
+            "name": "C",
+            "pct_of_portfolio": 41.67
+          },
+          {
+            "name": "A",
+            "pct_of_portfolio": 20
+          },
+          {
+            "name": "B",
+            "pct_of_portfolio": 13.33
+          }
+        ],
+        "single_name_hhi": 2527.78,
+        "single_name_limit_pct": 10,
+        "top_n": 3,
+        "top_n_exposures": [
+          {
+            "amount": 2500000,
+            "name": "C",
+            "pct_of_portfolio": 41.67,
+            "sector": "Energy"
+          },
+          {
+            "amount": 1200000,
+            "name": "A",
+            "pct_of_portfolio": 20,
+            "sector": "Retail"
+          },
+          {
+            "amount": 800000,
+            "name": "B",
+            "pct_of_portfolio": 13.33,
+            "sector": "Retail"
+          }
+        ],
+        "worst_sector": "Energy",
+        "worst_single_name": "C"
+      }
+    }
+  }
+},
+    {
+  "tool_id": "art-446-counterparty-internal-limit-check",
+  "tool_version": "1.0.0",
+  "display_name": "Counterparty Internal Limit Check",
+  "mcp_name": "compute_counterparty_limit_check",
+  "mandate_type": "compliance_mandate",
+  "wave": 70,
+  "gpu": false,
+  "url": "https://ainumbers.co/chaingraph/art-446-counterparty-internal-limit-check.html",
+  "description": "Counterparty internal credit-limit check: compares each counterparty's caller-supplied current exposure against its board-approved internal limit line (settlement, pre-settlement/PFE, or aggregate limit type), computes utilization percent and headroom, and flags each counterparty WITHIN_LIMIT, WARNING (above the caller-set soft-warning threshold, e.g. 90% of the limit), or BREACH (exposure exceeds the approved limit). This is a deterministic point-in-time check against internally governed limit lines -- distinct from the Basel/Reg-YY regulatory single-counterparty threshold check (art-425) -- and is NOT a real-time exposure monitor: no live feed, no intraday polling, no scheduled job. Not X: use art-425 for the Basel III / Regulation YY 25%/15%-of-Tier-1 regulatory large-exposures limit; use this node for internal (board- or risk-committee-approved) counterparty limit-line governance.",
+  "input_schema_ref": "chaingraph/art-446-counterparty-internal-limit-check.html#manifest",
+  "consumes": [],
+  "feeds": [],
+  "status": "live",
+  "conformance_fixtures": true,
+  "compute_capability": "server",
+  "compute_images": [
+    {
+      "system": "sha256-source",
+      "image_id": "sha256:235144f13ce1e5f16af5e68341a3f6eac7579044827d63769a9b062658bd21ab",
+      "valid_from": "2026-07-10"
+    },
+    {
+      "system": "risc0",
+      "image_id": "sha256:a1a0bc89b5b1febaeda3519f6dbade0fa5ac16beeb143c4e1b01689573567bc6",
+      "valid_from": "2026-07-23"
+    }
+  ],
+  "compute_proof_ready": "ready",
+  "export_capability": [
+    "json"
+  ],
+  "compute_proof": {
+    "type": "ZkVmReceipt",
+    "system": "risc0",
+    "receiptFormat": "groth16-bn254",
+    "imageId": "sha256:a1a0bc89b5b1febaeda3519f6dbade0fa5ac16beeb143c4e1b01689573567bc6",
+    "seal": "GXO6X72MbqGljONDGx3ocJf5tcsC+SxwEGXM2o+ZRq8tSFihSABcP8tRbOGj/7dbdRMOm/6UW1RFLUCVDYX3wy+cQXLHaHTLTdDplIl/kNWyHjwBD96jUEcHLsNOrN+fGvlX8Ky6+xrfPiFBDKIlZNsrqxdovRmx5yzgqLBBB2gCkk6XbAgyB1QsSZIEg7ke1SfY/7ipkKTLX9YJkQIO+QHARJeFRxf/YYmXI3785J8SJuSDOVNlxxKq3IZEDg1fEUqRdAX4enjenqS91zTS4R+edqVjnNtv6Z/V7D5wM9Qeumdn7EPq2r+PWjlTTMke3GQVIOle1vkt7BUq0mQI1g==",
+    "journal": {
+      "chaingraph_version": "0.4.0",
+      "kernel_digest": "sha256:235144f13ce1e5f16af5e68341a3f6eac7579044827d63769a9b062658bd21ab",
+      "output": {
+        "breach_list": [],
+        "counterparties": [
+          {
+            "approved_limit_musd": 1000,
+            "counterparty_id": "cp-A",
+            "counterparty_name": "Counterparty A",
+            "current_exposure_musd": 400,
+            "headroom_musd": 600,
+            "limit_type": "settlement",
+            "status": "WITHIN_LIMIT",
+            "utilization_pct": 40,
+            "warning_threshold_pct": 90
+          },
+          {
+            "approved_limit_musd": 1500,
+            "counterparty_id": "cp-B",
+            "counterparty_name": "Counterparty B",
+            "current_exposure_musd": 300,
+            "headroom_musd": 1200,
+            "limit_type": "aggregate",
+            "status": "WITHIN_LIMIT",
+            "utilization_pct": 20,
+            "warning_threshold_pct": 90
+          }
+        ],
+        "note": "Deterministic point comparison of caller-supplied current exposure against the caller-supplied approved internal limit line for a single reporting date. Not a real-time exposure monitor.",
+        "regulatory_basis": "Internal (board- or risk-committee-approved) counterparty credit-limit governance -- not a regulatory threshold. Distinct from the Basel III / Regulation YY 25%/15%-of-Tier-1 large-exposures limit (see art-425).",
+        "warning_list": []
+      }
+    }
+  }
+},
+    {
+  "tool_id": "art-447-securitization-risk-retention-check",
+  "tool_version": "1.0.0",
+  "display_name": "Securitization Risk Retention Check",
+  "mcp_name": "check_securitization_risk_retention",
+  "mandate_type": "compliance_mandate",
+  "wave": 73,
+  "gpu": false,
+  "url": "https://ainumbers.co/chaingraph/art-447-securitization-risk-retention-check.html",
+  "description": "EU Securitisation Regulation (EU) 2017/2402 Art.6 and U.S. Credit Risk Retention Rule (Dodd-Frank Sec.941, Reg RR, 12 CFR Part 244) 5% risk-retention checker: verifies the originator/sponsor/original-lender retains at least 5% net economic interest via a recognized method (vertical slice, horizontal first-loss, L-shaped, representative sample, seller's interest), applies the U.S. Qualified Residential Mortgage (QRM) exemption where flagged, and flags EU-specific structural breaches -- retainer sole-purpose-entity prohibition and retained-interest hedging/sale. Deterministic point-in-time structural check from caller-supplied retention method, exposure/retained amounts, and jurisdiction-specific flags for a single reporting date. Not a compute_rbc_action_level (NAIC insurer capital ladder) or calculate_solvency2_scr_ratio (EU insurer capital) check -- this is bank/ABS securitization risk-retention structure, not insurer solvency.",
+  "input_schema_ref": "chaingraph/art-447-securitization-risk-retention-check.html#manifest",
+  "consumes": [],
+  "feeds": [],
+  "status": "live",
+  "conformance_fixtures": true,
+  "compute_capability": "server",
+  "compute_images": [
+    {
+      "system": "sha256-source",
+      "image_id": "sha256:7c47eb66621889efcbc72476358adf9d81118f0c4692dc01375cb7251f1ada8e",
+      "valid_from": "2026-07-10"
+    },
+    {
+      "system": "risc0",
+      "image_id": "sha256:a1a0bc89b5b1febaeda3519f6dbade0fa5ac16beeb143c4e1b01689573567bc6",
+      "valid_from": "2026-07-23"
+    }
+  ],
+  "compute_proof_ready": "ready",
+  "compute_proof": {
+    "type": "ZkVmReceipt",
+    "system": "risc0",
+    "receiptFormat": "groth16-bn254",
+    "imageId": "sha256:a1a0bc89b5b1febaeda3519f6dbade0fa5ac16beeb143c4e1b01689573567bc6",
+    "seal": "Gdkh0NijknB/AKsI6ozkuZMioNmy5jfdYISM6PoJMF0nHIysYnr9W3QG+dRMVz/iommYeEH26WPLfMe38BW/gQIHqj6p5GjBdV0bf8rIAcnyu04noGSqZJPQJoxb/W9BIyk6kJ7hgVKqySBYdN8DHchFDZJoq99VE3RZUocHDiMFd20Y3PV5BBdY0uSEczGjazr5o7DCW7lprLsxZ4+srA9qSUgVHwfZdrgEXc08EqUN4I0/aBlrN3Noplam7UilIyVIf9Ds4thwdKzhMtznX25PtwwQh3GILr6eVX9qFSMMGRBiM+F98s0MY1kKev59KBUZhOn0iea9e1XNqbRW8g==",
+    "journal": {
+      "chaingraph_version": "0.4.0",
+      "kernel_digest": "sha256:7c47eb66621889efcbc72476358adf9d81118f0c4692dc01375cb7251f1ada8e",
+      "output": {
+        "actual_retention_pct": 5,
+        "breach_reasons": [],
+        "compliant": true,
+        "jurisdiction": "eu",
+        "note": "Deterministic structural check from caller-supplied retention method, exposure/retained nominal amounts, and jurisdiction-specific flags for a single reporting date.",
+        "qrm_exemption_applied": false,
+        "regulatory_basis": "EU Securitisation Regulation (EU) 2017/2402 Art.6 (originator/sponsor/original-lender net economic interest, ongoing 5% retention, no hedging/sale, sole-purpose-entity prohibition); U.S. Credit Risk Retention Rule (Dodd-Frank Sec.941, Reg RR, 12 CFR Part 244) 5% base retention with Sec_.19 Qualified Residential Mortgage exemption.",
+        "required_retention_pct": 5,
+        "retained_amount_musd": 100,
+        "retained_interest_hedged_or_sold": false,
+        "retainer_is_sole_purpose_entity": false,
+        "retention_method": "vertical_slice",
+        "retention_method_valid": true,
+        "total_securitized_exposure_musd": 2000
+      }
+    }
+  }
+},
+    {
+  "tool_id": "art-448-ifrs17-loss-component-tracker",
+  "tool_version": "1.0.0",
+  "display_name": "IFRS 17 Loss Component Roll-Forward Tracker",
+  "mcp_name": "track_ifrs17_loss_component_rollforward",
+  "mandate_type": "compliance_mandate",
+  "wave": 32,
+  "gpu": false,
+  "url": "https://ainumbers.co/chaingraph/art-448-ifrs17-loss-component-tracker.html",
+  "description": "Tracks the IFRS 17 para 50 loss-component roll-forward across periods: opening balance, additional loss recognised on new onerous contracts, reversal from subsequent favourable experience (capped so it never reverses more than the available balance), other adjustments, and release to profit or loss (capped at the pre-release balance). Delta over validate_ifrs17_csm_rollforward (art-178), which resets the loss component to a single period's shortfall and does not track the component's own multi-period roll-forward or its release pattern. IFRS 17 para 50, BC323-BC326. NaN-safe numeric validation on all inputs. Zero network, zero PII.",
+  "input_schema_ref": "chaingraph/art-448-ifrs17-loss-component-tracker.html#manifest",
+  "consumes": [
+    "art-178-ifrs17-csm-rollforward-validator"
+  ],
+  "feeds": [],
+  "status": "live",
+  "conformance_fixtures": true,
+  "compute_capability": "server",
+  "compute_images": [
+    {
+      "system": "sha256-source",
+      "image_id": "sha256:8e097549d34ca1082509778e8da4137f414ab761783cc9babc55ec076010976e",
+      "valid_from": "2026-07-10"
+    },
+    {
+      "system": "risc0",
+      "image_id": "sha256:a1a0bc89b5b1febaeda3519f6dbade0fa5ac16beeb143c4e1b01689573567bc6",
+      "valid_from": "2026-07-23"
+    }
+  ],
+  "export_capability": [
+    "json",
+    "vc"
+  ],
+  "compute_proof_ready": "ready",
+  "compute_proof": {
+    "type": "ZkVmReceipt",
+    "system": "risc0",
+    "receiptFormat": "groth16-bn254",
+    "imageId": "sha256:a1a0bc89b5b1febaeda3519f6dbade0fa5ac16beeb143c4e1b01689573567bc6",
+    "seal": "GXvBkO5zDHYqVClMsOrhyiohsN48ug9mpQ8zS8a0cEkLjjPrS5k1wqUxrqBEPyOvZdBVTF6QS9SpgvrxkYurNC8aSlwWcvnQBQU/9tHQpLqYcU2vy3MQqqBDkuHZsgbXJ/D8UojvrKWKJEyC54SB5NtZzY2Yny4Xh/vZ6csHIfkJ3gHnwFZlMtOeOAcadS5pSzGt95vUEskEF3D7mlzawxYy2Y473Fe5r8BKqlUL2cJHUAFjetOoKIfR4hNLVXaNHT3+gUFgt2yZXoclb/t3rmNbiNxD7QPzAbrZrcIergsPptsYudW/1jAhz22nSKrgOaJAqCGv8tFtiZbiHeth4A==",
+    "journal": {
+      "chaingraph_version": "0.4.0",
+      "kernel_digest": "sha256:8e097549d34ca1082509778e8da4137f414ab761783cc9babc55ec076010976e",
+      "output": {
+        "additional_lc": 50,
+        "closing_lc": 150,
+        "fully_reversed": false,
+        "lc_valid": true,
+        "opening_lc": 100,
+        "other_adj": 0,
+        "pre_release": 150,
+        "release_to_pnl": 0,
+        "reversal_lc": 0
+      }
+    }
+  }
+},
+    {
+  "tool_id": "art-449-solvency2-scr-module-aggregator",
+  "tool_version": "1.0.0",
+  "display_name": "Solvency II SCR Standard-Formula Module Aggregator",
+  "mcp_name": "aggregate_solvency2_scr_modules",
+  "mandate_type": "compliance_mandate",
+  "wave": 32,
+  "gpu": false,
+  "url": "https://ainumbers.co/chaingraph/art-449-solvency2-scr-module-aggregator.html",
+  "description": "Aggregates the five Solvency II standard-formula risk-module capital charges (market, counterparty default, life underwriting, health underwriting, non-life underwriting) into Basic SCR via the Delegated Regulation (EU) 2015/35 Annex IV correlation matrix, then adds the operational risk charge and subtracts the loss-absorbing adjustment (deferred tax/technical provisions) to produce total SCR. Delta over calculate_solvency2_scr_ratio (art-180), which takes `scr` as a given input and does not derive it from sub-module charges; feeds art-180's scr input. Not the US NAIC RBC action-level ladder (a different jurisdiction and regime, see compute_rbc_action_level). Solvency II Dir. 2009/138/EC + Del. Reg. (EU) 2015/35 Annex IV. NaN-safe. Zero network, zero PII.",
+  "input_schema_ref": "chaingraph/art-449-solvency2-scr-module-aggregator.html#manifest",
+  "consumes": [],
+  "feeds": [
+    "art-180-solvency2-scr-ratio-calculator"
+  ],
+  "status": "live",
+  "conformance_fixtures": true,
+  "compute_capability": "server",
+  "compute_images": [
+    {
+      "system": "sha256-source",
+      "image_id": "sha256:484b5640fddbb90b1bdecd2a7f4e9023d17cef27245c21ed1f726cbf1f30e0a4",
+      "valid_from": "2026-07-10"
+    },
+    {
+      "system": "risc0",
+      "image_id": "sha256:a1a0bc89b5b1febaeda3519f6dbade0fa5ac16beeb143c4e1b01689573567bc6",
+      "valid_from": "2026-07-23"
+    }
+  ],
+  "export_capability": [
+    "json",
+    "vc"
+  ],
+  "compute_proof_ready": "ready",
+  "compute_proof": {
+    "type": "ZkVmReceipt",
+    "system": "risc0",
+    "receiptFormat": "groth16-bn254",
+    "imageId": "sha256:a1a0bc89b5b1febaeda3519f6dbade0fa5ac16beeb143c4e1b01689573567bc6",
+    "seal": "AaRkZ07Rb8FA3ji5ePJixWgevSI2KpOwMODroRBgdxYXNWRA46h2dsVX9vts7BGL3DGKQi2GhEYyht8A2L8PURhIrd4VtFdowOoO+NxK7ZepQqGhzZpgIeDglxaZsCNJMFrZsnfS1RS2O0X7E7YPPyFv0dpDXbehzc2iEZFmFsMLACR+qDqITc+ilGqMjf2XKe10DAg6O8GZK+a49zm91ilSPRKFr2oCYiQCoDpVMsP0BtyyfSHTLlXi3uidrsI+IRXu7xM5xvqlAI94nplj1cxLZpsWCesXQ0src7e3CqMPLPxNoVLa8SfEHH9CtZPV+5kMXqSHzirDO+yTR62doQ==",
+    "journal": {
+      "chaingraph_version": "0.4.0",
+      "kernel_digest": "sha256:484b5640fddbb90b1bdecd2a7f4e9023d17cef27245c21ed1f726cbf1f30e0a4",
+      "output": {
+        "adjustment_exceeds_bscr_plus_op": false,
+        "bscr": 966.95,
+        "default_scr": 200,
+        "health_scr": 100,
+        "life_scr": 300,
+        "loss_absorbing_adjustment": 30,
+        "market_scr": 500,
+        "nonlife_scr": 400,
+        "scr_operational": 50,
+        "scr_total": 986.95
+      }
+    }
+  }
+},
+    {
+  "tool_id": "art-450-model-inventory-entry",
+  "tool_version": "1.0.0",
+  "display_name": "Model Inventory Entry Builder",
+  "mcp_name": "build_model_inventory_entry",
+  "mandate_type": "compliance_control",
+  "wave": 73,
+  "gpu": false,
+  "url": "https://ainumbers.co/chaingraph/art-450-model-inventory-entry.html",
+  "description": "Builds a single model-inventory record for a bank's SR 26-2 model-risk-management inventory: checks the caller-declared attributes (model name, owner, purpose, tier, development/deployment dates, last validation date) against the SR 26-2 required-field set, assigns a proportionality tier (limited/moderate/high) from caller-declared materiality and complexity inputs, and returns a completeness score plus a list of missing required fields. First node in the model-passport lifecycle (inventory entry, then outcome-analysis comparison in art-451, then validation status in art-453). Distinct from the shipped program-level gap analyzers (tools 339/451 SR 26-02 and SR 11-7 gap assessors), which score an institution's overall MRM program, not a single model's inventory record. Distinct from art-380 (AI workpaper record), which documents a completed assessment rather than registering a model. NaN-safe. Zero network, zero PII.",
+  "input_schema_ref": "chaingraph/art-450-model-inventory-entry.html#manifest",
+  "consumes": [],
+  "feeds": ["art-451-model-outcome-analysis"],
+  "status": "live",
+  "conformance_fixtures": true,
+  "compute_capability": "server",
+  "compute_images": [
+    {
+      "system": "sha256-source",
+      "image_id": "sha256:2de5269cd7ce2153d49d282c65e7561c5f097c2fc88f86daeb66ea327ad21a6e",
+      "valid_from": "2026-07-23"
+    },
+    {
+      "system": "risc0",
+      "image_id": "sha256:a1a0bc89b5b1febaeda3519f6dbade0fa5ac16beeb143c4e1b01689573567bc6",
+      "valid_from": "2026-07-23"
+    }
+  ],
+  "export_capability": [
+    "json"
+  ],
+  "compute_proof_ready": "ready",
+  "compute_proof": {
+    "type": "ZkVmReceipt",
+    "system": "risc0",
+    "receiptFormat": "groth16-bn254",
+    "imageId": "sha256:a1a0bc89b5b1febaeda3519f6dbade0fa5ac16beeb143c4e1b01689573567bc6",
+    "seal": "JGPs4o2VlA2lBQ3vhChaXVTvGEQrtkPcPQnD/EBJ1sUcItgbLqHzeCT8U0pR0wQOWFagAXX2CogLMS3YtmOpgAXr1sT9bH4uVC8y7ehos+LiXo38TJS2w6RSctEOuk1QCUz4haV1A3e2qh4EG02/2RqsxZ6pHYxwOq/Y7UbVQGEHzOC7ywGv1srzjXMvpaUweFk0Sld819BpViZZRPzEfSPkkRRX1MwPT2DxnErxnVvh1FyjaaoD5moy5zuz50ofBIGKIyNxOJ9x9Nw3CVN1UUqXl5x0o40eMsoPNP63k40C05NcewngUrsBKB9fUs3Pl65/PUsh0SZuO6ubDU1xjg==",
+    "journal": {
+      "chaingraph_version": "0.4.0",
+      "kernel_digest": "sha256:2de5269cd7ce2153d49d282c65e7561c5f097c2fc88f86daeb66ea327ad21a6e",
+      "output": {
+        "ai_ml_model": true,
+        "completeness_score": 100,
+        "complexity_score": 3,
+        "inventory_record": {
+          "business_purpose": "Consumer credit approval scoring",
+          "deployment_date": "2025-06-15",
+          "development_date": "2025-03-01",
+          "last_validation_date": "2026-01-10",
+          "model_name": "Retail Credit Scoring Model v3",
+          "model_owner": "Model Risk Management"
+        },
+        "materiality_score": 4,
+        "missing_required_fields": [],
+        "model_name": "Retail Credit Scoring Model v3",
+        "third_party_vendor": false,
+        "tier": "high",
+        "tier_sum": 7,
+        "usage_scope": "enterprise_wide"
+      }
+    }
+  }
+},
+    {
+  "tool_id": "art-451-model-outcome-analysis",
+  "tool_version": "1.0.0",
+  "display_name": "Model Outcome-Analysis Comparison",
+  "mcp_name": "compare_model_outcome_analysis",
+  "mandate_type": "compliance_control",
+  "wave": 73,
+  "gpu": false,
+  "url": "https://ainumbers.co/chaingraph/art-451-model-outcome-analysis.html",
+  "description": "SR 26-2 ongoing-monitoring backtest: compares a list of period predicted-vs-actual model outcomes, computes per-period absolute percent error, mean/max absolute percent error, and flags periods breaching a caller-declared error tolerance. Returns a pass/fail outcome status against a caller-declared maximum breach rate. Second node in the model-passport lifecycle (after art-450 inventory entry, before art-453 validation status). Distinct from the shipped program-level gap analyzers (tools 339/451 SR 26-02 and SR 11-7 gap assessors), which score an institution's overall MRM program rather than backtest one model's outcomes. NaN-safe. Zero network, zero PII.",
+  "input_schema_ref": "chaingraph/art-451-model-outcome-analysis.html#manifest",
+  "consumes": ["art-450-model-inventory-entry"],
+  "feeds": ["art-453-model-validation-status"],
+  "status": "live",
+  "conformance_fixtures": true,
+  "compute_capability": "server",
+  "compute_images": [
+    {
+      "system": "sha256-source",
+      "image_id": "sha256:0109055fc8041ae9b972ed952fe72e0763d5a5ae8b30ff92ef63886e762d102f",
+      "valid_from": "2026-07-23"
+    },
+    {
+      "system": "risc0",
+      "image_id": "sha256:a1a0bc89b5b1febaeda3519f6dbade0fa5ac16beeb143c4e1b01689573567bc6",
+      "valid_from": "2026-07-23"
+    }
+  ],
+  "export_capability": [
+    "json"
+  ],
+  "compute_proof_ready": "ready",
+  "compute_proof": {
+    "type": "ZkVmReceipt",
+    "system": "risc0",
+    "receiptFormat": "groth16-bn254",
+    "imageId": "sha256:a1a0bc89b5b1febaeda3519f6dbade0fa5ac16beeb143c4e1b01689573567bc6",
+    "seal": "GAV+h3YdzjUV+SutaowhbHWvfCPCvyMXeKpqj44PMTcItfmuQt3K2ZxustX6mpcAE69nwhSCKUvk9u4LevsVNgtGlxbHcZRXp91WLx2stbv5QAalBMdUGYyovWYuCtrKDRRlpoxMxnJ8nYvNT0Al1FCn/XjO30mZcB82jDHNI8cPqCnJ23WXHQ+2PScW/PYPwsYj466WF7qeozmnUH8PKiHX+bzz999uLIxmd4oWHl8sBmdY+1bPH3v3n3b4CN3jAFTe7mn7awvEMa7QAtcPDsr49ZCzHHR8AFk6kXvP9msO7LGi7lFaKOPNUnUfhcEdjO0dZy5lf9si6E8FGFz9Xw==",
+    "journal": {
+      "chaingraph_version": "0.4.0",
+      "kernel_digest": "sha256:0109055fc8041ae9b972ed952fe72e0763d5a5ae8b30ff92ef63886e762d102f",
+      "output": {
+        "breach_periods": [
+          {
+            "abs_pct_error": 15,
+            "period_label": "Q2"
+          }
+        ],
+        "breach_rate_pct": 25,
+        "error_threshold_pct": 10,
+        "max_absolute_percent_error": 15,
+        "max_breach_rate_pct": 20,
+        "mean_absolute_percent_error": 6,
+        "outcome_status": "fail",
+        "periods": [
+          {
+            "abs_pct_error": 2,
+            "actual": 1020,
+            "breach": false,
+            "error": 20,
+            "period_label": "Q1",
+            "predicted": 1000
+          },
+          {
+            "abs_pct_error": 15,
+            "actual": 1150,
+            "breach": true,
+            "error": 150,
+            "period_label": "Q2",
+            "predicted": 1000
+          },
+          {
+            "abs_pct_error": 2,
+            "actual": 980,
+            "breach": false,
+            "error": -20,
+            "period_label": "Q3",
+            "predicted": 1000
+          },
+          {
+            "abs_pct_error": 5,
+            "actual": 1050,
+            "breach": false,
+            "error": 50,
+            "period_label": "Q4",
+            "predicted": 1000
+          }
+        ],
+        "total_periods": 4,
+        "worst_period": "Q2"
+      }
+    }
+  }
+},
+    {
+  "tool_id": "art-452-build-ai-training-data-lineage-record",
+  "tool_version": "1.0.0",
+  "display_name": "AI Training-Data Lineage Record",
+  "mcp_name": "build_ai_training_data_lineage_record",
+  "mandate_type": "compliance_mandate",
+  "wave": 66,
+  "gpu": false,
+  "url": "https://ainumbers.co/chaingraph/art-452-build-ai-training-data-lineage-record.html",
+  "description": "Composes a hash-chained ML training-data lineage record: dataset identity, dataset version, upstream source dataset references, a declared collection/governance method, and an OPTIONAL reference to an existing OCG receipt for the training-run compute (tool identity, execution hash, kernel digest -- never re-embedded). Chains to a prior lineage record via sha256_prev_lineage_hash. Maps to EU AI Act Art 10 (data and data governance) + Annex IV 2(d) technical-documentation elements (data provenance, collection, labelling, cleaning); SR 11-7 model risk management data-lineage practice as the US domestic analog. Documents dataset lineage only -- does not validate dataset quality, bias, or representativeness. Not build_ai_decision_log_record (art-236, per-inference decision chain) and not build_ai_workpaper_record (art-380, audit workpaper over a receipt).",
+  "input_schema_ref": "chaingraph/art-452-build-ai-training-data-lineage-record.html#manifest",
+  "consumes": [],
+  "feeds": [],
+  "status": "live",
+  "conformance_fixtures": true,
+  "compute_capability": "server",
+  "compute_images": [
+    {
+      "system": "sha256-source",
+      "image_id": "sha256:56df585464140fcefbfbbc2e7b6131b2c47dc68f68df3c43db1224690069237d",
+      "valid_from": "2026-07-10"
+    },
+    {
+      "system": "risc0",
+      "image_id": "sha256:a1a0bc89b5b1febaeda3519f6dbade0fa5ac16beeb143c4e1b01689573567bc6",
+      "valid_from": "2026-07-23"
+    }
+  ],
+  "compute_proof_ready": "ready",
+  "compute_proof": {
+    "type": "ZkVmReceipt",
+    "system": "risc0",
+    "receiptFormat": "groth16-bn254",
+    "imageId": "sha256:a1a0bc89b5b1febaeda3519f6dbade0fa5ac16beeb143c4e1b01689573567bc6",
+    "seal": "I6KuCx6WbpRvZdlolChILr8xjhjWflXpkQ2E1twLKf0RqvJSy1eUjPiGuaScFEZ0yjLLI46bGG62rWbdwZb+iwagEbGUosurLKfny4KCFNs/fJ+99VA1UDVJkKUeaP+BJh1mYiGlnC2tazI09rET74e3QHBgnKqTMn1fQdlOWeERf4SnX/NgJhRb3aHKprb/t69SMcRfc+t9gSqW7F3Dpx4+gZqeulzCLM8ysTqz8GiPM5G5Jc8uJWhLq698I6P7IFHlUrNKbpxEtbQ0Xyq0uiIfB4rT8EmEMuG5JEdnrDYus8E3gaWGjUZ49glSJMN04vEQHh7XkKYKL7MCFwE1Lg==",
+    "journal": {
+      "chaingraph_version": "0.4.0",
+      "kernel_digest": "sha256:56df585464140fcefbfbbc2e7b6131b2c47dc68f68df3c43db1224690069237d",
+      "output": {
+        "chain_position": "first",
+        "checks": [
+          {
+            "check": "dataset_id_present",
+            "detail": "ds-credit-decisioning-2026q2",
+            "pass": true
+          },
+          {
+            "check": "dataset_version_present",
+            "detail": "1.0.0",
+            "pass": true
+          },
+          {
+            "check": "collection_method_valid",
+            "detail": "internal_transaction_records",
+            "pass": true
+          },
+          {
+            "check": "referenced_receipt_valid_if_present",
+            "detail": "not referenced",
+            "pass": true
+          },
+          {
+            "check": "prev_lineage_hash_valid_if_present",
+            "detail": "ok",
+            "pass": true
+          }
+        ],
+        "collection_method": "internal_transaction_records",
+        "dataset_id": "ds-credit-decisioning-2026q2",
+        "dataset_version": "1.0.0",
+        "governance_notes": "Sourced from internal core-banking transaction extracts, deduplicated and de-identified prior to model training per firm data-governance policy.",
+        "operator_id": "mrm-data-governance-team",
+        "record_status": "COMPLETE",
+        "referenced_receipt": null,
+        "regulatory_basis": "EU AI Act (Reg. 2024/1689) Art 10 (data and data governance), Annex IV 2(d) (technical documentation: data provenance, collection, labelling, cleaning); SR 11-7 model risk management data-lineage practice (US domestic analog)",
+        "retention_months": 12,
+        "scope_note": "Documents dataset lineage and governance metadata for a training run. Does NOT validate dataset quality, bias, or representativeness -- those remain a firm judgment call outside this kernel's deterministic boundary.",
+        "sha256_prev_lineage_hash": null,
+        "source_dataset_ids": [
+          "ds-core-banking-txn-log-2024-2026"
+        ],
+        "table_version": "EU-AIA-ART10-2024-1689-R1",
+        "zero_pii_notice": "dataset_id and source_dataset_ids are STRUCTURAL catalog identifiers only. This kernel never ingests, stores, or echoes dataset contents -- zero PII by construction."
+      }
+    }
+  }
+},
+    {
+  "tool_id": "art-453-model-validation-status",
+  "tool_version": "1.0.0",
+  "display_name": "Model Validation Status Assessor",
+  "mcp_name": "assess_model_validation_status",
+  "mandate_type": "compliance_control",
+  "wave": 73,
+  "gpu": false,
+  "url": "https://ainumbers.co/chaingraph/art-453-model-validation-status.html",
+  "description": "Determines a model's SR 26-2 validation status by combining its proportionality tier, last-validation date, and most recent outcome-analysis result against a tier-based revalidation cadence (high=365 days, moderate=730, limited=1095, overridable). Returns validated / conditionally-approved / validation-overdue / restricted-use / validation-required plus days-since-validation and next-due-in-days. Third and final node in the model-passport lifecycle (after art-450 inventory entry and art-451 outcome-analysis comparison) -- the passport's headline field. Dates are caller-declared (as_of_date) and diffed with integer civil-calendar arithmetic, never the system clock, so the result is fully deterministic. Distinct from the shipped program-level gap analyzers (tools 339/451 SR 26-02 and SR 11-7 gap assessors), which score an institution's overall MRM program rather than one model's cadence status. NaN-safe. Zero network, zero PII.",
+  "input_schema_ref": "chaingraph/art-453-model-validation-status.html#manifest",
+  "consumes": ["art-451-model-outcome-analysis"],
+  "feeds": [],
+  "status": "live",
+  "conformance_fixtures": true,
+  "compute_capability": "server",
+  "compute_images": [
+    {
+      "system": "sha256-source",
+      "image_id": "sha256:63eb1d7394a4cafde3fcd6102e610ec0ff1a0ab83c0eb65ad5b704bcaf777ddc",
+      "valid_from": "2026-07-23"
+    },
+    {
+      "system": "risc0",
+      "image_id": "sha256:a1a0bc89b5b1febaeda3519f6dbade0fa5ac16beeb143c4e1b01689573567bc6",
+      "valid_from": "2026-07-23"
+    }
+  ],
+  "export_capability": [
+    "json"
+  ],
+  "compute_proof_ready": "ready",
+  "compute_proof": {
+    "type": "ZkVmReceipt",
+    "system": "risc0",
+    "receiptFormat": "groth16-bn254",
+    "imageId": "sha256:a1a0bc89b5b1febaeda3519f6dbade0fa5ac16beeb143c4e1b01689573567bc6",
+    "seal": "K04iGkYVN9FMp7Mcl89wr9iZ41VM+At9h+J8LExGfxYU1wTuSoB0Do2ztTcliesyAqgu6JKkPZd6pR/DEjYi+iwlTzRJcBMmBd6euuBHud6qrmYwJzHBYFYHY6Z2ozJwBN1SXjUSAxOK2lV5s0+1+JVlityU1EgKgHfO21m9SosaSypb44VTz+IK9e3sqbTr69bVyV/2XfgXkTZCLMp/GAFdlr5VU0uM+E142/tSUb4jYvdxQnZYGxP3LcGH76jOIzT1O5Tzkj57El3yKGwt8XZhF9S00prGiEuhrR0vsfIVg6FHNkXNBhy2RgS0eREseCIKzb8X/otuv3ZK++zcNQ==",
+    "journal": {
+      "chaingraph_version": "0.4.0",
+      "kernel_digest": "sha256:63eb1d7394a4cafde3fcd6102e610ec0ff1a0ab83c0eb65ad5b704bcaf777ddc",
+      "output": {
+        "as_of_date": "2026-01-15",
+        "cadence_days": 365,
+        "days_since_validation": 167,
+        "last_validation_date": "2025-08-01",
+        "never_validated": false,
+        "next_validation_due_days": 198,
+        "outcome_status": "pass",
+        "overdue": false,
+        "tier": "high",
+        "validation_status": "validated"
+      }
+    }
+  }
+},
+    {
+  "tool_id": "art-454-globe-jurisdictional-etr",
+  "tool_version": "1.0.0",
+  "display_name": "GloBE Jurisdictional ETR Calculator",
+  "mcp_name": "compute_globe_jurisdictional_etr",
+  "mandate_type": "compliance_control",
+  "wave": 32,
+  "gpu": false,
+  "url": "https://ainumbers.co/chaingraph/art-454-globe-jurisdictional-etr.html",
+  "description": "Computes a jurisdiction's OECD Pillar Two (GloBE) effective tax rate from caller-declared constituent-entity financial data: sums entity-level GloBE income/loss to a jurisdictional net (Art 3.1), sums entity-level adjusted covered taxes (Art 4), and divides to get the ETR. If the jurisdictional net is a GloBE loss, no ETR is computed and the jurisdiction is flagged rather than divided by a non-positive base. Top-up tax percentage = max(0, minimum_rate - ETR); minimum_rate defaults to the Art 5.1 15% rate but is taken as a versioned policy-parameter input, not hardcoded. Election flags (de minimis, stock-based comp, aggregate deferred-tax adjustment) are caller-declared policy parameters -- this kernel echoes which elections were declared, it does not decide them; election judgment and DTA characterization stay with the filer. First node in the GloBE annual cycle, feeding the substance-based income exclusion / top-up node (art-455) and, downstream, the safe-harbour tests (art-456) and GIR composer (art-457). Pure arithmetic aggregation only. NaN-safe. Zero network, zero PII.",
+  "input_schema_ref": "chaingraph/art-454-globe-jurisdictional-etr.html#manifest",
+  "consumes": [],
+  "feeds": ["art-455-globe-sbie-topup"],
+  "status": "live",
+  "conformance_fixtures": true,
+  "compute_capability": "server",
+  "compute_images": [{"system":"sha256-source","image_id":"sha256:b6c161f165c164256e1d59d3de2d7b967aa272e972f8ad8d17648dbb1066ab78","valid_from":"2026-07-10"}],
+  "export_capability": [
+    "json"
+  ],
+  "compute_proof_ready": "deferred",
+  "deferred_reason": "Kernel is source-published and deterministic (§17 sha256-source digest pending publication in a later K-lane pass); no §18 zkVM guest built for this node yet -- proof generation deferred, not skipped."
+},
+    {
+  "tool_id": "art-455-globe-sbie-topup",
+  "tool_version": "1.0.0",
+  "display_name": "GloBE SBIE & Top-up Tax Calculator",
+  "mcp_name": "compute_globe_sbie_topup",
+  "mandate_type": "compliance_control",
+  "wave": 76,
+  "gpu": false,
+  "url": "https://ainumbers.co/chaingraph/art-455-globe-sbie-topup.html",
+  "description": "Computes the OECD Pillar Two substance-based income exclusion (SBIE) for a jurisdiction from a caller-declared payroll-cost figure, tangible-asset carrying value, and a versioned transition-year rate table (payroll % + tangible-asset % looked up by target year, table supplied whole as a policy input -- not hardcoded). Derives excess profit (jurisdictional GloBE income less SBIE, floored at zero), the resulting top-up tax from a caller-supplied top-up-tax percentage, and the final jurisdictional top-up after a QDMTT-paid offset, flagging any QDMTT over-collection informationally. Consumes art-454's jurisdictional GloBE income + top-up-tax-percentage output shape directly and does not recompute an ETR itself, so it also runs standalone. Election choices and GloBE-income adjustments are human judgment and stay upstream. NaN-safe. Zero network, zero PII.",
+  "input_schema_ref": "chaingraph/art-455-globe-sbie-topup.html#manifest",
+  "consumes": ["art-454-globe-jurisdictional-etr"],
+  "feeds": [],
+  "status": "live",
+  "conformance_fixtures": true,
+  "compute_capability": "server",
+  "compute_images": [{"system":"sha256-source","image_id":"sha256:f883e9af5be1a09cf3f90e6d98b8452905bbef712f381adef50876f7ee4a44ab","valid_from":"2026-07-10"}],
+  "compute_proof_ready": "deferred",
+  "deferred_reason": "New GloBE SBIE/top-up kernel shipped fixture-first; §18 zkVM guest proof to follow in a later proving wave.",
+  "export_capability": [
+    "json"
+  ]
+},
+    {
+  "tool_id": "art-456-globe-safe-harbour-tests",
+  "tool_version": "1.0.0",
+  "display_name": "GloBE Transitional Safe Harbour Test Evaluator",
+  "mcp_name": "evaluate_globe_safe_harbour_tests",
+  "mandate_type": "compliance_control",
+  "wave": 74,
+  "gpu": false,
+  "url": "https://ainumbers.co/chaingraph/art-456-globe-safe-harbour-tests.html",
+  "description": "Evaluates a jurisdiction against the OECD Pillar Two Transitional CbCR Safe Harbour (Dec 2022 Agreed Administrative Guidance): the de minimis test (CbCR revenue < EUR 10m AND profit before tax < EUR 1m, both versioned thresholds), the simplified ETR test (simplified covered taxes / profit before tax >= the fiscal-year transition rate -- 15% for 2023/2024, 16% for 2025, 17% for 2026, versioned rate table; auto-passes when profit before tax is non-positive since ETR is undefined), and the routine profits test (profit before tax <= the caller-supplied substance-based income exclusion amount). Safe harbour is met if ANY ONE of the three tests passes, in which case the jurisdiction's top-up tax is deemed zero. Returns each test as an independently gated pass/fail verdict with its own reasoning, plus the overall safe_harbour_met / deemed_zero_topup flags. Pure arithmetic threshold comparisons only -- elections, DTA characterization, and the SBIE amount itself are HUMAN JUDGMENT and enter only as policy_parameters; SBIE is not recomputed here (that is art-455's job). NaN-safe. Zero network, zero PII.",
+  "input_schema_ref": "chaingraph/art-456-globe-safe-harbour-tests.html#manifest",
+  "consumes": [],
+  "feeds": [],
+  "status": "live",
+  "conformance_fixtures": true,
+  "compute_capability": "server",
+  "compute_images": [{"system":"sha256-source","image_id":"sha256:9dd9ae74b1d4edde67ba59bd862dc96cd7a0623011b3e59070bf5fd6ccbf3669","valid_from":"2026-07-10"}],
+  "export_capability": [
+    "json"
+  ],
+  "compute_proof_ready": "deferred",
+  "deferred_reason": "New kernel awaiting §18 zkVM guest build and prove-first pass; ships arithmetic-only with compute_mode:server and no compute_proof yet."
+},
+    {
+  "tool_id": "art-458-attribute-sampling-plan",
+  "tool_version": "1.0.0",
+  "display_name": "Attribute Sampling Plan Generator",
+  "mcp_name": "plan_attribute_sample",
+  "mandate_type": "compliance_control",
+  "wave": 74,
+  "gpu": false,
+  "url": "https://ainumbers.co/chaingraph/art-458-attribute-sampling-plan.html",
+  "description": "Computes a SOX 404 / ICFR attribute-sampling plan from confidence level, tolerable deviation rate, and expected deviation rate (all policy inputs) using the standard zero-EDR Poisson attribute-sampling formula with an expansion factor for nonzero EDR. Item selection is deterministic interval sampling over the caller-declared population hash -- no randomness, so any auditor can replay the exact same sample from the same declared inputs. If the tolerable deviation rate is at or below the expected deviation rate the plan is statistically indefensible, so the kernel reframes to a full-population census rather than shipping a bad plan. First node in the ICFR control-test evidence chain (feeds art-461 control-test-evidence-composer). NaN-safe. Zero network, zero PII.",
+  "input_schema_ref": "chaingraph/art-458-attribute-sampling-plan.html#manifest",
+  "consumes": [],
+  "feeds": [],
+  "status": "live",
+  "conformance_fixtures": true,
+  "compute_capability": "server",
+  "compute_images": [{"system":"sha256-source","image_id":"sha256:5bcd64e2925ab483c805160229d7a37241e311140192cd080b09be6d358fec1b","valid_from":"2026-07-10"}],
+  "export_capability": [
+    "json"
+  ],
+  "compute_proof_ready": "deferred",
+  "deferred_reason": "New ICFR-K-1 kernel shipped shard-only (SO#6, ASSEMBLE-LAND lane); GPU zkVM proving for art-458..460 is queued for the async G-lane nightly proving run, not this D-disjoint kernel WU."
+},
+    {
+  "tool_id": "art-459-sod-matrix-check",
+  "tool_version": "1.0.0",
+  "display_name": "Segregation-of-Duties Matrix Checker",
+  "mcp_name": "check_sod_matrix",
+  "mandate_type": "compliance_control",
+  "wave": 74,
+  "gpu": false,
+  "url": "https://ainumbers.co/chaingraph/art-459-sod-matrix-check.html",
+  "description": "Evaluates a caller-declared role-assignment set against a caller-declared SoD conflict ruleset for SOX 404 / ICFR access controls. For every user, checks all pairs of assigned roles against the ruleset and returns any conflicts found, the count of affected users, and a clean/not-clean verdict. The ruleset is a versioned policy input, never derived by the kernel. Deterministic pairwise set evaluation only. Zero network, zero PII -- user_id and role names are caller-supplied opaque strings.",
+  "input_schema_ref": "chaingraph/art-459-sod-matrix-check.html#manifest",
+  "consumes": [],
+  "feeds": [],
+  "status": "live",
+  "conformance_fixtures": true,
+  "compute_capability": "server",
+  "compute_images": [{"system":"sha256-source","image_id":"sha256:991bda6ad22de1f56d310c7cfbe98b6a7a9e4fdace9805007b0cc161d05cd7cd","valid_from":"2026-07-10"}],
+  "export_capability": [
+    "json"
+  ],
+  "compute_proof_ready": "deferred",
+  "deferred_reason": "New ICFR-K-1 kernel shipped shard-only (SO#6, ASSEMBLE-LAND lane); GPU zkVM proving for art-458..460 is queued for the async G-lane nightly proving run, not this D-disjoint kernel WU."
+},
+    {
+  "tool_id": "art-460-ipe-integrity-verifier",
+  "tool_version": "1.0.0",
+  "display_name": "IPE Integrity Verifier",
+  "mcp_name": "verify_ipe_integrity",
+  "mandate_type": "compliance_control",
+  "wave": 74,
+  "gpu": false,
+  "url": "https://ainumbers.co/chaingraph/art-460-ipe-integrity-verifier.html",
+  "description": "Verifies Information-Produced-by-Entity (IPE) completeness and accuracy for SOX 404 / ICFR control testing -- is this report extract what the source system actually produced. Reconciles a caller-declared source-extract hash, row count, and control total against the same facts for the report built from it, within a caller-set rounding tolerance. All facts are policy inputs; the kernel never re-derives the extract, only reconciles the declared parameters into a confirmed/exception verdict with a discrepancy list. Deterministic equality and tolerance checks only. Zero network, zero PII.",
+  "input_schema_ref": "chaingraph/art-460-ipe-integrity-verifier.html#manifest",
+  "consumes": [],
+  "feeds": [],
+  "status": "live",
+  "conformance_fixtures": true,
+  "compute_capability": "server",
+  "compute_images": [{"system":"sha256-source","image_id":"sha256:3739111ed80b1fdde1f68667060608703b547770fc185678540d7e16fa4023c6","valid_from":"2026-07-10"}],
+  "export_capability": [
+    "json"
+  ],
+  "compute_proof_ready": "deferred",
+  "deferred_reason": "New ICFR-K-1 kernel shipped shard-only (SO#6, ASSEMBLE-LAND lane); GPU zkVM proving for art-458..460 is queued for the async G-lane nightly proving run, not this D-disjoint kernel WU."
+},
+    {
+  "tool_id": "art-462-je-ruleset-screen",
+  "tool_version": "1.0.0",
+  "display_name": "Journal-Entry Ruleset Screen",
+  "mcp_name": "screen_je_ruleset",
+  "mandate_type": "compliance_control",
+  "wave": 74,
+  "gpu": false,
+  "url": "https://ainumbers.co/chaingraph/art-462-je-ruleset-screen.html",
+  "description": "Runs a caller-declared, versioned journal-entry testing ruleset over a caller-declared JE extract and flags each entry that trips one or more rules: weekend/holiday postings, round-number entries, suspense/manual-account postings, post-close entries, and unusual user/account pairings. Every firm-specific convention (which rules are active, what counts as a round number, the weekend day set, the holiday calendar, the suspense-account list, the period-close date, the authorized user/account pairing list) is a caller-declared policy input, never a silent default; the ruleset_version string is echoed verbatim in the output so the artifact records exactly which policy vintage produced the flags. Optionally binds to a caller-declared extract_population_hash for audit-trail linkage to a hashed JE population (soft coupling only, e.g. to an art-460-style extract-integrity record if that node has landed). First of three ARCB-K-1 substantive audit-recalculation kernels. NaN-safe. Zero network, zero PII.",
+  "input_schema_ref": "chaingraph/art-462-je-ruleset-screen.html#manifest",
+  "consumes": [],
+  "feeds": [],
+  "status": "live",
+  "conformance_fixtures": true,
+  "compute_capability": "server",
+  "compute_images": [{"system":"sha256-source","image_id":"sha256:5f9f5a9b7c90cd52f8391fad3645938706315d2271784f07a1fb5a831b588599","valid_from":"2026-07-10"}],
+  "export_capability": [
+    "json"
+  ],
+  "compute_proof_ready": "deferred",
+  "deferred_reason": "Ship-first per ARCB-K-1 row; §18 proving batched with the next ASSEMBLE-LAND."
+},
+    {
+  "tool_id": "art-463-recalc-suite",
+  "tool_version": "1.0.0",
+  "display_name": "Audit Recalculation Suite",
+  "mcp_name": "run_audit_recalc_suite",
+  "mandate_type": "compliance_control",
+  "wave": 74,
+  "gpu": false,
+  "url": "https://ainumbers.co/chaingraph/art-463-recalc-suite.html",
+  "description": "Independently recalculates five caller-supplied audit schedule types (straight-line/double-declining-balance/units-of-production depreciation, interest accrual, EPS basic and diluted, straight-line intangible amortization, and prepaid-expense roll-forwards) and diffs each recalculated figure against the client's stated figure. A category only runs when the caller supplies items for it. The variance threshold gate (tolerance_abs, tolerance_pct) is a caller-declared policy input with an explicit, echoed default of 0/0 (flag any nonzero variance) when the caller declares neither -- there is no silent, unrecorded tolerance. EPS diluted uses the simplified NI-less-preferred-dividends-over-diluted-shares form; it does not model if-converted or treasury-stock adjustments for specific convertible instruments, a judgment-heavy extension out of this kernel's deterministic-recalc scope. Second of three ARCB-K-1 substantive audit-recalculation kernels. NaN-safe; a zero-denominator ratio resolves to null, never NaN/Infinity. Zero network, zero PII.",
+  "input_schema_ref": "chaingraph/art-463-recalc-suite.html#manifest",
+  "consumes": [],
+  "feeds": [],
+  "status": "live",
+  "conformance_fixtures": true,
+  "compute_capability": "server",
+  "compute_images": [{"system":"sha256-source","image_id":"sha256:d913e4c1ab2a8875f2d19463184c19f2de2051342302d321d03e1c790841c02a","valid_from":"2026-07-10"}],
+  "export_capability": [
+    "json"
+  ],
+  "compute_proof_ready": "deferred",
+  "deferred_reason": "Ship-first per ARCB-K-1 row; §18 proving batched with the next ASSEMBLE-LAND."
+},
+    {
+  "tool_id": "art-464-confirmation-matcher",
+  "tool_version": "1.0.0",
+  "display_name": "Bank/AR Confirmation Matcher",
+  "mcp_name": "match_confirmations",
+  "mandate_type": "compliance_control",
+  "wave": 74,
+  "gpu": false,
+  "url": "https://ainumbers.co/chaingraph/art-464-confirmation-matcher.html",
+  "description": "Joins caller-supplied bank and accounts-receivable confirmation responses against caller-supplied ledger balances on (counterparty_id, type), and classifies each pair EXACT_MATCH, TOLERANCE_MATCH, or MISMATCH, plus confirmations with no corresponding ledger balance and ledger balances with no corresponding confirmation. The match tolerance (tolerance_abs, tolerance_pct) is a caller-declared policy input; the explicit, echoed default is 0/0 (exact match required) when the caller declares neither -- there is no silent, unrecorded tolerance. A duplicate (counterparty_id, type) key on either side is reported as a data-quality flag rather than silently overwritten -- only the first occurrence on each side is joined. Third of three ARCB-K-1 substantive audit-recalculation kernels. NaN-safe. Zero network, zero PII.",
+  "input_schema_ref": "chaingraph/art-464-confirmation-matcher.html#manifest",
+  "consumes": [],
+  "feeds": [],
+  "status": "live",
+  "conformance_fixtures": true,
+  "compute_capability": "server",
+  "compute_images": [{"system":"sha256-source","image_id":"sha256:54918b9e1a32a89b38be7118d7fa3e6c5af4fc8dc91a023545a4fdbddb0bec76","valid_from":"2026-07-10"}],
+  "export_capability": [
+    "json"
+  ],
+  "compute_proof_ready": "deferred",
+  "deferred_reason": "Ship-first per ARCB-K-1 row; §18 proving batched with the next ASSEMBLE-LAND."
+},
+    {
+  "tool_id": "art-466-dora-roi-builder",
+  "tool_version": "1.0.0",
+  "display_name": "DORA Register of Information (RoI) Builder & Cross-Validator",
+  "mcp_name": "build_dora_roi_register",
+  "mandate_type": "compliance_mandate",
+  "wave": 74,
+  "gpu": false,
+  "url": "https://ainumbers.co/chaingraph/art-466-dora-roi-builder.html",
+  "description": "Constructs and cross-validates the core Register of Information (RoI) template relationships required under DORA (EU 2022/2554) Art. 28/30: entity + ICT third-party providers + functions + contractual arrangements. Validates ISO 17442 LEI format + mod-97 check-digit on the entity and every provider, referential integrity (every function's provider_id, every contract's function_id and provider_id, and function-to-contract provider consistency), and mandatory-field completeness per record type, emitting a form-shaped JSON dataset plus a validation report with per-record findings and compliance_flags. Distinct from the RoI's official xBRL-CSV submission format, which this kernel does NOT emit (a later WU handles ESA-format conversion). Distinct from art-467-dora-incident-classifier (this validates the standing RoI dataset; that classifies a single ICT incident's reporting obligations). Criticality of functions/providers is a caller-declared flag, not judged here.",
+  "input_schema_ref": "chaingraph/art-466-dora-roi-builder.html#manifest",
+  "deadline": "2027-01-31",
+  "deadline_note": "DORA RoI annual submission cycle, Q1 (2nd cycle completed Q1 2026; next cycle Q1 2027).",
+  "consumes": [],
+  "feeds": [],
+  "status": "live",
+  "conformance_fixtures": true,
+  "compute_capability": "server",
+  "compute_images": [
+    {
+      "system": "sha256-source",
+      "image_id": "sha256:4f605ce91ebec16f4f7e409b383f1f5f273b5f3e0551894aed9765e2b7681d80",
+      "valid_from": "2026-07-24"
+    }
+  ],
+  "compute_proof_ready": "deferred",
+  "deferred_reason": "New gpu:false kernel added in DORA-K-1 (2026-07-24); §18 zkVM compute_proof generation runs in the post-assembly proving pass, not in this kernel-only build wave.",
+  "export_capability": [
+    "json"
+  ]
+},
+    {
+  "tool_id": "art-467-dora-incident-classifier",
+  "tool_version": "1.0.0",
+  "display_name": "DORA ICT Incident Classifier & Reporting Clock",
+  "mcp_name": "classify_dora_ict_incident_and_clock_deadlines",
+  "mandate_type": "attestation_mandate",
+  "wave": 74,
+  "gpu": false,
+  "url": "https://ainumbers.co/chaingraph/art-467-dora-incident-classifier.html",
+  "description": "Classifies an ICT-related incident as major or non-major under DORA (EU 2022/2554) Art. 18, applying the published RTS (EU 2024/1772) numeric criteria (clients affected %, duration, geographical spread, data losses, economic impact, critical-services impact, reputational impact), then starts the DORA Art. 19 reporting clock (4-hour initial notification, 72-hour intermediate report, 1-calendar-month final report, all from classification) once classified major. Follows the art-428-cyber-incident-clock deadline-clock pattern for the EU DORA regime; see that node for the analogous US banking/SEC/NYDFS clock. Not a duplicate of the existing art-09-dora-incident-classifier (earlier draft-RTS citation, no notification-clock link, infrastructure_mandate) -- art-467 cites the final 2024 RTS/ITS package and is built to the attestation-clock pattern; the overlap between the two is flagged for review, not hidden. This node classifies and computes deadlines only; it does not itself transmit, file, or submit any regulatory notification, and it is not legal advice.",
+  "input_schema_ref": "chaingraph/art-467-dora-incident-classifier.html#manifest",
+  "deadline": null,
+  "deadline_note": "DORA (EU) 2022/2554 in force January 2025; incident-classification/reporting obligations are ongoing, not a one-time deadline.",
+  "consumes": [],
+  "feeds": [],
+  "status": "live",
+  "conformance_fixtures": true,
+  "compute_capability": "server",
+  "compute_images": [
+    {
+      "system": "sha256-source",
+      "image_id": "sha256:2f4fe65161e59aee68e9609258e251c1a571a671f2167a00a2d0dc1c514ac4a7",
+      "valid_from": "2026-07-24"
+    }
+  ],
+  "compute_proof_ready": "deferred",
+  "deferred_reason": "New gpu:false kernel added in DORA-K-1 (2026-07-24); §18 zkVM compute_proof generation runs in the post-assembly proving pass, not in this kernel-only build wave.",
+  "export_capability": [
+    "json"
+  ]
+},
+    {
+  "tool_id": "art-472-cbcr-builder",
+  "tool_version": "1.0.0",
+  "display_name": "OECD Country-by-Country Report Builder",
+  "mcp_name": "build_cbcr_report",
+  "mandate_type": "compliance_mandate",
+  "wave": 75,
+  "gpu": false,
+  "url": "https://ainumbers.co/chaingraph/art-472-cbcr-builder.html",
+  "description": "Builds an OECD BEPS Action 13 Country-by-Country Report XML schema skeleton from a caller-declared Table 1 (jurisdiction revenue/profit/tax/employee/asset data) and Table 2 (constituent-entity list) against a caller-declared, version-pinned Action 13 XML schema version. Runs internal consistency checks -- per-jurisdiction revenue-component sums, employee/asset non-negativity, entity-jurisdiction referential integrity between Table 1 and Table 2 -- and surfaces a profit-with-zero-employees anomaly flag for the downstream §27 review gate. Also produces EU Directive (EU) 2021/2101 and Australian public-CbCR field-subset export modes. NEVER a submission -- not accepted by any national CbCR gateway; each jurisdiction's own portal runs its own additional validation. Comparable-set selection and transfer-pricing judgment stay out of scope (see art-473-interquartile-benchmark for arm's-length range arithmetic). Zero network, zero PII.",
+  "input_schema_ref": "chaingraph/art-472-cbcr-builder.html#manifest",
+  "consumes": [],
+  "feeds": [
+    "art-473-interquartile-benchmark"
+  ],
+  "status": "live",
+  "conformance_fixtures": true,
+  "compute_capability": "server",
+  "compute_images": [{"system":"sha256-source","image_id":"sha256:62a04a2495b254beb4938ec0bf7c60631fd7d37bdcb79e12677091656b0cb8ce","valid_from":"2026-07-10"}],
+  "export_capability": [
+    "json"
+  ],
+  "compute_proof_ready": "deferred",
+  "deferred_reason": "Ship-first per CBCR-K-1 row; §18 proving batched with the next ASSEMBLE-LAND."
+},
+    {
+  "tool_id": "art-473-interquartile-benchmark",
+  "tool_version": "1.0.0",
+  "display_name": "Transfer-Pricing Interquartile Range Benchmark",
+  "mcp_name": "benchmark_tp_interquartile_range",
+  "mandate_type": "compliance_mandate",
+  "wave": 75,
+  "gpu": false,
+  "url": "https://ainumbers.co/chaingraph/art-473-interquartile-benchmark.html",
+  "description": "OECD Transfer Pricing Guidelines Ch. III §3.57 interquartile-range arithmetic over a caller-declared array of already-selected comparable financial ratios: linear-interpolation quartiles (Q1/median/Q3), IQR, and a tested-party ratio-vs-range verdict (below/within/above range). Also computes the TNMM net-cost-plus and operating-margin ratios and the Berry ratio directly from caller-declared financial data. Comparable-set SELECTION and functional/DEMPE analysis are entirely caller judgment -- this kernel performs no comparability analysis and never opines on which PLI applies; it is pure downstream arithmetic on an already-selected set. Cross-links art-456 GloBE safe-harbour (consumes the same underlying entity financial data for a different regime). Zero network, zero PII.",
+  "input_schema_ref": "chaingraph/art-473-interquartile-benchmark.html#manifest",
+  "consumes": [
+    "art-472-cbcr-builder"
+  ],
+  "feeds": [],
+  "status": "live",
+  "conformance_fixtures": true,
+  "compute_capability": "server",
+  "compute_images": [{"system":"sha256-source","image_id":"sha256:cb1ba5cdbe3498d0233716df24c81eefbc4b95386d57e76991a0c0c005b48f49","valid_from":"2026-07-10"}],
+  "export_capability": [
+    "json"
+  ],
+  "compute_proof_ready": "deferred",
+  "deferred_reason": "Ship-first per CBCR-K-1 row; §18 proving batched with the next ASSEMBLE-LAND."
+},
+    {
       "tool_id": "cry-01-zk-compliance-proof-generator",
       "tool_version": "1.0.0",
       "display_name": "ZK Compliance Proof Generator",
@@ -31406,16 +34059,12 @@
       "name": "mcp-server-attestation",
       "domain": "AI & Agent Governance",
       "title": "MCP Server Attestation",
-      "description": "MCP deployability diagnostic > developer readiness scorecard > signed server self-attestation (composite A-F grade).",
+      "description": "MCP deployability diagnostic > signed server self-attestation (composite A-F grade).",
       "composer_url": "https://ainumbers.co/chaingraph/chains/mcp-server-attestation.html",
       "steps": [
         {
           "tool_id": "art-28-mcp-server-deployability-diagnostic",
-          "handoff": "deployability grade and execution_hash feed Stage 2 readiness scorecard"
-        },
-        {
-          "tool_id": "art-18-mcp-developer-readiness-scorecard",
-          "handoff": "readiness score and execution_hash feed Stage 3 self-attestation"
+          "handoff": "deployability grade and execution_hash feed Stage 2 self-attestation"
         },
         {
           "tool_id": "art-33-mcp-server-self-attestation-pack",
@@ -31615,6 +34264,33 @@
         {
           "tool_id": "cry-04-merkle-batch-verifier",
           "handoff": "Exports composite whitepaper artifact with Merkle-root execution_hash (H2) -- final stage"
+        }
+      ]
+    },
+    {
+      "name": "model-passport-lifecycle",
+      "domain": "Bank Capital & Credit Risk",
+      "title": "Model Passport Lifecycle",
+      "spec_version": "0.8.0",
+      "wave": 73,
+      "description": "Linear three-step chain building an SR 26-2 model passport. Step 1 registers a model-inventory record with a completeness score and proportionality tier (art-450). Step 2 backtests the model's period predicted-vs-actual outcomes against a caller-declared error tolerance (art-451). Step 3 determines the model's SR 26-2 validation status from its tier, last-validation date, and the outcome-analysis result, applying a tier-based revalidation cadence (art-453). No routing gate -- validation_status branching lives inside art-453's own output, not chain-level routing.",
+      "composer_url": "https://ainumbers.co/chaingraph/chains/model-passport-lifecycle.html",
+      "regulatory_refs": [
+        "SR 26-2 (model risk management guidance, successor to SR 11-7)",
+        "SR 11-7 (Guidance on Model Risk Management)"
+      ],
+      "steps": [
+        {
+          "tool_id": "art-450-model-inventory-entry",
+          "handoff": "Model-inventory record with proportionality tier and completeness score. Passes to outcome-analysis backtest."
+        },
+        {
+          "tool_id": "art-451-model-outcome-analysis",
+          "handoff": "Predicted-vs-actual outcome backtest with pass/fail status against the declared breach-rate tolerance. Passes to validation-status determination."
+        },
+        {
+          "tool_id": "art-453-model-validation-status",
+          "handoff": "Final SR 26-2 validation status, days-since-validation, and next-due-in-days. Final stage."
         }
       ]
     },
