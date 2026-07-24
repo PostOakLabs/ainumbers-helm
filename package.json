@@ -21,6 +21,7 @@
     "build:sea": "node scripts/build-sea.mjs",
     "release:manifest": "node scripts/release-manifest.mjs",
     "release:verify": "node scripts/verify-release-manifest.mjs",
-    "release:packaging": "node scripts/gen-packaging-manifests.mjs"
+    "release:packaging": "node scripts/gen-packaging-manifests.mjs",
+    "export:bpmn": "node scripts/export-bpmn.mjs"
   }
 }
