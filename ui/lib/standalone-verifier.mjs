@@ -7,6 +7,7 @@
 // logic (trust labels, copy fence) but drives itself from embedded data
 // instead of file-picker inputs, since there is no shell around it here.
 import { VERIFIER_RUNTIME_JS } from "./standalone-verifier-runtime.gen.mjs";
+import { renderPresenterHtml } from "./presenter.mjs";
 
 const TRUST_LABEL_COPY = {
   hash_verified: "The artifact is unchanged relative to its stated preimage. Nothing here says the preimage itself was true.",
@@ -42,12 +43,19 @@ h1 { font-size: 1.4rem; } h2 { font-size: 1.1rem; margin-top: 2rem; }
 code { font-family: ui-monospace, monospace; font-size: 0.85em; word-break: break-all; }
 dl.fence div { margin-bottom: 0.6rem; }
 dt { font-weight: 600; }
+.presenter-block { margin: 1rem 0; }
+.presenter-label { font-size: 0.75rem; text-transform: uppercase; letter-spacing: 0.04em; color: var(--fg); opacity: 0.65; margin: 0 0 0.35rem; }
+.presenter-caveat { text-transform: none; letter-spacing: normal; }
+.presenter-card { display: flex; align-items: center; gap: 0.6rem; border: 1px dashed var(--border); border-radius: 6px; padding: 0.6rem 0.9rem; background: transparent; }
+.presenter-logo { max-height: 1.6rem; max-width: 8rem; object-fit: contain; }
+.presenter-name { font-weight: 600; }
+.presenter-statement { margin: 0.35rem 0 0; flex-basis: 100%; font-size: 0.85rem; opacity: 0.85; }
 `;
 
 export function buildStandaloneVerifierHtml({ bundle, publicKeys }) {
   const body = `<h1>Helm evidence bundle — offline verifier</h1>
 <p>This page verifies entirely inside this browser tab. Nothing here is uploaded, and nothing here requires a server, a daemon, or a network connection — open it from a saved file (<code>file://</code>) and it still works.</p>
-
+${renderPresenterHtml(bundle?.presenter)}
 <section class="card" aria-labelledby="what-checked">
   <h2 id="what-checked">What this checks — and what it does not</h2>
   <dl class="fence">

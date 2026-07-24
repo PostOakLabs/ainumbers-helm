@@ -20,6 +20,9 @@ const HERE = dirname(fileURLToPath(import.meta.url));
 const MANIFEST_SCHEMA = JSON.parse(
   readFileSync(join(HERE, "..", "schema", "evidence_bundle_manifest.schema.json"), "utf8")
 );
+const PRESENTER_SCHEMA = JSON.parse(
+  readFileSync(join(HERE, "..", "schema", "presenter.schema.json"), "utf8")
+);
 
 export const REDACTION_PROFILE = "default-v1";
 
@@ -101,7 +104,7 @@ export function sealBundleObject({ kind, subject, predicate, trustLabel }, keys)
 // seal) OR already-sealed { kind, digest, trust_label, envelope } (e.g. a
 // checkpoint envelope reused as-is). checkpoints: array of checkpoint.mjs
 // buildCheckpoint() results ({ checkpointSeq, journalRootDigest, envelope }).
-export function assembleBundle({ bundleId, runId, workflowManifestDigest, specs, checkpoints = [], anchorsRef = [], keys }) {
+export function assembleBundle({ bundleId, runId, workflowManifestDigest, specs, checkpoints = [], anchorsRef = [], keys, presenter }) {
   const sealed = specs.map((s) => (s.envelope && s.digest ? s : sealBundleObject(s, keys)));
   const entries = sealed.map(({ kind, digest, trust_label }) => ({ kind, digest, trust_label }));
   const checkpointsRef = checkpoints.map((cp) => envelopeDigest(cp.envelope));
@@ -125,10 +128,19 @@ export function assembleBundle({ bundleId, runId, workflowManifestDigest, specs,
   });
   const manifestEnvelope = emitEnvelope(manifestStatement, keys);
 
+  // presenter (HELM-P4-J2): deliberately NOT part of manifestPredicate — it
+  // travels as an unsigned sibling field so co-brand swaps can never move
+  // bundle.manifest.envelope's signed digest or affect verifyBundle().
+  if (presenter !== undefined) {
+    const presenterErrs = validate(PRESENTER_SCHEMA, presenter);
+    if (presenterErrs.length) throw new Error(`evidence bundle: presenter fails schema — ${presenterErrs.join("; ")}`);
+  }
+
   return {
     manifest: { predicate: manifestPredicate, envelope: manifestEnvelope },
     objects: sealed,
     checkpoints,
+    ...(presenter !== undefined ? { presenter } : {}),
   };
 }
 
