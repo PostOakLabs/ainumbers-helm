@@ -19,6 +19,7 @@ import { createKernelStepRunner } from "./kernel-runner.mjs";
 import { publishRunEvent, subscribeRunEvents } from "./event-bus.mjs";
 import { buildKernelCard, buildEucEntry } from "./euc-register.mjs";
 import { renderKernelCardHtml, renderEucEntryHtml } from "../ui/lib/euc-html.mjs";
+import { importMigrationBundle } from "./migration-import.mjs";
 
 const START = Date.now();
 const HERE = dirname(fileURLToPath(import.meta.url));
@@ -320,6 +321,29 @@ function handleEucEntry(req, res, params) {
   sendJson(res, 200, entry);
 }
 
+// POST /migration/import {bundle, raw_entries, fresh_reauth} — P3-M7
+// daemon-mediated import path. Reachable only through the normal bearer-token
+// gate below (never the pre-auth detection routes) — a paired browser is
+// already the trust boundary; migration-import.mjs's own freshReauth check
+// additionally refuses a bundle whose caller skipped the post-proof re-auth.
+async function handleMigrationImport(req, res, params, db) {
+  if (!db) return deny(res, 503, "engine_unavailable");
+  let body;
+  try {
+    body = await readJsonBody(req);
+  } catch {
+    return deny(res, 400, "invalid_json");
+  }
+  if (!body.bundle || !Array.isArray(body.raw_entries)) return deny(res, 400, "missing_bundle_or_raw_entries");
+  const result = importMigrationBundle(db, {
+    bundle: body.bundle,
+    rawEntries: body.raw_entries,
+    freshReauth: body.fresh_reauth === true,
+  });
+  if (!result.ok) return sendJson(res, 422, result);
+  sendJson(res, 200, result);
+}
+
 const ROUTES = {
   "GET /health": handleHealth,
   "GET /events": handleEvents,
@@ -330,6 +354,7 @@ const ROUTES = {
   "POST /run/start": handleRunStart,
   "GET /run/timeline": handleRunTimeline,
   "POST /pair/redeem": handlePairRedeem,
+  "POST /migration/import": handleMigrationImport,
 };
 
 const DYNAMIC_ROUTES = [
