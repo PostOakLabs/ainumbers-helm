@@ -3,7 +3,7 @@ import assert from "node:assert/strict";
 import { mkdtempSync, rmSync, writeFileSync } from "node:fs";
 import { tmpdir } from "node:os";
 import { join } from "node:path";
-import { request } from "node:http";
+import { request, createServer } from "node:http";
 
 const TMP = mkdtempSync(join(tmpdir(), "helm-test-"));
 process.env.HELM_HOME = TMP;
@@ -14,15 +14,18 @@ const ORIGIN = "null";
 writeFileSync(join(TMP, "config.json"), JSON.stringify({ port: PORT, allowedOrigin: ORIGIN }));
 
 const { loadConfig } = await import("./config.mjs");
-const { loadOrCreateToken } = await import("./token.mjs");
-const { createHelmServer, MAX_SSE_CONNECTIONS } = await import("./server.mjs");
+const { loadOrCreateToken, createPairingNonce } = await import("./token.mjs");
+const { loadOrCreateKeys } = await import("./keys.mjs");
+const { verifyChallenge } = await import("./challenge.mjs");
+const { createHelmServer, bindOrExit, MAX_SSE_CONNECTIONS, DAEMON_VERSION, SUPPORTED_API_VERSIONS } = await import("./server.mjs");
 
 const config = loadConfig();
 const token = loadOrCreateToken();
+const identityKeys = loadOrCreateKeys();
 let server;
 
 before(() => {
-  server = createHelmServer({ port: config.port, allowedOrigin: config.allowedOrigin, token });
+  server = createHelmServer({ port: config.port, allowedOrigin: config.allowedOrigin, token, identityKeys });
 });
 
 after(() => {
@@ -305,4 +308,130 @@ test("negative: POST /vault/connections/begin with http authorizationEndpoint re
   );
   assert.equal(res.status, 400);
   assert.equal(JSON.parse(res.body).error, "insecure_endpoint");
+});
+
+// --- HELM-P3-H6: detection + handoff + pairing hardening ---
+
+const DETECTION_ORIGIN = "https://ainumbers.co";
+
+test("GET /version: reachable from the hosted origin with NO bearer token (P3-D3 detection surface)", async () => {
+  const res = await get("/version", { Host: `127.0.0.1:${PORT}`, Origin: DETECTION_ORIGIN });
+  assert.equal(res.status, 200);
+  const body = JSON.parse(res.body);
+  assert.equal(body.daemon, DAEMON_VERSION);
+  assert.deepEqual(body.api, SUPPORTED_API_VERSIONS);
+});
+
+test("GET /version: still reachable from the loopback UI's own origin (no bearer needed there either)", async () => {
+  const res = await get("/version", { Host: `127.0.0.1:${PORT}`, Origin: ORIGIN });
+  assert.equal(res.status, 200);
+});
+
+test("negative: GET /version from an arbitrary third-party origin rejected", async () => {
+  const res = await get("/version", { Host: `127.0.0.1:${PORT}`, Origin: "https://evil.example" });
+  assert.equal(res.status, 403);
+  assert.equal(JSON.parse(res.body).error, "origin_mismatch");
+});
+
+test("OPTIONS /version: answers the Private Network Access preflight for the hosted origin", async () => {
+  const res = await new Promise((resolve, reject) => {
+    const req = request(
+      { host: "127.0.0.1", port: PORT, path: "/version", method: "OPTIONS", headers: { Host: `127.0.0.1:${PORT}`, Origin: DETECTION_ORIGIN } },
+      (r) => resolve(r)
+    );
+    req.on("error", reject);
+    req.end();
+  });
+  assert.equal(res.statusCode, 204);
+  assert.equal(res.headers["access-control-allow-private-network"], "true");
+  assert.equal(res.headers["access-control-allow-origin"], DETECTION_ORIGIN);
+});
+
+test("GET /pair/challenge: signed with the daemon's identity key, verifiable, no bearer required", async () => {
+  const res = await get("/pair/challenge", { Host: `127.0.0.1:${PORT}`, Origin: DETECTION_ORIGIN });
+  assert.equal(res.status, 200);
+  const challenge = JSON.parse(res.body);
+  assert.ok(challenge.nonce && challenge.signature && challenge.publicKey);
+  assert.equal(verifyChallenge(challenge), true);
+});
+
+test("GET /pair/challenge: 503 when the daemon has no identity keys configured", async () => {
+  const port2 = PORT + 2;
+  const server2 = createHelmServer({ port: port2, allowedOrigin: `http://127.0.0.1:${port2}`, token });
+  try {
+    const res = await new Promise((resolve, reject) => {
+      const req = request(
+        { host: "127.0.0.1", port: port2, path: "/pair/challenge", method: "GET", headers: { Host: `127.0.0.1:${port2}`, Origin: DETECTION_ORIGIN } },
+        (r) => {
+          let body = "";
+          r.on("data", (c) => (body += c));
+          r.on("end", () => resolve({ status: r.statusCode, body }));
+        }
+      );
+      req.on("error", reject);
+      req.end();
+    });
+    assert.equal(res.status, 503);
+  } finally {
+    server2.close();
+  }
+});
+
+test("POST /pair/redeem: single-use — first redeem succeeds, replay of the same nonce fails", async () => {
+  const nonce = createPairingNonce();
+  const first = await post("/pair/redeem", { nonce }, headers());
+  assert.equal(first.status, 200);
+  assert.deepEqual(JSON.parse(first.body), { ok: true });
+  const replay = await post("/pair/redeem", { nonce }, headers());
+  assert.equal(replay.status, 401);
+  assert.equal(JSON.parse(replay.body).error, "pairing_expired_or_used");
+});
+
+test("POST /pair/redeem: unknown nonce rejected", async () => {
+  const res = await post("/pair/redeem", { nonce: "never-issued" }, headers());
+  assert.equal(res.status, 401);
+});
+
+test("POST /pair/redeem: an expired nonce (short TTL, injected clock) is rejected", async () => {
+  const nonce = createPairingNonce(Date.now() - 10 * 60 * 1000); // minted "10 minutes ago"
+  const res = await post("/pair/redeem", { nonce }, headers());
+  assert.equal(res.status, 401);
+});
+
+test("negative: GET /pair/challenge from an arbitrary third-party origin rejected", async () => {
+  const res = await get("/pair/challenge", { Host: `127.0.0.1:${PORT}`, Origin: "https://evil.example" });
+  assert.equal(res.status, 403);
+});
+
+test("negative: POST to a detection-surface path (not GET/OPTIONS) 404s rather than falling through to the authed router", async () => {
+  const res = await post("/version", {}, { Host: `127.0.0.1:${PORT}`, Origin: DETECTION_ORIGIN });
+  assert.equal(res.status, 404);
+});
+
+test("bindOrExit: squatted port is refused cleanly, never falls back to a different port", async () => {
+  const port3 = PORT + 3;
+  // Occupy the port first, simulating another process already bound there.
+  const squatter = createServer();
+  await new Promise((resolve) => squatter.listen(port3, "127.0.0.1", resolve));
+  try {
+    const server3 = createHelmServer({ port: port3, allowedOrigin: `http://127.0.0.1:${port3}`, token });
+    const bound = await bindOrExit(server3, port3);
+    assert.equal(bound, false);
+    // server3 never bound (EADDRINUSE) — closing an unlistened http.Server
+    // emits its own async 'error' with no listener attached, which is an
+    // uncaught exception in Node. Nothing to close; it never opened.
+  } finally {
+    await new Promise((resolve) => squatter.close(resolve));
+  }
+});
+
+test("bindOrExit: a free port binds successfully", async () => {
+  const port4 = PORT + 4;
+  const server4 = createHelmServer({ port: port4, allowedOrigin: `http://127.0.0.1:${port4}`, token });
+  try {
+    const bound = await bindOrExit(server4, port4);
+    assert.equal(bound, true);
+  } finally {
+    server4.close();
+  }
 });

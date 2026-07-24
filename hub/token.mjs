@@ -16,8 +16,16 @@ export function loadOrCreateToken() {
   return token;
 }
 
-export function pairingUrl(token, port) {
-  return `http://127.0.0.1:${port}/#token=${token}`;
+// pair= carries a nonce, separate from the durable bearer token: P3-D9
+// requires the pairing LINK itself be single-use and short-TTL even though
+// the bearer token it delivers stays durable for the session (revoking it
+// on every call would break EventSource/health polling, which can't rotate
+// credentials mid-connection). The nonce's only power is /pair/redeem
+// (records the pairing event, so a replayed old link is detectable) — it
+// never gates ordinary API calls, matching "unlocks daemon APIs ONLY."
+export function pairingUrl(token, port, pairNonce) {
+  const pair = pairNonce ? `&pair=${pairNonce}` : "";
+  return `http://127.0.0.1:${port}/#token=${token}${pair}`;
 }
 
 export function tokenMatches(token, presented) {
@@ -26,4 +34,25 @@ export function tokenMatches(token, presented) {
   const b = Buffer.from(presented, "utf8");
   if (a.length !== b.length) return false;
   return timingSafeEqual(a, b);
+}
+
+// In-memory only (module-level Map, cleared on daemon restart — deliberate:
+// pairing nonces are ephemeral loopback artifacts, never worth persisting).
+const PAIRING_TTL_MS = 5 * 60 * 1000;
+const pairingNonces = new Map(); // nonce -> expiresAtMs
+
+export function createPairingNonce(now = Date.now()) {
+  const nonce = randomBytes(16).toString("hex");
+  pairingNonces.set(nonce, now + PAIRING_TTL_MS);
+  return nonce;
+}
+
+// Single-use by construction: the nonce is deleted whether or not it was
+// still valid, so a second redeem of the same value always fails, matching
+// P3-D9 even for a link that was accidentally reused before it expired.
+export function redeemPairingNonce(nonce, now = Date.now()) {
+  const expiresAt = pairingNonces.get(nonce);
+  pairingNonces.delete(nonce);
+  if (!expiresAt) return false;
+  return now <= expiresAt;
 }

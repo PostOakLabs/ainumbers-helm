@@ -5,7 +5,11 @@
 // GET handlers are read-only by construction — no side effects on GET.
 import { createServer } from "node:http";
 import { randomUUID } from "node:crypto";
-import { tokenMatches } from "./token.mjs";
+import { readFileSync } from "node:fs";
+import { join, dirname } from "node:path";
+import { fileURLToPath } from "node:url";
+import { tokenMatches, redeemPairingNonce } from "./token.mjs";
+import { signChallenge } from "./challenge.mjs";
 import { log } from "./log.mjs";
 import { startFlow, getFlowStatus, listConnections, revokeConnection, isSecureEndpoint } from "./oauth-pkce.mjs";
 import { serveStatic } from "./static.mjs";
@@ -17,6 +21,17 @@ import { buildKernelCard, buildEucEntry } from "./euc-register.mjs";
 import { renderKernelCardHtml, renderEucEntryHtml } from "../ui/lib/euc-html.mjs";
 
 const START = Date.now();
+const HERE = dirname(fileURLToPath(import.meta.url));
+export const DAEMON_VERSION = JSON.parse(readFileSync(join(HERE, "..", "package.json"), "utf8")).version;
+// UI↔daemon protocol versions this build understands (P3-D6). A hosted UI
+// intersects its own list against this one to decide compatible / degraded.
+export const SUPPORTED_API_VERSIONS = ["helm/1"];
+
+// P3-D3: the hosted marketing origin is allowed to hit ONLY the two
+// detection-surface routes below, cross-origin, pre-auth — never anything
+// that touches vault/journal/run data. Exact match, never a wildcard.
+const DETECTION_ORIGIN = "https://ainumbers.co";
+const DETECTION_PATHS = new Set(["/version", "/pair/challenge"]);
 
 function checkHost(req, port) {
   return req.headers.host === `127.0.0.1:${port}`;
@@ -96,6 +111,62 @@ async function handleBeginConnection(req, res) {
 
 function handleListConnections(req, res) {
   sendJson(res, 200, { connections: listConnections() });
+}
+
+// POST /pair/redeem {nonce} — records that a given pairing LINK was
+// consumed (P3-D9 single-use). Requires the durable bearer token like any
+// other route (the nonce alone unlocks nothing); a failed redeem is
+// non-fatal to the caller's session (it already holds the durable token)
+// but signals a replayed/expired link for anything that wants to react.
+async function handlePairRedeem(req, res) {
+  let body;
+  try {
+    body = await readJsonBody(req);
+  } catch {
+    return deny(res, 400, "invalid_json");
+  }
+  if (!body.nonce) return deny(res, 400, "missing_nonce");
+  if (!redeemPairingNonce(body.nonce)) return deny(res, 401, "pairing_expired_or_used");
+  sendJson(res, 200, { ok: true });
+}
+
+function checkDetectionOrigin(req, allowedOrigin) {
+  const origin = req.headers.origin;
+  return origin === allowedOrigin || origin === DETECTION_ORIGIN;
+}
+
+// GET /version + GET /pair/challenge: reachable cross-origin from the
+// hosted ainumbers.co page (Chrome/Firefox LNA-gated detection enhancement,
+// P3-D3) with NO bearer token — that's deliberate, they carry nothing
+// sensitive (a version string; a nonce signed by the daemon's own identity
+// key). Host check still applies (done by the caller before this runs).
+function handleDetectionRoute(req, res, pathname, identityKeys, allowedOrigin) {
+  if (!checkDetectionOrigin(req, allowedOrigin)) {
+    log.warn("rejected: detection-route origin mismatch", { origin: req.headers.origin, path: pathname });
+    return deny(res, 403, "origin_mismatch");
+  }
+  res.setHeader("Access-Control-Allow-Origin", req.headers.origin);
+  res.setHeader("Vary", "Origin");
+  if (pathname === "/version") {
+    return sendJson(res, 200, { daemon: DAEMON_VERSION, api: SUPPORTED_API_VERSIONS });
+  }
+  // /pair/challenge
+  if (!identityKeys) return deny(res, 503, "identity_unavailable");
+  return sendJson(res, 200, signChallenge(identityKeys.ed25519));
+}
+
+// Private Network Access preflight: Chrome sends this OPTIONS before the
+// real cross-origin GET whenever the client fetch used
+// targetAddressSpace:'loopback'. Answering it is what makes the detection
+// probe (P3-D3) work at all in a Chrome-managed profile with LNA enabled.
+function handleDetectionPreflight(req, res, allowedOrigin) {
+  if (!checkDetectionOrigin(req, allowedOrigin)) return deny(res, 403, "origin_mismatch");
+  res.setHeader("Access-Control-Allow-Origin", req.headers.origin);
+  res.setHeader("Vary", "Origin");
+  res.setHeader("Access-Control-Allow-Methods", "GET, OPTIONS");
+  res.setHeader("Access-Control-Allow-Private-Network", "true");
+  res.writeHead(204);
+  res.end();
 }
 
 function handleFlowStatus(req, res, params) {
@@ -258,6 +329,7 @@ const ROUTES = {
   "GET /workflow-manifest": handleWorkflowManifest,
   "POST /run/start": handleRunStart,
   "GET /run/timeline": handleRunTimeline,
+  "POST /pair/redeem": handlePairRedeem,
 };
 
 const DYNAMIC_ROUTES = [
@@ -267,7 +339,7 @@ const DYNAMIC_ROUTES = [
   { method: "GET", pattern: /^\/workflows\/(?<id>[^/]+)\/euc-entry$/, handler: handleEucEntry },
 ];
 
-export function createHelmServer({ port, allowedOrigin, token, db = null }) {
+export function createHelmServer({ port, allowedOrigin, token, db = null, identityKeys = null }) {
   const server = createServer((req, res) => {
     if (!checkHost(req, port)) {
       log.warn("rejected: host mismatch", { host: req.headers.host, path: req.url });
@@ -279,6 +351,15 @@ export function createHelmServer({ port, allowedOrigin, token, db = null }) {
     // Only exact allowlisted paths match — anything else falls through to
     // the API router below and gets its normal 404.
     if (serveStatic(req, res, pathname)) return;
+
+    // Detection surface (P3-D3/D9): handled BEFORE the normal Origin+bearer
+    // gate — these two routes have their own narrower origin check
+    // (loopback UI OR the fixed hosted origin) and never require a token.
+    if (DETECTION_PATHS.has(pathname)) {
+      if (req.method === "OPTIONS") return handleDetectionPreflight(req, res, allowedOrigin);
+      if (req.method === "GET") return handleDetectionRoute(req, res, pathname, identityKeys, allowedOrigin);
+      return deny(res, 404, "not_found");
+    }
 
     if (!checkOrigin(req, allowedOrigin)) {
       log.warn("rejected: origin mismatch", { origin: req.headers.origin, path: req.url });
@@ -319,4 +400,23 @@ export function createHelmServer({ port, allowedOrigin, token, db = null }) {
   });
   server.listen(port, "127.0.0.1");
   return server;
+}
+
+// P3-D9: helmd must refuse to start on a squatted port, cleanly — never
+// silently retry on a different port, never crash with a raw stack trace.
+// Callers attach this immediately after createHelmServer(); Node's error
+// emission is async (next-tick at the earliest) so there's no race between
+// server.listen() above and the listeners this attaches.
+export function bindOrExit(server, port) {
+  return new Promise((resolve) => {
+    server.once("listening", () => resolve(true));
+    server.once("error", (err) => {
+      if (err.code === "EADDRINUSE") {
+        log.error(`port ${port} is already in use — refusing to start (never falls back to a different port)`, { port });
+      } else {
+        log.error("helmd failed to start", { error: String(err?.message || err) });
+      }
+      resolve(false);
+    });
+  });
 }
