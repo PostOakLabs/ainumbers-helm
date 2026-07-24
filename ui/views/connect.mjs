@@ -22,7 +22,7 @@ import {
   verifyGithubPat,
 } from "../lib/oauth-browser.mjs";
 import { consumeRelayedResult } from "../oauth-callback.mjs";
-import { unlockRecord, enrollPassphrase } from "../lib/vault.mjs";
+import { unlockRecord, enrollPassphrase, VaultWeakPassphraseError, PASSPHRASE_MIN_LENGTH } from "../lib/vault.mjs";
 import { VaultTokenStore, openIndexedDbTokenStore } from "../lib/vault-token-store.mjs";
 
 const VAULT_RECORD_KEY = "helm.browser.vault.record";
@@ -49,11 +49,19 @@ async function ensureVaultDek() {
     if (!passphrase) throw new Error("vault unlock cancelled");
     return unlockRecord(existing, { passphrase });
   }
-  const passphrase = window.prompt("Set a passphrase to protect connector tokens stored in this browser:");
-  if (!passphrase) throw new Error("vault enrollment cancelled");
-  const { dek, record } = await enrollPassphrase(passphrase);
-  saveVaultRecord(record);
-  return dek;
+  let prompt = `Set a passphrase to protect connector tokens stored in this browser (min ${PASSPHRASE_MIN_LENGTH} characters, several distinct):`;
+  for (;;) {
+    const passphrase = window.prompt(prompt);
+    if (!passphrase) throw new Error("vault enrollment cancelled");
+    try {
+      const { dek, record } = await enrollPassphrase(passphrase);
+      saveVaultRecord(record);
+      return dek;
+    } catch (err) {
+      if (!(err instanceof VaultWeakPassphraseError)) throw err;
+      prompt = `${err.message}. Try again:`;
+    }
+  }
 }
 
 async function tokenStoreFor() {
