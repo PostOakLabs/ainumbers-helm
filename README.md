@@ -33,3 +33,7 @@ Run `node scripts/setup-hooks.mjs` once per clone to enable local shift-left gat
 ## Security
 
 Loopback-only daemon, bearer-token pairing, Host/Origin validation, OS-keychain secret storage, default-deny egress. See `SECURITY.md` (HELM-0) for the disclosure contact.
+
+## License and trademark
+
+See `LICENSE`. The license covers the code; it grants no rights to the "Helm" name or logo — see `docs/TRADEMARK.md` for what's allowed when redistributing or building on Helm.

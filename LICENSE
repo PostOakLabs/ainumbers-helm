@@ -6,3 +6,10 @@ This software is proprietary to Post Oak Labs, Inc. and is not currently
 licensed for use, copying, modification, or distribution by any party
 other than Post Oak Labs, Inc. A formal license will be adopted prior to
 any public release.
+
+---
+
+Note: this placeholder is scheduled to be replaced with Apache-2.0 for the
+whole repo. Apache-2.0 grants no trademark rights — see `docs/TRADEMARK.md`
+for what you can and can't do with the "Helm" name and logo once code use
+is licensed.
