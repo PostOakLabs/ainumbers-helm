@@ -2,6 +2,7 @@
 // inventory of every manifest on disk. Selecting one opens Canvas
 // (read-only DAG first; authoring is a stretch goal per HELM-U2).
 import { fetchWithFallback } from "../api.mjs";
+import { getActiveCompanyProfile, getFeaturedTemplates } from "../lib/company-profile.mjs";
 
 function templateCard(t) {
   return `
@@ -47,7 +48,15 @@ export async function renderChoose(root, { port, token }) {
     return;
   }
 
-  const templates = templatesResult.state === "live" || templatesResult.state === "stale" ? (templatesResult.data?.templates ?? []) : [];
+  let templates = templatesResult.state === "live" || templatesResult.state === "stale" ? (templatesResult.data?.templates ?? []) : [];
+  // HELM-P4-J1: a loaded company profile can curate/reorder which templates
+  // surface here (slugs not present in the daemon's own list are dropped —
+  // a profile can narrow the rail, never invent templates that don't exist).
+  const featured = getFeaturedTemplates(getActiveCompanyProfile());
+  if (featured) {
+    const bySlug = new Map(templates.map((t) => [t.slug, t]));
+    templates = featured.map((slug) => bySlug.get(slug)).filter(Boolean);
+  }
   const templatesRail = templates.length
     ? `<section aria-label="Templates">
         <h3>Templates</h3>

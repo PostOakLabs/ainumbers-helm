@@ -1,4 +1,5 @@
 import { readTokenFromLocation, loadToken, saveToken, clearToken, loadFp, saveFp, clearFp, loadPort, savePort, call } from "./api.mjs";
+import { initCompanyProfile } from "./lib/company-profile.mjs";
 import { BrowserJournalClient, offerJsonBundleDownload } from "./lib/browser-journal-client.mjs";
 import { renderChoose } from "./views/choose.mjs";
 import { renderCanvas } from "./views/canvas.mjs";
@@ -164,6 +165,12 @@ export function boot() {
 
   window.addEventListener("hashchange", () => render(app));
   render(app);
+  // HELM-P4-J1: fire-and-forget, same pattern as pair/redeem above — a slow
+  // or unreachable config host must never delay first paint. If a profile
+  // does load, re-render once so branding/curation apply without a reload.
+  initCompanyProfile().then((profile) => {
+    if (profile) render(app);
+  });
   window.helmJournal = startBrowserJournal(); // exposed for views to append to (P3-U2 landing point for run/operate views)
   setInterval(() => {
     const token = loadToken();

@@ -1,0 +1,30 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://ainumbers.co/helm/schema/company_profile.schema.json",
+  "title": "Helm company-profile config (HELM-P4-J1)",
+  "description": "Static JSON, no backend, hosted by the embedder at any https:// URL and loaded via ?config=<url> (Swagger-UI pattern) or a saved per-browser setting. Config is DATA never code: no field carries executable content, a script reference, or a URL the app evaluates as anything other than an https fetch target. Every field is optional except schema_version/profile_name — a profile that only restyles, only retemplates, or only redirects the anchor relay is valid.",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["schema_version", "profile_name"],
+  "properties": {
+    "schema_version": { "const": 1 },
+    "profile_name": { "type": "string", "minLength": 1, "maxLength": 200 },
+    "templates": {
+      "type": "array",
+      "items": { "type": "string", "pattern": "^[a-z0-9][a-z0-9-]*$" },
+      "description": "Template slugs to feature on Choose, in display order. Absent/empty = no curation, daemon's full /templates list shows unfiltered."
+    },
+    "branding": {
+      "type": "object",
+      "description": "CSS custom-property overrides applied to :root (e.g. \"--accent\"). Values are plain CSS value strings set via style.setProperty — never parsed as HTML/JS. Keys not matching ^--[a-z][a-z0-9-]*$ are ignored by the loader, not rejected here."
+    },
+    "relay_url": {
+      "type": "string",
+      "pattern": "^https://"
+    },
+    "pinned_kernel_versions": {
+      "type": "object",
+      "description": "kernel_id -> pinned semver string. Informational/display only in this WU (HELM-P4-J1) — no enforcement engine yet."
+    }
+  }
+}
