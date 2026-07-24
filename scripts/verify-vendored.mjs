@@ -16,7 +16,15 @@ const destRoot = join(ROOT, config.destination);
 const manifest = JSON.parse(readFileSync(join(destRoot, "MANIFEST.json"), "utf8"));
 
 function sh(cmd, args, cwd) {
-  return execFileSync(cmd, args, { cwd, stdio: ["ignore", "pipe", "inherit"] }).toString();
+  // git invoking this script as a hook sets GIT_DIR/GIT_WORK_TREE in the
+  // process env; child git processes inherit and honor those over cwd, so
+  // the scratch clone below would otherwise silently target the CALLER's
+  // repo instead of `tmp` (see HELM-TESTISO-1). Scrub them.
+  const env = { ...process.env };
+  delete env.GIT_DIR;
+  delete env.GIT_WORK_TREE;
+  delete env.GIT_INDEX_FILE;
+  return execFileSync(cmd, args, { cwd, env, stdio: ["ignore", "pipe", "inherit"] }).toString();
 }
 
 function walk(dir) {
