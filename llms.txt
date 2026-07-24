@@ -1,0 +1,28 @@
+# AINumbers Helm
+
+## Overview
+Helm is a local-first control-plane daemon (`helmd`) that runs deterministic, hash-anchored OpenChainGraph (OCG) kernels vendored pinned from the AINumbers estate. It is a second, standalone product from Post Oak Labs (not part of ainumbers.co's browser tools) aimed at recurring, committee-facing evidence workflows: connect data once, run a template, export a signed Committee Pack.
+
+## Architecture & Privacy Stance
+- **Local-first:** `helmd` binds to 127.0.0.1 only. No centrally hosted instance — one daemon per installation.
+- **Deterministic kernels:** every kernel is vendored pinned (never live-fetched) from the AINumbers site repo's OpenChainGraph standard; see `hub/vendored/ocg/MANIFEST.json` for the pinned commit and file hashes.
+- **Evidence, not dashboards:** runs produce DSSE + RFC3161-anchored bundles a bank committee can read without a data team present.
+- **Apache-2.0, whole repo:** including the credential-handling daemon — inspectable by design.
+
+## Content Structure
+- `README.md` -> project overview, install, first-run pairing flow.
+- `docs/openapi.json` -> generated REST + SSE route table for `helmd` (source of truth: `hub/server.mjs`'s own router — see `scripts/gen-openapi.mjs`).
+- `.well-known/agent-card.json` -> agent-facing capability card (A2A-shaped) describing the daemon and its kernel catalog.
+- `docs/POWER-QUERY-BRIDGE.md` -> Excel/Power Query ingestion bridge for run output (frozen JSON schema + starter workbook).
+- `hub/` -> the daemon itself (Node.js, zero third-party runtime deps).
+- `ui/` -> the browser-based control-plane app served by the daemon.
+- `hub/vendored/ocg/kernels/` -> the vendored kernel catalog. Kernel authorship, the full 400+-kernel index, and the OpenChainGraph Standard (SPEC.md) live in the AINumbers site repo — see below.
+
+## Related surfaces (site repo)
+- Kernel source-of-truth + full catalog: `https://ainumbers.co/chaingraph/chaingraph.json`
+- OpenChainGraph Standard: `https://ainumbers.co/chaingraph/standard/SPEC.md`
+- Helm marketing/quickstart page: `https://ainumbers.co/helm.html`
+- Site repo's own `llms.txt`: `https://ainumbers.co/llms.txt`
+
+## For agents
+Helm is not a remotely callable MCP server today — `helmd`'s REST API is loopback-only, pairing-token-gated (see `docs/openapi.json`). An MCP Registry entry exists for discoverability metadata but is intentionally unpublished while the surface is local-only (HELM-P4-B2). Agents that want a live, publicly reachable MCP endpoint should use `https://mcp.ainumbers.co/mcp` (the site estate's server) instead.

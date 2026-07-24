@@ -1,0 +1,647 @@
+{
+  "openapi": "3.0.3",
+  "info": {
+    "title": "Helm daemon (helmd) — local REST API",
+    "version": "0.1.0",
+    "description": "Loopback-only REST + SSE API served by helmd on 127.0.0.1. Every request must present Host: 127.0.0.1:<port>, a matching Origin, and (except /health-adjacent detection routes) a Bearer token issued during pairing — see docs/POWER-QUERY-BRIDGE.md and README.md for the pairing flow. This document is generated from hub/server.mjs's own route table (scripts/gen-openapi.mjs) — never hand-edited."
+  },
+  "servers": [
+    {
+      "url": "http://127.0.0.1:{port}",
+      "variables": {
+        "port": {
+          "default": "4173"
+        }
+      }
+    }
+  ],
+  "components": {
+    "securitySchemes": {
+      "bearerAuth": {
+        "type": "http",
+        "scheme": "bearer",
+        "description": "Pairing token issued by helmd on first run."
+      }
+    }
+  },
+  "paths": {
+    "/health": {
+      "get": {
+        "summary": "Daemon liveness check.",
+        "tags": [
+          "Daemon"
+        ],
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Missing or invalid bearer token."
+          },
+          "403": {
+            "description": "Host or Origin mismatch (D8 loopback hardening)."
+          }
+        }
+      }
+    },
+    "/events": {
+      "get": {
+        "summary": "Server-Sent Events stream of run progress (optionally ?run_id=).",
+        "tags": [
+          "Runs"
+        ],
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Missing or invalid bearer token."
+          },
+          "403": {
+            "description": "Host or Origin mismatch (D8 loopback hardening)."
+          }
+        }
+      }
+    },
+    "/vault/connections/begin": {
+      "post": {
+        "summary": "Start an OAuth PKCE loopback connection flow.",
+        "tags": [
+          "Vault"
+        ],
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Missing or invalid bearer token."
+          },
+          "403": {
+            "description": "Host or Origin mismatch (D8 loopback hardening)."
+          }
+        }
+      }
+    },
+    "/vault/connections": {
+      "get": {
+        "summary": "List connected OAuth providers.",
+        "tags": [
+          "Vault"
+        ],
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Missing or invalid bearer token."
+          },
+          "403": {
+            "description": "Host or Origin mismatch (D8 loopback hardening)."
+          }
+        }
+      }
+    },
+    "/workflows": {
+      "get": {
+        "summary": "List available workflows.",
+        "tags": [
+          "Workflows"
+        ],
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Missing or invalid bearer token."
+          },
+          "403": {
+            "description": "Host or Origin mismatch (D8 loopback hardening)."
+          }
+        }
+      }
+    },
+    "/templates": {
+      "get": {
+        "summary": "List available Committee Pack templates.",
+        "tags": [
+          "Templates"
+        ],
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Missing or invalid bearer token."
+          },
+          "403": {
+            "description": "Host or Origin mismatch (D8 loopback hardening)."
+          }
+        }
+      }
+    },
+    "/workflow-manifest": {
+      "get": {
+        "summary": "Build a workflow's execution manifest.",
+        "tags": [
+          "Workflows"
+        ],
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Missing or invalid bearer token."
+          },
+          "403": {
+            "description": "Host or Origin mismatch (D8 loopback hardening)."
+          }
+        }
+      }
+    },
+    "/run/start": {
+      "post": {
+        "summary": "Start a workflow run.",
+        "tags": [
+          "Runs"
+        ],
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Missing or invalid bearer token."
+          },
+          "403": {
+            "description": "Host or Origin mismatch (D8 loopback hardening)."
+          }
+        }
+      }
+    },
+    "/run/timeline": {
+      "get": {
+        "summary": "Fetch a run's step-by-step timeline.",
+        "tags": [
+          "Runs"
+        ],
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Missing or invalid bearer token."
+          },
+          "403": {
+            "description": "Host or Origin mismatch (D8 loopback hardening)."
+          }
+        }
+      }
+    },
+    "/pair/redeem": {
+      "post": {
+        "summary": "Redeem a single-use pairing nonce.",
+        "tags": [
+          "Pairing"
+        ],
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Missing or invalid bearer token."
+          },
+          "403": {
+            "description": "Host or Origin mismatch (D8 loopback hardening)."
+          }
+        }
+      }
+    },
+    "/migration/import": {
+      "post": {
+        "summary": "Import a migration bundle from another daemon.",
+        "tags": [
+          "Migration"
+        ],
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Missing or invalid bearer token."
+          },
+          "403": {
+            "description": "Host or Origin mismatch (D8 loopback hardening)."
+          }
+        }
+      }
+    },
+    "/workflows/import": {
+      "post": {
+        "summary": "Import a workflow export bundle.",
+        "tags": [
+          "Workflows"
+        ],
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Missing or invalid bearer token."
+          },
+          "403": {
+            "description": "Host or Origin mismatch (D8 loopback hardening)."
+          }
+        }
+      }
+    },
+    "/vault/connections/flow/{flowId}": {
+      "get": {
+        "summary": "Poll the status of an in-flight connection flow.",
+        "tags": [
+          "Vault"
+        ],
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Missing or invalid bearer token."
+          },
+          "403": {
+            "description": "Host or Origin mismatch (D8 loopback hardening)."
+          }
+        },
+        "parameters": [
+          {
+            "name": "flowId",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ]
+      }
+    },
+    "/vault/connections/{id}/revoke": {
+      "post": {
+        "summary": "Revoke a connected provider.",
+        "tags": [
+          "Vault"
+        ],
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Missing or invalid bearer token."
+          },
+          "403": {
+            "description": "Host or Origin mismatch (D8 loopback hardening)."
+          }
+        },
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ]
+      }
+    },
+    "/kernels/{id}/card": {
+      "get": {
+        "summary": "Fetch a kernel's read-only decision-table card.",
+        "tags": [
+          "Kernels"
+        ],
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Missing or invalid bearer token."
+          },
+          "403": {
+            "description": "Host or Origin mismatch (D8 loopback hardening)."
+          }
+        },
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ]
+      }
+    },
+    "/workflows/{id}/euc-entry": {
+      "get": {
+        "summary": "Fetch a workflow's End-User-Computing register entry.",
+        "tags": [
+          "Workflows"
+        ],
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Missing or invalid bearer token."
+          },
+          "403": {
+            "description": "Host or Origin mismatch (D8 loopback hardening)."
+          }
+        },
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ]
+      }
+    },
+    "/workflows/{id}/export": {
+      "get": {
+        "summary": "Export a workflow manifest bundle.",
+        "tags": [
+          "Workflows"
+        ],
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Missing or invalid bearer token."
+          },
+          "403": {
+            "description": "Host or Origin mismatch (D8 loopback hardening)."
+          }
+        },
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ]
+      }
+    },
+    "/templates/{slug}": {
+      "get": {
+        "summary": "Fetch one template's detail.",
+        "tags": [
+          "Templates"
+        ],
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Missing or invalid bearer token."
+          },
+          "403": {
+            "description": "Host or Origin mismatch (D8 loopback hardening)."
+          }
+        },
+        "parameters": [
+          {
+            "name": "slug",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ]
+      }
+    }
+  }
+}

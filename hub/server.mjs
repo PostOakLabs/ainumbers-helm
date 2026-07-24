@@ -403,7 +403,10 @@ async function handleMigrationImport(req, res, params, db) {
   sendJson(res, 200, result);
 }
 
-const ROUTES = {
+// Exported (not just used internally) so scripts/gen-openapi.mjs (HELM-P4-B2)
+// can derive the OpenAPI doc from the SAME route table the server actually
+// dispatches on, instead of a hand-copied list that can silently drift.
+export const ROUTES = {
   "GET /health": handleHealth,
   "GET /events": handleEvents,
   "POST /vault/connections/begin": handleBeginConnection,
@@ -418,13 +421,15 @@ const ROUTES = {
   "POST /workflows/import": handleWorkflowImport,
 };
 
-const DYNAMIC_ROUTES = [
-  { method: "GET", pattern: /^\/vault\/connections\/flow\/(?<flowId>[^/]+)$/, handler: handleFlowStatus },
-  { method: "POST", pattern: /^\/vault\/connections\/(?<id>[^/]+)\/revoke$/, handler: handleRevoke },
-  { method: "GET", pattern: /^\/kernels\/(?<id>[^/]+)\/card$/, handler: handleKernelCard },
-  { method: "GET", pattern: /^\/workflows\/(?<id>[^/]+)\/euc-entry$/, handler: handleEucEntry },
-  { method: "GET", pattern: /^\/workflows\/(?<id>[^/]+)\/export$/, handler: handleWorkflowExportRoute },
-  { method: "GET", pattern: /^\/templates\/(?<slug>[^/]+)$/, handler: handleTemplateDetail },
+// docPath: the OpenAPI-style templated path (gen-openapi.mjs has no way to
+// recover `{id}` from a compiled RegExp, so it rides along here).
+export const DYNAMIC_ROUTES = [
+  { method: "GET", pattern: /^\/vault\/connections\/flow\/(?<flowId>[^/]+)$/, docPath: "/vault/connections/flow/{flowId}", handler: handleFlowStatus },
+  { method: "POST", pattern: /^\/vault\/connections\/(?<id>[^/]+)\/revoke$/, docPath: "/vault/connections/{id}/revoke", handler: handleRevoke },
+  { method: "GET", pattern: /^\/kernels\/(?<id>[^/]+)\/card$/, docPath: "/kernels/{id}/card", handler: handleKernelCard },
+  { method: "GET", pattern: /^\/workflows\/(?<id>[^/]+)\/euc-entry$/, docPath: "/workflows/{id}/euc-entry", handler: handleEucEntry },
+  { method: "GET", pattern: /^\/workflows\/(?<id>[^/]+)\/export$/, docPath: "/workflows/{id}/export", handler: handleWorkflowExportRoute },
+  { method: "GET", pattern: /^\/templates\/(?<slug>[^/]+)$/, docPath: "/templates/{slug}", handler: handleTemplateDetail },
 ];
 
 export function createHelmServer({ port, allowedOrigin, token, db = null, identityKeys = null }) {
