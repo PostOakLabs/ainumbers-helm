@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<bpmn:definitions xmlns:bpmn="http://www.omg.org/spec/BPMN/20100524/MODEL"
+  id="Definitions__wf-invoice-reconcile-01"
+  targetNamespace="https://ainumbers.co/helm/bpmn"
+  exporter="Helm control plane (HELM-P4-B3)"
+  exporterVersion="1">
+  <bpmn:process id="Process_wf-invoice-reconcile-01" name="wf-invoice-reconcile-01" isExecutable="false">
+    <bpmn:documentation>Exported from a Helm workflow manifest (manifest_version 1). Diagram export only — not round-trippable back into Helm.</bpmn:documentation>
+    <bpmn:startEvent id="start_wf-invoice-reconcile-01" name="Trigger: schedule">
+      <bpmn:documentation>schedule: 0 6 * * *</bpmn:documentation>
+      <bpmn:outgoing>flow_0</bpmn:outgoing>
+      <bpmn:timerEventDefinition><bpmn:timeCycle>0 6 * * *</bpmn:timeCycle></bpmn:timerEventDefinition>
+    </bpmn:startEvent>
+    <bpmn:serviceTask id="task_ci1" name="Fetch: google-drive.fetch">
+      <bpmn:documentation>feeds n1.batch_uri</bpmn:documentation>
+      <bpmn:incoming>flow_0</bpmn:incoming>
+      <bpmn:outgoing>flow_1</bpmn:outgoing>
+    </bpmn:serviceTask>
+    <bpmn:serviceTask id="task_n1" name="art-213-fee-route">
+      <bpmn:documentation>kernel_digest: sha256:cf34ecd7b8eeff090b776cb06ab3742e15e4b739e7f6eac14d7fb02d2999c5b7</bpmn:documentation>
+      <bpmn:incoming>flow_1</bpmn:incoming>
+      <bpmn:outgoing>flow_2</bpmn:outgoing>
+    </bpmn:serviceTask>
+    <bpmn:exclusiveGateway id="gw_g1" name="review-if-variance-exceeds">
+      <bpmn:incoming>flow_2</bpmn:incoming>
+      <bpmn:outgoing>flow_3</bpmn:outgoing>
+    </bpmn:exclusiveGateway>
+    <bpmn:serviceTask id="task_a1" name="email.notify → smtp.postoaklabs.com">
+      <bpmn:documentation>target_host: smtp.postoaklabs.com</bpmn:documentation>
+      <bpmn:incoming>flow_3</bpmn:incoming>
+      <bpmn:outgoing>flow_4</bpmn:outgoing>
+    </bpmn:serviceTask>
+    <bpmn:endEvent id="end_wf-invoice-reconcile-01" name="Done">
+      <bpmn:incoming>flow_4</bpmn:incoming>
+    </bpmn:endEvent>
+    <bpmn:sequenceFlow id="flow_0" sourceRef="start_wf-invoice-reconcile-01" targetRef="task_ci1" />
+    <bpmn:sequenceFlow id="flow_1" sourceRef="task_ci1" targetRef="task_n1" />
+    <bpmn:sequenceFlow id="flow_2" sourceRef="task_n1" targetRef="gw_g1" />
+    <bpmn:sequenceFlow id="flow_3" sourceRef="gw_g1" targetRef="task_a1" />
+    <bpmn:sequenceFlow id="flow_4" sourceRef="task_a1" targetRef="end_wf-invoice-reconcile-01" />
+  </bpmn:process>
+</bpmn:definitions>
