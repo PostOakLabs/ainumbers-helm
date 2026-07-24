@@ -15,6 +15,7 @@
 // step full OTS clients do later) is out of scope here — see D12.
 import { createHash } from "node:crypto";
 import { buildTsqDer, freshNonce } from "./vendored/anchor-suite/lib/tsq.mjs";
+import { extractMessageImprintHex } from "./vendored/ocg/kernels/_rfc3161.mjs";
 
 const RELAY_BASE = "https://anchor.ainumbers.co";
 const RELAY_CAS = ["digicert", "sectigo", "freetsa"];
@@ -46,6 +47,15 @@ export async function anchorRfc3161(hashHex, { ca = "freetsa", relayBase = RELAY
   const ct = (res.headers.get("Content-Type") || "").split(";")[0].trim();
   if (ct !== "application/timestamp-reply") throw new Error(`anchor relay unexpected Content-Type: ${ct}`);
   const der = Buffer.from(await res.arrayBuffer());
+
+  // F11: a relay could return a token bound to a DIFFERENT digest than the
+  // one we asked it to stamp (bug, MITM, or a malicious relay). Assert the
+  // structural binding immediately, at anchor time, rather than trusting the
+  // stored DER until some later verify pass happens to check it.
+  const returnedImprint = extractMessageImprintHex(der.toString("base64"));
+  if (returnedImprint !== hashHex) {
+    throw new Error(`anchor relay ${ca} returned a token bound to a different digest (messageImprint ${returnedImprint} != requested ${hashHex})`);
+  }
 
   return {
     type: "rfc3161",

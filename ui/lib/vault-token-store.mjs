@@ -74,14 +74,17 @@ export class VaultTokenStore {
   }
 
   async setToken(ref, tokenObj) {
-    const blob = await encryptWithDek(await this._key(), tokenObj);
+    // AAD binds this ciphertext to (ref, DB_VERSION) so a blob swapped into a
+    // different token's IndexedDB slot fails to decrypt instead of opening
+    // cleanly under the wrong ref (F12).
+    const blob = await encryptWithDek(await this._key(), tokenObj, { ref, storeVersion: DB_VERSION });
     await this._store.set(ref, blob);
   }
 
   async getToken(ref) {
     const blob = await this._store.get(ref);
     if (blob === null) return null;
-    return decryptWithDek(await this._key(), blob);
+    return decryptWithDek(await this._key(), blob, { ref, storeVersion: DB_VERSION });
   }
 
   async deleteToken(ref) {

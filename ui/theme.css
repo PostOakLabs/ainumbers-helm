@@ -469,6 +469,9 @@ button.secondary {
 .verify-status[data-ok="null"] {
   color: var(--text-muted);
 }
+.verify-status[data-ok="partial"] {
+  color: var(--warning);
+}
 
 .verify-summary {
   font-size: 1.1rem;

@@ -74,21 +74,23 @@ export async function importDek(dekBytes) {
   return crypto.subtle.importKey("raw", dekBytes, WRAP_ALG, false, ["encrypt", "decrypt"]);
 }
 
-async function aesGcmSeal(key, plaintextBytes) {
+async function aesGcmSeal(key, plaintextBytes, aad) {
   const iv = crypto.getRandomValues(new Uint8Array(IV_LEN));
-  const ciphertext = new Uint8Array(await crypto.subtle.encrypt({ name: WRAP_ALG, iv }, key, plaintextBytes));
+  const params = aad ? { name: WRAP_ALG, iv, additionalData: aad } : { name: WRAP_ALG, iv };
+  const ciphertext = new Uint8Array(await crypto.subtle.encrypt(params, key, plaintextBytes));
   const blob = new Uint8Array(iv.length + ciphertext.length);
   blob.set(iv, 0);
   blob.set(ciphertext, iv.length);
   return bytesToB64(blob);
 }
 
-async function aesGcmOpen(key, blobB64) {
+async function aesGcmOpen(key, blobB64, aad) {
   const blob = b64ToBytes(blobB64);
   const iv = blob.slice(0, IV_LEN);
   const ciphertext = blob.slice(IV_LEN);
+  const params = aad ? { name: WRAP_ALG, iv, additionalData: aad } : { name: WRAP_ALG, iv };
   try {
-    return new Uint8Array(await crypto.subtle.decrypt({ name: WRAP_ALG, iv }, key, ciphertext));
+    return new Uint8Array(await crypto.subtle.decrypt(params, key, ciphertext));
   } catch {
     throw new VaultWrongKeyError();
   }
@@ -106,11 +108,20 @@ export function unwrapDek(wrappedB64, wrapKey) {
 
 // Encrypts/decrypts connector tokens (or any JSON-serializable secret) under
 // the unwrapped DEK. This is the ONLY thing the DEK ever protects.
-export async function encryptWithDek(dekKey, plaintextObj) {
-  return aesGcmSeal(dekKey, new TextEncoder().encode(JSON.stringify(plaintextObj)));
+//
+// `aad` binds the ciphertext to the slot it was written for (F12: caller
+// passes the store ref + store version) so a blob copied between IndexedDB
+// keys — or replayed after a store-version bump — fails to decrypt instead
+// of silently opening under the wrong identity.
+function tokenAad(aad) {
+  return aad ? new TextEncoder().encode(JSON.stringify(aad)) : undefined;
 }
 
-export async function decryptWithDek(dekKey, blobB64) {
-  const bytes = await aesGcmOpen(dekKey, blobB64);
+export async function encryptWithDek(dekKey, plaintextObj, aad) {
+  return aesGcmSeal(dekKey, new TextEncoder().encode(JSON.stringify(plaintextObj)), tokenAad(aad));
+}
+
+export async function decryptWithDek(dekKey, blobB64, aad) {
+  const bytes = await aesGcmOpen(dekKey, blobB64, tokenAad(aad));
   return JSON.parse(new TextDecoder().decode(bytes));
 }
