@@ -1,0 +1,10 @@
+{
+  "schema_version": 1,
+  "generated_at": "2026-07-24T00:00:00.000Z",
+  "run_id": "run-9f1c2b",
+  "bundle_id": "bundle-wf-invoice-reconcile-01-2026-07-23",
+  "workflow_manifest_digest": "sha256:cf34ecd7b8eeff090b776cb06ab3742e15e4b739e7f6eac14d7fb02d2999c5b7",
+  "rows": [
+    { "digest": "not-a-valid-digest", "kind": "connector_attestation", "run_id": "run-9f1c2b", "bundle_id": "bundle-wf-invoice-reconcile-01-2026-07-23" }
+  ]
+}
