@@ -16,6 +16,8 @@ jobs:
       - uses: actions/setup-node@249970729cb0ef3589644e2896645e5dc5ba9c38 # v6.5.0
         with:
           node-version: "22"
+      - name: hook↔CI parity (no gate drift)
+        run: node scripts/check-hook-ci-parity.mjs
       - name: lint
         run: node scripts/lint.mjs
       - name: test
