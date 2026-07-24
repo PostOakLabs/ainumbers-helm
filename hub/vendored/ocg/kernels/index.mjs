@@ -356,11 +356,50 @@ import * as art415    from './art-415-check-capital-adequacy-private.kernel.mjs'
 import * as art418    from './art-418-idv-verification-failure-incident-composer.kernel.mjs';
 import * as art42     from './art-42-arc-fit-diagnostic.kernel.mjs';
 import * as art424    from './art-424-witness-cosignature-verifier.kernel.mjs';
+import * as art425    from './art-425-large-exposures-limit-check.kernel.mjs';
+import * as art426    from './art-426-cecl-ecl-calculator.kernel.mjs';
+import * as art427    from './art-427-discount-window-capacity.kernel.mjs';
+import * as art428    from './art-428-cyber-incident-clock.kernel.mjs';
+import * as art429    from './art-429-var-backtest-traffic-light.kernel.mjs';
 import * as art43     from './art-43-arc-cpn-model.kernel.mjs';
+import * as art431    from './art-431-fdic-assessment-rate-calculator.kernel.mjs';
+import * as art432    from './art-432-call-report-rc-balance-sheet.kernel.mjs';
+import * as art433    from './art-433-call-report-rcr-capital.kernel.mjs';
+import * as art434    from './art-434-call-report-edit-check-gate.kernel.mjs';
+import * as art435    from './art-435-bhc-schedule-hc-balance-sheet.kernel.mjs';
+import * as art436    from './art-436-bhc-schedule-hcr-capital.kernel.mjs';
+import * as art437    from './art-437-fr2052a-inflow-outflow-classifier.kernel.mjs';
+import * as art438    from './art-438-eval-attestation-receipt-composer.kernel.mjs';
+import * as art439    from './art-439-y14-capital-worksheet-rollforward.kernel.mjs';
 import * as art44     from './art-44-arc-stablefx-model.kernel.mjs';
+import * as art442    from './art-442-nmd-behavioral-repricing-mapper.kernel.mjs';
+import * as art443    from './art-443-irrbb-basis-risk-nii-shock-calculator.kernel.mjs';
+import * as art444    from './art-444-collateral-haircut-engine.kernel.mjs';
+import * as art445    from './art-445-credit-concentration-topn-sector.kernel.mjs';
+import * as art446    from './art-446-counterparty-internal-limit-check.kernel.mjs';
+import * as art447    from './art-447-securitization-risk-retention-check.kernel.mjs';
+import * as art448    from './art-448-ifrs17-loss-component-tracker.kernel.mjs';
+import * as art449    from './art-449-solvency2-scr-module-aggregator.kernel.mjs';
 import * as art45     from './art-45-arc-xreserve-linter.kernel.mjs';
+import * as art450    from './art-450-model-inventory-entry.kernel.mjs';
+import * as art451    from './art-451-model-outcome-analysis.kernel.mjs';
+import * as art452    from './art-452-build-ai-training-data-lineage-record.kernel.mjs';
+import * as art453    from './art-453-model-validation-status.kernel.mjs';
+import * as art454    from './art-454-globe-jurisdictional-etr.kernel.mjs';
+import * as art455    from './art-455-globe-sbie-topup.kernel.mjs';
+import * as art456    from './art-456-globe-safe-harbour-tests.kernel.mjs';
+import * as art458    from './art-458-attribute-sampling-plan.kernel.mjs';
+import * as art459    from './art-459-sod-matrix-check.kernel.mjs';
 import * as art46     from './art-46-arc-paymaster-model.kernel.mjs';
+import * as art460    from './art-460-ipe-integrity-verifier.kernel.mjs';
+import * as art462    from './art-462-je-ruleset-screen.kernel.mjs';
+import * as art463    from './art-463-recalc-suite.kernel.mjs';
+import * as art464    from './art-464-confirmation-matcher.kernel.mjs';
+import * as art466    from './art-466-dora-roi-builder.kernel.mjs';
+import * as art467    from './art-467-dora-incident-classifier.kernel.mjs';
 import * as art47     from './art-47-arc-cctp-transfer.kernel.mjs';
+import * as art472    from './art-472-cbcr-builder.kernel.mjs';
+import * as art473    from './art-473-interquartile-benchmark.kernel.mjs';
 import * as art48     from './art-48-treasury-clearing-fit-diagnostic.kernel.mjs';
 import * as art49     from './art-49-clearing-access-model-selector.kernel.mjs';
 import * as art50     from './art-50-ficc-margin-netting-estimator.kernel.mjs';
@@ -785,11 +824,50 @@ export const KERNELS = {
   'art-418-idv-verification-failure-incident-composer':       art418,
   'art-42-arc-fit-diagnostic':                                art42,
   'art-424-witness-cosignature-verifier':                     art424,
+  'art-425-large-exposures-limit-check':                      art425,
+  'art-426-cecl-ecl-calculator':                              art426,
+  'art-427-discount-window-capacity':                         art427,
+  'art-428-cyber-incident-clock':                             art428,
+  'art-429-var-backtest-traffic-light':                       art429,
   'art-43-arc-cpn-model':                                     art43,
+  'art-431-fdic-assessment-rate-calculator':                  art431,
+  'art-432-call-report-rc-balance-sheet':                     art432,
+  'art-433-call-report-rcr-capital':                          art433,
+  'art-434-call-report-edit-check-gate':                      art434,
+  'art-435-bhc-schedule-hc-balance-sheet':                    art435,
+  'art-436-bhc-schedule-hcr-capital':                         art436,
+  'art-437-fr2052a-inflow-outflow-classifier':                art437,
+  'art-438-eval-attestation-receipt-composer':                art438,
+  'art-439-y14-capital-worksheet-rollforward':                art439,
   'art-44-arc-stablefx-model':                                art44,
+  'art-442-nmd-behavioral-repricing-mapper':                  art442,
+  'art-443-irrbb-basis-risk-nii-shock-calculator':            art443,
+  'art-444-collateral-haircut-engine':                        art444,
+  'art-445-credit-concentration-topn-sector':                 art445,
+  'art-446-counterparty-internal-limit-check':                art446,
+  'art-447-securitization-risk-retention-check':              art447,
+  'art-448-ifrs17-loss-component-tracker':                    art448,
+  'art-449-solvency2-scr-module-aggregator':                  art449,
   'art-45-arc-xreserve-linter':                               art45,
+  'art-450-model-inventory-entry':                            art450,
+  'art-451-model-outcome-analysis':                           art451,
+  'art-452-build-ai-training-data-lineage-record':            art452,
+  'art-453-model-validation-status':                          art453,
+  'art-454-globe-jurisdictional-etr':                         art454,
+  'art-455-globe-sbie-topup':                                 art455,
+  'art-456-globe-safe-harbour-tests':                         art456,
+  'art-458-attribute-sampling-plan':                          art458,
+  'art-459-sod-matrix-check':                                 art459,
   'art-46-arc-paymaster-model':                               art46,
+  'art-460-ipe-integrity-verifier':                           art460,
+  'art-462-je-ruleset-screen':                                art462,
+  'art-463-recalc-suite':                                     art463,
+  'art-464-confirmation-matcher':                             art464,
+  'art-466-dora-roi-builder':                                 art466,
+  'art-467-dora-incident-classifier':                         art467,
   'art-47-arc-cctp-transfer':                                 art47,
+  'art-472-cbcr-builder':                                     art472,
+  'art-473-interquartile-benchmark':                          art473,
   'art-48-treasury-clearing-fit-diagnostic':                  art48,
   'art-49-clearing-access-model-selector':                    art49,
   'art-50-ficc-margin-netting-estimator':                     art50,

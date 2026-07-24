@@ -18,7 +18,7 @@
       {
         "node_id": "n2",
         "kernel_id": "art-275-genius-reserve-disclosure-checker",
-        "kernel_digest": "sha256:6dc1841eacba4fe724eda818961bfbb1248bde713c6b8dd204be34bc2cb37b4e"
+        "kernel_digest": "sha256:0f28358a1106be5fd951174ff9984a32af17133642481706a056f43ce6fe0d22"
       },
       {
         "node_id": "n3",
@@ -30,7 +30,7 @@
     "gates": [],
     "actions": []
   },
-  "workflow_manifest_digest": "sha256:b82c337311180ecb7472f4e488b6fb7a7d8eebb2f4fe5241f40018914f3adad8",
+  "workflow_manifest_digest": "sha256:58a572f6e3bbdf8a1276d468b1413424f72d4e30321d3f9319b4320da49002ac",
   "declared_inputs": [],
   "steps_meta": [
     {

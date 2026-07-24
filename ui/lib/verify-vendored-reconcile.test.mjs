@@ -16,7 +16,7 @@ import { fileURLToPath } from "node:url";
 
 import { cgCanon as uiCgCanon, executionHash as uiExecutionHash } from "../vendored/hash.mjs";
 import { cgCanon as hubCgCanon, executionHash as hubExecutionHash } from "../../hub/vendored/ocg/kernels/_hash.mjs";
-import { ml_dsa44 as uiMlDsa44 } from "../vendored/proof.mjs";
+import { ml_dsa44 as uiMlDsa44, sign as uiSign, verify as uiVerify, rawPubkeyToDidKey as uiRawPubkeyToDidKey } from "../vendored/proof.mjs";
 import { ml_dsa44 as hubMlDsa44 } from "../../hub/vendored/ocg/kernels/_proof.mjs";
 import { parseRfc3161MessageImprint } from "../vendored/der.mjs";
 import { parseRfc3161Token } from "../../hub/vendored/ocg/kernels/_rfc3161.mjs";
@@ -46,6 +46,19 @@ test("proof.mjs: ml_dsa44 keygen/sign/verify round-trips across ui <-> hub copie
   assert.equal(hubMlDsa44.verify(sig, msg, publicKey), true);
   const hubSig = hubMlDsa44.sign(msg, secretKey);
   assert.equal(uiMlDsa44.verify(hubSig, msg, publicKey), true);
+});
+
+test("proof.mjs: securedDocument() empty-audit_signature fix (§16, site #589/#590) — sign->verify round-trips with no pre-existing audit_signature", async () => {
+  const kp = await globalThis.crypto.subtle.generateKey("Ed25519", true, ["sign", "verify"]);
+  const vm = await uiRawPubkeyToDidKey(kp.publicKey);
+  const created = "2026-07-24T00:00:00Z";
+  const bare = { record_type: "reconcile-check", subject_hash: "sha256:abc" };
+  const signedBare = await uiSign(bare, { verificationMethod: vm, created, privateKey: kp.privateKey });
+  assert.equal(await uiVerify(signedBare, kp.publicKey), true, "no pre-existing audit_signature round-trips");
+
+  const emptyWrap = { record_type: "reconcile-check", subject_hash: "sha256:abc", audit_signature: {} };
+  const signedEmpty = await uiSign(emptyWrap, { verificationMethod: vm, created, privateKey: kp.privateKey });
+  assert.equal(await uiVerify(signedEmpty, kp.publicKey), true, "explicit empty audit_signature:{} pre-sign round-trips");
 });
 
 test("der.mjs: parseRfc3161MessageImprint agrees field-for-field with the hub's parseRfc3161Token on a real pinned TSA token", () => {

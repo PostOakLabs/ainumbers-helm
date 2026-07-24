@@ -1,8 +1,8 @@
 {
-  "pinnedSha": "bfa1bd621ca7147d2dc32f34326444159dfb0387",
+  "pinnedSha": "db8b2512f3a1b57bcef0c8d800c0dff205abd052",
   "generatedFrom": "hub/vendored/ocg/chaingraph.json",
-  "compiledCount": 207,
-  "skippedCount": 102,
+  "compiledCount": 209,
+  "skippedCount": 101,
   "skips": [
     {
       "name": "a2a-payment-rail-compliance",
@@ -263,10 +263,6 @@
     {
       "name": "mcp-security-hardening",
       "reason": "non-kernel or unvendored step(s): 274-mcp-tool-definition-linter, 275-mcp-server-json-validator, 278-mcp-oauth-authorization-auditor, 282-mcp-tool-poisoning-scanner, 284-mcp-transport-dns-rebinding-auditor"
-    },
-    {
-      "name": "mcp-server-attestation",
-      "reason": "non-kernel or unvendored step(s): art-18-mcp-developer-readiness-scorecard"
     },
     {
       "name": "mica-passporting-surveillance",
