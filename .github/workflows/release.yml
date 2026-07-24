@@ -280,3 +280,51 @@ jobs:
       - name: publish to npm (OIDC provenance, no token)
         working-directory: npm-package
         run: npm publish --access public --provenance
+
+  # HELM-P4-F3-VERSIONFEED: helm/version.json in the SITE repo
+  # (ainumbers.co/helm/version.json) is the machine-readable release feed
+  # docs/RELEASE-CHANNEL.md §3 promises a CAB, and what helmd's own
+  # version-check (hub/version-check.mjs) polls. Generated here, on every
+  # GA tag, so no human hand-edits it — a hand-maintained feed is exactly
+  # the unattended-duty class HELM-PHASE4-BUILD-SPEC.md §4 gate 5 rules
+  # out. Facts only (version numbers, a real timestamp, a release URL) —
+  # no day-based or support-window language belongs in this file.
+  publish-version-feed:
+    needs: sign-and-release
+    if: needs.sign-and-release.outputs.is_ga == 'true'
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+    steps:
+      - uses: actions/checkout@9c091bb21b7c1c1d1991bb908d89e4e9dddfe3e0 # v7.0.0
+        with:
+          path: helm
+      - uses: actions/checkout@9c091bb21b7c1c1d1991bb908d89e4e9dddfe3e0 # v7.0.0
+        with:
+          repository: PostOakLabs/ainumbers
+          token: ${{ secrets.SITE_REPO_PUSH_TOKEN }}
+          path: site
+
+      - name: write version.json
+        run: |
+          VERSION="${GITHUB_REF_NAME#v}"
+          PUBLISHED_AT="$(date -u +%Y-%m-%dT%H:%M:%SZ)"
+          node helm/scripts/gen-version-feed.mjs \
+            --version "$VERSION" \
+            --published-at "$PUBLISHED_AT" \
+            --release-url "https://github.com/${GITHUB_REPOSITORY}/releases/tag/${GITHUB_REF_NAME}" \
+            --schema helm/schema/version_notice.schema.json \
+            --out site/helm/version.json
+
+      - name: commit + push (no-op if unchanged)
+        working-directory: site
+        run: |
+          git config user.name "helm-release-bot"
+          git config user.email "noreply@postoaklabs.com"
+          if git diff --quiet -- helm/version.json; then
+            echo "version.json unchanged, nothing to push"
+            exit 0
+          fi
+          git add helm/version.json
+          git commit -m "chore(helm): publish version.json for ${GITHUB_REF_NAME}"
+          git push origin HEAD:main
