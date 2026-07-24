@@ -40,7 +40,7 @@ if (failed > 0) {
 // 2026-07-23): a test making a REAL anchor call (FreeTSA / OTS calendar) must
 // gate it via liveTest() from test-support/live.mjs, so the blocking suite
 // stays offline/deterministic and a third-party hiccup can't redden main.
-const LIVE_CALL = /\bawait\s+(?:anchorRfc3161|anchorOpenTimestamps)\s*\(/;
+const LIVE_CALL = /\bawait\s+(?:anchorRfc3161|anchorOpenTimestamps|verifyGithubPat)\s*\(/;
 let liveViol = 0;
 for (const file of walk(ROOT)) {
   if (!file.endsWith(".test.mjs")) continue;
@@ -52,6 +52,16 @@ for (const file of walk(ROOT)) {
 }
 if (liveViol > 0) {
   console.error(`lint: ${liveViol} live-network gate violation(s)`);
+  process.exit(1);
+}
+
+// Google OAuth scope lint (HELM-P3-U4, P3-D5): forbid drive.readonly/drive
+// anywhere in the repo — see scripts/lib/google-scope-lint.mjs.
+const { scanRepoForForbiddenGoogleScopes } = await import("./lib/google-scope-lint.mjs");
+const scopeViolations = scanRepoForForbiddenGoogleScopes(ROOT);
+if (scopeViolations.length > 0) {
+  console.error("GOOGLE SCOPE LINT: forbidden restricted Drive scope found (drive.readonly/drive require a $500-4.5k/yr CASA assessment — use drive.file):");
+  for (const v of scopeViolations) console.error(`  ${v.file}: "${v.scope}"`);
   process.exit(1);
 }
 

@@ -4,6 +4,6 @@
   "publisher": "ainumbers-helm",
   "allowed_hosts": ["www.googleapis.com"],
   "allowed_methods": ["GET"],
-  "scopes": ["drive.readonly"],
+  "scopes": ["drive.file"],
   "vault_scope": ["vault://helm/connectors/google-drive/oauth-token"]
 }

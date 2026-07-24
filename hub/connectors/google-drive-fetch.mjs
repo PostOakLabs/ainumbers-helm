@@ -1,7 +1,14 @@
-// Connector 1 (HELM-H6): google-drive.fetch — READ-ONLY. Retrieves a single
-// Drive file's bytes via the OAuth token already in the vault (from H5's
-// generic PKCE flow) and produces a signed connector_attestation. No writes,
-// no other Drive scopes — matches the contract's drive.readonly scope.
+// Connector 1 (HELM-H6, scope migrated HELM-P3-U4/P3-D5): google-drive.fetch.
+// Retrieves a single Drive file's bytes via the OAuth token already in the
+// vault (from H5's generic PKCE flow) and produces a signed
+// connector_attestation. Read-only HTTP verb (GET) only — no write calls —
+// against the contract's `drive.file` scope: drive.readonly and the bare
+// `drive` scope are both Google RESTRICTED scopes requiring an annual CASA
+// assessment ($500-4.5k/yr), dead at $0 budget (P3-D5/P3-DEC-2, locked
+// 2026-07-23). drive.file only grants access to files the user explicitly
+// opened/created through this app, which is what the caller of send() is
+// expected to already have (a fileId the user picked), so this connector's
+// own behavior is unchanged by the migration.
 //
 // Lifecycle kept as init -> selfTest -> send -> dispose (borrowed shape, §4)
 // even though "send" here means "perform the read": the borrowed contract is
