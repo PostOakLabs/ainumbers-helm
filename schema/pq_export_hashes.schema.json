@@ -1,0 +1,28 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://ainumbers.co/helm/schema/pq_export_hashes.schema.json",
+  "title": "Power Query bridge — hashes.json (HELM-P4-B1, FROZEN v1)",
+  "description": "One row per evidence-bundle entry, splitting the algorithm-prefixed digest into columns a spreadsheet formula can use directly (e.g. VLOOKUP against an external hash list). Joins to results.json and trust-labels.json on `digest`. FROZEN: any shape change is a major-version bump (see docs/POWER-QUERY-BRIDGE.md) — never edit fields in place.",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["schema_version", "generated_at", "run_id", "bundle_id", "rows"],
+  "properties": {
+    "schema_version": { "const": 1 },
+    "generated_at": { "type": "string", "minLength": 1 },
+    "run_id": { "type": "string", "minLength": 1 },
+    "bundle_id": { "type": "string", "minLength": 1 },
+    "rows": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": ["digest", "algorithm", "hex"],
+        "properties": {
+          "digest": { "type": "string", "pattern": "^sha256:[0-9a-f]{64}$" },
+          "algorithm": { "const": "sha256" },
+          "hex": { "type": "string", "pattern": "^[0-9a-f]{64}$" }
+        }
+      }
+    }
+  }
+}

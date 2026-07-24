@@ -1,0 +1,30 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://ainumbers.co/helm/schema/pq_export_results.schema.json",
+  "title": "Power Query bridge — results.json (HELM-P4-B1, FROZEN v1)",
+  "description": "One row per evidence-bundle entry produced by a run. Joins to trust-labels.json and hashes.json on `digest`. FROZEN: any shape change is a major-version bump (see docs/POWER-QUERY-BRIDGE.md) — never edit fields in place.",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["schema_version", "generated_at", "run_id", "bundle_id", "rows"],
+  "properties": {
+    "schema_version": { "const": 1 },
+    "generated_at": { "type": "string", "minLength": 1 },
+    "run_id": { "type": "string", "minLength": 1 },
+    "bundle_id": { "type": "string", "minLength": 1 },
+    "workflow_manifest_digest": { "type": "string", "pattern": "^sha256:[0-9a-f]{64}$" },
+    "rows": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": ["digest", "kind", "run_id", "bundle_id"],
+        "properties": {
+          "digest": { "type": "string", "pattern": "^sha256:[0-9a-f]{64}$" },
+          "kind": { "type": "string", "minLength": 1 },
+          "run_id": { "type": "string", "minLength": 1 },
+          "bundle_id": { "type": "string", "minLength": 1 }
+        }
+      }
+    }
+  }
+}
