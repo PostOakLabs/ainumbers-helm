@@ -1,0 +1,9 @@
+{
+  "bundle_digest": "sha256:af2c0d0db5baec3e06592c51e073a7606955a005fe70bbbce5c0f85c08fe2f0b",
+  "maker_signature": {
+    "keyid": "maker-key-01",
+    "sig": "base64:bWFrZXItc2ln",
+    "alg": "Ed25519"
+  },
+  "countersignatures": []
+}

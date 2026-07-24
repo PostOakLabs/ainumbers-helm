@@ -1,0 +1,23 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://ainumbers.co/helm/schema/anchor_queue_marker.schema.json",
+  "title": "Browser mode — anchor queue marker (HELM-PHASE3-BUILD-SPEC.md P3-D4)",
+  "description": "Recorded in place of an anchor proof when the shipped anchor relay (anchor.ainumbers.co) is unreachable at checkpoint time. Explicit, never silent: a run with all egress blocked (including the relay) MUST still produce a valid checkpoint with this marker instead of an anchors[] entry, and the offline verifier must render it as 'anchoring queued/skipped', not as an error. status=queued means a retry is still possible client-side before export; status=skipped means the checkpoint was exported without ever anchoring (zero-egress copy, P3-D4).",
+  "$defs": {
+    "sha256ref": { "type": "string", "pattern": "^sha256:[0-9a-f]{64}$" },
+    "timestamp": { "type": "string", "pattern": "^\\d{4}-\\d{2}-\\d{2}T\\d{2}:\\d{2}:\\d{2}(\\.\\d+)?Z$" }
+  },
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["checkpoint_seq", "status", "reason", "relay_url", "recorded_at"],
+  "properties": {
+    "checkpoint_seq": { "type": "integer", "minimum": 0 },
+    "status": { "type": "string", "enum": ["queued", "skipped"] },
+    "reason": { "type": "string", "enum": ["relay_unreachable", "egress_blocked", "relay_error"] },
+    "relay_url": { "type": "string", "minLength": 1, "description": "The anchor relay endpoint that was attempted (or would have been, for egress_blocked)." },
+    "recorded_at": { "$ref": "#/$defs/timestamp" },
+    "attempts": { "type": "integer", "minimum": 0, "description": "Client-side retry count before this marker was finalized into the checkpoint." },
+    "last_attempt_at": { "$ref": "#/$defs/timestamp" },
+    "journal_root_digest": { "$ref": "#/$defs/sha256ref", "description": "The checkpoint's journal_root_digest this marker stands in for — lets a verifier tie the marker back to its checkpoint without re-parsing the full checkpoint object." }
+  }
+}

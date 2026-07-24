@@ -1,0 +1,39 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://ainumbers.co/helm/schema/countersignature_slot.schema.json",
+  "title": "Two-signature bundle slot (maker-checker stretch-ready, NOT wired — HELM-PHASE3-BUILD-SPEC.md §3.7)",
+  "description": "Reserves the shape for serverless maker-checker (Phase-4 candidate, not built in Phase 3): a maker's evidence bundle plus zero or more independent checker countersignatures, each over the SAME bundle_digest the maker signed. No producer in Phase 3 emits countersignatures — the array is expected empty. This schema exists so a Phase-4 checker feature has a stable shape to fill in rather than inventing one under deadline; it does not imply any bundle is unverified without a countersignature (maker_signature alone is a complete, valid bundle per §26.7).",
+  "$defs": {
+    "sha256ref": { "type": "string", "pattern": "^sha256:[0-9a-f]{64}$" },
+    "timestamp": { "type": "string", "pattern": "^\\d{4}-\\d{2}-\\d{2}T\\d{2}:\\d{2}:\\d{2}(\\.\\d+)?Z$" },
+    "signature": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["keyid", "sig", "alg"],
+      "properties": {
+        "keyid": { "type": "string", "minLength": 1 },
+        "sig": { "type": "string", "minLength": 1 },
+        "alg": { "type": "string", "enum": ["Ed25519", "ML-DSA-44"] }
+      }
+    },
+    "countersignature": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["role", "signature", "signed_at"],
+      "properties": {
+        "role": { "const": "checker" },
+        "signature": { "$ref": "#/$defs/signature" },
+        "signed_at": { "$ref": "#/$defs/timestamp" },
+        "replay_verified": { "type": "boolean", "description": "True iff the checker independently re-ran the workflow deterministically and got a matching bundle_digest before countersigning — the flagship differentiator over a rubber-stamp approval." }
+      }
+    }
+  },
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["bundle_digest", "maker_signature", "countersignatures"],
+  "properties": {
+    "bundle_digest": { "$ref": "#/$defs/sha256ref" },
+    "maker_signature": { "$ref": "#/$defs/signature" },
+    "countersignatures": { "type": "array", "items": { "$ref": "#/$defs/countersignature" }, "description": "Empty in Phase 3. A future maker-checker feature appends entries here; nothing in Phase 3 reads or requires them." }
+  }
+}
