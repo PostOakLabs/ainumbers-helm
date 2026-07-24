@@ -72,6 +72,28 @@ export async function call(path, { port, token, method = "GET", body: reqBody, t
   }
 }
 
+// Non-JSON GET (e.g. a ?format=html export) — same auth/timeout handling as
+// call(), but returns raw text instead of parsing JSON. No cache fallback:
+// downloadable exports are a one-shot action, not a page that needs a stale
+// state to degrade into.
+export async function callText(path, { port, token, timeoutMs = 5000 } = {}) {
+  const controller = new AbortController();
+  const timer = setTimeout(() => controller.abort(), timeoutMs);
+  try {
+    const res = await fetch(`http://127.0.0.1:${port}${path}`, {
+      headers: token ? { Authorization: `Bearer ${token}` } : {},
+      signal: controller.signal,
+    });
+    const text = await res.text();
+    if (!res.ok) return { ok: false, status: res.status, error: text };
+    return { ok: true, status: res.status, text };
+  } catch (err) {
+    return { ok: false, status: 0, error: err.message };
+  } finally {
+    clearTimeout(timer);
+  }
+}
+
 function cacheGet(path) {
   const raw = localStorage.getItem(CACHE_PREFIX + path);
   return raw ? JSON.parse(raw) : null;

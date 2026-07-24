@@ -13,6 +13,8 @@ import { listPacks, getPack } from "./packs.mjs";
 import { executeRun } from "./run.mjs";
 import { createKernelStepRunner } from "./kernel-runner.mjs";
 import { publishRunEvent, subscribeRunEvents } from "./event-bus.mjs";
+import { buildKernelCard, buildEucEntry } from "./euc-register.mjs";
+import { renderKernelCardHtml, renderEucEntryHtml } from "../ui/lib/euc-html.mjs";
 
 const START = Date.now();
 
@@ -39,6 +41,11 @@ function deny(res, status, error) {
 function sendJson(res, status, body) {
   res.writeHead(status, { "Content-Type": "application/json" });
   res.end(JSON.stringify(body));
+}
+
+function sendHtml(res, status, html) {
+  res.writeHead(status, { "Content-Type": "text/html; charset=utf-8" });
+  res.end(html);
 }
 
 function readJsonBody(req) {
@@ -205,6 +212,43 @@ function handleRunTimeline(req, res, params, db) {
   sendJson(res, 200, { steps });
 }
 
+// GET /kernels/:id/card?format=json|html (HELM-P3-E12) — per-kernel
+// validation card generated from vendored metadata + committed fixtures.
+function handleKernelCard(req, res, params) {
+  const format = new URL(req.url, "http://x").searchParams.get("format") === "html" ? "html" : "json";
+  let card;
+  try {
+    card = buildKernelCard(params.id);
+  } catch {
+    return deny(res, 404, "kernel_not_found");
+  }
+  if (format === "html") return sendHtml(res, 200, renderKernelCardHtml(card));
+  sendJson(res, 200, card);
+}
+
+// GET /workflows/:id/euc-entry?format=json|html&owner=&purpose=&control_description=&last_validated=
+// (HELM-P3-E12) — one-click EUC register entry for a compiled workflow.
+// owner/purpose/control_description/last_validated aren't persisted
+// anywhere in helm today (see hub/euc-register.mjs) — caller supplies them
+// per export.
+function handleEucEntry(req, res, params) {
+  const q = new URL(req.url, "http://x").searchParams;
+  const format = q.get("format") === "html" ? "html" : "json";
+  let entry;
+  try {
+    entry = buildEucEntry(params.id, {
+      owner: q.get("owner") || undefined,
+      purpose: q.get("purpose") || undefined,
+      controlDescription: q.get("control_description") || undefined,
+      lastValidated: q.get("last_validated") || undefined,
+    });
+  } catch {
+    return deny(res, 404, "workflow_not_found");
+  }
+  if (format === "html") return sendHtml(res, 200, renderEucEntryHtml(entry));
+  sendJson(res, 200, entry);
+}
+
 const ROUTES = {
   "GET /health": handleHealth,
   "GET /events": handleEvents,
@@ -219,6 +263,8 @@ const ROUTES = {
 const DYNAMIC_ROUTES = [
   { method: "GET", pattern: /^\/vault\/connections\/flow\/(?<flowId>[^/]+)$/, handler: handleFlowStatus },
   { method: "POST", pattern: /^\/vault\/connections\/(?<id>[^/]+)\/revoke$/, handler: handleRevoke },
+  { method: "GET", pattern: /^\/kernels\/(?<id>[^/]+)\/card$/, handler: handleKernelCard },
+  { method: "GET", pattern: /^\/workflows\/(?<id>[^/]+)\/euc-entry$/, handler: handleEucEntry },
 ];
 
 export function createHelmServer({ port, allowedOrigin, token, db = null }) {

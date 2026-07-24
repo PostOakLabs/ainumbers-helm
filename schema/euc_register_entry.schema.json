@@ -1,0 +1,34 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://ainumbers.co/helm/schema/euc_register_entry.schema.json",
+  "title": "EUC register entry (HELM-PHASE3-BUILD-SPEC.md P3-E12, §3 item 5)",
+  "description": "One-click export shaped to match a compliance officer's End-User Computing register: name, owner, purpose, every kernel version+hash the workflow pins, declared inputs/outputs, control description, last-validated date. owner/purpose/control_description/last_validated are caller-supplied at export time (not persisted anywhere in helm today); everything else is generated from the compiled pack.",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["workflow_id", "name", "kernels", "declared_inputs", "declared_outputs", "workflow_manifest_digest", "generated_at"],
+  "properties": {
+    "workflow_id": { "type": "string", "minLength": 1 },
+    "name": { "type": "string", "minLength": 1 },
+    "owner": { "type": ["string", "null"] },
+    "purpose": { "type": ["string", "null"] },
+    "control_description": { "type": ["string", "null"] },
+    "last_validated": { "type": ["string", "null"] },
+    "kernels": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": ["node_id", "kernel_id", "kernel_digest"],
+        "properties": {
+          "node_id": { "type": "string", "minLength": 1 },
+          "kernel_id": { "type": "string", "minLength": 1 },
+          "kernel_digest": { "type": "string", "pattern": "^sha256:[0-9a-f]{64}$" }
+        }
+      }
+    },
+    "declared_inputs": { "type": "array" },
+    "declared_outputs": { "type": "array" },
+    "workflow_manifest_digest": { "type": "string", "pattern": "^sha256:[0-9a-f]{64}$" },
+    "generated_at": { "type": "string", "pattern": "^\\d{4}-\\d{2}-\\d{2}T\\d{2}:\\d{2}:\\d{2}(\\.\\d+)?Z$" }
+  }
+}

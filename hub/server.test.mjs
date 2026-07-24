@@ -119,6 +119,52 @@ test("GET /vault/connections/flow/:id 404s for an unknown flow", async () => {
   assert.equal(res.status, 404);
 });
 
+test("GET /kernels/:id/card returns a JSON kernel validation card (HELM-P3-E12)", async () => {
+  const res = await get("/kernels/art-298-aca-affordability-safe-harbor/card", headers());
+  assert.equal(res.status, 200);
+  const card = JSON.parse(res.body);
+  assert.equal(card.kernel_id, "art-298-aca-affordability-safe-harbor");
+  assert.ok(card.test_vectors.length > 0);
+  assert.match(card.kernel_digest, /^sha256:[0-9a-f]{64}$/);
+});
+
+test("GET /kernels/:id/card?format=html returns a printable HTML document (HELM-P3-E12)", async () => {
+  const res = await get("/kernels/art-298-aca-affordability-safe-harbor/card?format=html", headers());
+  assert.equal(res.status, 200);
+  assert.match(res.body, /<!doctype html>/);
+  assert.match(res.body, /art-298-aca-affordability-safe-harbor/);
+});
+
+test("GET /kernels/:id/card 404s for an unknown kernel", async () => {
+  const res = await get("/kernels/does-not-exist/card", headers());
+  assert.equal(res.status, 404);
+});
+
+test("GET /workflows/:id/euc-entry returns a JSON EUC register entry (HELM-P3-E12)", async () => {
+  const res = await get(
+    "/workflows/pack-aca-226j-response-composer/euc-entry?owner=Compliance&last_validated=2026-07-01",
+    headers()
+  );
+  assert.equal(res.status, 200);
+  const entry = JSON.parse(res.body);
+  assert.equal(entry.workflow_id, "pack-aca-226j-response-composer");
+  assert.equal(entry.kernels.length, 3);
+  assert.equal(entry.owner, "Compliance");
+  assert.equal(entry.last_validated, "2026-07-01");
+});
+
+test("GET /workflows/:id/euc-entry?format=html returns a printable HTML document (HELM-P3-E12)", async () => {
+  const res = await get("/workflows/pack-aca-226j-response-composer/euc-entry?format=html", headers());
+  assert.equal(res.status, 200);
+  assert.match(res.body, /<!doctype html>/);
+  assert.match(res.body, /pack-aca-226j-response-composer/);
+});
+
+test("GET /workflows/:id/euc-entry 404s for an unknown workflow", async () => {
+  const res = await get("/workflows/does-not-exist/euc-entry", headers());
+  assert.equal(res.status, 404);
+});
+
 test("negative: POST /vault/connections/begin with http tokenEndpoint rejected (F4)", async () => {
   const res = await post(
     "/vault/connections/begin",

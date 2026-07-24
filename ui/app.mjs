@@ -7,8 +7,9 @@ import { renderOperate } from "./views/operate.mjs";
 import { renderVerify } from "./views/verify.mjs";
 import { renderReview } from "./views/review.mjs";
 import { renderHelp } from "./views/help.mjs";
+import { renderRegister } from "./views/register.mjs";
 
-const VIEWS = { choose: renderChoose, canvas: renderCanvas, connect: renderConnect, run: renderRun, verify: renderVerify, review: renderReview, operate: renderOperate, help: renderHelp };
+const VIEWS = { choose: renderChoose, canvas: renderCanvas, connect: renderConnect, run: renderRun, verify: renderVerify, review: renderReview, operate: renderOperate, register: renderRegister, help: renderHelp };
 const STATIC_VIEWS = new Set(["help"]);
 const DEFAULT_VIEW = "choose";
 
