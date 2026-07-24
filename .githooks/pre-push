@@ -25,6 +25,9 @@ if ! git rev-parse --verify origin/main >/dev/null 2>&1; then
   range="HEAD"
 fi
 
+echo "pre-push: hook↔CI parity (no gate drift) ..."
+node scripts/check-hook-ci-parity.mjs
+
 echo "pre-push: commit subjects ($range) ..."
 node scripts/check-pushed-commits.mjs "$range"
 
