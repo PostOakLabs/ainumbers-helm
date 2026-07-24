@@ -1,4 +1,5 @@
 import { readTokenFromLocation, loadToken, saveToken, clearToken, loadPort, savePort, call } from "./api.mjs";
+import { BrowserJournalClient, offerJsonBundleDownload } from "./lib/browser-journal-client.mjs";
 import { renderChoose } from "./views/choose.mjs";
 import { renderCanvas } from "./views/canvas.mjs";
 import { renderConnect } from "./views/connect.mjs";
@@ -111,6 +112,22 @@ function initDensityToggle(btn) {
   });
 }
 
+// P3-D7: OPFS journal cache runs independently of daemon pairing — browser
+// mode has no daemon at all. Best-effort: a browser without OPFS/Web Locks
+// just never shows a banner and never records locally (daemon/export remain
+// the source of truth in that case).
+function startBrowserJournal() {
+  const slot = document.getElementById("durability-banner-slot");
+  const client = new BrowserJournalClient({
+    onBannerChange: (html) => {
+      if (slot) slot.innerHTML = html;
+    },
+    onOfferBundleDownload: (entries) => offerJsonBundleDownload(entries),
+  });
+  client.start().catch(() => {});
+  return client;
+}
+
 export function boot() {
   const { token: preHashToken, pair } = readTokenFromLocation();
   if (preHashToken) saveToken(preHashToken);
@@ -136,6 +153,7 @@ export function boot() {
 
   window.addEventListener("hashchange", () => render(app));
   render(app);
+  window.helmJournal = startBrowserJournal(); // exposed for views to append to (P3-U2 landing point for run/operate views)
   setInterval(() => {
     const token = loadToken();
     if (token) refreshConnectivity(loadPort(), token, app.statusDot, app.statusLabel);
