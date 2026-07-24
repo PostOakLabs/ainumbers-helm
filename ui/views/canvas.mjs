@@ -8,9 +8,24 @@ import { buildDag } from "../lib/manifest-dag.mjs";
 import { renderDagSvg } from "../lib/dag-svg.mjs";
 import { toYaml } from "../lib/to-yaml.mjs";
 import { manifestDigest } from "../lib/manifest-digest.mjs";
+import { buildExecSummary } from "../lib/canvas-exec-summary.mjs";
 
 function escapeHtml(s) {
   return String(s).replace(/[&<>]/g, (c) => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;" }[c]));
+}
+
+function renderExecSummary(summary) {
+  return `
+    <section class="canvas-exec-summary" data-outcome="green">
+      <p class="cp-banner-status">✓ Manifest loads and verifies structurally</p>
+      <ul class="cp-headline-numbers">
+        ${summary.headline.map((h) => `<li><strong>${h.value}</strong><span>${escapeHtml(h.label)}</span></li>`).join("")}
+      </ul>
+      <ul class="canvas-exec-checks">
+        ${summary.checks.map((c) => `<li data-ok="${c.ok}">${c.ok ? "✓" : "✗"} ${escapeHtml(c.label)}</li>`).join("")}
+      </ul>
+      <p class="empty-state">${escapeHtml(summary.runNote)}</p>
+    </section>`;
 }
 
 function frameFor(state, workflowId) {
@@ -40,35 +55,60 @@ export async function renderCanvas(root, { port, token, params }) {
   const dag = buildDag(manifest);
   const svg = renderDagSvg(dag);
   const digest = await manifestDigest(manifest);
+  const execSummary = buildExecSummary(manifest, dag, digest);
 
   root.innerHTML = `
     <h2>Canvas — ${escapeHtml(manifest.workflow_id)}${staleBadge}</h2>
-    <p class="field-row">
-      <span>workflow_manifest_digest</span>
-      <code id="canvas-digest">${digest}</code>
-    </p>
-    <p class="empty-state">Read-only graph, derived from manifest order (trigger → connectors → compute → gates → actions). No edges are stored in the manifest itself.</p>
-    <div class="dag-frame" role="list" aria-label="Manifest graph">${svg}</div>
-    <div class="canvas-source">
-      <div class="canvas-source-toggle" role="tablist" aria-label="Manifest source format">
-        <button type="button" id="tab-json" role="tab" aria-selected="true">JSON</button>
-        <button type="button" id="tab-yaml" role="tab" aria-selected="false">YAML</button>
-      </div>
-      <pre id="source-json">${escapeHtml(JSON.stringify(manifest, null, 2))}</pre>
-      <pre id="source-yaml" hidden>${escapeHtml(toYaml(manifest))}</pre>
+    <div class="canvas-present-toggle" role="tablist" aria-label="Presentation mode">
+      <button type="button" id="tab-present" role="tab" aria-selected="false">Present</button>
+      <button type="button" id="tab-analyst" role="tab" aria-selected="true">Analyst</button>
     </div>
-    <p class="field-row"><a href="#/run?wf=${encodeURIComponent(workflowId)}">Go to Run →</a></p>
-    <h3>Spread (.helm.json)</h3>
-    <p class="empty-state">Export an email-able, versioned workflow file — secrets stripped, kernels pinned by hash. Importing checks version, integrity, and kernel pins before accepting anything; any mismatch is a plain-language refusal, never a silent partial import (HELM-P3-W11).</p>
-    <p class="field-row">
-      <button type="button" id="export-helm-json" class="secondary">Export .helm.json</button>
-      <span id="export-status" class="field-row-note" role="status"></span>
-    </p>
-    <p class="field-row">
-      <label for="import-helm-json">Import a .helm.json file</label>
-      <input type="file" id="import-helm-json" accept="application/json,.json" />
-    </p>
-    <p id="import-status" class="field-row-note" role="status"></p>`;
+    <div id="canvas-present-view" hidden>${renderExecSummary(execSummary)}</div>
+    <div id="canvas-analyst-view">
+      <p class="field-row">
+        <span>workflow_manifest_digest</span>
+        <code id="canvas-digest">${digest}</code>
+      </p>
+      <p class="empty-state">Read-only graph, derived from manifest order (trigger → connectors → compute → gates → actions). No edges are stored in the manifest itself.</p>
+      <div class="dag-frame" role="list" aria-label="Manifest graph">${svg}</div>
+      <div class="canvas-source">
+        <div class="canvas-source-toggle" role="tablist" aria-label="Manifest source format">
+          <button type="button" id="tab-json" role="tab" aria-selected="true">JSON</button>
+          <button type="button" id="tab-yaml" role="tab" aria-selected="false">YAML</button>
+        </div>
+        <pre id="source-json">${escapeHtml(JSON.stringify(manifest, null, 2))}</pre>
+        <pre id="source-yaml" hidden>${escapeHtml(toYaml(manifest))}</pre>
+      </div>
+      <p class="field-row"><a href="#/run?wf=${encodeURIComponent(workflowId)}">Go to Run →</a></p>
+      <h3>Spread (.helm.json)</h3>
+      <p class="empty-state">Export an email-able, versioned workflow file — secrets stripped, kernels pinned by hash. Importing checks version, integrity, and kernel pins before accepting anything; any mismatch is a plain-language refusal, never a silent partial import (HELM-P3-W11).</p>
+      <p class="field-row">
+        <button type="button" id="export-helm-json" class="secondary">Export .helm.json</button>
+        <span id="export-status" class="field-row-note" role="status"></span>
+      </p>
+      <p class="field-row">
+        <label for="import-helm-json">Import a .helm.json file</label>
+        <input type="file" id="import-helm-json" accept="application/json,.json" />
+      </p>
+      <p id="import-status" class="field-row-note" role="status"></p>
+    </div>`;
+
+  const presentTab = root.querySelector("#tab-present");
+  const analystTab = root.querySelector("#tab-analyst");
+  const presentView = root.querySelector("#canvas-present-view");
+  const analystView = root.querySelector("#canvas-analyst-view");
+  presentTab.addEventListener("click", () => {
+    presentView.hidden = false;
+    analystView.hidden = true;
+    presentTab.setAttribute("aria-selected", "true");
+    analystTab.setAttribute("aria-selected", "false");
+  });
+  analystTab.addEventListener("click", () => {
+    presentView.hidden = true;
+    analystView.hidden = false;
+    presentTab.setAttribute("aria-selected", "false");
+    analystTab.setAttribute("aria-selected", "true");
+  });
 
   const jsonTab = root.querySelector("#tab-json");
   const yamlTab = root.querySelector("#tab-yaml");
