@@ -146,11 +146,23 @@ jobs:
           TARBALL=$(cd dist/packaging/npm && npm pack --silent --pack-destination "$GITHUB_WORKSPACE/dist/upload")
           mv "dist/upload/$TARBALL" "dist/upload/helm-cli-${HELM_RELEASE_VERSION}.tgz"
 
+      # HELM-P4-C3: CycloneDX SBOM per release, published as a release asset
+      # (docs/TRUST.md §5). anchore/sbom-action (syft-based) scans the
+      # checked-out source tree — package.json + lockfile — for the full
+      # dependency graph; no new devDependency, contents:read only, no
+      # secrets touched. Pinned by commit SHA (v0.24.0), per SO #17.
+      - name: generate CycloneDX SBOM
+        uses: anchore/sbom-action@e22c389904149dbc22b58101806040fa8d37a610 # v0.24.0
+        with:
+          path: .
+          format: cyclonedx-json
+          output-file: dist/upload/sbom.cyclonedx.json
+
       # D-SIGN-1 free hardening: a plain SHA256SUMS file gives anyone
       # `sha256sum -c` verification with zero tooling beyond coreutils,
       # alongside (not instead of) the DSSE-signed release-manifest above.
-      # Runs after every asset (incl. the offline tarball) is staged so the
-      # sums file covers the exact set of files in the GitHub release.
+      # Runs after every asset (incl. the offline tarball and SBOM) is staged
+      # so the sums file covers the exact set of files in the GitHub release.
       - name: generate SHA256SUMS
         working-directory: dist/upload
         run: sha256sum * > SHA256SUMS
