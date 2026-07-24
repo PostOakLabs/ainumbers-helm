@@ -1,4 +1,6 @@
 #!/usr/bin/env node
+// SPDX-License-Identifier: Apache-2.0
+// Copyright (c) 2026 Post Oak Labs, Inc.
 // Vendors pinned OCG kernels + verify libs from PostOakLabs/ainumbers into hub/vendored/ocg.
 // Single-writer: run this script alone, commit the pinned SHA in the commit message.
 // Zero npm deps — git + node builtins only (STANDING ORDERS #10: never npm).

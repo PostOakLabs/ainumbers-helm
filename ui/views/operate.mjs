@@ -1,3 +1,5 @@
+// SPDX-License-Identifier: Apache-2.0
+// Copyright (c) 2026 Post Oak Labs, Inc.
 // Operate view: daemon health, journal head, anchor status, backup trigger.
 // Journal/anchor/backup ship with HELM-H3; the calls below are already wired
 // so this view lights up with no UI changes once that daemon route lands.

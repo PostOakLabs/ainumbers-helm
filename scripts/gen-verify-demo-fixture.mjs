@@ -1,4 +1,6 @@
 #!/usr/bin/env node
+// SPDX-License-Identifier: Apache-2.0
+// Copyright (c) 2026 Post Oak Labs, Inc.
 // Generates the Verify view's built-in tampered-fixture demo (HELM-U3, TILE-
 // EXPLORER discipline: "a verifier never observed to reject isn't known to
 // verify"). Builds ONE real signed evidence bundle via the shipped H7 hub

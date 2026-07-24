@@ -1,4 +1,6 @@
 #!/usr/bin/env node
+// SPDX-License-Identifier: Apache-2.0
+// Copyright (c) 2026 Post Oak Labs, Inc.
 // HELM-P4-B2: generates docs/openapi.json from hub/server.mjs's own ROUTES +
 // DYNAMIC_ROUTES tables — the SSOT is the dispatcher, never a hand-copied
 // list (feedback-ssot-generator-freshness-gate). Descriptions below are the

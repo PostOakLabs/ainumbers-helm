@@ -1,3 +1,5 @@
+// SPDX-License-Identifier: Apache-2.0
+// Copyright (c) 2026 Post Oak Labs, Inc.
 // Append-only journal (D6, HELM-H3). One SQLite table, one process, one writer
 // (better-sqlite3 is synchronous — no concurrent-writer races to guard against).
 //

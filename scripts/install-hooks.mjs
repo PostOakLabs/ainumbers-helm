@@ -1,4 +1,6 @@
 #!/usr/bin/env node
+// SPDX-License-Identifier: Apache-2.0
+// Copyright (c) 2026 Post Oak Labs, Inc.
 // Activate the repo's tracked git hooks in this clone by pointing
 // core.hooksPath at the committed .githooks/ dir. The commit-msg hook itself
 // (.githooks/commit-msg → check-commit-msg.mjs, HELM-SHIFTLEFT-1) is already

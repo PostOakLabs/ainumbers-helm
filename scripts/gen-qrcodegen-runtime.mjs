@@ -1,4 +1,6 @@
 #!/usr/bin/env node
+// SPDX-License-Identifier: Apache-2.0
+// Copyright (c) 2026 Post Oak Labs, Inc.
 // Wraps the vendored ui/vendored/qrcodegen.js (verbatim, no imports/exports —
 // see ui/vendored/PORT.md) as a JS string constant so ui/lib/auditor-pdf.mjs
 // (HELM-P3-V9) can embed it in generated HTML with zero fs access — same

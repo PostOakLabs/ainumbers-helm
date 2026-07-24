@@ -1,3 +1,5 @@
+// SPDX-License-Identifier: Apache-2.0
+// Copyright (c) 2026 Post Oak Labs, Inc.
 // Hand-rolled static handler for the served UI shell (HELM-U4, Syncthing
 // pattern). No framework, no directory listing, no fs path built from the
 // request — see ui-manifest.mjs for why traversal isn't reachable.

@@ -1,3 +1,5 @@
+// SPDX-License-Identifier: Apache-2.0
+// Copyright (c) 2026 Post Oak Labs, Inc.
 import { readTokenFromLocation, loadToken, saveToken, clearToken, loadFp, saveFp, clearFp, loadPort, savePort, call } from "./api.mjs";
 import { initCompanyProfile } from "./lib/company-profile.mjs";
 import { BrowserJournalClient, offerJsonBundleDownload } from "./lib/browser-journal-client.mjs";

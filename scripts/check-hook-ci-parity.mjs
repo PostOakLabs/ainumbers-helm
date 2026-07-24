@@ -1,4 +1,6 @@
 #!/usr/bin/env node
+// SPDX-License-Identifier: Apache-2.0
+// Copyright (c) 2026 Post Oak Labs, Inc.
 // check-hook-ci-parity.mjs — fail if the blocking CI `ci` job runs a
 // `node scripts/*.mjs` gate that the pre-push hook (.githooks/pre-push) does
 // NOT run. Keeps "green pre-push == green CI" (HELM-SHIFTLEFT-1) an enforced

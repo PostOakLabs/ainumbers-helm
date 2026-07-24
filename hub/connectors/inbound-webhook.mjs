@@ -1,3 +1,5 @@
+// SPDX-License-Identifier: Apache-2.0
+// Copyright (c) 2026 Post Oak Labs, Inc.
 // Connector 2 (HELM-H6): generic inbound webhook — the n8n/Zapier "governed
 // step" adapter. The orchestrator the buyer already runs POSTs a step-
 // completion callback in; this connector never calls out (no outbound

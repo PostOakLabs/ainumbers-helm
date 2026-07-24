@@ -1,3 +1,5 @@
+// SPDX-License-Identifier: Apache-2.0
+// Copyright (c) 2026 Post Oak Labs, Inc.
 // Compiled workflow-pack catalog (HELM-P2-U4): reads the committed,
 // generator-produced packs/ directory (helm/scripts/compile-packs.mjs,
 // HELM-P2-C1) — never regenerated at runtime, same vendoring discipline as

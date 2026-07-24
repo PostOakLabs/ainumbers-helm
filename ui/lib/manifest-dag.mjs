@@ -1,3 +1,5 @@
+// SPDX-License-Identifier: Apache-2.0
+// Copyright (c) 2026 Post Oak Labs, Inc.
 // Derives a read-only layered DAG from a workflow manifest (SPEC.md §26.3).
 // The manifest schema (schema/workflow-manifest.schema.json) has no explicit
 // edge list — trigger/connectors/nodes/gates/actions are flat arrays whose

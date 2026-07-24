@@ -1,3 +1,5 @@
+// SPDX-License-Identifier: Apache-2.0
+// Copyright (c) 2026 Post Oak Labs, Inc.
 // Run view: timeline of execution_state transitions (schema/objects/
 // execution_state.schema.json — §26.4/§26.5 lifecycle), dry-run trigger,
 // data-classification markers (from connector_attestation.classification

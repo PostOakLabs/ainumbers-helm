@@ -1,3 +1,5 @@
+// SPDX-License-Identifier: Apache-2.0
+// Copyright (c) 2026 Post Oak Labs, Inc.
 // Loopback API client for helmd. D8: bearer token on every call, no PII in
 // URLs. Dormant-state discipline: a failed live call falls back to the last
 // cached response with an explicit stale flag — never silently invents state

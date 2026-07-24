@@ -1,4 +1,6 @@
 #!/usr/bin/env node
+// SPDX-License-Identifier: Apache-2.0
+// Copyright (c) 2026 Post Oak Labs, Inc.
 // SEA build dry-run: generates the Node single-executable blob from hub/index.mjs
 // but does NOT inject it into a runnable binary (that needs postject at
 // packaging time, HELM-H8). Proves the entrypoint + sea-config stay buildable.

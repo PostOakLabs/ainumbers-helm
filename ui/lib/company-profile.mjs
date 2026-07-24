@@ -1,3 +1,5 @@
+// SPDX-License-Identifier: Apache-2.0
+// Copyright (c) 2026 Post Oak Labs, Inc.
 // Company-profile config URL (HELM-P4-J1, Swagger-UI pattern). An embedder
 // hosts a static JSON file at any https:// URL (or S3/GitHub Pages/intranet
 // — no backend of ours involved) and points the app at it via `?config=`

@@ -1,3 +1,5 @@
+// SPDX-License-Identifier: Apache-2.0
+// Copyright (c) 2026 Post Oak Labs, Inc.
 // One-shot: enable this repo's committed git hooks for the current clone.
 //   node scripts/setup-hooks.mjs
 // Points core.hooksPath at the version-controlled .githooks/ dir (Git 2.9+). Idempotent.

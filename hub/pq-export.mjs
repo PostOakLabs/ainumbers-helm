@@ -1,3 +1,5 @@
+// SPDX-License-Identifier: Apache-2.0
+// Copyright (c) 2026 Post Oak Labs, Inc.
 // Power Query bridge (HELM-P4-B1, HELM-PHASE4-BUILD-SPEC.md §2 Band B row B1):
 // writes a run's evidence-bundle entries out as a small, FROZEN-schema JSON
 // output-folder that Excel/Power Query reads natively, offline, in

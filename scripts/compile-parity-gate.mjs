@@ -1,4 +1,6 @@
 #!/usr/bin/env node
+// SPDX-License-Identifier: Apache-2.0
+// Copyright (c) 2026 Post Oak Labs, Inc.
 // Compile parity gate (HELM-P2-C2, HELM-PHASE2-BUILD-SPEC.md §2/§8 row C2/§10 gate 1).
 //
 // Proves compiling a chain into a pack manifest (C1) preserves execution semantics: for

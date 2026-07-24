@@ -1,3 +1,5 @@
+// SPDX-License-Identifier: Apache-2.0
+// Copyright (c) 2026 Post Oak Labs, Inc.
 // Encrypted export/backup + restore (D6/HELM-H3 "done" criteria: restore then
 // verify running hashes + checkpoint sigs). A backup is a passphrase-protected
 // archive of the full journal + checkpoints tables — portable across machines

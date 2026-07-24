@@ -1,3 +1,5 @@
+// SPDX-License-Identifier: Apache-2.0
+// Copyright (c) 2026 Post Oak Labs, Inc.
 // Main-thread orchestrator for the browser journal (P3-D7, HELM-P3-U2).
 // Wires the tested primitives (browser-journal.mjs, durability-banner.mjs)
 // to real browser globals: the dedicated worker, Web Locks, Storage Manager,

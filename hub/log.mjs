@@ -1,3 +1,5 @@
+// SPDX-License-Identifier: Apache-2.0
+// Copyright (c) 2026 Post Oak Labs, Inc.
 // Structured JSON-lines logger. One object per line: ts, level, msg, ...fields.
 function emit(level, msg, fields) {
   const line = { ts: new Date().toISOString(), level, msg, ...fields };

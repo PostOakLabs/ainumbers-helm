@@ -1,4 +1,6 @@
 #!/usr/bin/env node
+// SPDX-License-Identifier: Apache-2.0
+// Copyright (c) 2026 Post Oak Labs, Inc.
 // Verifies a signed release manifest: DSSE dual-signature against the
 // committed public release-signing key, then every subject artifact's
 // sha256 against the files actually present in dist/. Used by CI (post-sign

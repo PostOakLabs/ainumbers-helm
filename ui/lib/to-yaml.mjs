@@ -1,3 +1,5 @@
+// SPDX-License-Identifier: Apache-2.0
+// Copyright (c) 2026 Post Oak Labs, Inc.
 // Minimal JSON->YAML for display only (Canvas manifest side-by-side view).
 // Not a general YAML emitter — handles the plain object/array/scalar shapes
 // that come out of workflow-manifest JSON. Pure, DOM-free, unit-testable.

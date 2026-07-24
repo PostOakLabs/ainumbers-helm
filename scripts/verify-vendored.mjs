@@ -1,4 +1,6 @@
 #!/usr/bin/env node
+// SPDX-License-Identifier: Apache-2.0
+// Copyright (c) 2026 Post Oak Labs, Inc.
 // Re-verifies hub/vendored/ocg/ integrity: local bytes vs MANIFEST.json hashes,
 // and MANIFEST bytes vs upstream pinnedSha (HELM-SEC-3 / THREAT-MODEL §5 F3).
 // Zero npm deps — git + node builtins only (STANDING ORDERS #10: never npm).

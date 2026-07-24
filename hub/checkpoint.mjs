@@ -1,3 +1,5 @@
+// SPDX-License-Identifier: Apache-2.0
+// Copyright (c) 2026 Post Oak Labs, Inc.
 // Signed checkpoints (D6/§26.5): periodic summaries of journal state, signed
 // with the H2 dual-sign envelope, optionally carrying anchors[] from
 // anchor-client.mjs. checkpoint_seq is caller-assigned (monotonic per hub) —

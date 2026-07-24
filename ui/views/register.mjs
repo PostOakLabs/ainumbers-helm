@@ -1,3 +1,5 @@
+// SPDX-License-Identifier: Apache-2.0
+// Copyright (c) 2026 Post Oak Labs, Inc.
 // Register view (HELM-P3-E12): one-click EUC register entry + per-kernel
 // validation card exports. Turns SR 11-7/SS1-23 model-risk paperwork into a
 // button instead of a hand-maintained spreadsheet — generated entirely from

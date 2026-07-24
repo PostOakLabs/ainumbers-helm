@@ -1,3 +1,5 @@
+// SPDX-License-Identifier: Apache-2.0
+// Copyright (c) 2026 Post Oak Labs, Inc.
 // Template gallery (HELM-P3-G10): curated compliance-scenario templates
 // over the compiled pack catalog (HELM-P2-C1/U4) — kills the 400-kernel
 // empty-canvas problem by pre-wiring a handful of named scenarios with

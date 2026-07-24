@@ -1,3 +1,5 @@
+// SPDX-License-Identifier: Apache-2.0
+// Copyright (c) 2026 Post Oak Labs, Inc.
 // schema-validator.mjs — zero-dep JSON Schema (draft 2020-12 subset) validator.
 // Subset implemented: type, required, properties, additionalProperties, enum,
 // const, pattern, minLength, minItems, items, oneOf, $ref to a LOCAL #/$defs

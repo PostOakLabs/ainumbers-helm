@@ -1,3 +1,5 @@
+// SPDX-License-Identifier: Apache-2.0
+// Copyright (c) 2026 Post Oak Labs, Inc.
 // Help view (HELM-P2-U6, HELM-PHASE2-BUILD-SPEC.md §5): static explainer, no
 // daemon dependency — renders even when the browser has no pairing token, so
 // it's reachable from the "not paired" welcome state (app.mjs bypasses the

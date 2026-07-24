@@ -1,3 +1,5 @@
+// SPDX-License-Identifier: Apache-2.0
+// Copyright (c) 2026 Post Oak Labs, Inc.
 // Bearer-token pairing: random token in a mode-0600 file, one-time #token= URL
 // printed by the CLI on start. Every HTTP call must carry it (D8).
 import { randomBytes, timingSafeEqual } from "node:crypto";

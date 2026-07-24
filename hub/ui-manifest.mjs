@@ -1,3 +1,5 @@
+// SPDX-License-Identifier: Apache-2.0
+// Copyright (c) 2026 Post Oak Labs, Inc.
 // Explicit allowlist of servable UI files (HELM-U4). This Map is the ONLY
 // thing static.mjs consults to answer a GET — a request path that isn't a
 // key here is a 404, full stop. There is no filesystem-path concatenation

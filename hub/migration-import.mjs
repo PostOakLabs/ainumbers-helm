@@ -1,3 +1,5 @@
+// SPDX-License-Identifier: Apache-2.0
+// Copyright (c) 2026 Post Oak Labs, Inc.
 // Daemon-side migration import (P3-D10, HELM-P3-M7). A migration_bundle
 // (schema/migration_bundle.schema.json, shipped by P3-S1) is a signed-free
 // continuity MANIFEST — seq+digest per browser journal entry, plus the

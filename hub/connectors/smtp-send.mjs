@@ -1,3 +1,5 @@
+// SPDX-License-Identifier: Apache-2.0
+// Copyright (c) 2026 Post Oak Labs, Inc.
 // Connector 4 (HELM-P2-H9b): smtp.send — pure-config outbound email over
 // raw SMTP (node:net/node:tls, zero dependency — D11). There is no HTTP
 // fetch here to route through connector.mjs's performEgress, so this module

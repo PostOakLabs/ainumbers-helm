@@ -1,3 +1,5 @@
+// SPDX-License-Identifier: Apache-2.0
+// Copyright (c) 2026 Post Oak Labs, Inc.
 // Release signing keypair (HELM-H8, D10). Distinct from the per-install
 // daemon keypair in keys.mjs: this key signs release manifests at build
 // time in CI, not per-customer at runtime. Provisioned via the

@@ -1,3 +1,5 @@
+// SPDX-License-Identifier: Apache-2.0
+// Copyright (c) 2026 Post Oak Labs, Inc.
 // Review view — Phase 2 stub (HELM-U3 row: "Review view ships as labeled
 // Phase-2 stub only"). The review_task/review_decision/override schemas are
 // already reserved-but-empty (HELM-S1); this view has nothing live to render

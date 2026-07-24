@@ -1,3 +1,5 @@
+// SPDX-License-Identifier: Apache-2.0
+// Copyright (c) 2026 Post Oak Labs, Inc.
 // Anchor client (D6/§26.5): submits checkpoint digests to external timestamp
 // authorities and returns `anchors[]` members — {type, ...} with
 // type ∈ rfc3161 | opentimestamps (scitt-receipt is reserved, never emitted).

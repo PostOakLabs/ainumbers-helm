@@ -1,3 +1,5 @@
+// SPDX-License-Identifier: Apache-2.0
+// Copyright (c) 2026 Post Oak Labs, Inc.
 // Browser-side DSSE/in-toto envelope verifier (HELM-U3, mirrors hub/envelope.mjs
 // verifyEnvelope() for the daemon-free Verify view). Ed25519 via WebCrypto
 // (same importKey('jwk', {kty:'OKP',crv:'Ed25519',...}) pattern already shipped

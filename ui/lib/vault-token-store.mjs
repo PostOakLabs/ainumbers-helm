@@ -1,3 +1,5 @@
+// SPDX-License-Identifier: Apache-2.0
+// Copyright (c) 2026 Post Oak Labs, Inc.
 // Connector-token storage for browser-mode Helm (HELM-PHASE3-BUILD-SPEC.md
 // P3-D8). Tokens are the ONLY thing the vault DEK ever encrypts — the vault
 // record (wrapped DEK + PRF/passphrase KDF metadata) and the token blobs

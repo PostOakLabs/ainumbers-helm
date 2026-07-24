@@ -1,3 +1,5 @@
+// SPDX-License-Identifier: Apache-2.0
+// Copyright (c) 2026 Post Oak Labs, Inc.
 // Verify view (HELM-U3, SPEC.md §26.6-§26.8): full browser-side verification of
 // an evidence bundle — DSSE dual-signature, entry/checkpoint self-consistency,
 // anchor structural binding — with ZERO network access by default (§26.7).

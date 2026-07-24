@@ -1,3 +1,5 @@
+// SPDX-License-Identifier: Apache-2.0
+// Copyright (c) 2026 Post Oak Labs, Inc.
 // Autostart (HELM-P4-J4): the last CLI moment. First run writes a per-user
 // launcher so helmd survives reboots without a terminal ever reopening —
 // macOS gets a LaunchAgent (RunAtLoad + KeepAlive = crash self-heal, visible

@@ -1,3 +1,5 @@
+// SPDX-License-Identifier: Apache-2.0
+// Copyright (c) 2026 Post Oak Labs, Inc.
 // Run engine (D4, HELM-H4): SQLite step-checkpoint executor over the H3
 // journal. A workflow manifest's `nodes[]` has no edges field yet (§26.3) —
 // Phase 1 treats manifest order as the DAG (a linear chain); a later WU that

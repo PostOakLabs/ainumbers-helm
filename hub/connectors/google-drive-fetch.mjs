@@ -1,3 +1,5 @@
+// SPDX-License-Identifier: Apache-2.0
+// Copyright (c) 2026 Post Oak Labs, Inc.
 // Connector 1 (HELM-H6, scope migrated HELM-P3-U4/P3-D5): google-drive.fetch.
 // Retrieves a single Drive file's bytes via the OAuth token already in the
 // vault (from H5's generic PKCE flow) and produces a signed

@@ -1,3 +1,5 @@
+// SPDX-License-Identifier: Apache-2.0
+// Copyright (c) 2026 Post Oak Labs, Inc.
 // Dual-sign DSSE/in-toto envelope emitter + verifier (D5, HELM-H2).
 // Every signed Helm object (manifest, checkpoint, attestation, evidence bundle
 // manifest, release manifest) is an in-toto Statement v1 inside a DSSE

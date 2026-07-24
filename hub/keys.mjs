@@ -1,3 +1,5 @@
+// SPDX-License-Identifier: Apache-2.0
+// Copyright (c) 2026 Post Oak Labs, Inc.
 // Signing key generation + at-rest storage (D9 fallback tier).
 // Real OS-keychain storage is HELM-H5's vault; this module owns a stable
 // load/create API so H5 can swap the backing store underneath without

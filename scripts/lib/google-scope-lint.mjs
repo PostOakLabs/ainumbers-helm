@@ -1,3 +1,5 @@
+// SPDX-License-Identifier: Apache-2.0
+// Copyright (c) 2026 Post Oak Labs, Inc.
 // Google OAuth scope lint (HELM-P3-U4, P3-D5). drive.readonly and the bare
 // "drive" scope are both Google RESTRICTED scopes requiring an annual CASA
 // security assessment ($500-4.5k/yr) — dead at Helm's $0 budget. Phase-1's

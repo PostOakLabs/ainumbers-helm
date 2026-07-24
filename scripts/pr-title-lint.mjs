@@ -1,4 +1,6 @@
 #!/usr/bin/env node
+// SPDX-License-Identifier: Apache-2.0
+// Copyright (c) 2026 Post Oak Labs, Inc.
 // Zero-dep Conventional Commits lint for PR titles (HELM-REL-AUTO-2, A3).
 // Reads the PR title from the pull_request event payload and fails the
 // process if it does not match `type(scope)!: subject`. Keeps

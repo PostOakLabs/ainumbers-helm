@@ -1,3 +1,5 @@
+// SPDX-License-Identifier: Apache-2.0
+// Copyright (c) 2026 Post Oak Labs, Inc.
 // Connector runtime (D-class, HELM-H6). Loads signed connector contracts
 // (schema/connector_contract.schema.json) and enforces DEFAULT-DENY egress:
 // a connector may only reach a (host, method) pair present in its OWN

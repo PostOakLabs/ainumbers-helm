@@ -1,3 +1,5 @@
+// SPDX-License-Identifier: Apache-2.0
+// Copyright (c) 2026 Post Oak Labs, Inc.
 // Kernel decision-table cards (HELM-P4-A4, HELM-PHASE4-BUILD-SPEC.md §2 Band A
 // row A4). Reshapes a kernel validation card's test vectors (already the
 // input->output ground truth committed as fixtures, see hub/euc-register.mjs)

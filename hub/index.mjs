@@ -1,4 +1,6 @@
 #!/usr/bin/env node
+// SPDX-License-Identifier: Apache-2.0
+// Copyright (c) 2026 Post Oak Labs, Inc.
 // helmd — local-first control plane hub daemon. Loopback REST+SSE (D8
 // hardened) + named-pipe/UDS CLI channel + doctor self-check.
 import { loadConfig } from "./config.mjs";

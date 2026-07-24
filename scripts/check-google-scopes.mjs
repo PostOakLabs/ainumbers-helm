@@ -1,4 +1,6 @@
 #!/usr/bin/env node
+// SPDX-License-Identifier: Apache-2.0
+// Copyright (c) 2026 Post Oak Labs, Inc.
 // CLI entrypoint for the Google OAuth scope lint (HELM-P3-U4, P3-D5). Wired
 // into `npm run lint` (see scripts/lint.mjs). Fails the build if any
 // connector contract or OAuth provider preset in the repo names

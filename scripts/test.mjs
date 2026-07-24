@@ -1,4 +1,6 @@
 #!/usr/bin/env node
+// SPDX-License-Identifier: Apache-2.0
+// Copyright (c) 2026 Post Oak Labs, Inc.
 // Zero-dep test runner: executes every *.test.mjs under fixtures/ and hub/ via node:test.
 import { run } from "node:test";
 import { tap } from "node:test/reporters";

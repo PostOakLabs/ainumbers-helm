@@ -1,4 +1,6 @@
 #!/usr/bin/env node
+// SPDX-License-Identifier: Apache-2.0
+// Copyright (c) 2026 Post Oak Labs, Inc.
 // Builds + dual-signs the release manifest (HELM-H8, D10) over every
 // artifact in dist/: SEA binaries per platform + packaging manifests.
 // Statement subject = one entry per artifact (name, sha256, size). Predicate

@@ -1,4 +1,6 @@
 #!/usr/bin/env node
+// SPDX-License-Identifier: Apache-2.0
+// Copyright (c) 2026 Post Oak Labs, Inc.
 // Compiles the Verify view's ESM crypto/schema chain (ui/vendored/{hash,proof,
 // der,schema-validator}.mjs + ui/vendored/schemas/evidence_bundle_manifest.schema.mjs
 // + ui/lib/{verify-envelope,verify-bundle}.mjs) into ONE dependency-free script

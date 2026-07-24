@@ -1,4 +1,6 @@
 #!/usr/bin/env node
+// SPDX-License-Identifier: Apache-2.0
+// Copyright (c) 2026 Post Oak Labs, Inc.
 // Pack compiler (HELM-P2-C1, HELM-PHASE2-BUILD-SPEC.md §2): compiles the site
 // repo's ~300 named chains (vendored, pinned copy of chaingraph.json) into
 // §26.3-conformant workflow-pack manifests. Vendoring-pattern generator —

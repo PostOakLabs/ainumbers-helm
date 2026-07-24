@@ -1,3 +1,5 @@
+// SPDX-License-Identifier: Apache-2.0
+// Copyright (c) 2026 Post Oak Labs, Inc.
 // Minimal STORE-method (uncompressed) ZIP writer — HELM-P3-V9's bundle.zip
 // export needs no compression (its payload is already-tiny HTML/JSON), and a
 // hand-rolled STORE writer keeps the export dependency-free (D2) rather than

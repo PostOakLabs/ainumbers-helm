@@ -1,3 +1,5 @@
+// SPDX-License-Identifier: Apache-2.0
+// Copyright (c) 2026 Post Oak Labs, Inc.
 // Connect view: review connector contracts BEFORE consent — scope,
 // destination, data-route, token location, expiry — for daemon-side
 // connectors (unchanged from H6/P2).

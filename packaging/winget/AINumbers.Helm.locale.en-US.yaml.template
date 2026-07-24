@@ -3,7 +3,8 @@ PackageVersion: {{VERSION}}
 PackageLocale: en-US
 Publisher: Post Oak Labs
 PackageName: AINumbers Helm
-License: Proprietary
+License: Apache-2.0
+LicenseUrl: https://github.com/PostOakLabs/ainumbers-helm/blob/main/LICENSE
 ShortDescription: Local-first control plane for verifiable connected workflows.
 PackageUrl: https://ainumbers.co/helm
 ManifestType: defaultLocale

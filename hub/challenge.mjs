@@ -1,3 +1,5 @@
+// SPDX-License-Identifier: Apache-2.0
+// Copyright (c) 2026 Post Oak Labs, Inc.
 // Signed-challenge daemon proof (P3-D9): before any client trusts a
 // responder at 127.0.0.1:<port> enough to migrate data into it, the
 // responder must prove it holds the private half of a stable per-install
