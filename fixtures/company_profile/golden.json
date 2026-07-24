@@ -1,0 +1,13 @@
+{
+  "schema_version": 1,
+  "profile_name": "Acme Compliance",
+  "templates": ["pillar-two-provision", "cbcr-notification"],
+  "branding": {
+    "--accent": "#7a1fd9",
+    "--surface": "#ffffff"
+  },
+  "relay_url": "https://anchor.acme-internal.example",
+  "pinned_kernel_versions": {
+    "art-201": "1.4.0"
+  }
+}

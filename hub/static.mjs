@@ -15,9 +15,17 @@ import { join } from "node:path";
 import { isSea, getAsset } from "node:sea";
 import { UI_ASSETS, UI_DIR } from "./ui-manifest.mjs";
 
+// HELM-P4-J1: connect-src widened from 'self' to 'self' https: so the
+// browser can fetch an embedder-hosted company-profile config JSON at
+// ?config=<https-url> (any host — Swagger-UI's ?url= pattern, not an
+// allowlist we maintain). This does NOT relax script-src/style-src/img-src —
+// a hostile config can only ever be fetched as JSON and read as data; it can
+// never load as a script, stylesheet, or navigate the frame. The relay-base
+// override the same config can set (ui/lib/company-profile.mjs) is scoped by
+// this same connect-src widening, not a separate hole.
 export const STATIC_HEADERS = {
   "Content-Security-Policy":
-    "default-src 'none'; script-src 'self'; style-src 'self'; img-src 'self' data:; connect-src 'self'; frame-ancestors 'none'; base-uri 'none'; form-action 'none'",
+    "default-src 'none'; script-src 'self'; style-src 'self'; img-src 'self' data:; connect-src 'self' https:; frame-ancestors 'none'; base-uri 'none'; form-action 'none'",
   "X-Content-Type-Options": "nosniff",
   "Referrer-Policy": "no-referrer",
   "Cross-Origin-Opener-Policy": "same-origin",

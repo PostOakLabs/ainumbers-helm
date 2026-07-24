@@ -7,7 +7,7 @@ import assert from "node:assert/strict";
 import { readFileSync } from "node:fs";
 import { join, dirname } from "node:path";
 import { fileURLToPath } from "node:url";
-import { submitAnchor, buildQueueMarker, RELAY_CAS } from "./anchor-browser.mjs";
+import { submitAnchor, buildQueueMarker, RELAY_CAS, RELAY_BASE, currentRelayBase, setRelayBaseOverride } from "./anchor-browser.mjs";
 import { verifyAnchorBinding } from "./verify-bundle.mjs";
 import { validate } from "../vendored/schema-validator.mjs";
 import ANCHOR_QUEUE_MARKER_SCHEMA from "../vendored/schemas/anchor_queue_marker.schema.mjs";
@@ -119,4 +119,32 @@ test("fixture: tampered anchor_queue_marker (status not in enum) fails the schem
   const tampered = JSON.parse(readFileSync(join(FIXTURES, "tampered.json"), "utf8"));
   const errs = validate(ANCHOR_QUEUE_MARKER_SCHEMA, tampered);
   assert.ok(errs.length > 0);
+});
+
+// HELM-P4-J1: a loaded company profile can override the relay base.
+test("currentRelayBase: defaults to RELAY_BASE with no override set", () => {
+  setRelayBaseOverride(null);
+  assert.equal(currentRelayBase(), RELAY_BASE);
+});
+
+test("setRelayBaseOverride: accepts an https override and it becomes the new current base", () => {
+  setRelayBaseOverride("https://anchor.acme-internal.example");
+  assert.equal(currentRelayBase(), "https://anchor.acme-internal.example");
+  setRelayBaseOverride(null);
+  assert.equal(currentRelayBase(), RELAY_BASE);
+});
+
+test("setRelayBaseOverride: rejects a non-https value, falls back to RELAY_BASE", () => {
+  setRelayBaseOverride("javascript:alert(1)");
+  assert.equal(currentRelayBase(), RELAY_BASE);
+});
+
+test("submitAnchor: honors an active relay-base override for the request URL", async () => {
+  setRelayBaseOverride("https://anchor.acme-internal.example");
+  let requestedUrl = null;
+  const b64 = fakeTokenB64(HASH_HEX);
+  const fetchImpl = async (url) => { requestedUrl = url; return fakeResponse(b64); };
+  await submitAnchor(HASH_HEX, { checkpointSeq: 5, ca: "freetsa", fetchImpl });
+  assert.equal(requestedUrl, "https://anchor.acme-internal.example/relay/freetsa");
+  setRelayBaseOverride(null);
 });

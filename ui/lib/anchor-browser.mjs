@@ -30,6 +30,18 @@ import ANCHOR_QUEUE_MARKER_SCHEMA from "../vendored/schemas/anchor_queue_marker.
 export const RELAY_BASE = "https://anchor.ainumbers.co";
 export const RELAY_CAS = ["digicert", "sectigo", "freetsa"];
 
+// HELM-P4-J1: a loaded company profile's relay_url overrides the default
+// base for callers that don't pass their own relayBase. The relay stays
+// untrusted either way — submitAnchor's messageImprint check below binds the
+// returned token to the requested hash regardless of which relay answered.
+let relayBaseOverride = null;
+export function setRelayBaseOverride(url) {
+  relayBaseOverride = typeof url === "string" && /^https:\/\//.test(url) ? url : null;
+}
+export function currentRelayBase() {
+  return relayBaseOverride || RELAY_BASE;
+}
+
 function relayUrlFor(relayBase, ca) {
   return `${relayBase}/relay/${ca}`;
 }
@@ -64,7 +76,7 @@ export async function submitAnchor(
   {
     checkpointSeq,
     ca = "freetsa",
-    relayBase = RELAY_BASE,
+    relayBase = currentRelayBase(),
     timeoutMs = 35_000,
     fetchImpl = fetch,
     offline = false,

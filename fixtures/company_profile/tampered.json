@@ -1,0 +1,6 @@
+{
+  "schema_version": 1,
+  "profile_name": "Acme Compliance",
+  "relay_url": "javascript:alert(1)",
+  "extra_field_not_allowed": true
+}
