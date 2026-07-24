@@ -13,6 +13,8 @@ pinned SHA in `../../scripts/vendor.config.json` (currently
 | `der.mjs`                | `hub/vendored/ocg/kernels/_anchor-testutil.mjs` (DER/OID reader) + `hub/vendored/ocg/kernels/_rfc3161.mjs` (`parseRfc3161Token`'s field-walk) | Buffer -> Uint8Array; `Buffer.from(x,"base64")` -> `atob()`-based `base64ToBytes`; CMS signature/chain-of-trust verification dropped (no WebCrypto equivalent — structural-only, see file header) |
 | `schema-validator.mjs`   | `scripts/lib/schema-validator.mjs` (helm's own, not site-vendored) | none (verbatim body) |
 | `schemas/connector_contract.schema.mjs` | `schema/connector_contract.schema.json` (helm's own) | JSON literal wrapped as a default export |
+| `schemas/anchor_queue_marker.schema.mjs` | `schema/anchor_queue_marker.schema.json` (helm's own, HELM-P3-A5) | JSON literal wrapped as a default export |
+| `der-encode.mjs` | not a port — hand-rolled DER writer (HELM-P3-A5), the encode-side counterpart to `der.mjs`'s hand-rolled reader. Deliberately NOT ported from `hub/vendored/anchor-suite/lib/tsq.mjs`, which builds the identical TLV shape via the ~24k-line vendored pkijs bundle — bringing that into `ui/` would break D2 (static, no build step, no heavyweight dep for one small request). See the file's own header. |
 
 `ui/lib/verify-envelope.mjs` and `ui/lib/verify-bundle.mjs` are not ports of a
 vendored file — they mirror helm's own `hub/envelope.mjs` / `hub/bundle.mjs`
