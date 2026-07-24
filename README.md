@@ -45,8 +45,10 @@ Loopback-only daemon, bearer-token pairing, Host/Origin validation, OS-keychain 
 `docs/TRUST.md` — SOC 2 scoping statement, a complete enumeration of every
 outbound request the shipped code can make, a reproducible zero-telemetry
 recipe you can run yourself in under 10 minutes, the data-flow/subprocessor
-statement, and where to find the CycloneDX SBOM published with every
-release.
+statement, where to find the CycloneDX SBOM published with every release,
+zone-level DNS hardening status (DNSSEC + CAA, runbook in
+`docs/DNSSEC-CAA-RUNBOOK.md`), dated SSL Labs / Mozilla Observatory grades
+for every host we touch, and the SRI statement.
 
 ## Continuity
 

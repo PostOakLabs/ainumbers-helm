@@ -1,8 +1,10 @@
 # Helm trust page v1
 
-This is the source for Helm's public trust posture. Five parts, in order:
+This is the source for Helm's public trust posture. Eight parts, in order:
 scoping, network behavior, a reproducible zero-telemetry check, the
-data-flow/subprocessor statement, and the per-release SBOM. It extends
+data-flow/subprocessor statement, the per-release SBOM, zone-level DNS
+hardening (DNSSEC + CAA), dated third-party grades for every host in §2,
+and the Subresource Integrity statement. It extends
 [HELM-P3-T13](https://ainumbers.co/trust/) (site-repo trust pages covering
 CAIQ-Lite, threat model, LNA policy, PA coexistence) with the parts that are
 specific to this repo's shipped code and release pipeline — read both; this
@@ -152,3 +154,84 @@ release manifest and `SHA256SUMS`. See
 [anchore/sbom-action](https://github.com/anchore/sbom-action), pinned by
 commit SHA. Fetch the SBOM for any release from that release's GitHub
 assets: `sbom.cyclonedx.json`.
+
+## 6. Zone-level DNS hardening: DNSSEC + CAA
+
+The `ainumbers.co` zone (Cloudflare-managed, covers every host in §2 —
+`ainumbers.co`, `anchor.ainumbers.co`, `mcp.ainumbers.co`) runs DNSSEC and
+CAA the way Cloudflare's own documentation recommends. Both are
+zone-wide Cloudflare **console/registrar** toggles, not application
+code — Post Oak Labs' standing operating rule (SO #8, SO #24) is that a
+build session never touches production zone config directly; a human
+applies console changes from a written runbook and the session
+memorializes the before/after. The exact-click runbook for this WU's
+DNSSEC + CAA change lives in
+[`DNSSEC-CAA-RUNBOOK.md`](DNSSEC-CAA-RUNBOOK.md) in this directory.
+Current state as verified by this WU (`dig`/DNS-over-HTTPS, 2026-07-24):
+no `DS` record at the registrar and no `CAA` record in the zone — both
+pending the runbook's execution. This section will be updated with the
+landed state once Tim confirms.
+
+## 7. Third-party grades — dated, every host in §2
+
+Run against the live sites, not against a design doc. Re-run and
+re-date whenever the CSP/header baseline changes materially; a stale
+grade is worse than no grade, so don't let this table silently drift.
+
+| Host | Qualys SSL Labs | Mozilla/MDN HTTP Observatory | Scanned |
+|---|---|---|---|
+| `ainumbers.co` | **B** (all 4 endpoints) | **C+** (60/100, 8/10 passed) | 2026-07-24 |
+| `mcp.ainumbers.co` | **A+** (all 4 endpoints) | **C** (55/100, 8/10 passed) | 2026-07-24 |
+| `anchor.ainumbers.co` | **B** (all 4 endpoints) | **A+** (135/100) | 2026-07-24 |
+
+SSL Labs: [ainumbers.co](https://www.ssllabs.com/ssltest/analyze.html?d=ainumbers.co) ·
+[mcp.ainumbers.co](https://www.ssllabs.com/ssltest/analyze.html?d=mcp.ainumbers.co) ·
+[anchor.ainumbers.co](https://www.ssllabs.com/ssltest/analyze.html?d=anchor.ainumbers.co).
+Observatory: [ainumbers.co](https://developer.mozilla.org/en-US/observatory/analyze?host=ainumbers.co) ·
+[mcp.ainumbers.co](https://developer.mozilla.org/en-US/observatory/analyze?host=mcp.ainumbers.co) ·
+[anchor.ainumbers.co](https://developer.mozilla.org/en-US/observatory/analyze?host=anchor.ainumbers.co).
+
+**What's holding `ainumbers.co` and `mcp.ainumbers.co` at C/C+ (both
+share the same two failing Observatory tests):**
+
+- **`content-security-policy`** — implemented but with `'unsafe-inline'`
+  in `script-src`/`style-src`, so it scores as "implemented unsafely"
+  (−20 to −25). Tightening this is a real content change (removing
+  inline script/style), not a config toggle — out of scope for this WU;
+  tracked as a follow-up, not silently fixed here.
+- **`x-frame-options`** — not set (−20). The site deliberately leaves
+  framing policy to CSP `frame-ancestors` rather than the legacy header;
+  Observatory scores the legacy header's absence regardless. Documented
+  here rather than added reflexively — SO #20 (`connect-src 'self'
+  https:`) already governs this surface; adding XFO is a separate call
+  for whoever owns CSP policy, not this WU.
+
+`anchor.ainumbers.co` (BrowserChain/anchor-suite host) has neither
+Observatory gap — A+/135 — because it serves no HTML/JS surface to
+harden. Its **SSL Labs B** (shared with `ainumbers.co`) has a different,
+confirmed cause: the endpoint still negotiates **TLS 1.0/1.1** alongside
+1.2/1.3 (SSL Labs caps the grade at B whenever legacy TLS versions are
+enabled, independent of cipher strength). `mcp.ainumbers.co` (the
+Cloudflare Worker) doesn't offer TLS 1.0/1.1 and scores A+ — the gap is
+the zone/edge-certificate **Minimum TLS Version** setting, another
+Cloudflare console toggle, not application code. Raising it to TLS 1.2
+is out of scope for this WU (it's a separate console change with its
+own blast radius — could break legacy clients still connecting over
+1.0/1.1) but is flagged here as a follow-up candidate, not silently
+applied.
+
+## 8. Subresource Integrity (SRI) statement
+
+**N/A by construction.** Grepped every `.html`/`.mjs`/`.js` file in this
+repo (excluding `node_modules`, generated `dist/`, and vendored kernel
+fixtures) for `<script src=` and `<link href=` pointing at an external
+origin — zero matches. `ui/helm.html` and `ui/oauth-callback.html` load
+no third-party script or stylesheet at all; every dependency (pptxgenjs,
+dmn-js, etc.) is vendored and bundled in-repo, not fetched at runtime.
+`ui/lib/standalone-verifier.test.mjs` asserts this holds for the
+standalone verifier's self-contained HTML output too — the test fails
+if any `<script src=` is ever introduced. Because there is no
+cross-origin script/style load to protect, an SRI `integrity` hash has
+nothing to attach to; this statement is re-derived by re-running the
+grep, not asserted from memory, and will flip to a hash table the day
+any cross-file load is added.
