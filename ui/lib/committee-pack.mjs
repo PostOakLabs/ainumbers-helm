@@ -25,7 +25,7 @@ function esc(s) {
   return String(s ?? "").replace(/[&<>"']/g, (c) => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" }[c]));
 }
 
-const TRUST_LABELS_ORDER = [
+export const TRUST_LABELS_ORDER = [
   "hash_verified",
   "kernel_verified",
   "connector_asserted",
@@ -33,7 +33,7 @@ const TRUST_LABELS_ORDER = [
   "external_ack_captured",
 ];
 
-function trustLabelCounts(entries) {
+export function trustLabelCounts(entries) {
   const counts = new Map(TRUST_LABELS_ORDER.map((l) => [l, 0]));
   for (const e of entries) {
     counts.set(e.trust_label, (counts.get(e.trust_label) ?? 0) + 1);
