@@ -1,0 +1,4 @@
+{
+  "logo": "https://acme.example/logo.png",
+  "statement": "Missing required name; logo is a remote URL, not a data-URI."
+}

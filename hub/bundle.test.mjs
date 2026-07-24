@@ -118,3 +118,23 @@ test("TAMPERED-BUNDLE: a checkpoint the manifest references but that never verif
   assert.equal(result.valid, false);
   assert.ok(result.reasons.some((r) => r.startsWith("checkpoint_missing") || r.startsWith("checkpoint_envelope_invalid") || r === "manifest_predicate_mismatch"));
 });
+
+test("assembleBundle: presenter (HELM-P4-J2) rides along as an unsigned sibling field, invisible to verifyBundle()", () => {
+  const bundle = assembleBundle({
+    bundleId: "bundle-7", runId: RUN_ID, workflowManifestDigest: WF_DIGEST, specs: fixtureSpecs(), keys,
+    presenter: { name: "Acme Bank Compliance", statement: "Reviewed by Acme Bank." },
+  });
+  assert.deepEqual(bundle.presenter, { name: "Acme Bank Compliance", statement: "Reviewed by Acme Bank." });
+  assert.equal(bundle.manifest.predicate.presenter, undefined, "presenter must never enter the signed manifest predicate");
+
+  const swapped = { ...bundle, presenter: { name: "A Different Reseller Entirely" } };
+  const result = verifyBundle(swapped, publicKeys);
+  assert.deepEqual(result, { valid: true, reasons: [] });
+});
+
+test("assembleBundle: rejects a presenter that fails schema (missing required name)", () => {
+  assert.throws(
+    () => assembleBundle({ bundleId: "bundle-8", runId: RUN_ID, workflowManifestDigest: WF_DIGEST, specs: fixtureSpecs(), keys, presenter: { statement: "no name" } }),
+    /presenter fails schema/
+  );
+});

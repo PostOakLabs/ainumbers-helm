@@ -47,3 +47,19 @@ test("buildStandaloneVerifierHtml: a bundle_id containing '</script>' cannot bre
   assert.doesNotMatch(html, /<\/script><script>window\.pwned/, "the raw closing tag must be escaped, not passed through verbatim");
   assert.ok(html.includes("\\u003c/script>\\u003cscript>window.pwned=1\\u003c/script>"), "the hostile string should survive, inertly, as escaped JSON text");
 });
+
+test("buildStandaloneVerifierHtml: renders a co-brand 'Presented by' section when bundle.presenter is set (HELM-P4-J2)", async () => {
+  const withPresenter = { ...DEMO_GOLDEN_BUNDLE, presenter: { name: "Acme Bank Compliance", statement: "Reviewed by Acme Bank." } };
+  const html = buildStandaloneVerifierHtml({ bundle: withPresenter, publicKeys: DEMO_PUBLIC_KEYS });
+  assert.match(html, /Presented by/);
+  assert.match(html, /Acme Bank Compliance/);
+
+  const { verifyBundle } = loadRuntime();
+  const result = await verifyBundle(withPresenter, DEMO_PUBLIC_KEYS);
+  assert.equal(result.valid, true, "a presenter block must never affect the embedded runtime's own verification result");
+});
+
+test("buildStandaloneVerifierHtml: omits the presenter section entirely when bundle.presenter is absent", () => {
+  const html = buildStandaloneVerifierHtml({ bundle: DEMO_GOLDEN_BUNDLE, publicKeys: DEMO_PUBLIC_KEYS });
+  assert.doesNotMatch(html, /data-presenter="true"/);
+});

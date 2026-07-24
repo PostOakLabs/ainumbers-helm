@@ -1,0 +1,18 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://ainumbers.co/helm/schema/presenter.schema.json",
+  "title": "Presenter co-brand block (HELM-PHASE4-BUILD-SPEC.md §2 Band D row J2)",
+  "description": "Optional, unsigned bundle.presenter field — sits OUTSIDE the manifest/objects/checkpoints that verifyBundle() checks, so it can never affect a verification result. Rendered as a clearly-labeled 'Presented by' section, distinct from verified content.",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["name"],
+  "properties": {
+    "name": { "type": "string", "minLength": 1 },
+    "logo": {
+      "type": "string",
+      "description": "Data-URI only (no network fetch) — image/png, image/jpeg, image/svg+xml, or image/webp.",
+      "pattern": "^data:image/(png|jpeg|svg\\+xml|webp);base64,"
+    },
+    "statement": { "type": "string" }
+  }
+}

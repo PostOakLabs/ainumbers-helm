@@ -6,6 +6,7 @@
 // should be able to read what a trust label does and does NOT claim in under
 // two minutes — the copy fence below is written for that reader, not for us.
 import { verifyBundle, verifyAnchorBinding } from "../lib/verify-bundle.mjs";
+import { renderPresenterHtml } from "../lib/presenter.mjs";
 import { buildCommitteePackHtml } from "../lib/committee-pack.mjs";
 import { buildCommitteeDeckSpec } from "../lib/committee-deck.mjs";
 import { buildCommitteeDeckPptxBlob } from "../lib/committee-pptx.mjs";
@@ -117,6 +118,7 @@ async function runVerify(root, { bundle, publicKeys }) {
     return;
   }
   resultEl.innerHTML = `
+    ${renderPresenterHtml(bundle?.presenter)}
     <p class="verify-summary" data-ok="${result.valid}">
       ${result.valid ? "✓ Bundle verifies." : `✗ Bundle FAILS verification (${result.reasons.length} reason${result.reasons.length === 1 ? "" : "s"}).`}
     </p>
