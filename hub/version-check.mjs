@@ -1,3 +1,5 @@
+// SPDX-License-Identifier: Apache-2.0
+// Copyright (c) 2026 Post Oak Labs, Inc.
 // Version-check notice (HELM-H8, D10/D12): polls a static JSON endpoint and
 // surfaces a passive "an update exists" notice. NEVER downloads or applies
 // anything — D10 explicitly rules out an in-process auto-updater in Phase 1.

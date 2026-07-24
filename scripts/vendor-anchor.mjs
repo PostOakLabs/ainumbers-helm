@@ -1,4 +1,6 @@
 #!/usr/bin/env node
+// SPDX-License-Identifier: Apache-2.0
+// Copyright (c) 2026 Post Oak Labs, Inc.
 // Vendors pinned RFC3161 client code from PostOakLabs/anchor-suite into
 // hub/vendored/anchor-suite. Unlike scripts/vendor.mjs (which flattens ocg
 // kernels to a basename layout), this preserves the source's relative

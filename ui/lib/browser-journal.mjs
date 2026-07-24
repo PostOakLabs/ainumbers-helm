@@ -1,3 +1,5 @@
+// SPDX-License-Identifier: Apache-2.0
+// Copyright (c) 2026 Post Oak Labs, Inc.
 // Browser journal (P3-D7, HELM-P3-U2): OPFS is a CACHE, never custody — the
 // anchored bundle export is the real archive. This module is split into pure,
 // node:test-able pieces (framing, scan/truncate, election, durability check)

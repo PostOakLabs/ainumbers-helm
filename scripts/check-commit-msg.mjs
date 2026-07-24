@@ -1,4 +1,6 @@
 #!/usr/bin/env node
+// SPDX-License-Identifier: Apache-2.0
+// Copyright (c) 2026 Post Oak Labs, Inc.
 // Validate a commit subject against the SAME Conventional Commit rule the
 // `PR Title Lint` CI job enforces on PR titles (HELM-SHIFTLEFT-1). Imports
 // `lintTitle()` from pr-title-lint.mjs — one validator, so local and CI can

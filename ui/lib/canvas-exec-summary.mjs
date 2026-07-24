@@ -1,3 +1,5 @@
+// SPDX-License-Identifier: Apache-2.0
+// Copyright (c) 2026 Post Oak Labs, Inc.
 // Present-toggle exec summary for the Canvas view (HELM-P4-A3,
 // HELM-PHASE4-BUILD-SPEC.md §2 Band A row A3): the same manifest + digest
 // the analyst view already fetched, condensed to what a committee reader

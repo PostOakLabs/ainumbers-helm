@@ -1,3 +1,5 @@
+// SPDX-License-Identifier: Apache-2.0
+// Copyright (c) 2026 Post Oak Labs, Inc.
 // Pure WebCrypto primitives for the browser-mode vault (HELM-PHASE3-BUILD-SPEC.md
 // P3-D8). No navigator/IndexedDB access here — that split is what lets this
 // module run under plain node:test with the node:crypto webcrypto polyfill.

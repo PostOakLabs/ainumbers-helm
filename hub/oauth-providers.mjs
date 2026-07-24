@@ -1,3 +1,5 @@
+// SPDX-License-Identifier: Apache-2.0
+// Copyright (c) 2026 Post Oak Labs, Inc.
 // Named-provider OAuth presets (HELM-P2-H9b, DEC-5 increment). Phase-1's
 // oauth-pkce.mjs startFlow() is already fully provider-agnostic — it takes
 // any authorizationEndpoint/tokenEndpoint/clientId/scopes and runs the

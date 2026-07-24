@@ -1,4 +1,6 @@
 #!/usr/bin/env node
+// SPDX-License-Identifier: Apache-2.0
+// Copyright (c) 2026 Post Oak Labs, Inc.
 // Validate every commit subject in the range being pushed (HELM-SHIFTLEFT-1).
 // Reuses lintTitle() from pr-title-lint.mjs — same rule as PR Title Lint CI.
 // Usage: node scripts/check-pushed-commits.mjs <range>  (e.g. "origin/main..HEAD")

@@ -1,3 +1,5 @@
+// SPDX-License-Identifier: Apache-2.0
+// Copyright (c) 2026 Post Oak Labs, Inc.
 // Connector 3 (HELM-P2-H9b): http.send — generic pure-config outbound HTTP
 // (API-key or bearer auth). Unlike google-drive.fetch (one hardcoded
 // endpoint baked into the module), this connector's TARGET is the contract:

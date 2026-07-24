@@ -1,3 +1,5 @@
+// SPDX-License-Identifier: Apache-2.0
+// Copyright (c) 2026 Post Oak Labs, Inc.
 // EUC register entry + kernel validation card generator (HELM-P3-E12,
 // HELM-PHASE3-BUILD-SPEC.md §3 item 5). Turns SR 11-7/SS1-23 model-risk
 // paperwork into a one-click export instead of manual spreadsheet upkeep —

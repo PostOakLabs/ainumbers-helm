@@ -1,3 +1,5 @@
+// SPDX-License-Identifier: Apache-2.0
+// Copyright (c) 2026 Post Oak Labs, Inc.
 // Secret vault (D9, HELM-H5). Per-platform OS-keychain tier first, falling
 // back to an age-style AES-256-GCM encrypted file when no native store is
 // reachable (headless CI, missing secret-service, etc.). Callers only ever

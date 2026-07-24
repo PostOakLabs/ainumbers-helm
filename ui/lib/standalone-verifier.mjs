@@ -1,3 +1,5 @@
+// SPDX-License-Identifier: Apache-2.0
+// Copyright (c) 2026 Post Oak Labs, Inc.
 // Single-file, zero-install offline evidence-bundle verifier (HELM-P3-V9,
 // SPEC.md §26.7-§26.8, HELM-PHASE3-BUILD-SPEC.md §3 item 1). Embedded in every
 // bundle.zip export (see hub/bundle.mjs's exportBundleZip): a colleague opens

@@ -1,3 +1,5 @@
+// SPDX-License-Identifier: Apache-2.0
+// Copyright (c) 2026 Post Oak Labs, Inc.
 // Credential provider (HELM-P2-H9a). The ONLY place a connector-egress call
 // resolves an opaque vault_scope ref to an actual secret value. Callers
 // (connector.mjs's performEgress) pass a { ref, scheme } descriptor; this

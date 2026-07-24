@@ -1,3 +1,5 @@
+// SPDX-License-Identifier: Apache-2.0
+// Copyright (c) 2026 Post Oak Labs, Inc.
 // Dedicated fragment-free OAuth callback logic (HELM-P3-U4, P3-D5). Lives at
 // its own static path (oauth-callback.html), separate from helm.html's
 // hash-router, specifically so a provider's query-param redirect

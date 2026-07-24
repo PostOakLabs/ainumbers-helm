@@ -1,3 +1,5 @@
+// SPDX-License-Identifier: Apache-2.0
+// Copyright (c) 2026 Post Oak Labs, Inc.
 // `.helm.json` workflow export/import (HELM-P3-W11, HELM-PHASE3-BUILD-SPEC.md
 // §3 item 4). The email-able workflow file — n8n's spread mechanic without
 // n8n's silent-mangle-on-skew failure mode. A compiled pack's manifest

@@ -1,0 +1,29 @@
+AINumbers Helm
+Copyright 2026 Post Oak Labs, Inc.
+
+This product includes software developed by Post Oak Labs, Inc.
+(https://ainumbers.co).
+
+This product includes the following third-party components, each under
+its own license (see the file cited for full terms):
+
+  - OCG kernels, verify libraries, and standard/schema documents, vendored
+    pinned from PostOakLabs/ainumbers (chaingraph/kernels,
+    chaingraph/standard/SPEC.md, chaingraph/standard/openchain-graph-v0.4.schema.json,
+    chaingraph/chaingraph.json) into hub/vendored/ocg/. See
+    hub/vendored/ocg/MANIFEST.json for the pinned commit SHA.
+  - anchor-suite browser libraries, vendored pinned from
+    PostOakLabs/anchor-suite (public/lib/tsq.mjs,
+    public/vendor/pkijs.bundle.mjs) into hub/vendored/anchor-suite/. See
+    hub/vendored/anchor-suite/MANIFEST.json for the pinned commit SHA.
+  - qrcodegen.js: Project Nayuki QR Code generator library, v1.5.0,
+    MIT License (full header preserved in-file), at ui/vendored/qrcodegen.js.
+  - pptxgen.bundle.js: PptxGenJS 4.0.1 (bundles JSZip), MIT License (full
+    header preserved in-file), at ui/vendored/pptxgen.bundle.js.
+  - Most other files under ui/vendored/ are hand-ported subsets of this
+    repo's own Apache-2.0 code, not third-party. See ui/vendored/PORT.md
+    for the full provenance table of each file.
+
+"Helm" and the Helm logo are trademarks of Post Oak Labs, Inc. The
+Apache License, Version 2.0 governing this repository's code does not
+grant any rights to those names or marks — see docs/TRADEMARK.md.

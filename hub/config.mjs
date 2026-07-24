@@ -1,3 +1,5 @@
+// SPDX-License-Identifier: Apache-2.0
+// Copyright (c) 2026 Post Oak Labs, Inc.
 // Single config file: ~/.helm/config.json. Created with defaults on first run.
 import { existsSync, readFileSync, writeFileSync } from "node:fs";
 import { statePath } from "./state-dir.mjs";

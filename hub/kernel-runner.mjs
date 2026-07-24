@@ -1,3 +1,5 @@
+// SPDX-License-Identifier: Apache-2.0
+// Copyright (c) 2026 Post Oak Labs, Inc.
 // Kernel execution (HELM-H7): invokes VENDORED OCG kernels from inside the H4
 // run engine for "nodes" steps. D2 invariant enforced here, not just by
 // convention: a manifest node's kernel_digest MUST match the vendored file's

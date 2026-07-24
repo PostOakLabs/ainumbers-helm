@@ -1,3 +1,5 @@
+// SPDX-License-Identifier: Apache-2.0
+// Copyright (c) 2026 Post Oak Labs, Inc.
 // Canvas view: read-only manifest DAG + JSON/YAML side-by-side + live
 // manifest_digest. Drag-to-author is a stretch goal (HELM-U2) — this ships
 // view-first. The digest is computed client-side from the fetched manifest

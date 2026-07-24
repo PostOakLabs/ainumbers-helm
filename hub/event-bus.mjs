@@ -1,3 +1,5 @@
+// SPDX-License-Identifier: Apache-2.0
+// Copyright (c) 2026 Post Oak Labs, Inc.
 // Tiny in-process pub/sub for run progress (HELM-P2-U4 Run/SSE wiring).
 // One daemon process, one EventEmitter — no cross-process fanout needed
 // (loopback-only, single-writer daemon per D8).

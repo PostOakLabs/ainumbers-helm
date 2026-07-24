@@ -1,3 +1,5 @@
+// SPDX-License-Identifier: Apache-2.0
+// Copyright (c) 2026 Post Oak Labs, Inc.
 // Browser-side, zero-network evidence bundle verifier (HELM-U3; SPEC.md §26.7,
 // §26.8). Mirrors hub/bundle.mjs verifyBundle() + hub/checkpoint.mjs's
 // self-consistency check, minus the "live daemon journal" comparison

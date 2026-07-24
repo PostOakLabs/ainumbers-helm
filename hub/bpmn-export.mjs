@@ -1,3 +1,5 @@
+// SPDX-License-Identifier: Apache-2.0
+// Copyright (c) 2026 Post Oak Labs, Inc.
 // BPMN 2.0 XML export of workflow manifests (HELM-P4-B3, HELM-PHASE4-BUILD-SPEC.md
 // §2 Band B row B3). One-time, spec-frozen mapping from
 // schema/workflow-manifest.schema.json onto BPMN 2.0 so a manifest opens in

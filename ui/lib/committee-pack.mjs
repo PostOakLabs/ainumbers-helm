@@ -1,3 +1,5 @@
+// SPDX-License-Identifier: Apache-2.0
+// Copyright (c) 2026 Post Oak Labs, Inc.
 // Committee Pack export (HELM-P4-A1, HELM-PHASE4-BUILD-SPEC.md §2 Band A row A1):
 // an ISAE-3000/SOC-2-shaped, print-CSS HTML report for the recurring
 // template->run->export loop a committee/BA reads without explanation.

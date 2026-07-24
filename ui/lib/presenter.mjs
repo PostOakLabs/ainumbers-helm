@@ -1,3 +1,5 @@
+// SPDX-License-Identifier: Apache-2.0
+// Copyright (c) 2026 Post Oak Labs, Inc.
 // Presenter co-brand block (HELM-P4-J2, HELM-PHASE4-BUILD-SPEC.md §2 Band D
 // row J2): an optional, UNSIGNED sibling field on the bundle object
 // (bundle.presenter) — outside manifest/objects/checkpoints, so it never

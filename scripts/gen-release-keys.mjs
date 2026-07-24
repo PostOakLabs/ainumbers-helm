@@ -1,4 +1,6 @@
 #!/usr/bin/env node
+// SPDX-License-Identifier: Apache-2.0
+// Copyright (c) 2026 Post Oak Labs, Inc.
 // One-time (or rotation) generator for the release signing keypair (HELM-H8).
 // Writes the PUBLIC half to schema/release-signing-keys.json (commit it) and
 // prints the PRIVATE half's base64 blob to stdout — pipe that directly into

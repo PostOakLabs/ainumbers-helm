@@ -1,3 +1,5 @@
+// SPDX-License-Identifier: Apache-2.0
+// Copyright (c) 2026 Post Oak Labs, Inc.
 // Evidence bundle assembler (HELM-H7, SPEC.md §26.7): packages a run's §26.4
 // objects + checkpoints + anchors into a self-contained, offline-verifiable
 // archive. Every entry is signed (§26.2 DSSE/in-toto), labeled with EXACTLY

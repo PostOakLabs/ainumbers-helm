@@ -1,3 +1,5 @@
+// SPDX-License-Identifier: Apache-2.0
+// Copyright (c) 2026 Post Oak Labs, Inc.
 // Committee deck spec builder (HELM-P4-A2, HELM-PHASE4-BUILD-SPEC.md §2 Band A
 // row A2): produces a plain-data, JSON-serializable slide spec for the .pptx
 // committee-deck export — title slide, process-map slide, decision-table

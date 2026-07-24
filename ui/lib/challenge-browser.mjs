@@ -1,3 +1,5 @@
+// SPDX-License-Identifier: Apache-2.0
+// Copyright (c) 2026 Post Oak Labs, Inc.
 // Browser-side counterpart to hub/challenge.mjs (R15-F1/F2 fix, P3-D9).
 // hub/challenge.mjs runs in Node (node:crypto) and signs; this module runs
 // in the browser (WebCrypto) and verifies + pins. Two runtimes, same shapes

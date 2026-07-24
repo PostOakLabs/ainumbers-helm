@@ -1,3 +1,5 @@
+// SPDX-License-Identifier: Apache-2.0
+// Copyright (c) 2026 Post Oak Labs, Inc.
 // Choose view: an outcome-oriented list of workflow packs, NOT a raw
 // inventory of every manifest on disk. Selecting one opens Canvas
 // (read-only DAG first; authoring is a stretch goal per HELM-U2).

@@ -1,3 +1,5 @@
+// SPDX-License-Identifier: Apache-2.0
+// Copyright (c) 2026 Post Oak Labs, Inc.
 // Browser-to-daemon migration bundle builder (P3-D10, HELM-P3-M7).
 // OPFS journal entries + the browser vault's wrapped-DEK record never leave
 // the browser except inside this bundle — the DEK itself never appears here

@@ -1,3 +1,5 @@
+// SPDX-License-Identifier: Apache-2.0
+// Copyright (c) 2026 Post Oak Labs, Inc.
 // Pure banner-state logic for the browser journal (P3-D7 durability UX).
 // Kept separate from DOM mounting so it's node:test-able without a browser;
 // app.mjs/views call renderBannerHtml() and set innerHTML, same convention

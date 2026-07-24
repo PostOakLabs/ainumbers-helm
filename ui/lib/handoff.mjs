@@ -1,3 +1,5 @@
+// SPDX-License-Identifier: Apache-2.0
+// Copyright (c) 2026 Post Oak Labs, Inc.
 // Detection + handoff primitives (HELM-P3-H6, P3-D3/D6/D9). Pure, portable
 // functions — no module-scope browser globals — so a future hosted
 // browser-mode app (P3-U2..U4, not built yet) can import this directly and

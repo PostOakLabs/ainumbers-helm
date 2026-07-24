@@ -1,3 +1,5 @@
+// SPDX-License-Identifier: Apache-2.0
+// Copyright (c) 2026 Post Oak Labs, Inc.
 // Self-check: config readable, token file mode 0600, state dir private, port free.
 import { statSync, existsSync, readFileSync } from "node:fs";
 import { platform } from "node:os";

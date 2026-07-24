@@ -1,3 +1,5 @@
+// SPDX-License-Identifier: Apache-2.0
+// Copyright (c) 2026 Post Oak Labs, Inc.
 // Committee deck .pptx renderer (HELM-P4-A2). Turns a buildCommitteeDeckSpec()
 // data object into a downloadable .pptx Blob using the vendored PptxGenJS
 // UMD bundle (ui/vendored/pptxgen.bundle.js, MIT, see PORT.md). Browser-only

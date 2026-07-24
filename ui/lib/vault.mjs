@@ -1,3 +1,5 @@
+// SPDX-License-Identifier: Apache-2.0
+// Copyright (c) 2026 Post Oak Labs, Inc.
 // Browser-mode vault (HELM-PHASE3-BUILD-SPEC.md P3-D8). WebAuthn PRF derives
 // the key that wraps a random DEK; the DEK — never the PRF output, never the
 // journal — is what encrypts connector tokens (see vault-token-store.mjs).

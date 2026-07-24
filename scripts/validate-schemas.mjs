@@ -1,4 +1,6 @@
 #!/usr/bin/env node
+// SPDX-License-Identifier: Apache-2.0
+// Copyright (c) 2026 Post Oak Labs, Inc.
 // validate-schemas.mjs — GATE. For every schema/**/*.schema.json, requires a
 // sibling fixtures/<same-relative-path>/golden.json (MUST validate) and
 // tampered.json (MUST fail validation). Non-zero exit blocks CI.

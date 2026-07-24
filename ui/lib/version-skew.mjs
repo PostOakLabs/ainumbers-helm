@@ -1,3 +1,5 @@
+// SPDX-License-Identifier: Apache-2.0
+// Copyright (c) 2026 Post Oak Labs, Inc.
 // Pure banner-state logic for daemon version skew (HELM-P4-J4). Kept
 // separate from DOM mounting so it's node:test-able without a browser, same
 // convention as durability-banner.mjs. The daemon does the actual version

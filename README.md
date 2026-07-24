@@ -34,6 +34,17 @@ Run `node scripts/setup-hooks.mjs` once per clone to enable local shift-left gat
 
 Loopback-only daemon, bearer-token pairing, Host/Origin validation, OS-keychain secret storage, default-deny egress. See `SECURITY.md` (HELM-0) for the disclosure contact.
 
+## Continuity
+
+Evidence bundles self-verify independently of the vendor: every bundle
+carries its own offline verifier (`ui/vendored/` + `ui/lib/standalone-verifier.mjs`),
+so a bundle produced today stays checkable — hashes, signatures, the
+RFC 3161 timestamp chain — with no call back to AINumbers, no daemon, no
+subscription, even if this project stops.
+
 ## License and trademark
 
-See `LICENSE`. The license covers the code; it grants no rights to the "Helm" name or logo — see `docs/TRADEMARK.md` for what's allowed when redistributing or building on Helm.
+Apache License, Version 2.0 — see `LICENSE` and `NOTICE`. The license
+covers the code; it grants no rights to the "Helm" name or logo — see
+`docs/TRADEMARK.md` for what's allowed when redistributing or building on
+Helm.

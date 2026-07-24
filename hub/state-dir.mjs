@@ -1,3 +1,5 @@
+// SPDX-License-Identifier: Apache-2.0
+// Copyright (c) 2026 Post Oak Labs, Inc.
 // Shared state-dir resolution: ~/.helm by default, override via HELM_HOME for tests.
 import { homedir } from "node:os";
 import { join } from "node:path";

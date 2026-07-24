@@ -1,3 +1,5 @@
+// SPDX-License-Identifier: Apache-2.0
+// Copyright (c) 2026 Post Oak Labs, Inc.
 // Browser-side workflow_manifest_digest (SPEC.md §26.3): SHA-256 of the JCS
 // canonical form. Mirrors the recursive-key-sort + minimal-JSON canonicalizer
 // in hub/vendored/ocg/kernels/_hash.mjs (cgCanon) so the digest this view

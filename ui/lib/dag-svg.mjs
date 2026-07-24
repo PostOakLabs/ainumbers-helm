@@ -1,3 +1,5 @@
+// SPDX-License-Identifier: Apache-2.0
+// Copyright (c) 2026 Post Oak Labs, Inc.
 // Renders a buildDag() graph to an SVG string. Pure string-in/string-out —
 // no DOM globals — so layout math is unit-testable under node:test.
 const COL_W = 220;

@@ -1,3 +1,5 @@
+// SPDX-License-Identifier: Apache-2.0
+// Copyright (c) 2026 Post Oak Labs, Inc.
 // Human-readable, printable rendering of an evidence bundle (HELM-P3-V9,
 // HELM-PHASE3-BUILD-SPEC.md §3 item 3: "paper is the audit currency").
 // Print-CSS HTML, not a binary PDF — acceptable per the row's own contract;

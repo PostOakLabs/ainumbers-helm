@@ -1,3 +1,5 @@
+// SPDX-License-Identifier: Apache-2.0
+// Copyright (c) 2026 Post Oak Labs, Inc.
 // Browser-mode anchor client (HELM-P3-A5; HELM-PHASE3-BUILD-SPEC.md §1 P3-D4).
 //
 // Browser-direct RFC 3161 is CORS-dead — no public TSA sends

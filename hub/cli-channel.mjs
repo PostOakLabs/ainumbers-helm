@@ -1,3 +1,5 @@
+// SPDX-License-Identifier: Apache-2.0
+// Copyright (c) 2026 Post Oak Labs, Inc.
 // CLI channel: named pipe (Windows) / UDS (unix), newline-delimited JSON.
 // Trust boundary is the OS (same-user pipe ACL / 0600 socket file), not the
 // bearer token — this is the local `helm` CLI talking to `helmd`, not a browser.

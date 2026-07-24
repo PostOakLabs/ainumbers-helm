@@ -1,3 +1,5 @@
+// SPDX-License-Identifier: Apache-2.0
+// Copyright (c) 2026 Post Oak Labs, Inc.
 // Browser-side OAuth (HELM-P3-U4, HELM-PHASE3-BUILD-SPEC.md P3-D5). Runs
 // entirely client-side against SPA-registered apps: Microsoft's identity
 // platform (redirect-URI type "Single-page application") and Google's OAuth

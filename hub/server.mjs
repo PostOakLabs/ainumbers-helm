@@ -1,3 +1,5 @@
+// SPDX-License-Identifier: Apache-2.0
+// Copyright (c) 2026 Post Oak Labs, Inc.
 // Loopback REST + SSE server. D8 hardening, in order, on every request:
 //   1. Host header must exactly equal 127.0.0.1:<port>        (DNS-rebinding defense)
 //   2. Origin header must exactly equal the configured origin  (no wildcard CORS)

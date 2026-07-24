@@ -1,3 +1,5 @@
+// SPDX-License-Identifier: Apache-2.0
+// Copyright (c) 2026 Post Oak Labs, Inc.
 // Generic RFC 8252 loopback authorization-code + PKCE flow (D9, HELM-H5).
 // Not tied to any real provider — tested here against an in-repo mock. The
 // authorization redirect target is its OWN ephemeral single-shot listener,

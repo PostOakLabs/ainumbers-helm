@@ -1,3 +1,5 @@
+// SPDX-License-Identifier: Apache-2.0
+// Copyright (c) 2026 Post Oak Labs, Inc.
 // Printable-HTML renderers for HELM-P3-E12 exports. Pure template functions
 // (no DOM globals) so they're unit-testable under node:test, same discipline
 // as lib/to-yaml.mjs. Styling is inline + a @media print block — this is a

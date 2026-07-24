@@ -1,3 +1,5 @@
+// SPDX-License-Identifier: Apache-2.0
+// Copyright (c) 2026 Post Oak Labs, Inc.
 // Browser connector runtime (HELM-P3-U4). Reuses the SAME contract shape as
 // hub/connector.mjs — schema/connector_contract.schema.json, vendored here
 // as ui/vendored/schemas/connector_contract.schema.mjs — and the SAME

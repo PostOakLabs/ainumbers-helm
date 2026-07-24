@@ -1,3 +1,5 @@
+// SPDX-License-Identifier: Apache-2.0
+// Copyright (c) 2026 Post Oak Labs, Inc.
 // Power Query bridge starter workbook (HELM-P4-B1, HELM-PHASE4-BUILD-SPEC.md
 // §2 Band B row B1): a macro-free .xlsx a BA downloads once, pointed at a
 // run's output-folder (see pq-export.mjs / docs/POWER-QUERY-BRIDGE.md).

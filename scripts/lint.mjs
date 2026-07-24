@@ -1,4 +1,6 @@
 #!/usr/bin/env node
+// SPDX-License-Identifier: Apache-2.0
+// Copyright (c) 2026 Post Oak Labs, Inc.
 // Zero-dep lint gate: syntax-checks every .mjs file via node --check.
 // No ESLint dep yet (D2/zero-dep-first discipline) — expand when hub/ui code lands.
 import { execFileSync } from "node:child_process";

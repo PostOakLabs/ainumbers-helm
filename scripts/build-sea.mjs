@@ -1,4 +1,6 @@
 #!/usr/bin/env node
+// SPDX-License-Identifier: Apache-2.0
+// Copyright (c) 2026 Post Oak Labs, Inc.
 // Builds the Node SEA (single executable application) binary for the
 // CURRENT host platform (HELM-H8, D3/D10). Node SEA is not a cross-compiler
 // — CI runs this once per OS in a build-matrix job, each producing its own

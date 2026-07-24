@@ -1,3 +1,5 @@
+// SPDX-License-Identifier: Apache-2.0
+// Copyright (c) 2026 Post Oak Labs, Inc.
 // Dedicated worker: sole owner of the OPFS journal file (P3-D7). OPFS itself
 // refuses a second createSyncAccessHandle on the same path while one is open,
 // so routing every read/write through this one worker (never the main thread

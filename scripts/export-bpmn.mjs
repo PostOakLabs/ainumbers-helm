@@ -1,4 +1,6 @@
 #!/usr/bin/env node
+// SPDX-License-Identifier: Apache-2.0
+// Copyright (c) 2026 Post Oak Labs, Inc.
 // CLI wrapper for hub/bpmn-export.mjs (HELM-P4-B3). Usage:
 //   node scripts/export-bpmn.mjs <workflow_id> [out.bpmn]
 // Writes BPMN 2.0 XML for a compiled pack's workflow manifest to stdout, or

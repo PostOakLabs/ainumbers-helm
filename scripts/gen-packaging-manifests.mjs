@@ -1,4 +1,6 @@
 #!/usr/bin/env node
+// SPDX-License-Identifier: Apache-2.0
+// Copyright (c) 2026 Post Oak Labs, Inc.
 // Fills the winget/homebrew/npm packaging templates from a signed
 // dist/release-manifest.json (HELM-H8). Run AFTER release-manifest.mjs so
 // the sha256 values baked into these manifests are exactly what the release
