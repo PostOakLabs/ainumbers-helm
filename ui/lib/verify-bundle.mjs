@@ -75,6 +75,15 @@ export function verifyAnchorBinding(anchor, expectedHashHex) {
     // there is no Merkle-to-block-header proof yet to bind structurally.
     return { checked: false, bound: null, reason: "pending calendar attestation only — not yet upgraded to a Bitcoin block proof (Phase 1 scope)" };
   }
+  // R15-F5/P3-D4: a queued/skipped marker is NOT an error — relay-blocked
+  // (or fully egress-blocked) is an explicit, expected state, and this
+  // neutral branch is what makes §5 exit-gate #1 ("relay-blocked, tool 100%
+  // functional") true for the offline verifier specifically. `queued` = a
+  // client-side retry is still possible before export; `skipped` = exported
+  // with anchoring never attempted (zero-egress copy).
+  if (anchor.type === "queued" || anchor.type === "skipped") {
+    return { checked: true, bound: null, neutral: true, status: anchor.type, reason: anchor.reason };
+  }
   return { checked: false, bound: null, reason: `unrecognized anchor type "${anchor.type}"` };
 }
 

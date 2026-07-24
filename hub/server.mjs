@@ -397,6 +397,7 @@ async function handleMigrationImport(req, res, params, db) {
     bundle: body.bundle,
     rawEntries: body.raw_entries,
     freshReauth: body.fresh_reauth === true,
+    overwrite: body.overwrite === true,
   });
   if (!result.ok) return sendJson(res, 422, result);
   sendJson(res, 200, result);

@@ -20,7 +20,7 @@ import { join, dirname } from "node:path";
 import { fileURLToPath } from "node:url";
 import { cgCanon, assertIJson } from "./vendored/ocg/kernels/_hash.mjs";
 import { appendEntry, replayVerify } from "./journal.mjs";
-import { vaultSet } from "./vault.mjs";
+import { vaultSet, vaultGet } from "./vault.mjs";
 import { validate } from "../scripts/lib/schema-validator.mjs";
 
 const HERE = dirname(fileURLToPath(import.meta.url));
@@ -76,6 +76,22 @@ export function verifyBundleContinuity(bundle, rawEntries) {
   return { ok: true, reason: null };
 }
 
+// R15-F8: source_origin is attacker-controlled (it's the caller's own claim,
+// not anything the daemon independently verified), so `migrated-vault:${source_
+// origin}` is a ref an attacker can pick to collide with a prior migration's
+// ref and silently clobber someone else's vault material. Finds the existing
+// migration_import marker (if any) for this stream by re-scanning its
+// journal rows — cheap: one migration stream per source_origin, imports are
+// rare — rather than adding a query surface just for this check.
+function findExistingMarker(db, streamId, journalRootDigest) {
+  const rows = db.prepare("SELECT seq, entry_json FROM journal WHERE stream_id = ? AND kind = ?").all(streamId, "migration_import");
+  for (const row of rows) {
+    const entry = JSON.parse(row.entry_json);
+    if (entry.triggering_input_digest === journalRootDigest) return { seq: row.seq, entry };
+  }
+  return null;
+}
+
 // Verifies continuity, stores the still-wrapped vault material (never
 // unwrapped here — no PRF/passphrase key reaches the daemon, ever), and
 // leaves a migrated-from marker in the HUB's own journal chain. "journal
@@ -84,17 +100,32 @@ export function verifyBundleContinuity(bundle, rawEntries) {
 // via replayVerify) — the browser's entries are not spliced into the hub's
 // per-stream hash chain, they're proven-then-recorded as evidence under
 // their own migration stream.
-export function importMigrationBundle(db, { bundle, rawEntries, freshReauth }) {
+//
+// R15-F8: append is idempotent on (source_origin, journal_root_digest) — a
+// retried import of the SAME bundle (network hiccup, client retry) returns
+// the existing marker rather than appending a duplicate. A DIFFERENT bundle
+// claiming the same source_origin (attacker-controlled) refuses to overwrite
+// the existing vault ref unless the caller explicitly passes overwrite:true.
+export function importMigrationBundle(db, { bundle, rawEntries, freshReauth, overwrite = false }) {
   if (freshReauth !== true) {
     return { ok: false, reason: "fresh_reauth_required" };
   }
   const continuity = verifyBundleContinuity(bundle, rawEntries);
   if (!continuity.ok) return { ok: false, ...continuity };
 
+  const streamId = `${MIGRATION_STREAM_PREFIX}${bundle.source_origin}`;
+  const existing = findExistingMarker(db, streamId, bundle.journal_root_digest);
+  if (existing) {
+    const vaultRef = `migrated-vault:${bundle.source_origin}`;
+    return { ok: true, reason: null, markerSeq: existing.seq, vaultRef, streamId, idempotent: true };
+  }
+
   const vaultRef = `migrated-vault:${bundle.source_origin}`;
+  if (!overwrite && vaultGet(vaultRef) !== null) {
+    return { ok: false, reason: "vault_ref_exists", vaultRef };
+  }
   vaultSet(vaultRef, bundle.vault_export);
 
-  const streamId = `${MIGRATION_STREAM_PREFIX}${bundle.source_origin}`;
   const marker = appendEntry(db, {
     streamId,
     kind: "migration_import",
