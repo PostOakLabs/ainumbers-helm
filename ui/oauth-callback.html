@@ -1,0 +1,16 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Helm — connecting…</title>
+</head>
+<body>
+  <p>Finishing sign-in&hellip; you can close this window if it doesn't redirect automatically.</p>
+  <script type="module">
+    import { parseCallbackParams, relayAndRedirect } from "./oauth-callback.mjs";
+    const result = parseCallbackParams(location.search);
+    relayAndRedirect({ result, targetUrl: "./helm.html#/connect" });
+  </script>
+</body>
+</html>

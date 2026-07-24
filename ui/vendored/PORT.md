@@ -12,6 +12,7 @@ pinned SHA in `../../scripts/vendor.config.json` (currently
 | `proof.mjs`              | `hub/vendored/ocg/kernels/_proof.mjs`                      | one import path: `./_hash.mjs` -> `./hash.mjs` |
 | `der.mjs`                | `hub/vendored/ocg/kernels/_anchor-testutil.mjs` (DER/OID reader) + `hub/vendored/ocg/kernels/_rfc3161.mjs` (`parseRfc3161Token`'s field-walk) | Buffer -> Uint8Array; `Buffer.from(x,"base64")` -> `atob()`-based `base64ToBytes`; CMS signature/chain-of-trust verification dropped (no WebCrypto equivalent — structural-only, see file header) |
 | `schema-validator.mjs`   | `scripts/lib/schema-validator.mjs` (helm's own, not site-vendored) | none (verbatim body) |
+| `schemas/connector_contract.schema.mjs` | `schema/connector_contract.schema.json` (helm's own) | JSON literal wrapped as a default export |
 
 `ui/lib/verify-envelope.mjs` and `ui/lib/verify-bundle.mjs` are not ports of a
 vendored file — they mirror helm's own `hub/envelope.mjs` / `hub/bundle.mjs`

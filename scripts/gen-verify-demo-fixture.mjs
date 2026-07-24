@@ -53,7 +53,7 @@ const bundle = assembleBundle({
         connector_version: "1.0.0",
         contract_digest: `sha256:${"1".repeat(64)}`,
         operation: "drive.files.get",
-        scope: ["drive.readonly"],
+        scope: ["drive.file"],
         endpoint_host: "www.googleapis.com",
         payload_digest: `sha256:${createHash("sha256").update("demo").digest("hex")}`,
         requested_at: "2026-07-23T00:00:00.000Z",

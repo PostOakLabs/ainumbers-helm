@@ -71,7 +71,7 @@ liveTest("H7 round-trip: drive-fetch -> kernel -> bundle -> journal -> checkpoin
         connectorVersion: "1.0.0",
         contractDigest: "sha256:" + "9".repeat(64),
         operation: "drive.files.get",
-        scope: ["drive.readonly"],
+        scope: ["drive.file"],
         endpointHost: "www.googleapis.com",
         payloadBytes: fakePayload,
       });

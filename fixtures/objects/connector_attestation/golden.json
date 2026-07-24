@@ -6,7 +6,7 @@
   "connector_version": "1.0.0",
   "contract_digest": "sha256:af2c0d0db5baec3e06592c51e073a7606955a005fe70bbbce5c0f85c08fe2f0b",
   "operation": "files.get",
-  "scope": ["drive.readonly"],
+  "scope": ["drive.file"],
   "endpoint_host": "www.googleapis.com",
   "payload_digest": "sha256:2ca2ac613d4d7c2aab7190dcb452b1b4efe3994cdae36d67b69986f43e3866fb",
   "classification": "confidential"
