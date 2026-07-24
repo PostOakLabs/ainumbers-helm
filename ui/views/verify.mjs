@@ -22,7 +22,10 @@ function trustBadge(label) {
 }
 
 function statusBadge(ok, text) {
-  return `<span class="verify-status" data-ok="${!!ok}">${ok ? "✓" : "✗"} ${text}</span>`;
+  // "partial" (F10): structurally bound but NOT a proof of authenticity —
+  // never rendered as the same green "✓" a fully-checked item gets.
+  const symbol = ok === "partial" ? "◐" : ok ? "✓" : "✗";
+  return `<span class="verify-status" data-ok="${ok === "partial" ? "partial" : !!ok}">${symbol} ${text}</span>`;
 }
 
 function readFileAsJson(file) {
@@ -63,10 +66,15 @@ function renderCheckpoints(checkpoints) {
           const b = verifyAnchorBinding(a, cp.predicate.journal_root_digest);
           const text = b.checked
             ? b.bound
-              ? `bound to this checkpoint${b.genTime ? ` — TSA time ${b.genTime}` : ""}`
+              ? `bound to this checkpoint${b.genTime ? ` — TSA time ${b.genTime} (signature not verified offline — see below)` : ""}`
               : `NOT bound — ${b.reason ?? "messageImprint mismatch"}`
             : `structural check not applicable — ${b.reason}`;
-          return `<li>${statusBadge(b.checked ? b.bound : null, `${a.type}: ${text}`)}</li>`;
+          // A bound messageImprint only proves the token covers this checkpoint's
+          // digest — it does NOT prove the TSA's signature chains to a trusted
+          // root, so a hostile relay could still forge genTime on a token that
+          // binds cleanly (F10). Never render that case as an unqualified ✓.
+          const badgeOk = b.checked ? (b.bound ? "partial" : false) : null;
+          return `<li>${statusBadge(badgeOk, `${a.type}: ${text}`)}</li>`;
         })
         .join("");
       return `

@@ -47,13 +47,23 @@ export const PROBE_STATE = {
 // timer, never retried automatically. `fetchImpl` is injected so this stays
 // testable without a real network stack; it must be the browser's `fetch`
 // in production so `targetAddressSpace` is honored by Chrome's PNA check.
+// AbortSignal.timeout ships everywhere Chrome/Firefox/Safari matter today,
+// but falls back to a manual AbortController so an engine that lacks it
+// still bounds the probe instead of hanging indefinitely (F13).
+function timeoutSignal(timeoutMs) {
+  if (typeof AbortSignal.timeout === "function") return AbortSignal.timeout(timeoutMs);
+  const controller = new AbortController();
+  setTimeout(() => controller.abort(new Error("probeDaemon: timed out")), timeoutMs);
+  return controller.signal;
+}
+
 export async function probeDaemon({ port = DEFAULT_HELM_PORT, fetchImpl, timeoutMs = 2000 } = {}) {
   if (!fetchImpl) throw new Error("probeDaemon: fetchImpl required");
   let res;
   try {
     res = await fetchImpl(`http://127.0.0.1:${port}/version`, {
       targetAddressSpace: "loopback",
-      signal: AbortSignal.timeout ? AbortSignal.timeout(timeoutMs) : undefined,
+      signal: timeoutSignal(timeoutMs),
     });
   } catch (err) {
     // LNA denial, PNA preflight failure, and "nothing listening" all land

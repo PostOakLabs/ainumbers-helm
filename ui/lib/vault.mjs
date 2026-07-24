@@ -151,7 +151,10 @@ export async function enrollPassphrase(passphrase) {
 
 export async function unlockPassphrase(record, passphrase) {
   const salt = b64ToBytes(record.kdf.salt);
-  const wrapKey = await derivePassphraseKdf(passphrase, salt, record.kdf.iterations);
+  // Floor at the current minimum (F14): a tampered/downgraded record claiming
+  // fewer iterations than our own floor must not weaken the KDF actually run.
+  const iterations = Math.max(record.kdf.iterations, PBKDF2_ITERATIONS);
+  const wrapKey = await derivePassphraseKdf(passphrase, salt, iterations);
   return unwrapDek(record.wrapped_dek, wrapKey);
 }
 
