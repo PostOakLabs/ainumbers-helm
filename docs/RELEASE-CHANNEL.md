@@ -78,9 +78,16 @@ Don't build a parallel "managed channel" — the
 [Phase-3 offline distribution kit](INSTALL.md#offline-install-no-npm-registry-access)
 already is one. A bank CAB that wants to freeze on a specific reviewed
 version, stage it through internal testing, and roll it out on its own
-schedule (no registry reachability, no auto-update, no background fetch)
-uses exactly that path: download one tagged release's binaries + npm
-tarball + `SHA256SUMS` + DSSE manifest, verify offline (§2), stage
-internally, deploy via [IT-DEPLOYMENT.md](IT-DEPLOYMENT.md). Re-pinning to
-a newer version is a deliberate re-run of the same offline steps against a
-new tag — never an in-place update.
+schedule (no registry reachability, no auto-update) uses exactly that
+path: download one tagged release's binaries + npm tarball + `SHA256SUMS`
++ DSSE manifest, verify offline (§2), stage internally, deploy via
+[IT-DEPLOYMENT.md](IT-DEPLOYMENT.md). Re-pinning to a newer version is a
+deliberate re-run of the same offline steps against a new tag — never an
+in-place update. **The one background call this path does not remove:**
+the hourly version-check poll (`versionCheckUrl`, [TRUST.md §2 row
+10](TRUST.md)) still fires by default even on an otherwise fully
+air-gapped install, since it isn't network-topology-aware — it will just
+fail closed (`unreachable`, non-blocking) if the host truly has no route
+to `ainumbers.co`. A CAB that wants zero background fetch on this path,
+not merely a harmless failure, must explicitly set `"versionCheckUrl": ""`
+in `~/.helm/config.json` before deployment.
