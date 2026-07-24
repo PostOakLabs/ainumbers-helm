@@ -11,10 +11,8 @@ process per release.
 domain/company owner, not a build agent. **Every step below is TIM-EXECUTED.** This doc is
 the runbook, not a completed submission — no agent should attempt these forms.
 
-**Turnaround expectation:** category submissions are typically reviewed in **1–10 business
-days** (vendor-dependent, no SLA); Microsoft's SEA clean-file loop is **2–4 weeks per
-release** (per P3-D2/T14 row) since a new unsigned binary hash needs re-submission every
-build.
+Microsoft's SEA clean-file loop is a **per-release** step (per P3-D2/T14 row) since a new
+unsigned binary hash needs re-submission every build.
 
 ---
 
@@ -39,8 +37,6 @@ select "Uncategorized" workarounds like Proxy/Anonymizer).
 4. Repeat steps 2–3 for `anchor.ainumbers.co`.
 5. Fill the requester email as `tim@postoaklabs.com` so confirmation/rejection replies land
    with the owner.
-6. **Expected turnaround:** Zscaler states most requests process automatically within
-   24–48h; contested/manual review can take up to ~10 business days.
 
 ## TIM-EXECUTED — Netskope
 
@@ -51,11 +47,9 @@ select "Uncategorized" workarounds like Proxy/Anonymizer).
    **Financial Services** if offered as a distinct option — prefer the more specific one).
 3. Repeat for `anchor.ainumbers.co`.
 4. Netskope's public form typically requires an email for follow-up — use
-   `tim@postoaklabs.com`.
-5. **Expected turnaround:** no published SLA; Netskope support threads report ~5–10
-   business days for public (non-customer) submissions. If a specific bank pilot uses
-   Netskope, their Netskope admin can also submit via their own tenant console, which is
-   usually faster — note this as an alternate path when a pilot bank is identified.
+   `tim@postoaklabs.com`. If a specific bank pilot uses Netskope, their Netskope admin can
+   also submit via their own tenant console — note this as an alternate path when a pilot
+   bank is identified.
 
 ## TIM-EXECUTED — Bluecoat / Symantec (Broadcom WebPulse / Site Review)
 
@@ -65,8 +59,6 @@ select "Uncategorized" workarounds like Proxy/Anonymizer).
 3. Suggested category: **Business/Economy** (fallback **Financial Services**).
 4. Repeat for `anchor.ainumbers.co`.
 5. The form requires a captcha + submitter email — use `tim@postoaklabs.com`.
-6. **Expected turnaround:** Broadcom's own guidance says up to 24h for automated review,
-   longer for manual escalation (no fixed SLA published).
 
 ---
 
@@ -93,10 +85,9 @@ first downloads.
    - Attach the binary + note the SHA256 in the description for cross-reference.
 4. Note the ticket/reference number Microsoft returns; if a specific detection name comes
    back later, that becomes the tracked "known FP" entry for that release version.
-5. **Expected turnaround:** Microsoft's own guidance is **~2–4 weeks** for full review; the
-   binary hash changes every release, so this is a **recurring per-release step**, not a
-   one-time fix. Track it as a release-checklist line item in `RELEASING.md` until a signing
-   cert (D-SIGN-2/3, still deferred) removes the need.
+5. The binary hash changes every release, so this is a **recurring per-release step**, not
+   a one-time fix. Track it as a release-checklist line item in `RELEASING.md` until a
+   signing cert (D-SIGN-2/3, still deferred) removes the need.
 
 ---
 
