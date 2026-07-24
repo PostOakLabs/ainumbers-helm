@@ -2,8 +2,9 @@
 // helmd — local-first control plane hub daemon. Loopback REST+SSE (D8
 // hardened) + named-pipe/UDS CLI channel + doctor self-check.
 import { loadConfig } from "./config.mjs";
-import { loadOrCreateToken, pairingUrl } from "./token.mjs";
-import { createHelmServer } from "./server.mjs";
+import { loadOrCreateToken, pairingUrl, createPairingNonce } from "./token.mjs";
+import { createHelmServer, bindOrExit } from "./server.mjs";
+import { loadOrCreateKeys } from "./keys.mjs";
 import { createCliChannel, cliChannelPath } from "./cli-channel.mjs";
 import { runDoctor } from "./doctor.mjs";
 import { log } from "./log.mjs";
@@ -36,10 +37,11 @@ async function cmdDoctor() {
   process.exit(report.ok ? 0 : 1);
 }
 
-function cmdStart({ open = false } = {}) {
+async function cmdStart({ open = false } = {}) {
   const config = loadConfig();
   const isFirstRun = !existsSync(statePath("token"));
   const token = loadOrCreateToken();
+  const identityKeys = loadOrCreateKeys();
 
   // D6: replay-journal-on-restart integrity check. A daemon must never come
   // up serving a journal it can't prove is unbroken. Stays open for the
@@ -54,7 +56,17 @@ function cmdStart({ open = false } = {}) {
   }
   log.info("journal replay integrity check passed");
 
-  createHelmServer({ port: config.port, allowedOrigin: config.allowedOrigin, token, db });
+  const server = createHelmServer({ port: config.port, allowedOrigin: config.allowedOrigin, token, db, identityKeys });
+  // P3-D9: refuse to start on a squatted port — never silently bind
+  // elsewhere. Must resolve BEFORE the CLI channel opens or any browser tab
+  // is auto-launched, or a squatted port would open onto whatever's
+  // actually listening there instead of failing loudly.
+  const bound = await bindOrExit(server, config.port);
+  if (!bound) {
+    db.close();
+    process.exit(1);
+  }
+
   createCliChannel({
     health: () => ({ status: "ok" }),
     // HELM-P2-B8 / DEC-3: the ONLY re-pair path. Gated by the pipe's OS ACL
@@ -63,14 +75,14 @@ function cmdStart({ open = false } = {}) {
     // the browser server-side (same code path as first-run) and also returns
     // the URL so the CLI can print it for headless/no-DE sessions.
     pair: () => {
-      const u = pairingUrl(token, config.port);
+      const u = pairingUrl(token, config.port, createPairingNonce());
       openBrowser(u);
       return { url: u };
     },
   });
 
   log.info("helmd started", { port: config.port });
-  const url = pairingUrl(token, config.port);
+  const url = pairingUrl(token, config.port, createPairingNonce());
   console.log(url);
 
   // First-run zero-CLI-copy-paste onboarding (HELM-U4): the pairing link
@@ -114,7 +126,7 @@ function cmdOpen() {
 const args = process.argv.slice(2);
 const cmd = args[0] || "start";
 if (cmd === "doctor") await cmdDoctor();
-else if (cmd === "start") cmdStart({ open: args.includes("--open") });
+else if (cmd === "start") await cmdStart({ open: args.includes("--open") });
 else if (cmd === "open") cmdOpen();
 else {
   console.error(`helmd: unknown command "${cmd}" (expected: start | doctor | open)`);

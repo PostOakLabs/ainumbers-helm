@@ -111,8 +111,13 @@ function initDensityToggle(btn) {
 }
 
 export function boot() {
-  const preHashToken = readTokenFromLocation();
+  const { token: preHashToken, pair } = readTokenFromLocation();
   if (preHashToken) saveToken(preHashToken);
+  // P3-D9: best-effort, fire-and-forget — a failed redeem (link already
+  // used, expired) never blocks this session, which already has the token.
+  if (preHashToken && pair) {
+    call("/pair/redeem", { port: loadPort(), token: preHashToken, method: "POST", body: { nonce: pair } }).catch(() => {});
+  }
 
   initDensityToggle(document.getElementById("density-toggle"));
 

@@ -12,16 +12,30 @@ export function parseTokenFromHash(hash) {
   return m ? decodeURIComponent(m[1]) : null;
 }
 
+// P3-D9: the pairing link also carries a single-use nonce alongside the
+// durable token — see hub/token.mjs for why they're separate values.
+export function parsePairFromHash(hash) {
+  const m = /(?:^|[#&])pair=([^&]+)/.exec(hash || "");
+  return m ? decodeURIComponent(m[1]) : null;
+}
+
 export function isCacheStale(atIso, maxAgeMs) {
   const at = Date.parse(atIso);
   if (Number.isNaN(at)) return true;
   return Date.now() - at > maxAgeMs;
 }
 
+// P3-D9: scrub happens before this function returns to its caller, which in
+// boot() is the very first statement executed — the token/nonce never
+// survive to a second paint or a copyable address bar. Returns both values;
+// callers redeem the pair nonce with a best-effort, non-blocking call (a
+// failed redeem — e.g. an already-used link — must never lock the caller
+// out, since it already holds the durable token in hand).
 export function readTokenFromLocation(loc = location, hist = history) {
   const token = parseTokenFromHash(loc.hash);
-  if (token) hist.replaceState(null, "", loc.pathname + loc.search);
-  return token;
+  const pair = parsePairFromHash(loc.hash);
+  if (token || pair) hist.replaceState(null, "", loc.pathname + loc.search);
+  return { token, pair };
 }
 
 export function loadToken() {
