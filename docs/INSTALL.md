@@ -26,12 +26,39 @@ from the matching [GitHub release](https://github.com/PostOakLabs/ainumbers-helm
 and verifies its SHA-256 against the value baked in from the signed release
 manifest before use — install aborts on any mismatch.
 
-## Manual download
+## Offline install (no npm registry access)
 
-Download `helmd-<platform>-<arch>` (or `.exe` on Windows) from a
+Banks and other locked-down environments often block `registry.npmjs.org`
+outright. Download `helm-cli-<version>.tgz` from a
+[GitHub release](https://github.com/PostOakLabs/ainumbers-helm/releases) and
+install it directly — no registry reachability required:
+
+```
+npm install ./helm-cli-<version>.tgz
+```
+
+It is packed from the exact same filled package `npm publish` would ship
+(real sha256 values baked in), so behavior is identical to the registry
+install. If your org mirrors npm through an internal proxy (Artifactory,
+Nexus, etc.), push the tarball into your virtual npm repo instead of
+installing it locally and consume it from there like any other package.
+
+## Advanced: raw SEA binary download
+
+Only reach for this if none of winget/Homebrew/npm fit (e.g. scripting a CI
+image). Download `helmd-<platform>-<arch>` (or `.exe` on Windows) from a
 [GitHub release](https://github.com/PostOakLabs/ainumbers-helm/releases),
-plus `release-manifest.json` and `release-manifest.dsse.json` from the same
-release.
+plus `release-manifest.json`, `release-manifest.dsse.json`, and
+`SHA256SUMS` from the same release.
+
+**Honest note on Windows SmartScreen / Defender:** the raw `helmd.exe` is
+**not code-signed** (D-SIGN-2/3, Azure Trusted Signing, is deferred — see
+`HELM-CODE-SIGNING-RESEARCH-2026-07-23.md` §6). An unsigned single-executable
+binary is commonly flagged by Defender/SmartScreen on first run (this pattern
+was actively abused by the Oct 2025 "Stealit" campaign, so the caution is
+warranted, not just noise). We will not ask you to click through that
+warning — if your system blocks it, prefer winget/Homebrew/npm above (all
+three sidestep Mark-of-the-Web) or wait for a signed release.
 
 ## Verifying a downloaded release by hand
 
@@ -48,6 +75,24 @@ This checks: (1) both signature families over the manifest verify against
 the committed public key, (2) every artifact's SHA-256 on disk matches the
 digest the release key attested to. A tampered binary or a manifest signed
 by any other key fails closed.
+
+Two lighter-weight alternatives ship alongside the DSSE manifest, for
+verifiers who don't want to run repo code:
+
+- **`SHA256SUMS`** — plain-text digests, checkable with coreutils alone:
+  `sha256sum -c SHA256SUMS` (run from the directory holding the downloaded
+  files).
+- **GitHub build provenance** (D-SIGN-1, `actions/attest-build-provenance`,
+  free/first-party, no third-party action) — attests each binary and the
+  offline npm tarball were built by this repo's `release.yml`, from this
+  exact source, with no way to forge it after the fact:
+  `gh attestation verify helmd-linux-x64 --repo PostOakLabs/ainumbers-helm`
+  (works for any of the `helmd-*` binaries or `helm-cli-*.tgz`).
+
+npm installs additionally support `npm audit signatures`, which checks the
+installed package's registry signature against npm's public key — run it
+after any `npm install -g @ainumbers/helm-cli` or local tarball install to
+confirm nothing was tampered with in transit.
 
 ## First run
 
