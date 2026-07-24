@@ -16,6 +16,16 @@ test("pairingUrl: without a pair nonce, omits the pair param (backward compatibl
   assert.equal(url, "http://127.0.0.1:4173/#token=tok123");
 });
 
+test("pairingUrl: with a fingerprint, embeds the fp param (R15-F1 fix)", () => {
+  const url = pairingUrl("tok123", 4173, "nonceABC", "sha256:deadbeef");
+  assert.equal(url, "http://127.0.0.1:4173/#token=tok123&pair=nonceABC&fp=sha256:deadbeef");
+});
+
+test("pairingUrl: without a fingerprint, omits the fp param", () => {
+  const url = pairingUrl("tok123", 4173, "nonceABC");
+  assert.equal(url, "http://127.0.0.1:4173/#token=tok123&pair=nonceABC");
+});
+
 test("tokenMatches: correct token matches, wrong token does not", () => {
   assert.equal(tokenMatches("abc", "abc"), true);
   assert.equal(tokenMatches("abc", "xyz"), false);

@@ -1,4 +1,4 @@
-import { readTokenFromLocation, loadToken, saveToken, clearToken, loadPort, savePort, call } from "./api.mjs";
+import { readTokenFromLocation, loadToken, saveToken, clearToken, loadFp, saveFp, clearFp, loadPort, savePort, call } from "./api.mjs";
 import { BrowserJournalClient, offerJsonBundleDownload } from "./lib/browser-journal-client.mjs";
 import { renderChoose } from "./views/choose.mjs";
 import { renderCanvas } from "./views/canvas.mjs";
@@ -136,8 +136,11 @@ function startBrowserJournal() {
 }
 
 export function boot() {
-  const { token: preHashToken, pair } = readTokenFromLocation();
+  const { token: preHashToken, pair, fp } = readTokenFromLocation();
   if (preHashToken) saveToken(preHashToken);
+  // R15-F1 fix: pin the daemon identity fingerprint from this SAME trusted
+  // link — only real helmd ever mints an `fp=` param (index.mjs cmdStart).
+  if (fp) saveFp(fp);
   // P3-D9: best-effort, fire-and-forget — a failed redeem (link already
   // used, expired) never blocks this session, which already has the token.
   if (preHashToken && pair) {
@@ -155,6 +158,7 @@ export function boot() {
 
   document.getElementById("unpair-btn")?.addEventListener("click", () => {
     clearToken();
+    clearFp();
     render(app);
   });
 
