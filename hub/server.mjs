@@ -14,6 +14,7 @@ import { log } from "./log.mjs";
 import { startFlow, getFlowStatus, listConnections, revokeConnection, isSecureEndpoint } from "./oauth-pkce.mjs";
 import { serveStatic } from "./static.mjs";
 import { listPacks, getPack } from "./packs.mjs";
+import { listTemplates, getTemplate, buildTemplateManifest } from "./templates.mjs";
 import { executeRun } from "./run.mjs";
 import { createKernelStepRunner } from "./kernel-runner.mjs";
 import { publishRunEvent, subscribeRunEvents } from "./event-bus.mjs";
@@ -221,6 +222,23 @@ function handleWorkflows(req, res) {
   sendJson(res, 200, { workflows: listPacks() });
 }
 
+// GET /templates — Choose's Templates rail (HELM-P3-G10): curated
+// compliance-scenario templates over the compiled catalog.
+function handleTemplates(req, res) {
+  sendJson(res, 200, { templates: listTemplates() });
+}
+
+// GET /templates/:slug — template detail incl. a manifest pre-wired with
+// sample policy_parameters, ready for one-click Run.
+function handleTemplateDetail(req, res, params) {
+  const template = getTemplate(params.slug);
+  if (!template) return deny(res, 404, "template_not_found");
+  const manifest = buildTemplateManifest(template);
+  if (!manifest) return deny(res, 404, "workflow_not_found");
+  const pack = getPack(template.workflow_id);
+  sendJson(res, 200, { ...template, name: pack?.name, outcome: pack?.outcome, manifest });
+}
+
 // GET /workflow-manifest?workflow_id=... — Canvas's DAG source. Returns the
 // pack's manifest field, not the pack wrapper — matches the shape
 // buildDag()/manifestDigest() and the run engine's executeRun() all expect.
@@ -245,10 +263,20 @@ async function handleRunStart(req, res, params, db) {
   } catch {
     return deny(res, 400, "invalid_json");
   }
-  const workflowId = body.workflow_id;
-  if (!workflowId) return deny(res, 400, "missing_workflow_id");
-  const pack = getPack(workflowId);
-  if (!pack) return deny(res, 404, "workflow_not_found");
+  let workflowId = body.workflow_id;
+  let manifest;
+  if (body.template_slug) {
+    const template = getTemplate(body.template_slug);
+    if (!template) return deny(res, 404, "template_not_found");
+    workflowId = template.workflow_id;
+    manifest = buildTemplateManifest(template);
+    if (!manifest) return deny(res, 404, "workflow_not_found");
+  } else {
+    if (!workflowId) return deny(res, 400, "missing_workflow_id");
+    const pack = getPack(workflowId);
+    if (!pack) return deny(res, 404, "workflow_not_found");
+    manifest = pack.manifest;
+  }
 
   const runId = randomUUID();
   const dryRun = !!body.dry_run;
@@ -259,7 +287,7 @@ async function handleRunStart(req, res, params, db) {
     return output;
   };
 
-  executeRun(db, { runId, manifest: pack.manifest, dryRun, stepRunner })
+  executeRun(db, { runId, manifest, dryRun, stepRunner })
     .then((result) => publishRunEvent(runId, { run_id: runId, state: result.state, execution_hash: result.executionHash }))
     .catch((err) => {
       log.error("run engine: run failed", { runId, workflowId, error: String(err?.message || err) });
@@ -350,6 +378,7 @@ const ROUTES = {
   "POST /vault/connections/begin": handleBeginConnection,
   "GET /vault/connections": handleListConnections,
   "GET /workflows": handleWorkflows,
+  "GET /templates": handleTemplates,
   "GET /workflow-manifest": handleWorkflowManifest,
   "POST /run/start": handleRunStart,
   "GET /run/timeline": handleRunTimeline,
@@ -362,6 +391,7 @@ const DYNAMIC_ROUTES = [
   { method: "POST", pattern: /^\/vault\/connections\/(?<id>[^/]+)\/revoke$/, handler: handleRevoke },
   { method: "GET", pattern: /^\/kernels\/(?<id>[^/]+)\/card$/, handler: handleKernelCard },
   { method: "GET", pattern: /^\/workflows\/(?<id>[^/]+)\/euc-entry$/, handler: handleEucEntry },
+  { method: "GET", pattern: /^\/templates\/(?<slug>[^/]+)$/, handler: handleTemplateDetail },
 ];
 
 export function createHelmServer({ port, allowedOrigin, token, db = null, identityKeys = null }) {

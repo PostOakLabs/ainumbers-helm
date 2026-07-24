@@ -44,15 +44,18 @@ function timelineEntry(step) {
     </li>`;
 }
 
-async function triggerRun(port, token, workflowId, dryRun, resultEl) {
+async function triggerRun(port, token, workflowId, dryRun, resultEl, templateSlug) {
   resultEl.textContent = dryRun ? "Starting dry-run…" : "Starting run…";
-  const res = await call("/run/start", { port, token, method: "POST", body: { workflow_id: workflowId, dry_run: dryRun } });
+  const body = templateSlug ? { template_slug: templateSlug, dry_run: dryRun } : { workflow_id: workflowId, dry_run: dryRun };
+  const res = await call("/run/start", { port, token, method: "POST", body });
   if (res.ok) {
     const runId = res.data?.run_id;
     resultEl.textContent = `${dryRun ? "Dry-run" : "Run"} started: ${runId ?? "pending"}.`;
     // Re-render this view with ?run=<id> so the timeline + SSE stream below
     // pick it up — a hashchange, not a fresh navigation, so it lands on the
-    // same view with the run now attached.
+    // same view with the run now attached. Drops the template param: the
+    // workflow_id it resolved to is now known, and the manifest is memoized
+    // to this run_id regardless.
     if (runId) location.hash = `#/run?wf=${encodeURIComponent(workflowId)}&run=${encodeURIComponent(runId)}`;
   } else if (res.status === 404) {
     resultEl.textContent = "The run engine isn't available in this daemon version yet.";
@@ -68,10 +71,28 @@ async function runControl(port, token, action, runId, resultEl) {
 }
 
 export async function renderRun(root, { port, token, params }) {
-  const workflowId = params?.get("wf") ?? "";
+  let workflowId = params?.get("wf") ?? "";
   const runId = params?.get("run") ?? "";
+  const templateSlug = !workflowId ? (params?.get("template") ?? "") : "";
 
   root.innerHTML = `<p aria-live="polite">Loading run state…</p>`;
+
+  let templateBanner = "";
+  if (templateSlug) {
+    const tpl = await fetchWithFallback(`/templates/${encodeURIComponent(templateSlug)}`, { port, token });
+    if (tpl.state === "unavailable" || tpl.state === "missing") {
+      root.innerHTML = `<p class="empty-state">Can't load the "${templateSlug}" template — pair with helmd on this computer, then open this link again.</p>`;
+      return;
+    }
+    workflowId = tpl.data?.workflow_id ?? "";
+    templateBanner = `
+      <div class="card">
+        <h3>${tpl.data?.title ?? templateSlug}</h3>
+        <p class="field-row-note">${tpl.data?.blurb ?? ""}</p>
+        <p class="field-row"><span>Sample data</span><span>pre-wired — nothing to fill in</span></p>
+      </div>`;
+  }
+
   const timeline = await fetchWithFallback(`/run/timeline${runId ? `?run_id=${encodeURIComponent(runId)}` : ""}`, { port, token });
 
   const staleBadge = timeline.state === "stale" ? `<span class="stale-badge" role="status">stale — last seen ${timeline.at}</span>` : "";
@@ -83,15 +104,26 @@ export async function renderRun(root, { port, token, params }) {
         ? `<p class="empty-state">No run history yet.</p>`
         : `<ol class="timeline">${steps.map(timelineEntry).join("")}</ol>`;
 
+  const startCard = templateSlug
+    ? `<div class="card">
+        <h3>Start</h3>
+        <p class="field-row">One click runs this template end to end with its sample data.</p>
+        <button type="button" id="live-run-btn">Run template</button>
+        <button type="button" id="dry-run-btn" class="secondary">Dry-run instead</button>
+        <p id="start-result" role="status" aria-live="polite"></p>
+      </div>`
+    : `<div class="card">
+        <h3>Start</h3>
+        <p class="field-row">Dry-run replays the manifest without side effects; a live run may call connectors and actions.</p>
+        <button type="button" id="dry-run-btn">Dry-run</button>
+        <button type="button" id="live-run-btn" class="secondary">Run live</button>
+        <p id="start-result" role="status" aria-live="polite"></p>
+      </div>`;
+
   root.innerHTML = `
     <h2>Run${workflowId ? ` — ${workflowId}` : ""}${staleBadge}</h2>
-    <div class="card">
-      <h3>Start</h3>
-      <p class="field-row">Dry-run replays the manifest without side effects; a live run may call connectors and actions.</p>
-      <button type="button" id="dry-run-btn">Dry-run</button>
-      <button type="button" id="live-run-btn" class="secondary">Run live</button>
-      <p id="start-result" role="status" aria-live="polite"></p>
-    </div>
+    ${templateBanner}
+    ${startCard}
     <div class="card">
       <h3>Timeline${runId ? ` — ${runId}` : ""}</h3>
       <p id="live-indicator" class="empty-state" role="status" aria-live="polite">not streaming</p>
@@ -105,8 +137,8 @@ export async function renderRun(root, { port, token, params }) {
     </div>`;
 
   const startResult = root.querySelector("#start-result");
-  root.querySelector("#dry-run-btn").addEventListener("click", () => triggerRun(port, token, workflowId, true, startResult));
-  root.querySelector("#live-run-btn").addEventListener("click", () => triggerRun(port, token, workflowId, false, startResult));
+  root.querySelector("#dry-run-btn").addEventListener("click", () => triggerRun(port, token, workflowId, true, startResult, templateSlug));
+  root.querySelector("#live-run-btn").addEventListener("click", () => triggerRun(port, token, workflowId, false, startResult, templateSlug));
 
   const controlResult = root.querySelector("#control-result");
   root.querySelector("#pause-btn").addEventListener("click", () => runControl(port, token, "pause", runId, controlResult));

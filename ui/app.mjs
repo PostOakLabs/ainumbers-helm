@@ -14,8 +14,15 @@ const VIEWS = { choose: renderChoose, canvas: renderCanvas, connect: renderConne
 const STATIC_VIEWS = new Set(["help"]);
 const DEFAULT_VIEW = "choose";
 
+// HELM-P3-G10: `#template=<slug>` is a shareable deep link (Teams/email),
+// not the normal `#/view?query` shape — it always lands on Run with the
+// template pre-loaded, one click from executing.
 function currentRoute() {
-  const [view, query] = location.hash.replace(/^#\/?/, "").split("?");
+  const raw = location.hash.replace(/^#\/?/, "");
+  if (raw.startsWith("template=")) {
+    return { view: "run", params: new URLSearchParams({ template: decodeURIComponent(raw.slice("template=".length)) }) };
+  }
+  const [view, query] = raw.split("?");
   return { view: VIEWS[view] ? view : DEFAULT_VIEW, params: new URLSearchParams(query || "") };
 }
 

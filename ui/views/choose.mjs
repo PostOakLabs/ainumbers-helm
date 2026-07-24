@@ -3,6 +3,15 @@
 // (read-only DAG first; authoring is a stretch goal per HELM-U2).
 import { fetchWithFallback } from "../api.mjs";
 
+function templateCard(t) {
+  return `
+    <article class="card" aria-labelledby="template-${t.slug}">
+      <h3 id="template-${t.slug}">${t.title}</h3>
+      <p class="field-row-note">${t.blurb}</p>
+      <a class="button-link" href="#template=${encodeURIComponent(t.slug)}">Run template</a>
+    </article>`;
+}
+
 function packCard(pack) {
   const outcome = pack.outcome ?? "";
   return `
@@ -16,7 +25,10 @@ function packCard(pack) {
 
 export async function renderChoose(root, { port, token }) {
   root.innerHTML = `<p aria-live="polite">Loading workflow packs…</p>`;
-  const result = await fetchWithFallback("/workflows", { port, token });
+  const [result, templatesResult] = await Promise.all([
+    fetchWithFallback("/workflows", { port, token }),
+    fetchWithFallback("/templates", { port, token }),
+  ]);
 
   if (result.state === "unavailable") {
     root.innerHTML = `<p class="unavailable-state">Workflow packs aren't available in this daemon yet — the run engine ships in a later Helm wave. This page will populate automatically once it does.</p>`;
@@ -35,8 +47,18 @@ export async function renderChoose(root, { port, token }) {
     return;
   }
 
+  const templates = templatesResult.state === "live" || templatesResult.state === "stale" ? (templatesResult.data?.templates ?? []) : [];
+  const templatesRail = templates.length
+    ? `<section aria-label="Templates">
+        <h3>Templates</h3>
+        <p class="field-row">Compliance-scenario templates pre-wired with sample data — pick one to run end to end.</p>
+        <div class="card-grid">${templates.map(templateCard).join("")}</div>
+      </section>`
+    : "";
+
   root.innerHTML = `
     <h2>Choose${staleBadge}</h2>
+    ${templatesRail}
     <p class="field-row">Outcome-oriented workflow packs — not a raw inventory. Pick one to review its manifest.</p>
     <div class="card-grid">${packs.map(packCard).join("")}</div>`;
 }
