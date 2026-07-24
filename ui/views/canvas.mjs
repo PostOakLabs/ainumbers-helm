@@ -3,7 +3,7 @@
 // view-first. The digest is computed client-side from the fetched manifest
 // so it's available even when the daemon is dormant, as long as a manifest
 // was cached by a prior live call.
-import { fetchWithFallback } from "../api.mjs";
+import { fetchWithFallback, call, callText } from "../api.mjs";
 import { buildDag } from "../lib/manifest-dag.mjs";
 import { renderDagSvg } from "../lib/dag-svg.mjs";
 import { toYaml } from "../lib/to-yaml.mjs";
@@ -57,7 +57,18 @@ export async function renderCanvas(root, { port, token, params }) {
       <pre id="source-json">${escapeHtml(JSON.stringify(manifest, null, 2))}</pre>
       <pre id="source-yaml" hidden>${escapeHtml(toYaml(manifest))}</pre>
     </div>
-    <p class="field-row"><a href="#/run?wf=${encodeURIComponent(workflowId)}">Go to Run →</a></p>`;
+    <p class="field-row"><a href="#/run?wf=${encodeURIComponent(workflowId)}">Go to Run →</a></p>
+    <h3>Spread (.helm.json)</h3>
+    <p class="empty-state">Export an email-able, versioned workflow file — secrets stripped, kernels pinned by hash. Importing checks version, integrity, and kernel pins before accepting anything; any mismatch is a plain-language refusal, never a silent partial import (HELM-P3-W11).</p>
+    <p class="field-row">
+      <button type="button" id="export-helm-json" class="secondary">Export .helm.json</button>
+      <span id="export-status" class="field-row-note" role="status"></span>
+    </p>
+    <p class="field-row">
+      <label for="import-helm-json">Import a .helm.json file</label>
+      <input type="file" id="import-helm-json" accept="application/json,.json" />
+    </p>
+    <p id="import-status" class="field-row-note" role="status"></p>`;
 
   const jsonTab = root.querySelector("#tab-json");
   const yamlTab = root.querySelector("#tab-yaml");
@@ -74,5 +85,47 @@ export async function renderCanvas(root, { port, token, params }) {
     yamlEl.hidden = false;
     jsonTab.setAttribute("aria-selected", "false");
     yamlTab.setAttribute("aria-selected", "true");
+  });
+
+  const exportStatus = root.querySelector("#export-status");
+  root.querySelector("#export-helm-json").addEventListener("click", async () => {
+    exportStatus.textContent = "Exporting…";
+    const res = await callText(`/workflows/${encodeURIComponent(workflowId)}/export`, { port, token });
+    if (!res.ok) {
+      exportStatus.textContent = `Failed: ${typeof res.error === "string" ? res.error : res.status}`;
+      return;
+    }
+    const blob = new Blob([res.text], { type: "application/json" });
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement("a");
+    a.href = url;
+    a.download = `${workflowId}.helm.json`;
+    document.body.appendChild(a);
+    a.click();
+    a.remove();
+    URL.revokeObjectURL(url);
+    exportStatus.textContent = "Downloaded.";
+  });
+
+  const importStatus = root.querySelector("#import-status");
+  root.querySelector("#import-helm-json").addEventListener("change", async (ev) => {
+    const file = ev.target.files?.[0];
+    if (!file) return;
+    importStatus.textContent = "Validating…";
+    let parsed;
+    try {
+      parsed = JSON.parse(await file.text());
+    } catch {
+      importStatus.textContent = "Refused: not valid JSON.";
+      return;
+    }
+    const res = await call("/workflows/import", { port, token, method: "POST", body: { export: parsed } });
+    const result = res.data ?? res.error;
+    if (result?.ok) {
+      importStatus.textContent = `Accepted: ${result.workflow_id} (${result.kernelPins?.length ?? 0} kernel(s) pinned, all match this install).`;
+    } else {
+      importStatus.textContent = `Refused: ${result?.reason ?? "unknown error"}`;
+    }
+    ev.target.value = "";
   });
 }

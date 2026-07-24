@@ -168,6 +168,44 @@ test("GET /workflows/:id/euc-entry 404s for an unknown workflow", async () => {
   assert.equal(res.status, 404);
 });
 
+test("GET /workflows/:id/export returns a versioned, secrets-stripped .helm.json (HELM-P3-W11)", async () => {
+  const res = await get("/workflows/pack-aca-226j-response-composer/export", headers());
+  assert.equal(res.status, 200);
+  const doc = JSON.parse(res.body);
+  assert.equal(doc.format_version, "1");
+  assert.equal(doc.result, "ok");
+  assert.equal(doc.secrets_stripped, true);
+  assert.equal(doc.kernel_pins.length, 3);
+  assert.match(doc.workflow_manifest_digest, /^sha256:[0-9a-f]{64}$/);
+});
+
+test("GET /workflows/:id/export 404s for an unknown workflow", async () => {
+  const res = await get("/workflows/does-not-exist/export", headers());
+  assert.equal(res.status, 404);
+});
+
+test("POST /workflows/import round-trips a freshly exported workflow (HELM-P3-W11)", async () => {
+  const exportRes = await get("/workflows/pack-aca-226j-response-composer/export", headers());
+  const exported = JSON.parse(exportRes.body);
+  const res = await post("/workflows/import", { export: exported }, headers());
+  assert.equal(res.status, 200);
+  const result = JSON.parse(res.body);
+  assert.equal(result.ok, true);
+  assert.equal(result.workflow_id, "pack-aca-226j-response-composer");
+  assert.deepEqual(result.manifest, exported.workflow_manifest);
+});
+
+test("POST /workflows/import refuses an unsupported format_version, explained not silently mangled (HELM-P3-W11)", async () => {
+  const exportRes = await get("/workflows/pack-aca-226j-response-composer/export", headers());
+  const exported = JSON.parse(exportRes.body);
+  const res = await post("/workflows/import", { export: { ...exported, format_version: "9" } }, headers());
+  assert.equal(res.status, 422);
+  const result = JSON.parse(res.body);
+  assert.equal(result.result, "refused");
+  assert.equal(result.minimum_supported_version, "1");
+  assert.match(result.reason, /unsupported format_version/);
+});
+
 test("negative: POST /vault/connections/begin with http tokenEndpoint rejected (F4)", async () => {
   const res = await post(
     "/vault/connections/begin",

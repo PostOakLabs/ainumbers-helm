@@ -21,6 +21,7 @@ import { publishRunEvent, subscribeRunEvents } from "./event-bus.mjs";
 import { buildKernelCard, buildEucEntry } from "./euc-register.mjs";
 import { renderKernelCardHtml, renderEucEntryHtml } from "../ui/lib/euc-html.mjs";
 import { importMigrationBundle } from "./migration-import.mjs";
+import { buildWorkflowExport, parseWorkflowExport } from "./workflow-export.mjs";
 
 const START = Date.now();
 const HERE = dirname(fileURLToPath(import.meta.url));
@@ -349,6 +350,35 @@ function handleEucEntry(req, res, params) {
   sendJson(res, 200, entry);
 }
 
+// GET /workflows/:id/export (HELM-P3-W11) — the versioned, secrets-stripped,
+// kernel-hash-pinned `.helm.json` file. Read-only re-shape of an already
+// compiled pack, same immutable-catalog discipline as handleEucEntry above.
+function handleWorkflowExportRoute(req, res, params) {
+  let doc;
+  try {
+    doc = buildWorkflowExport(params.id);
+  } catch {
+    return deny(res, 404, "workflow_not_found");
+  }
+  sendJson(res, 200, doc);
+}
+
+// POST /workflows/import {export: <parsed .helm.json contents>} — HELM-P3-W11.
+// Validation-only: packs are compile-time-immutable (D2 zero-dep, same
+// discipline as packs.mjs), so importing never writes anything — the caller
+// gets back exactly the {ok, workflow_id, manifest, kernelPins} / refused
+// shape parseWorkflowExport() always returns, never a thrown error.
+async function handleWorkflowImport(req, res) {
+  let body;
+  try {
+    body = await readJsonBody(req);
+  } catch {
+    return deny(res, 400, "invalid_json");
+  }
+  const result = parseWorkflowExport(body.export ?? body);
+  sendJson(res, result.ok ? 200 : 422, result);
+}
+
 // POST /migration/import {bundle, raw_entries, fresh_reauth} — P3-M7
 // daemon-mediated import path. Reachable only through the normal bearer-token
 // gate below (never the pre-auth detection routes) — a paired browser is
@@ -384,6 +414,7 @@ const ROUTES = {
   "GET /run/timeline": handleRunTimeline,
   "POST /pair/redeem": handlePairRedeem,
   "POST /migration/import": handleMigrationImport,
+  "POST /workflows/import": handleWorkflowImport,
 };
 
 const DYNAMIC_ROUTES = [
@@ -391,6 +422,7 @@ const DYNAMIC_ROUTES = [
   { method: "POST", pattern: /^\/vault\/connections\/(?<id>[^/]+)\/revoke$/, handler: handleRevoke },
   { method: "GET", pattern: /^\/kernels\/(?<id>[^/]+)\/card$/, handler: handleKernelCard },
   { method: "GET", pattern: /^\/workflows\/(?<id>[^/]+)\/euc-entry$/, handler: handleEucEntry },
+  { method: "GET", pattern: /^\/workflows\/(?<id>[^/]+)\/export$/, handler: handleWorkflowExportRoute },
   { method: "GET", pattern: /^\/templates\/(?<slug>[^/]+)$/, handler: handleTemplateDetail },
 ];
 
