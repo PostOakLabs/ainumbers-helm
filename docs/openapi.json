@@ -56,6 +56,37 @@
         }
       }
     },
+    "/version-check": {
+      "get": {
+        "summary": "Passive daemon-vs-latest-release version notice (HELM-P4-J4 skew banner).",
+        "tags": [
+          "Daemon"
+        ],
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Missing or invalid bearer token."
+          },
+          "403": {
+            "description": "Host or Origin mismatch (D8 loopback hardening)."
+          }
+        }
+      }
+    },
     "/events": {
       "get": {
         "summary": "Server-Sent Events stream of run progress (optionally ?run_id=).",
