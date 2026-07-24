@@ -1,6 +1,6 @@
 # AINumbers Helm
 
-Local-first control plane for verifiable connected workflows: a customer-installed hub daemon (`helmd`) plus a static browser UI (`helm.html`) that run deterministic OCG kernels against connector-retrieved data and emit independently verifiable, regulator-legible evidence bundles.
+Local-first control plane for verifiable connected workflows: a self-installed hub daemon (`helmd`) plus a static browser UI (`helm.html`) that run deterministic OCG kernels against connector-retrieved data and emit independently verifiable, regulator-legible evidence bundles.
 
 **Status:** Phase 1 foundation — pre-release, private.
 

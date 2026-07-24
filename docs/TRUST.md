@@ -165,14 +165,15 @@ to us.
 
 ## 5. CycloneDX SBOM per release
 
-Every tagged release (`v*`) generates a CycloneDX JSON SBOM covering the
-full dependency tree, published as a release asset alongside the signed
-release manifest and `SHA256SUMS`. See
-[`.github/workflows/release.yml`](../.github/workflows/release.yml) (the
-`sign-and-release` job's SBOM step) — generated with
+The release pipeline generates a CycloneDX JSON SBOM and a `SHA256SUMS`
+file for every tagged release going forward, published as release assets
+alongside the signed release manifest. See
+[`.github/workflows/release.yml`](../.github/workflows/release.yml) (`sbom`
++ `attach-sbom-asset` jobs; SBOM generated with
 [anchore/sbom-action](https://github.com/anchore/sbom-action), pinned by
-commit SHA. Fetch the SBOM for any release from that release's GitHub
-assets: `sbom.cyclonedx.json`.
+commit SHA). **v0.1.0 predates this pipeline and has neither asset** —
+check a release's GitHub assets for `sbom.cyclonedx.json` /
+`SHA256SUMS` before relying on either.
 
 ## 6. Zone-level DNS hardening: DNSSEC + CAA
 
@@ -188,8 +189,7 @@ DNSSEC + CAA change lives in
 [`DNSSEC-CAA-RUNBOOK.md`](DNSSEC-CAA-RUNBOOK.md) in this directory.
 Current state as verified by this WU (`dig`/DNS-over-HTTPS, 2026-07-24):
 no `DS` record at the registrar and no `CAA` record in the zone — both
-pending the runbook's execution. This section will be updated with the
-landed state once Tim confirms.
+pending the runbook's execution.
 
 ## 7. Third-party grades — dated, every host in §2
 
