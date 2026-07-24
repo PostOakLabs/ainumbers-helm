@@ -5,7 +5,8 @@ because Helm is a credential-holding daemon: **credential leak** and **unauthori
 external action**. Written 2026-07-23 (HELM-R1).
 
 **Disclosure contact:** security@postoaklabs.com (routes to tim@postoaklabs.com; live,
-also published in `SECURITY.md`). Acknowledge within 5 business days.
+also published in `SECURITY.md`). We read every report and respond as soon as we can —
+see `SECURITY.md` for the current disclosure policy.
 
 **Phase-1 responder reality (per brief §10, decided with Tim 2026-07-23):**
 founder-only, best-effort, no uptime/response SLA, no external customers yet. This

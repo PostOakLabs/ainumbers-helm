@@ -3,10 +3,10 @@
 A change-advisory-board process implies a committee. Helm has no committee —
 this doc is what a bank's CAB actually needs to accept upstream releases
 without one: predictable version discipline, signed and readable release
-notes, a machine-checkable feed to gate on, and a stated deprecation window.
+notes, and a machine-checkable feed to gate on.
 Everything below is existing machinery — see [RELEASING.md](RELEASING.md)
 and [INSTALL.md](INSTALL.md) for the mechanics; this doc is the CAB-facing
-summary and the one piece of new commitment (the deprecation window).
+summary.
 
 ## 1. Semver discipline statement
 
@@ -59,18 +59,19 @@ gets the same object `helmd`'s own version-check UI reads — one source of
 truth, published by the site repo (not this one; coordinated separately,
 per the schema doc's own note).
 
-## 4. Deprecation window
+## 4. Support floor signal
 
-`minimum_supported_version` in the feed above is the enforcement point.
-Policy: a minor version series stays in `minimum_supported_version` for at
-least **90 days after the next minor ships**, and a security-relevant patch
-extends that window rather than shortening it. Falling below the floor
-doesn't break anything by force — `helmd` never auto-updates (D10) — it
-only flips `belowMinimumSupported: true` in the version-check result, so
-the passive notice becomes a harder signal a CAB can alert on. There is no
-enforced kill-switch; this is a published commitment, not a remote lockout,
+`minimum_supported_version` in the feed above is the enforcement point. No
+fixed window is promised for how long a minor series stays supported — this
+is a pre-revenue, founder-run project, and a floor date is a commitment
+easier to publish than to keep. Falling below the floor doesn't break
+anything by force — `helmd` never auto-updates (D10) — it only flips
+`belowMinimumSupported: true` in the version-check result, so the passive
+notice becomes a harder signal a CAB can alert on. There is no enforced
+kill-switch; the field is a live signal, not a scheduled guarantee,
 consistent with "local-first, no vendor control plane" everywhere else in
-this repo.
+this repo. A published support-window policy is easy to add later — when a
+paying customer needs one — and hard to retract once public.
 
 ## 5. Offline kit = the version-pinned change-managed channel
 
