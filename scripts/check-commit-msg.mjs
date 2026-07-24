@@ -28,6 +28,9 @@ function main() {
   if (!lintTitle(subject)) {
     console.error(`check-commit-msg: commit subject "${subject}" is not a valid Conventional Commit.`);
     console.error(`Required format: type(optional-scope)!: subject`);
+    console.error(`Put the WU-ID in the scope or body, never the type:`);
+    console.error(`  bad:  HELM-P3-U3: browser vault`);
+    console.error(`  good: feat(helm-ui): browser vault (HELM-P3-U3)`);
     console.error(`This is the SAME rule PR Title Lint enforces in CI — fixing it here means`);
     console.error(`'gh pr create --fill' inherits a title that will already pass.`);
     process.exit(1);

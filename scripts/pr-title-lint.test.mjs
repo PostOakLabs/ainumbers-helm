@@ -24,6 +24,18 @@ test("lintTitle: rejects non-conventional titles", () => {
   assert.equal(lintTitle(""), false);
 });
 
+test("lintTitle: rejects the real CI failures (runs 30061089932/30087980537/30088100988)", () => {
+  assert.equal(lintTitle("HELM-P3-U2: Browser journal + durability UX"), false); // WU-ID as type
+  assert.equal(lintTitle("helm-ui: browser vault — PRF wraps DEK, passphrase fallback (HELM-P3-U3)"), false); // non-allowed type
+  assert.equal(lintTitle("helm testiso 1"), false); // no type at all
+});
+
+test("lintTitle: accepts the corrected forms of those failures", () => {
+  assert.ok(lintTitle("feat(ui): browser journal + durability UX (HELM-P3-U2)"));
+  assert.ok(lintTitle("feat(helm-ui): browser vault, PRF wraps DEK (HELM-P3-U3)"));
+  assert.ok(lintTitle("chore: testiso 1"));
+});
+
 function runWithEvent(title) {
   const tmp = mkdtempSync(join(tmpdir(), "helm-pr-title-lint-test-"));
   const eventPath = join(tmp, "event.json");
