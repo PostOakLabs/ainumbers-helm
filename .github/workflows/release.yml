@@ -146,23 +146,13 @@ jobs:
           TARBALL=$(cd dist/packaging/npm && npm pack --silent --pack-destination "$GITHUB_WORKSPACE/dist/upload")
           mv "dist/upload/$TARBALL" "dist/upload/helm-cli-${HELM_RELEASE_VERSION}.tgz"
 
-      # HELM-P4-C3: CycloneDX SBOM per release, published as a release asset
-      # (docs/TRUST.md §5). anchore/sbom-action (syft-based) scans the
-      # checked-out source tree — package.json + lockfile — for the full
-      # dependency graph; no new devDependency, contents:read only, no
-      # secrets touched. Pinned by commit SHA (v0.24.0), per SO #17.
-      - name: generate CycloneDX SBOM
-        uses: anchore/sbom-action@e22c389904149dbc22b58101806040fa8d37a610 # v0.24.0
-        with:
-          path: .
-          format: cyclonedx-json
-          output-file: dist/upload/sbom.cyclonedx.json
-
       # D-SIGN-1 free hardening: a plain SHA256SUMS file gives anyone
       # `sha256sum -c` verification with zero tooling beyond coreutils,
       # alongside (not instead of) the DSSE-signed release-manifest above.
-      # Runs after every asset (incl. the offline tarball and SBOM) is staged
-      # so the sums file covers the exact set of files in the GitHub release.
+      # Runs after every asset staged so far (offline tarball incl.) so the
+      # sums file covers this job's set. The SBOM lands separately via the
+      # sbom/attach-sbom-asset jobs below (HELM-P4-F2-ACTION-FLAG, SO #17)
+      # and is not covered by this file — see F7 for closing that gap.
       - name: generate SHA256SUMS
         working-directory: dist/upload
         run: sha256sum * > SHA256SUMS
@@ -204,6 +194,55 @@ jobs:
           name: npm-package
           path: dist/packaging/npm
           if-no-files-found: error
+
+  # HELM-P4-F2-ACTION-FLAG (SO #17): anchore/sbom-action moved OUT of
+  # sign-and-release into its own job — contents:read only, no secrets, no
+  # id-token, runs in parallel with signing off the same build artifacts.
+  # Tim ruling 2026-07-24, option (b): keep the SBOM, isolate the
+  # third-party Action from HELM_RELEASE_SIGNING_KEY_B64 and OIDC scope.
+  sbom:
+    needs: build
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+    steps:
+      - uses: actions/checkout@9c091bb21b7c1c1d1991bb908d89e4e9dddfe3e0 # v7.0.0
+
+      # HELM-P4-C3: CycloneDX SBOM per release, published as a release asset
+      # (docs/TRUST.md §5). anchore/sbom-action (syft-based) scans the
+      # checked-out source tree — package.json + lockfile — for the full
+      # dependency graph; no new devDependency, contents:read only, no
+      # secrets touched. Pinned by commit SHA (v0.24.0), per SO #17.
+      - name: generate CycloneDX SBOM
+        uses: anchore/sbom-action@e22c389904149dbc22b58101806040fa8d37a610 # v0.24.0
+        with:
+          path: .
+          format: cyclonedx-json
+          output-file: sbom.cyclonedx.json
+
+      - uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4.6.2
+        with:
+          name: sbom
+          path: sbom.cyclonedx.json
+          if-no-files-found: error
+
+  # Attaches the SBOM built in the isolated `sbom` job to the GitHub release
+  # `sign-and-release` already created. contents:write to call `gh release
+  # upload`, and nothing else — no signing secret, no id-token, no npm step.
+  attach-sbom-asset:
+    needs: [sign-and-release, sbom]
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+    steps:
+      - uses: actions/download-artifact@018cc2cf5baa6db3ef3c5f8a56943fffe632ef53 # v6.0.0
+        with:
+          name: sbom
+          path: sbom-dl
+      - name: upload SBOM to release
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: gh release upload "$GITHUB_REF_NAME" sbom-dl/sbom.cyclonedx.json --repo "$GITHUB_REPOSITORY"
 
   # HELM-REL-NPM-DEFER: ainumbers-helm is unregistered on npm and npm only
   # lets you attach a trusted publisher from an EXISTING package's settings
