@@ -34,6 +34,14 @@ Run `node scripts/setup-hooks.mjs` once per clone to enable local shift-left gat
 
 Loopback-only daemon, bearer-token pairing, Host/Origin validation, OS-keychain secret storage, default-deny egress. See `SECURITY.md` (HELM-0) for the disclosure contact.
 
+## Trust
+
+`docs/TRUST.md` — SOC 2 scoping statement, a complete enumeration of every
+outbound request the shipped code can make, a reproducible zero-telemetry
+recipe you can run yourself in under 10 minutes, the data-flow/subprocessor
+statement, and where to find the CycloneDX SBOM published with every
+release.
+
 ## Continuity
 
 Evidence bundles self-verify independently of the vendor: every bundle
