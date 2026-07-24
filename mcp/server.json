@@ -1,0 +1,12 @@
+{
+  "$schema": "https://static.modelcontextprotocol.io/schemas/2025-12-11/server.schema.json",
+  "$comment": "HELM-P4-B2: metadata-only. NOT published to registry.modelcontextprotocol.io — helmd is a loopback-only local daemon with no publicly reachable MCP endpoint today (see .well-known/agent-card.json's `notes`). This doc records the listing shape so a future publish (once helmd exposes a remote MCP transport, or a downloadable-package profile is decided) can reuse it without re-deriving the metadata. Publish flow when the time comes: memory `reference-mcp-registry-publish` (site/worker repo precedent) — helmd's is a package/binary distribution, not a `remotes[].url`, so that flow needs adapting, not copying verbatim.",
+  "name": "co.ainumbers/helm",
+  "description": "Local-first control-plane daemon that runs deterministic, hash-anchored OpenChainGraph kernels and exports signed Committee Pack evidence. Distributed as a per-user installed daemon (SEA binaries), not a hosted remote server.",
+  "repository": {
+    "url": "https://github.com/PostOakLabs/ainumbers-helm",
+    "source": "github"
+  },
+  "version": "0.1.0",
+  "websiteUrl": "https://ainumbers.co/helm.html"
+}

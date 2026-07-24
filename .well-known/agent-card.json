@@ -1,0 +1,53 @@
+{
+  "protocolVersion": "1.0",
+  "name": "AINumbers Helm",
+  "description": "Local-first control-plane daemon (helmd) that runs deterministic, hash-anchored OpenChainGraph (OCG) kernels vendored from the AINumbers estate — no data leaves the machine unless the user explicitly connects a provider. Produces Committee-Pack-ready evidence bundles (DSSE/RFC3161-signed) from bank-legible workflows.",
+  "url": "http://127.0.0.1:4173",
+  "preferredTransport": "HTTP+JSON",
+  "version": "0.1.0",
+  "provider": {
+    "organization": "Post Oak Labs",
+    "url": "https://postoaklabs.com"
+  },
+  "documentationUrl": "https://ainumbers.co/helm.html",
+  "iconUrl": "https://ainumbers.co/favicon.svg",
+  "capabilities": {
+    "streaming": true,
+    "pushNotifications": false,
+    "stateTransitionHistory": true,
+    "extensions": [
+      {
+        "uri": "https://postoaklabs.github.io/chaingraph/ext/x-chaingraph/v0.1",
+        "description": "Executes OpenChainGraph-conformant kernels vendored pinned from the AINumbers estate (see hub/vendored/ocg/MANIFEST.json in this repo). Kernel source-of-truth and full catalog live in the AINumbers site repo.",
+        "required": false,
+        "params": {
+          "conformance_level": "L4",
+          "graph_index": "https://ainumbers.co/chaingraph/chaingraph.json",
+          "hash_alg": "sha256",
+          "mandate_namespace": "co.ainumbers"
+        }
+      }
+    ]
+  },
+  "defaultInputModes": ["application/json"],
+  "defaultOutputModes": ["application/json", "text/event-stream"],
+  "notes": [
+    "This card describes helmd, a daemon that binds to 127.0.0.1 only — the `url` above is a loopback address, not a publicly reachable endpoint. There is one instance per installation; nothing here is centrally hosted.",
+    "REST + SSE route table: see docs/openapi.json in this repo (generated from hub/server.mjs — scripts/gen-openapi.mjs).",
+    "Every request requires Host/Origin match plus a pairing-issued Bearer token (D8 hardening) — see README.md."
+  ],
+  "skills": [
+    {
+      "id": "committee-pack-export",
+      "name": "Committee Pack export",
+      "description": "Run a workflow template against connected data and export a Committee-Pack-ready PDF/pptx: outcome banner, process map, decision table, and a collapsible full-DAG/hash/DSSE appendix.",
+      "tags": ["evidence", "audit", "OCG", "DSSE", "RFC3161"]
+    },
+    {
+      "id": "kernel-catalog",
+      "name": "OCG kernel catalog",
+      "description": "Deterministic kernel library (fraud, compliance, treasury, ESG, DLT, and more) vendored pinned from the AINumbers OpenChainGraph estate, executed locally with SHA-256 execution-hash receipts.",
+      "tags": ["OCG", "deterministic", "kernels"]
+    }
+  ]
+}
