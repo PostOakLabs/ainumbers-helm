@@ -46,6 +46,14 @@ function renderEntry(entry) {
 function renderCheckpoint(cp) {
   const anchors = (cp.predicate?.anchors ?? [])
     .map((a) => {
+      // R15-F5/P3-D4: queued/skipped is a neutral, expected state (relay
+      // unreachable/blocked at checkpoint time) — render it plainly, not as
+      // a missing/failed anchor.
+      if (a.type === "queued" || a.type === "skipped") {
+        const rows = [`<tr><th>Reason</th><td>${esc(a.reason)}</td></tr>`, `<tr><th>Relay</th><td><code>${esc(a.relay_url)}</code></td></tr>`];
+        if (a.recorded_at) rows.push(`<tr><th>Recorded</th><td>${isoUtcNote(a.recorded_at)}</td></tr>`);
+        return `<div class="anchor"><h4>Anchoring ${esc(a.type)}</h4><table>${rows.join("")}</table></div>`;
+      }
       const b = a.binding;
       const rows = [];
       if (b?.genTime) rows.push(`<tr><th>TSA time</th><td>${isoUtcNote(b.genTime)}</td></tr>`);

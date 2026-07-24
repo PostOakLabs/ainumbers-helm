@@ -1,7 +1,7 @@
-// Inlined copy of schema/checkpoint.schema.json (HELM-U3) — ui/ ships static with
+// Inlined copy of schema/checkpoint.schema.json (HELM-U3) ï¿½ ui/ ships static with
 // no build step and can't fetch outside its own tree reliably (file://), so the
 // two schemas the Verify view shape-checks travel as JS objects, same
-// discipline as ui/vendored/*.mjs. DO NOT hand-edit — resync from the schema/
+// discipline as ui/vendored/*.mjs. DO NOT hand-edit ï¿½ resync from the schema/
 // copy if it changes.
 export default {
   "$schema": "https://json-schema.org/draft/2020-12/schema",
@@ -16,6 +16,10 @@ export default {
     "rawSha256Hex": {
       "type": "string",
       "pattern": "^[0-9a-f]{64}$"
+    },
+    "timestamp": {
+      "type": "string",
+      "pattern": "^\\d{4}-\\d{2}-\\d{2}T\\d{2}:\\d{2}:\\d{2}(\\.\\d+)?Z$"
     },
     "streamCheckpoint": {
       "type": "object",
@@ -45,6 +49,7 @@ export default {
       "required": [
         "type"
       ],
+      "description": "type=queued|skipped is the anchor_queue_marker shape (schema/anchor_queue_marker.schema.json, HELM-P3-SEC-3) recorded in place of a real anchor proof when the relay was unreachable/blocked/erroring at checkpoint time.",
       "properties": {
         "type": {
           "type": "string",
@@ -57,6 +62,24 @@ export default {
         "log_origin": {
           "type": "string",
           "minLength": 1
+        },
+        "reason": {
+          "type": "string",
+          "enum": ["relay_unreachable", "egress_blocked", "relay_error"]
+        },
+        "relay_url": {
+          "type": "string",
+          "minLength": 1
+        },
+        "recorded_at": {
+          "$ref": "#/$defs/timestamp"
+        },
+        "attempts": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "last_attempt_at": {
+          "$ref": "#/$defs/timestamp"
         }
       }
     }

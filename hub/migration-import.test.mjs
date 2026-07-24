@@ -107,6 +107,64 @@ test("refuses import without a fresh re-auth, even with a perfectly valid bundle
   db.close();
 });
 
+// R15-F8: source_origin is attacker-controlled, so `migrated-vault:${source_
+// origin}` is a ref an attacker can pick to collide with a prior migration
+// and silently clobber someone else's wrapped vault material. These two
+// tests prove: (1) a retried import of the SAME bundle is idempotent, no
+// duplicate marker/overwrite, and (2) a DIFFERENT bundle claiming the same
+// source_origin is refused unless the caller explicitly passes overwrite:true.
+test("R15-F8: retrying the SAME bundle import is idempotent — no duplicate marker, no re-write", async () => {
+  const origin = "https://ainumbers.co.idempotent.test";
+  const db = openJournal(join(TMP, "idempotent.db"));
+  const entries = rawEntries();
+  const bundle = await buildMigrationBundle({ entries, vaultRecord: vaultRecord(), sourceOrigin: origin, now: new Date("2026-07-24T00:00:00.000Z") });
+
+  const first = importMigrationBundle(db, { bundle, rawEntries: entries, freshReauth: true });
+  assert.equal(first.ok, true);
+  assert.equal(first.idempotent, undefined);
+
+  const second = importMigrationBundle(db, { bundle, rawEntries: entries, freshReauth: true });
+  assert.equal(second.ok, true);
+  assert.equal(second.idempotent, true);
+  assert.equal(second.markerSeq, first.markerSeq);
+
+  const markerRows = db.prepare("SELECT entry_json FROM journal WHERE stream_id = ? AND kind = ?").all(first.streamId, "migration_import");
+  assert.equal(markerRows.length, 1, "a retried import must not append a second marker");
+  assert.equal(replayVerify(db).ok, true);
+  db.close();
+});
+
+test("R15-F8: a DIFFERENT bundle claiming the same source_origin is refused, not silently overwritten", async () => {
+  const origin = "https://ainumbers.co.collision.test";
+  const db = openJournal(join(TMP, "collision.db"));
+  const firstEntries = rawEntries();
+  const firstBundle = await buildMigrationBundle({ entries: firstEntries, vaultRecord: vaultRecord(), sourceOrigin: origin, now: new Date("2026-07-24T00:00:00.000Z") });
+  const firstResult = importMigrationBundle(db, { bundle: firstBundle, rawEntries: firstEntries, freshReauth: true });
+  assert.equal(firstResult.ok, true);
+  const storedBefore = vaultGet(`migrated-vault:${origin}`);
+  assert.deepEqual(storedBefore, firstBundle.vault_export);
+
+  // A different bundle (different vault_export, different journal contents)
+  // asserting the SAME source_origin — an attacker could pick this on purpose.
+  const attackerEntries = [{ kind: "run", run_id: "attacker-r1", note: "attacker-controlled" }];
+  const attackerBundle = await buildMigrationBundle({
+    entries: attackerEntries,
+    vaultRecord: { wrap_method: "webauthn-prf", wrapped_dek: "attacker-b64==", kdf: { alg: "hkdf-sha256" } },
+    sourceOrigin: origin,
+    now: new Date("2026-07-24T01:00:00.000Z"),
+  });
+  const refused = importMigrationBundle(db, { bundle: attackerBundle, rawEntries: attackerEntries, freshReauth: true });
+  assert.equal(refused.ok, false);
+  assert.equal(refused.reason, "vault_ref_exists");
+  assert.deepEqual(vaultGet(`migrated-vault:${origin}`), storedBefore, "existing vault material must be untouched");
+
+  // Explicit overwrite:true is honored.
+  const overwritten = importMigrationBundle(db, { bundle: attackerBundle, rawEntries: attackerEntries, freshReauth: true, overwrite: true });
+  assert.equal(overwritten.ok, true);
+  assert.deepEqual(vaultGet(`migrated-vault:${origin}`), attackerBundle.vault_export);
+  db.close();
+});
+
 test("verifyBundleContinuity: schema violation is reported, not thrown", async () => {
   const entries = rawEntries();
   const bundle = await buildMigrationBundle({ entries, vaultRecord: vaultRecord(), sourceOrigin: "https://ainumbers.co.schema.test" });

@@ -89,18 +89,30 @@ export function offerMigrationBundleDownload(bundle, filename = `helm-migration-
 //      structural: the send is refused if reauth happened before (or
 //      without reference to) the daemon proof, not just documented as a
 //      comment the caller could ignore.
-// fetchImpl is injectable so this stays node:test-able without a real browser.
-export async function submitMigrationToDaemon({ bundle, verifiedChallenge, reauthAt, endpoint, token, fetchImpl = fetch }) {
+// R15-F6: the daemon's /migration/import route (hub/server.mjs's
+// handleMigrationImport) proves continuity by recomputing digests over the
+// RAW entries and comparing them to the bundle's manifest (hub/migration-
+// import.mjs's verifyBundleContinuity) — the manifest alone (seq+digest per
+// entry) is never enough, the route 400s with missing_bundle_or_raw_entries
+// without the raw entries riding alongside it. entries: the SAME array
+// passed to buildMigrationBundle()'s digestEntries() for this bundle — this
+// function does not re-derive or validate that correspondence, the daemon's
+// continuity check is what proves it. fetchImpl is injectable so this stays
+// node:test-able without a real browser.
+export async function submitMigrationToDaemon({ bundle, entries, verifiedChallenge, reauthAt, endpoint, token, overwrite = false, fetchImpl = fetch }) {
   if (!verifiedChallenge || typeof verifiedChallenge !== "object" || !verifiedChallenge.fingerprint || typeof verifiedChallenge.verifiedAt !== "number") {
     throw new Error("submitMigrationToDaemon: refusing to send vault material without a verified, pinned daemon challenge");
   }
   if (typeof reauthAt !== "number" || reauthAt <= verifiedChallenge.verifiedAt) {
     throw new Error("submitMigrationToDaemon: refusing to send — fresh re-auth must happen AFTER the daemon proof, not before");
   }
+  if (!Array.isArray(entries)) {
+    throw new Error("submitMigrationToDaemon: entries (the raw journal entries this bundle's manifest was built from) is required");
+  }
   const res = await fetchImpl(endpoint, {
     method: "POST",
     headers: { "Content-Type": "application/json", Authorization: `Bearer ${token}` },
-    body: JSON.stringify({ bundle, fresh_reauth: true }),
+    body: JSON.stringify({ bundle, raw_entries: entries, fresh_reauth: true, overwrite }),
   });
   const body = await res.json();
   if (!res.ok) throw new Error(`migration import failed: ${body.error || res.status}`);

@@ -110,7 +110,7 @@ test("submitMigrationToDaemon: refuses when reauthAt exactly equals verifiedAt (
   );
 });
 
-test("submitMigrationToDaemon: wired happy path — verified-pinned challenge, THEN reauth, THEN send — POSTs bundle + fresh_reauth, returns parsed body", async () => {
+test("submitMigrationToDaemon: wired happy path — verified-pinned challenge, THEN reauth, THEN send — POSTs bundle + raw_entries + fresh_reauth, returns parsed body", async () => {
   let captured;
   const fetchImpl = async (url, opts) => {
     captured = { url, opts };
@@ -119,6 +119,7 @@ test("submitMigrationToDaemon: wired happy path — verified-pinned challenge, T
   const bundle = await buildMigrationBundle({ entries: entries(), vaultRecord: vaultRecord(), sourceOrigin: "https://ainumbers.co", now: NOW });
   const result = await submitMigrationToDaemon({
     bundle,
+    entries: entries(),
     verifiedChallenge: verifiedChallenge(1000),
     reauthAt: 2000,
     endpoint: "http://127.0.0.1:4173/migration/import",
@@ -130,7 +131,23 @@ test("submitMigrationToDaemon: wired happy path — verified-pinned challenge, T
   const sentBody = JSON.parse(captured.opts.body);
   assert.equal(sentBody.fresh_reauth, true);
   assert.deepEqual(sentBody.bundle, bundle);
+  assert.deepEqual(sentBody.raw_entries, entries());
+  assert.equal(sentBody.overwrite, false);
   assert.deepEqual(result, { ok: true, markerSeq: 1 });
+});
+
+test("submitMigrationToDaemon: refuses when entries (raw journal entries) is missing — the daemon's continuity check needs them, not just the manifest", async () => {
+  await assert.rejects(
+    () =>
+      submitMigrationToDaemon({
+        bundle: {},
+        verifiedChallenge: verifiedChallenge(1000),
+        reauthAt: 2000,
+        endpoint: "http://x",
+        token: "t",
+      }),
+    /entries.*required/
+  );
 });
 
 test("submitMigrationToDaemon: throws with the daemon's error on a non-ok response", async () => {
@@ -139,6 +156,7 @@ test("submitMigrationToDaemon: throws with the daemon's error on a non-ok respon
     () =>
       submitMigrationToDaemon({
         bundle: {},
+        entries: entries(),
         verifiedChallenge: verifiedChallenge(1000),
         reauthAt: 2000,
         endpoint: "http://x",
