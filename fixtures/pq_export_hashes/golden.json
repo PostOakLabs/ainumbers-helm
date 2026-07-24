@@ -1,0 +1,10 @@
+{
+  "schema_version": 1,
+  "generated_at": "2026-07-24T00:00:00.000Z",
+  "run_id": "run-9f1c2b",
+  "bundle_id": "bundle-wf-invoice-reconcile-01-2026-07-23",
+  "rows": [
+    { "digest": "sha256:af2c0d0db5baec3e06592c51e073a7606955a005fe70bbbce5c0f85c08fe2f0b", "algorithm": "sha256", "hex": "af2c0d0db5baec3e06592c51e073a7606955a005fe70bbbce5c0f85c08fe2f0b" },
+    { "digest": "sha256:2ca2ac613d4d7c2aab7190dcb452b1b4efe3994cdae36d67b69986f43e3866fb", "algorithm": "sha256", "hex": "2ca2ac613d4d7c2aab7190dcb452b1b4efe3994cdae36d67b69986f43e3866fb" }
+  ]
+}

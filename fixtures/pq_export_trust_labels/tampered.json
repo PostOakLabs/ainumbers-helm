@@ -1,0 +1,9 @@
+{
+  "schema_version": 1,
+  "generated_at": "2026-07-24T00:00:00.000Z",
+  "run_id": "run-9f1c2b",
+  "bundle_id": "bundle-wf-invoice-reconcile-01-2026-07-23",
+  "rows": [
+    { "digest": "sha256:af2c0d0db5baec3e06592c51e073a7606955a005fe70bbbce5c0f85c08fe2f0b", "trust_label": "verified" }
+  ]
+}
