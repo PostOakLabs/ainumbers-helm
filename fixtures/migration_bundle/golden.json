@@ -1,0 +1,16 @@
+{
+  "bundle_version": "1",
+  "source_origin": "https://ainumbers.co",
+  "exported_at": "2026-07-23T14:10:00Z",
+  "journal_entries": [
+    { "seq": 0, "digest": "sha256:af2c0d0db5baec3e06592c51e073a7606955a005fe70bbbce5c0f85c08fe2f0b" },
+    { "seq": 1, "digest": "sha256:d78dff200aa19cf0f138bf54c8c88cb4f5bf3982b3b473aaf5bfa0c016fcf221" }
+  ],
+  "journal_root_digest": "sha256:af2c0d0db5baec3e06592c51e073a7606955a005fe70bbbce5c0f85c08fe2f0b",
+  "vault_export": {
+    "wrap_method": "webauthn-prf",
+    "wrapped_dek": "base64:AAECAwQFBgcICQoLDA0ODw==",
+    "kdf": { "alg": "hkdf-sha256", "salt": "base64:c2FsdHNhbHQ=" }
+  },
+  "daemon_proof_required": true
+}

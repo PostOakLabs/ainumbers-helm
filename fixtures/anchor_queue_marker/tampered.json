@@ -1,0 +1,9 @@
+{
+  "checkpoint_seq": 5,
+  "status": "anchored",
+  "reason": "egress_blocked",
+  "relay_url": "https://anchor.ainumbers.co/v1/anchor",
+  "recorded_at": "2026-07-23T14:02:11Z",
+  "attempts": 0,
+  "journal_root_digest": "sha256:af2c0d0db5baec3e06592c51e073a7606955a005fe70bbbce5c0f85c08fe2f0b"
+}

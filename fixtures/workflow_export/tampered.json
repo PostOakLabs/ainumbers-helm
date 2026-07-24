@@ -1,0 +1,21 @@
+{
+  "format_version": "1",
+  "result": "ok",
+  "workflow_id": "wf-invoice-reconcile-01",
+  "exported_at": "2026-07-23T14:20:00Z",
+  "secrets_stripped": false,
+  "kernel_pins": [
+    { "node_id": "n1", "kernel_id": "art-07-basel31-reporting-delta-calculator", "kernel_digest": "sha256:af2c0d0db5baec3e06592c51e073a7606955a005fe70bbbce5c0f85c08fe2f0b" }
+  ],
+  "workflow_manifest_digest": "sha256:d78dff200aa19cf0f138bf54c8c88cb4f5bf3982b3b473aaf5bfa0c016fcf221",
+  "vault_env_secret": "sk_live_this_should_never_be_in_an_export",
+  "workflow_manifest": {
+    "manifest_version": "1",
+    "workflow_id": "wf-invoice-reconcile-01",
+    "trigger": { "type": "manual" },
+    "nodes": [],
+    "connectors": [],
+    "gates": [],
+    "actions": []
+  }
+}

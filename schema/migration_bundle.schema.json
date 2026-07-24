@@ -1,0 +1,50 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://ainumbers.co/helm/schema/migration_bundle.schema.json",
+  "title": "Browser-to-daemon migration bundle (HELM-PHASE3-BUILD-SPEC.md P3-D10, P3-M7)",
+  "description": "Export format for origin-bound browser-mode state (OPFS journal cache + PRF-wrapped vault) that a user carries from ainumbers.co to a freshly installed helmd. helmd only imports a bundle AFTER it has proven itself to the browser via the signed-challenge probe (P3-D9) and a fresh WebAuthn assertion has been taken (P3-M7) — this schema validates the bundle's shape only, not the import-time proof sequence. vault_export never carries a raw DEK or PRF secret, only the wrapped/encrypted blob plus enough KDF metadata for the daemon-side unwrap to run.",
+  "$defs": {
+    "sha256ref": { "type": "string", "pattern": "^sha256:[0-9a-f]{64}$" },
+    "timestamp": { "type": "string", "pattern": "^\\d{4}-\\d{2}-\\d{2}T\\d{2}:\\d{2}:\\d{2}(\\.\\d+)?Z$" },
+    "journalExportEntry": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["seq", "digest"],
+      "properties": {
+        "seq": { "type": "integer", "minimum": 0 },
+        "digest": { "$ref": "#/$defs/sha256ref" }
+      }
+    },
+    "vaultExport": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["wrap_method", "wrapped_dek", "kdf"],
+      "properties": {
+        "wrap_method": { "type": "string", "enum": ["webauthn-prf", "passphrase-kdf"] },
+        "wrapped_dek": { "type": "string", "minLength": 1, "description": "Base64 ciphertext of the journal DEK under the wrap method's derived key. Never the DEK itself, never a PRF output, never a passphrase." },
+        "kdf": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": ["alg"],
+          "properties": {
+            "alg": { "type": "string", "minLength": 1 },
+            "salt": { "type": "string", "minLength": 1 },
+            "iterations": { "type": "integer", "minimum": 1 }
+          }
+        }
+      }
+    }
+  },
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["bundle_version", "source_origin", "exported_at", "journal_entries", "journal_root_digest", "vault_export", "daemon_proof_required"],
+  "properties": {
+    "bundle_version": { "const": "1" },
+    "source_origin": { "type": "string", "pattern": "^https://[a-z0-9.-]+$" },
+    "exported_at": { "$ref": "#/$defs/timestamp" },
+    "journal_entries": { "type": "array", "items": { "$ref": "#/$defs/journalExportEntry" } },
+    "journal_root_digest": { "$ref": "#/$defs/sha256ref" },
+    "vault_export": { "$ref": "#/$defs/vaultExport" },
+    "daemon_proof_required": { "const": true, "description": "Fixed true — a bundle importer that skipped the signed-challenge proof step is a contract violation, not a schema variant (P3-D9)." }
+  }
+}
