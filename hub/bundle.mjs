@@ -10,6 +10,11 @@ import { fileURLToPath } from "node:url";
 import { cgCanon, assertIJson } from "./vendored/ocg/kernels/_hash.mjs";
 import { buildStatement, emitEnvelope, verifyEnvelope, helmPredicateType } from "./envelope.mjs";
 import { validate } from "../scripts/lib/schema-validator.mjs";
+import { verifyBundle as verifyBundleOffline, verifyAnchorBinding } from "../ui/lib/verify-bundle.mjs";
+import { envelopeDigest as envelopeDigestOffline } from "../ui/lib/verify-envelope.mjs";
+import { buildStandaloneVerifierHtml } from "../ui/lib/standalone-verifier.mjs";
+import { buildAuditorHtml } from "../ui/lib/auditor-pdf.mjs";
+import { buildZip } from "../ui/lib/zip-writer.mjs";
 
 const HERE = dirname(fileURLToPath(import.meta.url));
 const MANIFEST_SCHEMA = JSON.parse(
@@ -175,4 +180,63 @@ export function verifyBundle(bundle, publicKeys) {
   }
 
   return { valid: reasons.length === 0, reasons };
+}
+
+// Node KeyObject/Uint8Array keypair (loadOrCreateKeys() shape) -> the base64
+// SPKI shape the WebCrypto-based offline verifier chain (ui/lib/verify-*.mjs,
+// embedded in verify.html) expects — same conversion gen-verify-demo-fixture.mjs
+// hand-does for the Verify view's built-in demo.
+export function browserPublicKeys(keys) {
+  return {
+    ed25519SpkiB64: keys.ed25519.publicKey.export({ format: "der", type: "spki" }).toString("base64"),
+    mldsa44B64: Buffer.from(keys.mldsa44.publicKey).toString("base64"),
+  };
+}
+
+// HELM-P3-V9 (HELM-PHASE3-BUILD-SPEC.md §3 items 1+3): packages an assembled
+// bundle into bundle.zip — the shareable, offline-verifiable artifact. Runs
+// the SAME WebCrypto verify chain the embedded verify.html will run (Node
+// 22.5+ ships globalThis.crypto.subtle, so this is the real code path, not a
+// simulation) both to prove the bundle actually verifies before it ships and
+// to source the auditor.html's per-object/per-checkpoint detail. keys: the
+// Node keypair (loadOrCreateKeys() shape) that signed the bundle.
+export async function exportBundleZip(bundle, keys, { generatedAt } = {}) {
+  const publicKeys = browserPublicKeys(keys);
+  const verifyResult = await verifyBundleOffline(bundle, publicKeys);
+  const manifestDigest = await envelopeDigestOffline(bundle.manifest.envelope);
+
+  const checkpointsWithBinding = verifyResult.detail.checkpoints.map((cp) => {
+    if (!cp.predicate) return cp;
+    const anchors = (cp.predicate.anchors ?? []).map((a) => ({
+      ...a,
+      binding: verifyAnchorBinding(a, cp.predicate.journal_root_digest),
+    }));
+    return { ...cp, predicate: { ...cp.predicate, anchors } };
+  });
+
+  const verifyHtml = buildStandaloneVerifierHtml({ bundle, publicKeys });
+  const auditorHtml = buildAuditorHtml({
+    bundle,
+    entries: verifyResult.detail.entries,
+    checkpoints: checkpointsWithBinding,
+    manifestDigest,
+    generatedAt,
+  });
+  const readme = `Helm evidence bundle — ${bundle.manifest.predicate.bundle_id}\n\n` +
+    `bundle.json   — the raw signed evidence bundle (this IS the evidence; everything else here is a view onto it)\n` +
+    `verify.html   — open this in any browser, fully offline, to re-verify the bundle from scratch\n` +
+    `auditor.html  — human-readable audit record; print or "print to PDF" for paper records\n\n` +
+    `Bundle verified ${verifyResult.valid ? "VALID" : "INVALID"} at export time` +
+    (verifyResult.reasons.length ? `: ${verifyResult.reasons.join("; ")}\n` : ".\n");
+
+  return {
+    valid: verifyResult.valid,
+    reasons: verifyResult.reasons,
+    zip: buildZip([
+      { name: "bundle.json", data: JSON.stringify(bundle, null, 2) },
+      { name: "verify.html", data: verifyHtml },
+      { name: "auditor.html", data: auditorHtml },
+      { name: "README.txt", data: readme },
+    ]),
+  };
 }
