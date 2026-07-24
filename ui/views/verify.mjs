@@ -7,6 +7,8 @@
 // two minutes — the copy fence below is written for that reader, not for us.
 import { verifyBundle, verifyAnchorBinding } from "../lib/verify-bundle.mjs";
 import { buildCommitteePackHtml } from "../lib/committee-pack.mjs";
+import { buildCommitteeDeckSpec } from "../lib/committee-deck.mjs";
+import { buildCommitteeDeckPptxBlob } from "../lib/committee-pptx.mjs";
 import { DEMO_PUBLIC_KEYS, DEMO_GOLDEN_BUNDLE, DEMO_TAMPERED_BUNDLE } from "../fixtures/verify-demo.mjs";
 
 const TRUST_LABEL_COPY = {
@@ -90,7 +92,10 @@ function renderCheckpoints(checkpoints) {
 }
 
 function downloadHtml(html, filename) {
-  const blob = new Blob([html], { type: "text/html" });
+  downloadBlob(new Blob([html], { type: "text/html" }), filename);
+}
+
+function downloadBlob(blob, filename) {
   const url = URL.createObjectURL(blob);
   const a = document.createElement("a");
   a.href = url;
@@ -120,22 +125,48 @@ async function runVerify(root, { bundle, publicKeys }) {
     ${renderEntries(result.detail.entries)}
     <h3>Checkpoints</h3>
     ${renderCheckpoints(result.detail.checkpoints)}
-    <p class="field-row"><button type="button" id="verify-export-committee-pack">Export Committee Pack (print to PDF)</button></p>`;
+    <p class="field-row">
+      <button type="button" id="verify-export-committee-pack">Export Committee Pack (print to PDF)</button>
+      <button type="button" id="verify-export-committee-deck" class="secondary">Export .pptx deck</button>
+    </p>
+    <p id="verify-deck-export-status" role="status" aria-live="polite"></p>`;
 
-  root.querySelector("#verify-export-committee-pack").addEventListener("click", () => {
-    const checkpointsWithBinding = result.detail.checkpoints.map((cp) => {
+  function checkpointsWithAnchorBinding() {
+    return result.detail.checkpoints.map((cp) => {
       if (!cp.predicate) return cp;
       const anchors = (cp.predicate.anchors ?? []).map((a) => ({ ...a, binding: verifyAnchorBinding(a, cp.predicate.journal_root_digest) }));
       return { ...cp, predicate: { ...cp.predicate, anchors } };
     });
+  }
+
+  root.querySelector("#verify-export-committee-pack").addEventListener("click", () => {
     const html = buildCommitteePackHtml({
       bundle,
       entries: result.detail.entries,
-      checkpoints: checkpointsWithBinding,
+      checkpoints: checkpointsWithAnchorBinding(),
       manifestDigest: bundle.manifest?.predicate?.workflow_manifest_digest,
       generatedAt: new Date().toISOString(),
     });
     downloadHtml(html, `committee-pack-${bundle.manifest?.predicate?.bundle_id ?? "export"}.html`);
+  });
+
+  root.querySelector("#verify-export-committee-deck").addEventListener("click", async () => {
+    const statusEl = root.querySelector("#verify-deck-export-status");
+    statusEl.textContent = "Building deck — nothing leaves this browser tab…";
+    try {
+      const spec = buildCommitteeDeckSpec({
+        bundle,
+        entries: result.detail.entries,
+        checkpoints: checkpointsWithAnchorBinding(),
+        manifestDigest: bundle.manifest?.predicate?.workflow_manifest_digest,
+        generatedAt: new Date().toISOString(),
+      });
+      const blob = await buildCommitteeDeckPptxBlob(spec);
+      downloadBlob(blob, `committee-deck-${bundle.manifest?.predicate?.bundle_id ?? "export"}.pptx`);
+      statusEl.textContent = "Deck downloaded — macro-free OOXML, no network access used.";
+    } catch (err) {
+      statusEl.textContent = `Could not build deck: ${err.message}`;
+    }
   });
 }
 
