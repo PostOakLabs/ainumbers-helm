@@ -13,16 +13,30 @@ import { renderHelp } from "./views/help.mjs";
 import { renderRegister } from "./views/register.mjs";
 
 const VIEWS = { choose: renderChoose, canvas: renderCanvas, connect: renderConnect, run: renderRun, verify: renderVerify, review: renderReview, operate: renderOperate, register: renderRegister, help: renderHelp };
-const STATIC_VIEWS = new Set(["help"]);
+// HELM-P4-J5: Verify joins Help as pairing-free — a `#load=` link recipient
+// (SharePoint/Teams share, no Helm install/pairing on that machine at all)
+// must land straight on the bundle, not a "waiting for Helm" screen. Safe
+// because verify.mjs is standalone by construction (never calls ../api.mjs).
+const STATIC_VIEWS = new Set(["help", "verify"]);
 const DEFAULT_VIEW = "choose";
 
 // HELM-P3-G10: `#template=<slug>` is a shareable deep link (Teams/email),
 // not the normal `#/view?query` shape — it always lands on Run with the
 // template pre-loaded, one click from executing.
+//
+// HELM-P4-J5: `#load=<https-url>` is the same idea for an evidence bundle —
+// a SharePoint/Teams link-first share drops the app straight on Verify with
+// the bundle pre-fetched, no file picker round-trip. Hash (not `?config=`'s
+// query string) because link-sharing UIs commonly re-host or proxy a shared
+// URL's query string but leave the fragment alone, and because `helmd open`
+// already treats the hash as the deep-link channel (`#token=`, `#template=`).
 function currentRoute() {
   const raw = location.hash.replace(/^#\/?/, "");
   if (raw.startsWith("template=")) {
     return { view: "run", params: new URLSearchParams({ template: decodeURIComponent(raw.slice("template=".length)) }) };
+  }
+  if (raw.startsWith("load=")) {
+    return { view: "verify", params: new URLSearchParams({ load: decodeURIComponent(raw.slice("load=".length)) }) };
   }
   const [view, query] = raw.split("?");
   return { view: VIEWS[view] ? view : DEFAULT_VIEW, params: new URLSearchParams(query || "") };

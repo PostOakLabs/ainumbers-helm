@@ -172,7 +172,19 @@ async function runVerify(root, { bundle, publicKeys }) {
   });
 }
 
-function wireInputs(root) {
+// HELM-P4-J5: fetch-by-URL half of `#load=<https-url>` link opening. Same
+// graceful-failure doctrine as company-profile.mjs's config fetch — an
+// unreachable host, non-200, or non-JSON body just leaves the bundle slot
+// empty with an error message, never a thrown error out of renderVerify.
+// https-only (no file://, no javascript:) by construction of the regex.
+async function fetchBundleFromUrl(url) {
+  if (!/^https:\/\//.test(url)) throw new Error("bundle link must be an https:// URL");
+  const res = await fetch(url);
+  if (!res.ok) throw new Error(`fetch failed: HTTP ${res.status}`);
+  return res.json();
+}
+
+function wireInputs(root, { loadUrl } = {}) {
   const state = { bundle: null, publicKeys: null };
   const bundleFile = root.querySelector("#verify-bundle-file");
   const bundlePaste = root.querySelector("#verify-bundle-paste");
@@ -241,12 +253,21 @@ function wireInputs(root) {
     runVerify(root, { bundle: state.bundle, publicKeys: state.publicKeys });
   });
   runBtn.addEventListener("click", () => runVerify(root, { bundle: state.bundle, publicKeys: state.publicKeys }));
+
+  if (loadUrl) {
+    setBundle(null, `loading from link…`);
+    fetchBundleFromUrl(loadUrl)
+      .then((obj) => setBundle(obj, "loaded from shared link"))
+      .catch((err) => setBundle(null, `error loading link: ${err.message}`));
+  }
 }
 
-export async function renderVerify(root) {
+export async function renderVerify(root, { params } = {}) {
+  const loadUrl = params?.get("load") || null;
   root.innerHTML = `
     <h2>Verify</h2>
     <p class="field-row-note">Checks an evidence bundle entirely in this browser tab. Nothing is uploaded, and no daemon connection is required.</p>
+    ${loadUrl ? `<p class="field-row-note" data-testid="verify-link-notice">Opened from a shared bundle link. Public identity/keys still need to be loaded separately — Helm has no key registry.</p>` : ""}
 
     <section class="card verify-copy-fence" aria-labelledby="verify-what-checked">
       <h3 id="verify-what-checked">What this checks — and what it does not</h3>
@@ -289,5 +310,5 @@ export async function renderVerify(root) {
 
     <section id="verify-result" class="card" aria-live="polite" aria-labelledby="verify-load"></section>`;
 
-  wireInputs(root);
+  wireInputs(root, { loadUrl });
 }

@@ -3,6 +3,9 @@
 `helmd` is a Node SEA (single-executable) binary — no runtime dependency,
 loopback-only by default (D8). Pick one:
 
+Deploying to a managed fleet instead of installing by hand? See
+[IT-DEPLOYMENT.md](IT-DEPLOYMENT.md) (Intune Win32 app, MDM `.pkg`).
+
 ## winget (Windows)
 
 ```
