@@ -15,12 +15,12 @@ Please include:
 
 ## What to expect
 
-This is a solo/small-maintainer project, not a funded security team — the
-timelines below are commitments we intend to keep, not marketing.
+This is a solo/small-maintainer project, not a funded security team — no
+response-time commitment is made here. We read every report and respond as
+soon as we can.
 
-- **Acknowledgment:** within 2 business days
-- **Coordinated disclosure window:** 90 days from acknowledgment, or sooner
-  by mutual agreement
+- **Coordinated disclosure:** we ask reporters to hold public disclosure for
+  90 days from their report, or sooner by mutual agreement
 - Confirmed vulnerabilities are published as GitHub Security Advisories on
   this repo once fixed
 

@@ -11,7 +11,7 @@ credentials** — that is the gate, not a date.
 | Who patches the Local Hub on a dependency CVE, and target time-to-patch? | Founder (Tim). **Best-effort, no SLA.** Patches ship as capacity allows. Honest for pre-revenue; the dependency surface is deliberately tiny (better-sqlite3, keychain lib, Node builtins — zero-npm elsewhere), which keeps the exposure small. Revisit to a real SLA before the first paying customer. |
 | Who is on call if a connector breaks mid-workflow? | **Deferred — no external customers yet.** On-call is undefined until the first customer runs a live connector. Write-capable connectors are gated behind making this decision. |
 | What happens to a customer's evidence/credentials if a connector version is abandoned? | **Best-effort connector support** (no migration/deprecation commitment yet). **But evidence readability is not at risk:** offline verifiability is a *structural* property — the standalone Verify view checks an evidence bundle with no daemon and no connector (§5 gate #2). A vault becomes unreadable only if the customer loses their own keychain/OS secret, not because Helm stops maintaining a connector. |
-| Where do security disclosures go? | **security@postoaklabs.com** (→ tim@postoaklabs.com; live, confirmed). Published in `SECURITY.md`. Acknowledge within 5 business days. |
+| Where do security disclosures go? | **security@postoaklabs.com** (→ tim@postoaklabs.com; live, confirmed). Disclosure policy lives in `SECURITY.md` — one home, not restated here. |
 | What does the credential-leak / unauthorized-action runbook look like? | See `INCIDENT-RESPONSE.md` (IR-1 credential leak, IR-2 unauthorized external action, IR-3 supply-chain). |
 
 ## Phase-1 operating envelope (consequences of the above)
