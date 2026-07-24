@@ -13,8 +13,10 @@ import {
   unlockRecord,
   VaultNoPrfError,
   VaultWrongKeyError,
+  VaultWeakPassphraseError,
   WRAP_METHOD,
   LOST_PASSKEY_COPY,
+  PASSPHRASE_MIN_LENGTH,
 } from "./vault.mjs";
 
 // --- fake authenticators -----------------------------------------------
@@ -109,6 +111,22 @@ test("enrollPassphrase + unlockPassphrase: round trip, wrong passphrase rejects"
   assert.equal(record.wrap_method, WRAP_METHOD.PASSPHRASE);
   assert.deepEqual(await unlockPassphrase(record, "correct horse battery staple"), dek);
   await assert.rejects(() => unlockPassphrase(record, "wrong passphrase"), VaultWrongKeyError);
+});
+
+test("enrollPassphrase rejects a passphrase shorter than the minimum length (R15-F9)", async () => {
+  const short = "a".repeat(PASSPHRASE_MIN_LENGTH - 1);
+  await assert.rejects(() => enrollPassphrase(short), VaultWeakPassphraseError);
+});
+
+test("enrollPassphrase rejects a long but low-diversity passphrase (R15-F9)", async () => {
+  const repetitive = "aaaaaaaaaaaaaaaaaaaa"; // long enough, but only 1 distinct char
+  await assert.rejects(() => enrollPassphrase(repetitive), VaultWeakPassphraseError);
+});
+
+test("enrollPassphrase accepts a passphrase meeting the length + diversity floor", async () => {
+  const { dek, record } = await enrollPassphrase("a".repeat(PASSPHRASE_MIN_LENGTH - 4) + "xyz1");
+  assert.equal(record.wrap_method, WRAP_METHOD.PASSPHRASE);
+  assert.ok(dek);
 });
 
 test("unlockRecord dispatches by wrap_method for both PRF and passphrase records", async () => {

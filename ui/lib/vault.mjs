@@ -32,6 +32,29 @@ export class VaultNoPrfError extends Error {
 
 export const WRAP_METHOD = Object.freeze({ PRF: "webauthn-prf", PASSPHRASE: "passphrase-kdf" });
 
+// R15-F9: the IndexedDB passphrase record (wrapped_dek+salt+iterations) is a
+// complete offline oracle to any origin XSS or local disk read — 600k PBKDF2
+// iterations don't save a short or low-variety passphrase. Floor both length
+// and character diversity before deriving.
+export const PASSPHRASE_MIN_LENGTH = 12;
+const PASSPHRASE_MIN_UNIQUE_CHARS = 4;
+
+export class VaultWeakPassphraseError extends Error {
+  constructor(reason) {
+    super(`passphrase too weak: ${reason}`);
+    this.name = "VaultWeakPassphraseError";
+  }
+}
+
+function assertPassphraseStrength(passphrase) {
+  if (typeof passphrase !== "string" || passphrase.length < PASSPHRASE_MIN_LENGTH) {
+    throw new VaultWeakPassphraseError(`must be at least ${PASSPHRASE_MIN_LENGTH} characters`);
+  }
+  if (new Set(passphrase).size < PASSPHRASE_MIN_UNIQUE_CHARS) {
+    throw new VaultWeakPassphraseError(`must use at least ${PASSPHRASE_MIN_UNIQUE_CHARS} distinct characters`);
+  }
+}
+
 export const LOST_PASSKEY_COPY =
   "Losing this passkey doesn't lose anything stored here — it only means reconnecting your accounts. Your journal isn't kept in the vault.";
 
@@ -134,6 +157,7 @@ export async function unlockPrf(record, { webauthn = defaultWebauthn(), rpId = l
 }
 
 export async function enrollPassphrase(passphrase) {
+  assertPassphraseStrength(passphrase);
   const dek = generateDek();
   const salt = randomSalt();
   const wrapKey = await derivePassphraseKdf(passphrase, salt);
