@@ -1,0 +1,32 @@
+name: Live-net coverage
+
+# Live third-party coverage (FreeTSA / OTS) — the tests that #SKIP in the
+# blocking `ci` job so a third-party outage can never redden main or a PR.
+# Moved here from ci.yml (2026-07-24) because, even as continue-on-error, it
+# painted a cosmetic red ✗ on every PR whenever FreeTSA/OTS flaked. Running it
+# on a schedule (plus manual dispatch) keeps the live coverage while removing
+# that noise from PR checks. This run is allowed to fail visibly: a red here
+# means "investigate" — usually a third-party outage, occasionally a real
+# regression in the live anchor/connector path.
+
+on:
+  schedule:
+    # 06:23 UTC daily (off-peak; minute offset avoids the top-of-hour rush).
+    - cron: "23 6 * * *"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  live-net:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@9c091bb21b7c1c1d1991bb908d89e4e9dddfe3e0 # v7.0.0
+      - uses: actions/setup-node@249970729cb0ef3589644e2896645e5dc5ba9c38 # v6.5.0
+        with:
+          node-version: "22"
+      - name: test (live network)
+        env:
+          HELM_LIVE_NET: "1"
+        run: node scripts/test.mjs
