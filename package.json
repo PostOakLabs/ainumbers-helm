@@ -8,6 +8,8 @@
     "node": ">=22.5"
   },
   "scripts": {
+    "prepare": "node scripts/install-hooks.mjs",
+    "hooks:install": "node scripts/install-hooks.mjs",
     "lint": "node scripts/lint.mjs",
     "test": "node scripts/test.mjs",
     "vendor": "node scripts/vendor.mjs",
