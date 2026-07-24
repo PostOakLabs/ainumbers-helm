@@ -17,6 +17,9 @@ function downloadBlob(filename, text, mime) {
   URL.revokeObjectURL(url);
 }
 
+const FORMAT_EXT = { html: "html", table: "html", dmn: "dmn", json: "json" };
+const FORMAT_MIME = { html: "text/html", table: "text/html", dmn: "application/xml", json: "application/json" };
+
 async function triggerDownload(root, { port, token, path, filenameBase, format, setStatus }) {
   setStatus("Generating…");
   const res = await callText(`${path}${path.includes("?") ? "&" : "?"}format=${format}`, { port, token });
@@ -24,8 +27,8 @@ async function triggerDownload(root, { port, token, path, filenameBase, format, 
     setStatus(`Failed: ${typeof res.error === "string" ? res.error : res.status}`);
     return;
   }
-  const ext = format === "html" ? "html" : "json";
-  const mime = format === "html" ? "text/html" : "application/json";
+  const ext = FORMAT_EXT[format] ?? "json";
+  const mime = FORMAT_MIME[format] ?? "application/json";
   downloadBlob(`${filenameBase}.${ext}`, res.text, mime);
   setStatus("Downloaded.");
 }
@@ -37,6 +40,8 @@ function kernelRow(kernelId) {
       <span>
         <button type="button" class="secondary" data-action="card" data-format="json">JSON</button>
         <button type="button" class="secondary" data-action="card" data-format="html">HTML</button>
+        <button type="button" class="secondary" data-action="card" data-format="table">Decision table</button>
+        <button type="button" class="secondary" data-action="card" data-format="dmn">DMN XML</button>
       </span>
       <span class="field-row-note" data-role="status"></span>
     </li>`;

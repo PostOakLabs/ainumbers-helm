@@ -20,6 +20,7 @@ import { createKernelStepRunner } from "./kernel-runner.mjs";
 import { publishRunEvent, subscribeRunEvents } from "./event-bus.mjs";
 import { buildKernelCard, buildEucEntry } from "./euc-register.mjs";
 import { renderKernelCardHtml, renderEucEntryHtml } from "../ui/lib/euc-html.mjs";
+import { renderKernelDecisionTableHtml, buildKernelDecisionTableDmn } from "../ui/lib/decision-table.mjs";
 import { importMigrationBundle } from "./migration-import.mjs";
 import { buildWorkflowExport, parseWorkflowExport } from "./workflow-export.mjs";
 
@@ -64,6 +65,11 @@ function sendJson(res, status, body) {
 function sendHtml(res, status, html) {
   res.writeHead(status, { "Content-Type": "text/html; charset=utf-8" });
   res.end(html);
+}
+
+function sendXml(res, status, xml) {
+  res.writeHead(status, { "Content-Type": "application/xml; charset=utf-8" });
+  res.end(xml);
 }
 
 function readJsonBody(req) {
@@ -313,10 +319,12 @@ function handleRunTimeline(req, res, params, db) {
   sendJson(res, 200, { steps });
 }
 
-// GET /kernels/:id/card?format=json|html (HELM-P3-E12) — per-kernel
-// validation card generated from vendored metadata + committed fixtures.
+// GET /kernels/:id/card?format=json|html|table|dmn (HELM-P3-E12; table/dmn
+// added HELM-P4-A4) — per-kernel validation card generated from vendored
+// metadata + committed fixtures. "table" is the read-only decision-table
+// view of the same test vectors; "dmn" is its DMN 1.5 XML export.
 function handleKernelCard(req, res, params) {
-  const format = new URL(req.url, "http://x").searchParams.get("format") === "html" ? "html" : "json";
+  const format = new URL(req.url, "http://x").searchParams.get("format");
   let card;
   try {
     card = buildKernelCard(params.id);
@@ -324,6 +332,8 @@ function handleKernelCard(req, res, params) {
     return deny(res, 404, "kernel_not_found");
   }
   if (format === "html") return sendHtml(res, 200, renderKernelCardHtml(card));
+  if (format === "table") return sendHtml(res, 200, renderKernelDecisionTableHtml(card));
+  if (format === "dmn") return sendXml(res, 200, buildKernelDecisionTableDmn(card));
   sendJson(res, 200, card);
 }
 
