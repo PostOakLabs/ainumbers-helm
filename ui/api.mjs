@@ -3,6 +3,7 @@
 // cached response with an explicit stale flag — never silently invents state
 // the daemon never asserted.
 const TOKEN_KEY = "helm.token";
+const FP_KEY = "helm.fp";
 const PORT_KEY = "helm.port";
 const CACHE_PREFIX = "helm.cache.";
 
@@ -16,6 +17,15 @@ export function parseTokenFromHash(hash) {
 // durable token — see hub/token.mjs for why they're separate values.
 export function parsePairFromHash(hash) {
   const m = /(?:^|[#&])pair=([^&]+)/.exec(hash || "");
+  return m ? decodeURIComponent(m[1]) : null;
+}
+
+// R15-F1 fix: the daemon identity-key fingerprint, delivered ONLY via this
+// same trusted pairing link (only real helmd mints it — see token.mjs
+// pairingUrl). Pinned for the session so a later /pair/challenge response
+// can be checked against it, never trusted on self-consistency alone.
+export function parseFpFromHash(hash) {
+  const m = /(?:^|[#&])fp=([^&]+)/.exec(hash || "");
   return m ? decodeURIComponent(m[1]) : null;
 }
 
@@ -34,8 +44,9 @@ export function isCacheStale(atIso, maxAgeMs) {
 export function readTokenFromLocation(loc = location, hist = history) {
   const token = parseTokenFromHash(loc.hash);
   const pair = parsePairFromHash(loc.hash);
-  if (token || pair) hist.replaceState(null, "", loc.pathname + loc.search);
-  return { token, pair };
+  const fp = parseFpFromHash(loc.hash);
+  if (token || pair || fp) hist.replaceState(null, "", loc.pathname + loc.search);
+  return { token, pair, fp };
 }
 
 export function loadToken() {
@@ -46,6 +57,19 @@ export function saveToken(token) {
 }
 export function clearToken() {
   sessionStorage.removeItem(TOKEN_KEY);
+}
+
+// Pinned once per pairing, cleared alongside the token on unpair — a fresh
+// pair (fresh fp=) is required after clearToken() rather than trusting a
+// stale pin from a previous install/daemon.
+export function loadFp() {
+  return sessionStorage.getItem(FP_KEY);
+}
+export function saveFp(fp) {
+  sessionStorage.setItem(FP_KEY, fp);
+}
+export function clearFp() {
+  sessionStorage.removeItem(FP_KEY);
 }
 
 export function loadPort() {

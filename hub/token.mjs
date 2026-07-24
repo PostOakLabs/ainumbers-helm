@@ -23,9 +23,17 @@ export function loadOrCreateToken() {
 // credentials mid-connection). The nonce's only power is /pair/redeem
 // (records the pairing event, so a replayed old link is detectable) — it
 // never gates ordinary API calls, matching "unlocks daemon APIs ONLY."
-export function pairingUrl(token, port, pairNonce) {
+//
+// fp= carries the daemon identity-key fingerprint (R15-F1 fix): the ONLY
+// channel a port squatter cannot spoof, because only real helmd — the
+// process holding ~/.helm/keys.enc.json — ever mints this URL. The browser
+// pins it and later refuses to trust ANY /pair/challenge response whose
+// publicKey fingerprint doesn't match, closing the self-consistency-only
+// gap in challenge.mjs's verifyChallenge.
+export function pairingUrl(token, port, pairNonce, fingerprint) {
   const pair = pairNonce ? `&pair=${pairNonce}` : "";
-  return `http://127.0.0.1:${port}/#token=${token}${pair}`;
+  const fp = fingerprint ? `&fp=${fingerprint}` : "";
+  return `http://127.0.0.1:${port}/#token=${token}${pair}${fp}`;
 }
 
 export function tokenMatches(token, presented) {

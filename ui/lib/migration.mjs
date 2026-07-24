@@ -73,14 +73,29 @@ export function offerMigrationBundleDownload(bundle, filename = `helm-migration-
 }
 
 // Daemon-mediated import path (P3-M7's "buildable" #2): POSTs the bundle
-// directly to a paired daemon's /migration/import route. `freshReauth` must
-// be true — the caller only sets it after a real, just-now WebAuthn/
-// passphrase unlock succeeded (P3-D9 ordering: AFTER the daemon has already
-// proven itself via the signed-challenge probe, never before). fetchImpl is
-// injectable so this stays node:test-able without a real browser.
-export async function submitMigrationToDaemon({ bundle, freshReauth, endpoint, token, fetchImpl = fetch }) {
-  if (freshReauth !== true) {
-    throw new Error("submitMigrationToDaemon: refusing to send vault material without a fresh re-auth");
+// directly to a paired daemon's /migration/import route. R15-F1/F2 fix:
+// this used to gate on a bare `freshReauth === true` boolean the caller
+// could set at any time or for any reason — no proof the daemon on the
+// other end was ever verified, and no structural ordering. It now requires
+// TWO things, checked structurally rather than trusted on the caller's say:
+//   1. `verifiedChallenge` — the object returned by
+//      ui/lib/challenge-browser.mjs's verifyPinnedChallenge(), i.e. a
+//      signed daemon challenge that ALSO fingerprint-matched the pairing
+//      link's pinned identity. A bare boolean can no longer stand in for
+//      "the daemon proved itself."
+//   2. `reauthAt` — the timestamp of a real, just-now WebAuthn/passphrase
+//      unlock, which must be STRICTLY AFTER `verifiedChallenge.verifiedAt`.
+//      This is P3-D9's "prove, THEN fresh-reauth, THEN send" order made
+//      structural: the send is refused if reauth happened before (or
+//      without reference to) the daemon proof, not just documented as a
+//      comment the caller could ignore.
+// fetchImpl is injectable so this stays node:test-able without a real browser.
+export async function submitMigrationToDaemon({ bundle, verifiedChallenge, reauthAt, endpoint, token, fetchImpl = fetch }) {
+  if (!verifiedChallenge || typeof verifiedChallenge !== "object" || !verifiedChallenge.fingerprint || typeof verifiedChallenge.verifiedAt !== "number") {
+    throw new Error("submitMigrationToDaemon: refusing to send vault material without a verified, pinned daemon challenge");
+  }
+  if (typeof reauthAt !== "number" || reauthAt <= verifiedChallenge.verifiedAt) {
+    throw new Error("submitMigrationToDaemon: refusing to send — fresh re-auth must happen AFTER the daemon proof, not before");
   }
   const res = await fetchImpl(endpoint, {
     method: "POST",

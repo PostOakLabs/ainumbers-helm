@@ -78,21 +78,53 @@ test("buildMigrationBundle: refuses a vaultRecord that isn't unlocked/enrolled",
   );
 });
 
-test("submitMigrationToDaemon: refuses to send without freshReauth === true", async () => {
+function verifiedChallenge(verifiedAt = 1000) {
+  return { nonce: "n", signature: "s", publicKey: "pk", fingerprint: "sha256:abc", verifiedAt };
+}
+
+test("submitMigrationToDaemon: refuses to send without a verified+pinned challenge object", async () => {
   await assert.rejects(
-    () => submitMigrationToDaemon({ bundle: {}, freshReauth: false, endpoint: "http://x", token: "t" }),
-    /fresh re-auth/
+    () => submitMigrationToDaemon({ bundle: {}, verifiedChallenge: null, reauthAt: 2000, endpoint: "http://x", token: "t" }),
+    /verified, pinned daemon challenge/
   );
 });
 
-test("submitMigrationToDaemon: POSTs bundle + fresh_reauth, returns parsed body on success", async () => {
+test("submitMigrationToDaemon: refuses a bare-boolean stand-in (R15-F2 regression guard — the old freshReauth:true shape must not satisfy the new gate)", async () => {
+  await assert.rejects(
+    () => submitMigrationToDaemon({ bundle: {}, verifiedChallenge: true, reauthAt: 2000, endpoint: "http://x", token: "t" }),
+    /verified, pinned daemon challenge/
+  );
+});
+
+test("submitMigrationToDaemon: refuses when reauthAt is BEFORE the daemon proof (ordering enforced structurally)", async () => {
+  await assert.rejects(
+    () => submitMigrationToDaemon({ bundle: {}, verifiedChallenge: verifiedChallenge(2000), reauthAt: 1000, endpoint: "http://x", token: "t" }),
+    /AFTER the daemon proof/
+  );
+});
+
+test("submitMigrationToDaemon: refuses when reauthAt exactly equals verifiedAt (must be strictly after)", async () => {
+  await assert.rejects(
+    () => submitMigrationToDaemon({ bundle: {}, verifiedChallenge: verifiedChallenge(1000), reauthAt: 1000, endpoint: "http://x", token: "t" }),
+    /AFTER the daemon proof/
+  );
+});
+
+test("submitMigrationToDaemon: wired happy path — verified-pinned challenge, THEN reauth, THEN send — POSTs bundle + fresh_reauth, returns parsed body", async () => {
   let captured;
   const fetchImpl = async (url, opts) => {
     captured = { url, opts };
     return { ok: true, json: async () => ({ ok: true, markerSeq: 1 }) };
   };
   const bundle = await buildMigrationBundle({ entries: entries(), vaultRecord: vaultRecord(), sourceOrigin: "https://ainumbers.co", now: NOW });
-  const result = await submitMigrationToDaemon({ bundle, freshReauth: true, endpoint: "http://127.0.0.1:4173/migration/import", token: "tok", fetchImpl });
+  const result = await submitMigrationToDaemon({
+    bundle,
+    verifiedChallenge: verifiedChallenge(1000),
+    reauthAt: 2000,
+    endpoint: "http://127.0.0.1:4173/migration/import",
+    token: "tok",
+    fetchImpl,
+  });
   assert.equal(captured.url, "http://127.0.0.1:4173/migration/import");
   assert.equal(captured.opts.headers.Authorization, "Bearer tok");
   const sentBody = JSON.parse(captured.opts.body);
@@ -104,7 +136,15 @@ test("submitMigrationToDaemon: POSTs bundle + fresh_reauth, returns parsed body 
 test("submitMigrationToDaemon: throws with the daemon's error on a non-ok response", async () => {
   const fetchImpl = async () => ({ ok: false, status: 422, json: async () => ({ error: "journal_root_digest_mismatch" }) });
   await assert.rejects(
-    () => submitMigrationToDaemon({ bundle: {}, freshReauth: true, endpoint: "http://x", token: "t", fetchImpl }),
+    () =>
+      submitMigrationToDaemon({
+        bundle: {},
+        verifiedChallenge: verifiedChallenge(1000),
+        reauthAt: 2000,
+        endpoint: "http://x",
+        token: "t",
+        fetchImpl,
+      }),
     /journal_root_digest_mismatch/
   );
 });

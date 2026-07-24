@@ -5,6 +5,7 @@ import { loadConfig } from "./config.mjs";
 import { loadOrCreateToken, pairingUrl, createPairingNonce } from "./token.mjs";
 import { createHelmServer, bindOrExit } from "./server.mjs";
 import { loadOrCreateKeys } from "./keys.mjs";
+import { fingerprintPublicKeyDer } from "./challenge.mjs";
 import { createCliChannel, cliChannelPath } from "./cli-channel.mjs";
 import { runDoctor } from "./doctor.mjs";
 import { log } from "./log.mjs";
@@ -42,6 +43,12 @@ async function cmdStart({ open = false } = {}) {
   const isFirstRun = !existsSync(statePath("token"));
   const token = loadOrCreateToken();
   const identityKeys = loadOrCreateKeys();
+  // R15-F1 fix: fingerprint of the daemon's OWN identity key, minted only
+  // here (never derivable by a port squatter) and carried into every
+  // pairing link so the browser can pin it — see token.mjs pairingUrl.
+  const identityFingerprint = fingerprintPublicKeyDer(
+    identityKeys.ed25519.publicKey.export({ format: "der", type: "spki" }).toString("base64")
+  );
 
   // D6: replay-journal-on-restart integrity check. A daemon must never come
   // up serving a journal it can't prove is unbroken. Stays open for the
@@ -75,14 +82,14 @@ async function cmdStart({ open = false } = {}) {
     // the browser server-side (same code path as first-run) and also returns
     // the URL so the CLI can print it for headless/no-DE sessions.
     pair: () => {
-      const u = pairingUrl(token, config.port, createPairingNonce());
+      const u = pairingUrl(token, config.port, createPairingNonce(), identityFingerprint);
       openBrowser(u);
       return { url: u };
     },
   });
 
   log.info("helmd started", { port: config.port });
-  const url = pairingUrl(token, config.port, createPairingNonce());
+  const url = pairingUrl(token, config.port, createPairingNonce(), identityFingerprint);
   console.log(url);
 
   // First-run zero-CLI-copy-paste onboarding (HELM-U4): the pairing link
