@@ -68,6 +68,8 @@ jobs:
     environment: release
     permissions:
       contents: write
+      id-token: write
+      attestations: write
     outputs:
       is_ga: ${{ steps.tag-kind.outputs.is_ga }}
     steps:
@@ -132,6 +134,37 @@ jobs:
           cp dist/windows-x64/helmd.exe dist/upload/helmd-windows-x64.exe
           cp dist/release-manifest.json dist/release-manifest.dsse.json dist/upload/
 
+      # HELM-P3-D8: offline install path for environments that block the npm
+      # registry (bank proxies, airgapped hosts) — `npm install
+      # ./helm-cli-<version>.tgz` needs no registry reachability at all. Packed
+      # from the SAME filled package gen-packaging-manifests.mjs just wrote
+      # (real sha256 values baked in, no template placeholders), so it is
+      # byte-identical to what publish-npm would publish. `npm pack` reads
+      # package.json + files only — no install, no network, safe under SO #10.
+      - name: pack offline npm tarball
+        run: |
+          TARBALL=$(cd dist/packaging/npm && npm pack --silent --pack-destination "$GITHUB_WORKSPACE/dist/upload")
+          mv "dist/upload/$TARBALL" "dist/upload/helm-cli-${HELM_RELEASE_VERSION}.tgz"
+
+      # D-SIGN-1 free hardening: a plain SHA256SUMS file gives anyone
+      # `sha256sum -c` verification with zero tooling beyond coreutils,
+      # alongside (not instead of) the DSSE-signed release-manifest above.
+      # Runs after every asset (incl. the offline tarball) is staged so the
+      # sums file covers the exact set of files in the GitHub release.
+      - name: generate SHA256SUMS
+        working-directory: dist/upload
+        run: sha256sum * > SHA256SUMS
+
+      # D-SIGN-1: GitHub-native SLSA build provenance for every release
+      # asset. First-party action, no SO #17 authorization needed (unlike
+      # sigstore/cosign-installer, which stays out per HELM-CODE-SIGNING-
+      # RESEARCH-2026-07-23 §5). Verify with:
+      #   gh attestation verify dist/upload/helmd-linux-x64 --repo PostOakLabs/ainumbers-helm
+      - name: attest build provenance
+        uses: actions/attest-build-provenance@0f67c3f4856b2e3261c31976d6725780e5e4c373 # v4.1.1
+        with:
+          subject-path: "dist/upload/helmd-*\ndist/upload/helm-cli-*.tgz"
+
       - name: create GitHub release
         env:
           GH_TOKEN: ${{ github.token }}
@@ -195,4 +228,4 @@ jobs:
 
       - name: publish to npm (OIDC provenance, no token)
         working-directory: npm-package
-        run: npm publish --access public
+        run: npm publish --access public --provenance

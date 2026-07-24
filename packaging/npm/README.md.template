@@ -1,0 +1,39 @@
+# @ainumbers/helm-cli
+
+Installs `helmd` — the AINumbers Helm local-first control-plane daemon — for
+your platform. `postinstall` downloads the matching `helmd` SEA binary from
+the [GitHub release](https://github.com/PostOakLabs/ainumbers-helm/releases)
+tagged `v{{VERSION}}` and verifies its SHA-256 against the value baked into
+this package from the signed release manifest before it ever runs. A mismatch
+aborts the install — no source is trusted beyond that pinned digest.
+
+## First run
+
+```
+helmd start
+```
+
+`helmd` serves its own UI — no separate download, no `file://` page. On
+first run it opens your default browser at `http://127.0.0.1:4173/`,
+**pre-paired with a one-time token in the URL fragment** (`#token=...`). The
+fragment is stripped from the address bar immediately and never sent to the
+server. If nothing opens (headless box, no default browser) copy the printed
+pairing URL yourself. Later starts stay silent — run `helmd start --open` to
+force the browser open again.
+
+## Offline / no-registry install
+
+Environments that block the npm registry (bank proxies, airgapped hosts) can
+skip it entirely: download `helm-cli-{{VERSION}}.tgz` from the same GitHub
+release and run `npm install ./helm-cli-{{VERSION}}.tgz` — no registry
+reachability needed. See `docs/INSTALL.md` in the source repo for the
+Artifactory virtual-repo path.
+
+## Verifying without installing
+
+```
+node scripts/verify-release-manifest.mjs /path/to/downloaded/release/dir
+```
+
+checks both the DSSE-signed manifest and every artifact's SHA-256 offline.
+Full docs: https://github.com/PostOakLabs/ainumbers-helm/blob/main/docs/INSTALL.md
