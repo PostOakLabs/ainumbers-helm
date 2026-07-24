@@ -59,8 +59,9 @@ call under `hub/` and `ui/` (excluding tests, node_modules, generated
 | 7 | Browser navigation to `https://github.com/login/oauth/authorize` | User clicks "Connect" | Standard OAuth authorize redirect — not a server-side call |
 | 8 | `https://login.microsoftonline.com/{tenant}/oauth2/v2.0/{authorize,token}`, `https://accounts.google.com/o/oauth2/v2/auth`, `https://oauth2.googleapis.com/token` | Browser-only mode (no `helmd` installed), user connects a provider | PKCE code exchange; response tokens land in sessionStorage/vault |
 | 9 | `GET https://api.github.com/user` with `Authorization: Bearer <pasted PAT>` | User pastes a fine-grained PAT to verify it | The pasted PAT, to GitHub only, to confirm it's valid |
-| 10 | `GET https://ainumbers.co/helm/version.json` | Running `helmd doctor` | Nothing but the GET; response is a static version JSON (skew check) |
-| 11 | `GET http://127.0.0.1:{port}/version` | Browser UI probing a local `helmd` for handoff | Loopback only — never leaves the machine |
+| 10 | `GET https://ainumbers.co/helm/version.json` | **On by default.** Fired by helmd itself, on behalf of row 12 below, once on every UI boot and then every hour (`ui/app.mjs` `checkSkew()` + `setInterval(checkSkew, 60*60*1000)`, relayed by `hub/server.mjs` `GET /version-check`). Also fired once, separately, whenever `helmd doctor` runs (`hub/doctor.mjs`). | Bare GET, no request body, no identifiers, no user or workflow data. Response is a static version-notice JSON (`schema/version_notice.schema.json`) used only to show a passive "an update exists" banner — never downloaded or applied automatically (D10). Like any HTTP request it necessarily reveals the caller's IP and User-Agent to the server. **Disable:** set `"versionCheckUrl": ""` (or omit and let a falsy value pass) in `~/.helm/config.json` (`hub/config.mjs`) — `hub/server.mjs`'s `GET /version-check` handler then returns `{ checked: false, reason: "disabled" }` without making row 10's outbound call at all. |
+| 11 | `GET http://127.0.0.1:{port}/version` | Browser UI probing a local `helmd` for handoff, only on explicit user click, never on page load | Loopback only — never leaves the machine |
+| 12 | `GET http://127.0.0.1:{port}/version-check` | Browser UI, authenticated loopback call that triggers row 10 above: once on boot, then hourly (`ui/app.mjs`) | Loopback only — never leaves the machine; the outbound leg it triggers is row 10 |
 
 **No telemetry, analytics, or crash-reporting library exists anywhere in
 this repo.** (Checked for Sentry, PostHog, Segment, Mixpanel, and generic
@@ -89,32 +90,48 @@ beacon/analytics patterns — none found.)
   `.github/workflows/release.yml` — ordinary CI plumbing, not something
   the shipped daemon does.
 
-## 3. Reproducible zero-telemetry recipe (≤10 minutes)
+## 3. Reproducible zero-unlisted-egress recipe (≤10 minutes)
 
-Verify §2 yourself rather than take our word for it:
+Browser devtools cannot verify this repo's egress claim end to end: helmd's
+outbound call to `ainumbers.co` (row 10) is made server-side, by the daemon
+process, and can **never** appear in a browser's Network tab no matter how
+zero-telemetry the app is — the tab only sees loopback traffic between the
+UI and helmd (rows 11–12). A recipe built around watching devtools and
+expecting silence is structurally incapable of proving or disproving §2;
+verify it at the OS/process level instead, and expect to see row 10 fire,
+not to see nothing.
 
 1. Install `helmd` per [`INSTALL.md`](INSTALL.md) and start it:
    `helmd start`.
-2. Open your browser's devtools **Network** tab, filter to
-   "Other"/"Fetch/XHR", and open `helm.html` pointed at the running
-   daemon.
-3. Run a workflow end to end: load a template, execute a run, view the
-   result canvas. Do **not** connect any OAuth provider and do **not**
-   trigger an anchor/checkpoint action for this pass.
-4. Observe the Network tab: the only entries should be
-   `http://127.0.0.1:<port>/...` calls to your own local `helmd` (loopback,
-   row 11 above) — nothing external.
-5. Optionally repeat with `helmd doctor` running in a terminal at the
-   same time and watch for exactly one call to
-   `https://ainumbers.co/helm/version.json` (row 10) — the version-skew
-   check, and the only thing that leaves the machine during ordinary
-   use if you run `doctor`.
-6. If you connect a provider or trigger an anchor, you'll see exactly
-   the rows in §2 that describe those actions and nothing else — no
-   additional hosts should ever appear.
+2. Start a machine-level egress observer *before* the daemon makes its
+   first call — pick one:
+   - `sudo lsof -i -P -n -p $(pgrep -f helmd)` (macOS/Linux, poll it, or
+     use `watch`)
+   - `sudo netstat -anp | grep $(pgrep -f helmd)` (Linux)
+   - a host firewall/egress proxy rule scoped to the `helmd` process,
+     logging connections instead of blocking them
+3. Open `helm.html` pointed at the running daemon in a browser. Within a
+   few seconds you should see exactly one outbound TCP connection from
+   the `helmd` process to `ainumbers.co:443` — that's row 10, the
+   version-check poll firing on UI boot. This is expected, not a leak.
+4. Leave both running. No further outbound connection from `helmd` should
+   appear until the hour mark, when row 10 fires again (or until you run
+   a workflow, connect a provider, or trigger anchoring — each of which
+   produces exactly the rows in §2 that describe that action).
+5. To confirm row 10 is the *only* always-on background call: set
+   `"versionCheckUrl": ""` in `~/.helm/config.json`, restart `helmd`, and
+   repeat steps 2–4. Now zero outbound connections should appear at boot
+   or at the hour mark — only connections you cause yourself (OAuth
+   connect, anchor, connector egress) should ever show up.
+6. Optionally also watch the browser's devtools **Network** tab in
+   parallel: you'll only ever see `http://127.0.0.1:<port>/...` calls
+   there (rows 11–12) — never `ainumbers.co` — because the outbound leg
+   is made by helmd, not the browser. That's expected, and is why step 2
+   uses a machine-level tool instead.
 
-If you observe a request to a host not listed in §2, that's a bug —
-file it under [GitHub Security Advisories](https://github.com/PostOakLabs/ainumbers-helm/security)
+If you observe an outbound connection to a host not listed in §2, that's
+a bug — file it under
+[GitHub Security Advisories](https://github.com/PostOakLabs/ainumbers-helm/security)
 per the VDP.
 
 ## 4. Data-flow / subprocessor statement
@@ -128,8 +145,10 @@ leave your machine toward an AINumbers-operated endpoint are:
 - A SHA-256 hash (never document content) to `anchor.ainumbers.co`,
   and only if you explicitly invoke anchoring (§2 rows 1–2 — currently
   not wired to any live path, see above).
-- A version-check GET with no request body, only if you run
-  `helmd doctor` (§2 row 10).
+- A version-check GET with no request body and no identifiers — sent
+  by default, once on every UI boot and hourly thereafter, and also
+  whenever you run `helmd doctor` (§2 row 10). Disable it by setting
+  `"versionCheckUrl": ""` in `~/.helm/config.json`.
 
 Everything else in §2 — OAuth connects, connector egress, PAT
 verification — is a direct connection from your machine to the
