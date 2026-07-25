@@ -67,6 +67,18 @@ export function redeemPairingNonce(nonce, now = Date.now()) {
   return now <= expiresAt;
 }
 
+// §18.2 idle-shutdown suppression: true while any minted pairing link could
+// still be redeemed. A nonce is minted on every `helmd start`/`helmd open`,
+// so this also covers the first PAIRING_TTL_MS after boot even before a
+// browser tab shows up — exactly the window a fresh install needs to survive
+// to get paired at all.
+export function isPairingWindowOpen(now = Date.now()) {
+  for (const expiresAt of pairingNonces.values()) {
+    if (now <= expiresAt) return true;
+  }
+  return false;
+}
+
 // HELM-UX-1 §7.4: a stream ticket is a short-lived, single-use credential
 // minted over an authenticated (bearer-header) POST, so /events can be
 // opened without ever putting the durable bearer token in a URL query

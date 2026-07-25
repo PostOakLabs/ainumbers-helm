@@ -19,7 +19,7 @@ writeFileSync(join(TMP, "config.json"), JSON.stringify({ port: PORT, allowedOrig
 const { loadConfig } = await import("./config.mjs");
 const { loadOrCreateToken } = await import("./token.mjs");
 const { openJournal } = await import("./journal.mjs");
-const { createHelmServer } = await import("./server.mjs");
+const { createHelmServer, getRunsInFlightCount } = await import("./server.mjs");
 
 const config = loadConfig();
 const token = loadOrCreateToken();
@@ -124,6 +124,19 @@ test("POST /run/start (dry-run) drives the compiled pack end to end; timeline re
 test("POST /run/start 404s for an unknown workflow_id", async () => {
   const res = await post("/run/start", { workflow_id: "does-not-exist" }, headers());
   assert.equal(res.status, 404);
+});
+
+test("§18.2: getRunsInFlightCount returns to 0 once a run finishes (never leaks)", async () => {
+  assert.equal(getRunsInFlightCount(), 0, "no run in flight before this test starts one");
+  // handleRunStart's executeRun() is fire-and-forget: a dry run over trivial
+  // kernel steps can finish within the same microtask turn the HTTP response
+  // is written on, so asserting a transient >0 here would be a coin flip.
+  // The invariant that matters — never stuck above 0 — is what this checks.
+  await post("/run/start", { workflow_id: KNOWN_WORKFLOW_ID, dry_run: true }, headers());
+  for (let i = 0; i < 20 && getRunsInFlightCount() > 0; i++) {
+    await sleep(25);
+  }
+  assert.equal(getRunsInFlightCount(), 0, "count must return to 0 once the run finishes");
 });
 
 test("GET /events?run_id=...&ticket=... streams progress for a live run (HELM-UX-1 §7.4 ticket, not the bearer, in the query string)", async () => {

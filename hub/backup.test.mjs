@@ -10,7 +10,7 @@ process.env.HELM_HOME = TMP;
 const { loadOrCreateKeys, publicKeysOf } = await import("./keys.mjs");
 const { openJournal, appendEntry, replayVerify } = await import("./journal.mjs");
 const { buildCheckpoint, saveCheckpoint } = await import("./checkpoint.mjs");
-const { exportEncrypted, restoreEncrypted, verifyAllCheckpoints } = await import("./backup.mjs");
+const { exportEncrypted, restoreEncrypted, verifyAllCheckpoints, isBackupInFlight } = await import("./backup.mjs");
 
 const keys = loadOrCreateKeys();
 const publicKeys = publicKeysOf(keys);
@@ -66,6 +66,19 @@ test("negative: restoring a tampered ciphertext fails closed", () => {
   const blob = exportEncrypted(db, PASSPHRASE);
   const tampered = { ...blob, ciphertext: Buffer.from("tampered bytes here").toString("base64") };
   assert.throws(() => restoreEncrypted(tampered, PASSPHRASE, join(TMP, "tp-restored.db")));
+  db.close();
+});
+
+test("§18.2: isBackupInFlight clears after both a successful and a failed call", () => {
+  const db = openJournal(join(TMP, "flight.db"));
+  appendEntry(db, { streamId: "run-1", kind: "execution_state", entry: fixtureEntry() });
+  assert.equal(isBackupInFlight(), false);
+
+  const blob = exportEncrypted(db, PASSPHRASE);
+  assert.equal(isBackupInFlight(), false, "must clear after a successful export");
+
+  assert.throws(() => restoreEncrypted(blob, Buffer.from("wrong passphrase"), join(TMP, "flight-restored.db")));
+  assert.equal(isBackupInFlight(), false, "must clear even after a failed restore (finally, not just the happy path)");
   db.close();
 });
 
