@@ -20,6 +20,8 @@ import { listTemplates, getTemplate, buildTemplateManifest } from "./templates.m
 import { executeRun } from "./run.mjs";
 import { createKernelStepRunner } from "./kernel-runner.mjs";
 import { publishRunEvent, subscribeRunEvents } from "./event-bus.mjs";
+import { haGateCheckFor, findHeldGate, recordReplay, submitHaRecord } from "./ha-gate.mjs";
+import { recordsForSubject, getSlot } from "./ha-store.mjs";
 import { buildKernelCard, buildEucEntry } from "./euc-register.mjs";
 import { renderKernelCardHtml, renderEucEntryHtml } from "../ui/lib/euc-html.mjs";
 import { renderKernelDecisionTableHtml, buildKernelDecisionTableDmn } from "../ui/lib/decision-table.mjs";
@@ -322,14 +324,138 @@ async function handleRunStart(req, res, params, db) {
     return output;
   };
 
-  executeRun(db, { runId, manifest, dryRun, stepRunner })
-    .then((result) => publishRunEvent(runId, { run_id: runId, state: result.state, execution_hash: result.executionHash }))
+  executeRun(db, { runId, manifest, dryRun, stepRunner, gateCheck: haGateCheckFor(db) })
+    .then((result) => publishRunEvent(runId, {
+      run_id: runId, state: result.state, execution_hash: result.executionHash, held: result.held ?? null,
+    }))
     .catch((err) => {
       log.error("run engine: run failed", { runId, workflowId, error: String(err?.message || err) });
       publishRunEvent(runId, { run_id: runId, state: "failed", error: String(err?.message || err) });
     });
 
   sendJson(res, 200, { run_id: runId, state: "queued" });
+}
+
+// POST /run/resume {run_id} — re-invokes executeRun for a run currently
+// `awaiting_data` on a §27.4 gate hold (HELM-HA-1). Same idempotent-resume
+// path crash-recovery already uses (run.mjs's executeRun re-checks every
+// unmemoized step from scratch) — this route is just "call it again now"
+// instead of waiting for the next daemon restart. A run that isn't actually
+// held (unknown id, wrong state) is a 404/409, never silently a no-op 200.
+async function handleRunResume(req, res, params, db) {
+  if (!db) return deny(res, 503, "engine_unavailable");
+  let body;
+  try {
+    body = await readJsonBody(req);
+  } catch {
+    return deny(res, 400, "invalid_json");
+  }
+  if (!body.run_id) return deny(res, 400, "missing_run_id");
+  const row = db.prepare("SELECT * FROM runs WHERE run_id = ?").get(body.run_id);
+  if (!row) return deny(res, 404, "run_not_found");
+  if (row.state !== "awaiting_data") return deny(res, 409, "run_not_held");
+
+  const manifest = JSON.parse(row.manifest_json);
+  const runId = body.run_id;
+  const kernelStepRunner = createKernelStepRunner();
+  const stepRunner = async (step, ctx) => {
+    const output = await kernelStepRunner(step, ctx);
+    publishRunEvent(runId, { run_id: runId, state: "running", step_id: step.step_id });
+    return output;
+  };
+
+  try {
+    const result = await executeRun(db, { runId, manifest, dryRun: !!row.dry_run, stepRunner, gateCheck: haGateCheckFor(db) });
+    publishRunEvent(runId, { run_id: runId, state: result.state, execution_hash: result.executionHash, held: result.held ?? null });
+    sendJson(res, 200, { run_id: runId, state: result.state, held: result.held ?? null });
+  } catch (err) {
+    log.error("run engine: resume failed", { runId, error: String(err?.message || err) });
+    publishRunEvent(runId, { run_id: runId, state: "failed", error: String(err?.message || err) });
+    deny(res, 500, "resume_failed");
+  }
+}
+
+// GET /ha/pending (HELM-HA-1) — every run currently held at a §27.4 gate,
+// with what it's waiting on (subject_hash/role/policy/threshold + records
+// collected so far) — the approve/reject queue's data source.
+function handleHaPending(req, res, params, db) {
+  if (!db) return deny(res, 503, "engine_unavailable");
+  const rows = db.prepare("SELECT * FROM runs WHERE state = 'awaiting_data'").all();
+  Promise.all(rows.map((row) => findHeldGate(db, row)))
+    .then((holds) => {
+      const pending = holds.filter(Boolean).map((h) => ({ ...h, records: recordsForSubject(db, h.subjectHash) }));
+      sendJson(res, 200, { pending });
+    })
+    .catch((err) => {
+      log.error("ha: pending scan failed", { error: String(err?.message || err) });
+      deny(res, 500, "pending_scan_failed");
+    });
+}
+
+// GET /ha/records?subject_hash=... — the §27.2 evidence trail for one
+// subject (read-only, no side effects — matches the D8 GET-is-read-only
+// invariant every other route here follows).
+function handleHaRecords(req, res, params, db) {
+  if (!db) return deny(res, 503, "engine_unavailable");
+  const subjectHash = new URL(req.url, "http://x").searchParams.get("subject_hash");
+  if (!subjectHash) return deny(res, 400, "missing_subject_hash");
+  sendJson(res, 200, { records: recordsForSubject(db, subjectHash), subject_hash: subjectHash });
+}
+
+// POST /ha/records {record} — accept an already-signed §27.2 record (the
+// browser mints and signs it with its own local key; helmd never holds a
+// human approver's private key). Verifies the signature cryptographically
+// against the record's own did:key identity BEFORE storing — a bad
+// signature is refused outright, never stored "pending verification".
+async function handleHaRecordSubmit(req, res, params, db) {
+  if (!db) return deny(res, 503, "engine_unavailable");
+  let body;
+  try {
+    body = await readJsonBody(req);
+  } catch {
+    return deny(res, 400, "invalid_json");
+  }
+  const record = body.record ?? body;
+  try {
+    const { recordId } = await submitHaRecord(db, record);
+    sendJson(res, 200, { ok: true, record_id: recordId });
+  } catch (err) {
+    sendJson(res, 422, { ok: false, error: String(err?.message || err) });
+  }
+}
+
+// POST /ha/replay {run_id, step_id} — helmd re-executes the named "nodes"
+// step itself (kernel-runner.mjs's runKernelNode, the SAME invocation the
+// run engine used originally) and compares the freshly-recomputed
+// execution_hash to what was recorded. `replay_verified` on the resulting
+// countersignature reflects that match ONLY — see ha-gate.mjs recordReplay's
+// doc comment for why this can never be inferred or caller-supplied.
+async function handleHaReplay(req, res, params, db, haIdentity) {
+  if (!db) return deny(res, 503, "engine_unavailable");
+  if (!haIdentity) return deny(res, 503, "ha_identity_unavailable");
+  let body;
+  try {
+    body = await readJsonBody(req);
+  } catch {
+    return deny(res, 400, "invalid_json");
+  }
+  if (!body.run_id || !body.step_id) return deny(res, 400, "missing_run_id_or_step_id");
+  try {
+    const result = await recordReplay(db, { runId: body.run_id, stepId: body.step_id, checkerIdentity: haIdentity });
+    sendJson(res, 200, result);
+  } catch (err) {
+    sendJson(res, 422, { ok: false, error: String(err?.message || err) });
+  }
+}
+
+// GET /ha/slot?subject_hash=... — the raw countersignature_slot for a
+// subject (maker signature + checker countersignatures incl. replay_verified),
+// separate from /ha/records because it's a different schema/artifact.
+function handleHaSlot(req, res, params, db) {
+  if (!db) return deny(res, 503, "engine_unavailable");
+  const subjectHash = new URL(req.url, "http://x").searchParams.get("subject_hash");
+  if (!subjectHash) return deny(res, 400, "missing_subject_hash");
+  sendJson(res, 200, { slot: getSlot(db, subjectHash) });
 }
 
 // GET /run/timeline?run_id=... — execution_state transitions straight off
@@ -454,10 +580,15 @@ export const ROUTES = {
   "GET /templates": handleTemplates,
   "GET /workflow-manifest": handleWorkflowManifest,
   "POST /run/start": handleRunStart,
+  "POST /run/resume": handleRunResume,
   "GET /run/timeline": handleRunTimeline,
   "POST /pair/redeem": handlePairRedeem,
   "POST /migration/import": handleMigrationImport,
   "POST /workflows/import": handleWorkflowImport,
+  "GET /ha/pending": handleHaPending,
+  "GET /ha/records": handleHaRecords,
+  "GET /ha/slot": handleHaSlot,
+  "POST /ha/records": handleHaRecordSubmit,
 };
 
 // docPath: the OpenAPI-style templated path (gen-openapi.mjs has no way to
@@ -471,8 +602,12 @@ export const DYNAMIC_ROUTES = [
   { method: "GET", pattern: /^\/templates\/(?<slug>[^/]+)$/, docPath: "/templates/{slug}", handler: handleTemplateDetail },
 ];
 
-export function createHelmServer({ port, allowedOrigin, token, db = null, identityKeys = null, versionCheckUrl = DEFAULT_VERSION_CHECK_URL }) {
-  const routes = { ...ROUTES, "GET /version-check": (req, res) => handleVersionCheck(req, res, versionCheckUrl) };
+export function createHelmServer({ port, allowedOrigin, token, db = null, identityKeys = null, haIdentity = null, versionCheckUrl = DEFAULT_VERSION_CHECK_URL }) {
+  const routes = {
+    ...ROUTES,
+    "GET /version-check": (req, res) => handleVersionCheck(req, res, versionCheckUrl),
+    "POST /ha/replay": (req, res, params, reqDb) => handleHaReplay(req, res, params, reqDb, haIdentity),
+  };
   const server = createServer((req, res) => {
     if (!checkHost(req, port)) {
       log.warn("rejected: host mismatch", { host: req.headers.host, path: logPath(req) });
