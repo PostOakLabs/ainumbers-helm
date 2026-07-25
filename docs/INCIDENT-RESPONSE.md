@@ -8,10 +8,6 @@ external action**. Written 2026-07-23 (HELM-R1).
 also published in `SECURITY.md`). We read every report and respond as soon as we can —
 see `SECURITY.md` for the current disclosure policy.
 
-**Phase-1 responder reality (per brief §10, decided with Tim 2026-07-23):**
-founder-only, best-effort, no uptime/response SLA, no external customers yet. This
-runbook is the *procedure*; it does not imply 24/7 coverage.
-
 ---
 
 ## Severity
@@ -95,8 +91,7 @@ update (no auto-updater in Phase 1 — D10).
 - **Do not delete the journal** during any incident — it is the evidence of record.
 - **Backups:** `hub/backup.mjs` produces an encrypted archive; restore is tested
   (`backup.test.mjs`). Keep a pre-incident backup before mutating state.
-- **Dependency CVEs:** best-effort patch cadence (no SLA, per brief §10); triage via
-  the disclosure contact. Dependency surface is intentionally tiny (better-sqlite3,
+- **Dependency CVEs:** triage via the disclosure contact. Dependency surface is intentionally tiny (better-sqlite3,
   keychain lib, Node builtins — zero-npm elsewhere).
 - **Postmortem:** blameless, written for every SEV-1/SEV-2; include timeline, blast
   radius from the journal, root cause, and the regression gate added.

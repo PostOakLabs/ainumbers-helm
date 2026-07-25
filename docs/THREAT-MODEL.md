@@ -2,7 +2,7 @@
 
 **Scope:** `hub/` (helmd daemon), `ui/` (helm.html), `schema/`, `scripts/` (vendoring + release).
 **Reviewed:** 2026-07-23 (HELM-R1, adversarial pass over H1/H5/H6/H8 surfaces).
-**Status:** Phase 1 foundation. No external customers yet; no write-capable connector shipped.
+**Status:** Phase 1 foundation. No write-capable connector shipped.
 
 Helm is the deliberate opposite of the rest of AINumbers.co: a locally-installed
 daemon that holds live OAuth tokens, calls private APIs, and keeps a durable signed
@@ -16,7 +16,7 @@ already defends, and the residual risks accepted for Phase 1.
 
 | Asset | Where | Sensitivity |
 |---|---|---|
-| OAuth access/refresh tokens | OS keychain / DPAPI / encrypted-file fallback (`vault.mjs`) | Critical — live credentials to customer systems |
+| OAuth access/refresh tokens | OS keychain / DPAPI / encrypted-file fallback (`vault.mjs`) | Critical — live credentials to the systems you connect |
 | Loopback pairing bearer token | `state/token`, mode-0600 | High — grants full daemon API access |
 | Release signing keys (Ed25519 + ML-DSA-44) | CI secret `HELM_RELEASE_SIGNING_KEY_B64`, never in repo | Critical — forges trusted binaries |
 | Journal / checkpoints / evidence bundles | SQLite + exports | High integrity, low confidentiality (secrets/raw payloads redacted by default) |
@@ -56,8 +56,7 @@ site repo @ pinned SHA  --[vendor.mjs single-writer]-->  hub/vendored/ocg/
 ## 5. Findings (HELM-R1 adversarial pass)
 
 All findings filed as follow-on board rows (`board/queued/HELM-SEC-*`). Severity is
-this reviewer's judgment for the Phase-1 posture (no external customers, no write
-connector). None block Phase-1 exit; F1/F2 SHOULD land before the first real connector.
+this reviewer's judgment for the Phase-1 posture (no write connector). None block Phase-1 exit; F1/F2 SHOULD land before the first real connector.
 
 ### F1 — Egress allowlist bypass via HTTP redirect (High)
 `performEgress` (`hub/connector.mjs`) calls `fetch(url)` with Node's default
@@ -122,9 +121,8 @@ for the day PQC becomes mandatory: flip to require both. → tracked in `HELM-SE
 
 ## 6. Residual risk statement (Phase 1)
 
-With F1 and F2 open, Helm should **not** ship a write-capable connector or handle a
-second customer's credentials (per brief §10 gate). The offline verifiability of
-evidence bundles is a **structural** property — the standalone Verify view checks a
-bundle with no daemon and no connector (§5 gate #2, `bundle.test.mjs` 6/6) — so a
-connector going unmaintained never renders a customer's evidence unreadable, even
-under the best-effort support posture (see `OPERATIONS.md`).
+With F1 and F2 open, Helm should **not** ship a write-capable connector. The offline
+verifiability of evidence bundles is a **structural** property — the standalone Verify
+view checks a bundle with no daemon and no connector (§5 gate #2, `bundle.test.mjs`
+6/6) — so a connector going unmaintained never renders evidence unreadable, whether or
+not that connector is still maintained.

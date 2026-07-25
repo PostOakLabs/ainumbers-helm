@@ -62,16 +62,15 @@ per the schema doc's own note).
 ## 4. Support floor signal
 
 `minimum_supported_version` in the feed above is the enforcement point. No
-fixed window is promised for how long a minor series stays supported — this
-is a pre-revenue, founder-run project, and a floor date is a commitment
-easier to publish than to keep. Falling below the floor doesn't break
+fixed window is promised for how long a minor series stays supported: a floor
+date is a commitment easier to publish than to keep. Falling below the floor doesn't break
 anything by force — `helmd` never auto-updates (D10) — it only flips
 `belowMinimumSupported: true` in the version-check result, so the passive
 notice becomes a harder signal a CAB can alert on. There is no enforced
 kill-switch; the field is a live signal, not a scheduled guarantee,
 consistent with "local-first, no vendor control plane" everywhere else in
-this repo. A published support-window policy is easy to add later — when a
-paying customer needs one — and hard to retract once public.
+this repo. A published support-window policy is easy to add later and hard to retract
+once public.
 
 ## 5. Offline kit = the version-pinned change-managed channel
 

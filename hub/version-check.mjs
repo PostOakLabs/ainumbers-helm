@@ -3,7 +3,7 @@
 // Version-check notice (HELM-H8, D10/D12): polls a static JSON endpoint and
 // surfaces a passive "an update exists" notice. NEVER downloads or applies
 // anything — D10 explicitly rules out an in-process auto-updater in Phase 1.
-// Network failures (offline install, airgapped customer) are NOT errors:
+// Network failures (offline install, airgapped machine) are NOT errors:
 // this check degrades to "unknown" silently, never blocks doctor or startup.
 import { readFileSync } from "node:fs";
 import { join, dirname } from "node:path";
