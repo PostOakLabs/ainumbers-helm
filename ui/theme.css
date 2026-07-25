@@ -1,6 +1,5 @@
 /* Semantic token architecture (retrofit is expensive — do it day one).
-   color-scheme + light-dark() pick the palette; density is a separate,
-   independently overridable axis. */
+   color-scheme + light-dark() pick the palette. */
 :root {
   color-scheme: light dark;
 
@@ -16,26 +15,14 @@
   --ok: light-dark(#1e7a3d, #7fe0a0);
 
   --space-1: 0.25rem;
-  --space-2: 0.5rem;
-  --space-3: 1rem;
-  --space-4: 1.5rem;
-
-  --radius: 8px;
-  --focus-ring: 2px solid var(--accent);
-}
-
-/* DEC-2 (locked): compact is the default density; comfortable is opt-in
-   via the header toggle (data-density="comfortable" restores base spacing). */
-:root {
+  /* DEC-2 (amended 2026-07-25): compact is the only density — no toggle,
+     no comfortable variant. */
   --space-2: 0.35rem;
   --space-3: 0.65rem;
   --space-4: 1rem;
-}
 
-:root[data-density="comfortable"] {
-  --space-2: 0.5rem;
-  --space-3: 1rem;
-  --space-4: 1.5rem;
+  --radius: 8px;
+  --focus-ring: 2px solid var(--accent);
 }
 
 @media (prefers-contrast: more) {
