@@ -111,6 +111,29 @@ test("negative: DNS-rebind Host rejected", async () => {
   assert.equal(res.status, 403);
 });
 
+// The bearer token rides in the query string on /events (EventSource can't
+// set an Authorization header), so a rejected request must never log req.url
+// verbatim — that writes a WORKING credential to stdout, which the macOS
+// LaunchAgent can capture to a file. Both reject paths are covered: the host
+// gate (which fires before pathname is computed) and the origin gate.
+test("negative: a rejected /events request never logs the token", async () => {
+  const written = [];
+  const realWrite = process.stdout.write.bind(process.stdout);
+  // Suppressed rather than tee'd on purpose: if this assertion ever fails, we
+  // do not want the leaked credential printed into CI output as well.
+  process.stdout.write = (chunk) => { written.push(String(chunk)); return true; };
+  try {
+    await get(`/events?token=${token}`, headers({ Host: "evil.example" }));
+    await get(`/events?token=${token}`, headers({ Origin: "https://evil.example" }));
+  } finally {
+    process.stdout.write = realWrite;
+  }
+  const logged = written.join("");
+  assert.ok(logged.includes("rejected:"), "expected the rejections to be logged at all");
+  assert.ok(!logged.includes(token), "bearer token leaked into log output");
+  assert.ok(logged.includes("/events"), "expected the path itself to still be logged");
+});
+
 test("GET /vault/connections is authenticated and starts empty", async () => {
   const res = await get("/vault/connections", headers());
   assert.equal(res.status, 200);
