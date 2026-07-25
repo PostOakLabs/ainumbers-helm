@@ -265,6 +265,25 @@ details.disclosure summary {
   font-style: normal;
 }
 
+/* HELM-UX-BUILD-SPEC.md §13: blocked/empty states — heading states what's
+   true, body what it means, action the one next step. Port/host/status
+   (technical-details summary below) never appear in these three lines. */
+.blocked-state-heading {
+  font-weight: 600;
+  margin-bottom: 0;
+}
+.blocked-state-body,
+.blocked-state-action {
+  color: var(--text-muted);
+  margin-top: var(--space-1);
+}
+.blocked-state-details summary {
+  cursor: pointer;
+  color: var(--accent);
+  font-size: 0.85rem;
+  margin-top: var(--space-2);
+}
+
 .welcome-state {
   padding: var(--space-4) 0;
 }

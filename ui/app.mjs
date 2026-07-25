@@ -6,6 +6,7 @@ import { BrowserJournalClient, offerJsonBundleDownload } from "./lib/browser-jou
 import { skewBannerHtml, isDismissed, dismiss } from "./lib/version-skew.mjs";
 import { TABS } from "./lib/tab-meta.mjs";
 import { VIEWS } from "./lib/view-registry.mjs";
+import { pairFormHtml, wirePairForm } from "./lib/pair-form.mjs";
 
 // HELM-UX2-B-TABMETA (§12): TABS is the only place a tab's identity is
 // written. VIEWS (lib/view-registry.mjs) maps an id to its render function —
@@ -208,25 +209,10 @@ function mountTokenForm(root, onPaired) {
       <p class="empty-state">Still waiting after a minute? Open the Helm app (check your login items or Start menu), or reinstall from <a href="https://ainumbers.co/helm" rel="noopener">ainumbers.co/helm</a> if it isn't there.</p>
       <details class="disclosure">
         <summary>Advanced: pair by hand</summary>
-        <form class="token-form" aria-label="Pair with helmd">
-          <label for="token-input">Pairing token</label>
-          <input id="token-input" name="token" type="password" autocomplete="off" placeholder="paste token or open the CLI pairing link" />
-          <label for="port-input">Port</label>
-          <input id="port-input" name="port" type="number" min="1" max="65535" value="${loadPort()}" style="width:6rem" />
-          <button type="submit">Pair</button>
-        </form>
+        ${pairFormHtml()}
       </details>
     </div>`;
-  root.querySelector("form").addEventListener("submit", (ev) => {
-    ev.preventDefault();
-    const token = root.querySelector("#token-input").value.trim();
-    const port = Number(root.querySelector("#port-input").value) || loadPort();
-    savePort(port);
-    if (token) {
-      saveToken(token);
-      onPaired();
-    }
-  });
+  wirePairForm(root, onPaired);
 }
 
 // §12.3: the shell owns the page title. Views delete their own <h2> and

@@ -8,6 +8,8 @@
 // to the same dormant-state discipline as Connect/Operate — it lights up
 // with no UI changes once those routes exist.
 import { fetchWithFallback, call } from "../api.mjs";
+import { blockedStateHtml, classifyBlockedState } from "../lib/blocked-state.mjs";
+import { esc } from "../lib/esc.mjs";
 
 const STATE_LABELS = {
   draft: "Draft", validated: "Validated", queued: "Queued", running: "Running",
@@ -65,8 +67,16 @@ export async function renderRun(root, { port, token, params, activityStream }) {
   let templateBanner = "";
   if (templateSlug) {
     const tpl = await fetchWithFallback(`/templates/${encodeURIComponent(templateSlug)}`, { port, token });
-    if (tpl.state === "unavailable" || tpl.state === "missing") {
-      root.innerHTML = `<p class="empty-state">Can't load the "${templateSlug}" template — pair with helmd on this computer, then open this link again.</p>`;
+    const tplBlocked = classifyBlockedState(tpl);
+    if (tplBlocked) {
+      root.innerHTML = blockedStateHtml(tplBlocked, {
+        port,
+        status: tpl.status,
+        route: tpl.route,
+        body: tplBlocked === "too-old"
+          ? "helmd answered, but templates aren't served by this version of Helm yet."
+          : `Helm is running, but this tab can't load the "${esc(templateSlug)}" template right now.`,
+      });
       return;
     }
     workflowId = tpl.data?.workflow_id ?? "";
@@ -82,12 +92,19 @@ export async function renderRun(root, { port, token, params, activityStream }) {
 
   const staleBadge = timeline.state === "stale" ? `<span class="stale-badge" role="status">stale — last seen ${timeline.at}</span>` : "";
   const steps = timeline.data?.steps ?? [];
-  const timelineHtml =
-    timeline.state === "unavailable"
-      ? `<p class="unavailable-state">The run engine isn't available in this daemon yet — it ships in a later Helm wave.</p>`
-      : steps.length === 0
-        ? `<p class="empty-state">No run history yet.</p>`
-        : `<ol class="timeline">${steps.map(timelineEntry).join("")}</ol>`;
+  const timelineBlocked = classifyBlockedState(timeline);
+  const timelineHtml = timelineBlocked
+    ? blockedStateHtml(timelineBlocked, {
+        port,
+        status: timeline.status,
+        route: timeline.route,
+        body: timelineBlocked === "too-old"
+          ? "helmd answered, but the run engine isn't part of this version of Helm yet."
+          : "Helm is running, but this tab can't reach the run engine right now.",
+      })
+    : steps.length === 0
+      ? `<p class="empty-state">No runs yet. A dry-run replays this workflow's manifest end to end with no side effects — connectors aren't called and no actions fire — so it's the safe first thing to try before a live run.</p>`
+      : `<ol class="timeline">${steps.map(timelineEntry).join("")}</ol>`;
 
   const startCard = templateSlug
     ? `<div class="card">

@@ -5,6 +5,7 @@
 // (read-only DAG first; authoring is a stretch goal per HELM-U2).
 import { fetchWithFallback } from "../api.mjs";
 import { getActiveCompanyProfile, getFeaturedTemplates } from "../lib/company-profile.mjs";
+import { blockedStateHtml, classifyBlockedState } from "../lib/blocked-state.mjs";
 
 function templateCard(t) {
   return `
@@ -33,12 +34,9 @@ export async function renderChoose(root, { port, token }) {
     fetchWithFallback("/templates", { port, token }),
   ]);
 
-  if (result.state === "unavailable") {
-    root.innerHTML = `<p class="unavailable-state">Workflow packs aren't available in this daemon yet — the run engine ships in a later Helm wave. This page will populate automatically once it does.</p>`;
-    return;
-  }
-  if (result.state === "missing") {
-    root.innerHTML = `<p class="empty-state">Can't reach helmd on port ${port}. Start the daemon and open its pairing link to choose a workflow.</p>`;
+  const blocked = classifyBlockedState(result);
+  if (blocked) {
+    root.innerHTML = blockedStateHtml(blocked, { port, status: result.status, route: result.route });
     return;
   }
 

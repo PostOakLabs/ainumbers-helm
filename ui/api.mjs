@@ -153,6 +153,6 @@ export async function fetchWithFallback(path, opts) {
   }
   const cached = cacheGet(path);
   if (cached) return { state: "stale", data: cached.data, at: cached.at };
-  if (res.status === 404) return { state: "unavailable", error: res.error };
-  return { state: "missing", error: res.error };
+  if (res.status === 404) return { state: "unavailable", status: res.status, route: path, error: res.error };
+  return { state: "missing", status: res.status, route: path, error: res.error };
 }

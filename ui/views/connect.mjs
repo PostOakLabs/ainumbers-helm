@@ -27,6 +27,7 @@ import { consumeRelayedResult } from "../oauth-callback.mjs";
 import { unlockRecord, enrollPassphrase, VaultWeakPassphraseError, PASSPHRASE_MIN_LENGTH } from "../lib/vault.mjs";
 import { VaultTokenStore, openIndexedDbTokenStore } from "../lib/vault-token-store.mjs";
 import { esc } from "../lib/esc.mjs";
+import { blockedStateHtml, classifyBlockedState } from "../lib/blocked-state.mjs";
 
 const VAULT_RECORD_KEY = "helm.browser.vault.record";
 const OAUTH_CLIENT_ID_KEYS = { microsoft: "helm.oauth.clientId.microsoft", google: "helm.oauth.clientId.google" };
@@ -234,10 +235,16 @@ export async function renderConnect(root, { port, token }) {
   const result = await fetchWithFallback("/connectors", { port, token });
 
   let daemonHtml;
-  if (result.state === "unavailable") {
-    daemonHtml = `<p class="unavailable-state">Connector catalog isn't available in this daemon yet — the connector runtime ships in a later Helm wave. This page will populate automatically once it does.</p>`;
-  } else if (result.state === "missing") {
-    daemonHtml = `<p class="empty-state">Can't reach helmd on port ${port}. Start the daemon and open its pairing link to review daemon-side connectors.</p>`;
+  const blocked = classifyBlockedState(result);
+  if (blocked) {
+    daemonHtml = blockedStateHtml(blocked, {
+      port,
+      status: result.status,
+      route: result.route,
+      body: blocked === "too-old"
+        ? "helmd answered, but the connector catalog isn't served by this version of Helm yet."
+        : "Helm is running, but this tab can't reach the daemon-side connector catalog right now.",
+    });
   } else {
     const entries = result.data?.connectors ?? [];
     const staleBadge = result.state === "stale" ? `<span class="stale-badge" role="status">stale — last seen ${result.at}</span>` : "";
