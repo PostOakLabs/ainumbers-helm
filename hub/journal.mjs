@@ -74,8 +74,26 @@ export function openJournal(dbPath) {
       envelope_json TEXT NOT NULL,
       created_at TEXT NOT NULL
     );
+    CREATE TABLE IF NOT EXISTS journal_meta (
+      key TEXT PRIMARY KEY,
+      value TEXT NOT NULL
+    );
   `);
   return db;
+}
+
+// HELM-UX-1 §9.4: "surface when the last full verification ran" — a single
+// KV row, not a log line, so `helmd doctor` and `helmd status` can both read
+// it back after the process that wrote it has exited. Only a FULL replayVerify
+// (genesis to head) counts; the §9 checkpoint fast path re-proves the tail
+// but deliberately never touches this timestamp — it isn't a full verification.
+export function recordFullVerification(db, now = new Date().toISOString()) {
+  db.prepare("INSERT INTO journal_meta (key, value) VALUES ('last_full_verified_at', ?) ON CONFLICT(key) DO UPDATE SET value = excluded.value").run(now);
+}
+
+export function lastFullVerifiedAt(db) {
+  const row = db.prepare("SELECT value FROM journal_meta WHERE key = 'last_full_verified_at'").get();
+  return row ? row.value : null;
 }
 
 function streamSeed(streamId) {
@@ -138,11 +156,47 @@ export function streamHeads(db) {
 }
 
 // Replay every stream from seq 1 and recompute rh independently of the stored
-// column — this is the integrity check run on daemon restart (D6) and the
-// mechanism a tampered-journal negative fixture is proven against.
+// column — the mechanism a tampered-journal negative fixture is proven
+// against, and what `helmd doctor` always runs. HELM-UX-1 §9: no longer what
+// every boot runs unconditionally — an unbounded, whole-history replay on
+// every restart is an eventual OOM on a long-lived install. Boot instead
+// prefers replayVerifyFrom() below, from the last checkpoint, and only falls
+// back to this full replay when there's no usable checkpoint (see index.mjs).
 export function replayVerify(db) {
   const rows = db.prepare("SELECT seq, stream_id, entry_digest, rh FROM journal ORDER BY seq ASC").all();
   const rhByStream = new Map();
+  for (const row of rows) {
+    const rhPrev = rhByStream.get(row.stream_id) ?? streamSeed(row.stream_id);
+    const expected = sha256Hex(
+      Buffer.from(rhPrev, "hex"),
+      Buffer.from(row.stream_id, "utf8"),
+      Buffer.from(String(row.seq), "utf8"),
+      Buffer.from(row.entry_digest, "hex")
+    );
+    if (expected !== row.rh) {
+      return { ok: false, brokenAt: { seq: row.seq, streamId: row.stream_id, expected, found: row.rh } };
+    }
+    rhByStream.set(row.stream_id, expected);
+  }
+  return { ok: true, brokenAt: null };
+}
+
+// HELM-UX-1 §9.1/§9.3: the boot fast path. Same tamper detection as
+// replayVerify — every row's rh is still recomputed and compared, nothing is
+// trusted on presence alone — but the hash chain per stream picks up from a
+// checkpoint's already-signed-and-verified head instead of streamSeed(), so
+// cost is bounded by rows written SINCE the checkpoint, not total journal
+// size. checkpointStreams is the checkpoint's own predicate.streams (the
+// caller must have already verified the checkpoint's envelope signature —
+// this function trusts the {stream_id, journal_seq, rh} it's handed, it does
+// not re-verify them). A stream absent from the checkpoint (created after it
+// was taken) replays from genesis like normal, so nothing added post-
+// checkpoint is ever exempted from verification.
+export function replayVerifyFrom(db, checkpointStreams) {
+  const seqs = checkpointStreams.map((s) => s.journal_seq).filter((n) => Number.isInteger(n));
+  const floorSeq = seqs.length ? Math.min(...seqs) : 0;
+  const rows = db.prepare("SELECT seq, stream_id, entry_digest, rh FROM journal WHERE seq > ? ORDER BY seq ASC").all(floorSeq);
+  const rhByStream = new Map(checkpointStreams.map((s) => [s.stream_id, s.rh]));
   for (const row of rows) {
     const rhPrev = rhByStream.get(row.stream_id) ?? streamSeed(row.stream_id);
     const expected = sha256Hex(

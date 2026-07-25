@@ -9,23 +9,6 @@
 // with no UI changes once those routes exist.
 import { fetchWithFallback, call } from "../api.mjs";
 
-// EventSource can't set an Authorization header, and D8 loopback bind means
-// this token only ever reaches 127.0.0.1 — carrying it in the query string
-// here is a deliberate, narrow exception to the "bearer header only" rule,
-// scoped to this one SSE connection. Flagged for HELM-R1 security review.
-function openProgressStream(port, token, runId, onEvent) {
-  const url = `http://127.0.0.1:${port}/events?run_id=${encodeURIComponent(runId)}&token=${encodeURIComponent(token)}`;
-  let es;
-  try {
-    es = new EventSource(url);
-  } catch {
-    return () => {};
-  }
-  es.addEventListener("progress", (ev) => onEvent(JSON.parse(ev.data)));
-  es.onerror = () => onEvent(null, true);
-  return () => es.close();
-}
-
 const STATE_LABELS = {
   draft: "Draft", validated: "Validated", queued: "Queued", running: "Running",
   awaiting_data: "Awaiting data", awaiting_review: "Awaiting review", approved: "Approved",
@@ -72,7 +55,7 @@ async function runControl(port, token, action, runId, resultEl) {
   resultEl.textContent = res.ok ? `${action} acknowledged.` : `${action} not available yet.`;
 }
 
-export async function renderRun(root, { port, token, params }) {
+export async function renderRun(root, { port, token, params, activityStream }) {
   let workflowId = params?.get("wf") ?? "";
   const runId = params?.get("run") ?? "";
   const templateSlug = !workflowId ? (params?.get("template") ?? "") : "";
@@ -146,18 +129,29 @@ export async function renderRun(root, { port, token, params }) {
   root.querySelector("#pause-btn").addEventListener("click", () => runControl(port, token, "pause", runId, controlResult));
   root.querySelector("#cancel-btn").addEventListener("click", () => runControl(port, token, "cancel", runId, controlResult));
 
-  if (runId && typeof EventSource !== "undefined") {
+  // HELM-UX-1 §7.3: the shell owns the one EventSource for the whole app —
+  // this view just points it at this run and listens, rather than opening
+  // its own (a second stream here would double-subscribe on Run and, on a
+  // hash-router shell, ratchet toward MAX_SSE_CONNECTIONS on every visit).
+  if (runId && activityStream) {
     const indicator = root.querySelector("#live-indicator");
-    const close = openProgressStream(port, token, runId, (data, errored) => {
-      if (errored) {
-        indicator.textContent = "stream disconnected — retry from Run";
-        return;
-      }
+    activityStream.setRunId(runId);
+    indicator.textContent = "connecting…";
+    const unsubscribe = activityStream.subscribeProgress((data) => {
+      if (!data) return;
       indicator.textContent = `live — last event: ${STATE_LABELS[data?.state] ?? data?.state ?? "update"}`;
     });
     // The shell re-renders #shell-main in place on navigation rather than
     // replacing the element, so leaving this view is a hashchange, not a
-    // DOM removal — close the stream on the next navigation, once.
-    window.addEventListener("hashchange", close, { once: true });
+    // DOM removal — stop listening and release the run scope on the next
+    // navigation, once.
+    window.addEventListener(
+      "hashchange",
+      () => {
+        unsubscribe();
+        activityStream.setRunId(null);
+      },
+      { once: true }
+    );
   }
 }

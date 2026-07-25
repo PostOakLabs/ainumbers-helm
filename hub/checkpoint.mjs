@@ -53,12 +53,15 @@ export function latestCheckpoint(db) {
   return row ? { checkpointSeq: row.checkpointSeq, journalRootDigest: row.journalRootDigest, envelope: JSON.parse(row.envelope_json) } : null;
 }
 
-// Verifies the checkpoint envelope AND that its recorded stream heads match
-// the journal's current heads for every stream it claims to cover (a
-// checkpoint that doesn't match live journal state is stale/tampered, not
-// "verified"). Streams absent from the checkpoint are not compared — a
-// checkpoint only speaks for the streams it lists.
-export function verifyCheckpoint(db, checkpoint, publicKeys) {
+// Verifies the checkpoint's own signature and internal consistency ONLY —
+// its envelope signature, and that journal_root_digest actually digests the
+// streams it claims to cover. Deliberately does NOT compare against live
+// journal state (see verifyCheckpoint below for that): §9.3's boot fast path
+// needs to trust a checkpoint that is behind the current head — that's the
+// whole point, the rows written since it get replayed forward instead
+// (journal.mjs replayVerifyFrom). An unsigned or internally-inconsistent
+// checkpoint fails here, which is what forces a full replay at boot.
+function verifyCheckpointSelfConsistency(checkpoint, publicKeys) {
   const result = verifyEnvelope(checkpoint.envelope, publicKeys);
   if (!result.valid) return { ...result, valid: false, reason: "envelope" };
 
@@ -67,13 +70,29 @@ export function verifyCheckpoint(db, checkpoint, publicKeys) {
   if (expectedDigest !== predicate.journal_root_digest) {
     return { ...result, valid: false, reason: "journal_root_digest_mismatch" };
   }
+  return { ...result, valid: true, reason: null, predicate };
+}
+
+export const verifyCheckpointSignature = verifyCheckpointSelfConsistency;
+
+// Verifies the checkpoint envelope AND that its recorded stream heads match
+// the journal's current heads for every stream it claims to cover (a
+// checkpoint that doesn't match live journal state is stale/tampered, not
+// "verified"). Streams absent from the checkpoint are not compared — a
+// checkpoint only speaks for the streams it lists. This is the "checkpoint
+// matches right now" check (e.g. immediately after taking one); it is NOT
+// what boot uses, since boot's whole point is trusting a checkpoint that's
+// behind the live head — see verifyCheckpointSignature + replayVerifyFrom.
+export function verifyCheckpoint(db, checkpoint, publicKeys) {
+  const self = verifyCheckpointSelfConsistency(checkpoint, publicKeys);
+  if (!self.valid) return self;
 
   const live = new Map(streamHeads(db).map((s) => [s.stream_id, s]));
-  for (const claimed of predicate.streams) {
+  for (const claimed of self.predicate.streams) {
     const current = live.get(claimed.stream_id);
     if (!current || current.seq !== claimed.journal_seq || current.rh !== claimed.rh) {
-      return { ...result, valid: false, reason: "stream_head_mismatch", streamId: claimed.stream_id };
+      return { ...self, valid: false, reason: "stream_head_mismatch", streamId: claimed.stream_id };
     }
   }
-  return { ...result, valid: true, reason: null };
+  return { ...self, valid: true, reason: null };
 }

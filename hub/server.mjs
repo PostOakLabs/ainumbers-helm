@@ -10,7 +10,7 @@ import { randomUUID } from "node:crypto";
 import { readFileSync } from "node:fs";
 import { join, dirname } from "node:path";
 import { fileURLToPath } from "node:url";
-import { tokenMatches, redeemPairingNonce } from "./token.mjs";
+import { tokenMatches, redeemPairingNonce, createStreamTicket, redeemStreamTicket } from "./token.mjs";
 import { signChallenge } from "./challenge.mjs";
 import { log } from "./log.mjs";
 import { startFlow, getFlowStatus, listConnections, revokeConnection, isSecureEndpoint } from "./oauth-pkce.mjs";
@@ -227,6 +227,36 @@ async function handleRevoke(req, res, params) {
 
 export const MAX_SSE_CONNECTIONS = 20; // HELM-SEC-5 hardening: unbounded /events connections could exhaust local handles
 let sseConnections = 0;
+
+// POST /events/ticket (HELM-UX-1 §7.4): authenticated the normal way (bearer
+// header, already past the router's tokenMatches gate by the time this
+// runs) — mints a ticket /events can redeem in its query string instead of
+// the durable bearer token, so the credential never sits in a URL for the
+// life of a session.
+function handleEventsTicket(req, res) {
+  sendJson(res, 200, { ticket: createStreamTicket() });
+}
+
+// POST /shutdown (HELM-UX-1 §8, Operate view Quit button).
+//
+// §2 (shipped) says never add an HTTP shutdown route, reasoning that the CLI
+// channel's OS-level pipe/socket ACL is the right trust boundary for
+// stopping helmd and that an HTTP route "would be reachable by any local
+// process." §8 (this WU) asks for a browser Quit button, and a browser has
+// no channel to the CLI's named pipe / UDS at all — POSTing here, through
+// the SAME Host+Origin+Bearer gate every other mutating route already goes
+// through (identical exposure to /backup, /run/start, /run/resume), is the
+// only way a page can drive it. This route is gated no more loosely than
+// those already-shipped routes; flagged in the PR for a second look against
+// §2's literal wording rather than silently resolved either way.
+//
+// Must reply before exiting (§2, same discipline as the CLI `stop` verb) —
+// a daemon that exits first gives the browser a network error and the UI
+// reports failure for what was actually a successful stop.
+function handleShutdown(req, res, params, db, exitFn) {
+  sendJson(res, 200, { stopping: true, pid: process.pid });
+  setTimeout(() => exitFn(), 50);
+}
 
 // run_id-scoped progress: an EventSource with no ?run_id just gets ready +
 // heartbeats, same as before this WU (used by Connect/Operate today).
@@ -574,6 +604,7 @@ export const ROUTES = {
   "GET /health": handleHealth,
   "GET /version-check": (req, res) => handleVersionCheck(req, res, DEFAULT_VERSION_CHECK_URL),
   "GET /events": handleEvents,
+  "POST /events/ticket": handleEventsTicket,
   "POST /vault/connections/begin": handleBeginConnection,
   "GET /vault/connections": handleListConnections,
   "GET /workflows": handleWorkflows,
@@ -602,11 +633,12 @@ export const DYNAMIC_ROUTES = [
   { method: "GET", pattern: /^\/templates\/(?<slug>[^/]+)$/, docPath: "/templates/{slug}", handler: handleTemplateDetail },
 ];
 
-export function createHelmServer({ port, allowedOrigin, token, db = null, identityKeys = null, haIdentity = null, versionCheckUrl = DEFAULT_VERSION_CHECK_URL }) {
+export function createHelmServer({ port, allowedOrigin, token, db = null, identityKeys = null, haIdentity = null, versionCheckUrl = DEFAULT_VERSION_CHECK_URL, exitFn = () => process.exit(0) }) {
   const routes = {
     ...ROUTES,
     "GET /version-check": (req, res) => handleVersionCheck(req, res, versionCheckUrl),
     "POST /ha/replay": (req, res, params, reqDb) => handleHaReplay(req, res, params, reqDb, haIdentity),
+    "POST /shutdown": (req, res, params, reqDb) => handleShutdown(req, res, params, reqDb, exitFn),
   };
   const server = createServer((req, res) => {
     if (!checkHost(req, port)) {
@@ -645,11 +677,13 @@ export function createHelmServer({ port, allowedOrigin, token, db = null, identi
     const auth = req.headers.authorization || "";
     let presented = auth.startsWith("Bearer ") ? auth.slice(7) : "";
     // EventSource can't set an Authorization header. D8 loopback bind means
-    // this token only ever reaches 127.0.0.1 — carrying it in the query
-    // string is a deliberate, narrow exception scoped to this one GET route
-    // (matches ui/views/run.mjs's openProgressStream; flagged for HELM-R1).
+    // this only ever reaches 127.0.0.1, but per HELM-UX-1 §7.4 the durable
+    // bearer must not become a permanent query-string fixture — so this
+    // route accepts a short-lived, single-use ticket (POST /events/ticket,
+    // minted over an authenticated call) instead of the token itself.
     if (!presented && req.method === "GET" && pathname === "/events") {
-      presented = new URL(req.url, "http://x").searchParams.get("token") || "";
+      const ticket = new URL(req.url, "http://x").searchParams.get("ticket") || "";
+      if (ticket && redeemStreamTicket(ticket)) presented = token;
     }
     if (!tokenMatches(token, presented)) {
       log.warn("rejected: bad or missing token", { path: pathname });

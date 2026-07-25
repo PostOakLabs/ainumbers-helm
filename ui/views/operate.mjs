@@ -50,6 +50,18 @@ async function runBackup(port, token, resultEl) {
   }
 }
 
+// HELM-UX-1 §8: lives here, not the header status pill — Unpair already
+// sits there and two destructive-sounding buttons with very different
+// consequences (Unpair just forgets a browser token; this stops the
+// daemon process) next to each other is a footgun.
+async function quitDaemon(port, token, resultEl) {
+  resultEl.textContent = "Stopping helmd…";
+  const res = await call("/shutdown", { port, token, method: "POST" });
+  resultEl.textContent = res.ok
+    ? "helmd stopped. It restarts automatically the next time you log in."
+    : "helmd unreachable — nothing was stopped.";
+}
+
 // Persona starter presets (LANDING §3.1 borrow) — curated preview of what
 // Operate shows once helmd is running, so the dormant state has a home
 // screen instead of a wall of empty cards.
@@ -127,9 +139,18 @@ export async function renderOperate(root, { port, token }) {
         <button type="button" id="backup-btn">Trigger backup</button>
         <p id="backup-result" role="status" aria-live="polite"></p>
       </section>
+      <section class="card" aria-labelledby="op-quit">
+        <h3 id="op-quit">Quit Helm</h3>
+        <p class="field-row-note">Stops helmd on this computer. Autostart brings it back at your next login — this isn't a permanent uninstall.</p>
+        <button type="button" id="quit-btn" class="secondary">Quit Helm</button>
+        <p id="quit-result" role="status" aria-live="polite"></p>
+      </section>
     </div>`;
 
   root.querySelector("#backup-btn").addEventListener("click", () => {
     runBackup(port, token, root.querySelector("#backup-result"));
+  });
+  root.querySelector("#quit-btn").addEventListener("click", () => {
+    quitDaemon(port, token, root.querySelector("#quit-result"));
   });
 }

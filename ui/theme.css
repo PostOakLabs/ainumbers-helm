@@ -62,7 +62,12 @@ header.shell-header {
   display: flex;
   align-items: center;
   gap: var(--space-3);
-  padding: var(--space-2) var(--space-3);
+  padding-block: var(--space-2);
+  /* §6.1: stays full-bleed (background/border span the viewport) but its
+     content aligns to the same 72rem measure as main.shell-main — on a wide
+     monitor the nav and status pill no longer read as two clusters stranded
+     either side of an empty band. */
+  padding-inline: max(var(--space-3), calc((100% - 72rem) / 2));
   border-bottom: 1px solid var(--border);
   position: sticky;
   top: 0;
@@ -82,10 +87,17 @@ nav.shell-nav {
 }
 
 /* Workflow arc grouping: Build (Choose/Canvas/Connect) → Execute
-   (Run/Verify/Review) → Operate, separated by a hairline at each group's
-   first item so the arc reads as stages, not a flat 7-item row. */
-nav.shell-nav a:nth-child(4),
-nav.shell-nav a:nth-child(7) {
+   (Run/Verify/Review) → Operate. Keyed off the data-group wrapper (also an
+   AT-visible role="group" in helm.html), not nth-child, so adding, removing,
+   or reordering a nav item can't silently break the separator or leave the
+   grouping invisible to assistive tech. */
+nav.shell-nav > [data-group] {
+  display: flex;
+  align-items: center;
+  gap: var(--space-1);
+}
+
+nav.shell-nav > [data-group] + [data-group] {
   margin-left: var(--space-2);
   padding-left: calc(var(--space-2) + var(--space-1));
   border-left: 1px solid var(--border);
@@ -143,6 +155,33 @@ button:focus-visible,
 }
 .status-dot[data-state="down"] {
   background: var(--danger);
+}
+
+/* HELM-UX-1 §7.5: activity flash on the EXISTING dot, not a second
+   indicator. data-pulse is the one-shot animated ring (~700ms, removed by
+   JS — never a repeating/looping animation); data-recent is a plain static
+   ring held a few seconds longer so "recently active" survives even where
+   the animation itself is suppressed. aria-hidden on the dot in helm.html
+   keeps every bit of this out of the accessibility tree — the label text
+   (#status-label, role="status") is what announces state changes. */
+.status-dot[data-pulse="true"] {
+  animation: helm-status-pulse 700ms ease-out;
+}
+.status-dot[data-recent="true"] {
+  box-shadow: 0 0 0 3px color-mix(in srgb, currentColor 35%, transparent);
+}
+@keyframes helm-status-pulse {
+  0% {
+    box-shadow: 0 0 0 0 color-mix(in srgb, currentColor 55%, transparent);
+  }
+  100% {
+    box-shadow: 0 0 0 6px transparent;
+  }
+}
+@media (prefers-reduced-motion: reduce) {
+  .status-dot[data-pulse="true"] {
+    animation: none;
+  }
 }
 
 main.shell-main {

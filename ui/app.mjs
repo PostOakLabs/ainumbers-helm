@@ -56,6 +56,143 @@ async function refreshConnectivity(port, token, dot, label) {
   else setStatus(dot, label, "down", "helmd unreachable (dormant)");
 }
 
+// HELM-UX-1 §7: one shell-owned EventSource, reused across every view
+// (§7.3 — a second, view-level stream on Run would double-subscribe and
+// ratchet MAX_SSE_CONNECTIONS toward its cap on a hash-router shell). Fed by
+// a short-lived ticket per connect (§7.4), never the durable bearer token.
+// #status-dot is the only activity indicator (§7.1) — this drives its pulse,
+// it never creates a second one. Reconnect is manual (setTimeout), not the
+// browser's built-in EventSource retry, because a ticket is single-use: an
+// automatic retry would replay an already-consumed ticket and loop on 401.
+const PULSE_MS = 700;
+const RECENT_MS = 4000;
+const RECONNECT_MS = 3000;
+
+function createActivityStream(port, token, dot, label) {
+  let es = null;
+  let runId = null;
+  let closed = false;
+  let connected = null; // null = never connected yet, else last known live/dead
+  let reconnectTimer = null;
+  let pulseTimer = null;
+  let recentTimer = null;
+  const listeners = new Set();
+
+  // §7.5: only the low-frequency, human-meaningful transition goes into the
+  // live region (#status-label) — not per-heartbeat/per-event noise, which
+  // is what the aria-hidden pulse above is for instead.
+  function setConnected(live) {
+    if (connected === live) return;
+    connected = live;
+    if (label) label.textContent = live ? "connection restored" : "connection lost — retrying";
+  }
+
+  // §7.5: aria-hidden decorative flash, one-shot per event (never a repeating
+  // loop) with a reduced-motion-safe fallback — the animation is disabled
+  // under prefers-reduced-motion in theme.css, but the static data-recent
+  // ring it also sets still conveys "recently active" without motion.
+  function pulse() {
+    dot.dataset.pulse = "true";
+    dot.dataset.recent = "true";
+    clearTimeout(pulseTimer);
+    clearTimeout(recentTimer);
+    pulseTimer = setTimeout(() => dot.removeAttribute("data-pulse"), PULSE_MS);
+    recentTimer = setTimeout(() => dot.removeAttribute("data-recent"), RECENT_MS);
+  }
+
+  function scheduleReconnect() {
+    if (closed || reconnectTimer) return;
+    reconnectTimer = setTimeout(() => {
+      reconnectTimer = null;
+      connect();
+    }, RECONNECT_MS);
+  }
+
+  async function connect() {
+    if (closed || typeof EventSource === "undefined") return;
+    const res = await call("/events/ticket", { port, token, method: "POST", timeoutMs: 3000 });
+    if (closed) return;
+    if (!res.ok) return scheduleReconnect();
+    const qs = new URLSearchParams({ ticket: res.data?.ticket ?? "" });
+    if (runId) qs.set("run_id", runId);
+    try {
+      es = new EventSource(`http://127.0.0.1:${port}/events?${qs}`);
+    } catch {
+      return scheduleReconnect();
+    }
+    es.addEventListener("ready", () => {
+      pulse();
+      setConnected(true);
+    });
+    es.addEventListener("heartbeat", () => {
+      pulse();
+      setConnected(true);
+    });
+    es.addEventListener("progress", (ev) => {
+      pulse();
+      setConnected(true);
+      let data = null;
+      try {
+        data = JSON.parse(ev.data);
+      } catch {
+        /* malformed event, still counts as activity */
+      }
+      listeners.forEach((fn) => fn(data));
+    });
+    es.onerror = () => {
+      setConnected(false);
+      es?.close();
+      es = null;
+      scheduleReconnect();
+    };
+  }
+
+  connect();
+
+  return {
+    // Re-points the shared connection at a specific run's progress events —
+    // called by the Run view, never opens a second connection.
+    setRunId(id) {
+      if (id === runId) return;
+      runId = id;
+      es?.close();
+      es = null;
+      if (reconnectTimer) {
+        clearTimeout(reconnectTimer);
+        reconnectTimer = null;
+      }
+      connect();
+    },
+    subscribeProgress(fn) {
+      listeners.add(fn);
+      return () => listeners.delete(fn);
+    },
+    close() {
+      closed = true;
+      if (reconnectTimer) clearTimeout(reconnectTimer);
+      es?.close();
+    },
+  };
+}
+
+let activityStream = null;
+let activityStreamKey = null;
+
+function ensureActivityStream(port, token, dot, label) {
+  if (!token) {
+    activityStream?.close();
+    activityStream = null;
+    activityStreamKey = null;
+    return null;
+  }
+  const key = `${port}:${token}`;
+  if (activityStream && activityStreamKey === key) return activityStream;
+  activityStream?.close();
+  activityStreamKey = key;
+  activityStream = createActivityStream(port, token, dot, label);
+  return activityStream;
+}
+
 // Friendly welcome/empty state (Tim, 2026-07-23): first thing an unpaired
 // visitor sees is "waiting for Helm," not a bare paste-a-token form. Manual
 // pairing still works — it's tucked behind an <details> disclosure, since
@@ -107,8 +244,9 @@ async function render(app) {
   });
 
   if (!token) {
+    ensureActivityStream(port, null, app.statusDot, app.statusLabel);
     if (STATIC_VIEWS.has(view)) {
-      await VIEWS[view](app.main, { port, token, params });
+      await VIEWS[view](app.main, { port, token, params, activityStream: null });
     } else {
       mountTokenForm(app.main, () => render(app));
     }
@@ -116,7 +254,8 @@ async function render(app) {
     return;
   }
 
-  await VIEWS[view](app.main, { port, token, params });
+  const activityStream = ensureActivityStream(port, token, app.statusDot, app.statusLabel);
+  await VIEWS[view](app.main, { port, token, params, activityStream });
   refreshConnectivity(port, token, app.statusDot, app.statusLabel);
 }
 

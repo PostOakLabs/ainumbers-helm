@@ -66,3 +66,27 @@ export function redeemPairingNonce(nonce, now = Date.now()) {
   if (!expiresAt) return false;
   return now <= expiresAt;
 }
+
+// HELM-UX-1 §7.4: a stream ticket is a short-lived, single-use credential
+// minted over an authenticated (bearer-header) POST, so /events can be
+// opened without ever putting the durable bearer token in a URL query
+// string. Same shape as the pairing nonce above — in-memory, cleared on
+// restart — but a much shorter TTL, since it's re-minted on every
+// (re)connect rather than carried across a session.
+const STREAM_TICKET_TTL_MS = 15 * 1000;
+const streamTickets = new Map(); // ticket -> expiresAtMs
+
+export function createStreamTicket(now = Date.now()) {
+  const ticket = randomBytes(16).toString("hex");
+  streamTickets.set(ticket, now + STREAM_TICKET_TTL_MS);
+  return ticket;
+}
+
+// Single-use, same discipline as redeemPairingNonce: deleted whether or not
+// it was still valid.
+export function redeemStreamTicket(ticket, now = Date.now()) {
+  const expiresAt = streamTickets.get(ticket);
+  streamTickets.delete(ticket);
+  if (!expiresAt) return false;
+  return now <= expiresAt;
+}

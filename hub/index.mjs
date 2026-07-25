@@ -17,7 +17,9 @@ import { execFileSync } from "node:child_process";
 import { platform } from "node:os";
 import { createConnection } from "node:net";
 import { statePath } from "./state-dir.mjs";
-import { openJournal, replayVerify } from "./journal.mjs";
+import { openJournal, replayVerify, replayVerifyFrom, recordFullVerification, streamHeads } from "./journal.mjs";
+import { buildCheckpoint, saveCheckpoint, latestCheckpoint, verifyCheckpointSignature } from "./checkpoint.mjs";
+import { publicKeysOf } from "./keys.mjs";
 import { installAutostart, uninstallAutostart, isAutostartInstalled, autostartLocation } from "./autostart.mjs";
 import { installShortcut, uninstallShortcut, isShortcutInstalled, shortcutLocation } from "./shortcut.mjs";
 
@@ -67,18 +69,55 @@ async function cmdStart({ open = false } = {}) {
     identityKeys.ed25519.publicKey.export({ format: "der", type: "spki" }).toString("base64")
   );
 
-  // D6: replay-journal-on-restart integrity check. A daemon must never come
-  // up serving a journal it can't prove is unbroken. Stays open for the
-  // process lifetime — the H4 run engine (HELM-P2-U4) needs the same handle.
+  // D6/§9: a daemon must never come up serving a journal it can't prove is
+  // unbroken — but a FULL genesis-to-head replay on every boot is unbounded
+  // (O(n) in total journal size, an eventual OOM on a long-lived install).
+  // §9's fix: verify from the last signed checkpoint forward instead of from
+  // the beginning, and only fall back to a full replay when there's no
+  // checkpoint yet, or it fails its own signature/consistency check, or (per
+  // config.anchorRequired, §9.4) it isn't anchored. `helmd doctor` still
+  // does the unconditional full replay — that's the tool for "prove the
+  // whole history," not every boot. Stays open for the process lifetime —
+  // the H4 run engine (HELM-P2-U4) needs the same handle.
   const journalPath = statePath("journal.db");
   const db = openJournal(journalPath);
-  const replay = replayVerify(db);
-  if (!replay.ok) {
+  const publicKeys = publicKeysOf(identityKeys);
+  const checkpoint = latestCheckpoint(db);
+  let sig = checkpoint ? verifyCheckpointSignature(checkpoint, publicKeys) : null;
+  const anchored = sig?.predicate?.anchors?.length > 0;
+  const canFastPath = !!(sig?.valid && (anchored || !config.anchorRequired));
+
+  let verified;
+  if (canFastPath) {
+    verified = replayVerifyFrom(db, sig.predicate.streams);
+    if (verified.ok) log.info("journal replay integrity check passed (fast path, since checkpoint)", { checkpointSeq: checkpoint.checkpointSeq });
+  } else {
+    verified = replayVerify(db);
+    if (verified.ok) {
+      recordFullVerification(db);
+      log.info("journal replay integrity check passed (full replay)", {
+        reason: !checkpoint ? "no_checkpoint" : !sig?.valid ? sig.reason : "checkpoint_not_anchored",
+      });
+    }
+  }
+  if (!verified.ok) {
     db.close();
-    log.error("journal replay integrity check FAILED — refusing to start", { brokenAt: replay.brokenAt });
+    log.error("journal replay integrity check FAILED — refusing to start", { brokenAt: verified.brokenAt });
     process.exit(1);
   }
-  log.info("journal replay integrity check passed");
+
+  // Advance the checkpoint frontier every boot a verification just proved
+  // clean, so the NEXT boot's fast path only has to replay what's been
+  // appended since THIS boot — the delta stays bounded by one uptime, not by
+  // the daemon's whole lifetime. Anchoring a fresh checkpoint isn't wired up
+  // anywhere in this codebase yet (that's a separate, later piece of work),
+  // so this always saves unanchored — which is exactly why config.anchorRequired
+  // defaults off: nothing here could ever satisfy it yet.
+  const heads = streamHeads(db);
+  if (heads.length > 0) {
+    const nextSeq = (checkpoint?.checkpointSeq ?? 0) + 1;
+    saveCheckpoint(db, buildCheckpoint(db, { checkpointSeq: nextSeq, keys: identityKeys, anchors: [] }));
+  }
 
   const server = createHelmServer({ port: config.port, allowedOrigin: config.allowedOrigin, token, db, identityKeys, haIdentity, versionCheckUrl: config.versionCheckUrl });
   // P3-D9: refuse to start on a squatted port — never silently bind
