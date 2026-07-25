@@ -1,0 +1,14 @@
+{
+  "_comment": "HELM-HA-1 §1 item 5 (OPTIONAL) — a curated, hand-maintained overlay of §27.4 gate_policy/gate_role/gate_threshold onto specific compiled packs' nodes. compile-packs.mjs applies this by workflow_id/node_id EVERY run (packs/ is fully wiped+regenerated each time), so it survives a re-compile without editing site chaingraph.json (out of HELM-HA-1's fence) or hand-authoring a pack file (would be deleted on the next compile). Additive only — a node with no matching entry here is byte-identical to before this WU.",
+  "packs": {
+    "pack-ai-vendor-onboarding-packet": {
+      "n5": { "gate_policy": "review_required", "gate_role": "approver" }
+    },
+    "pack-kya-agent-counterparty-receipt": {
+      "n5": { "gate_policy": "dual_control", "gate_role": "approver", "gate_threshold": 2 }
+    },
+    "pack-mutual-nda-composer": {
+      "n2": { "gate_policy": "review_required", "gate_role": "approver" }
+    }
+  }
+}
