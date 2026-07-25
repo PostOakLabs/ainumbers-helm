@@ -1,0 +1,177 @@
+// SPDX-License-Identifier: Apache-2.0
+// Copyright (c) 2026 Post Oak Labs, Inc.
+// §27.4 gate-precondition wiring + §27.3 replay-verified countersigning
+// (HELM-HA-1). Thin glue: the actual evaluator is vendored `_hagate.mjs`
+// (single source of truth, shared with the site's own consumers) and the
+// actual re-execution is `kernel-runner.mjs`'s `runKernelNode` (the SAME
+// deterministic invocation the run engine itself uses) — this file adds no
+// second implementation of either, it just wires HA-record storage and the
+// run engine's hold/resume plumbing to them.
+import { didKeyToPublicKey, sign, verify } from "./vendored/ocg/kernels/_proof.mjs";
+import { evaluateHaGate } from "./vendored/ocg/kernels/_hagate.mjs";
+import { recordsForSubject, appendHaRecord, addCountersignature, getSlot } from "./ha-store.mjs";
+import { runKernelNode } from "./kernel-runner.mjs";
+import { planSteps, getMemoizedStep, stepInputDigest } from "./run.mjs";
+
+// Signs an unsigned §27.2 record with the given identity (either helmd's own
+// ha-identity.mjs keypair, or a caller-supplied one in tests) — the ONE path
+// that mints `audit_signature.proof`, reused for every helmd-authored record
+// (role_binding, and the approval this module appends after a verified
+// replay). A browser-signed human approval never passes through this
+// function; it arrives at ha-store.mjs already signed and is verified, not
+// re-signed, by verifyHaRecordSignature below.
+export async function signHaRecord(record, identity, { nowISO } = {}) {
+  return sign(record, {
+    verificationMethod: `${identity.id}#key-1`,
+    created: nowISO ?? new Date().toISOString(),
+    privateKey: identity.privateKey,
+  });
+}
+
+// Cryptographic (not just structural) verification: resolves the acting
+// party's public key from their OWN identity.id (did:key is self-certifying
+// — no registration/pairing step needed for helmd to check a browser-signed
+// approval it has never seen before) and checks the §16 signature over the
+// record. This is the gate every record MUST pass before appendHaRecord.
+export async function verifyHaRecordSignature(record) {
+  const proof = record?.audit_signature?.proof;
+  if (!proof?.verificationMethod?.startsWith(record?.identity?.id ?? "\0")) return false;
+  const did = record.identity.id;
+  try {
+    const publicKey = await didKeyToPublicKey(did);
+    return await verify(record, publicKey);
+  } catch {
+    return false;
+  }
+}
+
+// Verifies + stores in one call — the path every REST-submitted record
+// (POST /ha/records) goes through. Throws (never silently drops) on a bad
+// signature or a shape the store refuses.
+export async function submitHaRecord(db, record) {
+  const cryptoOk = await verifyHaRecordSignature(record);
+  if (!cryptoOk) throw new Error("ha-gate: record signature does not verify against its own identity.id — refused");
+  return appendHaRecord(db, record);
+}
+
+// gateCheck callback shape run.mjs's executeRun expects: given a "nodes"
+// step whose item declares `gate_policy` (the §1 item-5 additive pack
+// field), evaluate §27.4 against the records collected so far for the
+// PRECEDING step's output. The subject a human is asked to approve is the
+// OCG artifact's OWN execution_hash (per schema: "the execution_hash of the
+// artifact being acted upon"), not helm's internal step-memo digest — so
+// this prefers priorOutput.artifact.execution_hash (a "nodes" step's shape,
+// see kernel-runner.mjs) and only falls back to priorOutputDigest for a
+// non-kernel prior step (connectors/gates/actions have no artifact yet).
+function subjectHashFor(priorOutputDigest, priorOutput) {
+  const artifactHash = priorOutput?.artifact?.execution_hash;
+  if (artifactHash) return `sha256:${artifactHash}`;
+  return priorOutputDigest ?? `sha256:${"0".repeat(64)}`;
+}
+
+export function haGateCheckFor(db) {
+  return async function gateCheck(step, { priorOutputDigest, priorOutput, runId }) {
+    const gatePolicy = step.item?.gate_policy;
+    if (!gatePolicy) return { held: false };
+    const role = step.item?.gate_role ?? "approver";
+    const threshold = step.item?.gate_threshold;
+    const subjectHash = subjectHashFor(priorOutputDigest, priorOutput);
+    const records = recordsForSubject(db, subjectHash);
+    const result = evaluateHaGate({
+      gatePolicy, threshold, role, subjectHash, records, nowISO: new Date().toISOString(),
+    });
+    if (result.status === "satisfied" || result.status === "override_active") return { held: false, gateResult: result };
+    return { held: true, step_id: step.step_id, reason: `${step.step_id}: ${result.reason}`, gateResult: result, subjectHash, role, gatePolicy, threshold };
+  };
+}
+
+// Scans every "nodes" step of a run currently `awaiting_data` and reports
+// which one is actually holding (recomputes the SAME gateCheck the engine
+// itself will re-run on resume, so the UI queue and the engine can never
+// disagree about what's pending). Returns null if the run isn't at a gate
+// hold (e.g. genuinely awaiting external data, or not held at all).
+export async function findHeldGate(db, run) {
+  const manifest = JSON.parse(run.manifest_json);
+  const steps = planSteps(manifest);
+  const gateCheck = haGateCheckFor(db);
+  let priorOutputDigest = null;
+  let priorOutput = null;
+  for (const step of steps) {
+    const inputDigest = stepInputDigest({ runId: run.run_id, step, priorOutputDigest, dryRun: !!run.dry_run });
+    const memo = getMemoizedStep(db, { runId: run.run_id, stepId: step.step_id, inputDigest });
+    if (memo) { priorOutputDigest = memo.outputDigest; priorOutput = memo.output; continue; }
+    const gate = await gateCheck(step, { priorOutputDigest, priorOutput, runId: run.run_id });
+    return gate.held ? { run_id: run.run_id, ...gate } : null;
+  }
+  return null;
+}
+
+// §27.3 replay-verified countersigning — the Helm-only differentiator this
+// row exists to ship. Re-invokes the SAME deterministic kernel node the run
+// engine already ran (execution_hash's preimage excludes `generated_at`, so
+// re-running with a fresh timestamp yields a byte-identical hash iff the
+// inputs truly reproduce it — this is a REAL re-execution, not a stored-hash
+// comparison). `replay_verified` is set true ONLY here, and ONLY when the
+// freshly-recomputed hash matches what was recorded — never inferred, never
+// trusted from caller input.
+export async function recordReplay(db, { runId, stepId, checkerIdentity, nowISO }) {
+  const runRow = db.prepare("SELECT manifest_json, dry_run FROM runs WHERE run_id = ?").get(runId);
+  if (!runRow) throw new Error(`ha-gate: unknown run_id ${runId}`);
+  const manifest = JSON.parse(runRow.manifest_json);
+  const steps = planSteps(manifest);
+  const step = steps.find((s) => s.step_id === stepId);
+  if (!step) throw new Error(`ha-gate: unknown step_id ${stepId} for run ${runId}`);
+  if (step.kind !== "nodes") throw new Error(`ha-gate: replay is only defined for "nodes" steps (got kind="${step.kind}")`);
+
+  const recordedRows = db.prepare("SELECT output_json FROM step_results WHERE run_id = ? AND step_id = ?").all(runId, stepId);
+  if (!recordedRows.length) throw new Error(`ha-gate: no recorded output for run=${runId} step=${stepId} — nothing to replay against`);
+  const recorded = JSON.parse(recordedRows[recordedRows.length - 1].output_json);
+  const claimedHashHex = recorded?.artifact?.execution_hash;
+  if (!claimedHashHex) throw new Error(`ha-gate: recorded step output carries no artifact.execution_hash — cannot replay-verify`);
+  const claimedHash = `sha256:${claimedHashHex}`;
+
+  const fresh = await runKernelNode(step, {});
+  const matched = fresh.artifact.execution_hash === claimedHashHex;
+
+  const now = nowISO ?? new Date().toISOString();
+  const signature = await signBundleDigest(checkerIdentity, claimedHash);
+  const countersignature = {
+    role: "checker",
+    identity: { id: checkerIdentity.id },
+    signature,
+    signed_at: now,
+    replay_verified: matched,
+  };
+  const slot = addCountersignature(db, claimedHash, countersignature);
+
+  // A matched replay ALSO counts as a distinct-identity §27.2 approval, so
+  // evaluateHaGate's dual_control/review_required threshold counting (which
+  // reads ha_records, not the countersignature slot) sees this checker too —
+  // one act, two views of the same evidence, never two separate approval
+  // paths that could drift.
+  if (matched) {
+    const approval = await signHaRecord(
+      {
+        record_type: "approval",
+        role: "approver",
+        subject_hash: claimedHash,
+        identity: { id: checkerIdentity.id },
+        decision: "approve",
+        reason_code: "REPLAY_VERIFIED",
+        timestamp: now,
+      },
+      checkerIdentity,
+      { nowISO: now }
+    );
+    appendHaRecord(db, approval);
+  }
+
+  return { matched, claimedHash, recomputedHash: fresh.artifact.execution_hash, slot };
+}
+
+async function signBundleDigest(identity, bundleDigest) {
+  const sig = await globalThis.crypto.subtle.sign("Ed25519", identity.privateKey, Buffer.from(bundleDigest, "utf8"));
+  return { keyid: identity.id, sig: Buffer.from(sig).toString("base64"), alg: "Ed25519" };
+}
+
+export { getSlot };
