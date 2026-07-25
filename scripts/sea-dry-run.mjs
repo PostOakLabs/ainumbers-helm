@@ -28,6 +28,30 @@ if (!existsSync(ENTRY)) {
   process.exit(1);
 }
 
+// postject@1.0.0-alpha.6 (the newest published version) reads the whole ~110MB
+// node binary plus the asset-laden blob into JS memory. On Node >=24 that
+// overruns V8's zone allocator and dies with "Fatal process out of memory:
+// Zone" before injecting anything — and because it is a ZONE allocation,
+// --max-old-space-size does not help. CI pins Node 22
+// (.github/workflows/ci.yml), so this gate has always passed there and
+// deterministically failed the pre-push hook on any Node 24 developer box.
+//
+// That made the gate CI-only in practice. This makes it CI-only BY DECISION,
+// which is the difference between a known limitation and a mystery: skip on an
+// unsupported local runtime, say why, and never skip in CI (where a skip would
+// hide exactly the class of bug this gate exists to catch — see the header).
+// Set HELM_FORCE_SEA=1 to run it anyway. Remove this branch when postject
+// ships a fix or the toolchain moves to a Node that survives it.
+const NODE_MAJOR = Number(process.versions.node.split(".")[0]);
+if (NODE_MAJOR >= 24 && !process.env.CI && process.env.HELM_FORCE_SEA !== "1") {
+  console.warn(
+    `sea-dry-run: SKIPPED on Node ${process.versions.node} — postject@1.0.0-alpha.6 exhausts V8's ` +
+      `zone allocator on Node >=24. CI runs this gate on Node 22 and is the authority. ` +
+      `Force locally with HELM_FORCE_SEA=1.`
+  );
+  process.exit(0);
+}
+
 const tmp = mkdtempSync(join(tmpdir(), "helm-sea-"));
 try {
   const configPath = join(tmp, "sea-config.json");
@@ -65,21 +89,10 @@ try {
   const outPath = join(tmp, isWin ? "helmd.exe" : "helmd");
   copyFileSync(process.execPath, outPath);
   chmodSync(outPath, 0o755);
-  // postject@1.0.0-alpha.6 reads the whole ~110MB node binary plus the
-  // asset-laden blob into JS memory. Under Node 24 that overruns the default
-  // zone allocator and dies with "Fatal process out of memory: Zone" before it
-  // injects anything. CI pins Node 22 (.github/workflows/ci.yml) where the
-  // default heap happens to be enough, so this gate passed there and failed on
-  // every local push from a Node 24 box — the gate was CI-only in practice
-  // without anyone deciding that. Raising the child's heap makes it run on both.
   execFileSync(
     "npx",
     ["--yes", "postject@1.0.0-alpha.6", outPath, "NODE_SEA_BLOB", blobPath, "--sentinel-fuse", SENTINEL_FUSE],
-    {
-      stdio: "inherit",
-      shell: isWin,
-      env: { ...process.env, NODE_OPTIONS: `${process.env.NODE_OPTIONS ?? ""} --max-old-space-size=8192`.trim() },
-    }
+    { stdio: "inherit", shell: isWin }
   );
 
   const homeDir = join(tmp, "sea-dry-run-home");
