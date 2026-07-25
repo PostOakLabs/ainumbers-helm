@@ -1,8 +1,8 @@
 {
-  "pinnedSha": "834a79a43588aa907accfa64ee583e21af7513db",
+  "pinnedSha": "31e040291f24aa07b79adedcd35fb9b16fc40ac1",
   "generatedFrom": "hub/vendored/ocg/chaingraph.json",
-  "compiledCount": 213,
-  "skippedCount": 101,
+  "compiledCount": 218,
+  "skippedCount": 102,
   "skips": [
     {
       "name": "a2a-payment-rail-compliance",
@@ -11,6 +11,10 @@
     {
       "name": "ach-fraud-monitoring",
       "reason": "non-kernel or unvendored step(s): 492-ach-fraud-monitoring-procedure-builder, 493-ach-false-pretenses-credit-entry-simulator, 494-ach-fraud-monitoring-audit-pack-generator"
+    },
+    {
+      "name": "agent-payment-dispute-evidence",
+      "reason": "non-kernel or unvendored step(s): 567-chargeback-evidence-bundle-composer"
     },
     {
       "name": "agentic-checkout",

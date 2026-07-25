@@ -1,17 +1,17 @@
 {
   "sourceRepo": "https://github.com/PostOakLabs/ainumbers.git",
-  "pinnedSha": "834a79a43588aa907accfa64ee583e21af7513db",
+  "pinnedSha": "31e040291f24aa07b79adedcd35fb9b16fc40ac1",
   "vendoredPaths": [
     "chaingraph/kernels",
     "chaingraph/standard/SPEC.md",
     "chaingraph/standard/openchain-graph-v0.4.schema.json",
     "chaingraph/chaingraph.json"
   ],
-  "fileCount": 1320,
+  "fileCount": 1332,
   "files": [
     {
       "path": "chaingraph.json",
-      "sha256": "d0de174fc5d4931ef5f850b30f5e4120134343cb460031cc16d7ae8734f84600"
+      "sha256": "14ab8e02d8d7e1c0e20c40f7689b1749afd4ee4cdc6ce2105637d10c17eb1921"
     },
     {
       "path": "kernels/_anchor-testutil.mjs",
@@ -759,7 +759,7 @@
     },
     {
       "path": "kernels/art-236-build-ai-decision-log-record.kernel.mjs",
-      "sha256": "3f9c0dade487f4d6dafb35d97ebc3fe9b0f51656ea4e010caee2a8bf35aa159d"
+      "sha256": "38e616aa1627146cb9496fe598eea7869de615e58bcc59363e22fc24da851e1c"
     },
     {
       "path": "kernels/art-237-validate-agent-audit-trail.kernel.mjs",
@@ -1023,7 +1023,7 @@
     },
     {
       "path": "kernels/art-293-einvoice-format-validator.kernel.mjs",
-      "sha256": "a2ebeed8ccd9619e29ad9881e43eb8e60d93af64efa53d0bb1f7551ff7a1fb90"
+      "sha256": "5daa83b6ade4cbfb782fb404e16e80077c9264bb4f636e9c1d6e564294e89f58"
     },
     {
       "path": "kernels/art-294-einvoice-vat-calc-verifier.kernel.mjs",
@@ -1031,11 +1031,11 @@
     },
     {
       "path": "kernels/art-295-einvoice-jurisdiction-mandate-router.kernel.mjs",
-      "sha256": "3ef99554992eca2b33337d6dce029234595500ec5a480e3dcc8d6dde20d04dc6"
+      "sha256": "0b10eacc01a0d809c04d6f3548e9c09c589eb0eeb330672b8dfaab9877cd9d20"
     },
     {
       "path": "kernels/art-296-einvoice-transmission-receipt-builder.kernel.mjs",
-      "sha256": "b4d74d23dc88164802cbfefa68abfad52679a6a6f7693022b19bee34ce586d98"
+      "sha256": "efd9144454c833bea1da03c8c2003da04d8d3b21f33bd1e5e963a512bf21278c"
     },
     {
       "path": "kernels/art-297-agentic-dispute-ce30-linter.kernel.mjs",
@@ -1347,7 +1347,7 @@
     },
     {
       "path": "kernels/art-378-quarterly-test-evidence-composer.kernel.mjs",
-      "sha256": "3f76ae3282468ab897b279b659f06df7297ae43b7c7955ac6691e6ac6e4c15d1"
+      "sha256": "4110cf70767dc5ed8b26fc3543ef15d71239a5f52a8e9396832ac105f212de32"
     },
     {
       "path": "kernels/art-379-agent-incident-record-composer.kernel.mjs",
@@ -1359,7 +1359,7 @@
     },
     {
       "path": "kernels/art-380-build-ai-workpaper-record.kernel.mjs",
-      "sha256": "5857b0def8cbc21476aefaf427076ca7e7f387209dac53d47a2afb6fc230891e"
+      "sha256": "15049d4459f060c77f8ccefdcfff425170a1c8103384869b81c002b2f12602b1"
     },
     {
       "path": "kernels/art-385-agent-token-scope-checker.kernel.mjs",
@@ -1459,7 +1459,7 @@
     },
     {
       "path": "kernels/art-408-evidence-bundle-tier-labeler.kernel.mjs",
-      "sha256": "005c23e5672acc2fc67413f6a474ee2a5cea8eee289369bcde09c25fd9b75e6a"
+      "sha256": "4bffde8c450663ed6c3f2e2d7f8671638c0277be7be5f9e9717598f5911b88f8"
     },
     {
       "path": "kernels/art-409-dpa-art28-completeness-checker.kernel.mjs",
@@ -1686,6 +1686,14 @@
       "sha256": "5d628b9e3200e3791c5152e7eb5d6bbe34b3e278f43cd24ebc497eea062d9d15"
     },
     {
+      "path": "kernels/art-470-lookback-completeness-reconciler.kernel.mjs",
+      "sha256": "88f0b073173f8eafac3e96acaa0200f936815a627d4985738cbf8e79217632ca"
+    },
+    {
+      "path": "kernels/art-471-disposition-sampling-frame.kernel.mjs",
+      "sha256": "33d8dd00530f61c28fc39625801011c67b5ebb1694d5abe4bc9af6c882daa66c"
+    },
+    {
       "path": "kernels/art-472-cbcr-builder.kernel.mjs",
       "sha256": "62a04a2495b254beb4938ec0bf7c60631fd7d37bdcb79e12677091656b0cb8ce"
     },
@@ -1700,6 +1708,22 @@
     {
       "path": "kernels/art-475-cfpb-1071-coverage-check.kernel.mjs",
       "sha256": "0ef028be15ca148086aa48b2fc87b6f735c14233206ae951b0d1c8f285b98c72"
+    },
+    {
+      "path": "kernels/art-476-map-agent-payment-mandate.kernel.mjs",
+      "sha256": "cd37df86828dbc4c50192784c2c421b0dfda541d63b7c36735e63510f34dfb96"
+    },
+    {
+      "path": "kernels/art-477-intraday-liquidity-monitoring.kernel.mjs",
+      "sha256": "647771786d54eec94e4c54281af4b03bd11032678c1c363c7cbc39b9cc0a8b73"
+    },
+    {
+      "path": "kernels/art-478-analyze-dc-vs-lc-cost-benefit.kernel.mjs",
+      "sha256": "399294433cf13af7c9c72820fff550fb25f97a09c279902523b938e2a657ff0e"
+    },
+    {
+      "path": "kernels/art-479-compare-receivables-finance-economics.kernel.mjs",
+      "sha256": "ff2eabad532dc59453467b36302b88c0ac41425aca4e48f9524b89d928c33878"
     },
     {
       "path": "kernels/art-48-treasury-clearing-fit-diagnostic.kernel.mjs",
@@ -2635,7 +2659,7 @@
     },
     {
       "path": "kernels/fixtures/art-236-build-ai-decision-log-record.fixtures.json",
-      "sha256": "851e9ad215a83c113df1e26eb9c7ceb95ed32523d03b9572ce6ab2f5cb2bcf5a"
+      "sha256": "2906338b4054397eec7942940f143d790c28f2e18eb6f4d424b847a9c2e74280"
     },
     {
       "path": "kernels/fixtures/art-237-validate-agent-audit-trail.fixtures.json",
@@ -2887,7 +2911,7 @@
     },
     {
       "path": "kernels/fixtures/art-293-einvoice-format-validator.fixtures.json",
-      "sha256": "d12352cbc68c8c9def2da20c0e6e0bb8b1b056085b5b1833527a10db9ef306ac"
+      "sha256": "5a0b8384edad1d91d496c7cc9b58acd7e9ac2e55ce1b07f8a1137b9513f21ff0"
     },
     {
       "path": "kernels/fixtures/art-294-einvoice-vat-calc-verifier.fixtures.json",
@@ -2895,11 +2919,11 @@
     },
     {
       "path": "kernels/fixtures/art-295-einvoice-jurisdiction-mandate-router.fixtures.json",
-      "sha256": "8ac9641417f8029a571ea5a98a375ab836a51ad28fb0e1fb5a7bed2709ac9ecf"
+      "sha256": "0c2941994cdec182731cb8af0cb0dcea23655e5b5cec6ed5907c3175bcd0790b"
     },
     {
       "path": "kernels/fixtures/art-296-einvoice-transmission-receipt-builder.fixtures.json",
-      "sha256": "bbef241710296c2bfeeead4567058bf6f6ea6f1642a6fb0c7786c7743335830f"
+      "sha256": "f6066890031378b3257ed03454ccab4e7c73a82d0bb80ebfa45542a3a3f3e461"
     },
     {
       "path": "kernels/fixtures/art-297-agentic-dispute-ce30-linter.fixtures.json",
@@ -3235,7 +3259,7 @@
     },
     {
       "path": "kernels/fixtures/art-378-quarterly-test-evidence-composer.fixtures.json",
-      "sha256": "b591d76d8380bc9f13226a1447985d4c4eb2dc105c04bb08f8d2d9ebc7038b28"
+      "sha256": "471260e73bfe46e703af37d3c8864f7c227e88b3d97c78c9279b07c2cb2a6ef5"
     },
     {
       "path": "kernels/fixtures/art-379-agent-incident-record-composer.fixtures.json",
@@ -3247,7 +3271,7 @@
     },
     {
       "path": "kernels/fixtures/art-380-build-ai-workpaper-record.fixtures.json",
-      "sha256": "32614612d3c21755aa06668b621ac3e16153c1d2e60c357bb2691a6e0da2d506"
+      "sha256": "4033cb037b615bce0f883993588107c7d7aa9d966383f0d414a4b52e18c8715f"
     },
     {
       "path": "kernels/fixtures/art-385-agent-token-scope-checker.fixtures.json",
@@ -3347,7 +3371,7 @@
     },
     {
       "path": "kernels/fixtures/art-408-evidence-bundle-tier-labeler.fixtures.json",
-      "sha256": "665103daa4a4ed21d3246d0ba4c71245f4f81041151455f153ed43a1738c9957"
+      "sha256": "5d3acc9fe71606328c67caa332b6bb3ace6345a1f8edf73880fb0b83b1e56eec"
     },
     {
       "path": "kernels/fixtures/art-409-dpa-art28-completeness-checker.fixtures.json",
@@ -3586,6 +3610,14 @@
       "sha256": "a2575d5334e9f5b0a38b0c52b57b40ecdaf4b765f01bcb1df1a75a159b6b3148"
     },
     {
+      "path": "kernels/fixtures/art-470-lookback-completeness-reconciler.fixtures.json",
+      "sha256": "e7a9a6583b0570d504743a024dd0d5e1f5dcdba0da5d329920c3a344aef7dd6a"
+    },
+    {
+      "path": "kernels/fixtures/art-471-disposition-sampling-frame.fixtures.json",
+      "sha256": "4f07cdb660930fb44768da45fb596148934a6fbb4873212760bf316fd93fccbd"
+    },
+    {
       "path": "kernels/fixtures/art-472-cbcr-builder.fixtures.json",
       "sha256": "edb9ddd2aeec98f4ca92ed4c2f952929c0257866c5f7cea41d28389968af6f4a"
     },
@@ -3600,6 +3632,22 @@
     {
       "path": "kernels/fixtures/art-475-cfpb-1071-coverage-check.fixtures.json",
       "sha256": "3a11d2064b54036bb061655b036182e2c315e8e9e287016f87b32a71894f4a13"
+    },
+    {
+      "path": "kernels/fixtures/art-476-map-agent-payment-mandate.fixtures.json",
+      "sha256": "3fd2aae4678afd466f9995ec2b0ed64c16869fb94d7c08ca68eba0083bc07ec4"
+    },
+    {
+      "path": "kernels/fixtures/art-477-intraday-liquidity-monitoring.fixtures.json",
+      "sha256": "793b9ce24a98b739842a1fb57114f631755cfa128981a0e5170572722051ab91"
+    },
+    {
+      "path": "kernels/fixtures/art-478-analyze-dc-vs-lc-cost-benefit.fixtures.json",
+      "sha256": "efcedeb707e123e94289b2a6864a9d00d5b9796774a41d4391486631f47dcce3"
+    },
+    {
+      "path": "kernels/fixtures/art-479-compare-receivables-finance-economics.fixtures.json",
+      "sha256": "1c546f7f30953be6517712e4c11352c7d35aa058c46952541367b5fab95c8b4f"
     },
     {
       "path": "kernels/fixtures/art-48-treasury-clearing-fit-diagnostic.fixtures.json",
@@ -5151,7 +5199,7 @@
     },
     {
       "path": "kernels/index.mjs",
-      "sha256": "a7cf5be32099849c2b5c7dcf641e9eaffff11fd84ddb39a14ea92f09c6fb98a7"
+      "sha256": "976fd883d01dc1fe7179e1111c8129271955afb65876d222133d3ef814ad2bf7"
     },
     {
       "path": "kernels/inline-hash-equality.test.mjs",
@@ -5283,11 +5331,11 @@
     },
     {
       "path": "openchain-graph-v0.4.schema.json",
-      "sha256": "44943d1ce95123f1661bf85c899612fb98d05733a82531994a6a65c986bd36c6"
+      "sha256": "7eee75e560b9b00605eb34ce557a06f60c626ae8eefdae7ed6b3b93b1c3dcf09"
     },
     {
       "path": "SPEC.md",
-      "sha256": "00996ab8a1ee4545f926bc60646517669f01a6d51956a5cf293a4b57127a8862"
+      "sha256": "d8ddb702511e51a99cf7fb48dc9b492b036ee1918438d260e011383dab53838a"
     }
   ]
 }

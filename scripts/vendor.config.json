@@ -1,6 +1,6 @@
 {
   "sourceRepo": "https://github.com/PostOakLabs/ainumbers.git",
-  "pinnedSha": "834a79a43588aa907accfa64ee583e21af7513db",
+  "pinnedSha": "31e040291f24aa07b79adedcd35fb9b16fc40ac1",
   "paths": [
     "chaingraph/kernels",
     "chaingraph/standard/SPEC.md",

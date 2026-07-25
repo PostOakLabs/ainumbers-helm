@@ -1,0 +1,31 @@
+{
+  "workflow_id": "pack-dw-capacity-check",
+  "name": "Discount Window Borrowing-Capacity Check",
+  "outcome": "Single-node Federal Reserve Discount Window borrowing-capacity check: lendable collateral value against a runnable-liability / uninsured-deposit coverage target.",
+  "spec_version": "ocg-control-plane@1",
+  "manifest": {
+    "manifest_version": "1",
+    "workflow_id": "pack-dw-capacity-check",
+    "trigger": {
+      "type": "manual"
+    },
+    "nodes": [
+      {
+        "node_id": "n1",
+        "kernel_id": "art-427-discount-window-capacity",
+        "kernel_digest": "sha256:9229d3650b52b9385576c8f0c878c174906804fb4ccca5ae197016f655fa4aea"
+      }
+    ],
+    "connectors": [],
+    "gates": [],
+    "actions": []
+  },
+  "workflow_manifest_digest": "sha256:b35bcca83d51f9d80fef07a26b21c9ec34babcb90761d927a97e20f7edd47735",
+  "declared_inputs": [],
+  "steps_meta": [
+    {
+      "node_id": "n1",
+      "data_classification": "compute"
+    }
+  ]
+}
