@@ -1,0 +1,31 @@
+{
+  "workflow_id": "pack-dora-roi-annual-cycle",
+  "name": "DORA RoI Annual Cycle",
+  "outcome": "DORA (EU 2022/2554) Art. 28/30 Register of Information annual build in one artifact: criticality designations for ICT third-party providers and functions are recorded as review_required approval records (a judgment call, not kernel-decided); the annual RoI release itself requires a dual_control(2) gate with a management-body-role approver before submission, reflecting the Art. 5 personal management-body accountability for ICT risk management -- both recorded now via the §27 Human Accountability vocabulary, enforced once HA-RETRO-1's runtime gating is wired to this chain. Each annual cycle's approvals and gate outcome export as one evidence bundle citing the Art. 5 accountability basis. Never a filed submission.",
+  "spec_version": "ocg-control-plane@1",
+  "manifest": {
+    "manifest_version": "1",
+    "workflow_id": "pack-dora-roi-annual-cycle",
+    "trigger": {
+      "type": "manual"
+    },
+    "nodes": [
+      {
+        "node_id": "n1",
+        "kernel_id": "art-466-dora-roi-builder",
+        "kernel_digest": "sha256:4f605ce91ebec16f4f7e409b383f1f5f273b5f3e0551894aed9765e2b7681d80"
+      }
+    ],
+    "connectors": [],
+    "gates": [],
+    "actions": []
+  },
+  "workflow_manifest_digest": "sha256:6c9e69f8ce806d3989e17e83edea67e7335aa82ff66a884aeaeeb53d1e06cb12",
+  "declared_inputs": [],
+  "steps_meta": [
+    {
+      "node_id": "n1",
+      "data_classification": "compute"
+    }
+  ]
+}
