@@ -28,6 +28,13 @@ import { unlockRecord, enrollPassphrase, VaultWeakPassphraseError, PASSPHRASE_MI
 import { VaultTokenStore, openIndexedDbTokenStore } from "../lib/vault-token-store.mjs";
 import { esc } from "../lib/esc.mjs";
 import { blockedStateHtml, classifyBlockedState } from "../lib/blocked-state.mjs";
+import {
+  loadCustomConnectors,
+  validateCandidate,
+  addCustomConnector,
+  removeCustomConnector,
+  hostDisplayParts,
+} from "../lib/custom-connectors.mjs";
 
 const VAULT_RECORD_KEY = "helm.browser.vault.record";
 const OAUTH_CLIENT_ID_KEYS = { microsoft: "helm.oauth.clientId.microsoft", google: "helm.oauth.clientId.google" };
@@ -225,6 +232,152 @@ export function connectorCard(entry) {
     </article>`;
 }
 
+// §16.6: hosts render monospace (<code> is monospace by default — no new
+// CSS needed) with the registrable domain emphasised via <strong> and never
+// truncated, plus a Punycode subline for any non-ASCII (IDN homograph) host.
+function hostsHtml(hosts) {
+  return hosts
+    .map((h) => {
+      const { host, registrable, punycode } = hostDisplayParts(h);
+      const prefix = esc(host.slice(0, host.length - registrable.length));
+      const puny = punycode ? ` <span class="field-row-badge">Punycode: ${esc(punycode)}</span>` : "";
+      return `<div><code>${prefix}<strong>${esc(registrable)}</strong></code>${puny}</div>`;
+    })
+    .join("");
+}
+
+// §16.7: badged, never rendered in the daemon-connectors section, digest
+// stored so a later silent edit under the same id is detectable.
+function customConnectorCard(entry) {
+  const c = entry.contract;
+  return `
+    <article class="card" aria-labelledby="custom-connector-${esc(c.connector_id)}">
+      <span class="stale-badge" role="status">Added by you. Not checked by Post Oak Labs.</span>
+      <h3 id="custom-connector-${esc(c.connector_id)}">${esc(c.name ?? c.connector_id)}</h3>
+      <p class="field-row"><span>${esc(c.publisher)}</span> · <span>v${esc(c.connector_version)}</span></p>
+      <dl>
+        <div class="field-row"><dt>Destination</dt><dd>${hostsHtml(c.allowed_hosts)}</dd></div>
+        <div class="field-row"><dt>Data route</dt><dd>${methodBadgeList(c.allowed_methods)}</dd></div>
+        <div class="field-row"><dt>Scopes</dt><dd>${esc((c.scopes ?? []).join(", ")) || "none declared"}</dd></div>
+        <div class="field-row"><dt>Contract digest</dt><dd><code>${esc(entry.contractDigest)}</code></dd></div>
+        <div class="field-row"><dt>Added</dt><dd>${esc(entry.addedAt)}</dd></div>
+      </dl>
+      <details class="disclosure">
+        <summary>Full contract</summary>
+        <pre>${esc(JSON.stringify(c, null, 2))}</pre>
+      </details>
+      <button type="button" data-remove-id="${esc(c.connector_id)}">Remove</button>
+    </article>`;
+}
+
+// §16.4 step 2: preview only — rendered from a VALIDATED contract but not
+// yet added. No remove button (nothing to remove yet); the confirm copy
+// states plainly that adding is an allowlist entry, not a credential grant.
+function customConnectorPreviewCard(contract) {
+  return `
+    <article class="card" aria-labelledby="custom-connector-preview-heading">
+      <span class="stale-badge" role="status">Preview — not added yet</span>
+      <h3 id="custom-connector-preview-heading">${esc(contract.name ?? contract.connector_id)}</h3>
+      <p class="field-row"><span>${esc(contract.publisher)}</span> · <span>v${esc(contract.connector_version)}</span></p>
+      <dl>
+        <div class="field-row"><dt>Destination</dt><dd>${hostsHtml(contract.allowed_hosts)}</dd></div>
+        <div class="field-row"><dt>Data route</dt><dd>${methodBadgeList(contract.allowed_methods)}</dd></div>
+        <div class="field-row"><dt>Scopes</dt><dd>${esc((contract.scopes ?? []).join(", ")) || "none declared"}</dd></div>
+      </dl>
+      <details class="disclosure">
+        <summary>Full contract</summary>
+        <pre>${esc(JSON.stringify(contract, null, 2))}</pre>
+      </details>
+      <p class="field-row">Adding this creates an allowlist entry only — it grants no credential until you vault one, and it is never checked by Post Oak Labs.</p>
+    </article>`;
+}
+
+// §16.8: last section on Connect, collapsed by default — Connect's job is
+// reviewing before consent, an authoring affordance at the top inverts it.
+function customConnectorsSection() {
+  return `
+    <details class="disclosure" id="custom-connector-import">
+      <summary>Add a custom connector</summary>
+      <p class="field-row">Only add a contract you trust — it widens the egress allowlist for whatever's inside it. Validated with the same schema and digest logic the connector runtime itself uses.</p>
+      <div class="field-row">
+        <label for="custom-connector-file">Load from a file</label>
+        <input type="file" id="custom-connector-file" accept="application/json,.json" />
+      </div>
+      <div class="field-row">
+        <label for="custom-connector-text">Or paste the contract JSON</label>
+        <textarea id="custom-connector-text" rows="8"></textarea>
+      </div>
+      <button type="button" id="custom-connector-validate">Validate</button>
+      <p id="custom-connector-message" role="status" aria-live="polite"></p>
+      <div id="custom-connector-preview"></div>
+      <h3>Connectors added by you</h3>
+      <div class="card-grid" id="custom-connector-list"></div>
+    </details>`;
+}
+
+function wireCustomConnectorImport(root, { knownIds }) {
+  const fileInput = root.querySelector("#custom-connector-file");
+  const textArea = root.querySelector("#custom-connector-text");
+  const messageEl = root.querySelector("#custom-connector-message");
+  const previewEl = root.querySelector("#custom-connector-preview");
+  const listEl = root.querySelector("#custom-connector-list");
+
+  fileInput?.addEventListener("change", () => {
+    const file = fileInput.files?.[0];
+    if (!file) return;
+    const reader = new FileReader();
+    reader.onload = () => { textArea.value = String(reader.result ?? ""); };
+    reader.readAsText(file);
+  });
+
+  function renderList() {
+    const entries = loadCustomConnectors();
+    listEl.innerHTML = entries.length
+      ? entries.map(customConnectorCard).join("")
+      : `<p class="empty-state">No custom connectors added yet.</p>`;
+    listEl.querySelectorAll("[data-remove-id]").forEach((btn) => {
+      btn.addEventListener("click", () => {
+        removeCustomConnector(btn.dataset.removeId);
+        renderList();
+      });
+    });
+  }
+  renderList();
+
+  root.querySelector("#custom-connector-validate")?.addEventListener("click", async () => {
+    previewEl.innerHTML = "";
+    const text = textArea.value.trim();
+    if (!text) {
+      messageEl.textContent = "Nothing to validate — load a file or paste contract JSON first.";
+      return;
+    }
+    const result = await validateCandidate(text, { knownIds });
+    if (!result.ok) {
+      messageEl.textContent = result.message;
+      return;
+    }
+    messageEl.textContent = "Valid contract — review before adding.";
+    previewEl.innerHTML = `${customConnectorPreviewCard(result.contract)}
+      <button type="button" id="custom-connector-confirm">Add connector</button>
+      <button type="button" id="custom-connector-cancel">Cancel</button>`;
+    previewEl.querySelector("#custom-connector-confirm").addEventListener("click", () => {
+      try {
+        addCustomConnector(result);
+        messageEl.textContent = `Added "${result.contract.connector_id}". It's an allowlist entry only — no credential is granted until one is vaulted.`;
+        previewEl.innerHTML = "";
+        textArea.value = "";
+        renderList();
+      } catch (err) {
+        messageEl.textContent = err.message;
+      }
+    });
+    previewEl.querySelector("#custom-connector-cancel").addEventListener("click", () => {
+      previewEl.innerHTML = "";
+      messageEl.textContent = "";
+    });
+  });
+}
+
 // Daemon-side catalog is unavailable, missing, or empty in browser-mode-only
 // use (no daemon at all) — browser connectors (below) are the only ones that
 // apply then, so they render regardless of daemon state, per P3-D5's
@@ -235,6 +388,7 @@ export async function renderConnect(root, { port, token }) {
   const result = await fetchWithFallback("/connectors", { port, token });
 
   let daemonHtml;
+  let daemonIds = [];
   const blocked = classifyBlockedState(result);
   if (blocked) {
     daemonHtml = blockedStateHtml(blocked, {
@@ -247,6 +401,7 @@ export async function renderConnect(root, { port, token }) {
     });
   } else {
     const entries = result.data?.connectors ?? [];
+    daemonIds = entries.map((e) => e.contract?.connector_id).filter(Boolean);
     const staleBadge = result.state === "stale" ? `<span class="stale-badge" role="status">stale — last seen ${result.at}</span>` : "";
     daemonHtml = entries.length === 0
       ? `<p class="empty-state">No daemon connectors configured yet.${staleBadge}</p>`
@@ -255,6 +410,7 @@ export async function renderConnect(root, { port, token }) {
          <div class="card-grid">${entries.map(connectorCard).join("")}</div>`;
   }
 
-  root.innerHTML = `${daemonHtml}${browserConnectorsSection()}`;
+  root.innerHTML = `${daemonHtml}${browserConnectorsSection()}${customConnectorsSection()}`;
   wireBrowserConnectors(root);
+  wireCustomConnectorImport(root, { knownIds: daemonIds });
 }
