@@ -90,7 +90,6 @@ function personaCard(persona) {
 
 function dormantHome() {
   return `
-    <h2>Operate</h2>
     <p class="empty-state">helmd isn't running yet. These cards fill in once it's connected. To connect:</p>
     <ol class="steps">
       <li>Open a terminal (Command Prompt or PowerShell on Windows, Terminal on macOS or Linux).</li>
@@ -120,7 +119,6 @@ export async function renderOperate(root, { port, token }) {
   }
 
   root.innerHTML = `
-    <h2>Operate</h2>
     <div class="card-grid">
       <section class="card" aria-labelledby="op-health">
         <h3 id="op-health">Daemon health</h3>

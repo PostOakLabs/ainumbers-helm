@@ -68,7 +68,7 @@ export async function renderChoose(root, { port, token }) {
     : "";
 
   root.innerHTML = `
-    <h2>Choose${staleBadge}</h2>
+    ${staleBadge ? `<p class="view-subtitle">${staleBadge}</p>` : ""}
     ${templatesRail}
     <p class="field-row">Outcome-oriented workflow packs — not a raw inventory. Pick one to review its manifest.</p>
     <div class="card-grid">${packs.map(packCard).join("")}</div>`;

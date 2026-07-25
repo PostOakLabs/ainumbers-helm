@@ -57,7 +57,7 @@ export async function renderCanvas(root, { port, token, params }) {
   const execSummary = buildExecSummary(manifest, dag, digest);
 
   root.innerHTML = `
-    <h2>Canvas — ${escapeHtml(manifest.workflow_id)}${staleBadge}</h2>
+    <p class="view-subtitle">${escapeHtml(manifest.workflow_id)}${staleBadge}</p>
     <div class="canvas-present-toggle" role="tablist" aria-label="Presentation mode">
       <button type="button" id="tab-present" role="tab" aria-selected="false">Present</button>
       <button type="button" id="tab-analyst" role="tab" aria-selected="true">Analyst</button>

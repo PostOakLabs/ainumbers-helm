@@ -106,7 +106,7 @@ export async function renderRun(root, { port, token, params, activityStream }) {
       </div>`;
 
   root.innerHTML = `
-    <h2>Run${workflowId ? ` — ${workflowId}` : ""}${staleBadge}</h2>
+    ${workflowId || staleBadge ? `<p class="view-subtitle">${workflowId ? `${workflowId}` : ""}${staleBadge}</p>` : ""}
     ${templateBanner}
     ${startCard}
     <div class="card">

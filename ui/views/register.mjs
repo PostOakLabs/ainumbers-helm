@@ -69,7 +69,6 @@ export async function renderRegister(root, { port, token }) {
   }
 
   root.innerHTML = `
-    <h2>Register</h2>
     <p class="field-row">EUC register entries and per-kernel validation cards — SR 11-7/SS1-23 model-risk paperwork, generated instead of hand-maintained.</p>
     <form id="register-form">
       <label for="wf-select">Workflow</label>

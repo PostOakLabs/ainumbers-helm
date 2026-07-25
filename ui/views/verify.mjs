@@ -337,7 +337,6 @@ function wireInputs(root, { loadUrl } = {}) {
 export async function renderVerify(root, { params } = {}) {
   const loadUrl = params?.get("load") || null;
   root.innerHTML = `
-    <h2>Verify</h2>
     <p class="field-row-note">Checks an evidence bundle entirely in this browser tab. Nothing is uploaded, and no daemon connection is required.</p>
     ${loadUrl ? `<p class="field-row-note" data-testid="verify-link-notice">Opened from a shared bundle link. Public identity/keys still need to be loaded separately — Helm has no key registry.</p>` : ""}
 

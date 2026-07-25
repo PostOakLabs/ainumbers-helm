@@ -17,8 +17,6 @@ const VIEW_SUMMARY = [
 
 export async function renderHelp(root) {
   root.innerHTML = `
-    <h2>Help</h2>
-
     <section class="card" aria-labelledby="help-views">
       <h3 id="help-views">What each tab does</h3>
       <dl class="verify-fence-list">

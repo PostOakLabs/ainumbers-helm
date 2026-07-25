@@ -190,6 +190,18 @@ main.shell-main {
   margin: 0 auto;
 }
 
+/* HELM-UX2-B-TABMETA (§12.3): the shell-owned page title + intro, generated
+   from tab-meta.mjs ahead of view dispatch. */
+#view-header h1 {
+  font-size: 1.4rem;
+  margin: 0 0 var(--space-1);
+}
+
+#view-header .tab-intro {
+  color: var(--text-muted);
+  margin: 0 0 var(--space-3);
+}
+
 .card {
   background: var(--surface-raised);
   border: 1px solid var(--border);
