@@ -11,6 +11,11 @@
 // drift again. Learn also absorbs the doc links, the one estate surface
 // with no in-app home (§12.8), and is one of the two views §13.4 permits a
 // terminal command in — collapsed, never in the primary message.
+//
+// §17.4: the "install Helm for the first time" copy below (signing status,
+// OS warning wording) is the SSOT for that wording — mirrored in
+// repo/helm.html's #quickstart section. Any change here ships with a
+// matching change there in the same wave.
 import { TABS } from "../lib/tab-meta.mjs";
 
 const DOC_LINKS = [
@@ -52,6 +57,7 @@ export async function renderLearn(root) {
           <li>Run <code>helmd start</code> to launch the daemon and open a freshly paired tab.</li>
           <li>If helmd is already running, run <code>helmd open</code> to get a new paired link for this browser.</li>
         </ol>
+        <p>Haven't downloaded helmd yet? Get it from the public repo's <a href="https://github.com/PostOakLabs/ainumbers-helm/releases/latest" rel="noopener">releases page</a>. Windows and macOS builds aren't code-signed yet, so your OS may show a warning the first time you run one — Windows may say "Windows protected your PC", macOS may say the developer cannot be verified. Don't click past a warning like that on trust alone: check the file's SHA-256 against the signed release manifest first, and wait rather than override your OS's protection if you're not confident. Steps for that check are in <a href="https://ainumbers.co/helm.html#quickstart" rel="noopener">the quickstart's "Verify your download" section</a>. No signing step on Linux.</p>
       </details>
     </section>
 
