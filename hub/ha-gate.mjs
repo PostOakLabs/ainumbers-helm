@@ -96,12 +96,16 @@ export async function findHeldGate(db, run) {
   const gateCheck = haGateCheckFor(db);
   let priorOutputDigest = null;
   let priorOutput = null;
+  let priorStepId = null;
   for (const step of steps) {
     const inputDigest = stepInputDigest({ runId: run.run_id, step, priorOutputDigest, dryRun: !!run.dry_run });
     const memo = getMemoizedStep(db, { runId: run.run_id, stepId: step.step_id, inputDigest });
-    if (memo) { priorOutputDigest = memo.outputDigest; priorOutput = memo.output; continue; }
+    if (memo) { priorOutputDigest = memo.outputDigest; priorOutput = memo.output; priorStepId = step.step_id; continue; }
     const gate = await gateCheck(step, { priorOutputDigest, priorOutput, runId: run.run_id });
-    return gate.held ? { run_id: run.run_id, ...gate } : null;
+    // precedingStepId: the step whose OWN artifact is the subject being
+    // approved — a caller (e.g. the Review UI's "Replay-verify" action)
+    // re-executes THIS step, never the held one (which hasn't run yet).
+    return gate.held ? { run_id: run.run_id, precedingStepId: priorStepId, ...gate } : null;
   }
   return null;
 }
