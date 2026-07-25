@@ -44,6 +44,20 @@ function checkHost(req, port) {
   return req.headers.host === `127.0.0.1:${port}`;
 }
 
+// req.url must NEVER reach a log line: the bearer token rides in the query
+// string on /events (EventSource can't set an Authorization header, see the
+// exception below), so logging a rejected request verbatim writes a WORKING
+// credential to stdout — which the macOS LaunchAgent can capture to a file.
+// Log the path only. Falls back to a placeholder rather than throwing, since
+// this runs on the reject path where req.url may be malformed.
+function logPath(req) {
+  try {
+    return new URL(req.url, "http://x").pathname;
+  } catch {
+    return "<unparsable>";
+  }
+}
+
 function checkOrigin(req, allowedOrigin) {
   return req.headers.origin === allowedOrigin;
 }
@@ -461,7 +475,7 @@ export function createHelmServer({ port, allowedOrigin, token, db = null, identi
   const routes = { ...ROUTES, "GET /version-check": (req, res) => handleVersionCheck(req, res, versionCheckUrl) };
   const server = createServer((req, res) => {
     if (!checkHost(req, port)) {
-      log.warn("rejected: host mismatch", { host: req.headers.host, path: req.url });
+      log.warn("rejected: host mismatch", { host: req.headers.host, path: logPath(req) });
       return deny(res, 403, "host_mismatch");
     }
 
@@ -481,7 +495,7 @@ export function createHelmServer({ port, allowedOrigin, token, db = null, identi
     }
 
     if (!checkOrigin(req, allowedOrigin)) {
-      log.warn("rejected: origin mismatch", { origin: req.headers.origin, path: req.url });
+      log.warn("rejected: origin mismatch", { origin: req.headers.origin, path: pathname });
       return deny(res, 403, "origin_mismatch");
     }
     applyCors(res, allowedOrigin);
@@ -503,7 +517,7 @@ export function createHelmServer({ port, allowedOrigin, token, db = null, identi
       presented = new URL(req.url, "http://x").searchParams.get("token") || "";
     }
     if (!tokenMatches(token, presented)) {
-      log.warn("rejected: bad or missing token", { path: req.url });
+      log.warn("rejected: bad or missing token", { path: pathname });
       return deny(res, 401, "unauthorized");
     }
 
