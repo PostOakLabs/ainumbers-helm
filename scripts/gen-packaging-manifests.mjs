@@ -58,7 +58,7 @@ function main() {
     written++;
   }
 
-  console.log(`gen-packaging-manifests: wrote ${written} manifest(s) for v${version} -> ${PACKAGING_OUT}`);
+  console.log(`gen-packaging-manifests: wrote ${written} manifest(s) for ${version} -> ${PACKAGING_OUT}`);
 }
 
 main();

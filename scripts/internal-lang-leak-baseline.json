@@ -4,11 +4,8 @@
     ".github/workflows/ci.yml": {
       "bare-wu-id": 1
     },
-    ".github/workflows/release-please.yml": {
-      "bare-wu-id": 1
-    },
     ".github/workflows/release.yml": {
-      "bare-wu-id": 4
+      "bare-wu-id": 5
     },
     "docs/CATEGORIZATION-SUBMISSIONS-RUNBOOK.md": {
       "bare-wu-id": 4
@@ -29,10 +26,10 @@
       "bare-wu-id": 1
     },
     "docs/RELEASE-CHANNEL.md": {
-      "bare-wu-id": 1
+      "bare-wu-id": 2
     },
     "docs/RELEASING.md": {
-      "bare-wu-id": 5
+      "bare-wu-id": 4
     },
     "docs/THREAT-MODEL-P3-DELTA.md": {
       "bare-wu-id": 16
