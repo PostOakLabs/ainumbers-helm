@@ -20,10 +20,25 @@ git tag 2026.7.25 && git push --tags
 ```
 
 No release PR, no changelog ritual beyond step 1. The tag push triggers
-`.github/workflows/release.yml`: three-platform SEA build → pauses at the
-`release` Environment for one approval click → signed release manifest →
-verify (fail-closed) → GitHub release (GA tags self-promote to `latest`) →
-`publish-npm` (GA tags only).
+`.github/workflows/release.yml`: four-platform SEA build → signed release
+manifest → verify (fail-closed) → GitHub release (GA tags self-promote to
+`latest`) → `publish-version-feed` → `publish-npm` (GA tags only).
+
+⚠ **Step 1 is not optional and is easy to skip.** `release-manifest.mjs`
+compares the tag against `package.json` and refuses to sign a mismatch — so
+forgetting it fails the run *after* the build, with the tag already pushed.
+Because CalVer names the tag after the date, recovering means deleting and
+re-pushing the same tag rather than picking a new number. This happened on
+the first CalVer release (2026-07-25). The planned automated tagger folds
+the bump into the same step that computes the tag, so the two can no longer
+drift apart.
+
+The `release` Environment previously paused here for an approval click. That
+gate was removed 2026-07-25 (Tim): with no users, a signing job that waits on
+a human is friction rather than protection, and the reviewer was
+self-approvable and admin-bypassable anyway. Revisit when Helm has users or
+when npm publishing is re-enabled — an npm version publish is irreversible in
+a way a GitHub release is not.
 
 An `-rc` suffix (`2026.7.25-rc1`) stays a GitHub prerelease and never
 publishes to npm.
