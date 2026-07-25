@@ -296,8 +296,14 @@ async function refreshVersionSkew(port, token, slot) {
 function startBrowserJournal() {
   const slot = document.getElementById("durability-banner-slot");
   const client = new BrowserJournalClient({
+    // §14.2: the banner tells the user to export while the control lives
+    // elsewhere — wire its button to the same download hook used after
+    // every run, so a stranded reader isn't told about a control they
+    // can't find.
     onBannerChange: (html) => {
-      if (slot) slot.innerHTML = html;
+      if (!slot) return;
+      slot.innerHTML = html;
+      slot.querySelector("#durability-banner-download")?.addEventListener("click", () => offerJsonBundleDownload(client.entries));
     },
     onOfferBundleDownload: (entries) => offerJsonBundleDownload(entries),
   });

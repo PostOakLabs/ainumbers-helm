@@ -295,8 +295,19 @@ details.disclosure summary {
   padding: var(--space-4) 0;
 }
 
+/* §14.4/§14.5: full-bleed strips whose CONTENT aligns to the same 72rem
+   measure as header.shell-header (theme.css:70) and main.shell-main, so the
+   first character lines up with the wordmark — never centre the text, a
+   centred sentence in a full-width strip reads as an ad. #banner-stack caps
+   the two banners that can both fill; a non-last strip drops its own
+   border-bottom so two adjacent banners don't read as a doubled line. */
+#banner-stack > div:not(:last-child) {
+  border-bottom: none;
+}
+
 .durability-banner {
-  padding: var(--space-2) var(--space-3);
+  padding-block: var(--space-2);
+  padding-inline: max(var(--space-3), calc((100% - 72rem) / 2));
   margin: 0;
   font-size: 0.9rem;
 }
@@ -307,7 +318,8 @@ details.disclosure summary {
 }
 
 .version-skew-banner {
-  padding: var(--space-2) var(--space-3);
+  padding-block: var(--space-2);
+  padding-inline: max(var(--space-3), calc((100% - 72rem) / 2));
   margin: 0;
   font-size: 0.9rem;
   display: flex;

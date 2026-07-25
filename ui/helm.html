@@ -23,8 +23,12 @@
       <button id="unpair-btn" class="secondary" type="button">Unpair</button>
     </span>
   </header>
-  <div id="version-skew-banner-slot"></div>
-  <div id="durability-banner-slot"></div>
+  <!-- §14.5: siblings that can both fill, capped at two — skew first (it's
+       the more urgent "you're on stale software" notice), durability second. -->
+  <div id="banner-stack">
+    <div id="version-skew-banner-slot"></div>
+    <div id="durability-banner-slot"></div>
+  </div>
   <main id="shell-main" class="shell-main" aria-live="polite">
     <div id="view-header"></div>
     <div id="view-content"></div>
