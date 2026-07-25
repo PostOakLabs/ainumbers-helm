@@ -1,0 +1,31 @@
+{
+  "workflow_id": "pack-2052a-classify-daily",
+  "name": "FR 2052a Inflow/Outflow Daily Classification",
+  "outcome": "Single-node daily FR 2052a complex-institution liquidity monitoring classification: buckets inflows/outflows by product/maturity against a caller-supplied Appendix IV-style boundary table.",
+  "spec_version": "ocg-control-plane@1",
+  "manifest": {
+    "manifest_version": "1",
+    "workflow_id": "pack-2052a-classify-daily",
+    "trigger": {
+      "type": "manual"
+    },
+    "nodes": [
+      {
+        "node_id": "n1",
+        "kernel_id": "art-437-fr2052a-inflow-outflow-classifier",
+        "kernel_digest": "sha256:e6b15395a2f44a43b2968b7f10f6d7ef12137cd68b1a0ff292e5031b775f4f97"
+      }
+    ],
+    "connectors": [],
+    "gates": [],
+    "actions": []
+  },
+  "workflow_manifest_digest": "sha256:f4dc5e0d8b47d67277e4b22abb329a83d081e54935c82c164247d4b5a331ce91",
+  "declared_inputs": [],
+  "steps_meta": [
+    {
+      "node_id": "n1",
+      "data_classification": "compute"
+    }
+  ]
+}

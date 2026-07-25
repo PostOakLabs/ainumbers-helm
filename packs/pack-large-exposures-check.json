@@ -1,0 +1,31 @@
+{
+  "workflow_id": "pack-large-exposures-check",
+  "name": "Large Exposures Limit Check (Basel III / Regulation YY)",
+  "outcome": "Single-node check aggregating each counterparty group's exposure against the Basel III / Regulation YY 25% (general) or 15% (GSIB-to-GSIB) single-counterparty limit, emitting a breach-list artifact.",
+  "spec_version": "ocg-control-plane@1",
+  "manifest": {
+    "manifest_version": "1",
+    "workflow_id": "pack-large-exposures-check",
+    "trigger": {
+      "type": "manual"
+    },
+    "nodes": [
+      {
+        "node_id": "n1",
+        "kernel_id": "art-425-large-exposures-limit-check",
+        "kernel_digest": "sha256:eea6976089a31b050d82c8bc25f5fb90f8f7e2b464627acc89bb16e5d58c859e"
+      }
+    ],
+    "connectors": [],
+    "gates": [],
+    "actions": []
+  },
+  "workflow_manifest_digest": "sha256:7269894c0c6185c68978b3c28eb1ce3583dd87ad8db77665d4e0b28bd6378358",
+  "declared_inputs": [],
+  "steps_meta": [
+    {
+      "node_id": "n1",
+      "data_classification": "compute"
+    }
+  ]
+}

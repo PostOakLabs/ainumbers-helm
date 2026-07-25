@@ -1,0 +1,49 @@
+{
+  "workflow_id": "pack-call-report-edit-gate",
+  "name": "FFIEC Call Report Edit-Check Gate (Schedule RC + RC-R)",
+  "outcome": "Schedule RC balance-sheet mapper and Schedule RC-R capital mapper feed the Call Report edit-check gate, which runs cross-schedule identity and capital-stack checks and emits an auto_pass / review_required §27 gate verdict.",
+  "spec_version": "ocg-control-plane@1",
+  "manifest": {
+    "manifest_version": "1",
+    "workflow_id": "pack-call-report-edit-gate",
+    "trigger": {
+      "type": "manual"
+    },
+    "nodes": [
+      {
+        "node_id": "n1",
+        "kernel_id": "art-432-call-report-rc-balance-sheet",
+        "kernel_digest": "sha256:ebdcc54a5a9f44bae3307929b2c226e91666a2929a99fb42e15eb5f0df79c7d1"
+      },
+      {
+        "node_id": "n2",
+        "kernel_id": "art-433-call-report-rcr-capital",
+        "kernel_digest": "sha256:c62ba6456819dce8756770a395024a9508cf9685dd9d3ca1409ebe2d6e01546c"
+      },
+      {
+        "node_id": "n3",
+        "kernel_id": "art-434-call-report-edit-check-gate",
+        "kernel_digest": "sha256:fc730e1410814863f534802d3bcd7d948ac232f8f1fb5ddcf9078e4c97dd075d"
+      }
+    ],
+    "connectors": [],
+    "gates": [],
+    "actions": []
+  },
+  "workflow_manifest_digest": "sha256:8076f5779e4a066e502d8b0ddb3283d8290628392b963de3867f54ed68cd98c9",
+  "declared_inputs": [],
+  "steps_meta": [
+    {
+      "node_id": "n1",
+      "data_classification": "compute"
+    },
+    {
+      "node_id": "n2",
+      "data_classification": "compute"
+    },
+    {
+      "node_id": "n3",
+      "data_classification": "compute"
+    }
+  ]
+}

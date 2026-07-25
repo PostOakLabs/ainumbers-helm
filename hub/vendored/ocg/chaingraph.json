@@ -2,7 +2,7 @@
   "$schema": "https://ainumbers.co/schema/chaingraph-v1.0.json",
   "version": "1.67.0",
   "updated": "2026-07-14",
-  "spec_version": "0.8.12",
+  "spec_version": "0.8.13",
   "maintainer": "Post Oak Labs",
   "description": "Machine-readable index of the AINumbers ChainGraph suite. Every tool's MCP name, mandate_type, inputSchema pointer, and chain edges (consumes/feeds). Linked from llms.txt and embedded as JSON-LD on the hub. Internal mandate_type taxonomy — not AP2 v0.2 spec vocabulary.",
   "hub_url": "https://ainumbers.co/chaingraph/chaingraph-hub.html",
@@ -15456,14 +15456,14 @@
     },
     {
       "tool_id": "art-236-build-ai-decision-log-record",
-      "tool_version": "1.0.1",
+      "tool_version": "1.1.0",
       "display_name": "AI Decision Log Record Builder (EU AI Act Art 12)",
       "mcp_name": "build_ai_decision_log_record",
       "mandate_type": "compliance_mandate",
       "wave": 40,
       "gpu": false,
       "url": "https://ainumbers.co/chaingraph/art-236-build-ai-decision-log-record.html",
-      "description": "Builds an EU AI Act Art 12(2)-conformant decision log record for high-risk AI systems in financial services. Computes chain_position (first/chained), art12_completeness_score (12 required fields), retention_months (>= 6 months, configurable), and anchor_surface instructions for composing anchor.ainumbers.co/mcp. subject_ref is a STRUCTURAL field only (opaque reference, never a real natural-person identifier; no PII enters this kernel). Disambiguates from build_session_receipt (cry-01): that node logs MCP session I/O; this node builds a regulatory Art 12 decision record. Run classify_annex3_decisioning_obligations (art-238) first to confirm is_high_risk before generating Art 12 records.",
+      "description": "Builds an EU AI Act Art 12(2)-conformant decision log record for high-risk AI systems in financial services. Computes chain_position (first/chained), art12_completeness_score (12 required fields), retention_months (>= 6 months, configurable), and anchor_surface instructions for composing anchor.ainumbers.co/mcp. subject_ref is a STRUCTURAL field only (opaque reference, never a real natural-person identifier; no PII enters this kernel). When the caller declares which sealed decision artifact this record evidences, this node also wraps it as a section-27.6 evidence bundle over that subject. Disambiguates from build_session_receipt (cry-01): that node logs MCP session I/O; this node builds a regulatory Art 12 decision record. Run classify_annex3_decisioning_obligations (art-238) first to confirm is_high_risk before generating Art 12 records.",
       "input_schema_ref": "chaingraph/art-236-build-ai-decision-log-record.html#manifest",
       "consumes": [],
       "feeds": [
@@ -15473,7 +15473,7 @@
       "status": "live",
       "conformance_fixtures": true,
       "compute_capability": "server",
-      "compute_images": [{"system":"sha256-source","image_id":"sha256:3f9c0dade487f4d6dafb35d97ebc3fe9b0f51656ea4e010caee2a8bf35aa159d","valid_from":"2026-07-10"},{"system":"risc0","image_id":"sha256:a1a0bc89b5b1febaeda3519f6dbade0fa5ac16beeb143c4e1b01689573567bc6","valid_from":"2026-07-04"}],
+      "compute_images": [{"system":"sha256-source","image_id":"sha256:38e616aa1627146cb9496fe598eea7869de615e58bcc59363e22fc24da851e1c","valid_from":"2026-07-10"},{"system":"risc0","image_id":"sha256:a1a0bc89b5b1febaeda3519f6dbade0fa5ac16beeb143c4e1b01689573567bc6","valid_from":"2026-07-04"}],
       "export_capability": [
         "json"
       ],
@@ -19272,94 +19272,105 @@
       }
     },
     {
-      "tool_id": "art-293-einvoice-format-validator",
-      "tool_version": "1.0.0",
-      "display_name": "E-Invoice Format Validator",
-      "mcp_name": "validate_einvoice_format",
-      "mandate_type": "compliance_mandate",
-      "wave": 46,
-      "gpu": false,
-      "url": "https://ainumbers.co/chaingraph/art-293-einvoice-format-validator.html",
-      "description": "Conformance-validate a structured e-invoice extract against version-pinned Factur-X, XRechnung, PINT-AE, or MyInvois format rules: mandatory-field presence, currency/VAT-category codelist membership, line-item cardinality. Returns per-rule findings, missing_fields, and structural_completeness. Root node of the einvoice-validation-pipeline chain. Zero network, zero PII. Not a legal-validity determination.",
-      "input_schema_ref": "chaingraph/art-293-einvoice-format-validator.html#manifest",
-      "consumes": [],
-      "feeds": [
-        "art-294-einvoice-vat-calc-verifier"
-      ],
-      "status": "live",
-      "conformance_fixtures": true,
-      "compute_capability": "server",
-      "compute_images": [{"system":"sha256-source","image_id":"sha256:a2ebeed8ccd9619e29ad9881e43eb8e60d93af64efa53d0bb1f7551ff7a1fb90","valid_from":"2026-07-10"},{"system":"risc0","image_id":"sha256:a1a0bc89b5b1febaeda3519f6dbade0fa5ac16beeb143c4e1b01689573567bc6","valid_from":"2026-06-28"}],
-      "compute_proof": {
-        "type": "ZkVmReceipt",
-        "system": "risc0",
-        "receiptFormat": "groth16-bn254",
-        "imageId": "sha256:a1a0bc89b5b1febaeda3519f6dbade0fa5ac16beeb143c4e1b01689573567bc6",
-        "seal": "FPJebahsJw10aIh1ZPQtwmqwZgQut0rIg/PaObXxZ60s6c6P0vN74Z3JbUT4LIUVcLj0hof9hGWXY3qj/m5CUCPPupHX57/T5rYWyboSKa96EVgYOKPbD/XClYfsRcuSLksLygEAOvi420lLgptb2qtZQOhgSxqG7ZQ+bvF9VSUZRH/fGGF0i61uk2nCyyY5D9lPLdROOfz2cdxa4ERaLRReQVRaJ/UfnjcEvT/u+ofjkMCmaRjcwYY0H1UN13iyIhNElvDHdp3fOXlUkGBD1fQdJlsBnZIYQqBFvV3FmRMPt9X58NMvOm7cZEReB24Z76ej423YvAZ0IQ6xxf+Dfw==",
-        "journal": {
-          "chaingraph_version": "0.4.0",
-          "kernel_digest": "sha256:a2ebeed8ccd9619e29ad9881e43eb8e60d93af64efa53d0bb1f7551ff7a1fb90",
-          "output": {
-            "findings": [
-              {
-                "pass": true,
-                "rule": "mandatory_field:invoice_number"
-              },
-              {
-                "pass": true,
-                "rule": "mandatory_field:invoice_date"
-              },
-              {
-                "pass": true,
-                "rule": "mandatory_field:currency_code"
-              },
-              {
-                "pass": true,
-                "rule": "mandatory_field:seller_name"
-              },
-              {
-                "pass": true,
-                "rule": "mandatory_field:seller_vat_id"
-              },
-              {
-                "pass": true,
-                "rule": "mandatory_field:buyer_name"
-              },
-              {
-                "pass": true,
-                "rule": "mandatory_field:leitweg_id"
-              },
-              {
-                "pass": true,
-                "rule": "codelist:currency_code"
-              },
-              {
-                "pass": true,
-                "rule": "cardinality:line_items_non_empty"
-              },
-              {
-                "pass": true,
-                "rule": "codelist:line[0].vat_category"
-              },
-              {
-                "pass": true,
-                "rule": "codelist:line[1].vat_category"
-              }
-            ],
-            "format": "xrechnung",
-            "line_item_count": 2,
-            "missing_fields": [],
-            "parse_error": null,
-            "rule_set_version": "XRechnung CIUS 3.0.2 (DRAFT-PIN, unconfirmed as of 2026-07-13)",
-            "structural_completeness": true
-          }
-        }
-      },
-      "export_capability": [
-        "json",
-        "vc"
-      ]
+  "tool_id": "art-293-einvoice-format-validator",
+  "tool_version": "1.1.0",
+  "display_name": "E-Invoice Format Validator",
+  "mcp_name": "validate_einvoice_format",
+  "mandate_type": "compliance_mandate",
+  "wave": 46,
+  "gpu": false,
+  "url": "https://ainumbers.co/chaingraph/art-293-einvoice-format-validator.html",
+  "description": "Conformance-validate a structured e-invoice extract against version-pinned Factur-X, XRechnung, PINT-AE, MyInvois, Peppol BIS 3.0/EN 16931 core (Belgium), or KSeF FA(3) (Poland) format rules: mandatory-field presence, currency/VAT-category codelist membership, line-item cardinality. Returns per-rule findings, missing_fields, and structural_completeness. Root node of the einvoice-validation-pipeline chain. Zero network, zero PII. Not a legal-validity determination.",
+  "input_schema_ref": "chaingraph/art-293-einvoice-format-validator.html#manifest",
+  "consumes": [],
+  "feeds": [
+    "art-294-einvoice-vat-calc-verifier"
+  ],
+  "status": "live",
+  "conformance_fixtures": true,
+  "compute_capability": "server",
+  "compute_images": [
+    {
+      "system": "sha256-source",
+      "image_id": "sha256:5daa83b6ade4cbfb782fb404e16e80077c9264bb4f636e9c1d6e564294e89f58",
+      "valid_from": "2026-07-10"
     },
+    {
+      "system": "risc0",
+      "image_id": "sha256:a1a0bc89b5b1febaeda3519f6dbade0fa5ac16beeb143c4e1b01689573567bc6",
+      "valid_from": "2026-06-28"
+    }
+  ],
+  "compute_proof": {
+    "type": "ZkVmReceipt",
+    "system": "risc0",
+    "receiptFormat": "groth16-bn254",
+    "imageId": "sha256:a1a0bc89b5b1febaeda3519f6dbade0fa5ac16beeb143c4e1b01689573567bc6",
+    "seal": "DGMSs/AtKA2UzfDqordsmsdzshSCnj6vNXHNGQhKunEBTfEVnqbMSNMvfxX/L1ihcoDIl1ZC5p2O6X6IFbpfvy74PTbF/qSCKsMj2b2CnXnFEzkOrzISCrzFCRa7i1zjFZfQd9nRojqY9OZ93F/g+iijzwCpVCBGNHt4V1lnlYIbwTcoNvYVOPLLPs1+4Ju5FsHDshruGx324jgXDXMHzB1we740BR7GW3rgGXdeHqSNCiz7qhfgSM2H4F2+LbQfGvguNrHWCnIcngqUyf8wFitdGqz4Gj6WK/yqMB26QCsPmC1tX9Jyh2JStYrTX52Y7wYXOhjvyjy+ZInRW7GHog==",
+    "journal": {
+      "chaingraph_version": "0.4.0",
+      "kernel_digest": "sha256:5daa83b6ade4cbfb782fb404e16e80077c9264bb4f636e9c1d6e564294e89f58",
+      "output": {
+        "findings": [
+          {
+            "pass": true,
+            "rule": "mandatory_field:invoice_number"
+          },
+          {
+            "pass": true,
+            "rule": "mandatory_field:invoice_date"
+          },
+          {
+            "pass": true,
+            "rule": "mandatory_field:currency_code"
+          },
+          {
+            "pass": true,
+            "rule": "mandatory_field:seller_name"
+          },
+          {
+            "pass": true,
+            "rule": "mandatory_field:seller_vat_id"
+          },
+          {
+            "pass": true,
+            "rule": "mandatory_field:buyer_name"
+          },
+          {
+            "pass": true,
+            "rule": "mandatory_field:leitweg_id"
+          },
+          {
+            "pass": true,
+            "rule": "codelist:currency_code"
+          },
+          {
+            "pass": true,
+            "rule": "cardinality:line_items_non_empty"
+          },
+          {
+            "pass": true,
+            "rule": "codelist:line[0].vat_category"
+          },
+          {
+            "pass": true,
+            "rule": "codelist:line[1].vat_category"
+          }
+        ],
+        "format": "xrechnung",
+        "line_item_count": 2,
+        "missing_fields": [],
+        "parse_error": null,
+        "rule_set_version": "XRechnung CIUS 3.0.2 (DRAFT-PIN, unconfirmed as of 2026-07-13)",
+        "structural_completeness": true
+      }
+    }
+  },
+  "export_capability": [
+    "json",
+    "vc"
+  ]
+},
     {
       "tool_id": "art-294-einvoice-vat-calc-verifier",
       "tool_version": "1.0.0",
@@ -19430,120 +19441,148 @@
       ]
     },
     {
-      "tool_id": "art-295-einvoice-jurisdiction-mandate-router",
-      "tool_version": "1.0.0",
-      "display_name": "E-Invoice Jurisdiction Mandate Router",
-      "mcp_name": "route_einvoice_jurisdiction_mandate",
-      "mandate_type": "compliance_mandate",
-      "wave": 46,
-      "gpu": false,
-      "url": "https://ainumbers.co/chaingraph/art-295-einvoice-jurisdiction-mandate-router.html",
-      "description": "Deterministic lookup over a version-pinned mandate table: given supplier/buyer country, transaction type, and transaction date, routes to the applicable e-invoicing regime, format, phase status, and transmission channel. Covers France (PDP, B2B receive obligation live 2026-09-01), Germany (XRechnung), UAE (PINT-AE pilot), Malaysia (MyInvois). Third node of the einvoice-validation-pipeline chain. Zero network, zero PII.",
-      "input_schema_ref": "chaingraph/art-295-einvoice-jurisdiction-mandate-router.html#manifest",
-      "consumes": [
-        "art-294-einvoice-vat-calc-verifier"
-      ],
-      "feeds": [
-        "art-296-einvoice-transmission-receipt-builder"
-      ],
-      "status": "live",
-      "conformance_fixtures": true,
-      "compute_capability": "server",
-      "compute_images": [{"system":"sha256-source","image_id":"sha256:3ef99554992eca2b33337d6dce029234595500ec5a480e3dcc8d6dde20d04dc6","valid_from":"2026-07-10"},{"system":"risc0","image_id":"sha256:a1a0bc89b5b1febaeda3519f6dbade0fa5ac16beeb143c4e1b01689573567bc6","valid_from":"2026-06-28"}],
-      "compute_proof": {
-        "type": "ZkVmReceipt",
-        "system": "risc0",
-        "receiptFormat": "groth16-bn254",
-        "imageId": "sha256:a1a0bc89b5b1febaeda3519f6dbade0fa5ac16beeb143c4e1b01689573567bc6",
-        "seal": "JuxV3OlNrIp4sObXedPveRZSlH7t/rKi946g789V8MwDal+sz43UMc1j/FGiP6/1LllbyV7CZzlTvioVbnHdxSpYeov5RXRisjS+Cyllq3JJf/cQI1gmb0xtfBuUpn08Acwb99+9Sx6D3o9viuk8LDmvFSi3v7ir7UM3E/+rHJMbv5An5JdssqwJ0Vyqn+ZpHcM2Cf8qfi0jssl+SXKcOiiEaKjjZG4WmgshDcPOFvwnKxDUngBdD8cmQiTlk1ISG1P/YTHVqfeRIYfq3900aiDGw4AE+1DL9I+6nHaf/AkNnZXCNIcAhTbbdD+a8NIjor/5dQINkTv5wnvvKBzmdg==",
-        "journal": {
-          "chaingraph_version": "0.4.0",
-          "kernel_digest": "sha256:3ef99554992eca2b33337d6dce029234595500ec5a480e3dcc8d6dde20d04dc6",
-          "output": {
-            "applicable_format": "factur-x_or_ubl",
-            "mandatory_from": "2026-09-01",
-            "phase_status": "mandatory",
-            "regime_country": "FR",
-            "table_version": "einvoice-mandate-table-2026-07-13",
-            "transmission_channel": "PDP"
-          }
-        }
-      },
-      "export_capability": [
-        "json",
-        "vc"
-      ]
+  "tool_id": "art-295-einvoice-jurisdiction-mandate-router",
+  "tool_version": "1.1.0",
+  "display_name": "E-Invoice Jurisdiction Mandate Router",
+  "mcp_name": "route_einvoice_jurisdiction_mandate",
+  "mandate_type": "compliance_mandate",
+  "wave": 46,
+  "gpu": false,
+  "url": "https://ainumbers.co/chaingraph/art-295-einvoice-jurisdiction-mandate-router.html",
+  "description": "Deterministic lookup over a version-pinned mandate table: given supplier/buyer country, transaction type, and transaction date, routes to the applicable e-invoicing regime, format, phase status, and transmission channel. Covers France (PDP, B2B receive obligation live 2026-09-01), Germany (XRechnung), UAE (PINT-AE pilot), Malaysia (MyInvois), Belgium (Peppol BIS 3.0, mandatory since 2026-01-01), and Poland (KSeF FA(3), mandatory-use phase-in from 2026-02-01). Third node of the einvoice-validation-pipeline chain. Zero network, zero PII.",
+  "input_schema_ref": "chaingraph/art-295-einvoice-jurisdiction-mandate-router.html#manifest",
+  "consumes": [
+    "art-294-einvoice-vat-calc-verifier"
+  ],
+  "feeds": [
+    "art-296-einvoice-transmission-receipt-builder"
+  ],
+  "status": "live",
+  "conformance_fixtures": true,
+  "compute_capability": "server",
+  "compute_images": [
+    {
+      "system": "sha256-source",
+      "image_id": "sha256:0b10eacc01a0d809c04d6f3548e9c09c589eb0eeb330672b8dfaab9877cd9d20",
+      "valid_from": "2026-07-10"
     },
     {
-      "tool_id": "art-296-einvoice-transmission-receipt-builder",
-      "tool_version": "1.0.0",
-      "display_name": "E-Invoice Transmission Receipt Builder",
-      "mcp_name": "build_einvoice_transmission_receipt",
-      "mandate_type": "compliance_mandate",
-      "wave": 46,
-      "gpu": false,
-      "url": "https://ainumbers.co/chaingraph/art-296-einvoice-transmission-receipt-builder.html",
-      "description": "Build a hash-anchored receipt proving a specific e-invoice's transmitted bytes were format-validated and VAT-arithmetic-checked, with the routed mandate attached. Binds to the as-transmitted document digest (and, for hybrid Factur-X, the embedded XML digest separately). Proves validation was run; never certifies tax compliance, legal validity, or clearance-platform acceptance. Terminal node of the einvoice-validation-pipeline chain. Zero network, zero PII.",
-      "input_schema_ref": "chaingraph/art-296-einvoice-transmission-receipt-builder.html#manifest",
-      "consumes": [
-        "art-295-einvoice-jurisdiction-mandate-router"
-      ],
-      "feeds": [],
-      "status": "live",
-      "conformance_fixtures": true,
-      "compute_capability": "server",
-      "compute_images": [{"system":"sha256-source","image_id":"sha256:b4d74d23dc88164802cbfefa68abfad52679a6a6f7693022b19bee34ce586d98","valid_from":"2026-07-10"},{"system":"risc0","image_id":"sha256:a1a0bc89b5b1febaeda3519f6dbade0fa5ac16beeb143c4e1b01689573567bc6","valid_from":"2026-06-28"}],
-      "compute_proof": {
-        "type": "ZkVmReceipt",
-        "system": "risc0",
-        "receiptFormat": "groth16-bn254",
-        "imageId": "sha256:a1a0bc89b5b1febaeda3519f6dbade0fa5ac16beeb143c4e1b01689573567bc6",
-        "seal": "KTOT19eUoXIfT4o9wRtUWPilfKQs5tsvKDAkJcCwCSEfLgZivI90L6Kg4VZX6SqwHoKBySHqFNNVdmDVR5Lk+w7oDKaEG/zepXJBaTD6fkbUzs5qCk18cSVLI/xM9c9hLpZTO+5WwMhDXYY+QZHeRjNseEY5W8SK/xM0RlqrweMXa4To5LuInUokJFG7pyXiTXDb1LfQIXHn+t+RtDGZGC5rZt2jstSrjnK6NXQAPz2ATkDQLZzm/k+J6IVnncC4LeBSkJzx6rO0bcbgcJj3vk/3dxmN5ayb5U2cdv16uMMaQ+bnL6mbY5IPOqRcV3neg1p7N5bYdjQVCnnW/4pSBg==",
-        "journal": {
-          "chaingraph_version": "0.4.0",
-          "kernel_digest": "sha256:b4d74d23dc88164802cbfefa68abfad52679a6a6f7693022b19bee34ce586d98",
-          "output": {
-            "claim_strength": "format_and_arithmetic_verified",
-            "document_sha256": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
-            "embedded_xml_sha256": null,
-            "format": "xrechnung",
-            "format_gate_passed": true,
-            "not_legal_advice": "Proves the transmitted document was format-validated and VAT-arithmetic-checked. Does not certify tax compliance, legal validity, or clearance-platform acceptance.",
-            "routed_mandate": {
-              "applicable_format": "factur-x_or_ubl",
-              "mandatory_from": "2026-09-01",
-              "phase_status": "mandatory",
-              "regime_country": "FR",
-              "table_version": "einvoice-mandate-table-2026-07-13",
-              "transmission_channel": "PDP"
-            },
-            "steps": [
-              {
-                "gate_passed": true,
-                "mcp_name": "validate_einvoice_format",
-                "tool_id": "art-293-einvoice-format-validator"
-              },
-              {
-                "gate_passed": true,
-                "mcp_name": "verify_einvoice_vat_calc",
-                "tool_id": "art-294-einvoice-vat-calc-verifier"
-              },
-              {
-                "gate_passed": true,
-                "mcp_name": "route_einvoice_jurisdiction_mandate",
-                "tool_id": "art-295-einvoice-jurisdiction-mandate-router"
-              }
-            ],
-            "validated": true,
-            "vat_gate_passed": true
-          }
-        }
-      },
-      "export_capability": [
-        "json",
-        "vc"
-      ]
+      "system": "risc0",
+      "image_id": "sha256:a1a0bc89b5b1febaeda3519f6dbade0fa5ac16beeb143c4e1b01689573567bc6",
+      "valid_from": "2026-06-28"
+    }
+  ],
+  "compute_proof": {
+    "type": "ZkVmReceipt",
+    "system": "risc0",
+    "receiptFormat": "groth16-bn254",
+    "imageId": "sha256:a1a0bc89b5b1febaeda3519f6dbade0fa5ac16beeb143c4e1b01689573567bc6",
+    "seal": "MAkrD3Ow9M14uF6astVODm7aHvGtjWLdC5DAuxtf6iMB2D1M3LFGw2CO8dfjKzjnJQsR1tf8Bnp8UNMAZ7NkTxybKoY2QX3hPuR9JBpACivhkBQqTdH0jdG4InBU7RNVK6m2/d291qXV7aX75lqUTNdY2UKmFJUY933hVDfcs2QVNfczdit0v7cf2ynA3ev/pEp2b6+KE6wK/0pEjEUDPSPThX2wvmnG9zsQOk9NMHFbGAEYbaFdGbHmBzTfoGgyEEtAT+J9m80yi+K0fSxztmzrfRpbhkovPK5H8R3U7nYoHw6mGRII+sBZuZEky+ikO93qgPiq8xQIb7TRrZpeIw==",
+    "journal": {
+      "chaingraph_version": "0.4.0",
+      "kernel_digest": "sha256:0b10eacc01a0d809c04d6f3548e9c09c589eb0eeb330672b8dfaab9877cd9d20",
+      "output": {
+        "applicable_format": "factur-x_or_ubl",
+        "mandatory_from": "2026-09-01",
+        "phase_status": "mandatory",
+        "regime_country": "FR",
+        "table_version": "einvoice-mandate-table-2026-07-24",
+        "transmission_channel": "PDP"
+      }
+    }
+  },
+  "export_capability": [
+    "json",
+    "vc"
+  ]
+},
+    {
+  "tool_id": "art-296-einvoice-transmission-receipt-builder",
+  "tool_version": "1.1.0",
+  "display_name": "E-Invoice Transmission Receipt Builder",
+  "mcp_name": "build_einvoice_transmission_receipt",
+  "mandate_type": "compliance_mandate",
+  "wave": 46,
+  "gpu": false,
+  "url": "https://ainumbers.co/chaingraph/art-296-einvoice-transmission-receipt-builder.html",
+  "description": "Build a hash-anchored receipt proving a specific e-invoice's transmitted bytes were format-validated and VAT-arithmetic-checked, with the routed mandate attached. Binds to the as-transmitted document digest (and, for hybrid Factur-X, the embedded XML digest separately). Proves validation was run; never certifies tax compliance, legal validity, or clearance-platform acceptance. Carries SPEC.md §27 pre-transmission gate wiring (review_required release gate, emergency_override for a rejected batch) -- schema-only, enforcement pending HA-RETRO-1. Terminal node of the einvoice-validation-pipeline chain. Zero network, zero PII.",
+  "input_schema_ref": "chaingraph/art-296-einvoice-transmission-receipt-builder.html#manifest",
+  "consumes": [
+    "art-295-einvoice-jurisdiction-mandate-router"
+  ],
+  "feeds": [],
+  "status": "live",
+  "conformance_fixtures": true,
+  "compute_capability": "server",
+  "compute_images": [
+    {
+      "system": "sha256-source",
+      "image_id": "sha256:efd9144454c833bea1da03c8c2003da04d8d3b21f33bd1e5e963a512bf21278c",
+      "valid_from": "2026-07-10"
     },
+    {
+      "system": "risc0",
+      "image_id": "sha256:a1a0bc89b5b1febaeda3519f6dbade0fa5ac16beeb143c4e1b01689573567bc6",
+      "valid_from": "2026-06-28"
+    }
+  ],
+  "compute_proof": {
+    "type": "ZkVmReceipt",
+    "system": "risc0",
+    "receiptFormat": "groth16-bn254",
+    "imageId": "sha256:a1a0bc89b5b1febaeda3519f6dbade0fa5ac16beeb143c4e1b01689573567bc6",
+    "seal": "EAQLt/dpwIWHHsKzSZrsOu6CuLrc/6ammJe0snA7L5cmHniBFuF+h7LeZ7m52QHW67mIK+4/nSsnBZNZTQOhGgPsnzGprHu1KvbBmS66PiIRMftkAsdZFy9paQ+zXkfbCcH7A5Et7zUddcgCPgqSwqYWs52LV48SBEmAC3FfTZ4j7U3GM/+6yxxHumVbxFJQrK3cL9d+oPygRBqNhKveliOjp0kBFMEkPW1aerjbkfD/G6rNDYAkumkB7fzehvF4B1m33mkcT9yIHrCxzm/9+Vhx1ttV2msRUlEVA8pFuHgcVSxc4FAY7BZ8u34wK8LMuTqCIevTLFLnV6XkNrUDvw==",
+    "journal": {
+      "chaingraph_version": "0.4.0",
+      "kernel_digest": "sha256:efd9144454c833bea1da03c8c2003da04d8d3b21f33bd1e5e963a512bf21278c",
+      "output": {
+        "claim_strength": "format_and_arithmetic_verified",
+        "document_sha256": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+        "embedded_xml_sha256": null,
+        "format": "xrechnung",
+        "format_gate_passed": true,
+        "ha_wiring": {
+          "enforcement": "schema_only_pending_HA-RETRO-1",
+          "override_gate_policy": "emergency_override",
+          "release_gate_policy": "review_required",
+          "release_gate_role": "reviewer"
+        },
+        "not_legal_advice": "Proves the transmitted document was format-validated and VAT-arithmetic-checked. Does not certify tax compliance, legal validity, or clearance-platform acceptance.",
+        "routed_mandate": {
+          "applicable_format": "factur-x_or_ubl",
+          "mandatory_from": "2026-09-01",
+          "phase_status": "mandatory",
+          "regime_country": "FR",
+          "table_version": "einvoice-mandate-table-2026-07-13",
+          "transmission_channel": "PDP"
+        },
+        "steps": [
+          {
+            "gate_passed": true,
+            "mcp_name": "validate_einvoice_format",
+            "tool_id": "art-293-einvoice-format-validator"
+          },
+          {
+            "gate_passed": true,
+            "mcp_name": "verify_einvoice_vat_calc",
+            "tool_id": "art-294-einvoice-vat-calc-verifier"
+          },
+          {
+            "gate_passed": true,
+            "mcp_name": "route_einvoice_jurisdiction_mandate",
+            "tool_id": "art-295-einvoice-jurisdiction-mandate-router"
+          }
+        ],
+        "validated": true,
+        "vat_gate_passed": true
+      }
+    }
+  },
+  "export_capability": [
+    "json",
+    "vc"
+  ]
+},
     {
       "tool_id": "art-297-agentic-dispute-ce30-linter",
       "tool_version": "1.0.0",
@@ -23280,14 +23319,14 @@
 },
     {
   "tool_id": "art-378-quarterly-test-evidence-composer",
-  "tool_version": "1.0.0",
+  "tool_version": "1.1.0",
   "display_name": "Quarterly Agent Test Evidence Composer",
   "mcp_name": "build_agent_test_evidence",
   "mandate_type": "compliance_mandate",
   "wave": 65,
   "gpu": false,
   "url": "https://ainumbers.co/chaingraph/art-378-quarterly-test-evidence-composer.html",
-  "description": "Composes a quarterly agent testing-evidence pack: test-suite identity and digest, per-test receipts with an honest deterministic/estimated determinism class, pass rate, and a regression comparison chained to the prior quarter's pack digest. A declared prior-pack digest that does not match the caller-supplied prior record is flagged as a broken chain rather than silently accepted. Evidence format only -- never a certification claim. Zero network, zero PII.",
+  "description": "Composes a quarterly agent testing-evidence pack: test-suite identity and digest, per-test receipts with an honest deterministic/estimated determinism class, pass rate, and a regression comparison chained to the prior quarter's pack digest. A declared prior-pack digest that does not match the caller-supplied prior record is flagged as a broken chain rather than silently accepted. When the caller declares which sealed subject artifact the pack evidences, the per-test receipt digests wrap as a section-27.6 evidence bundle over that subject. Evidence format only -- never a certification claim. Zero network, zero PII.",
   "input_schema_ref": "chaingraph/art-378-quarterly-test-evidence-composer.html#manifest",
   "deadline": null,
   "deadline_note": "No regulatory deadline; evidence-format tooling run on the adopter's own quarterly test cadence.",
@@ -23296,7 +23335,7 @@
   "status": "live",
   "conformance_fixtures": true,
   "compute_capability": "server",
-  "compute_images": [{"system":"sha256-source","image_id":"sha256:3f76ae3282468ab897b279b659f06df7297ae43b7c7955ac6691e6ac6e4c15d1","valid_from":"2026-07-10"},{"system":"risc0","image_id":"sha256:a1a0bc89b5b1febaeda3519f6dbade0fa5ac16beeb143c4e1b01689573567bc6","valid_from":"2026-07-10"}],
+  "compute_images": [{"system":"sha256-source","image_id":"sha256:4110cf70767dc5ed8b26fc3543ef15d71239a5f52a8e9396832ac105f212de32","valid_from":"2026-07-10"},{"system":"risc0","image_id":"sha256:a1a0bc89b5b1febaeda3519f6dbade0fa5ac16beeb143c4e1b01689573567bc6","valid_from":"2026-07-10"}],
   "compute_proof_ready": "ready",
   "compute_proof": {"type":"ZkVmReceipt","system":"risc0","receiptFormat":"groth16-bn254","imageId":"sha256:a1a0bc89b5b1febaeda3519f6dbade0fa5ac16beeb143c4e1b01689573567bc6","seal":"JTG2iU3IuV2O6TItcAICPlFtRPsmgtzd+DeU+JtcpA4FVgtatLziksvKvnTVv2RXq79pPyE8w+mByFZr6veYpx+euTJfPXFQnx02u/zt/K8dtSUc8KcmaNNEp0CtrXm0H761azgUwQwE6VCZJ5YaOoGe8OshC6dCHdpuT7cKOf8XpCoTOqL1G9UYrQAxOwKA2GVQUQ18knzDfNbkEWkNRiUhmhVgnr8OvXEAnn2z9JmkCcp6LnsVG2yDO/fWZdQoIeguEyFEI9Fmd0USHsdOKZhHtfilfEE9MtRJhYzTTfsVYKd3iwaTjretZ++v9XX9yyq/BWzWALvuzFlCn0LFAw==","journal":{"chaingraph_version":"0.4.0","kernel_digest":"sha256:3f76ae3282468ab897b279b659f06df7297ae43b7c7955ac6691e6ac6e4c15d1","output":{"aiuc_version":"2026-Q1","certification_note":"Prepared for AIUC-1 technical testing evidence; not a certification and not an underwriting decision.","chain_intact":true,"declared_prior_pack_digest":null,"pack_claim_strength":"evidence-backed","pass_rate":1,"passed":3,"per_test":[{"coerced_from_forbidden_class":false,"determinism_class":"deterministic","prng":null,"receipt_digest":"sha256:2222222222222222222222222222222222222222222222222222222222222222","status":"pass","test_id":"t1"},{"coerced_from_forbidden_class":false,"determinism_class":"deterministic","prng":null,"receipt_digest":"sha256:3333333333333333333333333333333333333333333333333333333333333333","status":"pass","test_id":"t2"},{"coerced_from_forbidden_class":false,"determinism_class":"estimated","prng":{"algorithm":"xoshiro256**","draws":10000,"seed":"42"},"receipt_digest":null,"status":"pass","test_id":"t3"}],"prior_quarter":null,"quarter":"2026-Q1","regression":{"delta":null,"regressed":false},"suite":{"suite_digest":"sha256:1111111111111111111111111111111111111111111111111111111111111111","suite_id":"agent-e2e-suite","suite_version":"3.4.0"},"tamper_detected":false,"total":3}}},
   "export_capability": [
@@ -23332,21 +23371,21 @@
 },
     {
   "tool_id": "art-380-build-ai-workpaper-record",
-  "tool_version": "1.0.0",
+  "tool_version": "1.1.0",
   "display_name": "AI-Tool-Usage Workpaper Record",
   "mcp_name": "build_ai_workpaper_record",
   "mandate_type": "compliance_mandate",
   "wave": 65,
   "gpu": false,
   "url": "https://ainumbers.co/chaingraph/art-380-build-ai-workpaper-record.html",
-  "description": "Composes a documentation-element workpaper record from an existing OCG receipt (tool identity, execution hash, kernel digest), a declared determinism class and conventions, engagement metadata, and a reviewer sign-off statement. Maps to the six elements firms must document for AI/technology-assisted audit evidence under amended AU-C 500 / PCAOB guidance: tool identity, inputs, outputs, limitations, sign-off, and optional linkage to a prior workpaper. An evidence format, not an audit opinion -- makes no PCAOB or AICPA endorsement or compliance-sufficiency claim. An OPTIONAL section-16 eddsa-jcs-2022 signature on the emitted artifact turns the declared sign-off into a countersigned record.",
+  "description": "Composes a documentation-element workpaper record from an existing OCG receipt (tool identity, execution hash, kernel digest), a declared determinism class and conventions, engagement metadata, and a reviewer sign-off statement. Maps to the six elements firms must document for AI/technology-assisted audit evidence under amended AU-C 500 / PCAOB guidance: tool identity, inputs, outputs, limitations, sign-off, and optional linkage to a prior workpaper. An evidence format, not an audit opinion -- makes no PCAOB or AICPA endorsement or compliance-sufficiency claim. An OPTIONAL section-16 eddsa-jcs-2022 signature on the emitted artifact turns the declared sign-off into a countersigned record. When the caller supplies a reviewer identity, the declared sign-off additionally remaps to a section-27.1 approval record over the referenced receipt's execution hash.",
   "input_schema_ref": "chaingraph/art-380-build-ai-workpaper-record.html#manifest",
   "consumes": [],
   "feeds": [],
   "status": "live",
   "conformance_fixtures": true,
   "compute_capability": "server",
-  "compute_images": [{"system":"sha256-source","image_id":"sha256:5857b0def8cbc21476aefaf427076ca7e7f387209dac53d47a2afb6fc230891e","valid_from":"2026-07-10"},{"system":"risc0","image_id":"sha256:a1a0bc89b5b1febaeda3519f6dbade0fa5ac16beeb143c4e1b01689573567bc6","valid_from":"2026-07-10"}],
+  "compute_images": [{"system":"sha256-source","image_id":"sha256:15049d4459f060c77f8ccefdcfff425170a1c8103384869b81c002b2f12602b1","valid_from":"2026-07-10"},{"system":"risc0","image_id":"sha256:a1a0bc89b5b1febaeda3519f6dbade0fa5ac16beeb143c4e1b01689573567bc6","valid_from":"2026-07-10"}],
   "compute_proof_ready": "ready",
   "compute_proof": {"type":"ZkVmReceipt","system":"risc0","receiptFormat":"groth16-bn254","imageId":"sha256:a1a0bc89b5b1febaeda3519f6dbade0fa5ac16beeb143c4e1b01689573567bc6","seal":"DmMlByLh8h0AuVmel4TaCcB+o1j2OovVxNjIrimBi2wpnfFtIbkjbOr4ibX61wCvbDliyKDR76QhoPCm+fh7vAToYwZS42m+xgrwJLCYD5k4vPYjvg9cZHHSK+RWJzwBHugqe9xMLBWsrh0JG+rRpM/FIJJcK4G+u3e9MHrAj/wsutOUzh5dRimtyHDbFEj7fXxAs0AYVgmYOYZvJdf1LRtFON+v7llU1eewr1UnyoWpz+GLUOtVuLfCd8YPiPO2Cn/DDuZL1WRl0dwXSsTMVfKr1pj32ewjkEx7v59QSzwwOyCCyAgQusNbpSixgd1QKihmgLDSIMyykwMNVNU7zA==","journal":{"chaingraph_version":"0.4.0","kernel_digest":"sha256:5857b0def8cbc21476aefaf427076ca7e7f387209dac53d47a2afb6fc230891e","output":{"checks":[{"check":"receipt_tool_id_present","detail":"art-367-compute-cross-border-fees","pass":true},{"check":"receipt_tool_version_present","detail":"1.0.0","pass":true},{"check":"receipt_execution_hash_valid","detail":"ok","pass":true},{"check":"receipt_kernel_digest_valid","detail":"ok","pass":true},{"check":"determinism_class_valid","detail":"deterministic","pass":true},{"check":"declared_conventions_present","detail":"VAT/reverse-charge treatment, documentary-credit fees, and correspondent fees are caller-supplied inputs, not a vendored treaty table; the kernel applies only the published cost-stack formula.","pass":true},{"check":"documentation_standard_ref_present","detail":"AU-C 500 (as amended for AI/technology-assisted evidence), documentation elements per PCAOB audit-AI-tools research project (2026-05-05)","pass":true},{"check":"engagement_id_present","detail":"ENG-2026-0417","pass":true},{"check":"reviewer_role_present","detail":"engagement_reviewer","pass":true},{"check":"previous_workpaper_hash_valid_if_present","detail":"ok","pass":true}],"disclaimer":"This is an evidence format, not an audit opinion. It does not assert PCAOB or AICPA endorsement, or that the referenced engagement complies with any standard -- it is designed to satisfy the documentation elements (tool identity, inputs/outputs, limitations, sign-off) described in the cited standard reference. The declared reviewer sign-off becomes a countersigned record only once an OPTIONAL section-16 eddsa-jcs-2022 signature is applied to this emitted artifact.","documentation_standard_ref":"AU-C 500 (as amended for AI/technology-assisted evidence), documentation elements per PCAOB audit-AI-tools research project (2026-05-05)","engagement":{"engagement_id":"ENG-2026-0417","reporting_period":"FY2026 Q2"},"evidence_binding":{"execution_hash":"68a8b0eecde6775111d0301139900b213700c16917ccd395db4495f7f9bebf94","generated_at":"2026-07-18T00:00:00.000Z"},"limitations":{"declared_conventions":"VAT/reverse-charge treatment, documentary-credit fees, and correspondent fees are caller-supplied inputs, not a vendored treaty table; the kernel applies only the published cost-stack formula.","determinism_class":"deterministic"},"previous_workpaper_hash":null,"sign_off":{"reviewer_role":"engagement_reviewer","reviewer_statement":"I have reviewed the referenced tool identity, execution hash, and declared limitations for this engagement."},"tool_identity":{"kernel_digest":"sha256:ab7cc7c6345a21988fca592f503a6b89a4ddc3fe97267f8996170f1021619817","tool_id":"art-367-compute-cross-border-fees","tool_version":"1.0.0"},"zero_pii_notice":"This record carries no client or personnel identity beyond a declared reviewer role and an engagement identifier the caller controls. Real reviewer identity stays off-platform."}}},
   "export_capability": [
@@ -24838,32 +24877,21 @@
 },
     {
   "tool_id": "art-408-evidence-bundle-tier-labeler",
-  "tool_version": "1.0.0",
+  "tool_version": "1.1.0",
   "display_name": "Evidence Bundle Tier Labeler",
   "mcp_name": "assemble_ocg_evidence_bundle",
   "mandate_type": "attestation_mandate",
   "wave": 68,
   "gpu": false,
   "url": "https://ainumbers.co/chaingraph/art-408-evidence-bundle-tier-labeler.html",
-  "description": "Assembles a shareable evidence bundle around an artifact and stamps the SPEC.md §SIDECAR.1 tiered label it qualifies for: OCG-Verify (envelope well-formed, execution_hash recomputes), OCG-Execute (additionally §21 chain-execution and §22 mandate gates hold), OCG-Prove (additionally a §18 compute-integrity proof verifies). Tiers are cumulative -- any gate false at a level makes every level above it unavailable. The label adds no new gate and mints no new trust claim: it re-expresses existing gate-pass results the caller declares for the referenced artifact, and this node never re-runs those gates itself. Zero network, zero PII.",
+  "description": "Assembles a shareable evidence bundle around an artifact and stamps the SPEC.md §SIDECAR.1 tiered label it qualifies for: OCG-Verify (envelope well-formed, execution_hash recomputes), OCG-Execute (additionally §21 chain-execution and §22 mandate gates hold), OCG-Prove (additionally a §18 compute-integrity proof verifies). Tiers are cumulative -- any gate false at a level makes every level above it unavailable. The label adds no new gate and mints no new trust claim: it re-expresses existing gate-pass results the caller declares for the referenced artifact, and this node never re-runs those gates itself. When the caller supplies collected section-27.2 human-accountability records, they consume/emit as a section-27.6 evidence bundle keyed to the same artifact hash, so the tier label and the accountability trail ride one diffable object. Zero network, zero PII.",
   "input_schema_ref": "chaingraph/art-408-evidence-bundle-tier-labeler.html#manifest",
   "consumes": [],
   "feeds": [],
   "status": "live",
   "conformance_fixtures": true,
   "compute_capability": "server",
-  "compute_images": [
-    {
-      "system": "sha256-source",
-      "image_id": "sha256:005c23e5672acc2fc67413f6a474ee2a5cea8eee289369bcde09c25fd9b75e6a",
-      "valid_from": "2026-07-19"
-    },
-    {
-      "system": "risc0",
-      "image_id": "sha256:a1a0bc89b5b1febaeda3519f6dbade0fa5ac16beeb143c4e1b01689573567bc6",
-      "valid_from": "2026-07-19"
-    }
-  ],
+  "compute_images": [{"system":"sha256-source","image_id":"sha256:4bffde8c450663ed6c3f2e2d7f8671638c0277be7be5f9e9717598f5911b88f8","valid_from":"2026-07-10"},{"system":"risc0","image_id":"sha256:a1a0bc89b5b1febaeda3519f6dbade0fa5ac16beeb143c4e1b01689573567bc6","valid_from":"2026-07-19"}],
   "export_capability": [
     "json"
   ],
@@ -29272,6 +29300,250 @@
   }
 },
     {
+  "tool_id": "art-470-lookback-completeness-reconciler",
+  "tool_version": "1.0.0",
+  "display_name": "AML Lookback Completeness Reconciler",
+  "mcp_name": "reconcile_aml_lookback_completeness",
+  "mandate_type": "compliance_control",
+  "wave": 74,
+  "gpu": false,
+  "url": "https://ainumbers.co/chaingraph/art-470-lookback-completeness-reconciler.html",
+  "description": "Reconciles an AML consent-order remediation lookback's order-scope population against the extract actually produced for re-screening, per historical period. Coverage is always measured against the caller-declared SOURCE-SYSTEM record count, never the extract's own self-reported count -- a lookback that reports zero gaps because it only counted what the extract already contains is indistinguishable from a clean lookback, and catching that blind spot is this node's purpose. A second axis reconciles versioned policy-list snapshot availability: any period whose sanctions/PEP list snapshot was not preserved is flagged unverifiable and excluded from the screened-coverage total rather than silently re-screened against today's list. Also flags duplicate records surviving dedup. Deterministic reconciliation arithmetic only. Zero network, zero PII.",
+  "input_schema_ref": "chaingraph/art-470-lookback-completeness-reconciler.html#manifest",
+  "consumes": [],
+  "feeds": [],
+  "status": "live",
+  "conformance_fixtures": true,
+  "compute_capability": "server",
+  "compute_images": [{"system":"sha256-source","image_id":"sha256:88f0b073173f8eafac3e96acaa0200f936815a627d4985738cbf8e79217632ca","valid_from":"2026-07-10"},{"system":"risc0","image_id":"sha256:a1a0bc89b5b1febaeda3519f6dbade0fa5ac16beeb143c4e1b01689573567bc6","valid_from":"2026-07-25"}],
+  "compute_proof_ready": "ready",
+  "compute_proof": {
+    "type": "ZkVmReceipt",
+    "system": "risc0",
+    "receiptFormat": "groth16-bn254",
+    "imageId": "sha256:a1a0bc89b5b1febaeda3519f6dbade0fa5ac16beeb143c4e1b01689573567bc6",
+    "seal": "CJYGZJa20YFLmyDfPvK5kUIseKPfPjjIvobNa2Y1FnwKk8iB6mGq9a+M8MI1XX4wDoBMIld79Gs7iLpGelNtRhn1/Fl1bbIAQXNVZXGSRWuSxLHeCXzrMy39f43El9l1IADcbsPes7SKSP3o9WxyHElSGYDIII25hmxiblK9/VkKS6eGccNC6GwRRQg9p3O8EtG/Z8TLk4vqXF2bTcGAEAZGntrKuHFSWaEU0x6TdYDnzVHJbuiMv8IInDPuRBOxBi0pBdGSKtfiiej7tMHKKEqLrIOadxALTwqns9kX5MEKLCEZfa58NIFx3NMupT0p+6VqOTnkM1Qp7oM44L+imQ==",
+    "journal": {
+      "chaingraph_version": "0.4.0",
+      "kernel_digest": "sha256:88f0b073173f8eafac3e96acaa0200f936815a627d4985738cbf8e79217632ca",
+      "output": {
+        "gap_periods": [],
+        "lookback_status": "complete",
+        "overall_coverage_pct": 100,
+        "period_count": 2,
+        "periods": [
+          {
+            "coverage_pct": 100,
+            "dedup_record_count": 500,
+            "duplicate_count": 0,
+            "extract_record_count": 500,
+            "gap_count": 0,
+            "period_label": "2023-Q4",
+            "period_status": "complete",
+            "snapshot_available": true,
+            "source_record_count": 500
+          },
+          {
+            "coverage_pct": 100,
+            "dedup_record_count": 620,
+            "duplicate_count": 0,
+            "extract_record_count": 620,
+            "gap_count": 0,
+            "period_label": "2024-Q1",
+            "period_status": "complete",
+            "snapshot_available": true,
+            "source_record_count": 620
+          }
+        ],
+        "total_duplicate_count": 0,
+        "total_extract_record_count": 1120,
+        "total_source_record_count": 1120,
+        "unverifiable_periods": [],
+        "verifiable_extract_count": 1120,
+        "verifiable_source_count": 1120
+      }
+    }
+  },
+  "export_capability": [
+    "json"
+  ]
+},
+    {
+  "tool_id": "art-471-disposition-sampling-frame",
+  "tool_version": "1.0.0",
+  "display_name": "AML Disposition Sampling Frame Builder",
+  "mcp_name": "plan_aml_disposition_sample",
+  "mandate_type": "compliance_control",
+  "wave": 74,
+  "gpu": false,
+  "url": "https://ainumbers.co/chaingraph/art-471-disposition-sampling-frame.html",
+  "description": "Builds a deterministic sampling frame over an AML consent-order lookback's historical alert dispositions for independent-validator review, plus a reviewer workload allocation. Reuses the shipped art-458-attribute-sampling-plan kernel's compute() directly for the statistical core (sample size, deterministic interval selection over a caller-declared population hash) rather than reimplementing it -- no randomness, fully replayable by an independent reviewer from the same declared inputs. Adds only the AML-specific layer: labeling the frame as a disposition sample and deterministically fanning the selected indices out round-robin across a caller-declared reviewer roster. Deterministic only. Zero network, zero PII.",
+  "input_schema_ref": "chaingraph/art-471-disposition-sampling-frame.html#manifest",
+  "consumes": [],
+  "feeds": [],
+  "status": "live",
+  "conformance_fixtures": true,
+  "compute_capability": "server",
+  "compute_images": [{"system":"sha256-source","image_id":"sha256:33d8dd00530f61c28fc39625801011c67b5ebb1694d5abe4bc9af6c882daa66c","valid_from":"2026-07-10"},{"system":"risc0","image_id":"sha256:a1a0bc89b5b1febaeda3519f6dbade0fa5ac16beeb143c4e1b01689573567bc6","valid_from":"2026-07-25"}],
+  "compute_proof_ready": "ready",
+  "compute_proof": {
+    "type": "ZkVmReceipt",
+    "system": "risc0",
+    "receiptFormat": "groth16-bn254",
+    "imageId": "sha256:a1a0bc89b5b1febaeda3519f6dbade0fa5ac16beeb143c4e1b01689573567bc6",
+    "seal": "LpfacQDdZhyZhM5xuCkpz0It5UzGko80a29xE8/rBFIClk7WSkTL8y+euDPALVKhN1eJboh8CU/B/ZIw8oWYQg9XZtYGer9eMpKC/Anq15RmrZSkhhyShjt+rG2Kb+s3BdByF76llxOFORiJNG0y4qTTmz+k1TEQhg2sJfEdQm8W2R219+OVxSmzsVfsjadXdbJHJUUql/2hbPthDi3FQBQvXcTiGCL72rzSI/jG3YCd0yy0AaowFP3w2LYHXeoDBneL52d+8+y0tyYiFim9q7nvtD/lN5ju38Y2BbRGqnwpe50zFnQuCvSAqUl1eq56uGiVfqvrnJcqbEPmK3x3Eg==",
+    "journal": {
+      "chaingraph_version": "0.4.0",
+      "kernel_digest": "sha256:33d8dd00530f61c28fc39625801011c67b5ebb1694d5abe4bc9af6c882daa66c",
+      "output": {
+        "confidence_level": 95,
+        "disposition_population_hash": "abc123",
+        "disposition_population_size": 1000,
+        "expansion_factor": 1,
+        "expected_deviation_rate": 0,
+        "interval": 16,
+        "method": "poisson_attribute_sampling",
+        "reviewer_roster": [
+          "reviewer_1"
+        ],
+        "reviewer_workload": [
+          {
+            "disposition_indices": [
+              0,
+              16,
+              32,
+              48,
+              64,
+              80,
+              96,
+              112,
+              128,
+              144,
+              160,
+              176,
+              192,
+              208,
+              224,
+              240,
+              256,
+              272,
+              288,
+              304,
+              320,
+              336,
+              352,
+              368,
+              384,
+              400,
+              416,
+              432,
+              448,
+              464,
+              480,
+              496,
+              512,
+              528,
+              544,
+              560,
+              576,
+              592,
+              608,
+              624,
+              640,
+              656,
+              672,
+              688,
+              704,
+              720,
+              736,
+              752,
+              768,
+              784,
+              800,
+              816,
+              832,
+              848,
+              864,
+              880,
+              896,
+              912,
+              928
+            ],
+            "reviewer_id": "reviewer_1"
+          }
+        ],
+        "sample_size": 59,
+        "selected_indices": [
+          0,
+          16,
+          32,
+          48,
+          64,
+          80,
+          96,
+          112,
+          128,
+          144,
+          160,
+          176,
+          192,
+          208,
+          224,
+          240,
+          256,
+          272,
+          288,
+          304,
+          320,
+          336,
+          352,
+          368,
+          384,
+          400,
+          416,
+          432,
+          448,
+          464,
+          480,
+          496,
+          512,
+          528,
+          544,
+          560,
+          576,
+          592,
+          608,
+          624,
+          640,
+          656,
+          672,
+          688,
+          704,
+          720,
+          736,
+          752,
+          768,
+          784,
+          800,
+          816,
+          832,
+          848,
+          864,
+          880,
+          896,
+          912,
+          928
+        ],
+        "start_offset": 0,
+        "tolerable_deviation_rate": 5
+      }
+    }
+  },
+  "export_capability": [
+    "json"
+  ]
+},
+    {
   "tool_id": "art-472-cbcr-builder",
   "tool_version": "1.0.0",
   "display_name": "OECD Country-by-Country Report Builder",
@@ -29506,10 +29778,197 @@
   "status": "live",
   "conformance_fixtures": true,
   "compute_capability": "server",
-  "compute_images": [{"system":"sha256-source","image_id":"sha256:bbd232c7a97741b408b0957f63f84669da0307d0b6c6f36e92c821d2ff568bf4","valid_from":"2026-07-10"}],
+  "compute_images": [{"system":"sha256-source","image_id":"sha256:bbd232c7a97741b408b0957f63f84669da0307d0b6c6f36e92c821d2ff568bf4","valid_from":"2026-07-10"},{"system":"risc0","image_id":"sha256:a1a0bc89b5b1febaeda3519f6dbade0fa5ac16beeb143c4e1b01689573567bc6","valid_from":"2026-07-25"}],
   "export_capability": ["json"],
-  "compute_proof_ready": "deferred",
-  "deferred_reason": "New shard from LC-TOOLIFY-1, ships ahead of the next batched §18 prove sweep per SO #6."
+  "compute_proof_ready": "ready",
+  "compute_proof": {
+    "type": "ZkVmReceipt",
+    "system": "risc0",
+    "receiptFormat": "groth16-bn254",
+    "imageId": "sha256:a1a0bc89b5b1febaeda3519f6dbade0fa5ac16beeb143c4e1b01689573567bc6",
+    "seal": "ABrnwTXL1/DaO5WEtecocw4i3tbNgzbA/8keBVDDLjAK3rBzj0xLi+Eoj6MJDqxlRXodmBfxU50G4kD6DwXZrgQm710/k04RobbMKeWZrtEeutwqWF73xvB/N0Z4g0Y3CWvGjKePG+P1eIuRMkYP4YO8yiymc6gJg2kVepzidk8Tqg1/0YF6ObjHxxpkMeJHdNldRfSlZaqAnxYEMdvzJwj3ztjzrFVehH3MsSj5P9Utoi7YxkUkRnbrB6S2GwqpBANUzjPj/x7uygoxxl0UZsytC+JsEPsusNt1zCvN1OAuC5he7ZUlAD2DlmqA5h8K89AZ+/5VhC3f0fQnKSD+JQ==",
+    "journal": {
+      "chaingraph_version": "0.4.0",
+      "kernel_digest": "sha256:bbd232c7a97741b408b0957f63f84669da0307d0b6c6f36e92c821d2ff568bf4",
+      "output": {
+        "compliant": true,
+        "error_count": 0,
+        "errors": [],
+        "field_results": [
+          {
+            "field": "20",
+            "issue": "",
+            "label": "DC Number",
+            "rule": "Max 16 chars, A-Z 0-9 / -",
+            "status": "ok",
+            "value": "LC2024/001234"
+          },
+          {
+            "field": "40A",
+            "issue": "",
+            "label": "Form of DC",
+            "rule": "ICC-recognised form",
+            "status": "ok",
+            "value": "IRREVOCABLE"
+          },
+          {
+            "field": "31C",
+            "issue": "",
+            "label": "Date of Issue",
+            "rule": "Valid YYMMDD",
+            "status": "ok",
+            "value": "260901"
+          },
+          {
+            "field": "31D Date",
+            "issue": "",
+            "label": "Date of Expiry",
+            "rule": "After issue date",
+            "status": "ok",
+            "value": "261231"
+          },
+          {
+            "field": "31D Place",
+            "issue": "",
+            "label": "Place of Expiry",
+            "rule": "Place specified",
+            "status": "ok",
+            "value": "LONDON, UNITED KINGDOM"
+          },
+          {
+            "field": "32B",
+            "issue": "",
+            "label": "Currency/Amount",
+            "rule": "Valid CCY + amount",
+            "status": "ok",
+            "value": "USD 500000.00"
+          },
+          {
+            "field": "41 Bank",
+            "issue": "",
+            "label": "Available With",
+            "rule": "Bank specified",
+            "status": "ok",
+            "value": "ANY BANK"
+          },
+          {
+            "field": "41 By",
+            "issue": "",
+            "label": "Available By",
+            "rule": "Valid payment method",
+            "status": "ok",
+            "value": "BY NEGOTIATION"
+          },
+          {
+            "field": "42",
+            "issue": "",
+            "label": "Drafts At",
+            "rule": "N/A for Payment/Negotiation",
+            "status": "skip",
+            "value": "(not required)"
+          },
+          {
+            "field": "43P",
+            "issue": "",
+            "label": "Partial Shipments",
+            "rule": "Valid value",
+            "status": "ok",
+            "value": "ALLOWED"
+          },
+          {
+            "field": "43T",
+            "issue": "",
+            "label": "Transhipment",
+            "rule": "Valid value",
+            "status": "ok",
+            "value": "NOT ALLOWED"
+          },
+          {
+            "field": "44A",
+            "issue": "",
+            "label": "Port of Loading",
+            "rule": "Specified",
+            "status": "ok",
+            "value": "SHANGHAI, CHINA"
+          },
+          {
+            "field": "44B",
+            "issue": "",
+            "label": "Port of Discharge",
+            "rule": "Specified",
+            "status": "ok",
+            "value": "ROTTERDAM, NETHERLANDS"
+          },
+          {
+            "field": "44C",
+            "issue": "",
+            "label": "Latest Shipment",
+            "rule": "Valid date sequence",
+            "status": "ok",
+            "value": "261201"
+          },
+          {
+            "field": "45A",
+            "issue": "",
+            "label": "Description of Goods",
+            "rule": "Goods described with Incoterm",
+            "status": "ok",
+            "value": "ELECTRONIC COMPONENTS AS PER PROFORMA IN..."
+          },
+          {
+            "field": "46A",
+            "issue": "1 common doc(s) not detected",
+            "label": "Documents Required",
+            "rule": "Invoice + transport doc + packing list expected",
+            "status": "ok",
+            "value": "SIGNED COMMERCIAL INVOICE IN TRIPLICATE\nFULL SET C..."
+          },
+          {
+            "field": "48",
+            "issue": "",
+            "label": "Presentation Period",
+            "rule": "Within UCP 600 Art.14(c) limit",
+            "status": "ok",
+            "value": "21 days"
+          },
+          {
+            "field": "49",
+            "issue": "",
+            "label": "Confirmation",
+            "rule": "Valid instruction",
+            "status": "ok",
+            "value": "CONFIRM"
+          },
+          {
+            "field": "50",
+            "issue": "",
+            "label": "Applicant",
+            "rule": "Specified",
+            "status": "ok",
+            "value": "ABC IMPORT CO, 123 MAIN ST, NEW YORK"
+          },
+          {
+            "field": "59",
+            "issue": "",
+            "label": "Beneficiary",
+            "rule": "Specified",
+            "status": "ok",
+            "value": "XYZ EXPORT LTD, 45 HARBOUR RD, SHANGHAI"
+          }
+        ],
+        "score": 96,
+        "verdict": "compliant",
+        "warning_count": 1,
+        "warnings": [
+          {
+            "citation": "UCP 600 Art.19-25",
+            "field": "46A",
+            "message": "Field 46A: Transport document (B/L, AWB) not detected -- typically required."
+          }
+        ]
+      }
+    }
+  }
 },
     {
   "tool_id": "art-475-cfpb-1071-coverage-check",
@@ -29527,12 +29986,312 @@
   "status": "live",
   "conformance_fixtures": true,
   "compute_capability": "server",
-  "compute_images": [{"system":"sha256-source","image_id":"sha256:0ef028be15ca148086aa48b2fc87b6f735c14233206ae951b0d1c8f285b98c72","valid_from":"2026-07-10"}],
-  "compute_proof_ready": "deferred",
-  "deferred_reason": "New shard from BANK-1071-RENUM-1, ships ahead of the next batched §18 prove sweep per SO #6.",
+  "compute_images": [{"system":"sha256-source","image_id":"sha256:0ef028be15ca148086aa48b2fc87b6f735c14233206ae951b0d1c8f285b98c72","valid_from":"2026-07-10"},{"system":"risc0","image_id":"sha256:a1a0bc89b5b1febaeda3519f6dbade0fa5ac16beeb143c4e1b01689573567bc6","valid_from":"2026-07-25"}],
+  "compute_proof_ready": "ready",
+  "compute_proof": {
+    "type": "ZkVmReceipt",
+    "system": "risc0",
+    "receiptFormat": "groth16-bn254",
+    "imageId": "sha256:a1a0bc89b5b1febaeda3519f6dbade0fa5ac16beeb143c4e1b01689573567bc6",
+    "seal": "JSRQp6ZTR4p544/GA6/9SHTM5nsgeEJcNLmBxBpAupQUnUE4ZY9O3i0FHosCX1MWz4M6/EdVNeBL1Mw2Rc0Njyw8ZcCNX9FkyukvvB+BBsHWmDr7v6gHFT31W4Z0WwHXEoH/CvRUJwF2Gu4ot7hrlXbBjyZboM7NMNC9uXNYYOIuMAHIao5ALrxFJp1BNWpOUcJCVgzztb2StfoxLr4dlyk6C97o6B7UHeULJf1YuVWH8iZr9XoqU96dZJFRVQJECl72AQdFIeunUCp0Bl4V+Sg12zLGKAV+I6OUGrrhlhYU+kenABL4ileFMBWTnZJ09JsiNMzidzm7l3/Yj6N//w==",
+    "journal": {
+      "chaingraph_version": "0.4.0",
+      "kernel_digest": "sha256:0ef028be15ca148086aa48b2fc87b6f735c14233206ae951b0d1c8f285b98c72",
+      "output": {
+        "compliance_dates": {
+          "data_collection_start": "2028-01-01",
+          "first_sblar_due": "2029-06-01"
+        },
+        "covered": true,
+        "note": "Coverage determination compares caller-supplied origination counts to the fixed 1,000-per-year threshold. SBLAR field validation checks presence only, against a caller-supplied required-field schema -- this kernel makes no claim about which fields the current rule requires. Not a filing or submission.",
+        "originations_year1_count": 1500,
+        "originations_year2_count": 1200,
+        "regulatory_basis": "CFPB Section 1071 small business lending rule, Regulation B subpart B, revised final rule published 2026-05-01: covered-institution threshold of 1,000 small-business-lending originations in each of the two preceding calendar years.",
+        "required_sblar_fields": [
+          "uli",
+          "application_date",
+          "action_taken"
+        ],
+        "sblar_records": [
+          {
+            "missing_fields": [],
+            "present_fields_count": 3,
+            "record_id": "rec-1",
+            "required_fields_count": 3,
+            "valid": true
+          },
+          {
+            "missing_fields": [],
+            "present_fields_count": 3,
+            "record_id": "rec-2",
+            "required_fields_count": 3,
+            "valid": true
+          }
+        ],
+        "sblar_summary": {
+          "invalid_records": 0,
+          "total_records": 2,
+          "valid_records": 2
+        },
+        "threshold": 1000
+      }
+    }
+  },
   "export_capability": [
     "json"
   ]
+},
+    {
+  "tool_id": "art-476-map-agent-payment-mandate",
+  "tool_version": "1.0.0",
+  "display_name": "Agent Payment Mandate Cross-Protocol Mapper",
+  "mcp_name": "map_agent_payment_mandate",
+  "mandate_type": "compliance_control",
+  "wave": 71,
+  "gpu": false,
+  "url": "https://ainumbers.co/chaingraph/art-476-map-agent-payment-mandate.html",
+  "description": "Translates an agentic-payment mandate declared under one protocol (AP2, x402, or ACP) into the field vocabulary of another, pivoting through one internal canonical schema so each protocol needs only one mapping in and one mapping out. Emits the translated mandate plus a mapping receipt: source digest, target digest, mapping-table version, and a declared lossy-fields list, so any field the source could not carry is surfaced rather than silently dropped. AP2 and x402 field usage verified against art-01, art-62, and art-26; ACP is a draft-generic profile pending independent confirmation of its public schema. Verify-only and translate-only: nothing here initiates, routes, or settles a payment.",
+  "input_schema_ref": "chaingraph/art-476-map-agent-payment-mandate.html#manifest",
+  "consumes": [],
+  "feeds": [],
+  "status": "live",
+  "conformance_fixtures": true,
+  "compute_capability": "server",
+  "compute_images": [{"system":"sha256-source","image_id":"sha256:cd37df86828dbc4c50192784c2c421b0dfda541d63b7c36735e63510f34dfb96","valid_from":"2026-07-24"}],
+  "compute_proof_ready": "deferred",
+  "deferred_reason": "New shard from AI-2 (AGENTPAY-INTEROP-BUILD-SPEC), ships ahead of the next batched proof sweep per SO #6.",
+  "export_capability": [
+    "json"
+  ]
+},
+    {
+  "tool_id": "art-477-intraday-liquidity-monitoring",
+  "tool_version": "1.0.0",
+  "display_name": "BCBS 248 Intraday Liquidity Monitoring Snapshot",
+  "mcp_name": "compute_intraday_liquidity_monitoring",
+  "mandate_type": "compliance_mandate",
+  "wave": 71,
+  "gpu": false,
+  "url": "https://ainumbers.co/chaingraph/art-477-intraday-liquidity-monitoring.html",
+  "description": "BCBS 248 \"Monitoring tools for intraday liquidity management\" (Basel Committee, April 2013): computes daily maximum intraday liquidity usage (the largest negative excursion of a cumulative net settlement position built from a caller-supplied time-stamped transaction list), echoes start-of-day available liquidity, totals gross payments and receipts, checks time-specific obligations against their due times, and classifies the daily maximum usage against a caller-supplied list of available intraday liquidity sources. Not DW capacity (art-427) or FR 2052a inflow/outflow classification (art-437) -- adjacent but distinct BCBS 248 daily-usage metrics. Evidence artifact only, not a filing or supervisory submission.",
+  "input_schema_ref": "chaingraph/art-477-intraday-liquidity-monitoring.html#manifest",
+  "deadline": null,
+  "deadline_note": "BCBS 248 (April 2013): supervisory expectation, no statutory filing deadline -- monitoring tools are reported to supervisors on request/periodic schedule set by the home regulator.",
+  "consumes": [],
+  "feeds": [],
+  "status": "live",
+  "conformance_fixtures": true,
+  "compute_capability": "server",
+  "compute_images": [{"system":"sha256-source","image_id":"sha256:647771786d54eec94e4c54281af4b03bd11032678c1c363c7cbc39b9cc0a8b73","valid_from":"2026-07-10"},{"system":"risc0","image_id":"sha256:a1a0bc89b5b1febaeda3519f6dbade0fa5ac16beeb143c4e1b01689573567bc6","valid_from":"2026-07-25"}],
+  "compute_proof_ready": "ready",
+  "compute_proof": {
+    "type": "ZkVmReceipt",
+    "system": "risc0",
+    "receiptFormat": "groth16-bn254",
+    "imageId": "sha256:a1a0bc89b5b1febaeda3519f6dbade0fa5ac16beeb143c4e1b01689573567bc6",
+    "seal": "EO5o+OqneEZIEG7FFYydeMrOzJBAQsaN52CQwK1sfJgvNhiOcy8+01MpnO/K7EYartOSNxJ11q7RySLc3u75ZxnKdqwpxX95g0sC2LfvPdH5ZHRqXu2QEXYNHF74VuUcJXqUMED9FmuPtF2j4F+HL8SUTH2hE91bqHad6ABD278EcUX8ftXNsW6EAQIQ2LwRviTmv+/pKZdBmNLUvHvmAwquSyOBABuD/NGxfE/AFQEmmmcVlAokgpt2f57OD7HLLOcig9EjtfJ5BQeRddfJJwHSVoDtVJk9rtN5wlYXssYE/hmRdX3exr0/6mqO1T05wD0PGgmZLgfjzvqboRPt0g==",
+    "journal": {
+      "chaingraph_version": "0.4.0",
+      "kernel_digest": "sha256:647771786d54eec94e4c54281af4b03bd11032678c1c363c7cbc39b9cc0a8b73",
+      "output": {
+        "available_intraday_sources": [
+          {
+            "amount_musd": 200,
+            "source_id": "src-cb-balance"
+          },
+          {
+            "amount_musd": 150,
+            "source_id": "src-committed-line"
+          }
+        ],
+        "available_sources_total_musd": 350,
+        "coverage_ratio": 1.3,
+        "cumulative_position_path": [
+          {
+            "amount_musd": 100,
+            "cumulative_position_musd": 100,
+            "flow_type": "inflow",
+            "time_hhmm": "08:00",
+            "tx_id": "t1"
+          },
+          {
+            "amount_musd": 250,
+            "cumulative_position_musd": -150,
+            "flow_type": "outflow",
+            "time_hhmm": "09:30",
+            "tx_id": "t2"
+          },
+          {
+            "amount_musd": 120,
+            "cumulative_position_musd": -270,
+            "flow_type": "outflow",
+            "time_hhmm": "10:15",
+            "tx_id": "t3"
+          },
+          {
+            "amount_musd": 200,
+            "cumulative_position_musd": -70,
+            "flow_type": "inflow",
+            "time_hhmm": "13:00",
+            "tx_id": "t4"
+          },
+          {
+            "amount_musd": 80,
+            "cumulative_position_musd": -150,
+            "flow_type": "outflow",
+            "time_hhmm": "15:45",
+            "tx_id": "t5"
+          }
+        ],
+        "daily_max_usage_musd": 270,
+        "note": "Daily maximum intraday liquidity usage is the largest negative excursion of a cumulative net settlement position built from the caller-supplied time-stamped transaction list, starting at zero -- independent of the opening balance. Start-of-day available liquidity, time-specific-obligation timing, and available intraday sources are caller-supplied inputs, echoed and classified, not derived from external data. Evidence artifact only -- not a filing, not a regulatory submission, and not a claim of full BCBS 248 seven-tool coverage.",
+        "obligations_summary": {
+          "obligations_met": 2,
+          "obligations_missed": 0,
+          "total_obligations": 2
+        },
+        "regulatory_basis": "BCBS 248 \"Monitoring tools for intraday liquidity management\" (Basel Committee on Banking Supervision, April 2013).",
+        "start_of_day_available_musd": 500,
+        "time_specific_obligations": [
+          {
+            "amount_musd": 150,
+            "due_time_hhmm": "10:00",
+            "met_on_time": true,
+            "obligation_id": "o1",
+            "settled": true,
+            "settled_time_hhmm": "09:45"
+          },
+          {
+            "amount_musd": 90,
+            "due_time_hhmm": "14:00",
+            "met_on_time": true,
+            "obligation_id": "o2",
+            "settled": true,
+            "settled_time_hhmm": "13:30"
+          }
+        ],
+        "total_payments_musd": 450,
+        "total_receipts_musd": 300,
+        "usage_covered": true
+      }
+    }
+  },
+  "export_capability": [
+    "json"
+  ]
+},
+    {
+  "tool_id": "art-478-analyze-dc-vs-lc-cost-benefit",
+  "tool_version": "1.0.0",
+  "display_name": "Documentary Collection vs Letter of Credit Cost-Benefit",
+  "mcp_name": "analyze_dc_vs_lc_cost_benefit",
+  "mandate_type": "compliance_mandate",
+  "wave": 65,
+  "gpu": false,
+  "url": "https://ainumbers.co/chaingraph/art-478-analyze-dc-vs-lc-cost-benefit.html",
+  "description": "Compares the total cost and risk-adjusted exposure of Documentary Collections (D/P, D/A) against Letters of Credit (Sight, Usance, Confirmed, SBLC) for a trade transaction. Returns a fee breakdown, break-even non-payment probability, and a recommendation, plus a disclosed heuristic LC protection score. Provable node counterpart to tools/423-dc-vs-lc-analyzer.html; that tool page's URC 522 checklist and jurisdiction D/A enforceability reference panels stay browser-only reference material, not computed outputs.",
+  "input_schema_ref": "chaingraph/art-478-analyze-dc-vs-lc-cost-benefit.html#manifest",
+  "consumes": [],
+  "feeds": [],
+  "status": "live",
+  "conformance_fixtures": true,
+  "compute_capability": "server",
+  "compute_images": [{"system":"sha256-source","image_id":"sha256:399294433cf13af7c9c72820fff550fb25f97a09c279902523b938e2a657ff0e","valid_from":"2026-07-10"},{"system":"risc0","image_id":"sha256:a1a0bc89b5b1febaeda3519f6dbade0fa5ac16beeb143c4e1b01689573567bc6","valid_from":"2026-07-25"}],
+  "export_capability": ["json"],
+  "compute_proof_ready": "ready",
+  "compute_proof": {
+    "type": "ZkVmReceipt",
+    "system": "risc0",
+    "receiptFormat": "groth16-bn254",
+    "imageId": "sha256:a1a0bc89b5b1febaeda3519f6dbade0fa5ac16beeb143c4e1b01689573567bc6",
+    "seal": "Fq885gN27tMhHhxg8UBcY4g1+nA9Sm0Gy99/OlKupDkl/vz30tphIZz/E8JapykYrqykAr7gik/3EbxOlnH9YiFsdZSWlOqcAAFAGIzEiF1otyJgO1CvthlF32UJCiGMEyjXG/fUlupulqQpgYyiAPLv8oMAxs1fCgzw06E2sucPTsH0l705PimYvPc9QMzSnL/dHsVLGw3nbo0f8ASaoQ0FakPNQnQqTpWLnlJkkMb6YCZktXXBQvkcXq95ksL4GHVTSU+15NxtYqD+PtsnklBgmwoQVNMjMfrdtd+z+AYOXIFj2/SKK2C4WddEEtkCO9NjKsuTW6xWsGACxQMt+A==",
+    "journal": {
+      "chaingraph_version": "0.4.0",
+      "kernel_digest": "sha256:399294433cf13af7c9c72820fff550fb25f97a09c279902523b938e2a657ff0e",
+      "output": {
+        "breakEvenProbabilityPct": 0,
+        "dcRiskAdjCostUSD": 10865,
+        "dcRiskExposureUSD": 10000,
+        "dcTotalFeesUSD": 865,
+        "heuristic_note": "lcProtectionScore is a disclosed additive heuristic (0-100), not a computed fact. All USD/percentage figures above it are deterministic fee/break-even arithmetic.",
+        "lcProtectionScore": 65,
+        "lcRiskAdjCostUSD": 800,
+        "lcTotalFeesUSD": 800,
+        "lc_protection_score_heuristic": true,
+        "recommendation": "LC"
+      }
+    }
+  }
+},
+    {
+  "tool_id": "art-479-compare-receivables-finance-economics",
+  "tool_version": "1.0.0",
+  "display_name": "Forfaiting vs Factoring vs Invoice Discounting Economics",
+  "mcp_name": "compare_receivables_finance_economics",
+  "mandate_type": "analytics_mandate",
+  "wave": 65,
+  "gpu": false,
+  "url": "https://ainumbers.co/chaingraph/art-479-compare-receivables-finance-economics.html",
+  "description": "Compares net proceeds and effective annual cost across forfaiting (medium/long-term trade receivables, non-recourse PV discount), factoring with recourse, factoring without recourse, and invoice discounting for a receivables portfolio. Models advance rates, discount rates, service fees, and arrangement costs; returns per-instrument net proceeds, effective annual cost, a cost ranking, and the cheapest/highest-proceeds instrument. Provable node counterpart to tools/425-forfaiting-factoring-economics.html.",
+  "input_schema_ref": "chaingraph/art-479-compare-receivables-finance-economics.html#manifest",
+  "consumes": [],
+  "feeds": [],
+  "status": "live",
+  "conformance_fixtures": true,
+  "compute_capability": "server",
+  "compute_images": [{"system":"sha256-source","image_id":"sha256:ff2eabad532dc59453467b36302b88c0ac41425aca4e48f9524b89d928c33878","valid_from":"2026-07-10"},{"system":"risc0","image_id":"sha256:a1a0bc89b5b1febaeda3519f6dbade0fa5ac16beeb143c4e1b01689573567bc6","valid_from":"2026-07-25"}],
+  "export_capability": ["json"],
+  "compute_proof_ready": "ready",
+  "compute_proof": {
+    "type": "ZkVmReceipt",
+    "system": "risc0",
+    "receiptFormat": "groth16-bn254",
+    "imageId": "sha256:a1a0bc89b5b1febaeda3519f6dbade0fa5ac16beeb143c4e1b01689573567bc6",
+    "seal": "H6WpLG2x1Sham/NZ4taWVrsdiWXLoyZ6C5vpnJ8XKYoEnNrRrnANEVR4VZPmjRih7ItjG7m5jIgyNLPyPnlIYQjQuKOpne21B0U2+5aryHFYr79Kviukl4rK0pmEbq3aHdzQNNY1AZWivWoDV1sx3NQhvXSYDhDnwjPrBjezzd4o/u3PSOEl4WdPoBIveLpllWjH8HaiWQFR1W3dDpkNbAPjJLWv1DqNHHBLwk3GLXy/Zmclm/4siWlUvN3pvTtlLsiV2gzUgLDCitaLafA4ob64hhaCRnA8BSvALz5RITAVsfiWQGPCCrltIVi6/9fgk8UWmLmFYv4ps27zudtCgg==",
+    "journal": {
+      "chaingraph_version": "0.4.0",
+      "kernel_digest": "sha256:ff2eabad532dc59453467b36302b88c0ac41425aca4e48f9524b89d928c33878",
+      "output": {
+        "cheapest_instrument": "Forfaiting",
+        "cost_ranking": [
+          "Forfaiting",
+          "Factoring (With Recourse)",
+          "Factoring (Non-Recourse)",
+          "Invoice Discounting"
+        ],
+        "highest_proceeds_instrument": "Forfaiting",
+        "portfolio": {
+          "currency": "USD",
+          "face_value": 1000000,
+          "num_debtors": "mid",
+          "obligor_quality": "sub_ig",
+          "tenor_days": 90
+        },
+        "results": {
+          "factoring_non_recourse": {
+            "effective_annual_cost_pct": 109.87,
+            "net_proceeds": 786836,
+            "recourse": "non-recourse"
+          },
+          "factoring_recourse": {
+            "effective_annual_cost_pct": 85.83,
+            "net_proceeds": 825329,
+            "recourse": "with-recourse"
+          },
+          "forfaiting": {
+            "effective_annual_cost_pct": 8.7,
+            "net_proceeds": 979010,
+            "recourse": "non-recourse"
+          },
+          "invoice_discounting": {
+            "effective_annual_cost_pct": 110.96,
+            "net_proceeds": 785178,
+            "recourse": "with-recourse"
+          }
+        }
+      }
+    }
+  }
 },
     {
       "tool_id": "cry-01-zk-compliance-proof-generator",
@@ -30999,6 +31758,19 @@
   ],
   "chains": [
     {
+      "name": "2052a-classify-daily",
+      "domain": "Corporate Treasury & FX",
+      "title": "FR 2052a Inflow/Outflow Daily Classification",
+      "description": "Single-node daily FR 2052a complex-institution liquidity monitoring classification: buckets inflows/outflows by product/maturity against a caller-supplied Appendix IV-style boundary table.",
+      "composer_url": "https://ainumbers.co/chaingraph/chains/2052a-classify-daily.html",
+      "steps": [
+        {
+          "tool_id": "art-437-fr2052a-inflow-outflow-classifier",
+          "handoff": "bucket-classified inflow/outflow export feeds the daily FR 2052a filing layer; a bucket override without a reason_code routes to the §27 human_accountability_record"
+        }
+      ]
+    },
+    {
       "name": "a2a-payment-rail-compliance",
       "domain": "Cross-Border & Instant Payments",
       "title": "A2A Payment Rail Compliance",
@@ -31392,6 +32164,27 @@
         {
           "tool_id": "art-131-signature-agent-card-validator",
           "handoff": "Exports identity-trust verdict with execution_hash — final stage"
+        }
+      ]
+    },
+    {
+      "name": "agent-payment-dispute-evidence",
+      "domain": "Fraud & Dispute",
+      "title": "Agent Payment Dispute Evidence",
+      "description": "AP2 mandate-chain validator confirms the payment mandate's signature chain and scope; agent token scope checker evaluates the disputed action against the mandate's declared bounds; chargeback evidence bundle composer assembles both verdicts plus mandate/receipt, payment-protocol, and session/delivery evidence into a Merkle-rooted adjudication bundle.",
+      "composer_url": "https://ainumbers.co/chaingraph/chains/agent-payment-dispute-evidence.html",
+      "steps": [
+        {
+          "tool_id": "art-01-ap2-mandate-chain-validator",
+          "handoff": "mandate signature-chain, scope/limit, and TTL verdict feeds Stage 2 agent token scope check against the same mandate"
+        },
+        {
+          "tool_id": "art-385-agent-token-scope-checker",
+          "handoff": "in-scope / out-of-scope verdict and receipt feed Stage 3 chargeback evidence bundle composer as the mandate/receipt evidence group input"
+        },
+        {
+          "tool_id": "567-chargeback-evidence-bundle-composer",
+          "handoff": "assembles mandate-chain and scope verdicts with payment-protocol and session/delivery evidence into a hash-chained, Merkle-rooted adjudication bundle; terminal check"
         }
       ]
     },
@@ -32543,6 +33336,27 @@
       ]
     },
     {
+      "name": "call-report-edit-gate",
+      "domain": "Bank Capital & Credit Risk",
+      "title": "FFIEC Call Report Edit-Check Gate (Schedule RC + RC-R)",
+      "description": "Schedule RC balance-sheet mapper and Schedule RC-R capital mapper feed the Call Report edit-check gate, which runs cross-schedule identity and capital-stack checks and emits an auto_pass / review_required §27 gate verdict.",
+      "composer_url": "https://ainumbers.co/chaingraph/chains/call-report-edit-gate.html",
+      "steps": [
+        {
+          "tool_id": "art-432-call-report-rc-balance-sheet",
+          "handoff": "RC balance-sheet totals (total assets, liabilities, equity capital) feed Stage 3 cross-schedule edit checks"
+        },
+        {
+          "tool_id": "art-433-call-report-rcr-capital",
+          "handoff": "RC-R capital ratios and RWA feed Stage 3 cross-schedule edit checks against Stage 1 Schedule RC"
+        },
+        {
+          "tool_id": "art-434-call-report-edit-check-gate",
+          "handoff": "emits per-check pass/fail verdicts plus an auto_pass | review_required gate_status for the §27 dual_control/review_required gate ahead of submission-evidence export; terminal check"
+        }
+      ]
+    },
+    {
       "name": "canton-capital-efficiency",
       "domain": "Digital-Asset Rails",
       "title": "Canton Capital Efficiency Chain",
@@ -33085,6 +33899,19 @@
         {
           "tool_id": "484-ccd2-readiness-scorer",
           "handoff": "Exports CCD2 Policy Mandate -- final stage"
+        }
+      ]
+    },
+    {
+      "name": "cecl-allowance-quarterly",
+      "domain": "Bank Capital & Credit Risk",
+      "title": "CECL Allowance Calculation & Rollforward (Quarterly)",
+      "description": "Single-node quarterly ASC 326 CECL allowance run: computes per-segment expected credit loss from caller-supplied PD/LGD/EAD curves and reconciles the allowance rollforward against the prior period balance.",
+      "composer_url": "https://ainumbers.co/chaingraph/chains/cecl-allowance-quarterly.html",
+      "steps": [
+        {
+          "tool_id": "art-426-cecl-ecl-calculator",
+          "handoff": "per-segment ECL and the reconciled allowance rollforward feed the quarterly ASC 326 disclosure and audit workpaper; recurring quarterly cadence"
         }
       ]
     },
@@ -33915,6 +34742,19 @@
       ]
     },
     {
+      "name": "dw-capacity-check",
+      "domain": "Corporate Treasury & FX",
+      "title": "Discount Window Borrowing-Capacity Check",
+      "description": "Single-node Federal Reserve Discount Window borrowing-capacity check: lendable collateral value against a runnable-liability / uninsured-deposit coverage target.",
+      "composer_url": "https://ainumbers.co/chaingraph/chains/dw-capacity-check.html",
+      "steps": [
+        {
+          "tool_id": "art-427-discount-window-capacity",
+          "handoff": "lendable value vs. coverage-target result feeds the Discount Window Preparedness Act evidence pack and LCR pre-positioned-collateral disclosure; standalone recurring check"
+        }
+      ]
+    },
+    {
       "id": "ebl-control-evidence",
       "name": "ebl-control-evidence",
       "domain": "Digital Trade",
@@ -33941,7 +34781,7 @@
       "name": "einvoice-validation-pipeline",
       "domain": "ViDA / E-Invoicing",
       "title": "E-Invoice Validation Pipeline",
-      "description": "Gated four-step e-invoice validation pipeline: format conformance check, VAT arithmetic verification, jurisdiction mandate routing, and a hash-anchored transmission receipt. Exits early on a format-conformance failure or a VAT-arithmetic mismatch, so the receipt is only ever built for a document that passed both checks.",
+      "description": "Gated four-step e-invoice validation pipeline: format conformance check (Factur-X, XRechnung, PINT-AE, MyInvois, Peppol BIS 3.0/Belgium, KSeF FA(3)/Poland), VAT arithmetic verification, jurisdiction mandate routing, and a hash-anchored transmission receipt carrying the SPEC.md §27 pre-transmission release gate (review_required, schema-only pending HA-RETRO-1). Exits early on a format-conformance failure or a VAT-arithmetic mismatch, so the receipt is only ever built for a document that passed both checks.",
       "composer_url": "https://ainumbers.co/chaingraph/chains/einvoice-validation-pipeline.html",
       "steps": [
         {
@@ -35289,6 +36129,19 @@
         {
           "tool_id": "114-kyc-document-checklist",
           "handoff": "document_requirements and onboarding_checklist — final KYC onboarding mandate"
+        }
+      ]
+    },
+    {
+      "name": "large-exposures-check",
+      "domain": "Bank Capital & Credit Risk",
+      "title": "Large Exposures Limit Check (Basel III / Regulation YY)",
+      "description": "Single-node check aggregating each counterparty group's exposure against the Basel III / Regulation YY 25% (general) or 15% (GSIB-to-GSIB) single-counterparty limit, emitting a breach-list artifact.",
+      "composer_url": "https://ainumbers.co/chaingraph/chains/large-exposures-check.html",
+      "steps": [
+        {
+          "tool_id": "art-425-large-exposures-limit-check",
+          "handoff": "breach-list artifact feeds Basel III / Regulation YY large-exposures reporting and routes any breaching group to the §27 review gate; standalone recurring check per reporting date"
         }
       ]
     },
