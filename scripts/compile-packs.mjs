@@ -30,6 +30,14 @@ const PACKS_DIR = join(ROOT, "packs");
 const MANIFEST_SCHEMA = JSON.parse(
   readFileSync(join(ROOT, "schema", "workflow-manifest.schema.json"), "utf8")
 );
+// HELM-HA-1 §1 item 5 (OPTIONAL): a curated overlay of §27.4 gate_policy
+// onto specific compiled nodes, applied every run since packs/ is wiped +
+// regenerated wholesale below — see ha-gate-overlay.json's own comment for
+// why this lives here instead of in site chaingraph.json (out of fence) or
+// a hand-authored pack file (would be deleted on the next compile).
+const HA_GATE_OVERLAY = JSON.parse(
+  readFileSync(join(HERE, "ha-gate-overlay.json"), "utf8")
+).packs;
 
 function jcsDigestHex(obj) {
   assertIJson(obj);
@@ -72,11 +80,11 @@ function compileChain(chain, kernelDigests, nodesById) {
   }
 
   const workflowId = `pack-${chain.name}`;
-  const nodes = chain.steps.map((s, i) => ({
-    node_id: `n${i + 1}`,
-    kernel_id: s.tool_id,
-    kernel_digest: kernelDigests.get(s.tool_id),
-  }));
+  const gateOverlay = HA_GATE_OVERLAY[workflowId] ?? {};
+  const nodes = chain.steps.map((s, i) => {
+    const nodeId = `n${i + 1}`;
+    return { node_id: nodeId, kernel_id: s.tool_id, kernel_digest: kernelDigests.get(s.tool_id), ...(gateOverlay[nodeId] ?? {}) };
+  });
 
   const manifest = {
     manifest_version: "1",
@@ -132,6 +140,19 @@ function generate() {
 
   skips.sort((a, b) => a.name.localeCompare(b.name));
   packs.sort((a, b) => a.workflow_id.localeCompare(b.workflow_id));
+
+  // ABSENCE-INSTRUMENT: an overlay entry naming a workflow_id/node_id that
+  // never actually compiled (typo, renamed chain, gpu:true skip) would
+  // silently stop applying — fail loudly instead of shipping a "gated" pack
+  // that quietly isn't.
+  const compiledNodeIds = new Map(packs.map((p) => [p.workflow_id, new Set(p.manifest.nodes.map((n) => n.node_id))]));
+  for (const [workflowId, nodeOverlays] of Object.entries(HA_GATE_OVERLAY)) {
+    const nodeIds = compiledNodeIds.get(workflowId);
+    if (!nodeIds) throw new Error(`compile-packs: ha-gate-overlay.json names workflow_id "${workflowId}" which did not compile — stale/typo'd overlay entry`);
+    for (const nodeId of Object.keys(nodeOverlays)) {
+      if (!nodeIds.has(nodeId)) throw new Error(`compile-packs: ha-gate-overlay.json names node "${nodeId}" in "${workflowId}" which doesn't exist in the compiled manifest`);
+    }
+  }
 
   const index = {
     pinnedSha,

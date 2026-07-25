@@ -304,6 +304,37 @@
         }
       }
     },
+    "/run/resume": {
+      "post": {
+        "summary": "Resume a run currently held at a §27.4 accountability gate.",
+        "tags": [
+          "Runs"
+        ],
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Missing or invalid bearer token."
+          },
+          "403": {
+            "description": "Host or Origin mismatch (D8 loopback hardening)."
+          }
+        }
+      }
+    },
     "/run/timeline": {
       "get": {
         "summary": "Fetch a run's step-by-step timeline.",
@@ -402,6 +433,128 @@
         "summary": "Import a workflow export bundle.",
         "tags": [
           "Workflows"
+        ],
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Missing or invalid bearer token."
+          },
+          "403": {
+            "description": "Host or Origin mismatch (D8 loopback hardening)."
+          }
+        }
+      }
+    },
+    "/ha/pending": {
+      "get": {
+        "summary": "List runs held at a §27.4 accountability gate, awaiting human records.",
+        "tags": [
+          "Accountability"
+        ],
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Missing or invalid bearer token."
+          },
+          "403": {
+            "description": "Host or Origin mismatch (D8 loopback hardening)."
+          }
+        }
+      }
+    },
+    "/ha/records": {
+      "get": {
+        "summary": "Fetch the §27.2 accountability record trail for a subject_hash.",
+        "tags": [
+          "Accountability"
+        ],
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Missing or invalid bearer token."
+          },
+          "403": {
+            "description": "Host or Origin mismatch (D8 loopback hardening)."
+          }
+        }
+      },
+      "post": {
+        "summary": "Submit a signed §27.2 accountability record (approval/rejection/override/annotation/role_binding).",
+        "tags": [
+          "Accountability"
+        ],
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Missing or invalid bearer token."
+          },
+          "403": {
+            "description": "Host or Origin mismatch (D8 loopback hardening)."
+          }
+        }
+      }
+    },
+    "/ha/slot": {
+      "get": {
+        "summary": "Fetch the countersignature_slot (maker + checker signatures) for a subject_hash.",
+        "tags": [
+          "Accountability"
         ],
         "security": [
           {

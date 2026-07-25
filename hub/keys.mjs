@@ -113,3 +113,8 @@ export function publicKeysOf(keys) {
 // the same DER/base64 shape as the daemon keypair but is provisioned via
 // env vars (CI secrets), not the at-rest passphrase-encrypted file.
 export { serializeKeys, deserializeKeys, generateKeys };
+
+// Exposed for ha-identity.mjs (HELM-HA-1): the §27.2 producer identity reuses
+// this module's at-rest passphrase and AES-256-GCM blob format rather than a
+// second encrypted-storage implementation.
+export { loadOrCreatePassphrase, encrypt as encryptBlob, decrypt as decryptBlob };

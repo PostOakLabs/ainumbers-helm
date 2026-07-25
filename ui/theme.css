@@ -165,6 +165,13 @@ main.shell-main {
   gap: var(--space-3);
 }
 
+.button-row {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-2);
+  margin-top: var(--space-2);
+}
+
 .stale-badge {
   display: inline-block;
   font-size: 0.75rem;

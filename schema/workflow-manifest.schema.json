@@ -5,6 +5,10 @@
   "description": "The machine-readable graph of trigger, connectors, compute nodes, gates, and actions. Every control-plane run records workflow_manifest_digest = SHA-256 of THIS document's JCS-canonical form — the digest is carried by referencing objects, never stored inside the manifest itself. env_overlays are by reference only; a literal secret value here is a producer bug, not a schema violation this shape check can catch on its own (contract-level rule, §26.3).",
   "$defs": {
     "sha256ref": { "type": "string", "pattern": "^sha256:[0-9a-f]{64}$" },
+    "haGatePolicy": {
+      "description": "OCG SPEC.md §27.4 (v0.8.12) closed vocabulary, additive here per §1 item 5 of HELM-HA-BUILD-SPEC.md — mirrors hub/vendored/ocg's $defs/haGatePolicy so a pack step can declare a §27.4 human-accountability precondition helmd's run engine (hub/run.mjs gateCheck) actually enforces.",
+      "enum": ["auto_pass", "review_required", "dual_control", "escalate", "hold", "reject", "emergency_override"]
+    },
     "computeNode": {
       "type": "object",
       "additionalProperties": false,
@@ -12,7 +16,10 @@
       "properties": {
         "node_id": { "type": "string", "minLength": 1 },
         "kernel_id": { "type": "string", "minLength": 1 },
-        "kernel_digest": { "$ref": "#/$defs/sha256ref" }
+        "kernel_digest": { "$ref": "#/$defs/sha256ref" },
+        "gate_policy": { "$ref": "#/$defs/haGatePolicy", "description": "OPTIONAL — when present, the run engine HOLDS immediately before this node executes until §27.4 is satisfied against the preceding node's artifact." },
+        "gate_role": { "type": "string", "minLength": 1, "description": "OPTIONAL — the OCG SPEC.md §27.1 haRole a satisfying record must carry. Defaults to \"approver\" when omitted." },
+        "gate_threshold": { "type": "integer", "minimum": 1, "description": "OPTIONAL — N distinct identities required for dual_control/review_required/hold (§27.3). Defaults per hub/vendored/ocg's evaluateHaGate (2 for dual_control, 1 otherwise) when omitted." }
       }
     },
     "connectorRef": {

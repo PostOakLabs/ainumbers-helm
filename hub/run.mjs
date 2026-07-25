@@ -182,7 +182,7 @@ function currentState(db, runId) {
 // Idempotent + resumable: calling this again on a run left mid-flight by a
 // crash (state still "running", some steps memoized) replays the memoized
 // steps for free and only re-invokes stepRunner for what's left.
-export async function executeRun(db, { runId, manifest, stepRunner, dryRun = false, humansInvolved = [] }) {
+export async function executeRun(db, { runId, manifest, stepRunner, dryRun = false, humansInvolved = [], gateCheck = null }) {
   initRunTables(db);
   const workflowManifestDigest = manifestDigest(manifest);
   const steps = planSteps(manifest);
@@ -197,8 +197,8 @@ export async function executeRun(db, { runId, manifest, stepRunner, dryRun = fal
   }
 
   let state = currentState(db, runId);
-  if (state === "queued") {
-    transitionState(db, { runId, workflowManifestDigest, fromState: "queued", toState: "running", humansInvolved });
+  if (state === "queued" || state === "awaiting_data") {
+    transitionState(db, { runId, workflowManifestDigest, fromState: state, toState: "running", humansInvolved });
     state = "running";
   }
   if (state !== "running") {
@@ -207,12 +207,28 @@ export async function executeRun(db, { runId, manifest, stepRunner, dryRun = fal
   }
 
   let priorOutputDigest = null;
+  let priorOutput = null;
   const stepDigests = [];
   try {
     for (const step of steps) {
       const inputDigest = stepInputDigest({ runId, step, priorOutputDigest, dryRun });
       let memo = getMemoizedStep(db, { runId, stepId: step.step_id, inputDigest });
       if (!memo) {
+        // HELM-HA-1: a step whose pack item declares §27.4 gate_policy HOLDS
+        // here, BEFORE stepRunner ever executes it, until gateCheck reports
+        // satisfied — never runs a gated step speculatively and never
+        // memoizes a held attempt (so re-polling costs nothing and re-checks
+        // fresh HA-record state every time). gateCheck sees priorOutput (the
+        // full prior step result, not just its wrapper digest) since the
+        // thing a human is approving is the OCG artifact's own
+        // execution_hash, not helm's internal step-memo digest.
+        if (gateCheck) {
+          const gate = await gateCheck(step, { priorOutputDigest, priorOutput, runId });
+          if (gate?.held) {
+            transitionState(db, { runId, workflowManifestDigest, fromState: "running", toState: "awaiting_data", humansInvolved });
+            return { runId, state: "awaiting_data", executionHash: null, steps: stepDigests, held: { step_id: step.step_id, reason: gate.reason } };
+          }
+        }
         const output = dryRun
           ? { dry_run: true, step_id: step.step_id, kind: step.kind }
           : await stepRunner(step, { priorOutputDigest, runId });
@@ -221,6 +237,7 @@ export async function executeRun(db, { runId, manifest, stepRunner, dryRun = fal
       }
       stepDigests.push({ step_id: step.step_id, input_digest: inputDigest, output_digest: memo.outputDigest });
       priorOutputDigest = memo.outputDigest;
+      priorOutput = memo.output;
     }
   } catch (err) {
     transitionState(db, { runId, workflowManifestDigest, fromState: "running", toState: "failed", humansInvolved });
@@ -256,4 +273,7 @@ export function replayExecutionHash(db, runId) {
   return sha256ref(jcsDigestHex({ run_id: runId, workflow_manifest_digest: run.workflow_manifest_digest, steps: stepDigests }));
 }
 
-export { PHASE1_STATES };
+// Exposed for ha-gate.mjs (HELM-HA-1): replay verification needs the exact
+// same tamper-checked memo lookup the run engine itself uses, not a second
+// hand-rolled query against step_results.
+export { PHASE1_STATES, getMemoizedStep, stepInputDigest };

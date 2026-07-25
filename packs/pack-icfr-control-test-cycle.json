@@ -1,0 +1,31 @@
+{
+  "workflow_id": "pack-icfr-control-test-cycle",
+  "name": "ICFR Control-Test Cycle",
+  "outcome": "SOX 404 control-test evidence cycle -- population, sample, and per-item test results reconcile into ONE test-conclusion artifact (coverage, exception count vs tolerable deviation, test conclusion). gate_status (review_required) and any deficiency candidate are recorded per the §27 Human Accountability vocabulary: the tester is the §27.1 preparer, every conclusion requires a reviewer sign-off, and deficiency severity classification is a separate reviewer approval record -- both recorded now, enforced once HA-RETRO-1's runtime gating is wired to this chain. Quarter-end evidence bundles (§27.6) align to the §302 sub-certification cascade. Never a filed submission.",
+  "spec_version": "ocg-control-plane@1",
+  "manifest": {
+    "manifest_version": "1",
+    "workflow_id": "pack-icfr-control-test-cycle",
+    "trigger": {
+      "type": "manual"
+    },
+    "nodes": [
+      {
+        "node_id": "n1",
+        "kernel_id": "art-461-control-test-evidence-composer",
+        "kernel_digest": "sha256:ab7d9c5cf26d42cb2205025bca9f91353454bea181602f0dd0508aa55c4e94e4"
+      }
+    ],
+    "connectors": [],
+    "gates": [],
+    "actions": []
+  },
+  "workflow_manifest_digest": "sha256:033808c048da0ff95c8a552f557cbb80e7c96380bdd1a6f2905fd93e3f419dac",
+  "declared_inputs": [],
+  "steps_meta": [
+    {
+      "node_id": "n1",
+      "data_classification": "compute"
+    }
+  ]
+}

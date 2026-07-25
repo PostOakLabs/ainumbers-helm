@@ -7,6 +7,7 @@ import { loadConfig } from "./config.mjs";
 import { loadOrCreateToken, pairingUrl, createPairingNonce } from "./token.mjs";
 import { createHelmServer, bindOrExit, DAEMON_VERSION } from "./server.mjs";
 import { loadOrCreateKeys } from "./keys.mjs";
+import { loadOrCreateHaIdentity } from "./ha-identity.mjs";
 import { fingerprintPublicKeyDer } from "./challenge.mjs";
 import { createCliChannel, cliChannelPath } from "./cli-channel.mjs";
 import { runDoctor } from "./doctor.mjs";
@@ -58,6 +59,7 @@ async function cmdStart({ open = false } = {}) {
   const isFirstRun = !existsSync(statePath("token"));
   const token = loadOrCreateToken();
   const identityKeys = loadOrCreateKeys();
+  const haIdentity = await loadOrCreateHaIdentity();
   // R15-F1 fix: fingerprint of the daemon's OWN identity key, minted only
   // here (never derivable by a port squatter) and carried into every
   // pairing link so the browser can pin it — see token.mjs pairingUrl.
@@ -78,7 +80,7 @@ async function cmdStart({ open = false } = {}) {
   }
   log.info("journal replay integrity check passed");
 
-  const server = createHelmServer({ port: config.port, allowedOrigin: config.allowedOrigin, token, db, identityKeys, versionCheckUrl: config.versionCheckUrl });
+  const server = createHelmServer({ port: config.port, allowedOrigin: config.allowedOrigin, token, db, identityKeys, haIdentity, versionCheckUrl: config.versionCheckUrl });
   // P3-D9: refuse to start on a squatted port — never silently bind
   // elsewhere. Must resolve BEFORE the CLI channel opens or any browser tab
   // is auto-launched, or a squatted port would open onto whatever's

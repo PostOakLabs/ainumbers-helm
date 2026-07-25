@@ -33,14 +33,16 @@
       {
         "node_id": "n5",
         "kernel_id": "art-277-agreement-acceptance-binder",
-        "kernel_digest": "sha256:f89876aa4e8bd2c8202f42f53375dcaadcf311417577d08361dc752421a2a965"
+        "kernel_digest": "sha256:f89876aa4e8bd2c8202f42f53375dcaadcf311417577d08361dc752421a2a965",
+        "gate_policy": "review_required",
+        "gate_role": "approver"
       }
     ],
     "connectors": [],
     "gates": [],
     "actions": []
   },
-  "workflow_manifest_digest": "sha256:d797f34824631b1000a565cec80406a1654e70cab72d4392b24fce699dcd4552",
+  "workflow_manifest_digest": "sha256:a6fcce3c53d6f8d091e6f2d5d1353da1aba9872dee475485ca8db2db6f347378",
   "declared_inputs": [],
   "steps_meta": [
     {

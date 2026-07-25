@@ -34,6 +34,7 @@ const ROUTE_DOCS = {
   "GET /templates/{slug}": { summary: "Fetch one template's detail.", tags: ["Templates"] },
   "GET /workflow-manifest": { summary: "Build a workflow's execution manifest.", tags: ["Workflows"] },
   "POST /run/start": { summary: "Start a workflow run.", tags: ["Runs"] },
+  "POST /run/resume": { summary: "Resume a run currently held at a §27.4 accountability gate.", tags: ["Runs"] },
   "GET /run/timeline": { summary: "Fetch a run's step-by-step timeline.", tags: ["Runs"] },
   "POST /pair/redeem": { summary: "Redeem a single-use pairing nonce.", tags: ["Pairing"] },
   "POST /migration/import": { summary: "Import a migration bundle from another daemon.", tags: ["Migration"] },
@@ -41,6 +42,11 @@ const ROUTE_DOCS = {
   "GET /kernels/{id}/card": { summary: "Fetch a kernel's read-only decision-table card.", tags: ["Kernels"] },
   "GET /workflows/{id}/euc-entry": { summary: "Fetch a workflow's End-User-Computing register entry.", tags: ["Workflows"] },
   "GET /workflows/{id}/export": { summary: "Export a workflow manifest bundle.", tags: ["Workflows"] },
+  "GET /ha/pending": { summary: "List runs held at a §27.4 accountability gate, awaiting human records.", tags: ["Accountability"] },
+  "GET /ha/records": { summary: "Fetch the §27.2 accountability record trail for a subject_hash.", tags: ["Accountability"] },
+  "GET /ha/slot": { summary: "Fetch the countersignature_slot (maker + checker signatures) for a subject_hash.", tags: ["Accountability"] },
+  "POST /ha/records": { summary: "Submit a signed §27.2 accountability record (approval/rejection/override/annotation/role_binding).", tags: ["Accountability"] },
+  "POST /ha/replay": { summary: "helmd re-executes a step's kernel and countersigns with replay_verified reflecting whether the hash matched.", tags: ["Accountability"] },
 };
 
 function toOperation(method, path) {
