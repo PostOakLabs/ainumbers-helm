@@ -195,3 +195,48 @@ test("recordReplay: NEVER infers replay_verified — a mismatched re-execution r
   assert.equal(slot.countersignatures[0].replay_verified, false);
   db.close();
 });
+
+// §27.5 override-expiry conformance vector — mirrors validate-ha-records
+// .test.mjs's override_active/override_expired fixtures (vendored, site-
+// owned) at the run-engine integration level: an ACTIVE time-boxed override
+// satisfies a gate with NO approval records at all; the SAME override, once
+// its `nowClock` has moved past `expiry`, reverts to the underlying policy
+// (never a silent permanent auto-pass) and the run holds again.
+test("run engine: an active §27.5 override satisfies a held gate; after expiry it reverts to holding", async () => {
+  const db = dbAt("override-expiry.db");
+  const stepRunner = async (step) => runKernelNode(step, {});
+  const manifest = gatedManifest({ gatePolicy: "review_required" });
+
+  let clockNow = "2026-07-24T12:00:00Z";
+  const gateCheck = haGateCheckFor(db, { nowClock: () => clockNow });
+
+  const held = await executeRun(db, { runId: "run-override", manifest, stepRunner, gateCheck });
+  assert.equal(held.state, "awaiting_data");
+  const foundHold = await findHeldGate(db, db.prepare("SELECT * FROM runs WHERE run_id = ?").get("run-override"));
+
+  const officer = await newIdentity();
+  const override = await signHaRecord(
+    {
+      record_type: "override", role: "compliance_officer", subject_hash: foundHold.subjectHash, identity: { id: officer.id },
+      gate_policy: "emergency_override", reason_code: "REG_DEADLINE_WAIVER",
+      override: { scope: `gate:${foundHold.step_id}`, expiry: "2026-07-24T13:00:00Z", subject_hash: foundHold.subjectHash },
+      timestamp: clockNow,
+    },
+    officer, { nowISO: clockNow }
+  );
+  await submitHaRecord(db, override);
+
+  // Still within the window (12:30 < 13:00 expiry) — NO approval record
+  // exists, only the override, yet the gate is satisfied.
+  clockNow = "2026-07-24T12:30:00Z";
+  const satisfied = await executeRun(db, { runId: "run-override", manifest, stepRunner, gateCheck });
+  assert.equal(satisfied.state, "completed", "an active override must satisfy the gate with zero approval records");
+
+  // A SECOND run against the same subject, clock moved PAST expiry — the
+  // exact same override record is now inert; the gate reverts to holding
+  // rather than granting a silent permanent pass.
+  clockNow = "2026-07-24T14:00:00Z";
+  const heldAgain = await executeRun(db, { runId: "run-override-2", manifest, stepRunner, gateCheck });
+  assert.equal(heldAgain.state, "awaiting_data", "an EXPIRED override must revert to the underlying policy, never a permanent auto-pass");
+  db.close();
+});

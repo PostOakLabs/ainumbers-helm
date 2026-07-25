@@ -69,7 +69,10 @@ function subjectHashFor(priorOutputDigest, priorOutput) {
   return priorOutputDigest ?? `sha256:${"0".repeat(64)}`;
 }
 
-export function haGateCheckFor(db) {
+// nowClock: caller-overridable clock (defaults to the real wall clock in
+// production) — §27.5 override-expiry is time-dependent, so conformance
+// tests need to move "now" without an actual multi-hour sleep.
+export function haGateCheckFor(db, { nowClock = () => new Date().toISOString() } = {}) {
   return async function gateCheck(step, { priorOutputDigest, priorOutput, runId }) {
     const gatePolicy = step.item?.gate_policy;
     if (!gatePolicy) return { held: false };
@@ -78,7 +81,7 @@ export function haGateCheckFor(db) {
     const subjectHash = subjectHashFor(priorOutputDigest, priorOutput);
     const records = recordsForSubject(db, subjectHash);
     const result = evaluateHaGate({
-      gatePolicy, threshold, role, subjectHash, records, nowISO: new Date().toISOString(),
+      gatePolicy, threshold, role, subjectHash, records, nowISO: nowClock(),
     });
     if (result.status === "satisfied" || result.status === "override_active") return { held: false, gateResult: result };
     return { held: true, step_id: step.step_id, reason: `${step.step_id}: ${result.reason}`, gateResult: result, subjectHash, role, gatePolicy, threshold };
