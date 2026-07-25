@@ -12,12 +12,14 @@ import { pairFormHtml, wirePairForm } from "./lib/pair-form.mjs";
 // written. VIEWS (lib/view-registry.mjs) maps an id to its render function —
 // an id in TABS with no matching VIEWS entry fails the §12.5 gate rather
 // than silently 404ing.
-// HELM-P4-J5: Verify joins Help as pairing-free — a `#load=` link recipient
-// (SharePoint/Teams share, no Helm install/pairing on that machine at all)
-// must land straight on the bundle, not a "waiting for Helm" screen. Safe
-// because verify.mjs is standalone by construction (never calls ../api.mjs).
-// requiresPairing: false in tab-meta.mjs replaces the old STATIC_VIEWS set.
-const DEFAULT_VIEW = "choose";
+// HELM-P4-J5: Verify joins Home/Learn/Deadlines as pairing-free — a `#load=`
+// link recipient (SharePoint/Teams share, no Helm install/pairing on that
+// machine at all) must land straight on the bundle, not a "waiting for
+// Helm" screen. Safe because verify.mjs is standalone by construction
+// (never calls ../api.mjs). requiresPairing: false in tab-meta.mjs replaces
+// the old STATIC_VIEWS set.
+// §12.6: default route moves from choose to home.
+const DEFAULT_VIEW = "home";
 
 // HELM-P3-G10: `#template=<slug>` is a shareable deep link (Teams/email),
 // not the normal `#/view?query` shape — it always lands on Run with the

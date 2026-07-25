@@ -78,6 +78,13 @@ header.shell-header {
 .wordmark {
   font-weight: 600;
   letter-spacing: 0.01em;
+  color: inherit;
+  text-decoration: none;
+}
+
+.wordmark:hover,
+.wordmark:focus-visible {
+  text-decoration: underline;
 }
 
 nav.shell-nav {

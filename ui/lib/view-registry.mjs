@@ -4,6 +4,7 @@
 // out of app.mjs so the §12.5 gate test can import it without also importing
 // app.mjs's unconditional boot() (which needs `document` and isn't safe to
 // evaluate under node:test).
+import { renderHome } from "../views/home.mjs";
 import { renderChoose } from "../views/choose.mjs";
 import { renderCanvas } from "../views/canvas.mjs";
 import { renderConnect } from "../views/connect.mjs";
@@ -11,7 +12,8 @@ import { renderRun } from "../views/run.mjs";
 import { renderOperate } from "../views/operate.mjs";
 import { renderVerify } from "../views/verify.mjs";
 import { renderReview } from "../views/review.mjs";
-import { renderHelp } from "../views/help.mjs";
+import { renderLearn } from "../views/learn.mjs";
 import { renderRegister } from "../views/register.mjs";
+import { renderDeadlines } from "../views/deadlines.mjs";
 
-export const VIEWS = { choose: renderChoose, canvas: renderCanvas, connect: renderConnect, run: renderRun, verify: renderVerify, review: renderReview, operate: renderOperate, register: renderRegister, help: renderHelp };
+export const VIEWS = { home: renderHome, choose: renderChoose, canvas: renderCanvas, connect: renderConnect, run: renderRun, verify: renderVerify, review: renderReview, operate: renderOperate, register: renderRegister, deadlines: renderDeadlines, learn: renderLearn };
