@@ -5,7 +5,7 @@
 // hardened) + named-pipe/UDS CLI channel + doctor self-check.
 import { loadConfig } from "./config.mjs";
 import { loadOrCreateToken, pairingUrl, createPairingNonce } from "./token.mjs";
-import { createHelmServer, bindOrExit } from "./server.mjs";
+import { createHelmServer, bindOrExit, DAEMON_VERSION } from "./server.mjs";
 import { loadOrCreateKeys } from "./keys.mjs";
 import { fingerprintPublicKeyDer } from "./challenge.mjs";
 import { createCliChannel, cliChannelPath } from "./cli-channel.mjs";
@@ -17,7 +17,7 @@ import { platform } from "node:os";
 import { createConnection } from "node:net";
 import { statePath } from "./state-dir.mjs";
 import { openJournal, replayVerify } from "./journal.mjs";
-import { installAutostart, uninstallAutostart } from "./autostart.mjs";
+import { installAutostart, uninstallAutostart, isAutostartInstalled, autostartLocation } from "./autostart.mjs";
 
 // No "open" package (zero-dep, D2) — shell out to each OS's native opener.
 // Best-effort: a failure here (headless box, no default browser configured)
@@ -100,12 +100,35 @@ async function cmdStart({ open = false } = {}) {
       openBrowser(u);
       return { url: u };
     },
-  });
+    // `helmd stop` / `helmd status`: helmd has no window, no tray icon and no
+    // taskbar presence, so before these existed the only way to stop it was
+    // Task Manager or kill(1), and there was no way at all to ask whether it
+    // was running or whether autostart was installed. Both live on the CLI
+    // channel, never on HTTP — same reasoning as `pair` above: an HTTP verb
+    // that shuts the daemon down would be reachable by any local process, and
+    // server.mjs's "no side effects on GET" invariant exists to be kept.
+    stop: () => {
+      // Reply first, exit on a later tick, or the CLI sees ECONNRESET instead
+      // of an acknowledgement and reports a failure for a successful stop.
+      setTimeout(() => process.exit(0), 50);
+      return { stopping: true, pid: process.pid };
+    },
+    status: () => ({
+      running: true,
+      pid: process.pid,
+      port: config.port,
+      version: DAEMON_VERSION,
+      autostart: isAutostartInstalled(),
+      autostartLocation: autostartLocation(),
+    }),
+  }, { port: config.port });
 
   log.info("helmd started", { port: config.port });
   const url = pairingUrl(token, config.port, createPairingNonce(), identityFingerprint);
   console.log(url);
   console.log("(paste this into your browser if it did not open automatically)");
+  console.log("");
+  console.log("Helm is running. Stop it with `helmd stop`, check it with `helmd status`.");
 
   // HELM-WIN-INSTALL-1: this used to auto-open ONLY on first run
   // (`isFirstRun || open`) — every later start (including the very next
@@ -120,9 +143,18 @@ async function cmdStart({ open = false } = {}) {
   // autostart entry (macOS LaunchAgent / Windows HKCU Run key) so the next
   // launch is the OS's job, not the user's — best-effort, never fatal (an
   // unsupported platform or a sandboxed/CI environment just skips it).
+  // Announced, never silent: this writes a persistence entry, and a product
+  // that asks to be trusted cannot install one without saying so. Print where
+  // it went and how to remove it, in the same breath.
   if (isFirstRun) {
     try {
-      installAutostart();
+      const result = installAutostart();
+      if (result.ok) {
+        console.log("");
+        console.log("Helm will now start automatically when you log in.");
+        console.log(`  entry:   ${autostartLocation()}`);
+        console.log("  remove:  helmd uninstall");
+      }
     } catch (err) {
       log.warn("autostart install failed (non-fatal)", { error: String(err?.message || err) });
     }
@@ -148,41 +180,95 @@ function cmdUninstall() {
 // daemon's pipe/socket and asks it for a fresh pairing link — never spins up
 // its own server, never touches HTTP. If nothing is listening (daemon not
 // started, or a stale socket file), that's a plain "start it first" error.
-function cmdOpen() {
-  const path = cliChannelPath();
-  const socket = createConnection(path, () => socket.write(JSON.stringify({ cmd: "pair" }) + "\n"));
-  let buf = "";
-  socket.on("data", (chunk) => {
-    buf += chunk.toString("utf8");
-    const idx = buf.indexOf("\n");
-    if (idx === -1) return;
-    socket.end();
-    let msg;
-    try {
-      msg = JSON.parse(buf.slice(0, idx));
-    } catch {
-      console.error("helmd open: malformed response from daemon");
-      process.exit(1);
-    }
-    if (!msg.ok) {
-      console.error(`helmd open: ${msg.error}`);
-      process.exit(1);
-    }
-    console.log(msg.result.url);
+function callDaemon(cmd) {
+  return new Promise((resolve, reject) => {
+    const socket = createConnection(cliChannelPath(loadConfig().port), () => socket.write(JSON.stringify({ cmd }) + "\n"));
+    let buf = "";
+    socket.on("data", (chunk) => {
+      buf += chunk.toString("utf8");
+      const idx = buf.indexOf("\n");
+      if (idx === -1) return;
+      socket.end();
+      let msg;
+      try {
+        msg = JSON.parse(buf.slice(0, idx));
+      } catch {
+        return reject(new Error("malformed response from daemon"));
+      }
+      if (!msg.ok) return reject(new Error(msg.error));
+      resolve(msg.result);
+    });
+    // Settles at most once, so a post-`stop` ECONNRESET arriving after the
+    // acknowledgement is already resolved is harmlessly ignored.
+    socket.on("error", (err) => reject(Object.assign(new Error(err.message), { code: err.code })));
   });
-  socket.on("error", (err) => {
-    console.error(`helmd open: no daemon listening (${err.code === "ENOENT" || err.code === "ECONNREFUSED" ? "run `helmd start` first" : err.message})`);
+}
+
+// ENOENT (no socket file / no pipe) and ECONNREFUSED (stale socket file, no
+// listener) both mean the same thing to a user: helmd isn't running. That is
+// a normal state for `stop` and `status`, not an error to shout about.
+function isNotRunning(err) {
+  return err.code === "ENOENT" || err.code === "ECONNREFUSED";
+}
+
+async function cmdOpen() {
+  try {
+    const result = await callDaemon("pair");
+    console.log(result.url);
+  } catch (err) {
+    console.error(`helmd open: ${isNotRunning(err) ? "no daemon listening (run `helmd start` first)" : err.message}`);
     process.exit(1);
-  });
+  }
+}
+
+async function cmdStop() {
+  try {
+    await callDaemon("stop");
+    console.log("helmd stopped.");
+  } catch (err) {
+    if (isNotRunning(err)) {
+      console.log("helmd stop: not running.");
+      return;
+    }
+    console.error(`helmd stop: ${err.message}`);
+    process.exit(1);
+  }
+}
+
+async function cmdStatus() {
+  const describeAutostart = (installed, where) =>
+    installed ? `installed (${where})` : where === null ? "not supported on this platform" : "not installed";
+  try {
+    const r = await callDaemon("status");
+    console.log(`helmd: running (pid ${r.pid})`);
+    console.log(`  port       ${r.port}`);
+    console.log(`  version    ${r.version}`);
+    console.log(`  autostart  ${describeAutostart(r.autostart, r.autostartLocation)}`);
+    console.log("  pairing    helmd open");
+    console.log("  stop       helmd stop");
+  } catch (err) {
+    if (isNotRunning(err)) {
+      // Not an error the user needs a stack trace for — but still exit
+      // non-zero so a script can branch on it.
+      console.log("helmd: not running.");
+      console.log(`  autostart  ${describeAutostart(isAutostartInstalled(), autostartLocation())}`);
+      console.log("  start      helmd start");
+      process.exit(1);
+    }
+    console.error(`helmd status: ${err.message}`);
+    process.exit(1);
+  }
 }
 
 const args = process.argv.slice(2);
 const cmd = args[0] || "start";
 if (cmd === "doctor") await cmdDoctor();
 else if (cmd === "start") await cmdStart({ open: args.includes("--open") });
-else if (cmd === "open") cmdOpen();
+else if (cmd === "open") await cmdOpen();
+else if (cmd === "stop") await cmdStop();
+else if (cmd === "status") await cmdStatus();
 else if (cmd === "uninstall") cmdUninstall();
 else {
-  console.error(`helmd: unknown command "${cmd}" (expected: start | doctor | open | uninstall)`);
+  console.error(`helmd: unknown command "${cmd}" (expected: start | stop | status | doctor | open | uninstall)`);
   process.exit(1);
 }

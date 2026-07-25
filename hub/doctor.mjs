@@ -1,9 +1,11 @@
 // SPDX-License-Identifier: Apache-2.0
 // Copyright (c) 2026 Post Oak Labs, Inc.
-// Self-check: config readable, token file mode 0600, state dir private, port free.
+// Self-check: config readable, token file mode 0600, state dir private, and
+// the configured port either free or held by our own helmd.
 import { statSync, existsSync, readFileSync } from "node:fs";
 import { platform } from "node:os";
 import { createServer } from "node:net";
+import { request as httpRequest } from "node:http";
 import { join, dirname } from "node:path";
 import { fileURLToPath } from "node:url";
 import { stateDir, statePath } from "./state-dir.mjs";
@@ -25,6 +27,49 @@ function checkPortFree(port) {
   });
 }
 
+// Asks whoever holds the port to identify itself. /version is the
+// unauthenticated detection route (server.mjs handleDetectionRoute), so this
+// needs no bearer token; it answers only for the loopback UI origin or the
+// hosted one, so we send the configured allowedOrigin. A non-helmd listener
+// returns something else, or nothing, and we report the port as occupied.
+function probeDaemonVersion(port, allowedOrigin) {
+  return new Promise((resolve) => {
+    const req = httpRequest(
+      { host: "127.0.0.1", port, path: "/version", method: "GET", headers: { Origin: allowedOrigin }, timeout: 2000 },
+      (res) => {
+        let body = "";
+        res.on("data", (c) => (body += c));
+        res.on("end", () => {
+          try {
+            const parsed = JSON.parse(body);
+            resolve(res.statusCode === 200 && typeof parsed.daemon === "string" ? parsed.daemon : null);
+          } catch {
+            resolve(null);
+          }
+        });
+      }
+    );
+    req.on("error", () => resolve(null));
+    req.on("timeout", () => {
+      req.destroy();
+      resolve(null);
+    });
+    req.end();
+  });
+}
+
+// An unbindable port used to be an automatic FAIL, which meant `helmd doctor`
+// failed BY DESIGN on a healthy system: the running daemon is what holds the
+// port, and INSTALL.md points users at doctor as the post-install check. So
+// the documented first thing a new user does reported FAIL and implied the
+// port was squatted. Distinguish the three real cases instead.
+async function checkPort(port, allowedOrigin) {
+  if (await checkPortFree(port)) return { pass: true, detail: `${port} free (helmd not running)` };
+  const version = await probeDaemonVersion(port, allowedOrigin);
+  if (version) return { pass: true, detail: `${port} in use by helmd ${version}` };
+  return { pass: false, detail: `${port} in use by another process` };
+}
+
 export async function runDoctor() {
   const checks = [];
 
@@ -40,8 +85,8 @@ export async function runDoctor() {
   checks.push({ name: "token_file_mode_0600", pass: tokenModeOk, detail: mode.toString(8) });
   checks.push({ name: "token_present", pass: token.length > 0 });
 
-  const portFree = await checkPortFree(config.port);
-  checks.push({ name: "port_available", pass: portFree, detail: config.port });
+  const port = await checkPort(config.port, config.allowedOrigin);
+  checks.push({ name: "port_ok", pass: port.pass, detail: port.detail });
 
   // HELM-U4: helmd serves the UI itself now — a doctor that passes but can't
   // actually read ui/helm.html (missing SEA asset, moved dev checkout) would

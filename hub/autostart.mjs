@@ -2,12 +2,20 @@
 // Copyright (c) 2026 Post Oak Labs, Inc.
 // Autostart (HELM-P4-J4): the last CLI moment. First run writes a per-user
 // launcher so helmd survives reboots without a terminal ever reopening —
-// macOS gets a LaunchAgent (RunAtLoad + KeepAlive = crash self-heal, visible
-// in System Settings > Login Items), Windows gets an HKCU Run value. Both
-// are per-user (no admin), and both are removed on uninstall (Zoom-orphan
-// lesson, P3 robustness #8 — a leftover autostart entry after uninstall is
-// the failure mode we're avoiding). Linux has no single-user autostart
-// convention worth committing to yet — no-op, `supported: false`.
+// macOS gets a LaunchAgent (RunAtLoad, visible in System Settings > Login
+// Items), Windows gets an HKCU Run value. Both are per-user (no admin), and
+// both are removed on uninstall (Zoom-orphan lesson, P3 robustness #8 — a
+// leftover autostart entry after uninstall is the failure mode we're
+// avoiding). Linux has no single-user autostart convention worth committing
+// to yet — no-op, `supported: false`.
+//
+// KeepAlive is deliberately FALSE. It was true (crash self-heal), which
+// meant `helmd stop`, a Quit button, and plain kill(1) were all lies on
+// macOS: launchd relaunched the process immediately and the user had no way
+// to turn helmd off short of `helmd uninstall`. Software the user cannot
+// stop is the defining behavior of an implant, and this product is sold on
+// being inspectable. RunAtLoad alone gives start-on-login, which is the
+// actual goal; crash recovery is worth less than a working off switch.
 import { existsSync, mkdirSync, writeFileSync, unlinkSync } from "node:fs";
 import { execFileSync } from "node:child_process";
 import { homedir, platform } from "node:os";
@@ -48,7 +56,7 @@ ${programArgs}
   <key>RunAtLoad</key>
   <true/>
   <key>KeepAlive</key>
-  <true/>
+  <false/>
   <key>ProcessType</key>
   <string>Background</string>
 </dict>
@@ -133,6 +141,17 @@ export function isAutostartInstalled({ plat = platform(), home = homedir(), exec
   if (plat === "darwin") return isInstalledMac({ home });
   if (plat === "win32") return isInstalledWindows({ exec });
   return false;
+}
+
+// Where the autostart entry actually lives, in the exact form a user would
+// need to find or audit it by hand. Installing persistence without saying
+// where it went — and how to remove it — is the single behavior that makes
+// an inspectable product look like an implant, so index.mjs prints this at
+// the moment of install and `helmd status` reports it thereafter.
+export function autostartLocation({ plat = platform(), home = homedir() } = {}) {
+  if (plat === "darwin") return launchAgentPath(home);
+  if (plat === "win32") return `HKCU\\Software\\Microsoft\\Windows\\CurrentVersion\\Run\\${RUN_VALUE_NAME}`;
+  return null;
 }
 
 function defaultExec(bin, args) {

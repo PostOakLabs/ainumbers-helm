@@ -111,6 +111,59 @@ sent to the server). If nothing opens (headless box, no default browser,
 or the auto-open step failed) the URL is also printed to the console —
 copy/paste it yourself; it's always a working fallback, never required.
 
+### Autostart is installed on first run
+
+The first `helmd start` registers a **per-user** autostart entry so helmd
+comes back after a reboot without you reopening a terminal. It is announced
+on the console at the moment it happens, and it is per-user only — no
+administrator rights, nothing written outside your own account:
+
+| Platform | What is written |
+|---|---|
+| Windows | `HKCU\Software\Microsoft\Windows\CurrentVersion\Run\AINumbersHelmd` |
+| macOS | `~/Library/LaunchAgents/co.ainumbers.helmd.plist` (visible in System Settings → Login Items) |
+| Linux | nothing — no autostart entry is installed |
+
+Remove it at any time with `helmd uninstall` (below). The macOS agent sets
+`RunAtLoad` but **not** `KeepAlive`, so helmd starts when you log in and
+stays stopped when you stop it.
+
+## Starting, stopping, and removing Helm
+
+helmd is a background process. It has no window, no tray icon and no taskbar
+entry, so these are the commands that control it:
+
+```
+helmd status
+```
+
+Reports whether the daemon is running, on which port, its version, and
+whether the autostart entry is installed. Exits non-zero when it is not
+running, so scripts can branch on it.
+
+```
+helmd stop
+```
+
+Stops the running daemon. Your data is untouched — this only ends the
+process. Helm starts again at your next login unless you also remove the
+autostart entry. Stopping an already-stopped daemon is not an error.
+
+```
+helmd open
+```
+
+Asks an already-running daemon for a fresh pairing link and opens it. Use
+this when you have closed the tab.
+
+```
+helmd uninstall
+```
+
+Removes the autostart entry described above, and nothing else. Your
+`~/.helm` state — journal, keys, config — is deliberately left in place;
+delete that directory yourself if you also want the data gone.
+
 ## After installing
 
 ```
@@ -118,9 +171,12 @@ helmd doctor
 ```
 
 Runs the same self-check the daemon runs on start: config readable, token
-file mode 0600 (POSIX), loopback port free, journal replay-integrity (if a
-prior install left state), and a passive version-check notice (never an
-auto-update — see below).
+file mode 0600 (POSIX), the loopback port either free or held by your own
+helmd, journal replay-integrity (if a prior install left state), and a
+passive version-check notice (never an auto-update — see below).
+
+`helmd doctor` is safe to run while helmd is running — it identifies the
+listener on the port rather than assuming an occupied port is a problem.
 
 ## Updates
 
