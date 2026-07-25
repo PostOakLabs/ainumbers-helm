@@ -10,11 +10,22 @@ its own license (see the file cited for full terms):
   - OCG kernels, verify libraries, and standard/schema documents, vendored
     pinned from PostOakLabs/ainumbers (chaingraph/kernels,
     chaingraph/standard/SPEC.md, chaingraph/standard/openchain-graph-v0.4.schema.json,
-    chaingraph/chaingraph.json) into hub/vendored/ocg/. See
-    hub/vendored/ocg/MANIFEST.json for the pinned commit SHA.
+    chaingraph/chaingraph.json) into hub/vendored/ocg/. MIT License,
+    Copyright (c) 2026 Post Oak Labs (same license/holder as this repo; see
+    this repo's own LICENSE for full terms). See hub/vendored/ocg/MANIFEST.json
+    for the pinned commit SHA.
   - anchor-suite browser libraries, vendored pinned from
     PostOakLabs/anchor-suite (public/lib/tsq.mjs,
-    public/vendor/pkijs.bundle.mjs) into hub/vendored/anchor-suite/. See
+    public/vendor/pkijs.bundle.mjs) into hub/vendored/anchor-suite/.
+    anchor-suite itself is MIT License, Copyright (c) 2026 Post Oak Labs
+    (see hub/vendored/anchor-suite/lib/tsq.mjs, which is anchor-suite's own
+    code under that license). public/vendor/pkijs.bundle.mjs additionally
+    bundles third-party code it does not own the copyright to: pkijs 3.4.0
+    and asn1js 3.0.10, BSD-3-Clause, Copyright (c) 2014 GlobalSign/GMO
+    GlobalSign and Copyright (c) 2015-2022 Peculiar Ventures; and pvtsutils,
+    MIT License, Copyright (c) 2017-2024 Peculiar Ventures, LLC. Full
+    license text for each is preserved in-file at the top of each bundled
+    module inside pkijs.bundle.mjs. See
     hub/vendored/anchor-suite/MANIFEST.json for the pinned commit SHA.
   - qrcodegen.js: Project Nayuki QR Code generator library, v1.5.0,
     MIT License (full header preserved in-file), at ui/vendored/qrcodegen.js.

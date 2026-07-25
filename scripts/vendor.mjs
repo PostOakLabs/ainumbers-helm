@@ -75,6 +75,7 @@ try {
     JSON.stringify(
       {
         sourceRepo: config.sourceRepo,
+        license: config.license,
         pinnedSha: config.pinnedSha,
         vendoredPaths: config.paths,
         fileCount: manifestEntries.length,

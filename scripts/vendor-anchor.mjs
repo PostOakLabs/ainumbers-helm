@@ -68,7 +68,7 @@ try {
   writeFileSync(
     join(destRoot, "MANIFEST.json"),
     JSON.stringify(
-      { sourceRepo: config.sourceRepo, pinnedSha: config.pinnedSha, vendoredPaths: config.paths, fileCount: manifestEntries.length, files: manifestEntries },
+      { sourceRepo: config.sourceRepo, license: config.license, pinnedSha: config.pinnedSha, vendoredPaths: config.paths, fileCount: manifestEntries.length, files: manifestEntries },
       null,
       2
     ) + "\n"

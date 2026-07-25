@@ -1,5 +1,6 @@
 {
   "sourceRepo": "https://github.com/PostOakLabs/ainumbers.git",
+  "license": "MIT",
   "pinnedSha": "db8b2512f3a1b57bcef0c8d800c0dff205abd052",
   "paths": [
     "chaingraph/kernels",
