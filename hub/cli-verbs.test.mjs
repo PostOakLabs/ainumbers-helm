@@ -30,7 +30,10 @@ const { loadOrCreateToken } = await import("./token.mjs");
 loadOrCreateToken();
 
 const ENTRY = join(dirname(fileURLToPath(import.meta.url)), "index.mjs");
-const ENV = { ...process.env, HELM_HOME: TMP };
+// HELM_NO_OPEN: `helmd start` opens a browser tab on EVERY start (hub/index.mjs),
+// so without this the suite hijacks the developer's browser once per run — and a
+// pre-push hook that runs the suite does it once per push attempt.
+const ENV = { ...process.env, HELM_HOME: TMP, HELM_NO_OPEN: "1" };
 
 let daemon;
 after(() => {
@@ -76,6 +79,11 @@ test("status and stop report cleanly when no daemon is running", () => {
 
 test("start -> status -> stop round trip", async () => {
   daemon = spawn(process.execPath, [ENTRY, "start"], { env: ENV, stdio: ["ignore", "pipe", "pipe"] });
+  // The auto-open log line is emitted AFTER the "Helm is running." banner that
+  // waitForRunning resolves on, so it needs its own accumulator rather than the
+  // resolved snapshot.
+  let allOutput = "";
+  daemon.stdout.on("data", (c) => (allOutput += c.toString("utf8")));
   const startupOutput = await waitForRunning(daemon);
 
   // The start banner has to name the off switch: helmd has no window, no
@@ -87,6 +95,17 @@ test("start -> status -> stop round trip", async () => {
   assert.equal(status.code, 0);
   assert.match(status.out, /running \(pid \d+\)/);
   assert.match(status.out, new RegExp(`port\\s+${PORT}`));
+
+  // Regression: `helmd start` auto-opens a browser tab on EVERY start, so an
+  // automated caller that spawns the daemon hijacks the machine's browser. Run
+  // from a pre-push hook, that is one tab per push attempt. HELM_NO_OPEN (set in
+  // ENV above) is the opt-out; this asserts it is honoured, not merely set.
+  // Polled, not sampled: this line is written after the "Helm is running."
+  // banner that waitForRunning resolves on, and the child's stdout is a pipe.
+  for (let i = 0; i < 60 && !/browser auto-open suppressed/.test(allOutput); i++) {
+    await new Promise((r) => setTimeout(r, 50));
+  }
+  assert.match(allOutput, /browser auto-open suppressed/);
 
   const exited = new Promise((resolve) => daemon.on("exit", resolve));
   const stop = helmd("stop");

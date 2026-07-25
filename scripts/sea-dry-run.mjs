@@ -65,10 +65,21 @@ try {
   const outPath = join(tmp, isWin ? "helmd.exe" : "helmd");
   copyFileSync(process.execPath, outPath);
   chmodSync(outPath, 0o755);
+  // postject@1.0.0-alpha.6 reads the whole ~110MB node binary plus the
+  // asset-laden blob into JS memory. Under Node 24 that overruns the default
+  // zone allocator and dies with "Fatal process out of memory: Zone" before it
+  // injects anything. CI pins Node 22 (.github/workflows/ci.yml) where the
+  // default heap happens to be enough, so this gate passed there and failed on
+  // every local push from a Node 24 box — the gate was CI-only in practice
+  // without anyone deciding that. Raising the child's heap makes it run on both.
   execFileSync(
     "npx",
     ["--yes", "postject@1.0.0-alpha.6", outPath, "NODE_SEA_BLOB", blobPath, "--sentinel-fuse", SENTINEL_FUSE],
-    { stdio: "inherit", shell: isWin }
+    {
+      stdio: "inherit",
+      shell: isWin,
+      env: { ...process.env, NODE_OPTIONS: `${process.env.NODE_OPTIONS ?? ""} --max-old-space-size=8192`.trim() },
+    }
   );
 
   const homeDir = join(tmp, "sea-dry-run-home");
