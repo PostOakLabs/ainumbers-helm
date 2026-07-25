@@ -6,16 +6,18 @@
 // hub/vendored/ocg/kernels/_rfc3161.mjs's parseRfc3161Token. Buffer.from(...,
 // "base64") is replaced with atob()-based decoding since ui/ has no Node
 // builtins. The CMS SignedData signature/chain-of-trust verification in the hub
-// copy uses node:crypto (X509Certificate, sign/verify) and does NOT travel —
-// there is no WebCrypto equivalent for arbitrary TSA certificate chains, so a
-// browser-offline verifier can prove the token's messageImprint is BOUND to the
-// anchored digest (this module) but cannot prove the token's signature chains to
-// a trusted TSA root. The Verify view's copy fence says so explicitly (§26.7:
-// "what was checked / what was NOT"). DO NOT hand-edit the DER/OID primitives —
-// resync from the hub copy if they change. Reconciliation gate:
-// ui/lib/verify-vendored-reconcile.test.mjs proves this module's
-// parseRfc3161MessageImprint agrees field-for-field with the hub's
-// parseRfc3161Token on a real pinned fixture, so drift can't land silently.
+// copy uses node:crypto (X509Certificate, sign/verify) and does NOT travel — but
+// (HELM-TSA-1, corrects the claim this comment used to make) that verification IS
+// now available offline in the browser: ui/lib/rfc3161-verify.mjs does it via the
+// pkijs bundle already vendored at hub/vendored/anchor-suite (WebCrypto under the
+// hood), against the pins in ui/vendored/tsa-roots.mjs. This module stays the
+// FIRST, always-run check (messageImprint bound to the anchored digest, zero
+// crypto lib) — rfc3161-verify.mjs's fuller check is the second, lazy-loaded pass.
+// The Verify view's copy fence (§26.7 "what was checked / what was NOT") reflects
+// both now. DO NOT hand-edit the DER/OID primitives — resync from the hub copy if
+// they change. Reconciliation gate: ui/lib/verify-vendored-reconcile.test.mjs
+// proves this module's parseRfc3161MessageImprint agrees field-for-field with the
+// hub's parseRfc3161Token on a real pinned fixture, so drift can't land silently.
 
 export function base64ToBytes(b64) {
   const bin = atob(b64.replace(/\s+/g, ""));
@@ -83,6 +85,15 @@ function unwrapContentInfo(der) {
   } catch { /* first child isn't an OID at all — fall through to TimeStampResp unwrap */ }
   if (second) return der.subarray(second.start - second.header, second.end); // tokenNode's own TLV, re-based to offset 0
   throw new Error("not CMS SignedData and no TimeStampResp timeStampToken to unwrap");
+}
+
+// Same unwrap, exposed for callers (rfc3161-verify.mjs, HELM-TSA-1) that need the
+// raw ContentInfo DER bytes to hand to a real ASN.1 object model (pkijs) rather than
+// this module's hand-rolled field walk — kept in ONE place so both callers agree on
+// what "the TimeStampToken" means for a given proof shape.
+export function unwrapContentInfoDer(proofB64OrBytes) {
+  const der = typeof proofB64OrBytes === "string" ? base64ToBytes(proofB64OrBytes) : proofB64OrBytes;
+  return unwrapContentInfo(der);
 }
 
 // proofB64: base64 RFC 3161 response — either a bare CMS SignedData

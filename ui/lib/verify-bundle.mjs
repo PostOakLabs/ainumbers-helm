@@ -9,7 +9,8 @@
 // journal state. That's a real scope boundary, not an oversight — it's called
 // out explicitly in the Verify view's "what was NOT checked" copy fence.
 import { verifyEnvelope, jcsDigestHex, envelopeDigest, statementOf } from "./verify-envelope.mjs";
-import { parseRfc3161MessageImprint } from "../vendored/der.mjs";
+import { parseRfc3161MessageImprint, base64ToBytes } from "../vendored/der.mjs";
+import { verifyRfc3161Full } from "./rfc3161-verify.mjs";
 import { validate } from "../vendored/schema-validator.mjs";
 import EVIDENCE_BUNDLE_MANIFEST_SCHEMA from "../vendored/schemas/evidence_bundle_manifest.schema.mjs";
 
@@ -74,8 +75,30 @@ export function verifyAnchorBinding(anchor, expectedHashHex) {
   }
   if (anchor.type === "opentimestamps") {
     // Phase 1 stores only the pending calendar attestation (anchor-client.mjs);
-    // there is no Merkle-to-block-header proof yet to bind structurally.
-    return { checked: false, bound: null, reason: "pending calendar attestation only — not yet upgraded to a Bitcoin block proof (Phase 1 scope)" };
+    // there is no Merkle-to-block-header proof yet to bind structurally. HELM-TSA-1
+    // scope for OTS is exactly this: structural parse (does a pending_proof exist,
+    // does its declared digest match) + an UPGRADE POINTER (the calendar URL the
+    // reader can check later, themselves, for the Bitcoin block proof) — never a
+    // live fetch here (SO #0: zero network in the blocking path).
+    if (!anchor.pending_proof) return { checked: false, bound: null, reason: "no pending_proof bytes to inspect" };
+    let bytes;
+    try {
+      bytes = base64ToBytes(anchor.pending_proof);
+    } catch (err) {
+      return { checked: true, bound: false, reason: `pending_proof is not valid base64: ${err.message}` };
+    }
+    if (bytes.length === 0) return { checked: true, bound: false, reason: "pending_proof is empty" };
+    const anchoredHashHex = (anchor.anchored_hash ?? "").replace(/^sha256:/, "");
+    const digestBound = anchoredHashHex === expectedHashHex;
+    return {
+      checked: true,
+      bound: null, // never upgradeable to a definite verdict offline — see reason
+      digestBound,
+      upgradePointer: anchor.calendar ?? null,
+      reason: digestBound
+        ? "structural only: a pending calendar attestation is present and its declared digest matches this checkpoint. NOT yet a Bitcoin block proof (Phase 1 scope) — the upgrade pointer above is where a reader can check for that later, out of band."
+        : "pending_proof's declared anchored_hash does not match this checkpoint's digest",
+    };
   }
   // R15-F5/P3-D4: a queued/skipped marker is NOT an error — relay-blocked
   // (or fully egress-blocked) is an explicit, expected state, and this
@@ -87,6 +110,21 @@ export function verifyAnchorBinding(anchor, expectedHashHex) {
     return { checked: true, bound: null, neutral: true, status: anchor.type, reason: anchor.reason };
   }
   return { checked: false, bound: null, reason: `unrecognized anchor type "${anchor.type}"` };
+}
+
+// HELM-TSA-1: the FULL rfc3161 check (signature + chain-to-pinned-root +
+// validity window, on top of verifyAnchorBinding's messageImprint check above).
+// Deliberately SEPARATE from verifyAnchorBinding — that one stays synchronous
+// and zero-crypto-lib so the initial verify pass renders instantly; this one
+// dynamic-imports the pkijs bundle (~800KB, see ./rfc3161-verify.mjs) and is
+// meant to be awaited as a progressive enhancement AFTER the first render, not
+// blocking it. opentimestamps/queued/skipped anchors have no fuller check to
+// run — delegates straight to verifyAnchorBinding for those.
+export async function verifyAnchorFull(anchor, expectedHashHex) {
+  if (anchor.type !== "rfc3161") return verifyAnchorBinding(anchor, expectedHashHex);
+  if (!anchor.der && !anchor.proof) return { checked: false, bound: null, reason: "no proof bytes to bind" };
+  const full = await verifyRfc3161Full(anchor.der ?? anchor.proof, expectedHashHex);
+  return { checked: true, bound: full.messageImprint.bound, genTime: full.genTime, policyOid: full.policyOid, full };
 }
 
 // bundle: { manifest: {predicate, envelope}, objects: [{kind,digest,trust_label,envelope}], checkpoints: [{checkpointSeq,journalRootDigest,envelope}] }

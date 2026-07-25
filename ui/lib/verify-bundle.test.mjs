@@ -5,8 +5,9 @@
 // the exact code path the Verify view runs in-browser.
 import { test } from "node:test";
 import assert from "node:assert/strict";
-import { verifyBundle, verifyCheckpointOffline, verifyAnchorBinding } from "./verify-bundle.mjs";
+import { verifyBundle, verifyCheckpointOffline, verifyAnchorBinding, verifyAnchorFull } from "./verify-bundle.mjs";
 import { DEMO_PUBLIC_KEYS, DEMO_GOLDEN_BUNDLE, DEMO_TAMPERED_BUNDLE } from "../fixtures/verify-demo.mjs";
+import { FREETSA_TOKEN_B64, EXPECTED_HASH_HEX } from "../fixtures/rfc3161-verify-fixtures.mjs";
 
 test("golden bundle verifies fully offline", async () => {
   const result = await verifyBundle(DEMO_GOLDEN_BUNDLE, DEMO_PUBLIC_KEYS);
@@ -47,17 +48,47 @@ test("checkpoint self-consistency: a mismatched journal_root_digest is caught (s
   assert.equal(result.reason, "envelope");
 });
 
-test("anchor binding: rfc3161 messageImprint mismatch is caught structurally, no network", () => {
-  // A minimal, real CMS SignedData/TSTInfo DER whose messageImprint we know
-  // (built inline rather than depending on a live relay call in a unit test) —
-  // reuse the shipped anchor-binding fixture generator's known-good token.
+test("anchor binding: opentimestamps anchor with no pending_proof is reported, not silently accepted", () => {
   const result = verifyAnchorBinding({ type: "opentimestamps" }, "a".repeat(64));
   assert.equal(result.checked, false);
-  assert.match(result.reason, /pending calendar attestation/);
+  assert.match(result.reason, /no pending_proof/);
+});
+
+test("anchor binding: opentimestamps — structural digest match + upgrade pointer surfaced (HELM-TSA-1)", () => {
+  const hashHex = "a".repeat(64);
+  const result = verifyAnchorBinding(
+    { type: "opentimestamps", pending_proof: Buffer.from([1, 2, 3]).toString("base64"), anchored_hash: `sha256:${hashHex}`, calendar: "https://a.pool.opentimestamps.org" },
+    hashHex
+  );
+  assert.equal(result.checked, true);
+  assert.equal(result.bound, null, "never a definite verdict offline — not yet a Bitcoin block proof");
+  assert.equal(result.digestBound, true);
+  assert.equal(result.upgradePointer, "https://a.pool.opentimestamps.org");
+});
+
+test("anchor binding: opentimestamps — digest mismatch fails closed even though a pending_proof exists", () => {
+  const result = verifyAnchorBinding({ type: "opentimestamps", pending_proof: Buffer.from([1, 2, 3]).toString("base64"), anchored_hash: `sha256:${"b".repeat(64)}` }, "a".repeat(64));
+  assert.equal(result.checked, true);
+  assert.equal(result.digestBound, false);
 });
 
 test("anchor binding: unrecognized anchor type is reported, never silently accepted", () => {
   const result = verifyAnchorBinding({ type: "scitt-receipt" }, "a".repeat(64));
   assert.equal(result.checked, false);
   assert.match(result.reason, /unrecognized/);
+});
+
+test("verifyAnchorFull: genuine rfc3161 anchor gets the full signature+chain+validity breakdown (HELM-TSA-1)", async () => {
+  const result = await verifyAnchorFull({ type: "rfc3161", der: FREETSA_TOKEN_B64 }, EXPECTED_HASH_HEX);
+  assert.equal(result.checked, true);
+  assert.equal(result.bound, true);
+  assert.equal(result.full.signature.valid, true);
+  assert.equal(result.full.chain.valid, true);
+  assert.equal(result.full.validity.valid, true);
+});
+
+test("verifyAnchorFull: non-rfc3161 anchor delegates to the structural check (no fuller check exists yet)", async () => {
+  const result = await verifyAnchorFull({ type: "queued", reason: "relay unreachable" }, "a".repeat(64));
+  assert.equal(result.neutral, true);
+  assert.equal(result.status, "queued");
 });
