@@ -18,10 +18,17 @@ function stateLine(result, render) {
 
 function healthCard(data) {
   const uptimeS = Math.round((data.uptimeMs ?? 0) / 1000);
+  // §18.4: announce the idle-stop behavior wherever health is already shown,
+  // not just at daemon boot — a tab opened hours after launch never sees the
+  // console banner. Falls back silently on an older daemon with no field.
+  const idleRow = data.idleTimeoutMs
+    ? `<div class="field-row"><dt>Stops if idle</dt><dd>after ${Math.round(data.idleTimeoutMs / 1000)}s (Start Menu / Applications to relaunch)</dd></div>`
+    : "";
   return `
     <dl>
       <div class="field-row"><dt>Status</dt><dd>${data.status}</dd></div>
       <div class="field-row"><dt>Uptime</dt><dd>${uptimeS}s</dd></div>
+      ${idleRow}
     </dl>`;
 }
 

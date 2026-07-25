@@ -345,6 +345,58 @@ test("§8: POST /shutdown replies before exiting, then calls exitFn", async () =
   }
 });
 
+test("§18: GET /health announces idleTimeoutMs", async () => {
+  const IDLE_PORT = 42003;
+  const idleServer = createHelmServer({
+    port: IDLE_PORT, allowedOrigin: ORIGIN, token, identityKeys, idleTimeoutMs: 5000,
+  });
+  try {
+    const res = await new Promise((resolve, reject) => {
+      const req = request({ host: "127.0.0.1", port: IDLE_PORT, path: "/health", method: "GET", headers: headers({ Host: `127.0.0.1:${IDLE_PORT}` }) }, (res) => {
+        let body = "";
+        res.on("data", (c) => (body += c));
+        res.on("end", () => resolve({ status: res.statusCode, body }));
+      });
+      req.on("error", reject);
+      req.end();
+    });
+    assert.equal(res.status, 200);
+    assert.equal(JSON.parse(res.body).idleTimeoutMs, 5000);
+  } finally {
+    idleServer.close();
+  }
+});
+
+test("§18.2: onAuthenticated fires once per authenticated request, not on a rejected one", async () => {
+  const AUTH_PORT = 42004;
+  let calls = 0;
+  const authServer = createHelmServer({
+    port: AUTH_PORT, allowedOrigin: ORIGIN, token, identityKeys, onAuthenticated: () => calls++,
+  });
+  try {
+    await new Promise((resolve, reject) => {
+      const req = request({ host: "127.0.0.1", port: AUTH_PORT, path: "/health", method: "GET", headers: { Host: `127.0.0.1:${AUTH_PORT}`, Origin: ORIGIN } }, (res) => {
+        res.on("data", () => {});
+        res.on("end", resolve);
+      });
+      req.on("error", reject);
+      req.end();
+    });
+    assert.equal(calls, 0, "a request with no bearer token must not reset the idle timer");
+    await new Promise((resolve, reject) => {
+      const req = request({ host: "127.0.0.1", port: AUTH_PORT, path: "/health", method: "GET", headers: headers({ Host: `127.0.0.1:${AUTH_PORT}` }) }, (res) => {
+        res.on("data", () => {});
+        res.on("end", resolve);
+      });
+      req.on("error", reject);
+      req.end();
+    });
+    assert.equal(calls, 1);
+  } finally {
+    authServer.close();
+  }
+});
+
 test("static: GET /app.mjs serves as a JS module, no auth required", async () => {
   const res = await get("/app.mjs", { Host: `127.0.0.1:${PORT}` });
   assert.equal(res.status, 200);

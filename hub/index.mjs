@@ -22,6 +22,10 @@ import { buildCheckpoint, saveCheckpoint, latestCheckpoint, verifyCheckpointSign
 import { publicKeysOf } from "./keys.mjs";
 import { installAutostart, uninstallAutostart, isAutostartInstalled, autostartLocation } from "./autostart.mjs";
 import { installShortcut, uninstallShortcut, isShortcutInstalled, shortcutLocation } from "./shortcut.mjs";
+import { createIdleTimer } from "./idle-timer.mjs";
+import { getSseConnectionCount, getRunsInFlightCount } from "./server.mjs";
+import { isPairingWindowOpen } from "./token.mjs";
+import { isBackupInFlight } from "./backup.mjs";
 
 // No "open" package (zero-dep, D2) — shell out to each OS's native opener.
 // Best-effort: a failure here (headless box, no default browser configured)
@@ -130,7 +134,36 @@ async function cmdStart({ open = false } = {}) {
     saveCheckpoint(db, buildCheckpoint(db, { checkpointSeq: nextSeq, keys: identityKeys, anchors: [] }));
   }
 
-  const server = createHelmServer({ port: config.port, allowedOrigin: config.allowedOrigin, token, db, identityKeys, haIdentity, versionCheckUrl: config.versionCheckUrl });
+  // §18: helmd stops itself after config.idleTimeoutMs (default 2 minutes,
+  // §18.3) with nothing going on. "Going on" is deliberately broader than
+  // "an HTTP request just landed" — an open SSE tab, a run mid-execution, a
+  // just-minted pairing link, or a backup/export must all hold the daemon
+  // open even if no new authenticated request arrives during them (§18.2).
+  // Built before createHelmServer so its reset() can be wired in as the
+  // server's onAuthenticated hook below.
+  const idleTimer = createIdleTimer({
+    timeoutMs: config.idleTimeoutMs,
+    isSuppressed: () => getSseConnectionCount() > 0 || getRunsInFlightCount() > 0 || isPairingWindowOpen() || isBackupInFlight(),
+    onIdle: () => {
+      log.info(`helmd: idle for ${config.idleTimeoutMs}ms — stopping (see \`helmd status\` / Operate for how to restart)`);
+      // Same reply-then-exit discipline as the CLI `stop` verb (§2's
+      // ordering guarantee) even though nothing is waiting on a reply here —
+      // the delay gives this log line's write a tick to land before exit.
+      setTimeout(() => process.exit(0), 50);
+    },
+  });
+
+  const server = createHelmServer({
+    port: config.port,
+    allowedOrigin: config.allowedOrigin,
+    token,
+    db,
+    identityKeys,
+    haIdentity,
+    versionCheckUrl: config.versionCheckUrl,
+    idleTimeoutMs: config.idleTimeoutMs,
+    onAuthenticated: () => idleTimer.reset(),
+  });
   // P3-D9: refuse to start on a squatted port — never silently bind
   // elsewhere. Must resolve BEFORE the CLI channel opens or any browser tab
   // is auto-launched, or a squatted port would open onto whatever's
@@ -175,8 +208,18 @@ async function cmdStart({ open = false } = {}) {
       autostartLocation: autostartLocation(),
       shortcut: isShortcutInstalled(),
       shortcutLocation: shortcutLocation(),
+      // §18.4: announced here too, not just Operate — `helmd status` is the
+      // zero-CLI-else escape hatch this project's headless/no-DE users have.
+      idleTimeoutMs: config.idleTimeoutMs,
     }),
   }, { port: config.port });
+
+  // §18.2 insertion point: the timer starts counting down from here, the
+  // first moment there's a running daemon with nothing yet in flight.
+  // Without this call the countdown would never begin until the first
+  // authenticated request — silently doubling the effective idle window on
+  // an install nobody ever opens a browser tab against.
+  idleTimer.reset();
 
   log.info("helmd started", { port: config.port });
   const url = pairingUrl(token, config.port, createPairingNonce(), identityFingerprint);
@@ -184,6 +227,10 @@ async function cmdStart({ open = false } = {}) {
   console.log("(paste this into your browser if it did not open automatically)");
   console.log("");
   console.log("Helm is running. Stop it with `helmd stop`, check it with `helmd status`.");
+  // §18.4: said out loud at boot, not just on demand — the consequence
+  // (a bookmark reaching nothing until relaunched) is one Tim explicitly
+  // accepted contingent on it never being a silent surprise.
+  console.log(`Helm stops automatically after ${Math.round(config.idleTimeoutMs / 1000)}s idle — a Start Menu / Applications launch brings it back.`);
 
   // HELM-WIN-INSTALL-1: this used to auto-open ONLY on first run
   // (`isFirstRun || open`) — every later start (including the very next
@@ -321,6 +368,7 @@ async function cmdStatus() {
     console.log(`  version    ${r.version}`);
     console.log(`  autostart  ${describeEntry(r.autostart, r.autostartLocation)}`);
     console.log(`  shortcut   ${describeEntry(r.shortcut, r.shortcutLocation)}`);
+    console.log(`  idle stop  after ${Math.round(r.idleTimeoutMs / 1000)}s idle (configurable in ~/.helm/config.json); relaunch via Start Menu / Applications`);
     console.log("  pairing    helmd open");
     console.log("  stop       helmd stop");
   } catch (err) {

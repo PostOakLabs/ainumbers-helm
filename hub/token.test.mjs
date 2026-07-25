@@ -4,7 +4,7 @@ import assert from "node:assert/strict";
 // Only the pure/in-memory exports are covered here (pairingUrl, tokenMatches,
 // pairing-nonce lifecycle) — none of them touch statePath, so no HELM_HOME
 // fixture dir is needed (unlike keys.test.mjs / doctor.test.mjs).
-const { pairingUrl, tokenMatches, createPairingNonce, redeemPairingNonce } = await import("./token.mjs");
+const { pairingUrl, tokenMatches, createPairingNonce, redeemPairingNonce, isPairingWindowOpen } = await import("./token.mjs");
 
 test("pairingUrl: with a pair nonce, embeds both token and pair fragment params", () => {
   const url = pairingUrl("tok123", 4173, "nonceABC");
@@ -59,4 +59,17 @@ test("pairing nonce: two nonces are independent — redeeming one never consumes
   const b = createPairingNonce();
   assert.equal(redeemPairingNonce(a), true);
   assert.equal(redeemPairingNonce(b), true);
+});
+
+test("§18.2: isPairingWindowOpen is true for an unredeemed, unexpired nonce", () => {
+  const now = Date.now();
+  const nonce = createPairingNonce(now);
+  assert.equal(isPairingWindowOpen(now), true);
+  redeemPairingNonce(nonce, now); // clean up so it can't leak into a later test's map scan
+});
+
+test("§18.2: isPairingWindowOpen is false once every nonce has expired", () => {
+  const mintedAt = Date.now() - 10 * 60 * 1000; // 10 minutes ago, TTL is 5
+  createPairingNonce(mintedAt);
+  assert.equal(isPairingWindowOpen(Date.now()), false);
 });

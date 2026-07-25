@@ -28,6 +28,7 @@ import { renderKernelDecisionTableHtml, buildKernelDecisionTableDmn } from "../u
 import { importMigrationBundle } from "./migration-import.mjs";
 import { buildWorkflowExport, parseWorkflowExport } from "./workflow-export.mjs";
 import { checkVersion, DEFAULT_VERSION_CHECK_URL } from "./version-check.mjs";
+import { DEFAULT_IDLE_TIMEOUT_MS } from "./idle-timer.mjs";
 
 const START = Date.now();
 const HERE = dirname(fileURLToPath(import.meta.url));
@@ -107,9 +108,12 @@ function readJsonBody(req) {
   });
 }
 
-function handleHealth(req, res) {
+// §18.4: the idle timeout must be announced, not merely enforced — this is
+// the one route every client (Operate, the CLI's implicit health probes)
+// already polls, so it's where "Helm stops when idle" gets said out loud.
+function handleHealth(req, res, params, db, idleTimeoutMs = DEFAULT_IDLE_TIMEOUT_MS) {
   res.writeHead(200, { "Content-Type": "application/json" });
-  res.end(JSON.stringify({ status: "ok", uptimeMs: Date.now() - START, version: DAEMON_VERSION }));
+  res.end(JSON.stringify({ status: "ok", uptimeMs: Date.now() - START, version: DAEMON_VERSION, idleTimeoutMs }));
 }
 
 // GET /version-check (HELM-P4-J4): authenticated wrapper around the same
@@ -227,6 +231,17 @@ async function handleRevoke(req, res, params) {
 
 export const MAX_SSE_CONNECTIONS = 20; // HELM-SEC-5 hardening: unbounded /events connections could exhaust local handles
 let sseConnections = 0;
+// §18.2 idle-shutdown suppression signal: true for the wall-clock duration of
+// an in-flight run (handleRunStart's fire-and-forget chain and
+// handleRunResume's awaited one both bump this), not merely while a client
+// is watching its /events stream.
+let runsInFlight = 0;
+export function getSseConnectionCount() {
+  return sseConnections;
+}
+export function getRunsInFlightCount() {
+  return runsInFlight;
+}
 
 // POST /events/ticket (HELM-UX-1 §7.4): authenticated the normal way (bearer
 // header, already past the router's tokenMatches gate by the time this
@@ -354,6 +369,7 @@ async function handleRunStart(req, res, params, db) {
     return output;
   };
 
+  runsInFlight++;
   executeRun(db, { runId, manifest, dryRun, stepRunner, gateCheck: haGateCheckFor(db) })
     .then((result) => publishRunEvent(runId, {
       run_id: runId, state: result.state, execution_hash: result.executionHash, held: result.held ?? null,
@@ -361,7 +377,8 @@ async function handleRunStart(req, res, params, db) {
     .catch((err) => {
       log.error("run engine: run failed", { runId, workflowId, error: String(err?.message || err) });
       publishRunEvent(runId, { run_id: runId, state: "failed", error: String(err?.message || err) });
-    });
+    })
+    .finally(() => runsInFlight--);
 
   sendJson(res, 200, { run_id: runId, state: "queued" });
 }
@@ -394,6 +411,7 @@ async function handleRunResume(req, res, params, db) {
     return output;
   };
 
+  runsInFlight++;
   try {
     const result = await executeRun(db, { runId, manifest, dryRun: !!row.dry_run, stepRunner, gateCheck: haGateCheckFor(db) });
     publishRunEvent(runId, { run_id: runId, state: result.state, execution_hash: result.executionHash, held: result.held ?? null });
@@ -402,6 +420,8 @@ async function handleRunResume(req, res, params, db) {
     log.error("run engine: resume failed", { runId, error: String(err?.message || err) });
     publishRunEvent(runId, { run_id: runId, state: "failed", error: String(err?.message || err) });
     deny(res, 500, "resume_failed");
+  } finally {
+    runsInFlight--;
   }
 }
 
@@ -633,9 +653,25 @@ export const DYNAMIC_ROUTES = [
   { method: "GET", pattern: /^\/templates\/(?<slug>[^/]+)$/, docPath: "/templates/{slug}", handler: handleTemplateDetail },
 ];
 
-export function createHelmServer({ port, allowedOrigin, token, db = null, identityKeys = null, haIdentity = null, versionCheckUrl = DEFAULT_VERSION_CHECK_URL, exitFn = () => process.exit(0) }) {
+export function createHelmServer({
+  port,
+  allowedOrigin,
+  token,
+  db = null,
+  identityKeys = null,
+  haIdentity = null,
+  versionCheckUrl = DEFAULT_VERSION_CHECK_URL,
+  exitFn = () => process.exit(0),
+  idleTimeoutMs = DEFAULT_IDLE_TIMEOUT_MS,
+  // §18.2: called after every request clears the Host+Origin+Bearer gate,
+  // before it reaches a handler. index.mjs wires this to the idle timer's
+  // reset() — kept as a no-op default so every existing test/caller that
+  // doesn't care about idle shutdown is unaffected.
+  onAuthenticated = () => {},
+}) {
   const routes = {
     ...ROUTES,
+    "GET /health": (req, res) => handleHealth(req, res, {}, db, idleTimeoutMs),
     "GET /version-check": (req, res) => handleVersionCheck(req, res, versionCheckUrl),
     "POST /ha/replay": (req, res, params, reqDb) => handleHaReplay(req, res, params, reqDb, haIdentity),
     "POST /shutdown": (req, res, params, reqDb) => handleShutdown(req, res, params, reqDb, exitFn),
@@ -689,6 +725,7 @@ export function createHelmServer({ port, allowedOrigin, token, db = null, identi
       log.warn("rejected: bad or missing token", { path: pathname });
       return deny(res, 401, "unauthorized");
     }
+    onAuthenticated();
 
     const handler = routes[`${req.method} ${pathname}`];
     if (handler) return handler(req, res, {}, db);

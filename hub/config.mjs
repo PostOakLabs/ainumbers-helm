@@ -3,6 +3,7 @@
 // Single config file: ~/.helm/config.json. Created with defaults on first run.
 import { existsSync, readFileSync, writeFileSync } from "node:fs";
 import { statePath } from "./state-dir.mjs";
+import { DEFAULT_IDLE_TIMEOUT_MS } from "./idle-timer.mjs";
 
 const DEFAULT_PORT = 4173;
 // D10: passive notice only, never an auto-updater. Empty string disables
@@ -20,7 +21,14 @@ function defaultOrigin(port) {
 export function loadConfig() {
   const path = statePath("config.json");
   if (!existsSync(path)) {
-    const config = { port: DEFAULT_PORT, allowedOrigin: defaultOrigin(DEFAULT_PORT), versionCheckUrl: DEFAULT_VERSION_CHECK_URL };
+    const config = {
+      port: DEFAULT_PORT,
+      allowedOrigin: defaultOrigin(DEFAULT_PORT),
+      versionCheckUrl: DEFAULT_VERSION_CHECK_URL,
+      // §18.3: written out explicitly (not left implicit) so the file itself
+      // is where a user retunes it, per Tim's "we can always change it".
+      idleTimeoutMs: DEFAULT_IDLE_TIMEOUT_MS,
+    };
     writeFileSync(path, JSON.stringify(config, null, 2) + "\n", { mode: 0o600 });
     return { ...config, anchorRequired: false, path };
   }
@@ -30,6 +38,7 @@ export function loadConfig() {
     port,
     allowedOrigin: parsed.allowedOrigin ?? defaultOrigin(port),
     versionCheckUrl: parsed.versionCheckUrl ?? DEFAULT_VERSION_CHECK_URL,
+    idleTimeoutMs: parsed.idleTimeoutMs ?? DEFAULT_IDLE_TIMEOUT_MS,
     // HELM-UX-1 §9.4: when true, the journal-checkpoint boot fast path only
     // trusts an ANCHORED checkpoint — an unanchored one falls back to a full
     // replay, same as an invalid one. No installer sets this yet (nothing in

@@ -37,16 +37,39 @@ function dumpAll(db) {
   };
 }
 
+// §18.2 idle-shutdown suppression: true for the duration of an
+// exportEncrypted/restoreEncrypted call. A count, not a bool, so overlapping
+// calls (e.g. a resume racing a fresh export) can't have one's `finally`
+// clear the flag out from under the other.
+let backupsInFlight = 0;
+export function isBackupInFlight() {
+  return backupsInFlight > 0;
+}
+
 // Returns the encrypted blob (JSON-serializable) — caller decides where it lives.
 export function exportEncrypted(db, passphrase) {
-  const plaintext = Buffer.from(JSON.stringify(dumpAll(db)), "utf8");
-  return { format: "helm-journal-backup-v1", ...encrypt(passphrase, plaintext) };
+  backupsInFlight++;
+  try {
+    const plaintext = Buffer.from(JSON.stringify(dumpAll(db)), "utf8");
+    return { format: "helm-journal-backup-v1", ...encrypt(passphrase, plaintext) };
+  } finally {
+    backupsInFlight--;
+  }
 }
 
 // Restores an encrypted export into a fresh database file (must not already
 // exist / must be empty — restore is a full replace, never a merge). Returns
 // the opened db plus the two integrity checks the WU's "done" criteria require.
 export function restoreEncrypted(blob, passphrase, destDbPath) {
+  backupsInFlight++;
+  try {
+    return restoreEncryptedInner(blob, passphrase, destDbPath);
+  } finally {
+    backupsInFlight--;
+  }
+}
+
+function restoreEncryptedInner(blob, passphrase, destDbPath) {
   if (blob.format !== "helm-journal-backup-v1") throw new Error(`unknown backup format "${blob.format}"`);
   const dump = JSON.parse(decrypt(passphrase, blob).toString("utf8"));
 
