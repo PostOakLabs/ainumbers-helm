@@ -37,7 +37,18 @@ import { installShortcut, uninstallShortcut, isShortcutInstalled, shortcutLocati
 // url.dll,FileProtocolHandler entry point opens the default browser without
 // going through cmd.exe's command-line grammar at all, so it isn't exposed
 // to this class of bug.
+// HELM_NO_OPEN: automated callers (the test suite, CI, a scripted install)
+// start a real daemon and must not hijack the machine's browser to do it.
+// Every `helmd start` opens a tab (see the call site below), so a test that
+// spawns the daemon opened a tab on the developer's desktop on every run, and
+// a suite that spawns it repeatedly opened one every few minutes. Opt-out, not
+// opt-in: a human running `helmd start` by hand still gets the tab, which is
+// the behaviour the auto-open exists for.
 function openBrowser(url) {
+  if (process.env.HELM_NO_OPEN === "1") {
+    log.info("browser auto-open suppressed by HELM_NO_OPEN", { url });
+    return;
+  }
   try {
     const plat = platform();
     if (plat === "win32") execFileSync("rundll32", ["url.dll,FileProtocolHandler", url], { stdio: "ignore" });
