@@ -2,11 +2,10 @@
 // SPDX-License-Identifier: Apache-2.0
 // Copyright (c) 2026 Post Oak Labs, Inc.
 // Activate the repo's tracked git hooks in this clone by pointing
-// core.hooksPath at the committed .githooks/ dir. The commit-msg hook itself
-// (.githooks/commit-msg → check-commit-msg.mjs, HELM-SHIFTLEFT-1) is already
-// version-controlled — this script does NOT write it. It only fixes the one
-// per-clone gap that let a bad PR title through: git never runs those hooks
-// unless core.hooksPath is set, and a fresh clone doesn't set it.
+// core.hooksPath at the committed .githooks/ dir (HELM-SHIFTLEFT-1). The
+// hooks themselves are already version-controlled — this script does NOT
+// write them. It only fixes the one per-clone gap: git never runs those
+// hooks unless core.hooksPath is set, and a fresh clone doesn't set it.
 //
 // Wired to `npm install` via the package.json "prepare" script, so every
 // clone activates hooks automatically. Safe to run repeatedly. Exits 0 (never
@@ -41,7 +40,7 @@ try {
     process.exit(0);
   }
   git(["config", "core.hooksPath", HOOKS_DIR]);
-  console.log(`install-hooks: set core.hooksPath=${HOOKS_DIR} (activates .githooks/commit-msg).`);
+  console.log(`install-hooks: set core.hooksPath=${HOOKS_DIR} (activates .githooks/pre-push).`);
 } catch (err) {
   // Never fail the install — hook activation is best-effort.
   console.log(`install-hooks: skipped (${err.message.split("\n")[0]}).`);

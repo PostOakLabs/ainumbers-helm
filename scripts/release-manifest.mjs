@@ -36,7 +36,7 @@ function main() {
 
   if (process.env.HELM_RELEASE_VERSION && process.env.HELM_RELEASE_VERSION !== pkgVersion) {
     console.error(
-      `release-manifest: tag version v${process.env.HELM_RELEASE_VERSION} does not match package.json version ${pkgVersion} — refusing to sign a mismatched release`
+      `release-manifest: tag version ${process.env.HELM_RELEASE_VERSION} does not match package.json version ${pkgVersion} — refusing to sign a mismatched release`
     );
     process.exit(1);
   }
@@ -75,7 +75,7 @@ function main() {
   writeFileSync(join(DIST, "release-manifest.json"), JSON.stringify(statement, null, 2) + "\n");
   writeFileSync(join(DIST, "release-manifest.dsse.json"), JSON.stringify(envelope, null, 2) + "\n");
 
-  console.log(`release-manifest: signed ${subject.length} artifact(s) for v${version}`);
+  console.log(`release-manifest: signed ${subject.length} artifact(s) for ${version}`);
 }
 
 main();

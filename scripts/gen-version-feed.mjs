@@ -32,7 +32,7 @@ const schemaPath = arg("schema");
 const outPath = arg("out");
 
 if (!/^\d+\.\d+\.\d+(-[0-9A-Za-z.-]+)?$/.test(version)) {
-  console.error(`gen-version-feed: --version "${version}" is not a bare semver (no leading "v")`);
+  console.error(`gen-version-feed: --version "${version}" is not a bare N.N.N version (no leading "v")`);
   process.exit(1);
 }
 

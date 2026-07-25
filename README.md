@@ -28,11 +28,11 @@ OCG kernels and verify code are vendored pinned from `PostOakLabs/ainumbers` —
 
 ## Contributing
 
-Run `node scripts/setup-hooks.mjs` once per clone to enable local shift-left gates (commit-msg + pre-push mirror CI — see `docs/RELEASING.md`). Open PRs with `gh pr create --fill` so the title inherits the already-validated commit subject.
+Run `node scripts/setup-hooks.mjs` once per clone to enable the local pre-push shift-left gate (mirrors CI — see `docs/RELEASING.md`).
 
 ## Release channel
 
-`docs/RELEASE-CHANNEL.md` — semver discipline, signed release notes, the
+`docs/RELEASE-CHANNEL.md` — CalVer discipline, signed release notes, the
 machine-readable version feed, and the support-floor signal, for orgs running
 a CAB-lite process against upstream releases.
 
