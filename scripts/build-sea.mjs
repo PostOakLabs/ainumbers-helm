@@ -9,15 +9,19 @@
 // zero-dep discipline per D2 covers the shipped product, not one-shot build
 // tooling).
 import { execFileSync } from "node:child_process";
-import { copyFileSync, mkdirSync, mkdtempSync, rmSync, writeFileSync, existsSync, chmodSync } from "node:fs";
+import { copyFileSync, mkdirSync, mkdtempSync, rmSync, writeFileSync, existsSync, chmodSync, readFileSync } from "node:fs";
 import { join, dirname } from "node:path";
 import { tmpdir, platform, arch } from "node:os";
 import { fileURLToPath } from "node:url";
 import { seaAssetMap } from "../hub/ui-manifest.mjs";
+import { collectBackendSourceFiles, seaBackendAssetMap } from "../hub/sea-source-manifest.mjs";
 
 const ROOT = join(dirname(fileURLToPath(import.meta.url)), "..");
-const ENTRY = join(ROOT, "hub", "index.mjs");
+// The SEA main script must be CJS (see hub/sea-entry.cjs) — it dynamically
+// imports the real (ESM) index.mjs from extracted, embedded source assets.
+const ENTRY = join(ROOT, "hub", "sea-entry.cjs");
 const SENTINEL_FUSE = "NODE_SEA_FUSE_fce680ab2cc467b6e072b8b5df1996b2";
+const VERSION = JSON.parse(readFileSync(join(ROOT, "package.json"), "utf8")).version;
 
 function platformTag() {
   const p = platform() === "win32" ? "windows" : platform() === "darwin" ? "macos" : "linux";
@@ -40,10 +44,24 @@ function main() {
   try {
     const configPath = join(tmp, "sea-config.json");
     const blobPath = join(tmp, "helmd.blob");
+    const manifestPath = join(tmp, "src-manifest.json");
+    const versionPath = join(tmp, "src-version.txt");
+    writeFileSync(manifestPath, JSON.stringify(collectBackendSourceFiles()));
+    writeFileSync(versionPath, VERSION);
     writeFileSync(
       configPath,
       JSON.stringify(
-        { main: ENTRY, output: blobPath, disableExperimentalSEAWarning: true, assets: seaAssetMap() },
+        {
+          main: ENTRY,
+          output: blobPath,
+          disableExperimentalSEAWarning: true,
+          assets: {
+            ...seaAssetMap(),
+            ...seaBackendAssetMap(),
+            "src-manifest": manifestPath,
+            "src-version": versionPath,
+          },
+        },
         null,
         2
       )

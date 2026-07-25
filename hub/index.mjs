@@ -22,14 +22,25 @@ import { installAutostart, uninstallAutostart } from "./autostart.mjs";
 // No "open" package (zero-dep, D2) — shell out to each OS's native opener.
 // Best-effort: a failure here (headless box, no default browser configured)
 // is a warning, never fatal — the printed pairing URL is always the fallback.
+//
+// HELM-WIN-INSTALL-1: the pairing URL always contains `&pair=` and `&fp=`
+// query params. `cmd /c start "" <url>` hands the url to cmd.exe, which
+// parses `&` as a command separator REGARDLESS of the argv-level quoting
+// execFileSync applies — cmd splits "...token=x&pair=y&fp=z" into three
+// commands and the last two fail with "'pair' is not recognized...". This
+// silently killed auto-open on every Windows run (not just non-first-run —
+// see the isFirstRun/--open gate below, a separate bug). rundll32's
+// url.dll,FileProtocolHandler entry point opens the default browser without
+// going through cmd.exe's command-line grammar at all, so it isn't exposed
+// to this class of bug.
 function openBrowser(url) {
   try {
     const plat = platform();
-    if (plat === "win32") execFileSync("cmd", ["/c", "start", "", url], { stdio: "ignore" });
+    if (plat === "win32") execFileSync("rundll32", ["url.dll,FileProtocolHandler", url], { stdio: "ignore" });
     else if (plat === "darwin") execFileSync("open", [url], { stdio: "ignore" });
     else execFileSync("xdg-open", [url], { stdio: "ignore" });
   } catch (err) {
-    log.warn("could not auto-open browser", { error: String(err?.message || err) });
+    log.warn("could not auto-open browser — open the pairing URL above manually", { error: String(err?.message || err) });
   }
 }
 
@@ -94,11 +105,16 @@ async function cmdStart({ open = false } = {}) {
   log.info("helmd started", { port: config.port });
   const url = pairingUrl(token, config.port, createPairingNonce(), identityFingerprint);
   console.log(url);
+  console.log("(paste this into your browser if it did not open automatically)");
 
-  // First-run zero-CLI-copy-paste onboarding (HELM-U4): the pairing link
-  // opens itself. `--open` forces the same behavior on any later start
-  // (e.g. a future `helm open` wrapper shelling out to `helmd start --open`).
-  if (isFirstRun || open) openBrowser(url);
+  // HELM-WIN-INSTALL-1: this used to auto-open ONLY on first run
+  // (`isFirstRun || open`) — every later start (including the very next
+  // double-click after a crash, or after closing the tab) printed the URL
+  // to a console window a double-click never leaves open long enough to
+  // read, and opened nothing. Auto-open is harmless to repeat (it's just a
+  // browser tab), so do it on every start; `open`/`--open` is now redundant
+  // but stays as an explicit override for callers that want to force it.
+  openBrowser(url);
 
   // HELM-P4-J4: the last CLI moment. First run also installs the per-user
   // autostart entry (macOS LaunchAgent / Windows HKCU Run key) so the next
