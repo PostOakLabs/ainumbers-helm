@@ -301,6 +301,21 @@ jobs:
     permissions:
       contents: read
     steps:
+      # HELM-REL-AUTO-6: without this secret, actions/checkout below falls
+      # back to no auth token, checks out the (public) site repo fine, and
+      # the eventual `git push` 403s — a real failure, but one buried at
+      # the bottom of the log under a generic auth error. Fail here instead,
+      # first, with a message that names the actual cause: helm.html will
+      # keep serving a stale version until this secret exists.
+      - name: verify SITE_REPO_PUSH_TOKEN is configured
+        env:
+          TOKEN_SET: ${{ secrets.SITE_REPO_PUSH_TOKEN != '' }}
+        run: |
+          if [ "$TOKEN_SET" != "true" ]; then
+            echo "::error::SITE_REPO_PUSH_TOKEN secret is not set — publish-version-feed cannot push helm/version.json to the site repo, so helm.html will keep serving a stale version. This must be added (fine-grained PAT, contents:write, scoped to PostOakLabs/ainumbers only) before this job can succeed."
+            exit 1
+          fi
+
       - uses: actions/checkout@9c091bb21b7c1c1d1991bb908d89e4e9dddfe3e0 # v7.0.0
         with:
           path: helm

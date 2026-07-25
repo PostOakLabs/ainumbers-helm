@@ -1,37 +1,55 @@
 # Releasing
 
-Releases are CalVer, tagged by hand (HELM-CALVER-1, 2026-07-25): the version
-IS the ship date, `YYYY.M.D`, no zero-padding, no `v` prefix — three numeric
-components so npm accepts it unchanged. There is no support window, no
-deprecation policy and no dependent to protect with a computed major/minor/
-patch bump, so nothing computes one.
+Releases are CalVer (HELM-CALVER-1, 2026-07-25): the version IS the ship
+date, `YYYY.M.D`, no zero-padding, no `v` prefix — three numeric components
+so npm accepts it unchanged. There is no support window, no deprecation
+policy and no dependent to protect with a computed major/minor/patch bump,
+so nothing computes one.
 
-## Cutting a release
+## Cutting a release (automatic, HELM-REL-AUTO-6, 2026-07-25)
 
-1. Bump the `version` field in root `package.json` to the exact tag string
-   (e.g. `"2026.7.25"`) and merge that to `main` first —
-   `scripts/release-manifest.mjs` refuses to sign the release if the tag and
-   `package.json` don't match, by design (a mismatched version is a
-   mislabeled release, not a warning).
-2. Tag and push:
+`.github/workflows/auto-tag-release.yml` runs daily (`workflow_dispatch` to
+force it on demand). If `main` has moved since the last GA CalVer tag, it:
+
+1. Bumps the `version` field in root `package.json` to today's date.
+2. Regenerates `docs/openapi.json` (`scripts/gen-openapi.mjs` — it has its
+   own freshness gate in the test suite, so a stale copy would fail CI).
+3. Commits both straight to `main`.
+4. Tags that commit `YYYY.M.D` and pushes the tag.
+
+If `main` is unchanged since the last tag, or a tag for today already
+exists, it exits doing nothing — no commit, no tag. **One release per day
+is a hard format constraint, not a preference:** the date consumes all
+three semver components, so two GA tags can never coexist on the same day.
+
+No release PR, no changelog ritual, no human step. The tag push triggers
+`.github/workflows/release.yml`: four-platform SEA build → signed release
+manifest → verify (fail-closed) → GitHub release (GA tags self-promote to
+`latest`) → `publish-version-feed` → `publish-npm` (GA tags only, currently
+disabled — see below).
+
+⚠ **Because CalVer names the tag after the date, a failed release cannot
+pick a new number.** Recovery is deleting and re-pushing the same tag
+(`git push --delete origin YYYY.M.D` then re-tag), not incrementing. This
+happened once by hand on the first CalVer release (2026-07-25), before the
+tagger existed, when the version bump was a manual step and got skipped —
+exactly the drift the tagger's single bump-then-tag step now prevents by
+construction.
+
+### Manual tag (fallback only)
+
+The tagger is the normal path. To cut a release by hand instead — e.g. to
+test the pipeline, or if the tagger is broken — bump `package.json` to the
+exact tag string, regenerate `docs/openapi.json`, commit and merge to
+`main`, then:
 
 ```
 git tag 2026.7.25 && git push --tags
 ```
 
-No release PR, no changelog ritual beyond step 1. The tag push triggers
-`.github/workflows/release.yml`: four-platform SEA build → signed release
-manifest → verify (fail-closed) → GitHub release (GA tags self-promote to
-`latest`) → `publish-version-feed` → `publish-npm` (GA tags only).
-
-⚠ **Step 1 is not optional and is easy to skip.** `release-manifest.mjs`
-compares the tag against `package.json` and refuses to sign a mismatch — so
-forgetting it fails the run *after* the build, with the tag already pushed.
-Because CalVer names the tag after the date, recovering means deleting and
-re-pushing the same tag rather than picking a new number. This happened on
-the first CalVer release (2026-07-25). The planned automated tagger folds
-the bump into the same step that computes the tag, so the two can no longer
-drift apart.
+`scripts/release-manifest.mjs` refuses to sign the release if the tag and
+`package.json` don't match, by design (a mismatched version is a
+mislabeled release, not a warning).
 
 The `release` Environment previously paused here for an approval click. That
 gate was removed 2026-07-25 (Tim): with no users, a signing job that waits on
