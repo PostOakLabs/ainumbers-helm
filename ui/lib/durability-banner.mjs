@@ -21,10 +21,12 @@ export function bannerFor({ writerRole, durable }) {
 
 export function renderBannerHtml(banner) {
   switch (banner) {
+    // §14.3: this tab's work is silently not being recorded — role="alert",
+    // not "status", so it interrupts rather than waits to be polled.
     case BANNER.READ_ONLY_TAB:
-      return `<div class="durability-banner" data-state="warning" role="status">Another tab is recording this session — this tab is read-only. Close the other tab or reload here to take over.</div>`;
+      return `<div class="durability-banner" data-state="warning" role="alert">Another Helm tab is recording this session, so nothing here is being saved. Close the other tab, or reload this page to take over recording.</div>`;
     case BANNER.NOT_DURABLE:
-      return `<div class="durability-banner" data-state="warning" role="status">Not durable here — export the evidence bundle after each run, or install the Helm engine for durable storage.</div>`;
+      return `<div class="durability-banner" data-state="warning" role="status">This browser might clear your run history without warning. Download the evidence file after each run so you keep a copy. <button type="button" id="durability-banner-download" class="secondary">Download evidence file</button></div>`;
     default:
       return "";
   }
