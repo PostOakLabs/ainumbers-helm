@@ -1,7 +1,7 @@
 name: Auto-tag release
 
-# HELM-REL-AUTO-6: takes the recurring "cut a release" duty off Tim.
-# Runs daily; if `main` has moved since the last GA CalVer tag, bumps
+# Takes the recurring "cut a release" duty off a human. Runs daily; if
+# `main` has moved since the last GA CalVer tag, bumps
 # `package.json` to today's date, regenerates docs/openapi.json (its own
 # freshness gate would otherwise fail), commits both, and pushes today's
 # YYYY.M.D tag — which is what actually fires release.yml. No-op (exit 0,

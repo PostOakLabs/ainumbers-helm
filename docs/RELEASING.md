@@ -6,7 +6,7 @@ so npm accepts it unchanged. There is no support window, no deprecation
 policy and no dependent to protect with a computed major/minor/patch bump,
 so nothing computes one.
 
-## Cutting a release (automatic, HELM-REL-AUTO-6, 2026-07-25)
+## Cutting a release (automatic, 2026-07-25)
 
 `.github/workflows/auto-tag-release.yml` runs daily (`workflow_dispatch` to
 force it on demand). If `main` has moved since the last GA CalVer tag, it:

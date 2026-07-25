@@ -301,7 +301,7 @@ jobs:
     permissions:
       contents: read
     steps:
-      # HELM-REL-AUTO-6: without this secret, actions/checkout below falls
+      # Without this secret, actions/checkout below falls
       # back to no auth token, checks out the (public) site repo fine, and
       # the eventual `git push` 403s — a real failure, but one buried at
       # the bottom of the log under a generic auth error. Fail here instead,
