@@ -253,24 +253,6 @@ async function render(app) {
   refreshConnectivity(port, token, app.statusDot, app.statusLabel);
 }
 
-const DENSITY_KEY = "helm.density";
-
-// DEC-2 (locked): compact by default, comfortable is an opt-in toggle
-// persisted per-browser.
-function initDensityToggle(btn) {
-  const apply = (density) => {
-    document.documentElement.dataset.density = density;
-    btn.setAttribute("aria-pressed", String(density === "comfortable"));
-    btn.textContent = density === "comfortable" ? "Compact" : "Comfortable";
-  };
-  apply(localStorage.getItem(DENSITY_KEY) === "comfortable" ? "comfortable" : "compact");
-  btn.addEventListener("click", () => {
-    const next = document.documentElement.dataset.density === "comfortable" ? "compact" : "comfortable";
-    localStorage.setItem(DENSITY_KEY, next);
-    apply(next);
-  });
-}
-
 // HELM-P4-J4: skew banner — polls the daemon's own /version-check (which
 // does the real comparison server-side, since the page's CSP is
 // `connect-src 'self'` and can't reach ainumbers.co directly). Best-effort:
@@ -348,8 +330,6 @@ export function boot() {
   if (preHashToken && pair) {
     call("/pair/redeem", { port: loadPort(), token: preHashToken, method: "POST", body: { nonce: pair } }).catch(() => {});
   }
-
-  initDensityToggle(document.getElementById("density-toggle"));
 
   const app = {
     viewHeader: document.getElementById("view-header"),
