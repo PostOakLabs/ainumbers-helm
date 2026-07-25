@@ -1,5 +1,6 @@
 {
   "sourceRepo": "https://github.com/PostOakLabs/anchor-suite.git",
+  "license": "MIT (public/vendor/pkijs.bundle.mjs additionally bundles third-party BSD-3-Clause and MIT code preserved in-file; see NOTICE)",
   "pinnedSha": "1aa6d2222b64ff9b5f53245e6be244ddc091d401",
   "vendoredPaths": [
     "public/lib/tsq.mjs",
