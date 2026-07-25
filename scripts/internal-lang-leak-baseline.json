@@ -1,0 +1,44 @@
+{
+  "generated": "check-internal-lang-leak.mjs --update",
+  "counts": {
+    ".github/workflows/ci.yml": {
+      "bare-wu-id": 1
+    },
+    ".github/workflows/release-please.yml": {
+      "bare-wu-id": 1
+    },
+    ".github/workflows/release.yml": {
+      "bare-wu-id": 4
+    },
+    "docs/CATEGORIZATION-SUBMISSIONS-RUNBOOK.md": {
+      "bare-wu-id": 4
+    },
+    "docs/EAR-NOTIFICATION.md": {
+      "bare-wu-id": 1
+    },
+    "docs/INCIDENT-RESPONSE.md": {
+      "bare-wu-id": 1
+    },
+    "docs/INSTALL.md": {
+      "bare-wu-id": 4
+    },
+    "docs/IT-DEPLOYMENT.md": {
+      "bare-wu-id": 2
+    },
+    "docs/LAUNCH-READINESS.md": {
+      "bare-wu-id": 1
+    },
+    "docs/RELEASE-CHANNEL.md": {
+      "bare-wu-id": 1
+    },
+    "docs/RELEASING.md": {
+      "bare-wu-id": 5
+    },
+    "docs/THREAT-MODEL-P3-DELTA.md": {
+      "bare-wu-id": 16
+    },
+    "docs/THREAT-MODEL.md": {
+      "bare-wu-id": 13
+    }
+  }
+}

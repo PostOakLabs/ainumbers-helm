@@ -28,6 +28,9 @@ fi
 echo "pre-push: hook↔CI parity (no gate drift) ..."
 node scripts/check-hook-ci-parity.mjs
 
+echo "pre-push: internal-lang leak ..."
+node scripts/check-internal-lang-leak.mjs
+
 echo "pre-push: commit subjects ($range) ..."
 node scripts/check-pushed-commits.mjs "$range"
 

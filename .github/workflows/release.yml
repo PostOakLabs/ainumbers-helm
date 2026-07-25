@@ -140,7 +140,7 @@ jobs:
       # from the SAME filled package gen-packaging-manifests.mjs just wrote
       # (real sha256 values baked in, no template placeholders), so it is
       # byte-identical to what publish-npm would publish. `npm pack` reads
-      # package.json + files only — no install, no network, safe under SO #10.
+      # package.json + files only — no install, no network.
       - name: pack offline npm tarball
         run: |
           TARBALL=$(cd dist/packaging/npm && npm pack --silent --pack-destination "$GITHUB_WORKSPACE/dist/upload")
@@ -151,15 +151,15 @@ jobs:
       # alongside (not instead of) the DSSE-signed release-manifest above.
       # Runs after every asset staged so far (offline tarball incl.) so the
       # sums file covers this job's set. The SBOM lands separately via the
-      # sbom/attach-sbom-asset jobs below (HELM-P4-F2-ACTION-FLAG, SO #17)
+      # sbom/attach-sbom-asset jobs below (HELM-P4-F2-ACTION-FLAG)
       # and is not covered by this file — see F7 for closing that gap.
       - name: generate SHA256SUMS
         working-directory: dist/upload
         run: sha256sum * > SHA256SUMS
 
       # D-SIGN-1: GitHub-native SLSA build provenance for every release
-      # asset. First-party action, no SO #17 authorization needed (unlike
-      # sigstore/cosign-installer, which stays out per HELM-CODE-SIGNING-
+      # asset. First-party action, no extra third-party-action review needed
+      # (unlike sigstore/cosign-installer, which stays out per HELM-CODE-SIGNING-
       # RESEARCH-2026-07-23 §5). Verify with:
       #   gh attestation verify dist/upload/helmd-linux-x64 --repo PostOakLabs/ainumbers-helm
       - name: attest build provenance
@@ -195,11 +195,11 @@ jobs:
           path: dist/packaging/npm
           if-no-files-found: error
 
-  # HELM-P4-F2-ACTION-FLAG (SO #17): anchore/sbom-action moved OUT of
+  # HELM-P4-F2-ACTION-FLAG: anchore/sbom-action moved OUT of
   # sign-and-release into its own job — contents:read only, no secrets, no
   # id-token, runs in parallel with signing off the same build artifacts.
-  # Tim ruling 2026-07-24, option (b): keep the SBOM, isolate the
-  # third-party Action from HELM_RELEASE_SIGNING_KEY_B64 and OIDC scope.
+  # This isolates the SBOM step so the only third-party Action in the release
+  # pipeline never shares scope with HELM_RELEASE_SIGNING_KEY_B64 or OIDC.
   sbom:
     needs: build
     runs-on: ubuntu-latest
@@ -212,7 +212,8 @@ jobs:
       # (docs/TRUST.md §5). anchore/sbom-action (syft-based) scans the
       # checked-out source tree — package.json + lockfile — for the full
       # dependency graph; no new devDependency, contents:read only, no
-      # secrets touched. Pinned by commit SHA (v0.24.0), per SO #17.
+      # secrets touched. Pinned by commit SHA (v0.24.0): a tag can be
+      # repointed by its author, a commit hash cannot.
       - name: generate CycloneDX SBOM
         uses: anchore/sbom-action@e22c389904149dbc22b58101806040fa8d37a610 # v0.24.0
         with:
@@ -247,8 +248,8 @@ jobs:
   # HELM-REL-NPM-DEFER: ainumbers-helm is unregistered on npm and npm only
   # lets you attach a trusted publisher from an EXISTING package's settings
   # page, so there is no way to configure OIDC trusted publishing before a
-  # first manual bootstrap publish. Tim decision 2026-07-23: defer npm
-  # distribution — the signed GitHub release stands alone for GA. Gate this
+  # first manual bootstrap publish. Deferring npm distribution until then —
+  # the signed GitHub release stands alone for GA. Gate this
   # job behind an explicit opt-in var (default unset/false) so it SKIPS
   # cleanly instead of red-failing the first GA tag. Revive trigger: once
   # the npm trusted publisher is attached (requires the package to exist

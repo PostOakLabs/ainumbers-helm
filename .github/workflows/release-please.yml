@@ -3,8 +3,9 @@ name: release-please
 # HELM-REL-AUTO-1: maintains a standing release PR from Conventional-Commit
 # squash-merge titles. Merging that PR creates the vN.N.N tag + GitHub
 # Release, which triggers the existing tag-triggered release.yml pipeline
-# (signed SEA binaries). SHA-pinned per SO #17 — this is the only
-# third-party action in the program; never move it to a tag.
+# (signed SEA binaries). SHA-pinned: a tag can be repointed, a commit
+# cannot — this is the only third-party action in the program; never move
+# it to a tag.
 on:
   push:
     branches: [main]

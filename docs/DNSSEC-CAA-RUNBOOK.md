@@ -1,12 +1,11 @@
 # DNSSEC + CAA runbook — `ainumbers.co` zone (Cloudflare console)
 
-**TIM-EXECUTED ONLY.** Per SO #8 (console fence) and SO #24 (zone-config
-memorialization), no build session touches this console. This doc is the
-exact-click sequence to hand-run in the Cloudflare dashboard. After
-running it, paste back what actually landed (screenshots or the exact
-values shown) so this WU's session can write the before/after memory in
-the same sitting — an un-memorialized zone change is a standing drift
-risk per SO #24.
+**Manual, done by the domain owner only.** No build session touches the DNS
+console — a zone-config change is irreversible from outside and needs a human
+with registrar/dashboard access. This doc is the exact-click sequence to
+hand-run in the Cloudflare dashboard. After running it, paste back what
+actually landed (screenshots or the exact values shown) so the before/after
+state gets recorded — an unrecorded zone change is a standing drift risk.
 
 **Verified "before" state (2026-07-24, via DNS-over-HTTPS query, not
 console access):** no `DS` record for `ainumbers.co` at the registrar,
@@ -82,7 +81,7 @@ failure window — always disable in Cloudflare first, DS-removal second.
      wildcard certs are used anywhere on the zone — check SSL/TLS →
      Edge Certificates for any `*.ainumbers.co` cert first)
    - Optional: Flags: `0`, Tag: `iodef`, Value:
-     `mailto:security@postoaklabs.com` (per SO #C2's VDP contact,
+     `mailto:security@postoaklabs.com` (the published VDP contact,
      receives reports of unauthorized issuance attempts)
 6. Save each record. TTL: Auto (Cloudflare-managed).
 7. Verify:

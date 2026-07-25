@@ -7,9 +7,10 @@ a bank-desktop pilot can reach either origin. Separately, unsigned SEA binaries 
 flagged by Microsoft Defender/SmartScreen and should be submitted to Microsoft's clean-file
 process per release.
 
-**Ownership (P3-DEC-4, Tim 2026-07-23):** vendor category-submission forms want the
-domain/company owner, not a build agent. **Every step below is TIM-EXECUTED.** This doc is
-the runbook, not a completed submission — no agent should attempt these forms.
+**Ownership (P3-DEC-4):** vendor category-submission forms want the
+domain/company owner, not a build agent. **Every step below is manual, done by the domain
+owner.** This doc is the runbook, not a completed submission — no agent should attempt
+these forms.
 
 Microsoft's SEA clean-file loop is a **per-release** step (per P3-D2/T14 row) since a new
 unsigned binary hash needs re-submission every build.
@@ -27,7 +28,7 @@ select "Uncategorized" workarounds like Proxy/Anonymizer).
 
 ---
 
-## TIM-EXECUTED — Zscaler
+## Zscaler (manual, done by the domain owner)
 
 1. Go to the Zscaler URL Category Lookup / recategorization request tool:
    `https://sitereview.zscaler.com/` (public tool; no account required to *submit*).
@@ -38,7 +39,7 @@ select "Uncategorized" workarounds like Proxy/Anonymizer).
 5. Fill the requester email as `tim@postoaklabs.com` so confirmation/rejection replies land
    with the owner.
 
-## TIM-EXECUTED — Netskope
+## Netskope (manual, done by the domain owner)
 
 1. Go to Netskope's Cloud Confidence / URL lookup tool:
    `https://www.netskope.com/netskope-cloud-confidence-index/url-lookup` (or the current
@@ -51,7 +52,7 @@ select "Uncategorized" workarounds like Proxy/Anonymizer).
    also submit via their own tenant console — note this as an alternate path when a pilot
    bank is identified.
 
-## TIM-EXECUTED — Bluecoat / Symantec (Broadcom WebPulse / Site Review)
+## Bluecoat / Symantec (Broadcom WebPulse / Site Review) — manual, done by the domain owner
 
 1. Go to Broadcom's Site Review tool: `https://sitereview.bluecoat.com/`
    (legacy Blue Coat WebPulse categorization, now under Broadcom/Symantec).
@@ -62,7 +63,7 @@ select "Uncategorized" workarounds like Proxy/Anonymizer).
 
 ---
 
-## TIM-EXECUTED — Microsoft clean-file / SEA binary submission (per SEA release)
+## Microsoft clean-file / SEA binary submission (per SEA release) — manual, done by the domain owner
 
 **Why:** the unsigned Node SEA binaries (P3-D2 "advanced" install path) are proactively
 AV-flagged since the Oct 2025 Stealit-style campaign abused the same packaging technique.
@@ -96,9 +97,9 @@ first downloads.
 - It does not submit anything — every step above requires a human with authority to speak
   for `postoaklabs.com` / `ainumbers.co`, and vendor forms are captcha/email-verification
   gated in ways no agent should attempt.
-- It does not track submission status — once Tim runs a step, log the outcome (accepted
+- It does not track submission status — once a step runs, log the outcome (accepted
   category / ticket number / rejection reason) back into this doc or a follow-up note so
   the next SEA release doesn't re-litigate a settled category.
-- Delegation per P3-DEC-4: any step Tim can hand off (e.g., a bank pilot's own IT
-  submitting via their tenant's Netskope console) is called out inline above; everything
+- Delegation per P3-DEC-4: any step the domain owner can hand off (e.g., a bank pilot's own
+  IT submitting via their tenant's Netskope console) is called out inline above; everything
   else stays owner-executed.
