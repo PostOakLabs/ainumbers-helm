@@ -11,6 +11,7 @@
 import { fetchWithFallback, call } from "../api.mjs";
 import { loadOrCreateBrowserIdentity, signHaRecord } from "../lib/ha-crypto.mjs";
 import { esc } from "../lib/esc.mjs";
+import { blockedStateHtml, classifyBlockedState } from "../lib/blocked-state.mjs";
 
 function shortHash(h) {
   return h && h.length > 20 ? `${h.slice(0, 14)}…${h.slice(-6)}` : h;
@@ -118,12 +119,16 @@ export async function renderReview(root, { port, token } = {}) {
   root.innerHTML = `<p aria-live="polite">Checking helmd for pending accountability gates…</p>`;
   const pending = await fetchWithFallback("/ha/pending", { port, token });
 
-  if (pending.state === "unavailable") {
-    root.innerHTML = `<p class="unavailable-state">Not available in this daemon version yet.</p>`;
-    return;
-  }
-  if (pending.state === "missing") {
-    root.innerHTML = `<p class="empty-state">helmd unreachable.</p>`;
+  const blocked = classifyBlockedState(pending);
+  if (blocked) {
+    root.innerHTML = blockedStateHtml(blocked, {
+      port,
+      status: pending.status,
+      route: pending.route,
+      body: blocked === "too-old"
+        ? "helmd answered, but the accountability-gate queue isn't part of this version of Helm yet."
+        : "Helm is running, but this tab can't reach the accountability-gate queue right now.",
+    });
     return;
   }
 
@@ -132,7 +137,7 @@ export async function renderReview(root, { port, token } = {}) {
 
   if (!items.length) {
     root.innerHTML = `
-      <p class="empty-state">Nothing is waiting on a human right now. Runs whose pack declares a §27.4 gate policy (<code>review_required</code>, <code>dual_control</code>, …) appear here the moment they hold.</p>
+      <p class="empty-state">Nothing is waiting on a human right now. A run pauses here when its pack declares a step that needs a second person to sign off — for example a payment above a threshold, or a change that two people must independently approve before it continues.</p>
       <p class="empty-state">Your local approver identity: <code>${esc(identity.id)}</code></p>`;
     return;
   }

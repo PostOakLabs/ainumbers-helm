@@ -6,6 +6,7 @@
 // the compiled pack + vendored kernel metadata already on the daemon
 // (hub/euc-register.mjs); nothing here is persisted.
 import { fetchWithFallback, call, callText } from "../api.mjs";
+import { blockedStateHtml, classifyBlockedState } from "../lib/blocked-state.mjs";
 
 function downloadBlob(filename, text, mime) {
   const blob = new Blob([text], { type: mime });
@@ -53,12 +54,9 @@ export async function renderRegister(root, { port, token }) {
   root.innerHTML = `<p aria-live="polite">Loading workflow packs…</p>`;
   const result = await fetchWithFallback("/workflows", { port, token });
 
-  if (result.state === "unavailable") {
-    root.innerHTML = `<p class="unavailable-state">Workflow packs aren't available in this daemon yet.</p>`;
-    return;
-  }
-  if (result.state === "missing") {
-    root.innerHTML = `<p class="empty-state">Can't reach helmd on port ${port}.</p>`;
+  const blocked = classifyBlockedState(result);
+  if (blocked) {
+    root.innerHTML = blockedStateHtml(blocked, { port, status: result.status, route: result.route });
     return;
   }
 

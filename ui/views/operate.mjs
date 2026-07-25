@@ -4,14 +4,16 @@
 // Journal/anchor/backup ship with HELM-H3; the calls below are already wired
 // so this view lights up with no UI changes once that daemon route lands.
 import { fetchWithFallback, call } from "../api.mjs";
+import { blockedStateHtml, classifyBlockedState } from "../lib/blocked-state.mjs";
+import { pairFormHtml, wirePairForm } from "../lib/pair-form.mjs";
 
 function stateLine(result, render) {
   if (result.state === "live") return render(result.data);
   if (result.state === "stale") {
     return `${render(result.data)}<span class="stale-badge" role="status">stale — last seen ${result.at}</span>`;
   }
-  if (result.state === "unavailable") return `<p class="unavailable-state">Not available in this daemon version yet.</p>`;
-  return `<p class="empty-state">helmd unreachable.</p>`;
+  const blocked = classifyBlockedState(result);
+  return blockedStateHtml(blocked, { status: result.status, route: result.route });
 }
 
 function healthCard(data) {
@@ -88,16 +90,21 @@ function personaCard(persona) {
     </section>`;
 }
 
-function dormantHome() {
+// §11.1: this page could not have loaded without helmd already serving it,
+// so "helmd isn't running" is never the real cause here — it's this tab's
+// token, or a route this Helm version doesn't have yet. §13.4: the only
+// terminal-command escape hatch allowed on this view is the collapsed
+// "pair this tab by hand" form below, reusing app.mjs's shell-level form.
+function dormantHome(kind, port) {
   return `
-    <p class="empty-state">helmd isn't running yet. These cards fill in once it's connected. To connect:</p>
-    <ol class="steps">
-      <li>Open a terminal (Command Prompt or PowerShell on Windows, Terminal on macOS or Linux).</li>
-      <li>Type <code>helmd start</code> and press Enter. The daemon launches and opens a fresh, paired browser tab for you.</li>
-      <li>If a paired tab is already open, switch back to it. If you closed it or lost the link, run <code>helmd open</code> instead to get a new paired link for this browser.</li>
-      <li>Once connected, the status pill at the top right reads "helmd connected" and this page populates.</li>
-    </ol>
-    <p class="empty-state">Don't have helmd installed yet? Get it at <a href="https://ainumbers.co/helm" rel="noopener">ainumbers.co/helm</a>.</p>
+    ${blockedStateHtml(kind, {
+      port,
+      extra: `
+        <details class="disclosure">
+          <summary>Advanced: pair this tab by hand</summary>
+          ${pairFormHtml()}
+        </details>`,
+    })}
     <div class="card-grid">
       ${PERSONAS.map(personaCard).join("")}
     </div>`;
@@ -112,9 +119,11 @@ export async function renderOperate(root, { port, token }) {
     fetchWithFallback("/anchor/status", { port, token }),
   ]);
 
-  const allMissing = [health, journal, anchors].every((r) => r.state === "missing");
-  if (allMissing) {
-    root.innerHTML = dormantHome();
+  const allBlocked = [health, journal, anchors].every((r) => classifyBlockedState(r));
+  if (allBlocked) {
+    const kind = classifyBlockedState(health) ?? classifyBlockedState(journal) ?? classifyBlockedState(anchors);
+    root.innerHTML = dormantHome(kind, port);
+    wirePairForm(root, () => renderOperate(root, { port, token }));
     return;
   }
 

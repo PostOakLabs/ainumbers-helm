@@ -50,7 +50,7 @@ function readFileAsJson(file) {
 }
 
 function renderEntries(entries) {
-  if (!entries.length) return `<p class="empty-state">No entries.</p>`;
+  if (!entries.length) return `<p class="empty-state">No entries in this bundle — there's nothing here to verify a signature or hash chain against.</p>`;
   return `<ul class="verify-entry-list">${entries
     .map(
       (e) => `
@@ -88,7 +88,7 @@ function renderRfc3161FullBadges(full) {
 }
 
 function renderCheckpoints(checkpoints) {
-  if (!checkpoints.length) return `<p class="empty-state">No checkpoints in this bundle.</p>`;
+  if (!checkpoints.length) return `<p class="empty-state">No checkpoints in this bundle — a checkpoint is a point where the run's evidence was anchored (timestamped or hash-chained); this evidence file doesn't have one.</p>`;
   return `<ul class="verify-entry-list">${checkpoints
     .map((cp, cpIdx) => {
       const anchorRows = (cp.predicate?.anchors ?? [])

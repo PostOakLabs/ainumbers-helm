@@ -12,6 +12,7 @@ import { toYaml } from "../lib/to-yaml.mjs";
 import { manifestDigest } from "../lib/manifest-digest.mjs";
 import { buildExecSummary } from "../lib/canvas-exec-summary.mjs";
 import { esc as escapeHtml } from "../lib/esc.mjs";
+import { blockedStateHtml, classifyBlockedState } from "../lib/blocked-state.mjs";
 
 function renderExecSummary(summary) {
   return `
@@ -27,11 +28,44 @@ function renderExecSummary(summary) {
     </section>`;
 }
 
-function frameFor(state, workflowId) {
-  if (state === "unavailable") {
-    return `<p class="unavailable-state">Manifests aren't served by this daemon yet — the run engine ships in a later Helm wave.</p>`;
-  }
-  return `<p class="empty-state">Can't fetch the manifest for <code>${workflowId}</code>. Start helmd and open its pairing link, or pick a pack from Choose.</p>`;
+// §13.5: the one thing that works with no live daemon (a .helm.json import)
+// must stay reachable when the manifest fetch is blocked, not vanish behind
+// it — so the blocked state renders this same picker instead of a dead end.
+function importPickerHtml() {
+  return `
+    <div class="canvas-import-standalone">
+      <h3>Spread (.helm.json)</h3>
+      <p class="field-row-note">Import a versioned workflow file — this works without a live daemon.</p>
+      <p class="field-row">
+        <label for="import-helm-json">Import a .helm.json file</label>
+        <input type="file" id="import-helm-json" accept="application/json,.json" />
+      </p>
+      <p id="import-status" class="field-row-note" role="status"></p>
+    </div>`;
+}
+
+function wireImportPicker(root, port, token) {
+  const importStatus = root.querySelector("#import-status");
+  root.querySelector("#import-helm-json").addEventListener("change", async (ev) => {
+    const file = ev.target.files?.[0];
+    if (!file) return;
+    importStatus.textContent = "Validating…";
+    let parsed;
+    try {
+      parsed = JSON.parse(await file.text());
+    } catch {
+      importStatus.textContent = "Refused: not valid JSON.";
+      return;
+    }
+    const res = await call("/workflows/import", { port, token, method: "POST", body: { export: parsed } });
+    const result = res.data ?? res.error;
+    if (result?.ok) {
+      importStatus.textContent = `Accepted: ${result.workflow_id} (${result.kernelPins?.length ?? 0} kernel(s) pinned, all match this install).`;
+    } else {
+      importStatus.textContent = `Refused: ${result?.reason ?? "unknown error"}`;
+    }
+    ev.target.value = "";
+  });
 }
 
 export async function renderCanvas(root, { port, token, params }) {
@@ -44,8 +78,18 @@ export async function renderCanvas(root, { port, token, params }) {
   root.innerHTML = `<p aria-live="polite">Loading manifest for ${workflowId}…</p>`;
   const result = await fetchWithFallback(`/workflow-manifest?workflow_id=${encodeURIComponent(workflowId)}`, { port, token });
 
-  if (result.state === "unavailable" || result.state === "missing") {
-    root.innerHTML = frameFor(result.state, workflowId);
+  const blocked = classifyBlockedState(result);
+  if (blocked) {
+    root.innerHTML = blockedStateHtml(blocked, {
+      port,
+      status: result.status,
+      route: result.route,
+      body: blocked === "too-old"
+        ? "helmd answered, but manifests aren't served by this version of Helm yet."
+        : `Helm is running, but this tab can't fetch the manifest for <code>${escapeHtml(workflowId)}</code> right now.`,
+      extra: importPickerHtml(),
+    });
+    wireImportPicker(root, port, token);
     return;
   }
 
