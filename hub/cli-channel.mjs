@@ -7,14 +7,24 @@ import { createServer } from "node:net";
 import { existsSync, unlinkSync, chmodSync } from "node:fs";
 import { platform } from "node:os";
 import { statePath } from "./state-dir.mjs";
+import { loadConfig } from "./config.mjs";
 import { log } from "./log.mjs";
 
-export function cliChannelPath() {
-  return platform() === "win32" ? "\\\\.\\pipe\\helmd" : statePath("helmd.sock");
+// The unix socket lives under HELM_HOME, so two installs (a checkout and a
+// packaged binary, or a test run and a real daemon) never collide. The
+// Windows pipe name had no such scoping — it was the bare `helmd`, shared
+// process-wide by every helmd on the machine. That was survivable while the
+// only verb was `pair`, but `stop` makes it consequential: a `helmd stop`
+// run from one install would have stopped whichever daemon happened to own
+// the pipe. Scope it by port, which is what actually distinguishes two
+// daemons on one machine.
+export function cliChannelPath(port) {
+  const scope = port ?? loadConfig().port;
+  return platform() === "win32" ? `\\\\.\\pipe\\helmd-${scope}` : statePath("helmd.sock");
 }
 
-export function createCliChannel(handlers) {
-  const path = cliChannelPath();
+export function createCliChannel(handlers, { port } = {}) {
+  const path = cliChannelPath(port);
   if (platform() !== "win32" && existsSync(path)) unlinkSync(path);
 
   const server = createServer((socket) => {

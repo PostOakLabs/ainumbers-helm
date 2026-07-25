@@ -24,7 +24,7 @@ test("autostartCommand: dev checkout invocation (node + script path)", () => {
   assert.deepEqual(r, { command: "/usr/bin/node", args: ["/repo/hub/index.mjs", "start"] });
 });
 
-test("macOS: install writes a LaunchAgent plist with RunAtLoad + KeepAlive true", () => {
+test("macOS: install writes a LaunchAgent plist with RunAtLoad true and KeepAlive FALSE", () => {
   const home = mkdtempSync(join(tmpdir(), "helm-autostart-mac-"));
   const calls = [];
   const exec = (bin, args) => calls.push([bin, args]);
@@ -35,7 +35,12 @@ test("macOS: install writes a LaunchAgent plist with RunAtLoad + KeepAlive true"
 
     const plist = readFileSync(launchAgentPath(home), "utf8");
     assert.match(plist, /<key>RunAtLoad<\/key>\s*<true\/>/);
-    assert.match(plist, /<key>KeepAlive<\/key>\s*<true\/>/);
+    // KeepAlive MUST stay false. With it true, launchd relaunches helmd the
+    // instant it exits, which made `helmd stop`, a UI Quit button and plain
+    // kill(1) all lies on macOS — the user had no off switch short of
+    // `helmd uninstall`. RunAtLoad alone gives start-on-login, which is the
+    // actual goal. Do not "restore" this for crash self-heal.
+    assert.match(plist, /<key>KeepAlive<\/key>\s*<false\/>/);
     assert.match(plist, /<string>\/usr\/local\/bin\/helmd<\/string>/);
     assert.match(plist, /<string>start<\/string>/);
     assert.equal(plist, launchAgentPlist(cmd));

@@ -110,6 +110,34 @@ Ed25519 is MUST, so stripping the PQC signature still verifies. **Accepted** —
 the documented SHOULD/MUST split; a *present-and-wrong* PQC sig is still caught. Note
 for the day PQC becomes mandatory: flip to require both. → tracked in `HELM-SEC-5`.
 
+### F7 — Per-user autostart persistence (Low, accepted and disclosed)
+First run installs a per-user autostart entry: an HKCU `Run` value on Windows,
+a `RunAtLoad` LaunchAgent on macOS, nothing on Linux (see `docs/INSTALL.md` for
+the exact locations). This is ordinary desktop-daemon behavior, but it is
+**persistence**, and a threat model that omits its own persistence mechanism is
+worse than one that states it plainly.
+
+Properties that bound it: per-user only (HKCU / `~/Library`, never HKLM or
+`/Library`, no administrator rights); announced on the console at the moment
+of install, never silent; removed by `helmd uninstall`, which the uninstall
+script runs *before* deleting the binary so no entry is left pointing at a
+deleted path (the Zoom-orphan failure mode).
+
+`KeepAlive` on the macOS LaunchAgent is deliberately **false**. It was true
+(crash self-heal), which meant launchd relaunched helmd the instant it exited
+— `helmd stop` and `kill` were both effectively lies, and a user had no way to
+turn helmd off short of uninstalling it. Software the user cannot stop is the
+defining property of an implant. Start-on-login is the goal; crash recovery is
+worth less than a working off switch.
+
+**Residual:** an unsigned binary that writes a `Run` key and shells out to
+`reg.exe` and `rundll32.exe` composes into a pattern behavioral EDR scores as
+suspicious, independent of intent. Code signing (deferred at $0, see
+`HELM-CODE-SIGNING-RESEARCH-2026-07-23.md`) is the real mitigation; using
+native registry and shell APIs instead of spawning `reg.exe`/`rundll32.exe`
+would remove two high-signal child processes without changing behavior.
+→ tracked in `HELM-SEC-5`.
+
 ### Hardening notes (non-findings, batched into `HELM-SEC-5`)
 - No timeouts on `fetch` in `exchangeCode`, `performEgress`, `revokeConnection` — a
   slow/hung endpoint stalls the flow. Add per-call timeouts.
