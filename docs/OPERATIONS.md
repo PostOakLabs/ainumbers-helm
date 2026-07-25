@@ -31,7 +31,23 @@ Tim 2026-07-23 (HELM-R1). These positions are revisited before Helm ships a
    ```
 3. `git tag vX.Y.Z && git push origin vX.Y.Z` — this is the only trigger for `release.yml` (`test` → `build` → `sign-and-release`, fail-closed at each step).
 
-**Windows note:** `helmd.exe` is unsigned (no Authenticode certificate in Phase 1) — first launch shows a SmartScreen "Windows protected your PC" prompt. Users click "More info" → "Run anyway". This is expected until Phase 2 code-signing is budgeted; it is not a build defect.
+**Signing status (Phase 1):** `helmd.exe` carries no Authenticode certificate, and the macOS
+binaries are ad-hoc signed only (`scripts/build-sea.mjs` runs `codesign --sign -`, which is not a
+Developer ID identity and is not notarized). Windows first launch therefore typically shows a
+SmartScreen prompt, and macOS typically reports that the developer cannot be verified.
+
+**Never tell a user to click past either one.** Not "Run anyway", not right-click-Open to bypass
+Gatekeeper, not `xattr -d com.apple.quarantine`, not "the warning is normal, ignore it" — the last
+two are what real macOS malware campaigns instruct. The download page already follows this rule;
+so does this document.
+
+What we can honestly offer instead is verification: every release publishes `SHA256SUMS`, a
+DSSE-signed release manifest, SLSA build provenance, and a CycloneDX SBOM. Point users at the
+checksum, and state plainly that signing is not yet in place. A user who is not willing to verify
+the download should not run it.
+
+Unsigned is a known Phase-1 gap, not a build defect, and it is tracked for Phase 2 (Azure Artifact
+Signing on Windows; Developer ID + notarization + a stapled `.pkg` on macOS).
 
 ## Revisit triggers
 
