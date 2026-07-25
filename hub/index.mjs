@@ -18,6 +18,7 @@ import { createConnection } from "node:net";
 import { statePath } from "./state-dir.mjs";
 import { openJournal, replayVerify } from "./journal.mjs";
 import { installAutostart, uninstallAutostart, isAutostartInstalled, autostartLocation } from "./autostart.mjs";
+import { installShortcut, uninstallShortcut, isShortcutInstalled, shortcutLocation } from "./shortcut.mjs";
 
 // No "open" package (zero-dep, D2) — shell out to each OS's native opener.
 // Best-effort: a failure here (headless box, no default browser configured)
@@ -120,6 +121,8 @@ async function cmdStart({ open = false } = {}) {
       version: DAEMON_VERSION,
       autostart: isAutostartInstalled(),
       autostartLocation: autostartLocation(),
+      shortcut: isShortcutInstalled(),
+      shortcutLocation: shortcutLocation(),
     }),
   }, { port: config.port });
 
@@ -158,6 +161,22 @@ async function cmdStart({ open = false } = {}) {
     } catch (err) {
       log.warn("autostart install failed (non-fatal)", { error: String(err?.message || err) });
     }
+    // Same first-run moment, same announce-and-removable contract: give the
+    // user something to click. winget's portable installer type cannot create
+    // one, so without this a completed install leaves nothing on the machine
+    // the user can find. Best-effort — a failed shortcut never blocks a
+    // working daemon.
+    try {
+      const result = installShortcut();
+      if (result.ok) {
+        console.log("");
+        console.log("A Helm shortcut has been added to your Start Menu.");
+        console.log(`  entry:   ${result.path}`);
+        console.log("  remove:  helmd uninstall");
+      }
+    } catch (err) {
+      log.warn("start menu shortcut failed (non-fatal)", { error: String(err?.message || err) });
+    }
   }
 }
 
@@ -174,6 +193,11 @@ function cmdUninstall() {
   } else {
     console.log("helmd uninstall: autostart entry removed.");
   }
+  // Anything first run installs, uninstall removes — the same orphan lesson.
+  // A Start Menu entry pointing at a deleted binary is the desktop version of
+  // the leftover LaunchAgent this function exists to prevent.
+  const shortcut = uninstallShortcut();
+  if (shortcut.ok) console.log("helmd uninstall: Start Menu shortcut removed.");
 }
 
 // Client side of the re-pair path (DEC-3): connects to the ALREADY-RUNNING
@@ -236,14 +260,15 @@ async function cmdStop() {
 }
 
 async function cmdStatus() {
-  const describeAutostart = (installed, where) =>
+  const describeEntry = (installed, where) =>
     installed ? `installed (${where})` : where === null ? "not supported on this platform" : "not installed";
   try {
     const r = await callDaemon("status");
     console.log(`helmd: running (pid ${r.pid})`);
     console.log(`  port       ${r.port}`);
     console.log(`  version    ${r.version}`);
-    console.log(`  autostart  ${describeAutostart(r.autostart, r.autostartLocation)}`);
+    console.log(`  autostart  ${describeEntry(r.autostart, r.autostartLocation)}`);
+    console.log(`  shortcut   ${describeEntry(r.shortcut, r.shortcutLocation)}`);
     console.log("  pairing    helmd open");
     console.log("  stop       helmd stop");
   } catch (err) {
@@ -251,7 +276,8 @@ async function cmdStatus() {
       // Not an error the user needs a stack trace for — but still exit
       // non-zero so a script can branch on it.
       console.log("helmd: not running.");
-      console.log(`  autostart  ${describeAutostart(isAutostartInstalled(), autostartLocation())}`);
+      console.log(`  autostart  ${describeEntry(isAutostartInstalled(), autostartLocation())}`);
+      console.log(`  shortcut   ${describeEntry(isShortcutInstalled(), shortcutLocation())}`);
       console.log("  start      helmd start");
       process.exit(1);
     }

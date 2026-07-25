@@ -111,6 +111,25 @@ sent to the server). If nothing opens (headless box, no default browser,
 or the auto-open step failed) the URL is also printed to the console —
 copy/paste it yourself; it's always a working fallback, never required.
 
+### A Start Menu shortcut is created on first run (Windows)
+
+The first `helmd start` adds **Helm** to your Start Menu, at
+`%APPDATA%\Microsoft\Windows\Start Menu\Programs\Helm.lnk`. It is announced
+on the console when it is created and removed by `helmd uninstall`.
+
+This exists because `winget install` alone leaves nothing to click: winget's
+`portable` installer type drops the binary and adds a PATH alias, and cannot
+create a Start Menu or desktop entry at any setting. Creating the shortcut
+from the daemon instead means npm and raw-binary installs get it too.
+
+The shortcut targets the `helmd` binary, never a URL — a shortcut carrying a
+pairing link would store a long-lived token in an unprotected file and reuse
+it on every launch. Launching it starts the daemon, which mints a fresh link.
+
+macOS and Linux get no shortcut yet (they need a `.app` bundle and a
+`.desktop` entry respectively); `helmd status` reports this honestly rather
+than claiming one exists.
+
 ### Autostart is installed on first run
 
 The first `helmd start` registers a **per-user** autostart entry so helmd
