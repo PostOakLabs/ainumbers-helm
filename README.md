@@ -33,7 +33,7 @@ Run `node scripts/setup-hooks.mjs` once per clone to enable local shift-left gat
 ## Release channel
 
 `docs/RELEASE-CHANNEL.md` — semver discipline, signed release notes, the
-machine-readable version feed, and the deprecation window, for orgs running
+machine-readable version feed, and the support-floor signal, for orgs running
 a CAB-lite process against upstream releases.
 
 ## Security
@@ -42,10 +42,9 @@ Loopback-only daemon, bearer-token pairing, Host/Origin validation, OS-keychain 
 
 ## Trust
 
-`docs/TRUST.md` — SOC 2 scoping statement, a complete enumeration of every
-outbound request the shipped code can make, a reproducible zero-telemetry
-recipe you can run yourself in under 10 minutes, the data-flow/subprocessor
-statement, where to find the CycloneDX SBOM published with every release,
+`docs/TRUST.md` — a complete enumeration of every outbound request the
+shipped code can make, a reproducible zero-telemetry recipe you can run
+yourself in under 10 minutes, the data-flow statement, where to find the CycloneDX SBOM published with every release,
 zone-level DNS hardening status (DNSSEC + CAA, runbook in
 `docs/DNSSEC-CAA-RUNBOOK.md`), dated SSL Labs / Mozilla Observatory grades
 for every host we touch, and the SRI statement.
