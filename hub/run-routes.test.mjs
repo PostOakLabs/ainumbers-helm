@@ -126,17 +126,20 @@ test("POST /run/start 404s for an unknown workflow_id", async () => {
   assert.equal(res.status, 404);
 });
 
-test("GET /events?run_id=...&token=... streams progress for a live run (query-token SSE exception)", async () => {
+test("GET /events?run_id=...&ticket=... streams progress for a live run (HELM-UX-1 §7.4 ticket, not the bearer, in the query string)", async () => {
   const startRes = await post("/run/start", { workflow_id: KNOWN_WORKFLOW_ID, dry_run: true }, headers());
   const { run_id: runId } = JSON.parse(startRes.body);
+
+  const minted = await post("/events/ticket", {}, headers());
+  const { ticket } = JSON.parse(minted.body);
 
   const events = await new Promise((resolve, reject) => {
     const req = request({
       host: "127.0.0.1",
       port: PORT,
-      path: `/events?run_id=${runId}&token=${encodeURIComponent(token)}`,
+      path: `/events?run_id=${runId}&ticket=${ticket}`,
       method: "GET",
-      headers: { Host: `127.0.0.1:${PORT}`, Origin: ORIGIN }, // no Authorization header — proves the query-token path
+      headers: { Host: `127.0.0.1:${PORT}`, Origin: ORIGIN }, // no Authorization header — proves the ticket path
     });
     let buf = "";
     const seen = [];

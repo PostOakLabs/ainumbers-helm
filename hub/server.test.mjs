@@ -278,6 +278,73 @@ test("static: GET / serves the shell UI with no Origin/Authorization headers", a
   assert.match(res.body, /<title>Helm<\/title>/);
 });
 
+// HELM-UX-1 §7.4: /events must accept a short-lived ticket instead of the
+// durable bearer riding in the query string for the life of a session.
+test("§7.4: a minted ticket authenticates /events, and only once", async () => {
+  const minted = await post("/events/ticket", {}, headers());
+  assert.equal(minted.status, 200);
+  const { ticket } = JSON.parse(minted.body);
+  assert.ok(ticket, "expected a ticket in the response");
+
+  await new Promise((resolve, reject) => {
+    const req = request({ host: "127.0.0.1", port: PORT, path: `/events?ticket=${ticket}`, method: "GET", headers: { Host: `127.0.0.1:${PORT}`, Origin: ORIGIN } });
+    req.on("response", (res) => {
+      assert.equal(res.statusCode, 200);
+      req.destroy();
+      resolve();
+    });
+    req.on("error", reject);
+    req.end();
+  });
+
+  // Single-use: the same ticket must not authenticate a second connection.
+  const replay = await get(`/events?ticket=${ticket}`, { Host: `127.0.0.1:${PORT}`, Origin: ORIGIN });
+  assert.equal(replay.status, 401);
+});
+
+test("negative: an unknown /events ticket is rejected", async () => {
+  const res = await get("/events?ticket=not-a-real-ticket", { Host: `127.0.0.1:${PORT}`, Origin: ORIGIN });
+  assert.equal(res.status, 401);
+});
+
+// HELM-UX-1 §8: Operate view Quit button. Uses an isolated server instance
+// with an injected exitFn so the test process itself never calls
+// process.exit() — a real exitFn is only ever wired in production (helmd's
+// own entrypoint).
+test("§8: POST /shutdown replies before exiting, then calls exitFn", async () => {
+  const SHUTDOWN_PORT = 42000;
+  let exited = false;
+  const shutdownServer = createHelmServer({
+    port: SHUTDOWN_PORT,
+    allowedOrigin: ORIGIN,
+    token,
+    identityKeys,
+    exitFn: () => { exited = true; },
+  });
+  try {
+    const res = await new Promise((resolve, reject) => {
+      const data = JSON.stringify({});
+      const req = request(
+        { host: "127.0.0.1", port: SHUTDOWN_PORT, path: "/shutdown", method: "POST", headers: { ...headers({ Host: `127.0.0.1:${SHUTDOWN_PORT}` }), "Content-Type": "application/json", "Content-Length": Buffer.byteLength(data) } },
+        (res) => {
+          let body = "";
+          res.on("data", (c) => (body += c));
+          res.on("end", () => resolve({ status: res.statusCode, body }));
+        }
+      );
+      req.on("error", reject);
+      req.end(data);
+    });
+    assert.equal(res.status, 200);
+    assert.equal(JSON.parse(res.body).stopping, true);
+    assert.equal(exited, false, "must reply before exiting");
+    await new Promise((resolve) => setTimeout(resolve, 100));
+    assert.equal(exited, true, "exitFn should run shortly after the reply");
+  } finally {
+    shutdownServer.close();
+  }
+});
+
 test("static: GET /app.mjs serves as a JS module, no auth required", async () => {
   const res = await get("/app.mjs", { Host: `127.0.0.1:${PORT}` });
   assert.equal(res.status, 200);

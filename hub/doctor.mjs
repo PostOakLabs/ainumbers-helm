@@ -11,7 +11,7 @@ import { fileURLToPath } from "node:url";
 import { stateDir, statePath } from "./state-dir.mjs";
 import { loadConfig } from "./config.mjs";
 import { loadOrCreateToken } from "./token.mjs";
-import { openJournal, replayVerify } from "./journal.mjs";
+import { openJournal, replayVerify, recordFullVerification, lastFullVerifiedAt } from "./journal.mjs";
 import { checkVersion } from "./version-check.mjs";
 import { uiAssetsReadable } from "./static.mjs";
 
@@ -93,14 +93,24 @@ export async function runDoctor() {
   // still hand back a green report for a daemon that 404s its own homepage.
   checks.push({ name: "ui_assets_readable", pass: uiAssetsReadable() });
 
-  // D6 replay-journal-on-restart integrity check: recompute every stream's
-  // running hash from scratch and compare to what's stored. A missing
-  // journal.db is not a failure (fresh install, nothing to replay yet).
+  // D6/§9.1 full replay-from-genesis integrity check: recompute every
+  // stream's running hash from scratch and compare to what's stored. Boot
+  // itself no longer does this unconditionally (it verifies from the last
+  // checkpoint forward instead, see index.mjs) — doctor is now the place
+  // "prove the whole history" actually happens, and §9.4 wants the result
+  // of the last time that ran surfaced, not just implied by a clean boot.
+  // A missing journal.db is not a failure (fresh install, nothing to replay
+  // yet).
   const journalPath = statePath("journal.db");
   if (existsSync(journalPath)) {
     const db = openJournal(journalPath);
     const replay = replayVerify(db);
-    checks.push({ name: "journal_replay_integrity", pass: replay.ok, detail: replay.ok ? undefined : JSON.stringify(replay.brokenAt) });
+    if (replay.ok) recordFullVerification(db);
+    checks.push({
+      name: "journal_replay_integrity",
+      pass: replay.ok,
+      detail: replay.ok ? `last full verification: ${lastFullVerifiedAt(db)}` : JSON.stringify(replay.brokenAt),
+    });
     db.close();
   } else {
     checks.push({ name: "journal_replay_integrity", pass: true, detail: "no journal.db yet" });

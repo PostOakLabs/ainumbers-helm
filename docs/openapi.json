@@ -118,6 +118,37 @@
         }
       }
     },
+    "/events/ticket": {
+      "post": {
+        "summary": "Mint a short-lived, single-use ticket for /events — EventSource can't set an Authorization header, so this keeps the durable bearer token out of that one query string (HELM-UX-1 §7.4).",
+        "tags": [
+          "Runs"
+        ],
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Missing or invalid bearer token."
+          },
+          "403": {
+            "description": "Host or Origin mismatch (D8 loopback hardening)."
+          }
+        }
+      }
+    },
     "/vault/connections/begin": {
       "post": {
         "summary": "Start an OAuth PKCE loopback connection flow.",
