@@ -4,22 +4,18 @@ import { readTokenFromLocation, loadToken, saveToken, clearToken, loadFp, saveFp
 import { initCompanyProfile } from "./lib/company-profile.mjs";
 import { BrowserJournalClient, offerJsonBundleDownload } from "./lib/browser-journal-client.mjs";
 import { skewBannerHtml, isDismissed, dismiss } from "./lib/version-skew.mjs";
-import { renderChoose } from "./views/choose.mjs";
-import { renderCanvas } from "./views/canvas.mjs";
-import { renderConnect } from "./views/connect.mjs";
-import { renderRun } from "./views/run.mjs";
-import { renderOperate } from "./views/operate.mjs";
-import { renderVerify } from "./views/verify.mjs";
-import { renderReview } from "./views/review.mjs";
-import { renderHelp } from "./views/help.mjs";
-import { renderRegister } from "./views/register.mjs";
+import { TABS } from "./lib/tab-meta.mjs";
+import { VIEWS } from "./lib/view-registry.mjs";
 
-const VIEWS = { choose: renderChoose, canvas: renderCanvas, connect: renderConnect, run: renderRun, verify: renderVerify, review: renderReview, operate: renderOperate, register: renderRegister, help: renderHelp };
+// HELM-UX2-B-TABMETA (§12): TABS is the only place a tab's identity is
+// written. VIEWS (lib/view-registry.mjs) maps an id to its render function —
+// an id in TABS with no matching VIEWS entry fails the §12.5 gate rather
+// than silently 404ing.
 // HELM-P4-J5: Verify joins Help as pairing-free — a `#load=` link recipient
 // (SharePoint/Teams share, no Helm install/pairing on that machine at all)
 // must land straight on the bundle, not a "waiting for Helm" screen. Safe
 // because verify.mjs is standalone by construction (never calls ../api.mjs).
-const STATIC_VIEWS = new Set(["help", "verify"]);
+// requiresPairing: false in tab-meta.mjs replaces the old STATIC_VIEWS set.
 const DEFAULT_VIEW = "choose";
 
 // HELM-P3-G10: `#template=<slug>` is a shareable deep link (Teams/email),
@@ -233,6 +229,13 @@ function mountTokenForm(root, onPaired) {
   });
 }
 
+// §12.3: the shell owns the page title. Views delete their own <h2> and
+// render into #view-content only; #view-header is never touched by a view.
+function renderViewHeader(app, view) {
+  const tab = TABS.find((t) => t.id === view);
+  app.viewHeader.innerHTML = tab ? `<h1>${tab.label}</h1><p class="tab-intro">${tab.intro}</p>` : "";
+}
+
 async function render(app) {
   const port = loadPort();
   const token = loadToken();
@@ -242,20 +245,23 @@ async function render(app) {
     if (a.dataset.view === view) a.setAttribute("aria-current", "page");
     else a.removeAttribute("aria-current");
   });
+  renderViewHeader(app, view);
+
+  const requiresPairing = TABS.find((t) => t.id === view)?.requiresPairing ?? true;
 
   if (!token) {
     ensureActivityStream(port, null, app.statusDot, app.statusLabel);
-    if (STATIC_VIEWS.has(view)) {
-      await VIEWS[view](app.main, { port, token, params, activityStream: null });
+    if (!requiresPairing) {
+      await VIEWS[view](app.viewContent, { port, token, params, activityStream: null });
     } else {
-      mountTokenForm(app.main, () => render(app));
+      mountTokenForm(app.viewContent, () => render(app));
     }
     setStatus(app.statusDot, app.statusLabel, "dormant", "not paired");
     return;
   }
 
   const activityStream = ensureActivityStream(port, token, app.statusDot, app.statusLabel);
-  await VIEWS[view](app.main, { port, token, params, activityStream });
+  await VIEWS[view](app.viewContent, { port, token, params, activityStream });
   refreshConnectivity(port, token, app.statusDot, app.statusLabel);
 }
 
@@ -311,6 +317,32 @@ function startBrowserJournal() {
   return client;
 }
 
+// §12.3/§12.4: nav is generated from TABS, grouped per §12.6 — the wrapper
+// keeps the HELM-UX-1 §6.2/§6.3 role="group" + aria-label + data-group
+// contract theme.css's sibling-selector separator relies on, so reordering
+// or adding a tab here can never silently break the separator or grouping.
+function generateNav(navEl) {
+  navEl.innerHTML = "";
+  let currentGroup = null;
+  let groupEl = null;
+  for (const tab of TABS) {
+    if (tab.group !== currentGroup) {
+      currentGroup = tab.group;
+      groupEl = document.createElement("div");
+      groupEl.setAttribute("role", "group");
+      groupEl.setAttribute("aria-label", currentGroup);
+      groupEl.dataset.group = currentGroup.toLowerCase();
+      navEl.appendChild(groupEl);
+    }
+    const a = document.createElement("a");
+    a.href = `#/${tab.id}`;
+    a.dataset.view = tab.id;
+    a.textContent = tab.label;
+    groupEl.appendChild(a);
+  }
+  return Array.from(navEl.querySelectorAll("a"));
+}
+
 export function boot() {
   const { token: preHashToken, pair, fp } = readTokenFromLocation();
   if (preHashToken) saveToken(preHashToken);
@@ -326,8 +358,9 @@ export function boot() {
   initDensityToggle(document.getElementById("density-toggle"));
 
   const app = {
-    main: document.getElementById("shell-main"),
-    navLinks: Array.from(document.querySelectorAll("nav.shell-nav a")),
+    viewHeader: document.getElementById("view-header"),
+    viewContent: document.getElementById("view-content"),
+    navLinks: generateNav(document.querySelector("nav.shell-nav")),
     statusDot: document.getElementById("status-dot"),
     statusLabel: document.getElementById("status-label"),
   };

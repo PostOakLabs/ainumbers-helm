@@ -111,7 +111,6 @@ function wireActions(root, port, token, rerender) {
 export async function renderReview(root, { port, token } = {}) {
   if (!port || !token) {
     root.innerHTML = `
-      <h2>Review</h2>
       <p class="empty-state">helmd isn't paired yet. Pair a browser tab (see Operate) to see runs held at a §27 accountability gate.</p>`;
     return;
   }
@@ -120,11 +119,11 @@ export async function renderReview(root, { port, token } = {}) {
   const pending = await fetchWithFallback("/ha/pending", { port, token });
 
   if (pending.state === "unavailable") {
-    root.innerHTML = `<h2>Review</h2><p class="unavailable-state">Not available in this daemon version yet.</p>`;
+    root.innerHTML = `<p class="unavailable-state">Not available in this daemon version yet.</p>`;
     return;
   }
   if (pending.state === "missing") {
-    root.innerHTML = `<h2>Review</h2><p class="empty-state">helmd unreachable.</p>`;
+    root.innerHTML = `<p class="empty-state">helmd unreachable.</p>`;
     return;
   }
 
@@ -133,14 +132,12 @@ export async function renderReview(root, { port, token } = {}) {
 
   if (!items.length) {
     root.innerHTML = `
-      <h2>Review</h2>
       <p class="empty-state">Nothing is waiting on a human right now. Runs whose pack declares a §27.4 gate policy (<code>review_required</code>, <code>dual_control</code>, …) appear here the moment they hold.</p>
       <p class="empty-state">Your local approver identity: <code>${esc(identity.id)}</code></p>`;
     return;
   }
 
   root.innerHTML = `
-    <h2>Review</h2>
     <p class="empty-state">Your local approver identity: <code>${esc(identity.id)}</code> — signed in this browser, never sent to helmd.</p>
     <div class="card-grid">
       ${items.map((item) => pendingCard(item, identity.id)).join("")}
