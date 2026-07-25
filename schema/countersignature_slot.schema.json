@@ -19,9 +19,16 @@
     "countersignature": {
       "type": "object",
       "additionalProperties": false,
-      "required": ["role", "signature", "signed_at"],
+      "required": ["role", "identity", "signature", "signed_at"],
       "properties": {
         "role": { "const": "checker" },
+        "identity": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": ["id"],
+          "description": "OCG SPEC.md §27.1/§27.3 identity shape — the checker's did:key or LEI. Distinct-identity threshold counting (below) counts THIS id, never the signing key, so one checker rotating keys or signing twice counts once.",
+          "properties": { "id": { "type": "string", "minLength": 1 } }
+        },
         "signature": { "$ref": "#/$defs/signature" },
         "signed_at": { "$ref": "#/$defs/timestamp" },
         "replay_verified": { "type": "boolean", "description": "True iff the checker independently re-ran the workflow deterministically and got a matching bundle_digest before countersigning — the flagship differentiator over a rubber-stamp approval." }
@@ -34,6 +41,7 @@
   "properties": {
     "bundle_digest": { "$ref": "#/$defs/sha256ref" },
     "maker_signature": { "$ref": "#/$defs/signature" },
-    "countersignatures": { "type": "array", "items": { "$ref": "#/$defs/countersignature" }, "description": "Empty in Phase 3. A future maker-checker feature appends entries here; nothing in Phase 3 reads or requires them." }
+    "countersignatures": { "type": "array", "items": { "$ref": "#/$defs/countersignature" }, "description": "Empty in Phase 3. A future maker-checker feature appends entries here; nothing in Phase 3 reads or requires them." },
+    "threshold": { "type": "integer", "minimum": 1, "description": "OPTIONAL — mirrors OCG SPEC.md §27.3's in-toto integer threshold: the count of DISTINCT checker identity.id values required among countersignatures before this slot is satisfied (a repeated identity counts once). Absent = maker_signature alone is a complete, valid bundle (§26.7); this field exists so a Phase-4 maker-checker consumer has a stable place to express N without inventing one under deadline." }
   }
 }
