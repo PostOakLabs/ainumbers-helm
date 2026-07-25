@@ -1,6 +1,6 @@
 # Releasing
 
-Releases are automated by [release-please](https://github.com/googleapis/release-please) (`.github/workflows/release-please.yml`, SHA-pinned per SO #17 — the only third-party action in this program).
+Releases are automated by [release-please](https://github.com/googleapis/release-please) (`.github/workflows/release-please.yml`, SHA-pinned — the only third-party action in this program).
 
 ## How it works
 
@@ -69,10 +69,10 @@ Every GA release ships, alongside the four SEA binaries and the DSSE-signed mani
 
 - **`helm-cli-<version>.tgz`** — the filled npm package packed with `npm pack` (no install, no network — reads `package.json` + `files` only), so `npm install ./helm-cli-<version>.tgz` works with zero registry reachability. Byte-identical to what `publish-npm` would publish, since both are built from the same `dist/packaging/npm` output.
 - **`SHA256SUMS`** — plain digests over every staged asset (binaries, tarball, manifests), for `sha256sum -c` verification with no repo code.
-- **GitHub build provenance** via `actions/attest-build-provenance` (first-party, `v4.1.1` SHA-pinned — no SO #17 authorization needed, unlike `sigstore/cosign-installer` which stays out per `HELM-CODE-SIGNING-RESEARCH-2026-07-23.md` §5) — attests every `helmd-*` binary and the offline tarball back to this exact workflow run. Verify with `gh attestation verify <file> --repo PostOakLabs/ainumbers-helm`.
+- **GitHub build provenance** via `actions/attest-build-provenance` (first-party, `v4.1.1` SHA-pinned — no extra third-party-action review needed, unlike `sigstore/cosign-installer` which stays out per `HELM-CODE-SIGNING-RESEARCH-2026-07-23.md` §5) — attests every `helmd-*` binary and the offline tarball back to this exact workflow run. Verify with `gh attestation verify <file> --repo PostOakLabs/ainumbers-helm`.
 
 `docs/INSTALL.md` documents all three from the consumer side, plus the Artifactory-virtual-repo path for orgs that mirror npm through a proxy instead of allowing direct installs.
 
 ## Homebrew tap (D-SIGN-4)
 
-`packaging/homebrew/helm.rb.template` is filled by `gen-packaging-manifests.mjs` same as the npm/winget manifests, but publishing it needs a **new public repo** (`ainumbers/homebrew-helm`, the tap convention) — that's SO #8 flag-and-wait territory (new public repos), not something this WU creates. **Manual step (Tim, one-time):** create `PostOakLabs/homebrew-helm` (or an `ainumbers` org tap repo matching `docs/INSTALL.md`'s `brew install ainumbers/helm/helm`), add a step or manual copy of the filled `Formula/helm.rb` from each release's `dist/packaging/homebrew/` output into that repo. Until then, `brew install ainumbers/helm/helm` in `docs/INSTALL.md` documents the intended path, not a live one — winget/npm/manual download all work today regardless.
+`packaging/homebrew/helm.rb.template` is filled by `gen-packaging-manifests.mjs` same as the npm/winget manifests, but publishing it needs a **new public repo** (`ainumbers/homebrew-helm`, the tap convention) — creating a new public repo is a deliberate, one-time act, not something automated tooling should do on its own. **Manual step, one-time:** create `PostOakLabs/homebrew-helm` (or an `ainumbers` org tap repo matching `docs/INSTALL.md`'s `brew install ainumbers/helm/helm`), add a step or manual copy of the filled `Formula/helm.rb` from each release's `dist/packaging/homebrew/` output into that repo. Until then, `brew install ainumbers/helm/helm` in `docs/INSTALL.md` documents the intended path, not a live one — winget/npm/manual download all work today regardless.

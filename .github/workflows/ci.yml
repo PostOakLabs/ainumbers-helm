@@ -18,6 +18,8 @@ jobs:
           node-version: "22"
       - name: hook↔CI parity (no gate drift)
         run: node scripts/check-hook-ci-parity.mjs
+      - name: internal-lang leak (INTERNAL-LANG-LEAK-1)
+        run: node scripts/check-internal-lang-leak.mjs
       - name: lint
         run: node scripts/lint.mjs
       - name: test

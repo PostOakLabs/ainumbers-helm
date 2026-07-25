@@ -147,11 +147,11 @@ The `ainumbers.co` zone (Cloudflare-managed, covers every host in §1 —
 `ainumbers.co`, `anchor.ainumbers.co`, `mcp.ainumbers.co`) runs DNSSEC and
 CAA the way Cloudflare's own documentation recommends. Both are
 zone-wide Cloudflare **console/registrar** toggles, not application
-code — Post Oak Labs' standing operating rule (SO #8, SO #24) is that a
-build session never touches production zone config directly; a human
-applies console changes from a written runbook and the session
-memorializes the before/after. The exact-click runbook for this WU's
-DNSSEC + CAA change lives in
+code — a build session never touches production zone config directly,
+since it's irreversible from outside the console; a human applies
+console changes from a written runbook and the change is memorialized
+before/after. The exact-click runbook for this DNSSEC + CAA change
+lives in
 [`DNSSEC-CAA-RUNBOOK.md`](DNSSEC-CAA-RUNBOOK.md) in this directory.
 Current state as verified by this WU (`dig`/DNS-over-HTTPS, 2026-07-24):
 no `DS` record at the registrar and no `CAA` record in the zone — both
@@ -187,9 +187,9 @@ share the same two failing Observatory tests):**
 - **`x-frame-options`** — not set (−20). The site deliberately leaves
   framing policy to CSP `frame-ancestors` rather than the legacy header;
   Observatory scores the legacy header's absence regardless. Documented
-  here rather than added reflexively — SO #20 (`connect-src 'self'
-  https:`) already governs this surface; adding XFO is a separate call
-  for whoever owns CSP policy, not this WU.
+  here rather than added reflexively — the existing CSP directive
+  (`connect-src 'self' https:`) already governs this surface; adding XFO
+  is a separate call for whoever owns CSP policy, not this WU.
 
 `anchor.ainumbers.co` (BrowserChain/anchor-suite host) has neither
 Observatory gap — A+/135 — because it serves no HTML/JS surface to
