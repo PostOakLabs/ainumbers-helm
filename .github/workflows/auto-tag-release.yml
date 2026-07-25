@@ -1,0 +1,95 @@
+name: Auto-tag release
+
+# Takes the recurring "cut a release" duty off a human. Runs daily; if
+# `main` has moved since the last GA CalVer tag, bumps
+# `package.json` to today's date, regenerates docs/openapi.json (its own
+# freshness gate would otherwise fail), commits both, and pushes today's
+# YYYY.M.D tag — which is what actually fires release.yml. No-op (exit 0,
+# no commit, no tag) if nothing changed since the last tag, or if a tag for
+# today already exists: one release per day is a hard CalVer constraint,
+# not a preference — the date consumes all three semver components, so two
+# GA tags on the same day can never both exist. `workflow_dispatch` lets
+# this be forced manually (e.g. to verify the pipeline without waiting for
+# the schedule).
+on:
+  schedule:
+    - cron: "0 14 * * *" # once daily; the if-changed gate makes idle days a no-op
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  tag-if-changed:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+    steps:
+      - uses: actions/checkout@9c091bb21b7c1c1d1991bb908d89e4e9dddfe3e0 # v7.0.0
+        with:
+          fetch-depth: 0
+          ref: main
+      - uses: actions/setup-node@249970729cb0ef3589644e2896645e5dc5ba9c38 # v6.5.0
+        with:
+          node-version: "22"
+
+      - name: decide whether to release
+        id: gate
+        run: |
+          set -e
+          TAG="$(date -u +%Y.%-m.%-d)"
+          echo "tag=$TAG" >> "$GITHUB_OUTPUT"
+
+          if git rev-parse -q --verify "refs/tags/$TAG" >/dev/null; then
+            echo "already tagged $TAG — one release per day, skipping."
+            echo "skip=true" >> "$GITHUB_OUTPUT"
+            exit 0
+          fi
+
+          # nearest GA CalVer tag reachable from HEAD (excludes -rc and the
+          # old v0.1.0 semver tag via the match pattern)
+          LATEST_TAG="$(git describe --tags --abbrev=0 --match '20[0-9][0-9].*' HEAD 2>/dev/null || true)"
+          if [ -z "$LATEST_TAG" ]; then
+            echo "no prior CalVer GA tag found — proceeding."
+            echo "skip=false" >> "$GITHUB_OUTPUT"
+            exit 0
+          fi
+
+          LATEST_COMMIT="$(git rev-list -n1 "$LATEST_TAG")"
+          HEAD_COMMIT="$(git rev-parse HEAD)"
+          if [ "$LATEST_COMMIT" = "$HEAD_COMMIT" ]; then
+            echo "main unchanged since $LATEST_TAG — nothing to release."
+            echo "skip=true" >> "$GITHUB_OUTPUT"
+          else
+            echo "main has moved since $LATEST_TAG — releasing $TAG."
+            echo "skip=false" >> "$GITHUB_OUTPUT"
+          fi
+
+      # Folds the version bump into the same step that computes the tag
+      # (Tim's ruling, docs/RELEASING.md) so the two can never drift apart
+      # the way they did on the first CalVer release. package.json has four
+      # consumers (release-manifest's signing guard, DAEMON_VERSION baked
+      # into the SEA binaries, doctor's version-check, docs/openapi.json's
+      # own freshness gate) and this is the one place that updates it.
+      - name: bump version, regen openapi, commit, tag, push
+        if: steps.gate.outputs.skip != 'true'
+        run: |
+          set -e
+          TAG="${{ steps.gate.outputs.tag }}"
+
+          node --input-type=module -e "
+            import { readFileSync, writeFileSync } from 'node:fs';
+            const pkg = JSON.parse(readFileSync('package.json', 'utf8'));
+            pkg.version = '$TAG';
+            writeFileSync('package.json', JSON.stringify(pkg, null, 2) + '\n');
+          "
+          node scripts/gen-openapi.mjs
+
+          git config user.name "helm-release-bot"
+          git config user.email "noreply@postoaklabs.com"
+          git add package.json docs/openapi.json
+          git commit -m "release(helm): bump version to $TAG"
+          git push origin HEAD:main
+
+          git tag "$TAG"
+          git push origin "$TAG"
