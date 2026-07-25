@@ -7,7 +7,7 @@
 // calls ../api.mjs). Legibility gate (§5.7): a reviewer unfamiliar with the code
 // should be able to read what a trust label does and does NOT claim in under
 // two minutes — the copy fence below is written for that reader, not for us.
-import { verifyBundle, verifyAnchorBinding } from "../lib/verify-bundle.mjs";
+import { verifyBundle, verifyAnchorBinding, verifyAnchorFull } from "../lib/verify-bundle.mjs";
 import { renderPresenterHtml } from "../lib/presenter.mjs";
 import { buildCommitteePackHtml } from "../lib/committee-pack.mjs";
 import { buildCommitteeDeckSpec } from "../lib/committee-deck.mjs";
@@ -63,24 +63,66 @@ function renderEntries(entries) {
     .join("")}</ul>`;
 }
 
+// The four independent RFC 3161 checks (HELM-TSA-1) as their own badges — never
+// collapsed into one verdict, so a reader sees exactly which of {messageImprint,
+// signature, chain-to-pinned-root, validity window} passed. An expired-but-
+// validly-signed token and an untrusted-root token render as visibly DIFFERENT
+// failures, not the same generic ✗.
+function renderRfc3161FullBadges(full) {
+  const rows = [
+    ["messageImprint bound to this checkpoint", full.messageImprint],
+    ["CMS signature verifies", full.signature],
+    ["chains to a pinned TSA root", full.chain],
+    ["genTime within certificate validity", full.validity],
+  ];
+  const items = rows
+    .map(([label, r]) => {
+      if (!r || !r.checked) return `<li>${statusBadge(null, `${label} — not checked${r?.reason ? ` (${r.reason})` : ""}`)}</li>`;
+      const ok = "valid" in r ? r.valid : r.bound;
+      const detail = r.reason ? ` — ${r.reason}` : r.rootName ? ` — root: ${r.rootName}` : "";
+      return `<li>${statusBadge(!!ok, `${label}${detail}`)}</li>`;
+    })
+    .join("");
+  const genTimeLine = full.genTime ? `<p class="verify-reason">TSA time: ${full.genTime}${full.policyOid ? ` (policy ${full.policyOid})` : ""} — a timestamp proves the digest existed at this time; it does NOT prove the document is correct.</p>` : "";
+  return `<ul class="verify-anchor-list">${items}</ul>${genTimeLine}`;
+}
+
 function renderCheckpoints(checkpoints) {
   if (!checkpoints.length) return `<p class="empty-state">No checkpoints in this bundle.</p>`;
   return `<ul class="verify-entry-list">${checkpoints
-    .map((cp) => {
+    .map((cp, cpIdx) => {
       const anchorRows = (cp.predicate?.anchors ?? [])
-        .map((a) => {
+        .map((a, aIdx) => {
           const b = verifyAnchorBinding(a, cp.predicate.journal_root_digest);
-          const text = b.checked
-            ? b.bound
-              ? `bound to this checkpoint${b.genTime ? ` — TSA time ${b.genTime} (signature not verified offline — see below)` : ""}`
-              : `NOT bound — ${b.reason ?? "messageImprint mismatch"}`
-            : `structural check not applicable — ${b.reason}`;
-          // A bound messageImprint only proves the token covers this checkpoint's
-          // digest — it does NOT prove the TSA's signature chains to a trusted
-          // root, so a hostile relay could still forge genTime on a token that
-          // binds cleanly (F10). Never render that case as an unqualified ✓.
-          const badgeOk = b.checked ? (b.bound ? "partial" : false) : null;
-          return `<li>${statusBadge(badgeOk, `${a.type}: ${text}`)}</li>`;
+          const anchorId = `anchor-${cpIdx}-${aIdx}`;
+          if (a.type === "rfc3161") {
+            const text = b.checked
+              ? b.bound
+                ? `messageImprint bound to this checkpoint${b.genTime ? ` — TSA time ${b.genTime}` : ""} — checking signature, chain, and validity window…`
+                : `NOT bound — ${b.reason ?? "messageImprint mismatch"}`
+              : `structural check not applicable — ${b.reason}`;
+            // A bound messageImprint alone only proves the token covers this
+            // checkpoint's digest, not that the TSA's signature chains to a
+            // trusted root — never render that case as an unqualified ✓ before
+            // the fuller check (kicked off after this initial render, see
+            // enhanceRfc3161Anchors) has actually run.
+            const badgeOk = b.checked ? (b.bound ? "partial" : false) : null;
+            return `<li id="${anchorId}" data-anchor-type="rfc3161">${statusBadge(badgeOk, `${a.type}: ${text}`)}</li>`;
+          }
+          if (a.type === "opentimestamps") {
+            const text = b.checked
+              ? b.digestBound
+                ? `pending calendar attestation present, digest matches`
+                : `NOT bound — ${b.reason}`
+              : `structural check not applicable — ${b.reason}`;
+            const pointer = b.upgradePointer
+              ? `<p class="verify-reason">Not yet a Bitcoin block proof (Phase 1 scope). Upgrade pointer — check later, out of band: <code>${b.upgradePointer}</code></p>`
+              : "";
+            const badgeOk = b.checked && b.digestBound ? "partial" : b.checked ? false : null;
+            return `<li data-anchor-type="opentimestamps">${statusBadge(badgeOk, `${a.type}: ${text}`)}${pointer}</li>`;
+          }
+          const text = b.checked ? (b.neutral ? `${b.status}${b.reason ? ` — ${b.reason}` : ""}` : b.bound ? "bound" : `NOT bound — ${b.reason ?? "mismatch"}`) : `structural check not applicable — ${b.reason}`;
+          return `<li>${statusBadge(b.neutral ? null : b.checked ? !!b.bound : null, `${a.type}: ${text}`)}</li>`;
         })
         .join("");
       return `
@@ -92,6 +134,33 @@ function renderCheckpoints(checkpoints) {
     </li>`;
     })
     .join("")}</ul>`;
+}
+
+// Progressive enhancement (HELM-TSA-1): the initial render above is instant and
+// zero-crypto-lib (structural messageImprint check only). AFTER that render,
+// kick off the fuller signature+chain+validity check per rfc3161 anchor — it
+// dynamic-imports the ~800KB pkijs bundle lazily (../lib/rfc3161-verify.mjs) —
+// and replace each anchor's placeholder <li> in place once its verdict lands.
+// Anchors resolve independently; one slow/failing anchor never blocks another's
+// badge from updating.
+function enhanceRfc3161Anchors(root, checkpoints) {
+  checkpoints.forEach((cp, cpIdx) => {
+    (cp.predicate?.anchors ?? []).forEach((a, aIdx) => {
+      if (a.type !== "rfc3161") return;
+      const li = root.querySelector(`#anchor-${cpIdx}-${aIdx}`);
+      if (!li) return;
+      verifyAnchorFull(a, cp.predicate.journal_root_digest)
+        .then((full) => {
+          const el = root.querySelector(`#anchor-${cpIdx}-${aIdx}`);
+          if (!el || !full.full) return;
+          el.innerHTML = renderRfc3161FullBadges(full.full);
+        })
+        .catch((err) => {
+          const el = root.querySelector(`#anchor-${cpIdx}-${aIdx}`);
+          if (el) el.innerHTML = `${statusBadge(false, `rfc3161: could not run the fuller offline check — ${err.message}`)}`;
+        });
+    });
+  });
 }
 
 function downloadHtml(html, filename) {
@@ -134,6 +203,7 @@ async function runVerify(root, { bundle, publicKeys }) {
       <button type="button" id="verify-export-committee-deck" class="secondary">Export .pptx deck</button>
     </p>
     <p id="verify-deck-export-status" role="status" aria-live="polite"></p>`;
+  enhanceRfc3161Anchors(root, result.detail.checkpoints);
 
   function checkpointsWithAnchorBinding() {
     return result.detail.checkpoints.map((cp) => {
@@ -274,8 +344,8 @@ export async function renderVerify(root, { params } = {}) {
     <section class="card verify-copy-fence" aria-labelledby="verify-what-checked">
       <h3 id="verify-what-checked">What this checks — and what it does not</h3>
       <dl class="verify-fence-list">
-        <div><dt>✓ Checked</dt><dd>Every object's DSSE envelope: Ed25519 signature (required) and ML-DSA-44 signature (checked whenever present — a tampered post-quantum co-signature fails even though it's optional). Every entry's digest, kind, and trust label match the signed manifest exactly. Redaction: no secret-shaped fields are present in the exported predicate. Each checkpoint's declared running-hash state is internally self-consistent. RFC 3161 anchors: the token's message imprint is bound to the checkpoint it claims to cover.</dd>
-        <div><dt>✗ NOT checked</dt><dd>Whether the underlying real-world event is true — a trust label never claims that (see below). The TSA certificate's chain of trust to a root authority. Whether an OpenTimestamps anchor has been upgraded to a Bitcoin block proof (Phase 1 only captures the pending calendar attestation). Whether this checkpoint's state still matches a LIVE daemon's journal — this view has none; the Operate view checks that when a daemon is reachable.</dd>
+        <div><dt>✓ Checked</dt><dd>Every object's DSSE envelope: Ed25519 signature (required) and ML-DSA-44 signature (checked whenever present — a tampered post-quantum co-signature fails even though it's optional). Every entry's digest, kind, and trust label match the signed manifest exactly. Redaction: no secret-shaped fields are present in the exported predicate. Each checkpoint's declared running-hash state is internally self-consistent. RFC 3161 anchors, as four independent checks: the token's message imprint is bound to the checkpoint it claims to cover; the CMS signature verifies against the embedded signer certificate; that certificate chains to a PINNED TSA root (DigiCert, Sectigo, or FreeTSA — never a root the token itself supplies); and the TSA's claimed time falls inside the signing certificate's validity window. All four run fully offline.</dd>
+        <div><dt>✗ NOT checked</dt><dd>Whether the underlying real-world event is true — a trust label never claims that (see below), and a timestamp proves only that a digest existed at a given time, never that the document is correct. Whether an OpenTimestamps anchor has been upgraded to a Bitcoin block proof — Phase 1 captures only the pending calendar attestation plus a pointer for checking the upgrade later, out of band. Whether this checkpoint's state still matches a LIVE daemon's journal — this view has none; the Operate view checks that when a daemon is reachable.</dd>
       </dl>
     </section>
 
