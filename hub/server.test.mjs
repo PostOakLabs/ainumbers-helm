@@ -387,8 +387,8 @@ test("static: unknown path under a real UI directory (e.g. /views/does-not-exist
 // VIEWS (including help), so each one must be in ui-manifest's FILES
 // allowlist or the whole ES module graph 401s and <main> never mounts —
 // the same failure mode already documented for fixtures/verify-demo.mjs.
-test("static: GET /views/help.mjs serves as a JS module, no auth required (regression: was missing from ui-manifest FILES)", async () => {
-  const res = await get("/views/help.mjs", { Host: `127.0.0.1:${PORT}` });
+test("static: GET /views/learn.mjs serves as a JS module, no auth required (regression: was missing from ui-manifest FILES)", async () => {
+  const res = await get("/views/learn.mjs", { Host: `127.0.0.1:${PORT}` });
   assert.equal(res.status, 200);
 });
 
