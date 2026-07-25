@@ -56,6 +56,7 @@ const FILES = [
   "lib/verify-bundle.mjs",
   "lib/verify-envelope.mjs",
   "lib/version-skew.mjs",
+  "oauth-callback.html",
   "oauth-callback.mjs",
   "vendored/der.mjs",
   "vendored/der-encode.mjs",
