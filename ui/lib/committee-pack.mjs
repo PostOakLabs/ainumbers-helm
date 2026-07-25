@@ -22,10 +22,7 @@
 // honest "not attached" note instead of a fabricated diagram.
 import { buildDag } from "./manifest-dag.mjs";
 import { renderDagSvg } from "./dag-svg.mjs";
-
-function esc(s) {
-  return String(s ?? "").replace(/[&<>"']/g, (c) => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" }[c]));
-}
+import { esc } from "./esc.mjs";
 
 export const TRUST_LABELS_ORDER = [
   "hash_verified",

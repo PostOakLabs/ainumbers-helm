@@ -11,10 +11,7 @@ import { renderDagSvg } from "../lib/dag-svg.mjs";
 import { toYaml } from "../lib/to-yaml.mjs";
 import { manifestDigest } from "../lib/manifest-digest.mjs";
 import { buildExecSummary } from "../lib/canvas-exec-summary.mjs";
-
-function escapeHtml(s) {
-  return String(s).replace(/[&<>]/g, (c) => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;" }[c]));
-}
+import { esc as escapeHtml } from "../lib/esc.mjs";
 
 function renderExecSummary(summary) {
   return `

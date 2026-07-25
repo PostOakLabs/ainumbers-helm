@@ -42,6 +42,7 @@ const FILES = [
   "lib/company-profile.mjs",
   "lib/dag-svg.mjs",
   "lib/durability-banner.mjs",
+  "lib/esc.mjs",
   "lib/ha-crypto.mjs",
   "lib/journal-worker.mjs",
   "lib/euc-html.mjs",

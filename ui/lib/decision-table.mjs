@@ -12,10 +12,7 @@
 // hand-roll would be the first dependency added for no behavioral gain.
 // Same "no DOM globals" discipline as euc-html.mjs — pure template functions,
 // unit-testable under node:test.
-
-function esc(s) {
-  return String(s ?? "").replace(/[&<>"']/g, (c) => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" }[c]));
-}
+import { esc } from "./esc.mjs";
 
 // Flattens a (possibly nested) object into ordered [dotPath, value] leaf
 // pairs. Arrays and primitives are leaves as-is; this is a documentation

@@ -9,10 +9,7 @@
 // computed verification detail (see hub/bundle.mjs's exportBundleZip) rather
 // than this module re-deriving it, so it stays synchronous and testable.
 import { QRCODEGEN_JS } from "./qrcodegen-runtime.gen.mjs";
-
-function esc(s) {
-  return String(s ?? "").replace(/[&<>"']/g, (c) => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" }[c]));
-}
+import { esc } from "./esc.mjs";
 
 const KNOWN_PREDICATE_FIELDS = [
   "run_id", "step_id", "state", "output_digest",

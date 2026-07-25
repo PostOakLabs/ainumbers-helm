@@ -26,6 +26,7 @@ import {
 import { consumeRelayedResult } from "../oauth-callback.mjs";
 import { unlockRecord, enrollPassphrase, VaultWeakPassphraseError, PASSPHRASE_MIN_LENGTH } from "../lib/vault.mjs";
 import { VaultTokenStore, openIndexedDbTokenStore } from "../lib/vault-token-store.mjs";
+import { esc } from "../lib/esc.mjs";
 
 const VAULT_RECORD_KEY = "helm.browser.vault.record";
 const OAUTH_CLIENT_ID_KEYS = { microsoft: "helm.oauth.clientId.microsoft", google: "helm.oauth.clientId.google" };
@@ -189,7 +190,7 @@ function wireBrowserConnectors(root) {
 }
 
 function methodBadgeList(methods) {
-  return methods.map((m) => `<span class="field-row-badge">${m}</span>`).join(" ");
+  return methods.map((m) => `<span class="field-row-badge">${esc(m)}</span>`).join(" ");
 }
 
 function tokenLocationOf(contract) {
@@ -197,24 +198,28 @@ function tokenLocationOf(contract) {
   return "no vault-backed secret (public client or deep-link)";
 }
 
-function connectorCard(entry) {
+// Everything under `entry`/`entry.contract` is daemon-supplied and untrusted
+// (HELM-UX-BUILD-SPEC.md §16.2) — the full-contract <pre> in particular must
+// go through esc() because JSON.stringify does not escape "<", making it the
+// reliable breakout vector once a real connector runtime lands (HELM-UX2-G-IMPORT).
+export function connectorCard(entry) {
   const c = entry.contract;
   const expiry = entry.expiry ?? "no fixed expiry (revoke manually)";
   return `
-    <article class="card" aria-labelledby="connector-${c.connector_id}">
-      <h3 id="connector-${c.connector_id}">${c.name ?? c.connector_id}</h3>
-      <p class="field-row"><span>${c.publisher}</span> · <span>v${c.connector_version}</span></p>
+    <article class="card" aria-labelledby="connector-${esc(c.connector_id)}">
+      <h3 id="connector-${esc(c.connector_id)}">${esc(c.name ?? c.connector_id)}</h3>
+      <p class="field-row"><span>${esc(c.publisher)}</span> · <span>v${esc(c.connector_version)}</span></p>
       <dl>
-        <div class="field-row"><dt>Destination</dt><dd>${c.allowed_hosts.join(", ")}</dd></div>
+        <div class="field-row"><dt>Destination</dt><dd>${esc(c.allowed_hosts.join(", "))}</dd></div>
         <div class="field-row"><dt>Data route</dt><dd>${methodBadgeList(c.allowed_methods)}</dd></div>
-        <div class="field-row"><dt>Scopes</dt><dd>${(c.scopes ?? []).join(", ") || "none declared"}</dd></div>
-        <div class="field-row"><dt>Token location</dt><dd>${tokenLocationOf(c)}</dd></div>
-        <div class="field-row"><dt>Expiry</dt><dd>${expiry}</dd></div>
-        <div class="field-row"><dt>Status</dt><dd>${entry.status ?? "not connected"}</dd></div>
+        <div class="field-row"><dt>Scopes</dt><dd>${esc((c.scopes ?? []).join(", ")) || "none declared"}</dd></div>
+        <div class="field-row"><dt>Token location</dt><dd>${esc(tokenLocationOf(c))}</dd></div>
+        <div class="field-row"><dt>Expiry</dt><dd>${esc(expiry)}</dd></div>
+        <div class="field-row"><dt>Status</dt><dd>${esc(entry.status ?? "not connected")}</dd></div>
       </dl>
       <details class="disclosure">
         <summary>Full contract</summary>
-        <pre>${JSON.stringify(c, null, 2)}</pre>
+        <pre>${esc(JSON.stringify(c, null, 2))}</pre>
       </details>
     </article>`;
 }

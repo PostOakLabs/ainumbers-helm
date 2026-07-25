@@ -5,9 +5,7 @@
 // as lib/to-yaml.mjs. Styling is inline + a @media print block — this is a
 // standalone downloadable file, not a page mounted inside the shell, so it
 // can't rely on theme.css being present.
-function esc(s) {
-  return String(s ?? "").replace(/[&<>"']/g, (c) => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" }[c]));
-}
+import { esc } from "./esc.mjs";
 
 function docShell(title, body) {
   return `<!doctype html>

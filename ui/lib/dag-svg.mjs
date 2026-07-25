@@ -2,15 +2,13 @@
 // Copyright (c) 2026 Post Oak Labs, Inc.
 // Renders a buildDag() graph to an SVG string. Pure string-in/string-out —
 // no DOM globals — so layout math is unit-testable under node:test.
+import { esc } from "./esc.mjs";
+
 const COL_W = 220;
 const ROW_H = 64;
 const NODE_W = 176;
 const NODE_H = 40;
 const PAD = 32;
-
-function esc(s) {
-  return String(s).replace(/[&<>"']/g, (c) => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" }[c]));
-}
 
 function nodeCenter(colIndex, rowIndex) {
   return { x: PAD + colIndex * COL_W + NODE_W / 2, y: PAD + rowIndex * ROW_H + NODE_H / 2 };
