@@ -104,12 +104,12 @@ helmd start
 ```
 
 `helmd` serves its own UI at `http://127.0.0.1:<port>/` (default port 4173)
-— no separate download, no `file://` page. On first run it opens your
+— no separate download, no `file://` page. Every `helmd start` opens your
 default browser at that URL, pre-paired with a one-time token in the
 fragment (`#token=...`, stripped from the address bar immediately, never
-sent to the server). If nothing opens (headless box, no default browser)
-copy the printed URL yourself. Later starts stay silent; run `helmd start
---open` to force the browser open again.
+sent to the server). If nothing opens (headless box, no default browser,
+or the auto-open step failed) the URL is also printed to the console —
+copy/paste it yourself; it's always a working fallback, never required.
 
 ## After installing
 
