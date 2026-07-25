@@ -67,4 +67,26 @@ if (scopeViolations.length > 0) {
   process.exit(1);
 }
 
+// esc() redefinition lint (HELM-UX2-A-ESC): ui/lib/esc.mjs is the ONE
+// HTML-escaper — a redefined local copy is how the 3-char (&<>-only) drift
+// that left ui/views/canvas.mjs's escapeHtml attribute-breakout-unsafe got
+// in, and how a NEW copy could silently reintroduce it. standalone-verifier.mjs
+// is exempt: it's the offline single-file bundle verifier (D2/zero-dep) and
+// deliberately carries no imports.
+const ESC_DEF = /\bfunction\s+(esc|escapeHtml)\s*\(/;
+const ESC_EXEMPT = new Set([join(ROOT, "ui", "lib", "esc.mjs"), join(ROOT, "ui", "lib", "standalone-verifier.mjs")]);
+let escViol = 0;
+for (const file of walk(ROOT)) {
+  if (file.endsWith(".test.mjs") || ESC_EXEMPT.has(file)) continue;
+  const src = readFileSync(file, "utf8");
+  if (ESC_DEF.test(src)) {
+    escViol++;
+    console.error(`ESC REDEFINITION LINT: ${file} redefines an HTML escaper — import esc from ui/lib/esc.mjs instead.`);
+  }
+}
+if (escViol > 0) {
+  console.error(`lint: ${escViol} esc() redefinition violation(s)`);
+  process.exit(1);
+}
+
 console.log("lint: OK");

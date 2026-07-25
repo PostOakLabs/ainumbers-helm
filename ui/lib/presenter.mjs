@@ -11,9 +11,7 @@
 // clearly separate "Presented by" section so it can't be mistaken for
 // verified content, and never inside the verifier's own origin/hash/version
 // footer.
-function esc(s) {
-  return String(s ?? "").replace(/[&<>"']/g, (c) => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" }[c]));
-}
+import { esc } from "./esc.mjs";
 
 const LOGO_DATA_URI_RE = /^data:image\/(png|jpeg|svg\+xml|webp);base64,/;
 

@@ -10,10 +10,7 @@
 // replay_verified — the Helm-only maker-checker differentiator.
 import { fetchWithFallback, call } from "../api.mjs";
 import { loadOrCreateBrowserIdentity, signHaRecord } from "../lib/ha-crypto.mjs";
-
-function esc(s) {
-  return String(s ?? "").replace(/[&<>"']/g, (c) => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" }[c]));
-}
+import { esc } from "../lib/esc.mjs";
 
 function shortHash(h) {
   return h && h.length > 20 ? `${h.slice(0, 14)}…${h.slice(-6)}` : h;
