@@ -17,8 +17,8 @@ call under `hub/` and `ui/` (excluding tests, node_modules, generated
 
 | # | Endpoint | Trigger | Payload |
 |---|---|---|---|
-| 1 | `POST https://anchor.ainumbers.co/relay/<ca>` | RFC 3161 anchoring of a checkpoint (`hub/anchor-client.mjs`, `anchorRfc3161`) | Raw TSQ DER built from the checkpoint's SHA-256 hash only — no document content |
-| 2 | `POST https://{a,b}.pool.opentimestamps.org`, `https://alice.btc.calendar.opentimestamps.org/digest` | OpenTimestamps anchoring (`anchorOpenTimestamps`) | Raw SHA-256 digest bytes only |
+| 1 | `POST https://anchor.ainumbers.co/relay/<ca>` | **On by default.** Fired by helmd itself, in the background, right after each checkpoint it takes (every boot with journal activity since the last one — `hub/checkpoint.mjs` `buildAnchoredCheckpoint`, called from `hub/index.mjs`'s `cmdStart`). Never blocks daemon startup — the call happens after the server is already listening, and a relay failure/timeout/unreachable host never aborts or delays checkpoint creation, it just yields a `queued`/`skipped` marker instead of a real anchor. **Disable:** set `"anchorOnCheckpoint": false` in `~/.helm/config.json` (`hub/config.mjs`) — the daemon then skips even attempting the relay call and every checkpoint is saved with a `skipped`/`egress_blocked` marker. | Raw TSQ DER built from the checkpoint's SHA-256 hash only — no document content |
+| 2 | `POST https://{a,b}.pool.opentimestamps.org`, `https://alice.btc.calendar.opentimestamps.org/digest` | OpenTimestamps anchoring (`anchorOpenTimestamps`) — present in code, not called by anything at runtime (see below) | Raw SHA-256 digest bytes only |
 | 3 | Connector-defined host (via `performEgress`, DNS-rebind checked, `redirect: manual`) | Any installed, signed connector contract | Whatever that connector's `send()` builds — scoped to its own allowlisted host |
 | 4 | `GET https://www.googleapis.com/drive/v3/files/{fileId}?alt=media` | Google Drive fetch connector, user picks a file | OAuth bearer token (header, from vault) out; file bytes back, kept in-process |
 | 5 | `POST {tokenEndpoint}` (RFC 8252 loopback PKCE); shipped preset `https://github.com/login/oauth/access_token` | User clicks "Connect" in the UI | Authorization code + PKCE verifier + client_id + redirect_uri — no client secret |
@@ -36,12 +36,11 @@ beacon/analytics patterns — none found.)
 
 ### Present in code, not reachable at runtime today
 
-- `anchorForCheckpoint` / `anchorRfc3161` / `anchorOpenTimestamps`
-  (row 1–2 above) are exercised only by this repo's own tests today —
-  `hub/checkpoint.mjs` does not call them and no route wires anchoring
-  into a user-triggered path yet. Listed anyway because the code exists
-  and is capable of making the call; update this doc the moment a WU
-  wires it live.
+- `anchorOpenTimestamps` (row 2 above) is exercised only by this repo's
+  own tests today — `anchorForCheckpoint` (the function that actually
+  wires anchoring into checkpoint creation, see the row above this list)
+  only ever calls `anchorRfc3161`, never this one. Listed anyway because
+  the code exists and is capable of making the call.
 - The Google Drive connector (row 4) is likewise only instantiated in
   its own test file — no runtime registry constructs it yet. The generic
   `performEgress` mechanism (row 3) is live for any connector that *is*
@@ -82,14 +81,17 @@ not to see nothing.
    the `helmd` process to `ainumbers.co:443` — that's row 10, the
    version-check poll firing on UI boot. This is expected, not a leak.
 4. Leave both running. No further outbound connection from `helmd` should
-   appear until the hour mark, when row 10 fires again (or until you run
-   a workflow, connect a provider, or trigger anchoring — each of which
-   produces exactly the rows in §1 that describe that action).
-5. To confirm row 10 is the *only* always-on background call: set
-   `"versionCheckUrl": ""` in `~/.helm/config.json`, restart `helmd`, and
-   repeat steps 2–4. Now zero outbound connections should appear at boot
-   or at the hour mark — only connections you cause yourself (OAuth
-   connect, anchor, connector egress) should ever show up.
+   appear until the hour mark, when row 10 fires again — unless the
+   journal has new activity since the last checkpoint, in which case row
+   1 fires once in the background (never blocking anything) the next time
+   `helmd` boots, or you run a workflow or connect a provider (each of
+   which produces exactly the rows in §1 that describe that action).
+5. To confirm row 10 is the *only* always-on background call independent
+   of your own actions: set `"versionCheckUrl": ""` **and**
+   `"anchorOnCheckpoint": false` in `~/.helm/config.json`, restart
+   `helmd`, and repeat steps 2–4. Now zero outbound connections should
+   appear at boot or at the hour mark — only connections you cause
+   yourself (OAuth connect, connector egress) should ever show up.
 6. Optionally also watch the browser's devtools **Network** tab in
    parallel: you'll only ever see `http://127.0.0.1:<port>/...` calls
    there (rows 11–12) — never `ainumbers.co` — because the outbound leg
@@ -108,9 +110,12 @@ no run data, document content, or workflow output to `ainumbers.co` or any
 Post Oak Labs system. The only bytes that ever leave your machine toward an
 AINumbers-operated endpoint are:
 
-- A SHA-256 hash (never document content) to `anchor.ainumbers.co`,
-  and only if you explicitly invoke anchoring (§1 rows 1–2 — currently
-  not wired to any live path, see above).
+- A SHA-256 hash (never document content) to `anchor.ainumbers.co`
+  (§1 row 1) — sent by default, automatically, in the background,
+  whenever `helmd` takes a checkpoint (journal activity since the last
+  one, checked once per boot). Disable it by setting
+  `"anchorOnCheckpoint": false` in `~/.helm/config.json`; every
+  checkpoint is still saved either way, just without a real anchor.
 - A version-check GET with no request body and no identifiers — sent
   by default, once on every UI boot and hourly thereafter, and also
   whenever you run `helmd doctor` (§1 row 10). Disable it by setting

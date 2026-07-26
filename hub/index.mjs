@@ -19,7 +19,7 @@ import { createConnection } from "node:net";
 import { statePath, stateDir } from "./state-dir.mjs";
 import { openJournal, replayVerify, replayVerifyFrom, recordFullVerification, streamHeads } from "./journal.mjs";
 import { quarantineStateDir } from "./recovery.mjs";
-import { buildCheckpoint, saveCheckpoint, latestCheckpoint, verifyCheckpointSignature } from "./checkpoint.mjs";
+import { buildAnchoredCheckpoint, saveCheckpoint, latestCheckpoint, verifyCheckpointSignature } from "./checkpoint.mjs";
 import { publicKeysOf } from "./keys.mjs";
 import { installAutostart, uninstallAutostart, isAutostartInstalled, autostartLocation } from "./autostart.mjs";
 import { installShortcut, uninstallShortcut, isShortcutInstalled, shortcutLocation } from "./shortcut.mjs";
@@ -148,15 +148,18 @@ async function cmdStart({ open = false, _recoveredFrom = null } = {}) {
   // Advance the checkpoint frontier every boot a verification just proved
   // clean, so the NEXT boot's fast path only has to replay what's been
   // appended since THIS boot — the delta stays bounded by one uptime, not by
-  // the daemon's whole lifetime. Anchoring a fresh checkpoint isn't wired up
-  // anywhere in this codebase yet (that's a separate, later piece of work),
-  // so this always saves unanchored — which is exactly why config.anchorRequired
-  // defaults off: nothing here could ever satisfy it yet.
+  // the daemon's whole lifetime.
+  //
+  // HELM-ANCHOR-WIRE-1: anchoring is an RFC 3161 network round trip
+  // (anchor-client.mjs → anchor.ainumbers.co) — helmd's own readiness must
+  // never depend on a TSA relay's latency or availability, so this is kicked
+  // off (see below, past bindOrExit) only AFTER the server is already
+  // listening, and never awaited by the boot path itself. A relay failure
+  // can't fail it either way: buildAnchoredCheckpoint's anchorForCheckpoint
+  // call already turns "unreachable"/"egress blocked"/"HTTP error" into a
+  // schema-valid queued/skipped marker instead of throwing (§5 exit-gate #1).
   const heads = streamHeads(db);
-  if (heads.length > 0) {
-    const nextSeq = (checkpoint?.checkpointSeq ?? 0) + 1;
-    saveCheckpoint(db, buildCheckpoint(db, { checkpointSeq: nextSeq, keys: identityKeys, anchors: [] }));
-  }
+  const nextCheckpointSeq = heads.length > 0 ? (checkpoint?.checkpointSeq ?? 0) + 1 : null;
 
   // §18: helmd stops itself after config.idleTimeoutMs (default 2 minutes,
   // §18.3) with nothing going on. "Going on" is deliberately broader than
@@ -196,6 +199,26 @@ async function cmdStart({ open = false, _recoveredFrom = null } = {}) {
   if (!bound) {
     db.close();
     process.exit(1);
+  }
+
+  // Fire-and-forget, deliberately not awaited — see the comment above
+  // nextCheckpointSeq. Any unexpected failure here (not just a relay
+  // failure — buildAnchoredCheckpoint already handles those — but e.g. a
+  // db write error) is caught and logged, never an unhandled rejection and
+  // never a reason the daemon that's already listening should go down.
+  if (nextCheckpointSeq !== null) {
+    buildAnchoredCheckpoint(db, {
+      checkpointSeq: nextCheckpointSeq,
+      keys: identityKeys,
+      offline: !config.anchorOnCheckpoint,
+    })
+      .then((built) => saveCheckpoint(db, built))
+      .catch((err) => {
+        log.error("checkpoint anchoring/save failed unexpectedly (checkpoint not advanced this boot)", {
+          checkpointSeq: nextCheckpointSeq,
+          error: String(err?.message || err),
+        });
+      });
   }
 
   createCliChannel({
