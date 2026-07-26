@@ -278,9 +278,11 @@ jobs:
           registry-url: "https://registry.npmjs.org"
 
       # OIDC trusted publishing needs npm CLI >=11.5.1; setup-node's bundled
-      # CLI lags behind, so pin to latest before publishing.
+      # CLI lags behind, so pin to an explicit version before publishing
+      # (not `@latest` — a floating tag can drift the exact toolchain used
+      # to publish out from under this pinned workflow).
       - name: update npm CLI for OIDC trusted publishing
-        run: npm install -g npm@latest
+        run: npm install -g npm@11.5.1
 
       - name: publish to npm (OIDC provenance, no token)
         working-directory: npm-package
