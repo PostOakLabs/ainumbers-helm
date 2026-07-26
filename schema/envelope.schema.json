@@ -11,7 +11,7 @@
       "properties": {
         "keyid": { "type": "string", "minLength": 1, "description": "Producer key identifier; opaque to verifiers beyond lookup." },
         "sig": { "type": "string", "minLength": 1, "description": "Base64 signature bytes over the DSSE PAE encoding of payloadType+payload." },
-        "alg": { "type": "string", "enum": ["Ed25519", "ML-DSA-44"], "description": "RFC 9964 JOSE algorithm identifier. Producers MUST sign Ed25519 and SHOULD additionally sign ML-DSA-44 (§26.2)." }
+        "alg": { "type": "string", "enum": ["EdDSA", "ML-DSA-44"], "description": "JOSE/COSE algorithm identifier — 'EdDSA' is RFC 8037 (JOSE)/RFC 9053/9052 (COSE) for Ed25519 signatures; 'ML-DSA-44' is RFC 9964. Producers MUST sign EdDSA and SHOULD additionally sign ML-DSA-44 (§26.2)." }
       }
     },
     "digest": {

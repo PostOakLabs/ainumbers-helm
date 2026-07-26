@@ -23,8 +23,10 @@
 //                             divergence going unnoticed either direction.
 //                             NEVER `skip`/`todo` these — SO #25/JOB3.
 //
-// Divergence 1 (`alg` question) is a STANDARDS question, not resolved here —
-// see docs/HELM-PARITY-ALG-QUESTION.md for the write-up for a spec ruling.
+// Divergence 1 (`alg` question) was a STANDARDS question — resolved by
+// HELM-ALG-RULING-1 (docs/HELM-PARITY-ALG-QUESTION.md DETERMINATION: alg MUST
+// be 'EdDSA', 'Ed25519' is nonconforming) and HELM-ALG-FIX-1, which tightened
+// the browser verifier to match. Its test moved to the agreement section below.
 import { test } from "node:test";
 import assert from "node:assert/strict";
 import { createHash } from "node:crypto";
@@ -166,21 +168,22 @@ test("parity: bundle referencing a checkpoint digest not present in checkpoints[
   assert.deepEqual(v.hub, v.ui);
 });
 
+test("agreement 1 (formerly expected-divergence 1, alg question RESOLVED HELM-ALG-RULING-1 — see docs/HELM-PARITY-ALG-QUESTION.md DETERMINATION): alg='Ed25519' is NONCONFORMING — hub and ui/browser now BOTH reject it (only 'EdDSA' is accepted)", async () => {
+  const keys = generateKeys();
+  const mutated = withSig(freshEnvelope(keys), (s) => ({ ...s, alg: "Ed25519" }));
+  const v = await verdictEnvelope(mutated, keys);
+  assert.equal(v.hub.valid, false, "hub must still reject alg='Ed25519'");
+  assert.equal(v.hub.ed25519, false);
+  assert.equal(v.ui.valid, false, "ui must now ALSO reject alg='Ed25519' — if this now passes, the browser verifier has regressed to accepting the nonconforming value again");
+  assert.equal(v.ui.ed25519, false);
+  assert.deepEqual(v.hub, v.ui, "hub and ui must fully agree now that the alg question is resolved");
+});
+
 // ---------------------------------------------------------------------------
 // EXPECTED_DIVERGENCE_VECTORS — pinned, known disagreements. Each assertion
 // locks the CURRENT shape of the divergence so an accidental change (either
 // direction) fails loudly instead of drifting further unnoticed.
 // ---------------------------------------------------------------------------
-
-test("expected-divergence 1 (alg question, UNRESOLVED — see docs/HELM-PARITY-ALG-QUESTION.md): alg='Ed25519' — hub rejects (only recognizes 'EdDSA'), ui/browser accepts (recognizes both)", async () => {
-  const keys = generateKeys();
-  const mutated = withSig(freshEnvelope(keys), (s) => ({ ...s, alg: "Ed25519" }));
-  const v = await verdictEnvelope(mutated, keys);
-  assert.equal(v.hub.valid, false, "hub must still reject alg='Ed25519' — if this now passes, Divergence 1 is fixed hub-side and this pin must be updated/removed");
-  assert.equal(v.hub.ed25519, false);
-  assert.equal(v.ui.valid, true, "ui must still accept alg='Ed25519' — if this now fails, Divergence 1 is fixed ui-side and this pin must be updated/removed");
-  assert.equal(v.ui.ed25519, true);
-});
 
 test("expected-divergence 2 (checkpoint self-consistency, browser-STRICTER): checkpoint envelope valid but journal_root_digest inconsistent with its own streams — hub accepts (verifyBundle only checks the checkpoint's envelope signature), ui/browser rejects (verifyCheckpointOffline recomputes and compares journal_root_digest)", async () => {
   const keys = generateKeys();

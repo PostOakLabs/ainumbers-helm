@@ -70,7 +70,7 @@ export async function verifyEnvelope(envelope, publicKeys, { strict = false } = 
   const payloadBytes = base64ToBytes(envelope.payload);
   const toVerify = pae(envelope.payloadType, payloadBytes);
 
-  const edEntry = envelope.signatures.find((s) => s.alg === "EdDSA" || s.alg === "Ed25519");
+  const edEntry = envelope.signatures.find((s) => s.alg === "EdDSA");
   const mldsaEntry = envelope.signatures.find((s) => s.alg === "ML-DSA-44");
 
   let ed25519 = false;
