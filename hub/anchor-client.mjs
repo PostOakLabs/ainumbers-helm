@@ -21,6 +21,7 @@ import { join, dirname } from "node:path";
 import { fileURLToPath } from "node:url";
 import { buildTsqDer, freshNonce } from "./vendored/anchor-suite/lib/tsq.mjs";
 import { extractMessageImprintHex } from "./vendored/ocg/kernels/_rfc3161.mjs";
+import { derRead, derChildrenOf } from "./vendored/ocg/kernels/_anchor-testutil.mjs";
 import { validate } from "../scripts/lib/schema-validator.mjs";
 
 const HERE = dirname(fileURLToPath(import.meta.url));
@@ -41,6 +42,31 @@ function hexToBytes(hex) {
   return new Uint8Array(Buffer.from(clean, "hex"));
 }
 
+// A TSA relay's HTTP body is a full TimeStampResp = SEQUENCE { status PKIStatusInfo,
+// timeStampToken ContentInfo OPTIONAL } — NOT the bare ContentInfo our fixtures and the strict
+// vendored parser (_rfc3161.mjs, never edited here) expect. Ported from the SAME unwrap
+// `_regen-anchor-fixtures.mjs:68-71` already performs when building those fixtures.
+// Back-compat: a body that is ALREADY a bare ContentInfo (its first child is an OID, not a
+// PKIStatusInfo SEQUENCE) is passed through untouched — keeps the fixture shape working.
+function unwrapTimeStampResp(der, ca) {
+  const outer = derRead(der, 0);
+  const [first, second] = derChildrenOf(der, outer);
+  if (first.tag === 0x06) return der; // already a bare ContentInfo
+
+  const statusKids = derChildrenOf(der, first);
+  const status = statusKids[0].content[0];
+  if (status !== 0 && status !== 1) {
+    let reason = `PKIStatus ${status}`;
+    if (statusKids[1] && statusKids[1].tag === 0x30) {
+      const texts = derChildrenOf(der, statusKids[1]).map((k) => k.content.toString("utf8"));
+      if (texts.length) reason = texts.join("; ");
+    }
+    throw new Error(`anchor relay ${ca} rejected the TSQ: PKIStatus ${status} (${reason})`);
+  }
+  if (!second) throw new Error(`anchor relay ${ca} returned no timeStampToken (status ${status} granted, but token absent)`);
+  return Buffer.from(second.raw);
+}
+
 // hashHex: lowercase sha256 hex digest of the object being anchored (e.g. a
 // checkpoint's journal_root_digest). ca: one of RELAY_CAS, default "freetsa".
 export async function anchorRfc3161(hashHex, { ca = "freetsa", relayBase = RELAY_BASE, timeoutMs = 35_000, fetchImpl = fetch } = {}) {
@@ -57,7 +83,8 @@ export async function anchorRfc3161(hashHex, { ca = "freetsa", relayBase = RELAY
   if (!res.ok) throw new Error(`anchor relay HTTP ${res.status} (${ca})`);
   const ct = (res.headers.get("Content-Type") || "").split(";")[0].trim();
   if (ct !== "application/timestamp-reply") throw new Error(`anchor relay unexpected Content-Type: ${ct}`);
-  const der = Buffer.from(await res.arrayBuffer());
+  const respDer = Buffer.from(await res.arrayBuffer());
+  const der = unwrapTimeStampResp(respDer, ca);
 
   // F11: a relay could return a token bound to a DIFFERENT digest than the
   // one we asked it to stamp (bug, MITM, or a malicious relay). Assert the
