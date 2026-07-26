@@ -151,3 +151,70 @@ test("POST /run/start with an unknown template_slug 404s", async () => {
   const res = await post("/run/start", { template_slug: "does-not-exist", dry_run: true }, headers());
   assert.equal(res.status, 404);
 });
+
+// Flagship Committee Pack scenario (BANK-CECL-CPACK-2): proves the
+// cecl-allowance-quarterly template runs its real kernel end to end and
+// would FAIL if the pack silently stopped producing output — this is not
+// a smoke test, it asserts the actual reconciled allowance number.
+test("GET /templates/cecl-allowance-quarterly returns the flagship CECL manifest", async () => {
+  const res = await get("/templates/cecl-allowance-quarterly", headers());
+  assert.equal(res.status, 200);
+  const detail = JSON.parse(res.body);
+  assert.equal(detail.workflow_id, "pack-cecl-allowance-quarterly");
+  assert.equal(detail.manifest.nodes.length, 1);
+  assert.deepEqual(Object.keys(detail.manifest.nodes[0].policy_parameters).sort(), [
+    "charge_offs_usd", "constants_version", "forecast_weights", "method",
+    "prior_allowance_balance_usd", "recoveries_usd", "segments",
+  ].sort());
+});
+
+test("POST /run/start with cecl-allowance-quarterly runs end to end using the template's sample data", async () => {
+  const startRes = await post("/run/start", { template_slug: "cecl-allowance-quarterly", dry_run: false }, headers());
+  assert.equal(startRes.status, 200);
+  const { run_id: runId, state } = JSON.parse(startRes.body);
+  assert.ok(runId);
+  assert.equal(state, "queued");
+
+  let steps = [];
+  for (let i = 0; i < 40; i++) {
+    const timelineRes = await get(`/run/timeline?run_id=${runId}`, headers());
+    steps = JSON.parse(timelineRes.body).steps;
+    if (steps.some((s) => s.state === "completed")) break;
+    await sleep(25);
+  }
+  assert.ok(steps.some((s) => s.state === "completed"), `expected a completed transition, got: ${steps.map((s) => s.state).join(",")}`);
+});
+
+// Same run, driven straight through the run engine (bypassing the HTTP
+// route, which only ever exposes a committed digest — SPEC.md §26.3
+// redaction) so the test can assert the REAL reconciled-allowance number the
+// vendored art-426 kernel produced, not just that a step transitioned. This
+// is the test that would fail if the pack silently stopped producing real
+// output (same discipline BANK-GENIUS-HPACK-1 set: prove the negative).
+test("cecl-allowance-quarterly template's real kernel run reconciles the allowance to the golden fixture value", async () => {
+  const { openJournal } = await import("./journal.mjs");
+  const { executeRun } = await import("./run.mjs");
+  const { createKernelStepRunner } = await import("./kernel-runner.mjs");
+
+  const template = getTemplate("cecl-allowance-quarterly");
+  const manifest = buildTemplateManifest(template);
+  const runDb = openJournal(":memory:");
+  const stepRunner = createKernelStepRunner();
+
+  const result = await executeRun(runDb, { runId: "run-cecl-flagship-test", manifest, stepRunner });
+  assert.equal(result.state, "completed");
+
+  const row = runDb.prepare("SELECT output_json FROM step_results WHERE run_id = ? AND step_id = ?").get("run-cecl-flagship-test", "nodes:n1");
+  assert.ok(row, "expected the kernel's real output to be memoized in step_results");
+  const output = JSON.parse(row.output_json).artifact.output_payload;
+  runDb.close();
+
+  // $500k prior + $451k provision expense - $20k charge-offs + $5k
+  // recoveries reconciles to the $936k total required allowance across the
+  // two segments — the same golden vector committed in
+  // hub/vendored/ocg/kernels/fixtures/art-426-cecl-ecl-calculator.fixtures.json.
+  assert.equal(output.reconciliation_balanced, true);
+  assert.equal(output.total_required_allowance_usd, 936000);
+  assert.equal(output.reconciled_ending_allowance_usd, 936000);
+  assert.equal(output.provision_expense_usd, 451000);
+});
