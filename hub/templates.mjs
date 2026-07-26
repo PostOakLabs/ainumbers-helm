@@ -79,6 +79,45 @@ export const TEMPLATES = [
     workflow_id: "pack-mica-travel-rule",
     sample_data: { n1: {}, n2: { proof_entries: [], merkle_root: "0000000000000000000000000000000000000000000000000000000000000000" } },
   },
+  {
+    slug: "cecl-allowance-quarterly",
+    title: "CECL allowance & rollforward (quarterly)",
+    blurb: "Compute per-segment expected credit loss under ASC 326 from PD/LGD/EAD curves and reconcile the allowance rollforward against the prior-period balance — the quarterly audit-committee ACL artifact.",
+    workflow_id: "pack-cecl-allowance-quarterly",
+    sample_data: {
+      n1: {
+        method: "warm",
+        constants_version: "2026-07-23.cecl-warm-v1",
+        prior_allowance_balance_usd: 500000,
+        charge_offs_usd: 20000,
+        recoveries_usd: 5000,
+        forecast_weights: [
+          { scenario: "baseline", weight: 0.6 },
+          { scenario: "downside", weight: 0.4 },
+        ],
+        segments: [
+          {
+            segment_id: "retail-auto",
+            exposure_balance_usd: 10000000,
+            remaining_life_years: 3,
+            scenarios: [
+              { scenario: "baseline", annual_loss_rate_pct: 0.012 },
+              { scenario: "downside", annual_loss_rate_pct: 0.025 },
+            ],
+          },
+          {
+            segment_id: "retail-card",
+            exposure_balance_usd: 5000000,
+            remaining_life_years: 2,
+            scenarios: [
+              { scenario: "baseline", annual_loss_rate_pct: 0.03 },
+              { scenario: "downside", annual_loss_rate_pct: 0.06 },
+            ],
+          },
+        ],
+      },
+    },
+  },
 ];
 
 export function listTemplates() {
