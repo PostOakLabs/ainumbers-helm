@@ -35,10 +35,41 @@ function portCheck(report) {
   return report.checks.find((c) => c.name === "port_ok");
 }
 
+function anchorCheck(report) {
+  return report.checks.find((c) => c.name === "anchor_on_checkpoint");
+}
+
 test("doctor: all checks pass on a fresh state dir, port reported free", async () => {
   const report = await runDoctor();
   assert.equal(report.ok, true, JSON.stringify(report.checks));
   assert.match(portCheck(report).detail, /free/);
+});
+
+// HELM-ANCHOR-DEFAULT-FLIP-1: the default (anchorOnCheckpoint unset ⇒ false)
+// must be VISIBLE here even though it isn't a doctor FAILURE — an unanchored
+// checkpoint is a fully valid, supported config, not a broken one (same
+// informational shape as version_check_notice below). This is one of the
+// row's two required visibility surfaces; the other is the boot-log warn in
+// index.mjs.
+test("doctor: reports checkpoints unanchored, and how to enable, when anchorOnCheckpoint is off (the default)", async () => {
+  const report = await runDoctor();
+  const check = anchorCheck(report);
+  assert.ok(check, "anchor_on_checkpoint check must be present");
+  assert.equal(check.pass, true, "unanchored is a valid config, must not fail doctor overall");
+  assert.match(check.detail, /NOT anchored/);
+  assert.match(check.detail, /anchorOnCheckpoint.*true/);
+});
+
+test("doctor: reports the active relay/CA when anchoring is enabled", async () => {
+  writeFileSync(
+    join(TMP, "config.json"),
+    JSON.stringify({ port: PORT, allowedOrigin: ORIGIN, versionCheckUrl: "", anchorOnCheckpoint: true, relayBase: "https://freetsa.org", ca: "freetsa" })
+  );
+  const report = await runDoctor();
+  const check = anchorCheck(report);
+  assert.equal(check.pass, true);
+  assert.match(check.detail, /freetsa\.org\/relay\/freetsa/);
+  writeFileSync(join(TMP, "config.json"), JSON.stringify({ port: PORT, allowedOrigin: ORIGIN, versionCheckUrl: "" }));
 });
 
 // The regression this exists to prevent: the port check probed bindability,

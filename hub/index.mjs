@@ -207,10 +207,19 @@ async function cmdStart({ open = false, _recoveredFrom = null } = {}) {
   // db write error) is caught and logged, never an unhandled rejection and
   // never a reason the daemon that's already listening should go down.
   if (nextCheckpointSeq !== null) {
+    // HELM-ANCHOR-DEFAULT-FLIP-1: anchoring is opt-in (config.anchorOnCheckpoint
+    // default false) — this is the ONE place that decides offline for the
+    // whole boot, so it is also the one place to log it, exactly once per
+    // boot, never once per checkpoint (there is only ever one checkpoint
+    // built here, at boot).
+    if (!config.anchorOnCheckpoint) {
+      log.warn("checkpoint anchoring is disabled (anchorOnCheckpoint: false) — this checkpoint will not be timestamped by a third-party TSA; run `helmd doctor` or set \"anchorOnCheckpoint\": true in ~/.helm/config.json to enable");
+    }
     buildAnchoredCheckpoint(db, {
       checkpointSeq: nextCheckpointSeq,
       keys: identityKeys,
       offline: !config.anchorOnCheckpoint,
+      anchorOptions: { relayBase: config.relayBase, ca: config.ca },
     })
       .then((built) => saveCheckpoint(db, built))
       .catch((err) => {

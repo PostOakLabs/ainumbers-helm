@@ -116,6 +116,20 @@ export async function runDoctor() {
     checks.push({ name: "journal_replay_integrity", pass: true, detail: "no journal.db yet" });
   }
 
+  // HELM-ANCHOR-DEFAULT-FLIP-1: anchoring is opt-in (default off) — this is
+  // informational, same as version_check_notice below, never a FAIL: an
+  // unanchored checkpoint is a fully valid, supported configuration, not a
+  // broken one. Its whole job is making sure an operator who never re-runs
+  // doctor after first setup still has ONE place that says so, per §20/the
+  // examiner-facing trust chain — the boot-log warn (index.mjs) is the other.
+  checks.push({
+    name: "anchor_on_checkpoint",
+    pass: true,
+    detail: config.anchorOnCheckpoint
+      ? `checkpoints anchored via ${config.relayBase}/relay/${config.ca}`
+      : `checkpoints NOT anchored (opt-in) — set "anchorOnCheckpoint": true in ~/.helm/config.json to enable`,
+  });
+
   // Version-check notice (HELM-H8, D10): informational only. Unreachable
   // (offline/airgapped) or disabled (empty url) are both a PASS — this
   // never gates doctor on network access. A reachable-but-malformed
