@@ -9,6 +9,9 @@
     },
     "pack-mutual-nda-composer": {
       "n2": { "gate_policy": "review_required", "gate_role": "approver" }
+    },
+    "pack-genius-reserve-disclosure": {
+      "n1": { "gate_policy": "dual_control", "gate_role": "approver", "gate_threshold": 2 }
     }
   }
 }

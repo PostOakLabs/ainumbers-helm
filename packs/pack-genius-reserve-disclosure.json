@@ -13,14 +13,17 @@
       {
         "node_id": "n1",
         "kernel_id": "art-275-genius-reserve-disclosure-checker",
-        "kernel_digest": "sha256:0f28358a1106be5fd951174ff9984a32af17133642481706a056f43ce6fe0d22"
+        "kernel_digest": "sha256:0f28358a1106be5fd951174ff9984a32af17133642481706a056f43ce6fe0d22",
+        "gate_policy": "dual_control",
+        "gate_role": "approver",
+        "gate_threshold": 2
       }
     ],
     "connectors": [],
     "gates": [],
     "actions": []
   },
-  "workflow_manifest_digest": "sha256:1e757d587f840056cdfd54910dfca63d2ad32c8381e874cac1445e1a103997f5",
+  "workflow_manifest_digest": "sha256:236b8abbf9e60c9000fb362d0da215a2262c40111228ab3866773760ba1789ed",
   "declared_inputs": [],
   "steps_meta": [
     {
