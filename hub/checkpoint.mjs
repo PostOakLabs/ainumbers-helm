@@ -9,6 +9,8 @@ import { createHash } from "node:crypto";
 import { cgCanon, assertIJson } from "./vendored/ocg/kernels/_hash.mjs";
 import { buildStatement, emitEnvelope, verifyEnvelope, helmPredicateType } from "./envelope.mjs";
 import { streamHeads } from "./journal.mjs";
+import { anchorForCheckpoint, toCheckpointAnchorEntry } from "./anchor-client.mjs";
+import { log } from "./log.mjs";
 
 function jcsDigestHex(obj) {
   assertIJson(obj);
@@ -31,6 +33,35 @@ export function buildCheckpoint(db, { checkpointSeq, keys, anchors = [] }) {
 
   const envelope = emitEnvelope(statement, keys);
   return { checkpointSeq, journalRootDigest, envelope };
+}
+
+// HELM-ANCHOR-WIRE-1: the last missing step of an otherwise fully-built
+// chain — anchorForCheckpoint/verification/failure-handling all shipped
+// already (HELM-P3-SEC-3, HELM-ANCHOR-TSR-1), but nothing ever called
+// anchorForCheckpoint from a real checkpoint-save site; every checkpoint
+// hardcoded `anchors: []`. This is that call.
+//
+// journal_root_digest depends only on `streams` (see buildCheckpoint above),
+// never on checkpointSeq or anchors — so the first build below is a cheap,
+// side-effect-free throwaway whose only purpose is handing anchorForCheckpoint
+// the digest it needs to anchor BEFORE the real (signed) checkpoint exists.
+// The real checkpoint is built a second time, now with the anchor result, and
+// is what the caller should sign off as the one to saveCheckpoint().
+//
+// `offline` is the caller's zero-egress switch (config.anchorOnCheckpoint in
+// index.mjs) — anchorForCheckpoint already never throws on a reachable-but-
+// failing relay (returns a schema-valid queued/skipped marker instead, per
+// §5 exit-gate #1), so this function only ever resolves, never rejects, on
+// the anchoring step itself.
+export async function buildAnchoredCheckpoint(db, { checkpointSeq, keys, offline = false, anchorOptions = {} }) {
+  const { journalRootDigest } = buildCheckpoint(db, { checkpointSeq, keys, anchors: [] });
+  const result = await anchorForCheckpoint(journalRootDigest, { checkpointSeq, offline, ...anchorOptions });
+  const anchorEntry = toCheckpointAnchorEntry(result);
+  log.info(result.anchor ? "checkpoint anchored" : "checkpoint saved without a live anchor", {
+    checkpointSeq,
+    anchorType: anchorEntry.type,
+  });
+  return buildCheckpoint(db, { checkpointSeq, keys, anchors: [anchorEntry] });
 }
 
 export function saveCheckpoint(db, checkpoint) {

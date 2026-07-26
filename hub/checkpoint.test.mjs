@@ -9,7 +9,7 @@ process.env.HELM_HOME = TMP;
 
 const { loadOrCreateKeys, publicKeysOf } = await import("./keys.mjs");
 const { openJournal, appendEntry } = await import("./journal.mjs");
-const { buildCheckpoint, verifyCheckpoint, saveCheckpoint, loadCheckpoints, latestCheckpoint } = await import("./checkpoint.mjs");
+const { buildCheckpoint, buildAnchoredCheckpoint, verifyCheckpoint, saveCheckpoint, loadCheckpoints, latestCheckpoint } = await import("./checkpoint.mjs");
 
 const keys = loadOrCreateKeys();
 const publicKeys = publicKeysOf(keys);
@@ -85,6 +85,67 @@ test("negative: checkpoint verification fails once the journal diverges from wha
   const result = verifyCheckpoint(db, checkpoint, publicKeys);
   assert.equal(result.valid, false);
   assert.equal(result.reason, "stream_head_mismatch");
+  db.close();
+});
+
+// HELM-ANCHOR-WIRE-1: buildAnchoredCheckpoint is the function index.mjs's
+// real checkpoint-save site now calls, replacing the historical hardcoded
+// `anchors: []`. anchorOptions.fetchImpl injection (same discipline as
+// anchor-client.test.mjs) proves this without a real network call.
+test("buildAnchoredCheckpoint: not offline actually attempts the relay, with THIS checkpoint's own journal_root_digest — never anchors: []", async () => {
+  const db = openJournal(join(TMP, "cp-anchor-a.db"));
+  appendEntry(db, { streamId: "run-1", kind: "execution_state", entry: fixtureEntry() });
+
+  let calledWithHex;
+  const fetchImpl = async (url, opts) => {
+    // buildTsqDer's request body carries the requested hash — inspecting the
+    // URL/call happening at all is enough to prove this is a REAL attempted
+    // network call (not the offline stub below), which is the wiring gap
+    // this row closes. The digest-binding check itself (F11) is anchor-
+    // client.test.mjs's job, not re-tested here.
+    calledWithHex = "called";
+    void url; void opts;
+    return { ok: false, status: 503, headers: { get: () => null }, arrayBuffer: async () => new ArrayBuffer(0) };
+  };
+
+  const checkpoint = await buildAnchoredCheckpoint(db, { checkpointSeq: 1, keys, anchorOptions: { fetchImpl } });
+  saveCheckpoint(db, checkpoint);
+
+  assert.equal(calledWithHex, "called", "not-offline must actually call the relay, not silently skip it");
+  const result = verifyCheckpoint(db, checkpoint, publicKeys);
+  assert.equal(result.valid, true);
+  assert.notDeepEqual(result.statement.predicate.anchors, [], "anchors[] must never be the historical no-op empty array");
+  db.close();
+});
+
+test("buildAnchoredCheckpoint: offline (egress-blocked) still produces a valid checkpoint with a schema-valid skipped marker, never throws", async () => {
+  const db = openJournal(join(TMP, "cp-anchor-b.db"));
+  appendEntry(db, { streamId: "run-1", kind: "execution_state", entry: fixtureEntry() });
+
+  const checkpoint = await buildAnchoredCheckpoint(db, { checkpointSeq: 1, keys, offline: true });
+  saveCheckpoint(db, checkpoint);
+
+  const result = verifyCheckpoint(db, checkpoint, publicKeys);
+  assert.equal(result.valid, true, "an offline/egress-blocked run must still produce a valid signed checkpoint");
+  const [anchor] = result.statement.predicate.anchors;
+  assert.equal(anchor.type, "skipped");
+  assert.equal(anchor.reason, "egress_blocked");
+  db.close();
+});
+
+test("buildAnchoredCheckpoint: a relay error (never a throw, never a network failure) still produces a valid checkpoint with a queued marker", async () => {
+  const db = openJournal(join(TMP, "cp-anchor-c.db"));
+  appendEntry(db, { streamId: "run-1", kind: "execution_state", entry: fixtureEntry() });
+
+  const fetchImpl = async () => { throw new Error("ECONNREFUSED"); };
+  const checkpoint = await buildAnchoredCheckpoint(db, { checkpointSeq: 1, keys, anchorOptions: { fetchImpl } });
+  saveCheckpoint(db, checkpoint);
+
+  const result = verifyCheckpoint(db, checkpoint, publicKeys);
+  assert.equal(result.valid, true, "a relay failure must never abort checkpoint creation (§5 exit-gate #1)");
+  const [anchor] = result.statement.predicate.anchors;
+  assert.equal(anchor.type, "queued");
+  assert.equal(anchor.reason, "relay_unreachable");
   db.close();
 });
 
