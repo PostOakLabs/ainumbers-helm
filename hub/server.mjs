@@ -6,7 +6,7 @@
 //   3. Authorization: Bearer <token> must match                (pairing token)
 // GET handlers are read-only by construction — no side effects on GET.
 import { createServer } from "node:http";
-import { randomUUID } from "node:crypto";
+import { randomUUID, createHash } from "node:crypto";
 import { readFileSync } from "node:fs";
 import { join, dirname } from "node:path";
 import { fileURLToPath } from "node:url";
@@ -29,6 +29,16 @@ import { importMigrationBundle } from "./migration-import.mjs";
 import { buildWorkflowExport, parseWorkflowExport } from "./workflow-export.mjs";
 import { checkVersion, DEFAULT_VERSION_CHECK_URL } from "./version-check.mjs";
 import { DEFAULT_IDLE_TIMEOUT_MS } from "./idle-timer.mjs";
+import { loadContract, recordEgress } from "./connector.mjs";
+import { createInboundWebhookConnector, CONNECTOR_ID as INBOUND_WEBHOOK_CONNECTOR_ID } from "./connectors/inbound-webhook.mjs";
+import { vaultGet } from "./vault.mjs";
+import {
+  verifyWebhookSignature,
+  isTimestampFresh,
+  checkAndConsumeNonce,
+  getIdempotentResponse,
+  storeIdempotentResponse,
+} from "./webhook-guard.mjs";
 
 const START = Date.now();
 const HERE = dirname(fileURLToPath(import.meta.url));
@@ -42,6 +52,17 @@ export const SUPPORTED_API_VERSIONS = ["helm/1"];
 // that touches vault/journal/run data. Exact match, never a wildcard.
 const DETECTION_ORIGIN = "https://ainumbers.co";
 const DETECTION_PATHS = new Set(["/version", "/pair/challenge"]);
+
+// HELM-INBOUND-WEBHOOK-1: the "governed step" push path an external
+// orchestrator (n8n/Zapier/Make, or a bank's PA flow — HELM-PHASE3-BUILD-SPEC
+// §item 6 — running on this SAME machine, since helmd never opens its socket
+// beyond 127.0.0.1) uses to hand a step completion in. Pre-auth like the
+// DETECTION_PATHS above, but for a different reason: the caller has neither
+// the browser's Origin nor the daemon's pairing bearer token — its own
+// authentication is the HMAC-over-raw-body check inside the handler, which
+// MUST run before ANY body parsing or allowlist check.
+const INBOUND_WEBHOOK_PATH = "/connectors/inbound-webhook";
+const DEFAULT_INBOUND_WEBHOOK_CONTRACT_PATH = join(HERE, "connectors", "inbound-webhook.contract.json");
 
 function checkHost(req, port) {
   return req.headers.host === `127.0.0.1:${port}`;
@@ -90,6 +111,19 @@ function sendHtml(res, status, html) {
 function sendXml(res, status, xml) {
   res.writeHead(status, { "Content-Type": "application/xml; charset=utf-8" });
   res.end(xml);
+}
+
+// Raw bytes, not the parsed-JSON readJsonBody above — the HMAC signature
+// covers the EXACT bytes the caller sent, and verifying it must happen
+// before JSON.parse ever runs (a parse that mutates whitespace/key order
+// would make a byte-based signature unverifiable after the fact).
+function readRawBody(req) {
+  return new Promise((resolve, reject) => {
+    const chunks = [];
+    req.on("data", (c) => chunks.push(c));
+    req.on("end", () => resolve(Buffer.concat(chunks)));
+    req.on("error", reject);
+  });
 }
 
 function readJsonBody(req) {
@@ -425,6 +459,156 @@ async function handleRunResume(req, res, params, db) {
   }
 }
 
+function digestOf(bytes) {
+  return `sha256:${createHash("sha256").update(bytes).digest("hex")}`;
+}
+
+// POST /connectors/inbound-webhook (HELM-INBOUND-WEBHOOK-1): the n8n/Zapier/PA
+// "governed step" push path. Pre-auth (see INBOUND_WEBHOOK_PATH above) — this
+// handler is its OWN authentication+replay+idempotency gate, in a fixed
+// order matching phil's four preconditions (research/PERSONA-phil-2026-07-26.md
+// Option 4):
+//   1. HMAC-over-raw-body BEFORE assertEgressAllowed (never after, never
+//      instead of).
+//   2. timestamp+nonce replay check, distinct from the connector's own
+//      content-digest journal.
+//   3. idempotency-key dedup BEFORE the workflow step (the connector call /
+//      run-resume) ever executes — a legitimate retry short-circuits to the
+//      cached response instead of re-running anything.
+//   4. deny-by-default run-resume: only a contract whose `scopes` explicitly
+//      lists "run.resume" may resume a paused run at all, and even then
+//      run.mjs's own gateCheck re-verifies the §27.4 hold — this route never
+//      constructs or forwards an HA approval on the caller's behalf, so an
+//      unsatisfied human-review gate cannot be completed through here no
+//      matter what the contract grants.
+async function handleInboundWebhook(req, res, db, contract, contractDigest) {
+  if (!db) return deny(res, 503, "engine_unavailable");
+
+  let raw;
+  try {
+    raw = await readRawBody(req);
+  } catch {
+    return deny(res, 400, "invalid_body");
+  }
+
+  const secretRef = contract.vault_scope?.[0];
+  const secretRaw = secretRef ? vaultGet(secretRef) : null;
+  const secret = typeof secretRaw === "string" ? secretRaw : secretRaw?.value;
+  if (!secret) {
+    log.error("inbound-webhook: no signing secret configured", { ref: secretRef });
+    return deny(res, 503, "webhook_not_configured");
+  }
+
+  // (1) HMAC-over-raw-body — verified BEFORE assertEgressAllowed runs (that
+  // happens inside connector.send() below) and journalled as a DIFFERENT
+  // signal ("auth_failed") from an allowlist "blocked", per phil's explicit
+  // instruction not to collapse the two.
+  const signatureHeader = req.headers["x-helm-webhook-signature"];
+  if (!verifyWebhookSignature(secret, raw, signatureHeader)) {
+    recordEgress(db, {
+      connectorId: INBOUND_WEBHOOK_CONNECTOR_ID,
+      destinationHost: req.socket.remoteAddress || "unknown",
+      operation: req.method,
+      decision: "auth_failed",
+      requestDigest: digestOf(raw),
+    });
+    log.warn("rejected: inbound-webhook bad or missing signature");
+    return deny(res, 401, "invalid_signature");
+  }
+
+  let body;
+  try {
+    body = JSON.parse(raw.toString("utf8"));
+  } catch {
+    return deny(res, 400, "invalid_json");
+  }
+  const { sourceHost, method = "POST", runId, workflowManifestDigest, operation, classification, timestamp, nonce, idempotencyKey, data } = body;
+  for (const [field, value] of Object.entries({ sourceHost, runId, workflowManifestDigest, timestamp, nonce, idempotencyKey })) {
+    if (!value) return deny(res, 400, `missing_${field}`);
+  }
+
+  // (2) replay — freshness window, then single-use nonce consumption. This
+  // MUST run before the idempotency check: a byte-for-byte replayed request
+  // (same nonce reused) is rejected here even though its idempotencyKey may
+  // match a cached entry. A legitimate n8n-style retry is a DIFFERENT HTTP
+  // delivery attempt — it mints a fresh nonce+timestamp but keeps the same
+  // idempotencyKey — so it passes this check and falls through to the cache
+  // lookup below instead of being caught here.
+  if (!isTimestampFresh(timestamp)) {
+    recordEgress(db, {
+      connectorId: INBOUND_WEBHOOK_CONNECTOR_ID, destinationHost: sourceHost, operation: method,
+      decision: "replay_rejected", requestDigest: digestOf(raw),
+    });
+    return deny(res, 401, "stale_timestamp");
+  }
+  if (!checkAndConsumeNonce(nonce)) {
+    recordEgress(db, {
+      connectorId: INBOUND_WEBHOOK_CONNECTOR_ID, destinationHost: sourceHost, operation: method,
+      decision: "replay_rejected", requestDigest: digestOf(raw),
+    });
+    return deny(res, 401, "replayed_nonce");
+  }
+
+  // (3) idempotency — a fresh nonce with a PREVIOUSLY-SEEN idempotencyKey is
+  // a legitimate retry (orchestrator retry-on-failure): short-circuit to the
+  // cached response rather than re-running connector.send/run-resume.
+  const cached = getIdempotentResponse(idempotencyKey);
+  if (cached) return sendJson(res, cached.status, cached.body);
+
+  const connector = createInboundWebhookConnector({ db, contract, contractDigest });
+  await connector.init({});
+  let attestation;
+  try {
+    ({ attestation } = await connector.send({ sourceHost, method, body: data ?? {}, runId, workflowManifestDigest, operation, classification }));
+  } catch (err) {
+    const rejected = { status: 403, body: { error: "source_not_allowed" } };
+    storeIdempotentResponse(idempotencyKey, rejected);
+    return sendJson(res, rejected.status, rejected.body);
+  }
+
+  // (4) deny-by-default termination. Absent an explicit "run.resume" grant,
+  // the webhook is accepted and attested but NEVER touches the run engine —
+  // a human/local caller must still drive /run/resume separately.
+  let resumed = false;
+  let runState = null;
+  const resumeAuthorized = Array.isArray(contract.scopes) && contract.scopes.includes("run.resume");
+  if (resumeAuthorized) {
+    const row = db.prepare("SELECT * FROM runs WHERE run_id = ?").get(runId);
+    if (row && row.state === "awaiting_data") {
+      const manifest = JSON.parse(row.manifest_json);
+      const kernelStepRunner = createKernelStepRunner();
+      const stepRunner = async (step, ctx) => {
+        const output = await kernelStepRunner(step, ctx);
+        publishRunEvent(runId, { run_id: runId, state: "running", step_id: step.step_id });
+        return output;
+      };
+      runsInFlight++;
+      try {
+        // Same gateCheck the authenticated /run/resume route uses — an
+        // unsatisfied §27.4 hold re-parks at awaiting_data no matter who
+        // called this route or what the contract grants. This route never
+        // submits an HA record on the caller's behalf; it only ever
+        // re-invokes the SAME re-verifying resume path.
+        const result = await executeRun(db, { runId, manifest, dryRun: !!row.dry_run, stepRunner, gateCheck: haGateCheckFor(db) });
+        publishRunEvent(runId, { run_id: runId, state: result.state, execution_hash: result.executionHash, held: result.held ?? null });
+        runState = result.state;
+        resumed = result.state !== "awaiting_data";
+      } catch (err) {
+        log.error("inbound-webhook: resume failed", { runId, error: String(err?.message || err) });
+        runState = "failed";
+      } finally {
+        runsInFlight--;
+      }
+    } else if (row) {
+      runState = row.state;
+    }
+  }
+
+  const responseBody = { attestation, resumed, runState, resumeAuthorized };
+  storeIdempotentResponse(idempotencyKey, { status: 200, body: responseBody });
+  sendJson(res, 200, responseBody);
+}
+
 // GET /ha/pending (HELM-HA-1) — every run currently held at a §27.4 gate,
 // with what it's waiting on (subject_hash/role/policy/threshold + records
 // collected so far) — the approve/reject queue's data source.
@@ -668,7 +852,12 @@ export function createHelmServer({
   // reset() — kept as a no-op default so every existing test/caller that
   // doesn't care about idle shutdown is unaffected.
   onAuthenticated = () => {},
+  // HELM-INBOUND-WEBHOOK-1: overridable so tests can point at a contract
+  // fixture that grants "run.resume" without touching the shipped default
+  // (which never grants it — deny-by-default).
+  inboundWebhookContractPath = DEFAULT_INBOUND_WEBHOOK_CONTRACT_PATH,
 }) {
+  const { contract: webhookContract, contractDigest: webhookContractDigest } = loadContract(inboundWebhookContractPath);
   const routes = {
     ...ROUTES,
     "GET /health": (req, res) => handleHealth(req, res, {}, db, idleTimeoutMs),
@@ -695,6 +884,17 @@ export function createHelmServer({
       if (req.method === "OPTIONS") return handleDetectionPreflight(req, res, allowedOrigin);
       if (req.method === "GET") return handleDetectionRoute(req, res, pathname, identityKeys, allowedOrigin);
       return deny(res, 404, "not_found");
+    }
+
+    // HELM-INBOUND-WEBHOOK-1: also handled BEFORE the normal Origin+bearer
+    // gate, for the opposite reason from detection surface above — the
+    // caller here has neither the browser Origin nor the daemon's pairing
+    // token. Its own authentication (HMAC-over-raw-body) lives entirely
+    // inside handleInboundWebhook; Host still applies (checked above), Origin
+    // and bearer do not.
+    if (pathname === INBOUND_WEBHOOK_PATH) {
+      if (req.method !== "POST") return deny(res, 404, "not_found");
+      return handleInboundWebhook(req, res, db, webhookContract, webhookContractDigest);
     }
 
     if (!checkOrigin(req, allowedOrigin)) {
