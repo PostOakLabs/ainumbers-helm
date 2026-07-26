@@ -3,7 +3,7 @@
   "maker_signature": {
     "keyid": "maker-key-01",
     "sig": "base64:bWFrZXItc2ln",
-    "alg": "Ed25519"
+    "alg": "EdDSA"
   },
   "countersignatures": []
 }

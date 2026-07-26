@@ -13,7 +13,7 @@
       "properties": {
         "keyid": { "type": "string", "minLength": 1 },
         "sig": { "type": "string", "minLength": 1 },
-        "alg": { "type": "string", "enum": ["Ed25519", "ML-DSA-44"] }
+        "alg": { "type": "string", "enum": ["EdDSA", "ML-DSA-44"] }
       }
     },
     "countersignature": {
