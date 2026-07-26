@@ -9,6 +9,12 @@
 // Learn]. Adding an id here with no matching VIEWS entry fails the §12.5
 // gate by design (§12.2: requiresPairing has no default, and neither does
 // view existence).
+// HELM-UX2-J-AGENTS-SLOT (§19): "agents" is a RESERVED, DISABLED slot — no
+// matching VIEWS entry, no route, rendered as a non-link nav item (see
+// generateNav in app.mjs). tab-meta.test.mjs excludes `disabled: true` tabs
+// from the TABS/VIEWS parity check for exactly this reason. The engine
+// (HELM-H9) is date-gated before 2026-07-28; do not remove `disabled` or add
+// a view until that row ships.
 export const TABS = [
   { id: "home", label: "Home", group: "Home", intro: "What Helm is, and what to do first.", requiresPairing: false },
   { id: "choose", label: "Choose", group: "Build", intro: "Pick the workflow you want to run, from ready-made templates or your own packs.", requiresPairing: true },
@@ -21,4 +27,5 @@ export const TABS = [
   { id: "register", label: "Register", group: "Operate", intro: "Produce the model-risk register entry and validation cards for a workflow.", requiresPairing: true },
   { id: "deadlines", label: "Deadlines", group: "Operate", intro: "Regulatory dates that matter, and which of your workflows cover them.", requiresPairing: false },
   { id: "learn", label: "Learn", group: "Operate", intro: "How Helm works, how to fix a connection, and where the standard is written down.", requiresPairing: false },
+  { id: "agents", label: "Agents / MCP", group: "Agents / MCP", intro: "Connect your own agent or MCP client to Helm. Not available yet.", requiresPairing: false, disabled: true },
 ];

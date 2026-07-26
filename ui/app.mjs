@@ -310,6 +310,18 @@ function generateNav(navEl) {
       groupEl.dataset.group = currentGroup.toLowerCase();
       navEl.appendChild(groupEl);
     }
+    if (tab.disabled) {
+      // HELM-UX2-J-AGENTS-SLOT (§19.2): reserved slot, no route reachable —
+      // a <span> has no href to activate, so there's nothing to click through
+      // to an empty/placeholder view. aria-disabled tells AT it's inert.
+      const span = document.createElement("span");
+      span.className = "shell-nav-disabled";
+      span.setAttribute("aria-disabled", "true");
+      span.textContent = tab.label;
+      groupEl.appendChild(span);
+      continue;
+    }
+
     const a = document.createElement("a");
     a.href = `#/${tab.id}`;
     a.dataset.view = tab.id;
