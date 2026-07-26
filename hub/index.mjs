@@ -16,8 +16,9 @@ import { existsSync } from "node:fs";
 import { execFileSync } from "node:child_process";
 import { platform } from "node:os";
 import { createConnection } from "node:net";
-import { statePath } from "./state-dir.mjs";
+import { statePath, stateDir } from "./state-dir.mjs";
 import { openJournal, replayVerify, replayVerifyFrom, recordFullVerification, streamHeads } from "./journal.mjs";
+import { quarantineStateDir } from "./recovery.mjs";
 import { buildCheckpoint, saveCheckpoint, latestCheckpoint, verifyCheckpointSignature } from "./checkpoint.mjs";
 import { publicKeysOf } from "./keys.mjs";
 import { installAutostart, uninstallAutostart, isAutostartInstalled, autostartLocation } from "./autostart.mjs";
@@ -47,7 +48,12 @@ import { isBackupInFlight } from "./backup.mjs";
 // spawns the daemon opened a tab on the developer's desktop on every run, and
 // a suite that spawns it repeatedly opened one every few minutes. Opt-out, not
 // opt-in: a human running `helmd start` by hand still gets the tab, which is
-// the behaviour the auto-open exists for.
+// the behaviour the auto-open exists for. Also gates the first-run autostart/
+// shortcut installation below (same "automated caller must not touch the
+// machine persistently" contract) — HELM-JOURNAL-REPAIR-1's recovery boot
+// re-enters first-run (a quarantined state dir has no token yet), so a test
+// that exercises that path needs the same opt-out or it writes a real
+// registry/LaunchAgent entry on the test machine.
 function openBrowser(url) {
   if (process.env.HELM_NO_OPEN === "1") {
     log.info("browser auto-open suppressed by HELM_NO_OPEN", { url });
@@ -71,7 +77,7 @@ async function cmdDoctor() {
   process.exit(report.ok ? 0 : 1);
 }
 
-async function cmdStart({ open = false } = {}) {
+async function cmdStart({ open = false, _recoveredFrom = null } = {}) {
   const config = loadConfig();
   const isFirstRun = !existsSync(statePath("token"));
   const token = loadOrCreateToken();
@@ -117,8 +123,26 @@ async function cmdStart({ open = false } = {}) {
   }
   if (!verified.ok) {
     db.close();
-    log.error("journal replay integrity check FAILED — refusing to start", { brokenAt: verified.brokenAt });
-    process.exit(1);
+    log.error("journal replay integrity check FAILED", { brokenAt: verified.brokenAt });
+    if (_recoveredFrom) {
+      // Defense in depth, should never fire: a freshly quarantined+re-inited
+      // journal has zero rows, so replayVerify trivially passes. A second
+      // failure right after recovery means something deeper than a broken
+      // journal is wrong (e.g. an unwritable state dir) — refuse loudly
+      // instead of quarantining forever.
+      log.error("journal replay integrity check failed again immediately after quarantine+reinit — refusing to start", {
+        brokenAt: verified.brokenAt,
+      });
+      process.exit(1);
+    }
+    // HELM-JOURNAL-REPAIR-1: a broken journal used to be a dead end — no
+    // restore path exists for an install that never booted clean once
+    // (backup.mjs's restore needs a live daemon to have taken a backup from).
+    // Quarantine the whole state dir (never delete) and re-init fresh,
+    // exactly what Tim's confirmed manual recovery does by hand.
+    const recovery = quarantineStateDir(stateDir(), verified.brokenAt);
+    log.error("broken state quarantined (not deleted); re-initializing fresh state and continuing boot", recovery);
+    return cmdStart({ open, _recoveredFrom: recovery });
   }
 
   // Advance the checkpoint frontier every boot a verification just proved
@@ -232,6 +256,17 @@ async function cmdStart({ open = false } = {}) {
   // accepted contingent on it never being a silent surprise.
   console.log(`Helm stops automatically after ${Math.round(config.idleTimeoutMs / 1000)}s idle — a Start Menu / Applications launch brings it back.`);
 
+  // HELM-JOURNAL-REPAIR-1: the only surface a double-click launch leaves
+  // behind once the window closes is whatever got printed before that —
+  // so a recovered boot says so here, in the same banner as the off-switch
+  // reminder above, not just in a log line nobody's console stays open to see.
+  if (_recoveredFrom) {
+    console.log("");
+    console.log("A corrupted journal was found and quarantined — nothing was lost, since it never finished starting cleanly.");
+    console.log(`  quarantined state: ${_recoveredFrom.quarantinePath}`);
+    console.log(`  failure details:   ${_recoveredFrom.crashLogPath}`);
+  }
+
   // HELM-WIN-INSTALL-1: this used to auto-open ONLY on first run
   // (`isFirstRun || open`) — every later start (including the very next
   // double-click after a crash, or after closing the tab) printed the URL
@@ -248,7 +283,7 @@ async function cmdStart({ open = false } = {}) {
   // Announced, never silent: this writes a persistence entry, and a product
   // that asks to be trusted cannot install one without saying so. Print where
   // it went and how to remove it, in the same breath.
-  if (isFirstRun) {
+  if (isFirstRun && process.env.HELM_NO_OPEN !== "1") {
     try {
       const result = installAutostart();
       if (result.ok) {
