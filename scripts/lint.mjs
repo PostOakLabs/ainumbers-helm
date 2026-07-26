@@ -9,7 +9,7 @@ import { join, dirname } from "node:path";
 import { fileURLToPath } from "node:url";
 
 const ROOT = join(dirname(fileURLToPath(import.meta.url)), "..");
-const SKIP_DIRS = new Set(["node_modules", ".git", "dist", "vendored"]);
+const SKIP_DIRS = new Set(["node_modules", ".git", "dist", "vendored", ".claude", ".wt", ".worktrees"]);
 
 function walk(dir) {
   const out = [];
