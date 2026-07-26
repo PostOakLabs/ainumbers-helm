@@ -18,6 +18,8 @@ import { buildCheckpoint, verifyCheckpoint } from "./checkpoint.mjs";
 import { verifyAnchorBinding } from "../ui/lib/verify-bundle.mjs";
 import { validate } from "../scripts/lib/schema-validator.mjs";
 import { liveTest } from "../test-support/live.mjs";
+import { verifyRfc3161, FREETSA_ROOT_PEM, extractMessageImprintHex } from "./vendored/ocg/kernels/_rfc3161.mjs";
+import { derSeq, derInt, derEnc } from "./vendored/ocg/kernels/_anchor-testutil.mjs";
 
 const HERE = dirname(fileURLToPath(import.meta.url));
 
@@ -96,6 +98,79 @@ test("anchorForCheckpoint: relay HTTP error — queued with relay_error, not sil
 
 test("anchorForCheckpoint: unknown CA is a caller bug, not a relay condition — still throws", async () => {
   await assert.rejects(() => anchorForCheckpoint(HASH_HEX, { checkpointSeq: 7, ca: "not-a-real-ca" }));
+});
+
+// HELM-ANCHOR-TSR-1: the relay's real HTTP body is a full TimeStampResp =
+// SEQUENCE { status PKIStatusInfo, timeStampToken ContentInfo OPTIONAL } —
+// every fixture/offline test above stubs a BARE ContentInfo, which is why the
+// live-net gate was the only thing that ever caught this. These run 100%
+// offline (fetchImpl-injected, zero network) so the fix is provable without
+// depending on a cron job nobody watches.
+const FIXTURE = JSON.parse(readFileSync(
+  join(HERE, "vendored", "ocg", "kernels", "fixtures", "anchor-binding.fixture.json"), "utf8",
+));
+const BARE_TOKEN_B64 = FIXTURE.artifact.anchor_bindings.find((b) => b.type === "rfc3161-tst").proof;
+const BARE_TOKEN_DER = Buffer.from(BARE_TOKEN_B64, "base64");
+// The fixture's messageImprint is over the fixture artifact's own execution_hash, not our
+// synthetic HASH_HEX — the tests below only assert the WRAPPER-UNWRAP shape (stored der ==
+// bare token, granted vs rejected classification), not a fresh F11 digest-binding check.
+const FIXTURE_HASH_HEX = extractMessageImprintHex(BARE_TOKEN_B64);
+
+function wrapGranted(tokenDer) {
+  // TimeStampResp = SEQUENCE { status PKIStatusInfo ::= SEQUENCE { status INTEGER(0) }, timeStampToken }
+  return derSeq(derSeq(derInt(0)), tokenDer);
+}
+
+function wrapRejected(status, reasonText) {
+  const statusInfo = reasonText
+    ? derSeq(derInt(status), derSeq(derEncUtf8(reasonText)))
+    : derSeq(derInt(status));
+  return derSeq(statusInfo);
+}
+
+// _anchor-testutil.mjs exports derEnc(tag, content) but not a UTF8String helper directly.
+function derEncUtf8(text) {
+  return derEnc(0x0c, Buffer.from(text, "utf8"));
+}
+
+test("anchorRfc3161: unwraps a granted TimeStampResp — stored der is the bare token, not the wrapper", async () => {
+  const wrapped = wrapGranted(BARE_TOKEN_DER);
+  assert.notEqual(wrapped[0], 0x06, "sanity: the wrapper's first child must NOT be an OID (else this test isn't exercising the wrapper path)");
+  const fetchImpl = async () => ({
+    ok: true,
+    headers: { get: () => "application/timestamp-reply" },
+    arrayBuffer: async () => wrapped.buffer.slice(wrapped.byteOffset, wrapped.byteOffset + wrapped.byteLength),
+  });
+  const anchor = await anchorRfc3161(FIXTURE_HASH_HEX, { ca: "freetsa", fetchImpl });
+  const storedDer = Buffer.from(anchor.der, "base64");
+  assert.ok(storedDer.equals(BARE_TOKEN_DER), "stored der must be the unwrapped bare token, byte-identical to the fixture's bare-token shape");
+  // Round-trips through the SAME strict vendored verifier a real checkpoint anchor is checked against.
+  const verified = verifyRfc3161({ proof: anchor.der }, { rootPem: FREETSA_ROOT_PEM, expectHashHex: FIXTURE_HASH_HEX });
+  assert.ok(verified.serial, "verifyRfc3161 must succeed against the unwrapped der — this is the check that was broken in production");
+});
+
+test("anchorRfc3161: an already-bare ContentInfo (fixture/back-compat shape) still passes through untouched", async () => {
+  const fetchImpl = async () => ({
+    ok: true,
+    headers: { get: () => "application/timestamp-reply" },
+    arrayBuffer: async () => BARE_TOKEN_DER.buffer.slice(BARE_TOKEN_DER.byteOffset, BARE_TOKEN_DER.byteOffset + BARE_TOKEN_DER.byteLength),
+  });
+  const anchor = await anchorRfc3161(FIXTURE_HASH_HEX, { ca: "freetsa", fetchImpl });
+  assert.ok(Buffer.from(anchor.der, "base64").equals(BARE_TOKEN_DER));
+});
+
+test("anchorForCheckpoint: non-granted PKIStatus is a relay_error queue marker, never an aborted checkpoint", async () => {
+  const rejected = wrapRejected(2, "Bad request format or system error.");
+  const fetchImpl = async () => ({
+    ok: true,
+    headers: { get: () => "application/timestamp-reply" },
+    arrayBuffer: async () => rejected.buffer.slice(rejected.byteOffset, rejected.byteOffset + rejected.byteLength),
+  });
+  const { anchor, queueMarker } = await anchorForCheckpoint(HASH_HEX, { checkpointSeq: 7, fetchImpl });
+  assert.equal(anchor, undefined, "a TSA rejection must never surface as a successful anchor");
+  assert.equal(queueMarker.status, "queued");
+  assert.equal(queueMarker.reason, "relay_error");
+  assert.deepEqual(validate(ANCHOR_QUEUE_MARKER_SCHEMA_REF, queueMarker), []);
 });
 
 test("buildQueueMarker: rejects a shape that would fail the schema (e.g. bad status)", () => {
