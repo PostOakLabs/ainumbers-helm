@@ -46,6 +46,43 @@ install. If your org mirrors npm through an internal proxy (Artifactory,
 Nexus, etc.), push the tarball into your virtual npm repo instead of
 installing it locally and consume it from there like any other package.
 
+## Running from a repo clone (developers)
+
+The [`ainumbers-helm`](https://github.com/PostOakLabs/ainumbers-helm) repo
+itself declares a `bin` entry (`package.json` → `bin.helmd`), so a clone
+gives you `helmd` without any of the packaging above:
+
+```
+git clone https://github.com/PostOakLabs/ainumbers-helm.git
+cd ainumbers-helm
+npm install -g .
+helmd doctor
+```
+
+or, without installing anything globally:
+
+```
+node bin/helmd.mjs doctor
+```
+
+`bin/helmd.mjs` is a thin wrapper: `start`/`stop`/`status`/`open`/`uninstall`
+are forwarded straight to `hub/index.mjs` (the same daemon entrypoint this
+guide's other install methods run); `doctor` calls the self-check directly
+so it can offer `--json`; `export-bpmn <workflow_id> [out.bpmn]` wraps
+`scripts/export-bpmn.mjs` to write a compiled pack's workflow as BPMN 2.0
+XML. It adds no runtime dependency — `npm install -g .` has nothing to
+fetch.
+
+### CLI stability contract
+
+- **Stable:** the command names (`start`, `stop`, `status`, `doctor`, `open`,
+  `uninstall`, `export-bpmn`), their plain-text output, and their exit codes
+  (`0` success; a subcommand's own failure code is passed through unchanged;
+  an unknown command is a usage error and exits `2`). Script against these.
+- **Provisional:** `--json` output shapes (currently only `doctor --json`).
+  These may change without a major-version bump until this notice is
+  removed. Don't parse them in anything you can't update on short notice.
+
 ## Advanced: raw SEA binary download
 
 Only reach for this if none of winget/Homebrew/npm fit (e.g. scripting a CI
@@ -196,6 +233,17 @@ passive version-check notice (never an auto-update — see below).
 
 `helmd doctor` is safe to run while helmd is running — it identifies the
 listener on the port rather than assuming an occupied port is a problem.
+Add `--json` for a machine-readable `{ok, checks: [...]}` (see the
+stability contract above — the `--json` shape is provisional, the plain
+output and exit code are not).
+
+```
+helmd export-bpmn <workflow_id> [out.bpmn]
+```
+
+Exports a compiled pack's workflow as BPMN 2.0 XML — to stdout, or to
+`out.bpmn` if given. Exits non-zero with a message on stderr for an unknown
+`workflow_id`.
 
 ## Updates
 

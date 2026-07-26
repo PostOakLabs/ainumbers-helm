@@ -5,6 +5,10 @@
   "license": "Apache-2.0",
   "description": "Local-first control plane: helmd hub daemon + helm.html UI",
   "type": "module",
+  "bin": {
+    "helmd": "./bin/helmd.mjs"
+  },
+  "dependencies": {},
   "engines": {
     "node": ">=22.5"
   },
