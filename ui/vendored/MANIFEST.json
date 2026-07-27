@@ -1,0 +1,61 @@
+{
+  "note": "ui/vendored/ is heterogeneous — first-party ports/own-code AND third-party bundles from DIFFERENT upstreams under DIFFERENT licenses, unlike hub/vendored/ocg and hub/vendored/anchor-suite which are single-sourced trees. Each entry below is a self-contained record (sourceRepo + pinnedSha + license + files), same shape as those manifests, grouped by classification. Full narrative provenance: PORT.md.",
+  "entries": [
+    {
+      "classification": "first-party-port",
+      "sourceRepo": "https://github.com/PostOakLabs/ainumbers.git",
+      "pinnedSha": "31e040291f24aa07b79adedcd35fb9b16fc40ac1",
+      "license": "MIT License, Copyright (c) 2026 PostOakLabs (same license/holder as this repo's OCG vendor tree; ported/adapted from that repo's chaingraph/kernels — see hub/vendored/ocg/MANIFEST.json and repo LICENSE)",
+      "files": [
+        { "path": "hash.mjs", "sha256": "aeb5214d3c5c704ce2f8462de10050f048b1ef6d6eff8bb00dde6589cc43eab8", "portedFrom": "hub/vendored/ocg/kernels/_hash.mjs (verbatim body)" },
+        { "path": "proof.mjs", "sha256": "ef6be85c53fcb17aac962295b4edadf5009b3b788f8f35004647237c261602f6", "portedFrom": "hub/vendored/ocg/kernels/_proof.mjs (one import path adjusted)" },
+        { "path": "der.mjs", "sha256": "83060ad2ae337ca57ae077d91496d49a0b32da81c750d9d95188f58cca7d6df4", "portedFrom": "hub/vendored/ocg/kernels/_anchor-testutil.mjs (DER/OID reader) + hub/vendored/ocg/kernels/_rfc3161.mjs (field-walk subset); Buffer->Uint8Array, atob()-based base64" }
+      ]
+    },
+    {
+      "classification": "first-party-own",
+      "sourceRepo": "https://github.com/PostOakLabs/ainumbers-helm.git",
+      "pinnedSha": "n/a — first-party, no upstream vendor to pin (own code, own commit history)",
+      "license": "Apache-2.0, Copyright (c) 2026 Post Oak Labs, Inc. (this repo's own license — see helm/LICENSE); not third-party",
+      "files": [
+        { "path": "schema-validator.mjs", "sha256": "5f94c08a221c4b0e7d062041a75dd8ea2b9f5ce67d43ed026d3f66b4052be30c", "portedFrom": "scripts/lib/schema-validator.mjs (this repo, verbatim body)" },
+        { "path": "schemas/connector_contract.schema.mjs", "sha256": "1224a673e99b512e2ebfaba1f2e21f44e431ebf05d9bb0f608db21f302ba4301", "portedFrom": "schema/connector_contract.schema.json (this repo, JSON literal wrapped as default export)" },
+        { "path": "schemas/anchor_queue_marker.schema.mjs", "sha256": "0d72373831dd6094c02c15f942e365eb54c857d52de130e795b302640e31c104", "portedFrom": "schema/anchor_queue_marker.schema.json (this repo, JSON literal wrapped as default export)" },
+        { "path": "schemas/checkpoint.schema.mjs", "sha256": "0e813043ae23b8556529ba5b9ec4cfc5b54719f76f085597ac08b7e03f0badb2", "portedFrom": "schema/checkpoint.schema.json (this repo, JSON literal wrapped as default export)" },
+        { "path": "schemas/company_profile.schema.mjs", "sha256": "d12bb7b240fffe00880c26d42d9f7f1eb9ab4f1d0bc405429c9301ea1d9daa34", "portedFrom": "schema/company_profile.schema.json (this repo, JSON literal wrapped as default export)" },
+        { "path": "schemas/evidence_bundle_manifest.schema.mjs", "sha256": "e3d84ba5703ab4d66cf4680d75c42b3f7d484badf952afd3f335fc4202f20e0f", "portedFrom": "schema/evidence_bundle_manifest.schema.json (this repo, JSON literal wrapped as default export)" },
+        { "path": "der-encode.mjs", "sha256": "d7035152842020a7b71901793c9f5369883d6485fc25d3593c9876fb17b63bab", "portedFrom": "not a port — hand-rolled DER writer (HELM-P3-A5)" },
+        { "path": "der-encode.test.mjs", "sha256": "751ccfcd8fd8c05d5637d4cd58f1f05db49fdea9a6e602c1bb6be51267401b50", "portedFrom": "not a port — this repo's own test for der-encode.mjs" },
+        { "path": "tsa-roots.mjs", "sha256": "274d36df41f7821fff11bc01bc037fb8d28fe5c00eb86a73e7a8ce644f221f68", "portedFrom": "not a port — own capture of public RFC 3161 TSA root certificates (HELM-TSA-1); the certificates themselves are public trust-chain data, not copyrighted third-party code" },
+        { "path": "PORT.md", "sha256": "e50bedb8bbb9156cfa3a6726fb971f26730b81ead235d620f436f7357d325f89", "portedFrom": "not a port — this repo's own provenance documentation" }
+      ]
+    },
+    {
+      "classification": "third-party-bundle",
+      "sourceRepo": "https://github.com/PostOakLabs/anchor-suite.git",
+      "pinnedSha": "1aa6d2222b64ff9b5f53245e6be244ddc091d401",
+      "license": "BSD-3-Clause (pkijs 3.4.0 and asn1js 3.0.10, Copyright (c) 2014 GlobalSign/GMO GlobalSign and Copyright (c) 2015-2022 Peculiar Ventures) + MIT (pvtsutils, Copyright (c) 2017-2024 Peculiar Ventures, LLC) — full license text preserved in-file at the top of each bundled module; see NOTICE",
+      "files": [
+        { "path": "pkijs.bundle.mjs", "sha256": "f1c2f9e8991bb28c76812ae5eda25b0693373609ef21748e4775bf902e0f1e40", "portedFrom": "byte-identical copy of hub/vendored/anchor-suite/vendor/pkijs.bundle.mjs (see that tree's own MANIFEST.json for the pinnedSha this hash traces to); resynced by copying, proven byte-identical by ui/lib/pkijs-vendor-reconcile.test.mjs" }
+      ]
+    },
+    {
+      "classification": "third-party-vendor",
+      "sourceRepo": "https://github.com/nayuki/QR-Code-generator.git",
+      "pinnedSha": "v1.5.0",
+      "license": "MIT License, Copyright (c) Project Nayuki — full header preserved in-file",
+      "files": [
+        { "path": "qrcodegen.js", "sha256": "99a61998d4cedf7b1d927ac8ae2f41e0c64a5c89d7de0a76bffd3cb4dda40e89" }
+      ]
+    },
+    {
+      "classification": "third-party-vendor",
+      "sourceRepo": "https://github.com/gitbrent/PptxGenJS.git",
+      "pinnedSha": "4.0.1",
+      "license": "MIT License (bundles JSZip, also MIT) — full header preserved in-file",
+      "files": [
+        { "path": "pptxgen.bundle.js", "sha256": "b9d113eea9456a9ac0f5c6a5c9430ce1b213ae8967670bb01b899994134826d4" }
+      ]
+    }
+  ]
+}
