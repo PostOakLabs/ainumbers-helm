@@ -4,8 +4,9 @@
 # this). Runs as the payload's own scripts/postinstall after pkgbuild copies
 # helmd-macos-<arch> into place. $2 is the target volume Installer passes;
 # $HOME under a `sudo installer`/Jamf policy run resolves to root's home, not
-# the logged-in user's, so re-derive the real console user explicitly —
-# writing the LaunchAgent to the wrong home is a silent no-op autostart.
+# the logged-in user's, so re-derive the real console user explicitly — the
+# whole per-user state dir (and any LaunchAgent the user later opts into)
+# would otherwise land in /var/root.
 set -e
 
 CONSOLE_USER=$(stat -f%Su /dev/console)
@@ -21,10 +22,9 @@ if [ ! -x "$INSTALLED_EXE" ]; then
   exit 1
 fi
 
-# Same first-run path an interactive install takes (writes the per-user
-# LaunchAgent via hub/autostart.mjs, HELM-P4-J4) — run AS the console user,
-# not root, or the LaunchAgent lands in /var/root and never autostarts the
-# user's session.
+# Same first-run path an interactive install takes — run AS the console user,
+# not root, or ~/.helm lands in /var/root. HELM-AUTOSTART-1: this no longer
+# writes a LaunchAgent; autostart is opt-in from the pairing tab.
 sudo -u "$CONSOLE_USER" HOME="$USER_HOME" "$INSTALLED_EXE" start >/tmp/helm-postinstall.log 2>&1 &
 
 exit 0

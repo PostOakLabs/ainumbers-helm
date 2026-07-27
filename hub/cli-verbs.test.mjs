@@ -7,9 +7,11 @@
 //     pipe (scoped by port, see cli-channel.mjs) and the unix socket (scoped
 //     by HELM_HOME) can never reach a real helmd. Without that scoping, a
 //     `stop` here could have killed a developer's running daemon.
-//   * The token file is created BEFORE the daemon starts, so isFirstRun is
-//     false and the run never installs a real autostart entry. Tests must
-//     not write to the registry or ~/Library/LaunchAgents.
+//   * The token file is created BEFORE the daemon starts, so the run looks
+//     like a returning one. HELM-AUTOSTART-1 makes that precaution redundant
+//     for persistence — no start path installs an autostart entry any more,
+//     at any point — but it stays, since tests must never write to the
+//     registry or ~/Library/LaunchAgents and defence in depth costs nothing.
 import { test, after } from "node:test";
 import assert from "node:assert/strict";
 import { mkdtempSync, rmSync, writeFileSync } from "node:fs";

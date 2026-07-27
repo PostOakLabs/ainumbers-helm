@@ -110,18 +110,43 @@ Ed25519 is MUST, so stripping the PQC signature still verifies. **Accepted** —
 the documented SHOULD/MUST split; a *present-and-wrong* PQC sig is still caught. Note
 for the day PQC becomes mandatory: flip to require both. → tracked in `HELM-SEC-5`.
 
-### F7 — Per-user autostart persistence (Low, accepted and disclosed)
-First run installs a per-user autostart entry: an HKCU `Run` value on Windows,
-a `RunAtLoad` LaunchAgent on macOS, nothing on Linux (see `docs/INSTALL.md` for
+### F7 — Per-user autostart persistence (Low, disclosed; consent bypass FIXED)
+Helm can install a per-user autostart entry: an HKCU `Run` value on Windows, a
+`RunAtLoad` LaunchAgent on macOS, nothing on Linux (see `docs/INSTALL.md` for
 the exact locations). This is ordinary desktop-daemon behavior, but it is
 **persistence**, and a threat model that omits its own persistence mechanism is
 worse than one that states it plainly.
 
-Properties that bound it: per-user only (HKCU / `~/Library`, never HKLM or
-`/Library`, no administrator rights); announced on the console at the moment
-of install, never silent; removed by `helmd uninstall`, which the uninstall
-script runs *before* deleting the binary so no entry is left pointing at a
-deleted path (the Zoom-orphan failure mode).
+**Fixed, `HELM-AUTOSTART-1` (2026-07-26).** Until this fix, the entry was
+installed on **first run**, with no user action beyond opening the program
+once. The stated mitigation was a console announcement — which does not reach
+the audience it was written for, because a double-clicked download has its
+console window closed before it is read. In practice: an unsigned executable
+that installed reboot-surviving persistence the first time it was opened, with
+no prompt. That is a consent bypass regardless of intent, and it is the exact
+shape AV/EDR heuristics classify as PUA. It happened to a real user.
+
+Autostart and the Start Menu shortcut are now **off by default on every
+platform**, and the only code path that installs either is `POST /autostart`,
+behind the same Host + Origin + Bearer gate as every other mutating route
+(POST only — a GET that installs persistence is reachable from an `<img src>`
+or a prefetch). The control is a toggle on the Operate tab that reads real
+machine state on every render.
+
+A related honesty defect went with it: `isInstalled` checked only that the
+registry value or plist **existed**, never that the path baked into it still
+resolved. Moving or re-downloading the binary left an entry that failed
+silently at every sign-in while every status surface reported healthy.
+`helmd status`, `helmd doctor` and the toggle now validate the recorded target
+and report a stale entry as broken. The arming change to watch for is
+auto-update-in-place: an update that moves or renames the binary without
+rewriting the entry re-creates the dead-path condition, and a file later
+landing at that stale path would launch with the user's privileges.
+
+Properties that bound what remains: per-user only (HKCU / `~/Library`, never
+HKLM or `/Library`, no administrator rights); removed by `helmd uninstall`,
+which the uninstall script runs *before* deleting the binary so no entry is
+left pointing at a deleted path (the Zoom-orphan failure mode).
 
 `KeepAlive` on the macOS LaunchAgent is deliberately **false**. It was true
 (crash self-heal), which meant launchd relaunched helmd the instant it exited

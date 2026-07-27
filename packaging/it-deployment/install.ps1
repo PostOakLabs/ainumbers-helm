@@ -6,15 +6,20 @@
 .DESCRIPTION
   Copies the pre-verified helmd-windows-x64.exe payload to a per-user install
   directory and launches it once to trigger the SAME first-run path a normal
-  interactive install goes through (opens the pairing tab, writes the HKCU
-  Run-key autostart entry — see hub/autostart.mjs, HELM-P4-J4). This script
-  does not duplicate that logic; it just gets the binary onto disk and runs
-  it once as the logged-in user.
+  interactive install goes through (opens the pairing tab). This script does
+  not duplicate that logic; it just gets the binary onto disk and runs it once
+  as the logged-in user.
+
+  HELM-AUTOSTART-1: that first run does NOT write an autostart entry any more,
+  here or anywhere else — autostart is opt-in from the pairing tab, on every
+  platform. A managed deployment that WANTS helmd starting at sign-in has to
+  say so deliberately; it is no longer a side effect of installing.
 
   Per-user, no admin rights required — matches helmd's own install model
   (winget/Homebrew/npm are all per-user too). Deploy this as an Intune Win32
   app in "install for user" (not device/SYSTEM) context, or the first-run
-  browser launch and HKCU Run key land in the wrong profile.
+  browser launch — and any autostart entry the user later enables — land in
+  the wrong profile.
 
   PowerShell 5.1-safe by construction: no `??`, no ternary, no classes.
 
@@ -92,11 +97,11 @@ if (-not $Version) {
 Set-Content -Path $VersionFile -Value $Version -Encoding ascii
 Write-Log ("Version file written: {0}" -f $Version)
 
-# First run: same path an interactive install takes (opens the pairing tab,
-# writes the HKCU Run-key autostart entry via hub/autostart.mjs). Detached
-# so the Intune install context (which may not stay attached to a foreground
-# session) doesn't block on it; `start` daemonizes itself already.
-Write-Log "Launching first run (installs autostart, opens pairing tab)..."
+# First run: same path an interactive install takes (opens the pairing tab).
+# Detached so the Intune install context (which may not stay attached to a
+# foreground session) doesn't block on it; `start` daemonizes itself already.
+# No persistence is written here — see the autostart note in .DESCRIPTION.
+Write-Log "Launching first run (opens pairing tab)..."
 Start-Process -FilePath $InstalledExe -ArgumentList "start" -WindowStyle Hidden
 
 Write-Log "Install complete."

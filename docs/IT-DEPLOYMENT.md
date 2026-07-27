@@ -23,9 +23,10 @@ payload carries the binary itself; nothing is fetched during install.
 4. Create the Win32 app in Intune:
    - **Install command:** `powershell.exe -NoProfile -ExecutionPolicy Bypass -File install.ps1`
    - **Uninstall command:** `powershell.exe -NoProfile -ExecutionPolicy Bypass -File uninstall.ps1`
-   - **Install behavior:** **User** (not System) — `helmd` autostart and the
-     first-run pairing tab are per-user; a System-context install writes the
-     LaunchAgent/Run-key equivalent for the wrong (or no) profile.
+   - **Install behavior:** **User** (not System) — `helmd`'s state dir, the
+     first-run pairing tab, and any autostart entry the user opts into are all
+     per-user; a System-context install lands them in the wrong (or no)
+     profile.
    - **Detection rule:** Custom script → `detect.ps1`. It checks a
      `version.txt` file `install.ps1` writes next to the binary (sourced
      from the signed `release-manifest.json`, not by launching the just
@@ -37,9 +38,14 @@ payload carries the binary itself; nothing is fetched during install.
 `SHA256SUMS` before copying it anywhere (same plain-text checksum file
 `docs/INSTALL.md` documents as the no-Node-required verification path) and
 refuses to install on a mismatch. It then launches `helmd.exe start` once,
-which is the *same* first-run path an interactive install takes — it opens
-the pairing tab and writes the HKCU `Run` autostart entry (`hub/autostart.mjs`,
-HELM-P4-J4). Nothing here duplicates or diverges from that logic.
+which is the *same* first-run path an interactive install takes — it opens the
+pairing tab. Nothing here duplicates or diverges from that logic.
+
+Deploying Helm does **not** make it start at sign-in. Autostart is opt-in from
+the pairing tab (`HELM-AUTOSTART-1`), so a pushed install leaves a user who
+never opens Helm with nothing running and nothing persisted. If a fleet needs
+helmd running at every sign-in, that has to be a deliberate, separately
+authored step — it is not a side effect of installing any more.
 
 ## macOS: unsigned component pkg (Jamf / Kandji / any MDM)
 

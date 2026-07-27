@@ -93,10 +93,14 @@ test("quarantineStateDir: is a no-op on config.json when the broken dir never ha
 //
 // Same safety properties cli-verbs.test.mjs depends on: HELM_HOME is a
 // unique temp dir and the port is unique, so this can never reach a real
-// helmd. HELM_NO_OPEN also gates the isFirstRun autostart/shortcut install
-// (see index.mjs) — the recovery boot re-enters first-run (the quarantined
-// dir's token is gone), so without that gate this test would write a real
-// registry/LaunchAgent entry on the machine running the suite.
+// helmd. HELM_NO_OPEN also suppresses the browser tab.
+//
+// HELM-AUTOSTART-1: this used to also depend on HELM_NO_OPEN gating a
+// first-run autostart/shortcut install, because a recovery boot re-enters
+// first run (the quarantined dir's token is gone) and would otherwise have
+// written a real registry/LaunchAgent entry on the machine running the suite.
+// That install is gone from every start path, so nothing here can persist
+// anything regardless of the flag.
 
 const TMP = mkdtempSync(join(tmpdir(), "helm-recovery-e2e-"));
 const PORT = 41779;

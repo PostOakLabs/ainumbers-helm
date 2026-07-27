@@ -198,16 +198,17 @@ function ensureActivityStream(port, token, dot, label) {
 // `helmd start` opens this page pre-paired for the normal first-run flow and
 // this screen is mostly seen by people who closed that tab or lost the link.
 //
-// HELM-P4-J4: with autostart installed, the daemon relaunching is the OS's
-// job now — this recovery copy deliberately never mentions a terminal or a
-// command to type. If autostart genuinely isn't running (fresh install
-// before its first login, or an unsupported OS), the fix is "open the Helm
-// app" / reinstall, not a CLI incantation.
+// This recovery copy deliberately never names a terminal or a command to
+// type — the fix is "open the Helm app" / reinstall. HELM-AUTOSTART-1: it no
+// longer claims Helm starts by itself either. Autostart is opt-in and off by
+// default now, so on most machines nothing is going to bring the daemon back
+// on its own and telling the user "no action needed" would strand them on a
+// page that never reconnects.
 function mountTokenForm(root, onPaired) {
   root.innerHTML = `
     <div class="welcome-state" aria-live="polite">
       <p class="welcome-title">Waiting for Helm on this computer&hellip;</p>
-      <p class="empty-state">This tab isn't paired with helmd yet. Helm starts automatically and this page will reconnect on its own — no action needed.</p>
+      <p class="empty-state">This tab isn't paired with helmd yet. If Helm is running, this page reconnects on its own.</p>
       <p class="empty-state">Still waiting after a minute? Open the Helm app (check your login items or Start menu), or reinstall from <a href="https://ainumbers.co/helm" rel="noopener">ainumbers.co/helm</a> if it isn't there.</p>
       <details class="disclosure">
         <summary>Advanced: pair by hand</summary>
