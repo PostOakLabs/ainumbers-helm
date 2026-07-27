@@ -48,6 +48,8 @@ const ROUTE_DOCS = {
   "GET /ha/slot": { summary: "Fetch the countersignature_slot (maker + checker signatures) for a subject_hash.", tags: ["Accountability"] },
   "POST /ha/records": { summary: "Submit a signed §27.2 accountability record (approval/rejection/override/annotation/role_binding).", tags: ["Accountability"] },
   "POST /ha/replay": { summary: "helmd re-executes a step's kernel and countersigns with replay_verified reflecting whether the hash matched.", tags: ["Accountability"] },
+  "GET /autostart": { summary: "Report whether the start-at-sign-in entry and desktop shortcut are installed, and whether the recorded entry still points at a Helm that exists.", tags: ["Daemon"] },
+  "POST /autostart": { summary: "Install or remove the start-at-sign-in entry and/or the shortcut. Body {autostart?: boolean, shortcut?: boolean}. The only code path that writes either — helmd never installs them on its own.", tags: ["Daemon"] },
 };
 
 function toOperation(method, path) {

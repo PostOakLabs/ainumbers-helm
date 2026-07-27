@@ -490,6 +490,66 @@
         }
       }
     },
+    "/autostart": {
+      "get": {
+        "summary": "Report whether the start-at-sign-in entry and desktop shortcut are installed, and whether the recorded entry still points at a Helm that exists.",
+        "tags": [
+          "Daemon"
+        ],
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Missing or invalid bearer token."
+          },
+          "403": {
+            "description": "Host or Origin mismatch (D8 loopback hardening)."
+          }
+        }
+      },
+      "post": {
+        "summary": "Install or remove the start-at-sign-in entry and/or the shortcut. Body {autostart?: boolean, shortcut?: boolean}. The only code path that writes either — helmd never installs them on its own.",
+        "tags": [
+          "Daemon"
+        ],
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Missing or invalid bearer token."
+          },
+          "403": {
+            "description": "Host or Origin mismatch (D8 loopback hardening)."
+          }
+        }
+      }
+    },
     "/ha/pending": {
       "get": {
         "summary": "List runs held at a §27.4 accountability gate, awaiting human records.",

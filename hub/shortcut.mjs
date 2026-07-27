@@ -8,11 +8,16 @@
 // to click and no visible sign anything had been installed.
 //
 // Rather than move to an MSI/NSIS installer (a large lift that wants the code
-// signing story settled first), helmd creates its own shortcut on first run —
-// the same moment, and the same shape, as the autostart entry in
-// autostart.mjs: per-user, announced on the console, removed by
-// `helmd uninstall`. That also means npm and raw-binary installs get the
-// shortcut too, which a winget-only packaging fix would not have done.
+// signing story settled first), helmd creates its own shortcut — per-user,
+// removed by `helmd uninstall`. That also means npm and raw-binary installs
+// get the shortcut too, which a winget-only packaging fix would not have done.
+//
+// HELM-AUTOSTART-1: this used to happen on first run, unconditionally, in the
+// same breath as the autostart entry. Both are opt-in now (POST /autostart),
+// for the reason written up at the top of autostart.mjs — a console
+// announcement is not consent when the console is already closed. A shortcut
+// is a far milder write than a Run key, but it went in through the same
+// unasked-for first-run path, so it leaves by the same door.
 //
 // The shortcut targets the BINARY, never a URL. A .lnk or .url carrying the
 // pairing link would write a long-lived bearer token to an unprotected file

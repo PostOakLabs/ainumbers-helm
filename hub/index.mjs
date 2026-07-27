@@ -21,8 +21,11 @@ import { openJournal, replayVerify, replayVerifyFrom, recordFullVerification, st
 import { quarantineStateDir } from "./recovery.mjs";
 import { buildAnchoredCheckpoint, saveCheckpoint, latestCheckpoint, verifyCheckpointSignature } from "./checkpoint.mjs";
 import { publicKeysOf } from "./keys.mjs";
-import { installAutostart, uninstallAutostart, isAutostartInstalled, autostartLocation } from "./autostart.mjs";
-import { installShortcut, uninstallShortcut, isShortcutInstalled, shortcutLocation } from "./shortcut.mjs";
+// HELM-AUTOSTART-1: install* is deliberately NOT imported here any more —
+// nothing on the daemon's start path may write a persistence entry. The only
+// installer callers are POST /autostart (server.mjs) and the user.
+import { uninstallAutostart, isAutostartInstalled, autostartLocation, autostartStatus } from "./autostart.mjs";
+import { uninstallShortcut, isShortcutInstalled, shortcutLocation } from "./shortcut.mjs";
 import { createIdleTimer } from "./idle-timer.mjs";
 import { getSseConnectionCount, getRunsInFlightCount } from "./server.mjs";
 import { isPairingWindowOpen } from "./token.mjs";
@@ -79,7 +82,6 @@ async function cmdDoctor() {
 
 async function cmdStart({ open = false, _recoveredFrom = null } = {}) {
   const config = loadConfig();
-  const isFirstRun = !existsSync(statePath("token"));
   const token = loadOrCreateToken();
   const identityKeys = loadOrCreateKeys();
   const haIdentity = await loadOrCreateHaIdentity();
@@ -255,19 +257,27 @@ async function cmdStart({ open = false, _recoveredFrom = null } = {}) {
       setTimeout(() => process.exit(0), 50);
       return { stopping: true, pid: process.pid };
     },
-    status: () => ({
-      running: true,
-      pid: process.pid,
-      port: config.port,
-      version: DAEMON_VERSION,
-      autostart: isAutostartInstalled(),
-      autostartLocation: autostartLocation(),
-      shortcut: isShortcutInstalled(),
-      shortcutLocation: shortcutLocation(),
-      // §18.4: announced here too, not just Operate — `helmd status` is the
-      // zero-CLI-else escape hatch this project's headless/no-DE users have.
-      idleTimeoutMs: config.idleTimeoutMs,
-    }),
+    status: () => {
+      // §4: "the value exists" was never the same question as "it still
+      // works" — a Run key baked with a path that has since moved reported
+      // healthy forever. One call: it shells out to `reg query`.
+      const autostart = autostartStatus();
+      return {
+        running: true,
+        pid: process.pid,
+        port: config.port,
+        version: DAEMON_VERSION,
+        autostart: autostart.installed,
+        autostartLocation: autostart.location,
+        autostartStale: autostart.stale,
+        autostartReason: autostart.reason,
+        shortcut: isShortcutInstalled(),
+        shortcutLocation: shortcutLocation(),
+        // §18.4: announced here too, not just Operate — `helmd status` is the
+        // zero-CLI-else escape hatch this project's headless/no-DE users have.
+        idleTimeoutMs: config.idleTimeoutMs,
+      };
+    },
   }, { port: config.port });
 
   // §18.2 insertion point: the timer starts counting down from here, the
@@ -308,42 +318,23 @@ async function cmdStart({ open = false, _recoveredFrom = null } = {}) {
   // but stays as an explicit override for callers that want to force it.
   openBrowser(url);
 
-  // HELM-P4-J4: the last CLI moment. First run also installs the per-user
-  // autostart entry (macOS LaunchAgent / Windows HKCU Run key) so the next
-  // launch is the OS's job, not the user's — best-effort, never fatal (an
-  // unsupported platform or a sandboxed/CI environment just skips it).
-  // Announced, never silent: this writes a persistence entry, and a product
-  // that asks to be trusted cannot install one without saying so. Print where
-  // it went and how to remove it, in the same breath.
-  if (isFirstRun && process.env.HELM_NO_OPEN !== "1") {
-    try {
-      const result = installAutostart();
-      if (result.ok) {
-        console.log("");
-        console.log("Helm will now start automatically when you log in.");
-        console.log(`  entry:   ${autostartLocation()}`);
-        console.log("  remove:  helmd uninstall");
-      }
-    } catch (err) {
-      log.warn("autostart install failed (non-fatal)", { error: String(err?.message || err) });
-    }
-    // Same first-run moment, same announce-and-removable contract: give the
-    // user something to click. winget's portable installer type cannot create
-    // one, so without this a completed install leaves nothing on the machine
-    // the user can find. Best-effort — a failed shortcut never blocks a
-    // working daemon.
-    try {
-      const result = installShortcut();
-      if (result.ok) {
-        console.log("");
-        console.log("A Helm shortcut has been added to your Start Menu.");
-        console.log(`  entry:   ${result.path}`);
-        console.log("  remove:  helmd uninstall");
-      }
-    } catch (err) {
-      log.warn("start menu shortcut failed (non-fatal)", { error: String(err?.message || err) });
-    }
-  }
+  // HELM-AUTOSTART-1: first run used to install BOTH the per-user autostart
+  // entry and a Start Menu shortcut here, unconditionally, gated on nothing
+  // but "the state dir did not exist yet". Both are gone, on every platform.
+  //
+  // The mitigation those installs relied on was the console announcement
+  // printed two blocks up. It does not work: the audience for a downloaded
+  // .exe double-clicks it, and that console window is closed (often before it
+  // is legible, sometimes not durable at all) long before anything is read.
+  // So the practical behaviour was "opening this file once wrote a
+  // reboot-surviving persistence entry to your account, silently" — a consent
+  // bypass whatever the intent, and the textbook PUA pattern for AV/EDR.
+  //
+  // Default is now OFF, and the ONLY way either gets installed is a person
+  // ticking the box in the tab openBrowser() just opened (POST /autostart).
+  // Every comparable local daemon (Docker Desktop, Zoom, Slack) does exactly
+  // this: an inspectable toggle in a surface that persists, never a one-shot
+  // console print.
 }
 
 // helmd uninstall: removes the autostart entry this same install wrote.
@@ -428,12 +419,20 @@ async function cmdStop() {
 async function cmdStatus() {
   const describeEntry = (installed, where) =>
     installed ? `installed (${where})` : where === null ? "not supported on this platform" : "not installed";
+  // §4: an entry that exists but points at a moved/deleted binary reported
+  // "installed" and nothing else — the whole defect was that this line lied.
+  const describeAutostart = (installed, where, staleReason) =>
+    staleReason === "target_missing"
+      ? `BROKEN — entry exists at ${where} but its target no longer exists; Helm will NOT start at login`
+      : staleReason === "unreadable"
+        ? `UNVERIFIABLE — entry exists at ${where} but could not be read back`
+        : describeEntry(installed, where);
   try {
     const r = await callDaemon("status");
     console.log(`helmd: running (pid ${r.pid})`);
     console.log(`  port       ${r.port}`);
     console.log(`  version    ${r.version}`);
-    console.log(`  autostart  ${describeEntry(r.autostart, r.autostartLocation)}`);
+    console.log(`  autostart  ${describeAutostart(r.autostart, r.autostartLocation, r.autostartStale ? r.autostartReason : null)}`);
     console.log(`  shortcut   ${describeEntry(r.shortcut, r.shortcutLocation)}`);
     console.log(`  idle stop  after ${Math.round(r.idleTimeoutMs / 1000)}s idle (configurable in ~/.helm/config.json); relaunch via Start Menu / Applications`);
     console.log("  pairing    helmd open");

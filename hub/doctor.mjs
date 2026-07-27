@@ -14,6 +14,7 @@ import { loadOrCreateToken } from "./token.mjs";
 import { openJournal, replayVerify, recordFullVerification, lastFullVerifiedAt } from "./journal.mjs";
 import { checkVersion } from "./version-check.mjs";
 import { uiAssetsReadable } from "./static.mjs";
+import { autostartDoctorCheck } from "./autostart.mjs";
 
 const HERE = dirname(fileURLToPath(import.meta.url));
 const CURRENT_VERSION = JSON.parse(readFileSync(join(HERE, "..", "package.json"), "utf8")).version;
@@ -129,6 +130,14 @@ export async function runDoctor() {
       ? `checkpoints anchored via ${config.relayBase}/relay/${config.ca}`
       : `checkpoints NOT anchored (opt-in) — set "anchorOnCheckpoint": true in ~/.helm/config.json to enable`,
   });
+
+  // HELM-AUTOSTART-1 §4: autostart is opt-in and default-off, so "not
+  // enabled" is a PASS. What is NOT a pass is an entry that exists and can no
+  // longer do its job — `isInstalled` only ever checked that the registry
+  // value / plist existed, never that the path baked into it still resolves,
+  // so a user who moved or re-downloaded the binary had a Run key that failed
+  // silently at every logon while every status surface said healthy.
+  checks.push(autostartDoctorCheck());
 
   // Version-check notice (HELM-H8, D10): informational only. Unreachable
   // (offline/airgapped) or disabled (empty url) are both a PASS — this

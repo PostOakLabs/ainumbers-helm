@@ -615,3 +615,186 @@ test("bindOrExit: a free port binds successfully", async () => {
     server4.close();
   }
 });
+
+// --- HELM-AUTOSTART-1: the consent-gated autostart routes ---
+//
+// These run against their OWN server on their OWN port with FAKE autostart
+// ops. Two reasons: the injected ops mean no test can touch the developer's
+// real registry or Start Menu, and a per-test recorder lets a rejection test
+// assert the stronger thing — that the write never happened — instead of only
+// that the status code was 403.
+//
+// The spec's warning is the point of this block: do NOT assume the shared
+// Host+Origin+Bearer gate covers a brand-new route transitively. A route added
+// to the pre-auth static allowlist or the detection carve-out by mistake would
+// still 200 happily; the only way to know is to aim each rejection at THIS
+// path.
+function fakeAutostartOps() {
+  const calls = [];
+  let installed = false;
+  let shortcut = false;
+  return {
+    calls,
+    ops: {
+      status: () => ({
+        supported: true,
+        installed,
+        stale: false,
+        reason: installed ? "ok" : "not_installed",
+        location: "HKCU\Software\Microsoft\Windows\CurrentVersion\Run\AINumbersHelmd",
+        recorded: installed ? '"C:\helmd.exe" "start"' : null,
+      }),
+      install: () => {
+        calls.push("install");
+        installed = true;
+        return { ok: true };
+      },
+      uninstall: () => {
+        calls.push("uninstall");
+        installed = false;
+        return { ok: true };
+      },
+      shortcutStatus: () => ({ installed: shortcut, location: "C:\Start Menu\Helm.lnk" }),
+      installShortcut: () => {
+        calls.push("installShortcut");
+        shortcut = true;
+        return { ok: true };
+      },
+      uninstallShortcut: () => {
+        calls.push("uninstallShortcut");
+        shortcut = false;
+        return { ok: true };
+      },
+    },
+  };
+}
+
+// Each test gets its OWN port: server.close() does not settle before the next
+// test starts listening, and the shared-port version of this block failed with
+// ECONNRESET on every second test.
+let asPortSeq = PORT + 5;
+
+function asRequest(port, { method = "GET", path = "/autostart", headers = {}, body }) {
+  return new Promise((resolve, reject) => {
+    const data = body === undefined ? null : JSON.stringify(body);
+    const req = request(
+      {
+        host: "127.0.0.1",
+        port,
+        path,
+        method,
+        headers: data
+          ? { ...headers, "Content-Type": "application/json", "Content-Length": Buffer.byteLength(data) }
+          : headers,
+      },
+      (res) => {
+        let resBody = "";
+        res.on("data", (c) => (resBody += c));
+        res.on("end", () => resolve({ status: res.statusCode, body: resBody }));
+      }
+    );
+    req.on("error", reject);
+    req.end(data ?? undefined);
+  });
+}
+
+async function withAutostartServer(fn) {
+  const port = asPortSeq++;
+  const origin = `http://127.0.0.1:${port}`;
+  const fake = fakeAutostartOps();
+  const server5 = createHelmServer({ port, allowedOrigin: origin, token, autostartOps: fake.ops });
+  const call5 = (opts) => asRequest(port, opts);
+  const headers5 = (overrides = {}) => ({ Host: `127.0.0.1:${port}`, Origin: origin, Authorization: `Bearer ${token}`, ...overrides });
+  try {
+    await fn({ ...fake, call: call5, headers: headers5, port });
+  } finally {
+    await new Promise((resolve) => server5.close(resolve));
+  }
+}
+
+test("autostart: POST installs only through Host+Origin+Bearer, and reports the re-read state", async () => {
+  await withAutostartServer(async ({ calls, call, headers }) => {
+    const res = await call({ method: "POST", headers: headers(), body: { autostart: true } });
+    assert.equal(res.status, 200);
+    assert.deepEqual(calls, ["install"]);
+    assert.equal(JSON.parse(res.body).autostart.installed, true);
+
+    const off = await call({ method: "POST", headers: headers(), body: { autostart: false } });
+    assert.equal(off.status, 200);
+    assert.deepEqual(calls, ["install", "uninstall"]);
+    assert.equal(JSON.parse(off.body).autostart.installed, false, "revoke must actually remove the entry");
+  });
+});
+
+test("autostart: GET reports state and installs NOTHING (no side effects on GET)", async () => {
+  await withAutostartServer(async ({ calls, call, headers }) => {
+    const res = await call({ headers: headers() });
+    assert.equal(res.status, 200);
+    const body = JSON.parse(res.body);
+    assert.equal(body.autostart.installed, false);
+    assert.equal(body.autostart.supported, true);
+    assert.deepEqual(calls, [], "a GET must never write a persistence entry");
+  });
+});
+
+test("autostart: negative — cross-origin POST is rejected AND nothing is installed", async () => {
+  await withAutostartServer(async ({ calls, call, headers }) => {
+    const res = await call({ method: "POST", headers: headers({ Origin: "https://evil.example" }), body: { autostart: true } });
+    assert.equal(res.status, 403);
+    assert.equal(JSON.parse(res.body).error, "origin_mismatch");
+    assert.deepEqual(calls, [], "a rejected request must not have reached the installer");
+  });
+});
+
+test("autostart: negative — the hosted detection origin gets no access to this route", async () => {
+  await withAutostartServer(async ({ calls, call, port }) => {
+    // /version and /pair/challenge answer this origin with no token at all.
+    // This route must not have joined that carve-out.
+    const res = await call({ method: "POST", headers: { Host: `127.0.0.1:${port}`, Origin: DETECTION_ORIGIN }, body: { autostart: true } });
+    assert.equal(res.status, 403);
+    assert.equal(JSON.parse(res.body).error, "origin_mismatch");
+    assert.deepEqual(calls, []);
+  });
+});
+
+test("autostart: negative — mismatched Host (DNS rebinding) is rejected AND nothing is installed", async () => {
+  await withAutostartServer(async ({ calls, call, headers }) => {
+    const res = await call({ method: "POST", headers: headers({ Host: "helm.evil.example" }), body: { autostart: true } });
+    assert.equal(res.status, 403);
+    assert.equal(JSON.parse(res.body).error, "host_mismatch");
+    assert.deepEqual(calls, []);
+  });
+});
+
+test("autostart: negative — no bearer token is rejected AND nothing is installed", async () => {
+  await withAutostartServer(async ({ calls, call, headers }) => {
+    const noAuth = headers();
+    delete noAuth.Authorization;
+    const res = await call({ method: "POST", headers: noAuth, body: { autostart: true } });
+    assert.equal(res.status, 401);
+    assert.equal(JSON.parse(res.body).error, "unauthorized");
+    assert.deepEqual(calls, []);
+
+    const read = await call({ headers: noAuth });
+    assert.equal(read.status, 401, "not in the pre-auth static allowlist either");
+  });
+});
+
+test("autostart: negative — a body naming neither toggle is a 400, not a silent no-op", async () => {
+  await withAutostartServer(async ({ calls, call, headers }) => {
+    const res = await call({ method: "POST", headers: headers(), body: { enabled: "yes" } });
+    assert.equal(res.status, 400);
+    assert.equal(JSON.parse(res.body).error, "missing_autostart_or_shortcut");
+    assert.deepEqual(calls, []);
+  });
+});
+
+test("autostart: shortcut toggles through the same gate, independently of autostart", async () => {
+  await withAutostartServer(async ({ calls, call, headers }) => {
+    const res = await call({ method: "POST", headers: headers(), body: { shortcut: true } });
+    assert.equal(res.status, 200);
+    assert.deepEqual(calls, ["installShortcut"]);
+    assert.equal(JSON.parse(res.body).shortcut.installed, true);
+    assert.equal(JSON.parse(res.body).autostart.installed, false, "the two toggles are not wired together");
+  });
+});

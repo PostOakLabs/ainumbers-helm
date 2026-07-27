@@ -32,6 +32,8 @@ import { DEFAULT_IDLE_TIMEOUT_MS } from "./idle-timer.mjs";
 import { loadContract, recordEgress } from "./connector.mjs";
 import { createInboundWebhookConnector, CONNECTOR_ID as INBOUND_WEBHOOK_CONNECTOR_ID } from "./connectors/inbound-webhook.mjs";
 import { vaultGet } from "./vault.mjs";
+import { autostartStatus, installAutostart, uninstallAutostart } from "./autostart.mjs";
+import { installShortcut, uninstallShortcut, isShortcutInstalled, shortcutLocation } from "./shortcut.mjs";
 import {
   verifyWebhookSignature,
   isTimestampFresh,
@@ -305,6 +307,90 @@ function handleEventsTicket(req, res) {
 function handleShutdown(req, res, params, db, exitFn) {
   sendJson(res, 200, { stopping: true, pid: process.pid });
   setTimeout(() => exitFn(), 50);
+}
+
+// --- HELM-AUTOSTART-1: consent-gated autostart ---
+//
+// Autostart used to be installed by helmd itself on first run, with no user
+// action of any kind (index.mjs, removed). These two routes are what replaces
+// it: the pairing tab reads GET /autostart to render a toggle that reflects
+// what is ACTUALLY on the machine, and POSTs here when the user ticks it.
+//
+// POST, never GET, for the write half. A GET that installs persistence is
+// reachable from `<img src="http://127.0.0.1:4173/autostart?on=1">` or a
+// prefetch — paths where a page's script never runs and so the Origin gate is
+// the only thing standing in the way. Keeping the write on POST means the
+// "no side effects on GET" invariant at the top of this file still holds, and
+// there is no single-URL form of the attack at all.
+//
+// Both routes go through the ordinary Host + Origin + Bearer gate below —
+// they are in ROUTES, NOT in serveStatic's pre-auth allowlist and NOT in
+// DETECTION_PATHS (which has a wider origin allowance and no token at all).
+// server.test.mjs asserts that directly rather than trusting registration.
+const DEFAULT_AUTOSTART_OPS = {
+  status: autostartStatus,
+  install: installAutostart,
+  uninstall: uninstallAutostart,
+  shortcutStatus: () => ({ installed: isShortcutInstalled(), location: shortcutLocation() }),
+  installShortcut,
+  uninstallShortcut,
+};
+
+function autostartPayload(ops) {
+  const status = ops.status();
+  const shortcut = ops.shortcutStatus();
+  return {
+    autostart: {
+      supported: status.supported,
+      installed: status.installed,
+      stale: status.stale,
+      reason: status.reason,
+      location: status.location,
+      recorded: status.recorded,
+    },
+    shortcut: {
+      supported: shortcut.location !== null,
+      installed: shortcut.installed,
+      location: shortcut.location,
+    },
+  };
+}
+
+function handleAutostartStatus(req, res, params, db, ops = DEFAULT_AUTOSTART_OPS) {
+  sendJson(res, 200, autostartPayload(ops));
+}
+
+async function handleAutostartSet(req, res, params, db, ops = DEFAULT_AUTOSTART_OPS) {
+  let body;
+  try {
+    body = await readJsonBody(req);
+  } catch {
+    return deny(res, 400, "invalid_json");
+  }
+  const wantAutostart = typeof body.autostart === "boolean";
+  const wantShortcut = typeof body.shortcut === "boolean";
+  if (!wantAutostart && !wantShortcut) return deny(res, 400, "missing_autostart_or_shortcut");
+
+  // reg.exe / launchctl / the WScript.Shell PowerShell call can all fail on a
+  // locked-down machine. Report it as a failure rather than letting it 500 as
+  // an unhandled rejection — the UI needs to put the toggle back where it was.
+  try {
+    if (wantAutostart) {
+      if (body.autostart) ops.install();
+      else ops.uninstall();
+    }
+    if (wantShortcut) {
+      if (body.shortcut) ops.installShortcut();
+      else ops.uninstallShortcut();
+    }
+  } catch (err) {
+    log.warn("autostart change failed", { error: String(err?.message || err) });
+    return sendJson(res, 500, { error: "autostart_failed", detail: String(err?.message || err), ...autostartPayload(ops) });
+  }
+  // Echo the re-read state, never the requested state: on an unsupported
+  // platform install() returns {supported:false} and nothing was written, and
+  // a UI that trusted its own request would show a toggle that lies.
+  sendJson(res, 200, autostartPayload(ops));
 }
 
 // run_id-scoped progress: an EventSource with no ?run_id just gets ready +
@@ -820,6 +906,8 @@ export const ROUTES = {
   "POST /pair/redeem": handlePairRedeem,
   "POST /migration/import": handleMigrationImport,
   "POST /workflows/import": handleWorkflowImport,
+  "GET /autostart": handleAutostartStatus,
+  "POST /autostart": handleAutostartSet,
   "GET /ha/pending": handleHaPending,
   "GET /ha/records": handleHaRecords,
   "GET /ha/slot": handleHaSlot,
@@ -856,6 +944,9 @@ export function createHelmServer({
   // fixture that grants "run.resume" without touching the shipped default
   // (which never grants it — deny-by-default).
   inboundWebhookContractPath = DEFAULT_INBOUND_WEBHOOK_CONTRACT_PATH,
+  // HELM-AUTOSTART-1: injectable so a test can exercise the real route
+  // dispatch without writing to the developer's actual registry / Start Menu.
+  autostartOps = DEFAULT_AUTOSTART_OPS,
 }) {
   const { contract: webhookContract, contractDigest: webhookContractDigest } = loadContract(inboundWebhookContractPath);
   const routes = {
@@ -864,6 +955,8 @@ export function createHelmServer({
     "GET /version-check": (req, res) => handleVersionCheck(req, res, versionCheckUrl),
     "POST /ha/replay": (req, res, params, reqDb) => handleHaReplay(req, res, params, reqDb, haIdentity),
     "POST /shutdown": (req, res, params, reqDb) => handleShutdown(req, res, params, reqDb, exitFn),
+    "GET /autostart": (req, res, params, reqDb) => handleAutostartStatus(req, res, params, reqDb, autostartOps),
+    "POST /autostart": (req, res, params, reqDb) => handleAutostartSet(req, res, params, reqDb, autostartOps),
   };
   const server = createServer((req, res) => {
     if (!checkHost(req, port)) {

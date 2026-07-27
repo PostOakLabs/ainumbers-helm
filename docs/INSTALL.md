@@ -148,11 +148,13 @@ sent to the server). If nothing opens (headless box, no default browser,
 or the auto-open step failed) the URL is also printed to the console —
 copy/paste it yourself; it's always a working fallback, never required.
 
-### A Start Menu shortcut is created on first run (Windows)
+### A Start Menu shortcut, if you ask for one (Windows)
 
-The first `helmd start` adds **Helm** to your Start Menu, at
-`%APPDATA%\Microsoft\Windows\Start Menu\Programs\Helm.lnk`. It is announced
-on the console when it is created and removed by `helmd uninstall`.
+Ticking **Add a Helm shortcut to this computer** on the **Operate** tab adds
+**Helm** to your Start Menu, at
+`%APPDATA%\Microsoft\Windows\Start Menu\Programs\Helm.lnk`. Untick it, or run
+`helmd uninstall`, to remove it. Like autostart, it used to be created on
+first run without asking, and is now off by default.
 
 This exists because `winget install` alone leaves nothing to click: winget's
 `portable` installer type drops the binary and adds a PATH alias, and cannot
@@ -167,22 +169,38 @@ macOS and Linux get no shortcut yet (they need a `.app` bundle and a
 `.desktop` entry respectively); `helmd status` reports this honestly rather
 than claiming one exists.
 
-### Autostart is installed on first run
+### Autostart is off until you turn it on
 
-The first `helmd start` registers a **per-user** autostart entry so helmd
-comes back after a reboot without you reopening a terminal. It is announced
-on the console at the moment it happens, and it is per-user only — no
-administrator rights, nothing written outside your own account:
+Helm does not add itself to your startup items. Nothing about installing or
+running it writes a login entry — that only happens when you tick **Start Helm
+when I sign in** on the **Operate** tab.
+
+Earlier versions installed the entry on first run and printed a note about it
+to the console. That note was unreadable in the case it mattered most (a
+double-clicked download closes its console window), so what it amounted to was
+persistence installed without consent. It is opt-in now, on every platform.
+
+When you do turn it on, it is per-user only — no administrator rights, nothing
+written outside your own account:
 
 | Platform | What is written |
 |---|---|
 | Windows | `HKCU\Software\Microsoft\Windows\CurrentVersion\Run\AINumbersHelmd` |
 | macOS | `~/Library/LaunchAgents/co.ainumbers.helmd.plist` (visible in System Settings → Login Items) |
-| Linux | nothing — no autostart entry is installed |
+| Linux | nothing — no autostart entry is available yet |
 
-Remove it at any time with `helmd uninstall` (below). The macOS agent sets
-`RunAtLoad` but **not** `KeepAlive`, so helmd starts when you log in and
+Untick the box to remove it, or run `helmd uninstall` (below). The macOS agent
+sets `RunAtLoad` but **not** `KeepAlive`, so helmd starts when you log in and
 stays stopped when you stop it.
+
+The same tab has a second, independent box for a Start Menu shortcut, also off
+by default.
+
+`helmd status` and `helmd doctor` both check that the entry still points at a
+Helm that exists. Moving or re-downloading the binary leaves the recorded path
+behind, and an entry pointing at a file that is gone fails silently at every
+sign-in — both commands now say so instead of reporting it as installed and
+healthy. Turn the box off and on again to rewrite it with the current path.
 
 ## Starting, stopping, and removing Helm
 
@@ -202,8 +220,9 @@ helmd stop
 ```
 
 Stops the running daemon. Your data is untouched — this only ends the
-process. Helm starts again at your next login unless you also remove the
-autostart entry. Stopping an already-stopped daemon is not an error.
+process. Open Helm again when you need it; it comes back at your next sign-in
+only if you turned autostart on. Stopping an already-stopped daemon is not an
+error.
 
 ```
 helmd open
@@ -216,7 +235,8 @@ this when you have closed the tab.
 helmd uninstall
 ```
 
-Removes the autostart entry described above, and nothing else. Your
+Removes the autostart entry and shortcut described above if you enabled them,
+and nothing else. Your
 `~/.helm` state — journal, keys, config — is deliberately left in place;
 delete that directory yourself if you also want the data gone.
 

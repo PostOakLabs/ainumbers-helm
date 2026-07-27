@@ -66,9 +66,104 @@ async function runBackup(port, token, resultEl) {
 async function quitDaemon(port, token, resultEl) {
   resultEl.textContent = "Stopping helmd…";
   const res = await call("/shutdown", { port, token, method: "POST" });
+  // HELM-AUTOSTART-1: this used to promise a restart at next login, which was
+  // only ever true because first run installed a login entry without asking.
+  // Autostart is opt-in now, so the honest instruction is "open Helm again".
   resultEl.textContent = res.ok
-    ? "helmd stopped. It restarts automatically the next time you log in."
+    ? "helmd stopped. Open Helm again when you need it."
     : "helmd unreachable — nothing was stopped.";
+}
+
+// HELM-AUTOSTART-1: the consent surface. helmd used to install a login entry
+// and a Start Menu shortcut by itself on first run and print a console note
+// about it — which the people this is built for never see, because they
+// double-click a downloaded .exe and the window is gone. Both are now off
+// until someone ticks a box here.
+//
+// State comes from GET /autostart on every render, never from localStorage:
+// this box is a claim about what is on the machine right now, and a cached
+// "on" for an entry a user removed by hand would be a lie about persistence,
+// which is the one thing this card exists to stop.
+function startupCardHtml() {
+  return `
+    <section class="card" aria-labelledby="op-startup">
+      <h3 id="op-startup">Startup</h3>
+      <p class="field-row-note">Both of these are off until you turn them on, and Quit or <code>helmd uninstall</code> removes them.</p>
+      <p class="field-row">
+        <label><input type="checkbox" id="autostart-toggle" disabled> Start Helm when I sign in</label>
+      </p>
+      <p class="field-row-note" id="autostart-where"></p>
+      <p class="field-row">
+        <label><input type="checkbox" id="shortcut-toggle" disabled> Add a Helm shortcut to this computer</label>
+      </p>
+      <p class="field-row-note" id="shortcut-where"></p>
+      <p id="startup-result" role="status" aria-live="polite"></p>
+    </section>`;
+}
+
+// textContent, not innerHTML: these strings are a registry path / filesystem
+// path built from the user's own home directory, and a home directory can
+// contain anything a filename can.
+function applyStartupState(root, payload) {
+  const auto = root.querySelector("#autostart-toggle");
+  const shortcut = root.querySelector("#shortcut-toggle");
+  const autoWhere = root.querySelector("#autostart-where");
+  const shortcutWhere = root.querySelector("#shortcut-where");
+
+  auto.checked = payload.autostart.installed === true;
+  auto.disabled = payload.autostart.supported !== true;
+  if (payload.autostart.supported !== true) {
+    autoWhere.textContent = "Helm has no start-at-login entry for this operating system yet.";
+  } else if (payload.autostart.stale) {
+    autoWhere.textContent = `This entry no longer works: ${payload.autostart.location} points at a copy of Helm that is not there any more. Turn it off and on again to rewrite it.`;
+  } else if (payload.autostart.installed) {
+    autoWhere.textContent = `Written at ${payload.autostart.location}. Nothing here runs as administrator.`;
+  } else {
+    autoWhere.textContent = `Turning this on writes one per-user entry at ${payload.autostart.location}, which starts Helm at your next sign-in. Nothing here runs as administrator.`;
+  }
+
+  shortcut.checked = payload.shortcut.installed === true;
+  shortcut.disabled = payload.shortcut.supported !== true;
+  shortcutWhere.textContent =
+    payload.shortcut.supported !== true
+      ? "Helm has no shortcut to create on this operating system yet."
+      : payload.shortcut.installed
+        ? `Written at ${payload.shortcut.location}. It points at the Helm program, never at a pairing link.`
+        : `Turning this on writes one file at ${payload.shortcut.location}. It points at the Helm program, never at a pairing link.`;
+}
+
+async function wireStartupCard(root, { port, token }) {
+  const resultEl = root.querySelector("#startup-result");
+  const initial = await call("/autostart", { port, token });
+  if (!initial.ok) {
+    resultEl.textContent =
+      initial.status === 404
+        ? "Startup options aren't available in this daemon version yet."
+        : "helmd didn't answer — startup options can't be shown.";
+    return;
+  }
+  applyStartupState(root, initial.data);
+
+  const send = async (field, el) => {
+    const wanted = el.checked;
+    el.disabled = true;
+    resultEl.textContent = "Saving…";
+    const res = await call("/autostart", { port, token, method: "POST", body: { [field]: wanted } });
+    el.disabled = false;
+    if (!res.ok) {
+      // Re-read rather than trusting the request: a refused write leaves the
+      // machine in whatever state it was already in, not the state asked for.
+      const after = await call("/autostart", { port, token });
+      if (after.ok) applyStartupState(root, after.data);
+      resultEl.textContent = "That didn't take effect — nothing was changed.";
+      return;
+    }
+    applyStartupState(root, res.data);
+    resultEl.textContent = wanted ? "Turned on." : "Turned off.";
+  };
+
+  root.querySelector("#autostart-toggle").addEventListener("change", (e) => send("autostart", e.target));
+  root.querySelector("#shortcut-toggle").addEventListener("change", (e) => send("shortcut", e.target));
 }
 
 // Persona starter presets (LANDING §3.1 borrow) — curated preview of what
@@ -153,9 +248,10 @@ export async function renderOperate(root, { port, token }) {
         <button type="button" id="backup-btn">Trigger backup</button>
         <p id="backup-result" role="status" aria-live="polite"></p>
       </section>
+      ${startupCardHtml()}
       <section class="card" aria-labelledby="op-quit">
         <h3 id="op-quit">Quit Helm</h3>
-        <p class="field-row-note">Stops helmd on this computer. Autostart brings it back at your next login — this isn't a permanent uninstall.</p>
+        <p class="field-row-note">Stops helmd on this computer. This isn't a permanent uninstall — open Helm again, or turn on the startup option above and it comes back at your next sign-in.</p>
         <button type="button" id="quit-btn" class="secondary">Quit Helm</button>
         <p id="quit-result" role="status" aria-live="polite"></p>
       </section>
@@ -167,4 +263,5 @@ export async function renderOperate(root, { port, token }) {
   root.querySelector("#quit-btn").addEventListener("click", () => {
     quitDaemon(port, token, root.querySelector("#quit-result"));
   });
+  await wireStartupCard(root, { port, token });
 }
