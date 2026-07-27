@@ -521,7 +521,7 @@
         }
       },
       "post": {
-        "summary": "Install or remove the start-at-sign-in entry and/or the shortcut. Body {autostart?: boolean, shortcut?: boolean}. The only code path that writes either — helmd never installs them on its own (HELM-AUTOSTART-1).",
+        "summary": "Install or remove the start-at-sign-in entry and/or the shortcut. Body {autostart?: boolean, shortcut?: boolean}. The only code path that writes either — helmd never installs them on its own.",
         "tags": [
           "Daemon"
         ],

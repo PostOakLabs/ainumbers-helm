@@ -42,7 +42,7 @@ which is the *same* first-run path an interactive install takes — it opens the
 pairing tab. Nothing here duplicates or diverges from that logic.
 
 Deploying Helm does **not** make it start at sign-in. Autostart is opt-in from
-the pairing tab (`HELM-AUTOSTART-1`), so a pushed install leaves a user who
+the pairing tab, so a pushed install leaves a user who
 never opens Helm with nothing running and nothing persisted. If a fleet needs
 helmd running at every sign-in, that has to be a deliberate, separately
 authored step — it is not a side effect of installing any more.

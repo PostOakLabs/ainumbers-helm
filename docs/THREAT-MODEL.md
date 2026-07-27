@@ -117,7 +117,7 @@ the exact locations). This is ordinary desktop-daemon behavior, but it is
 **persistence**, and a threat model that omits its own persistence mechanism is
 worse than one that states it plainly.
 
-**Fixed, `HELM-AUTOSTART-1` (2026-07-26).** Until this fix, the entry was
+**Fixed, 2026-07-26.** Until this fix, the entry was
 installed on **first run**, with no user action beyond opening the program
 once. The stated mitigation was a console announcement — which does not reach
 the audience it was written for, because a double-clicked download has its
