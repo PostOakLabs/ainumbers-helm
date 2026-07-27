@@ -15,6 +15,8 @@ import { openJournal, replayVerify, recordFullVerification, lastFullVerifiedAt }
 import { checkVersion } from "./version-check.mjs";
 import { uiAssetsReadable } from "./static.mjs";
 import { autostartDoctorCheck } from "./autostart.mjs";
+import { atRestPassphraseRef } from "./keys.mjs";
+import { vaultBackendFor } from "./vault.mjs";
 
 const HERE = dirname(fileURLToPath(import.meta.url));
 const CURRENT_VERSION = JSON.parse(readFileSync(join(HERE, "..", "package.json"), "utf8")).version;
@@ -115,6 +117,32 @@ export async function runDoctor() {
     db.close();
   } else {
     checks.push({ name: "journal_replay_integrity", pass: true, detail: "no journal.db yet" });
+  }
+
+  // KEYCHAIN-PROVABLE-1: which tier is actually protecting the at-rest
+  // signing-key passphrase was previously visible only via a bare
+  // console.warn at first provisioning (hub/keys.mjs provisionPassphrase) —
+  // easy to miss and never repeated. Surface it every doctor run instead.
+  // Read the ref straight off passphrase-ref.json rather than calling
+  // atRestPassphraseRef() unconditionally: that function MINTS a fresh ref
+  // file as a side effect if none exists yet, which doctor must not do on an
+  // install that has never provisioned a passphrase (e.g. a pre-start check).
+  const passphraseRefPath = statePath("passphrase-ref.json");
+  if (existsSync(passphraseRefPath)) {
+    const tier = vaultBackendFor(atRestPassphraseRef());
+    const degraded = tier === "file-fallback" && !process.env.HELM_VAULT_PASSPHRASE;
+    checks.push({
+      name: "signing_key_vault_tier",
+      pass: !degraded,
+      detail: degraded
+        ? `DEGRADED: the at-rest signing-key passphrase is on the file-fallback tier with no ` +
+          `HELM_VAULT_PASSPHRASE set — the key sits beside the data it protects, the same exposure ` +
+          `HELM-KEYCHAIN-1 removed. Get a native OS keychain reachable, or set HELM_VAULT_PASSPHRASE to ` +
+          `opt into the documented mitigated fallback.`
+        : `protected by the "${tier}" tier`,
+    });
+  } else {
+    checks.push({ name: "signing_key_vault_tier", pass: true, detail: "not yet provisioned (no keys created)" });
   }
 
   // HELM-ANCHOR-DEFAULT-FLIP-1: anchoring is opt-in (default off) — this is

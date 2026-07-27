@@ -1,6 +1,6 @@
 import { test, after } from "node:test";
 import assert from "node:assert/strict";
-import { mkdtempSync, rmSync, writeFileSync } from "node:fs";
+import { mkdtempSync, rmSync, writeFileSync, existsSync, readFileSync } from "node:fs";
 import { tmpdir } from "node:os";
 import { join } from "node:path";
 import { createServer as createTcpServer } from "node:net";
@@ -39,10 +39,65 @@ function anchorCheck(report) {
   return report.checks.find((c) => c.name === "anchor_on_checkpoint");
 }
 
+function vaultTierCheck(report) {
+  return report.checks.find((c) => c.name === "signing_key_vault_tier");
+}
+
 test("doctor: all checks pass on a fresh state dir, port reported free", async () => {
   const report = await runDoctor();
   assert.equal(report.ok, true, JSON.stringify(report.checks));
   assert.match(portCheck(report).detail, /free/);
+});
+
+// KEYCHAIN-PROVABLE-1: the active signing-key vault tier must be visible on
+// every doctor run, not just the first-boot console.warn.
+
+test("doctor: signing_key_vault_tier reports not-yet-provisioned before any keys exist", async () => {
+  const report = await runDoctor();
+  const check = vaultTierCheck(report);
+  assert.ok(check, "signing_key_vault_tier check must be present");
+  assert.equal(check.pass, true);
+  assert.match(check.detail, /not yet provisioned/);
+});
+
+test("doctor: signing_key_vault_tier FAILS when the passphrase is on file-fallback with no HELM_VAULT_PASSPHRASE", async () => {
+  // Fabricate the degraded on-disk shape directly rather than trying to force
+  // a real OS-keychain miss (not reliably reproducible cross-platform in a
+  // unit test): doctor.mjs only ever reads passphrase-ref.json + the vault
+  // index, so writing them by hand exercises exactly what doctor sees,
+  // without touching keys.mjs/vault.mjs.
+  const refPath = join(TMP, "passphrase-ref.json");
+  const idxPath = join(TMP, "vault-index.json");
+  const priorRef = existsSync(refPath) ? readFileSync(refPath, "utf8") : null;
+  const priorIdx = existsSync(idxPath) ? readFileSync(idxPath, "utf8") : null;
+  const priorEnv = process.env.HELM_VAULT_PASSPHRASE;
+  delete process.env.HELM_VAULT_PASSPHRASE;
+
+  const fakeRef = "helmd:at-rest-passphrase:doctor-test-fixture";
+  writeFileSync(refPath, JSON.stringify({ ref: fakeRef }));
+  writeFileSync(idxPath, JSON.stringify({ [fakeRef]: "file-fallback" }));
+
+  try {
+    const report = await runDoctor();
+    const check = vaultTierCheck(report);
+    assert.equal(check.pass, false);
+    assert.match(check.detail, /DEGRADED/);
+    assert.equal(report.ok, false, "an operator running doctor must see overall FAIL, not a buried note");
+  } finally {
+    if (priorRef !== null) writeFileSync(refPath, priorRef);
+    else rmSync(refPath, { force: true });
+    if (priorIdx !== null) writeFileSync(idxPath, priorIdx);
+    else rmSync(idxPath, { force: true });
+    if (priorEnv !== undefined) process.env.HELM_VAULT_PASSPHRASE = priorEnv;
+  }
+});
+
+test("doctor: signing_key_vault_tier reports the real tier once the signing key is provisioned", async () => {
+  loadOrCreateKeys();
+  const report = await runDoctor();
+  const check = vaultTierCheck(report);
+  assert.equal(check.pass, true, JSON.stringify(check));
+  assert.match(check.detail, /protected by the ".+" tier/);
 });
 
 // HELM-ANCHOR-DEFAULT-FLIP-1: the default (anchorOnCheckpoint unset ⇒ false)

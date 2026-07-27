@@ -22,6 +22,23 @@ jobs:
         run: node scripts/check-internal-lang-leak.mjs
       - name: lint
         run: node scripts/lint.mjs
+      # Install a real Secret Service so the linux-secret-tool vault tier is
+      # genuinely reachable in CI, not just warned about. Without this the
+      # ubuntu runner has no Secret Service daemon, vaultSet's
+      # linux-secret-tool attempt throws, and every secret silently lands on
+      # the file-fallback tier instead.
+      - name: install Secret Service (libsecret + gnome-keyring) for real linux-secret-tool coverage
+        run: sudo apt-get update -qq && sudo apt-get install -y -qq gnome-keyring libsecret-tools dbus-x11
+      # Env vars land in $GITHUB_ENV (not just this step's shell) so the plain
+      # `node scripts/test.mjs` invocation below stays a single literal line —
+      # check-hook-ci-parity.mjs greps exactly that shape, and burying it
+      # inside a `bash -c '...'` wrapper would make this gate invisible to it.
+      - name: start + unlock a Secret Service session (dbus + gnome-keyring)
+        run: |
+          eval "$(dbus-launch --sh-syntax)"
+          echo "DBUS_SESSION_BUS_ADDRESS=$DBUS_SESSION_BUS_ADDRESS" >> "$GITHUB_ENV"
+          eval "$(printf '\n' | gnome-keyring-daemon --unlock --components=secrets)"
+          echo "GNOME_KEYRING_CONTROL=$GNOME_KEYRING_CONTROL" >> "$GITHUB_ENV"
       - name: test
         run: node scripts/test.mjs
       - name: validate control-plane schemas
@@ -32,6 +49,21 @@ jobs:
         run: node scripts/compile-parity-gate.mjs
       - name: sea build dry-run
         run: node scripts/sea-dry-run.mjs
+
+  # macOS Keychain (`security` CLI) is only genuinely reachable on a darwin
+  # runner — a lightweight second job just for the test suite is enough to
+  # exercise that tier for real in CI rather than only on a developer's Mac.
+  # macos-latest ships an unlocked default login keychain, so no
+  # daemon-unlock step is needed here.
+  ci-macos:
+    runs-on: macos-latest
+    steps:
+      - uses: actions/checkout@9c091bb21b7c1c1d1991bb908d89e4e9dddfe3e0 # v7.0.0
+      - uses: actions/setup-node@249970729cb0ef3589644e2896645e5dc5ba9c38 # v6.5.0
+        with:
+          node-version: "22"
+      - name: test
+        run: node scripts/test.mjs
 
   # Live third-party coverage (FreeTSA / OTS) moved OUT of this PR-triggered
   # workflow into live-net.yml (scheduled + manual dispatch). It was
