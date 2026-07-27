@@ -1,0 +1,74 @@
+{
+  "generated": "check-copy-hallmarks.mjs --update",
+  "baseline": {
+    "docs/CATEGORIZATION-SUBMISSIONS-RUNBOOK.md": {
+      "emdash": 12
+    },
+    "docs/COMPANY-PROFILE.md": {
+      "emdash": 11
+    },
+    "docs/DNSSEC-CAA-RUNBOOK.md": {
+      "emdash": 17
+    },
+    "docs/EAR-NOTIFICATION-EMAIL-DRAFT.md": {
+      "emdash": 2
+    },
+    "docs/EAR-NOTIFICATION.md": {
+      "emdash": 7
+    },
+    "docs/EMBED-AND-INTERCHANGE.md": {
+      "emdash": 17
+    },
+    "docs/HELM-PARITY-ALG-QUESTION.md": {
+      "emdash": 31
+    },
+    "docs/INCIDENT-RESPONSE.md": {
+      "emdash": 13
+    },
+    "docs/INSTALL.md": {
+      "emdash": 24,
+      "overuse": {
+        "honest": 2
+      }
+    },
+    "docs/IT-DEPLOYMENT.md": {
+      "emdash": 15
+    },
+    "docs/LAUNCH-READINESS.md": {
+      "emdash": 11
+    },
+    "docs/OPERATIONS.md": {
+      "emdash": 11
+    },
+    "docs/POWER-QUERY-BRIDGE.md": {
+      "emdash": 15
+    },
+    "docs/RELEASE-CHANNEL.md": {
+      "emdash": 16
+    },
+    "docs/RELEASING.md": {
+      "emdash": 27
+    },
+    "docs/THREAT-MODEL-P2-DELTA.md": {
+      "emdash": 25
+    },
+    "docs/THREAT-MODEL-P3-DELTA.md": {
+      "emdash": 36
+    },
+    "docs/THREAT-MODEL.md": {
+      "emdash": 26
+    },
+    "docs/TRADEMARK.md": {
+      "emdash": 2
+    },
+    "docs/TRUST.md": {
+      "emdash": 47
+    },
+    "README.md": {
+      "emdash": 10
+    },
+    "SECURITY.md": {
+      "emdash": 2
+    }
+  }
+}
