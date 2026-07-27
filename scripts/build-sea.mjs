@@ -4,10 +4,12 @@
 // Builds the Node SEA (single executable application) binary for the
 // CURRENT host platform (HELM-H8, D3/D10). Node SEA is not a cross-compiler
 // — CI runs this once per OS in a build-matrix job, each producing its own
-// native artifact into dist/<platform>-<arch>/. Injection uses `postject`
-// via npx (an ephemeral CI tool invocation, not a package.json dependency —
-// zero-dep discipline per D2 covers the shipped product, not one-shot build
-// tooling).
+// native artifact into dist/<platform>-<arch>/. Injection uses the vendored,
+// integrity-checked postject (scripts/vendor/postject/), not `npx postject@...`
+// (HELM-POSTJECT-PIN-1) — npx only pins the VERSION, not the bytes the
+// registry serves at build time, inside the exact pipeline whose provenance
+// we attest; zero-dep discipline (D2) still holds because the vendored
+// injector never enters package.json.
 import { execFileSync } from "node:child_process";
 import { copyFileSync, mkdirSync, mkdtempSync, rmSync, writeFileSync, existsSync, chmodSync, readFileSync } from "node:fs";
 import { join, dirname } from "node:path";
@@ -15,6 +17,7 @@ import { tmpdir, platform, arch } from "node:os";
 import { fileURLToPath } from "node:url";
 import { seaAssetMap } from "../hub/ui-manifest.mjs";
 import { collectBackendSourceFiles, seaBackendAssetMap } from "../hub/sea-source-manifest.mjs";
+import { injectSEA } from "./vendor/postject/inject.mjs";
 
 const ROOT = join(dirname(fileURLToPath(import.meta.url)), "..");
 // The SEA main script must be CJS (see hub/sea-entry.cjs) — it dynamically
@@ -28,7 +31,7 @@ function platformTag() {
   return `${p}-${arch()}`;
 }
 
-function main() {
+async function main() {
   if (!existsSync(ENTRY)) {
     console.error(`build-sea: missing entrypoint ${ENTRY}`);
     process.exit(1);
@@ -79,13 +82,9 @@ function main() {
       }
     }
 
-    const postjectArgs = [
-      // postject publishes prerelease versions only — "@1" matches nothing (ETARGET); pin exact
-      "--yes", "postject@1.0.0-alpha.6", outPath, "NODE_SEA_BLOB", blobPath,
-      "--sentinel-fuse", SENTINEL_FUSE,
-    ];
-    if (platform() === "darwin") postjectArgs.push("--macho-segment-name", "NODE_SEA");
-    execFileSync("npx", postjectArgs, { stdio: "inherit", shell: isWin });
+    const injectOptions = { sentinelFuse: SENTINEL_FUSE };
+    if (platform() === "darwin") injectOptions.machoSegmentName = "NODE_SEA";
+    await injectSEA(outPath, "NODE_SEA_BLOB", blobPath, injectOptions);
 
     if (platform() === "darwin") {
       try {
@@ -101,4 +100,7 @@ function main() {
   }
 }
 
-main();
+main().catch((err) => {
+  console.error(err && err.stack ? err.stack : err);
+  process.exit(1);
+});

@@ -1,0 +1,22 @@
+{
+  "sourceRepo": "https://registry.npmjs.org/postject/-/postject-1.0.0-alpha.6.tgz",
+  "note": "postject ships dist/api.js and dist/cli.js as prebuilt tarball contents only — they are NOT present in the nodejs/postject git tree (dist/ is a build-time artifact of `npm run build`, absent even at the v1.0.0-alpha.6 tag). A git commit sha therefore cannot pin these exact bytes; pinnedSha is the npm registry's own tarball integrity hash instead, which is the authoritative identity for the bytes we vendored. Verified live 2026-07-27 against https://registry.npmjs.org/postject/1.0.0-alpha.6 .",
+  "pinnedSha": "sha512-b9Eb8h2eVqNE8edvKdwqkrY6O7kAwmI8kcnBv1NScolYJbo59XUF0noFq+lxbC1yN20bmC0WBEbDC5H/7ASb0A==",
+  "license": "MIT",
+  "vendoredPaths": [
+    "dist/api.js",
+    "LICENSE"
+  ],
+  "renameNote": "dist/api.js is vendored on disk as api.cjs (content byte-identical — see hash below) so Node's ESM loader treats it as CommonJS without a nested package.json; helm/package.json sets \"type\": \"module\" and api.js's require()/module.exports would otherwise fail to parse.",
+  "fileCount": 2,
+  "files": [
+    {
+      "path": "api.cjs",
+      "sha256": "88931f26b4d3e99e08dc8219a45f576986952fad4d0c78444d27048232b2881b"
+    },
+    {
+      "path": "LICENSE",
+      "sha256": "6546657539feb5b454f400db317e71fa39ff5cd048fa5d78ae0ada2df72f1ea7"
+    }
+  ]
+}
