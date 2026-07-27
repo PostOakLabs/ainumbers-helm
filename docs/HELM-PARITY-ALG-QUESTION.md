@@ -1,11 +1,11 @@
 # The `alg` question — `'EdDSA'` vs `'Ed25519'` — RESOLVED 2026-07-25 (`EdDSA` normative)
 
 **Status: resolved by the `## DETERMINATION (2026-07-25)` section below —
-`"EdDSA"` is normative. `HELM-ALG-FIX-1` shipped it for `hub/envelope.mjs`
-`emitEnvelope()` + the schema enums. That fix never scoped
+`"EdDSA"` is normative. An earlier fix shipped it for `hub/envelope.mjs`
+`emitEnvelope()` + the schema enums, but never scoped
 `hub/ha-gate.mjs`'s `signBundleDigest` (the maker-checker countersignature
 path) — a second, independent producer of the same `{keyid,sig,alg}` shape
-this document never audited. `HELMALG-FIX-1` (2026-07-27) corrected that
+this document never audited. A follow-up fix (2026-07-27) corrected that
 call site to match this determination.**
 
 ## What each side accepts
