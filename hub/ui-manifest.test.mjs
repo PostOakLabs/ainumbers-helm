@@ -118,7 +118,7 @@ test("every UI file reachable from an HTML entry point is in the ui-manifest all
 test("every ui-manifest allowlist entry is servable over HTTP (200, not 401/404)", async () => {
   const failures = [];
   for (const pathname of UI_ASSETS.keys()) {
-    if (pathname === "/") continue; // alias of /helm.html, covered separately
+    if (pathname === "/") continue; // alias of /app.html, covered separately
     const { status } = await get(pathname);
     if (status !== 200) failures.push(`${pathname} -> ${status}`);
   }

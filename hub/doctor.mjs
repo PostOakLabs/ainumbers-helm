@@ -90,7 +90,7 @@ export async function runDoctor() {
   checks.push({ name: "port_ok", pass: port.pass, detail: port.detail });
 
   // HELM-U4: helmd serves the UI itself now — a doctor that passes but can't
-  // actually read ui/helm.html (missing SEA asset, moved dev checkout) would
+  // actually read ui/app.html (missing SEA asset, moved dev checkout) would
   // still hand back a green report for a daemon that 404s its own homepage.
   checks.push({ name: "ui_assets_readable", pass: uiAssetsReadable() });
 

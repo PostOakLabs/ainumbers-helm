@@ -1,6 +1,6 @@
 # Helm — Threat Model (Phase 1)
 
-**Scope:** `hub/` (helmd daemon), `ui/` (helm.html), `schema/`, `scripts/` (vendoring + release).
+**Scope:** `hub/` (helmd daemon), `ui/` (app.html), `schema/`, `scripts/` (vendoring + release).
 **Reviewed:** 2026-07-23 (HELM-R1, adversarial pass over H1/H5/H6/H8 surfaces).
 **Status:** Phase 1 foundation. No write-capable connector shipped.
 
@@ -25,7 +25,7 @@ already defends, and the residual risks accepted for Phase 1.
 ## 2. Trust boundaries
 
 ```
-Browser UI (helm.html)  --[127.0.0.1 REST+SSE, Host+Origin+Bearer]-->  helmd
+Browser UI (app.html)  --[127.0.0.1 REST+SSE, Host+Origin+Bearer]-->  helmd
 System browser (OAuth)  --[ephemeral loopback listener, state+path-token]-->  helmd
 helmd  --[default-deny egress allowlist]-->  external APIs / webhooks
 CI (tag build)  --[dual-signed DSSE release manifest]-->  end users

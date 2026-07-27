@@ -6,7 +6,7 @@ tool. Neither changes daemon behavior — both are docs/CLI additions.
 
 ## SharePoint/Teams embed recipe
 
-Helm's UI (`ui/helm.html`) is a static page served by `helmd` over
+Helm's UI (`ui/app.html`) is a static page served by `helmd` over
 `http://127.0.0.1:<port>` (see [OPERATIONS.md](OPERATIONS.md)). SharePoint
 and Teams can embed any page reachable by URL inside an iframe web part —
 but **the site does not default-allow being framed**. There is no

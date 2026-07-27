@@ -3,7 +3,7 @@
 // HELM-UX2-B-TABMETA (HELM-UX-BUILD-SPEC.md §12): the ONLY place a tab's
 // identity is written. app.mjs generates <nav> and the #view-header from
 // this array instead of the three unsynchronised lists §12.1 found (VIEWS,
-// STATIC_VIEWS, hand-written <nav> in helm.html). §12.6 final IA (added in
+// STATIC_VIEWS, hand-written <nav> in app.html). §12.6 final IA (added in
 // HELM-UX2-D-VIEWS): Home standalone first · Build [Choose, Canvas, Connect]
 // · Execute [Run, Review, Verify] · Operate [Operate, Register, Deadlines,
 // Learn]. Adding an id here with no matching VIEWS entry fails the §12.5

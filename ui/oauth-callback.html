@@ -12,7 +12,7 @@
   <script type="module">
     import { parseCallbackParams, relayAndRedirect } from "./oauth-callback.mjs";
     const result = parseCallbackParams(location.search);
-    relayAndRedirect({ result, targetUrl: "./helm.html#/connect" });
+    relayAndRedirect({ result, targetUrl: "./app.html#/connect" });
   </script>
 </body>
 </html>

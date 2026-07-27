@@ -44,7 +44,7 @@ function readAsset(asset) {
 // asset embedded, or the dev-mode ui/ file present on disk)?
 export function uiAssetsReadable() {
   try {
-    readAsset(UI_ASSETS.get("/helm.html"));
+    readAsset(UI_ASSETS.get("/app.html"));
     return true;
   } catch {
     return false;
