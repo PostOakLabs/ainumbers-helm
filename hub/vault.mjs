@@ -233,6 +233,35 @@ export function vaultGet(ref) {
   return fileGet(ref);
 }
 
+// Strict variant of vaultGet for secrets whose ABSENCE must never be
+// interpreted as "not provisioned yet" (HELM-KEYCHAIN-1). vaultGet is
+// deliberately forgiving — it falls through to the file tier whenever the
+// native tier returns null — which is right for connector tokens (worst case
+// the user re-authorizes) and WRONG for the at-rest passphrase, where a
+// silent null makes the caller mint a fresh secret and orphan every previously
+// encrypted blob. Here the non-secret index is treated as the authority on
+// whether the ref was ever stored:
+//   - no index entry            -> null (genuinely never provisioned)
+//   - index entry, value found  -> the value, from THAT tier only
+//   - index entry, value gone   -> throw (keychain entry destroyed, keyring
+//                                 locked, profile moved, wrong OS user)
+// The third case is the loud failure the caller needs; it must never be
+// papered over by a cross-tier fallback.
+export function vaultGetStrict(ref) {
+  const backendName = loadIndex()[ref];
+  if (!backendName) return null;
+  const v = backendName === "file-fallback" ? fileGet(ref) : (BACKENDS[backendName]?.get(ref) ?? null);
+  if (v === null) {
+    throw new Error(
+      `helm vault: secret "${ref}" is recorded in vault-index.json as stored in the "${backendName}" tier, ` +
+        `but that tier no longer holds it. Refusing to continue, because treating this as "never provisioned" ` +
+        `would mint a replacement secret and permanently orphan everything encrypted under the original. ` +
+        `Restore the entry (or restore this machine's OS keychain/profile) and retry.`
+    );
+  }
+  return v;
+}
+
 export function vaultDelete(ref) {
   const idx = loadIndex();
   const backendName = idx[ref];

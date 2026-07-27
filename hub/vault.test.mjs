@@ -1,13 +1,13 @@
 import { test, before, after } from "node:test";
 import assert from "node:assert/strict";
-import { mkdtempSync, rmSync, readdirSync, readFileSync } from "node:fs";
+import { mkdtempSync, rmSync, readdirSync, readFileSync, writeFileSync } from "node:fs";
 import { tmpdir } from "node:os";
 import { join } from "node:path";
 
 const TMP = mkdtempSync(join(tmpdir(), "helm-vault-test-"));
 process.env.HELM_HOME = TMP;
 
-const { vaultSet, vaultGet, vaultDelete, vaultBackendFor } = await import("./vault.mjs");
+const { vaultSet, vaultGet, vaultGetStrict, vaultDelete, vaultBackendFor } = await import("./vault.mjs");
 
 after(() => rmSync(TMP, { recursive: true, force: true }));
 
@@ -78,6 +78,39 @@ test("HELM_VAULT_PASSPHRASE (HELM-SEC-5, F5): a value encrypted under one passph
   } finally {
     delete process.env.HELM_VAULT_PASSPHRASE;
   }
+});
+
+// --- vaultGetStrict (HELM-KEYCHAIN-1) ---
+
+test("vaultGetStrict: returns null for a ref that was never stored", () => {
+  assert.equal(vaultGetStrict("test:strict-never-set"), null);
+});
+
+test("vaultGetStrict: round-trips a stored secret like vaultGet", () => {
+  const secret = { passphrase_b64: "c3RyaWN0LXJvdW5kLXRyaXA=" };
+  const { ref } = vaultSet("test:strict-round-trip", secret);
+  assert.deepEqual(vaultGetStrict(ref), secret);
+  vaultDelete(ref);
+});
+
+test("vaultGetStrict: an indexed ref whose tier lost the value THROWS instead of returning null", () => {
+  const ref = "test:strict-destroyed";
+  vaultSet(ref, { passphrase_b64: "d2lsbC1iZS1kZXN0cm95ZWQ=" });
+  const tier = vaultBackendFor(ref);
+
+  // Destroy the value but leave the index entry — an OS keychain reset, a
+  // locked keyring, a moved profile. vaultGet's cross-tier fallback would
+  // report null here; vaultGetStrict must refuse.
+  vaultDelete(ref);
+  const idxPath = join(TMP, "vault-index.json");
+  const idx = JSON.parse(readFileSync(idxPath, "utf8"));
+  writeFileSync(idxPath, JSON.stringify({ ...idx, [ref]: tier }, null, 2) + "\n", { mode: 0o600 });
+
+  assert.equal(vaultGet(ref), null, "vaultGet stays forgiving for connector tokens");
+  assert.throws(() => vaultGetStrict(ref), /no longer holds it/);
+
+  delete idx[ref];
+  writeFileSync(idxPath, JSON.stringify(idx, null, 2) + "\n", { mode: 0o600 });
 });
 
 test("file-fallback tier never writes the secret in plaintext to disk", () => {
