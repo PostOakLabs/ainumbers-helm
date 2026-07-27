@@ -31,9 +31,19 @@ its own license (see the file cited for full terms):
     MIT License (full header preserved in-file), at ui/vendored/qrcodegen.js.
   - pptxgen.bundle.js: PptxGenJS 4.0.1 (bundles JSZip), MIT License (full
     header preserved in-file), at ui/vendored/pptxgen.bundle.js.
+  - ui/vendored/pkijs.bundle.mjs: byte-identical copy of
+    hub/vendored/anchor-suite/vendor/pkijs.bundle.mjs (pkijs 3.4.0 +
+    asn1js 3.0.10, BSD-3-Clause; pvtsutils, MIT — see the anchor-suite
+    entry above for full attribution). Copied rather than cross-imported
+    because ui/ serves only its own tree; kept in sync by
+    ui/lib/pkijs-vendor-reconcile.test.mjs.
   - Most other files under ui/vendored/ are hand-ported subsets of this
-    repo's own Apache-2.0 code, not third-party. See ui/vendored/PORT.md
-    for the full provenance table of each file.
+    repo's own Apache-2.0 code, or this repo's own hand-rolled/captured
+    files, not third-party. See ui/vendored/PORT.md for the full
+    provenance narrative and ui/vendored/MANIFEST.json for the
+    per-file classification (first-party-port / first-party-own /
+    third-party-bundle / third-party-vendor), license, and pinned
+    source for every file in this directory.
 
 "Helm" and the Helm logo are trademarks of Post Oak Labs, Inc. The
 Apache License, Version 2.0 governing this repository's code does not
