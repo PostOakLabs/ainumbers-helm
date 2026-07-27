@@ -27,7 +27,7 @@ const CONTENT_TYPES = {
 // type=module>` before app.mjs's top-level code ever runs, leaving
 // `<main>` empty even though mountTokenForm would otherwise render fine).
 const FILES = [
-  "helm.html",
+  "app.html",
   "app.mjs",
   "api.mjs",
   "theme.css",
@@ -98,7 +98,7 @@ for (const rel of FILES) {
   if (!contentType) throw new Error(`ui-manifest: no content-type mapped for extension ".${ext}" (${rel})`);
   UI_ASSETS.set(`/${rel}`, { rel, seaKey: `ui/${rel}`, contentType });
 }
-UI_ASSETS.set("/", UI_ASSETS.get("/helm.html"));
+UI_ASSETS.set("/", UI_ASSETS.get("/app.html"));
 
 // Flat { "ui/<rel>": "<abs path>" } map for sea-config's `assets` field —
 // same file list, no second source of truth.

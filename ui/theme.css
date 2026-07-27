@@ -82,7 +82,7 @@ nav.shell-nav {
 
 /* Workflow arc grouping: Build (Choose/Canvas/Connect) → Execute
    (Run/Verify/Review) → Operate. Keyed off the data-group wrapper (also an
-   AT-visible role="group" in helm.html), not nth-child, so adding, removing,
+   AT-visible role="group" in app.html), not nth-child, so adding, removing,
    or reordering a nav item can't silently break the separator or leave the
    grouping invisible to assistive tech. */
 nav.shell-nav > [data-group] {
@@ -168,7 +168,7 @@ button:focus-visible,
    indicator. data-pulse is the one-shot animated ring (~700ms, removed by
    JS — never a repeating/looping animation); data-recent is a plain static
    ring held a few seconds longer so "recently active" survives even where
-   the animation itself is suppressed. aria-hidden on the dot in helm.html
+   the animation itself is suppressed. aria-hidden on the dot in app.html
    keeps every bit of this out of the accessibility tree — the label text
    (#status-label, role="status") is what announces state changes. */
 .status-dot[data-pulse="true"] {

@@ -37,12 +37,12 @@ test("relayAndRedirect: stashes the result in sessionStorage, scrubs history BEF
   const navigate = (u) => calls.push(["navigate", u]);
 
   const result = { ok: true, code: "c1", state: "s1" };
-  relayAndRedirect({ result, targetUrl: "./helm.html#/connect", storage, history, loc, navigate });
+  relayAndRedirect({ result, targetUrl: "./app.html#/connect", storage, history, loc, navigate });
 
   assert.deepEqual(JSON.parse(storage.getItem("helm.oauth.callback")), result);
   assert.equal(calls[0][0], "replaceState");
   assert.equal(calls[0][3], "/helm/oauth-callback.html");
-  assert.deepEqual(calls[1], ["navigate", "./helm.html#/connect"]);
+  assert.deepEqual(calls[1], ["navigate", "./app.html#/connect"]);
 });
 
 test("consumeRelayedResult: one-shot read — a second call after consumption returns null", () => {

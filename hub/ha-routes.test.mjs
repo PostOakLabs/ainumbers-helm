@@ -1,5 +1,5 @@
 // HELM-HA-1: /ha/pending, /ha/records, /ha/slot, /ha/replay, /run/resume —
-// the REST surface the browser (helm.html Review) and any other §27.2
+// the REST surface the browser (app.html Review) and any other §27.2
 // producer drive against.
 import { test, before, after } from "node:test";
 import assert from "node:assert/strict";

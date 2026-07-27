@@ -76,7 +76,7 @@ not to see nothing.
    - `sudo netstat -anp | grep $(pgrep -f helmd)` (Linux)
    - a host firewall/egress proxy rule scoped to the `helmd` process,
      logging connections instead of blocking them
-3. Open `helm.html` pointed at the running daemon in a browser. Within a
+3. Open `app.html` pointed at the running daemon in a browser. Within a
    few seconds you should see exactly one outbound TCP connection from
    the `helmd` process to `ainumbers.co:443` — that's row 10, the
    version-check poll firing on UI boot. This is expected, not a leak.
@@ -215,7 +215,7 @@ applied.
 **N/A by construction.** Grepped every `.html`/`.mjs`/`.js` file in this
 repo (excluding `node_modules`, generated `dist/`, and vendored kernel
 fixtures) for `<script src=` and `<link href=` pointing at an external
-origin — zero matches. `ui/helm.html` and `ui/oauth-callback.html` load
+origin — zero matches. `ui/app.html` and `ui/oauth-callback.html` load
 no third-party script or stylesheet at all; every dependency (pptxgenjs,
 dmn-js, etc.) is vendored and bundled in-repo, not fetched at runtime.
 `ui/lib/standalone-verifier.test.mjs` asserts this holds for the
