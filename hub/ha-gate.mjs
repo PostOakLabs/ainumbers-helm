@@ -248,7 +248,7 @@ export async function recordArtifactBindingVerification(db, { runId, stepId, che
 
 async function signBundleDigest(identity, bundleDigest) {
   const sig = await globalThis.crypto.subtle.sign("Ed25519", identity.privateKey, Buffer.from(bundleDigest, "utf8"));
-  return { keyid: identity.id, sig: Buffer.from(sig).toString("base64"), alg: "Ed25519" };
+  return { keyid: identity.id, sig: Buffer.from(sig).toString("base64"), alg: "EdDSA" };
 }
 
 export { getSlot };
