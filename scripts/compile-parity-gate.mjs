@@ -23,6 +23,7 @@ import { join, dirname } from "node:path";
 import { fileURLToPath } from "node:url";
 import { KERNELS } from "../hub/vendored/ocg/kernels/index.mjs";
 import { runKernelNode } from "../hub/kernel-runner.mjs";
+import { runAttestedArtifact } from "../hub/attested-artifact-runner.mjs";
 import { executeRun } from "../hub/run.mjs";
 import { openJournal } from "../hub/journal.mjs";
 
@@ -75,6 +76,10 @@ export async function runParityGate({ packsDir = PACKS_DIR, db } = {}) {
         runId: `parity-${pack.workflow_id}`,
         manifest,
         stepRunner: async (step) => {
+          // BANK-NYDFS-HPACK-1: attested_artifacts steps have no chain-derived
+          // canonical counterpart (parity loop below only walks manifest.nodes),
+          // so run them for real without capturing into helmdArtifacts.
+          if (step.kind === "attested_artifacts") return runAttestedArtifact(step);
           const result = await runKernelNode(step, { now: NOW });
           helmdArtifacts.set(step.step_id, result);
           return result;

@@ -1,0 +1,50 @@
+{
+  "workflow_id": "pack-bank-nydfs-annual-certification",
+  "name": "NYDFS Part 500 Annual Certification — Countersigned",
+  "outcome": "Binds the site's NYDFS 23 NYCRR 500 annual Certification of Material Compliance (repo/tools/570-nydfs-part500-certification-builder.html — a chainless browser tool, no OCG kernel) to a §27.3 maker-checker countersignature_slot via the §3.1 attested-artifact binding path: the CISO/compliance maker signs the exact certification bundle produced, a checker performs the §3.3 Tier-B binding-integrity verification (digests recompute, NOT a re-run of the tool), and the senior-officer acceptance node holds under dual_control(2) until two distinct identities have recorded — the annual Apr 15 certification's countersignature_slot showcase.",
+  "spec_version": "ocg-control-plane@1",
+  "manifest": {
+    "manifest_version": "1",
+    "workflow_id": "pack-bank-nydfs-annual-certification",
+    "trigger": {
+      "type": "manual"
+    },
+    "attested_artifacts": [
+      {
+        "artifact_id": "nydfs-cert-2026",
+        "tool_ref": {
+          "tool_id": "nydfs-part500-certification-builder",
+          "tool_version": "1.0.0",
+          "entry": "tools/570-nydfs-part500-certification-builder.html",
+          "manifest_digest": "sha256:f6b92622f02abb5f460b33b42739e2fa3208e7e2848739f66cef6d5e4a85d2cd"
+        },
+        "inputs_digest": "sha256:f8ea2dabd506b6f42e4feb48d3b9bb3fb9199531e6eb144a9e626db5a730ae5d",
+        "artifact": {
+          "content_type": "text/markdown",
+          "content_digest": "sha256:455346e179e32ef521c1d5f7e2602fde3e4f63c004c777a14f9912607d7dc7bc"
+        }
+      }
+    ],
+    "nodes": [
+      {
+        "node_id": "n1",
+        "kernel_id": "art-277-agreement-acceptance-binder",
+        "kernel_digest": "sha256:f89876aa4e8bd2c8202f42f53375dcaadcf311417577d08361dc752421a2a965",
+        "gate_policy": "dual_control",
+        "gate_role": "approver",
+        "gate_threshold": 2
+      }
+    ],
+    "connectors": [],
+    "gates": [],
+    "actions": []
+  },
+  "workflow_manifest_digest": "sha256:61e9a65ab3681003963ad98aef9e6338273ed5f52421042beff1e0b0cf97ca72",
+  "declared_inputs": [],
+  "steps_meta": [
+    {
+      "node_id": "n1",
+      "data_classification": "compute"
+    }
+  ]
+}

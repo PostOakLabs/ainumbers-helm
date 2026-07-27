@@ -38,6 +38,13 @@ const MANIFEST_SCHEMA = JSON.parse(
 const HA_GATE_OVERLAY = JSON.parse(
   readFileSync(join(HERE, "ha-gate-overlay.json"), "utf8")
 ).packs;
+// BANK-NYDFS-HPACK-1 (HELM-HA-BUILD-SPEC.md §3.6): curated chainless packs —
+// same "survives the wholesale wipe+regen" pattern as HA_GATE_OVERLAY above,
+// for packs with no source chain at all (see chainless-packs.json's own
+// comment for why a hand-placed packs/*.json file doesn't work here).
+const CHAINLESS_PACKS = JSON.parse(
+  readFileSync(join(HERE, "chainless-packs.json"), "utf8")
+).packs;
 
 function jcsDigestHex(obj) {
   assertIJson(obj);
@@ -120,6 +127,30 @@ function compileChain(chain, kernelDigests, nodesById) {
   return { pack };
 }
 
+// BANK-NYDFS-HPACK-1: a curated chainless-packs.json entry is already a
+// full, schema-conformant manifest (attested_artifacts pinned digests +
+// gated nodes) — this just validates it and derives the same
+// workflow_manifest_digest/steps_meta shape a chain-compiled pack gets, so
+// nothing downstream (packs.mjs, getPack, /run/start) can tell the two
+// sources apart.
+function compileChainlessEntry(entry) {
+  const { workflow_id: workflowId, name, outcome, manifest } = entry;
+  const errs = validate(MANIFEST_SCHEMA, manifest);
+  if (errs.length > 0) {
+    throw new Error(`compile-packs: chainless-packs.json entry "${workflowId}" produced a non-conformant manifest:\n  ${errs.join("\n  ")}`);
+  }
+  return {
+    workflow_id: workflowId,
+    name,
+    outcome,
+    spec_version: "ocg-control-plane@1",
+    manifest,
+    workflow_manifest_digest: sha256ref(jcsDigestHex(manifest)),
+    declared_inputs: [],
+    steps_meta: (manifest.nodes ?? []).map((n) => ({ node_id: n.node_id, data_classification: "compute" })),
+  };
+}
+
 function loadChaingraph() {
   const g = JSON.parse(readFileSync(join(VENDORED, "chaingraph.json"), "utf8"));
   const nodesById = new Map(g.nodes.map((n) => [n.tool_id, n]));
@@ -137,6 +168,19 @@ function generate() {
     if (result.skip) skips.push(result.skip);
     else packs.push(result.pack);
   }
+
+  // BANK-NYDFS-HPACK-1: merge in curated chainless packs before the overlay
+  // sanity checks below, so a chainless workflow_id is eligible for
+  // HA_GATE_OVERLAY too (not used today — chainless-packs.json's own nodes
+  // already carry gate_policy inline — but keeps one merge point, not two).
+  const chainCount = packs.length;
+  for (const entry of CHAINLESS_PACKS) {
+    if (packs.some((p) => p.workflow_id === entry.workflow_id)) {
+      throw new Error(`compile-packs: chainless-packs.json workflow_id "${entry.workflow_id}" collides with a chain-compiled pack`);
+    }
+    packs.push(compileChainlessEntry(entry));
+  }
+  const chainlessCount = packs.length - chainCount;
 
   skips.sort((a, b) => a.name.localeCompare(b.name));
   packs.sort((a, b) => a.workflow_id.localeCompare(b.workflow_id));
@@ -158,6 +202,7 @@ function generate() {
     pinnedSha,
     generatedFrom: "hub/vendored/ocg/chaingraph.json",
     compiledCount: packs.length,
+    chainlessCount,
     skippedCount: skips.length,
     skips,
   };

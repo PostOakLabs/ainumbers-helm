@@ -11,6 +11,7 @@ import { join, dirname } from "node:path";
 import { fileURLToPath } from "node:url";
 import { KERNELS } from "./vendored/ocg/kernels/index.mjs";
 import { verifyBinding, verifySeal } from "./vendored/ocg/kernels/_computeproof.mjs";
+import { runAttestedArtifact } from "./attested-artifact-runner.mjs";
 
 const HERE = dirname(fileURLToPath(import.meta.url));
 const MANIFEST = JSON.parse(readFileSync(join(HERE, "vendored", "ocg", "MANIFEST.json"), "utf8"));
@@ -82,6 +83,7 @@ export async function runKernelNode(step, { now = new Date().toISOString() } = {
 export function createKernelStepRunner({ otherKindsRunner = null, now } = {}) {
   return async function stepRunner(step, ctx) {
     if (step.kind === "nodes") return runKernelNode(step, { now });
+    if (step.kind === "attested_artifacts") return runAttestedArtifact(step);
     if (otherKindsRunner) return otherKindsRunner(step, ctx);
     throw new Error(`kernel runner: no runner configured for step kind "${step.kind}" (step ${step.step_id})`);
   };

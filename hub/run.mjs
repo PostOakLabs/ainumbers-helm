@@ -75,6 +75,10 @@ export function manifestDigest(manifest) {
 // executor has no reason to reach for real parallelism in Phase 1).
 const STEP_LAYERS = [
   { key: "connectors", idField: "connector_id" },
+  // BANK-NYDFS-HPACK-1 (HELM-HA-BUILD-SPEC.md §3.1): chainless attested
+  // artifacts sit here — an input to the run, same position as a connector
+  // fetch, ahead of any node that gates on the artifact it pins.
+  { key: "attested_artifacts", idField: "artifact_id" },
   { key: "nodes", idField: "node_id" },
   { key: "gates", idField: "gate_id" },
   { key: "actions", idField: "action_id" },
