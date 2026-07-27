@@ -1,7 +1,12 @@
-# The `alg` question — `'EdDSA'` vs `'Ed25519'` — UNRESOLVED, needs a spec ruling
+# The `alg` question — `'EdDSA'` vs `'Ed25519'` — RESOLVED 2026-07-25 (`EdDSA` normative)
 
-**Status: written up alongside the hub↔browser verifier parity gate. NOT
-resolved here. Do not pick a winner without a spec ruling.**
+**Status: resolved by the `## DETERMINATION (2026-07-25)` section below —
+`"EdDSA"` is normative. `HELM-ALG-FIX-1` shipped it for `hub/envelope.mjs`
+`emitEnvelope()` + the schema enums. That fix never scoped
+`hub/ha-gate.mjs`'s `signBundleDigest` (the maker-checker countersignature
+path) — a second, independent producer of the same `{keyid,sig,alg}` shape
+this document never audited. `HELMALG-FIX-1` (2026-07-27) corrected that
+call site to match this determination.**
 
 ## What each side accepts
 

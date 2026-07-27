@@ -1,8 +1,9 @@
 import { test } from "node:test";
 import assert from "node:assert/strict";
-import { mkdtempSync } from "node:fs";
+import { mkdtempSync, readFileSync } from "node:fs";
 import { tmpdir } from "node:os";
 import { join } from "node:path";
+import { fileURLToPath } from "node:url";
 
 const TMP = mkdtempSync(join(tmpdir(), "helm-ha-gate-test-"));
 process.env.HELM_HOME = TMP;
@@ -13,6 +14,11 @@ const { pinnedKernelDigest, runKernelNode } = await import("./kernel-runner.mjs"
 const { appendHaRecord } = await import("./ha-store.mjs");
 const { haGateCheckFor, findHeldGate, recordReplay, signHaRecord, verifyHaRecordSignature, submitHaRecord, getSlot } = await import("./ha-gate.mjs");
 const { sign, rawPubkeyToDidKey } = await import("./vendored/ocg/kernels/_proof.mjs");
+const { validate } = await import("../scripts/lib/schema-validator.mjs");
+
+const COUNTERSIG_SCHEMA = JSON.parse(
+  readFileSync(fileURLToPath(new URL("../schema/countersignature_slot.schema.json", import.meta.url)), "utf8")
+);
 
 const KERNEL_ID = "art-324-tvm-npv";
 
@@ -171,6 +177,13 @@ test("recordReplay: a genuine re-execution match sets replay_verified true and m
   assert.equal(result.matched, true);
   assert.equal(getSlot(db, result.claimedHash).countersignatures.length, 1);
   assert.equal(getSlot(db, result.claimedHash).countersignatures[0].replay_verified, true);
+
+  // signBundleDigest's output feeds this exact object shape — it must
+  // conform to countersignature_slot.schema.json's `alg` enum
+  // (["EdDSA", "ML-DSA-44"]), not the WebCrypto algorithm-name "Ed25519".
+  const sig = getSlot(db, result.claimedHash).countersignatures[0].signature;
+  const errs = validate(COUNTERSIG_SCHEMA.$defs.signature, sig, COUNTERSIG_SCHEMA);
+  assert.deepEqual(errs, [], `countersignature signature must validate against countersignature_slot.schema.json: ${errs.join("; ")}`);
   db.close();
 });
 
