@@ -141,7 +141,7 @@ Every entry must carry the EU AI Act Article 12(2) and 12(3) field groups, `peri
 
 ### `rh_0` is unsalted by design
 
-`rh_0 = SHA-256(stream_id)` has no salt and no nonce. **This is a design decision, not an open issue**, and the adjudication is recorded in `HELM-DIGEST-SALT-1` (2026-07-26), verdict "not a defect by design".
+`rh_0 = SHA-256(stream_id)` has no salt and no nonce. **This is a design decision, not an open issue.** It was re-examined in a read-only design review on 2026-07-26, which re-derived the construction from this file and concluded it is correct as built. The reasoning is reproduced below so it does not have to be re-found.
 
 The reasoning, in short: `stream_id` is not, and was never intended to be, confidential. It is a plaintext column in the local schema (`hub/journal.mjs:57`), it sits in plaintext inside the same predicate object as `rh` in every checkpoint (`hub/checkpoint.mjs:24-27`), and that predicate travels verbatim inside every exported evidence bundle (`hub/bundle.mjs:109-147`). An offline verifier is *handed* `stream_id`; it never has to guess it. So the "attacker must recover a hash preimage" premise does not apply, whatever the entropy of a given stream identifier.
 
@@ -225,7 +225,7 @@ A connector result is labeled `connector_asserted`: it claims only that an autho
 
 ### The read tier ruling
 
-There is a ruling on record that **bulk evidence export does not belong inside a capability tier named "read"**. The wording is that `evidence.export` sitting inside a capability boundary named READ/RUN is bulk exfiltration behind a gate called read, and that export must be split out of the read tier before an agent-facing tab ships (`board/done/HELM-UX2-J-AGENTS-SLOT.md` §19.4, carried forward to the unbuilt `HELM-H9` work unit).
+There is a ruling on record that **bulk evidence export does not belong inside a capability tier named "read"**. The wording is that `evidence.export` sitting inside a capability boundary named READ/RUN is bulk exfiltration behind a gate called read, and that export must be split out of the read tier before any agent-facing surface ships it.
 
 **Status: the ruling exists, the surface it constrains does not.** There is no MCP endpoint in this repository today. The Agents and MCP navigation slot ships disabled, with no route reachable. The point of recording the ruling here is that the constraint is on the record before the surface is built, not after.
 
