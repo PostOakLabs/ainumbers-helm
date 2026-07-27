@@ -7,9 +7,10 @@
 // instantly with "Cannot use import statement outside a module" on every
 // platform) shipped for a full release without CI ever noticing: proving the
 // blob compiles proves nothing about whether the resulting binary can start.
-// This now goes all the way: inject via postject (same as build-sea.mjs) and
-// actually run the binary (`helmd doctor`), so a broken SEA main script fails
-// CI instead of failing silently in a user's hands.
+// This now goes all the way: inject via the vendored, integrity-checked
+// postject (scripts/vendor/postject/, same as build-sea.mjs — HELM-POSTJECT-PIN-1)
+// and actually run the binary (`helmd doctor`), so a broken SEA main script
+// fails CI instead of failing silently in a user's hands.
 import { execFileSync } from "node:child_process";
 import { writeFileSync, mkdtempSync, rmSync, existsSync, chmodSync, copyFileSync, readFileSync } from "node:fs";
 import { join, dirname } from "node:path";
@@ -17,6 +18,7 @@ import { tmpdir, platform } from "node:os";
 import { fileURLToPath } from "node:url";
 import { seaAssetMap } from "../hub/ui-manifest.mjs";
 import { collectBackendSourceFiles, seaBackendAssetMap } from "../hub/sea-source-manifest.mjs";
+import { injectSEA } from "./vendor/postject/inject.mjs";
 
 const ROOT = join(dirname(fileURLToPath(import.meta.url)), "..");
 const ENTRY = join(ROOT, "hub", "sea-entry.cjs");
@@ -89,11 +91,7 @@ try {
   const outPath = join(tmp, isWin ? "helmd.exe" : "helmd");
   copyFileSync(process.execPath, outPath);
   chmodSync(outPath, 0o755);
-  execFileSync(
-    "npx",
-    ["--yes", "postject@1.0.0-alpha.6", outPath, "NODE_SEA_BLOB", blobPath, "--sentinel-fuse", SENTINEL_FUSE],
-    { stdio: "inherit", shell: isWin }
-  );
+  await injectSEA(outPath, "NODE_SEA_BLOB", blobPath, { sentinelFuse: SENTINEL_FUSE });
 
   const homeDir = join(tmp, "sea-dry-run-home");
   const result = execFileSync(outPath, ["doctor"], {
@@ -111,6 +109,10 @@ try {
   console.log("sea-dry-run: OK — binary starts and runs `helmd doctor`");
   console.log(result);
 } catch (err) {
+  if (err && typeof err.message === "string" && err.message.startsWith("postject inject.mjs:")) {
+    console.error(err.message);
+    process.exit(1);
+  }
   // execFileSync throws even on a non-zero doctor exit; that's fine (see
   // above) as long as it actually produced doctor output on stdout.
   const out = err && err.stdout ? err.stdout.toString() : "";
