@@ -1,7 +1,13 @@
 import { test } from "node:test";
 import assert from "node:assert/strict";
+import { mkdtempSync } from "node:fs";
+import { tmpdir } from "node:os";
+import { join } from "node:path";
 import { pinnedKernelDigest, runKernelNode, createKernelStepRunner } from "./kernel-runner.mjs";
-import { manifestDigest, planSteps } from "./run.mjs";
+import { manifestDigest, planSteps, executeRun } from "./run.mjs";
+import { openJournal } from "./journal.mjs";
+
+const TMP = mkdtempSync(join(tmpdir(), "helm-kernel-runner-test-"));
 
 const KERNEL_ID = "art-324-tvm-npv";
 
@@ -89,6 +95,34 @@ test("createKernelStepRunner: throws for an unhandled kind with no otherKindsRun
   manifest.gates = [{ gate_id: "g1" }];
   const steps = planSteps(manifest);
   await assert.rejects(stepRunner(steps.find((s) => s.kind === "gates"), {}), /no runner configured/);
+});
+
+test("HELM-DRYRUN-PARITY-1: dry-run and real run agree — both throw for an unhandled kind", async () => {
+  const manifest = npvManifest();
+  manifest.gates = [{ gate_id: "g1" }];
+  const stepRunner = createKernelStepRunner();
+
+  const db = openJournal(join(TMP, "parity.db"));
+  await assert.rejects(
+    executeRun(db, { runId: "run-dryrun-parity-real", manifest, stepRunner, dryRun: false }),
+    /no runner configured for step kind "gates"/
+  );
+  await assert.rejects(
+    executeRun(db, { runId: "run-dryrun-parity-dry", manifest, stepRunner, dryRun: true }),
+    /no runner configured for step kind "gates"/
+  );
+  db.close();
+});
+
+test("HELM-DRYRUN-PARITY-1: dry-run still performs no side effects for a runnable kind", async () => {
+  const manifest = npvManifest();
+  const stepRunner = createKernelStepRunner();
+
+  const db = openJournal(join(TMP, "parity-noop.db"));
+  const result = await executeRun(db, { runId: "run-dryrun-parity-noop", manifest, stepRunner, dryRun: true });
+  assert.equal(result.state, "completed");
+  assert.equal(result.dryRun, true);
+  db.close();
 });
 
 test("manifestDigest is stable for the fixture manifest (sanity check for round-trip test reuse)", () => {
