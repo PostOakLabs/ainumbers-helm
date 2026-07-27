@@ -17,6 +17,9 @@ node scripts/check-hook-ci-parity.mjs
 echo "pre-push: internal-lang leak ..."
 node scripts/check-internal-lang-leak.mjs
 
+echo "pre-push: copy hallmarks ..."
+node scripts/check-copy-hallmarks.mjs
+
 echo "pre-push: lint ..."
 node scripts/lint.mjs
 

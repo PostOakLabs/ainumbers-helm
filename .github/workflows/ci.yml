@@ -20,6 +20,8 @@ jobs:
         run: node scripts/check-hook-ci-parity.mjs
       - name: internal-lang leak (INTERNAL-LANG-LEAK-1)
         run: node scripts/check-internal-lang-leak.mjs
+      - name: copy hallmarks (AI-writing-tell gate)
+        run: node scripts/check-copy-hallmarks.mjs
       - name: lint
         run: node scripts/lint.mjs
       # Install a real Secret Service so the linux-secret-tool vault tier is
