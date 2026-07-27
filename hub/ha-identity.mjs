@@ -5,8 +5,11 @@
 // vendored/ocg/kernels/_proof.mjs's sign()/verify() (the SPEC.md §16
 // eddsa-jcs-2022 DataIntegrityProof implementation every HA record uses)
 // takes WebCrypto CryptoKey objects, not node:crypto KeyObjects. Reuses
-// keys.mjs's passphrase file + AES-256-GCM blob format — one at-rest secret,
-// two keypairs.
+// keys.mjs's at-rest passphrase + AES-256-GCM blob format — one at-rest
+// secret, two keypairs. That passphrase now lives in the OS keychain tier
+// (HELM-KEYCHAIN-1); this module deliberately does NOT reach for the vault
+// itself, because a second passphrase accessor could migrate independently
+// and leave the two keypairs encrypted under different secrets.
 //
 // This is the identity helmd signs WITH when IT is the party attesting —
 // minting a role_binding record, or a checker countersignature after it has
