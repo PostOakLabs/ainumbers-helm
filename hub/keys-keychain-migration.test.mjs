@@ -211,6 +211,40 @@ test("FAILURE MODE 3 — the same refusal covers ha-identity.enc.json, not just 
   assert.throws(() => loadOrCreatePassphrase(), /ha-identity\.enc\.json/);
 });
 
+// --- resume of a crash-interrupted migration (KEYCHAIN-PROVABLE-1) ---
+// keys.mjs:118-123 — the "already migrated" branch also shreds a lingering
+// legacy file, so a process that crashed AFTER provisionPassphrase()
+// succeeded but BEFORE shredFile() ran finishes cleanly on its next boot
+// instead of leaking the old plaintext file forever.
+
+test("resume: an interrupted migration (vault already holds the passphrase, legacy file still present) shreds it without re-migrating", () => {
+  const home = freshHome("resume-interrupted");
+  const legacy = join(home, LEGACY_PASSPHRASE_FILENAME);
+  const legacyPass = randomBytes(32);
+  writeFileSync(legacy, legacyPass, { mode: 0o600 });
+
+  const pass1 = loadOrCreatePassphrase(); // completes migration normally
+  assert.equal(existsSync(legacy), false, "precondition: normal migration already shredded the legacy file");
+
+  // Simulate the crash: the legacy file reappears holding the SAME bytes the
+  // vault already has, exactly what "provisioned, not yet shredded" looks
+  // like on disk.
+  writeFileSync(legacy, legacyPass, { mode: 0o600 });
+
+  const pass2 = loadOrCreatePassphrase(); // must take the "already migrated" branch
+  assert.deepEqual(pass2, pass1, "resume must return the SAME passphrase, not mint or re-adopt one");
+  assert.equal(existsSync(legacy), false, "the resumed load must finish the interrupted shred");
+});
+
+// --- readback-mismatch branch of provisionPassphrase: DECLINED, with reason ---
+// hub/keys.mjs:90-97 throws when vaultGetStrict's readback doesn't match what
+// was just vaultSet — reachable only by a fault landing between those two
+// calls inside one synchronous function body. This zero-dep suite has no
+// mocking capability (no jest/sinon) and the fence for KEYCHAIN-PROVABLE-1
+// forbids editing keys.mjs/vault.mjs to add an injection seam, so there is no
+// way to exercise this branch without either dependency. Left uncovered,
+// named here rather than silently skipped.
+
 // --- partial migration ---
 
 test("FAILURE MODE 4 — partial migration: keys.mjs and ha-identity.mjs share ONE passphrase path", async () => {

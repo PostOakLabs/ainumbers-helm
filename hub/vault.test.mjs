@@ -3,6 +3,7 @@ import assert from "node:assert/strict";
 import { mkdtempSync, rmSync, readdirSync, readFileSync, writeFileSync } from "node:fs";
 import { tmpdir } from "node:os";
 import { join } from "node:path";
+import { randomBytes } from "node:crypto";
 
 const TMP = mkdtempSync(join(tmpdir(), "helm-vault-test-"));
 process.env.HELM_HOME = TMP;
@@ -32,6 +33,76 @@ test("vaultBackendFor reports the tier a ref landed on", () => {
   vaultSet("test:backend-check", { access_token: "at-3" });
   const backend = vaultBackendFor("test:backend-check");
   assert.ok(["macos-keychain", "windows-dpapi", "linux-secret-tool", "file-fallback"].includes(backend));
+});
+
+// KEYCHAIN-PROVABLE-1: the assertion above is the right shape for a
+// connector-token-class secret (`access_token`) — worst case on a re-auth is
+// the user signs in again, so tolerating file-fallback there is a genuine,
+// named acceptance, not an oversight. The at-rest SIGNING-KEY passphrase
+// (`passphrase_b64`, see keys.mjs) is a different class: file-fallback with no
+// HELM_VAULT_PASSPHRASE override is exactly the pre-HELM-KEYCHAIN-1 exposure
+// this vault exists to remove (key stored beside the ciphertext it
+// protects), so a test that accepts it as a pass cannot detect the
+// degradation. This is deliberately NOT a `t.skip` on the missing tiers: it
+// judges whatever backend THIS run actually landed on.
+test("signing-key-shaped secret (passphrase_b64) landing on file-fallback WITHOUT HELM_VAULT_PASSPHRASE is a failure, not a pass", () => {
+  const priorEnv = process.env.HELM_VAULT_PASSPHRASE;
+  delete process.env.HELM_VAULT_PASSPHRASE;
+  const secret = { passphrase_b64: randomBytes(32).toString("base64") };
+  let ref, backend;
+  try {
+    ({ ref, backend } = vaultSet("test:signing-key-tier-check", secret));
+  } finally {
+    if (priorEnv !== undefined) process.env.HELM_VAULT_PASSPHRASE = priorEnv;
+  }
+  vaultDelete(ref);
+  assert.notEqual(
+    backend,
+    "file-fallback",
+    "the at-rest signing-key passphrase must land on a native OS keychain tier in this environment; " +
+      "file-fallback with no HELM_VAULT_PASSPHRASE means no reachable native keychain AND no opt-in " +
+      "mitigation — a real gap here, not a test bug. See KEYCHAIN-PROVABLE-1 / hub/keys.mjs provisionPassphrase."
+  );
+});
+
+// --- native-tier round trips, mirroring the windows-dpapi tests below: must
+// genuinely exercise the tier when it is reachable, and skip LOUDLY (via
+// t.skip, visible in the test-runner summary) rather than silently
+// (a bare `return`, indistinguishable from an empty pass) when it is not. ---
+
+test("linux-secret-tool: round trip works when the tier is genuinely available", (t) => {
+  if (process.platform !== "linux") {
+    t.skip("tier only reachable on linux");
+    return;
+  }
+  const secret = { access_token: "LINUX-SECRET-TOOL-CHECK" };
+  const { ref, backend } = vaultSet("test:secret-tool-live", secret);
+  if (backend !== "linux-secret-tool") {
+    t.skip(`Secret Service not reachable in this environment — vaultSet fell back to "${backend}" instead of ` +
+      `linux-secret-tool. Install libsecret + run a Secret Service daemon (secret-tool, gnome-keyring, or ` +
+      `equivalent) to exercise this tier.`);
+    vaultDelete(ref);
+    return;
+  }
+  assert.deepEqual(vaultGet(ref), secret);
+  vaultDelete(ref);
+});
+
+test("macos-keychain: round trip works when the tier is genuinely available", (t) => {
+  if (process.platform !== "darwin") {
+    t.skip("tier only reachable on darwin");
+    return;
+  }
+  const secret = { access_token: "MACOS-KEYCHAIN-CHECK" };
+  const { ref, backend } = vaultSet("test:macos-keychain-live", secret);
+  if (backend !== "macos-keychain") {
+    t.skip(`macOS Keychain not reachable in this environment — vaultSet fell back to "${backend}" instead of ` +
+      `macos-keychain.`);
+    vaultDelete(ref);
+    return;
+  }
+  assert.deepEqual(vaultGet(ref), secret);
+  vaultDelete(ref);
 });
 
 test("windows-dpapi: round trip still works with secret passed via stdin", () => {
