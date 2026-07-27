@@ -80,11 +80,24 @@ export async function runKernelNode(step, { now = new Date().toISOString() } = {
 // stepRunner for run.mjs's executeRun(): dispatches "nodes" steps to the
 // kernel, and leaves every other step kind to the caller-supplied runner
 // (connectors/gates/actions are H6/Phase-2 territory, not this WU's scope).
+//
+// The returned function also carries a `canDispatch(step)` predicate (HELM-
+// DRYRUN-PARITY-1) so run.mjs's dry-run path can ask "would a real run throw
+// on this step's kind?" without invoking stepRunner — dry-run must stay
+// side-effect-free, so it consults the same kind-dispatch decision instead
+// of replaying it.
 export function createKernelStepRunner({ otherKindsRunner = null, now } = {}) {
-  return async function stepRunner(step, ctx) {
+  function canDispatch(step) {
+    if (step.kind === "nodes") return true;
+    if (step.kind === "attested_artifacts") return true;
+    return !!otherKindsRunner;
+  }
+  async function stepRunner(step, ctx) {
     if (step.kind === "nodes") return runKernelNode(step, { now });
     if (step.kind === "attested_artifacts") return runAttestedArtifact(step);
     if (otherKindsRunner) return otherKindsRunner(step, ctx);
     throw new Error(`kernel runner: no runner configured for step kind "${step.kind}" (step ${step.step_id})`);
-  };
+  }
+  stepRunner.canDispatch = canDispatch;
+  return stepRunner;
 }

@@ -233,6 +233,13 @@ export async function executeRun(db, { runId, manifest, stepRunner, dryRun = fal
             return { runId, state: "awaiting_data", executionHash: null, steps: stepDigests, held: { step_id: step.step_id, reason: gate.reason } };
           }
         }
+        // HELM-DRYRUN-PARITY-1: dry-run must report the same unsupported-
+        // kind failure a real run would hit, without ever invoking
+        // stepRunner (side-effect-free stays true) — consult the optional
+        // canDispatch predicate the caller's stepRunner may carry.
+        if (dryRun && stepRunner.canDispatch && !stepRunner.canDispatch(step)) {
+          throw new Error(`kernel runner: no runner configured for step kind "${step.kind}" (step ${step.step_id})`);
+        }
         const output = dryRun
           ? { dry_run: true, step_id: step.step_id, kind: step.kind }
           : await stepRunner(step, { priorOutputDigest, runId });
