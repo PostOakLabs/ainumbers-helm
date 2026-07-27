@@ -7,11 +7,18 @@
 // deterministic invocation the run engine itself uses) — this file adds no
 // second implementation of either, it just wires HA-record storage and the
 // run engine's hold/resume plumbing to them.
+import { createHash } from "node:crypto";
 import { didKeyToPublicKey, sign, verify } from "./vendored/ocg/kernels/_proof.mjs";
 import { evaluateHaGate } from "./vendored/ocg/kernels/_hagate.mjs";
+import { cgCanon, assertIJson } from "./vendored/ocg/kernels/_hash.mjs";
 import { recordsForSubject, appendHaRecord, addCountersignature, getSlot } from "./ha-store.mjs";
 import { runKernelNode } from "./kernel-runner.mjs";
 import { planSteps, getMemoizedStep, stepInputDigest } from "./run.mjs";
+
+function jcsDigestHex(obj) {
+  assertIJson(obj);
+  return createHash("sha256").update(JSON.stringify(cgCanon(obj))).digest("hex");
+}
 
 // Signs an unsigned §27.2 record with the given identity (either helmd's own
 // ha-identity.mjs keypair, or a caller-supplied one in tests) — the ONE path
@@ -174,6 +181,69 @@ export async function recordReplay(db, { runId, stepId, checkerIdentity, nowISO 
   }
 
   return { matched, claimedHash, recomputedHash: fresh.artifact.execution_hash, slot };
+}
+
+// §3.3 Tier B — chainless attested-artifact binding verification
+// (BANK-NYDFS-HPACK-1, HELM-HA-BUILD-SPEC.md §3.3). Distinct from
+// recordReplay (Tier A) on purpose: a browser tool artifact has no kernel to
+// re-invoke, so this NEVER sets replay_verified — omission is the honest
+// state (schema-optional; `false` would falsely claim "replay attempted and
+// failed", `true` would falsely claim kernel re-execution). What IS checked,
+// offline and deterministically: the three pinned digests recompute the
+// SAME execution_hash the maker's step recorded — a binding-integrity
+// check, proof the artifact is the one the maker signed from a pinned tool
+// version, NOT a recomputation of the tool's arithmetic.
+export async function recordArtifactBindingVerification(db, { runId, stepId, checkerIdentity, nowISO }) {
+  const runRow = db.prepare("SELECT manifest_json, dry_run FROM runs WHERE run_id = ?").get(runId);
+  if (!runRow) throw new Error(`ha-gate: unknown run_id ${runId}`);
+  const manifest = JSON.parse(runRow.manifest_json);
+  const steps = planSteps(manifest);
+  const step = steps.find((s) => s.step_id === stepId);
+  if (!step) throw new Error(`ha-gate: unknown step_id ${stepId} for run ${runId}`);
+  if (step.kind !== "attested_artifacts") {
+    throw new Error(`ha-gate: artifact-binding verification is only defined for "attested_artifacts" steps (got kind="${step.kind}")`);
+  }
+
+  const recordedRows = db.prepare("SELECT output_json FROM step_results WHERE run_id = ? AND step_id = ?").all(runId, stepId);
+  if (!recordedRows.length) throw new Error(`ha-gate: no recorded output for run=${runId} step=${stepId} — nothing to verify against`);
+  const recorded = JSON.parse(recordedRows[recordedRows.length - 1].output_json);
+  const claimedHashHex = recorded?.artifact?.execution_hash;
+  if (!claimedHashHex) throw new Error(`ha-gate: recorded step output carries no artifact.execution_hash — cannot verify`);
+  const claimedHash = `sha256:${claimedHashHex}`;
+
+  const { tool_ref, inputs_digest, artifact } = step.item;
+  const recomputedHashHex = jcsDigestHex({ tool_ref, inputs_digest, artifact: { content_type: artifact.content_type, content_digest: artifact.content_digest } });
+  const matched = recomputedHashHex === claimedHashHex;
+
+  const now = nowISO ?? new Date().toISOString();
+  const signature = await signBundleDigest(checkerIdentity, claimedHash);
+  const countersignature = {
+    role: "checker",
+    identity: { id: checkerIdentity.id },
+    signature,
+    signed_at: now,
+    // ⛔ replay_verified deliberately OMITTED — see comment above.
+  };
+  const slot = addCountersignature(db, claimedHash, countersignature);
+
+  if (matched) {
+    const approval = await signHaRecord(
+      {
+        record_type: "approval",
+        role: "approver",
+        subject_hash: claimedHash,
+        identity: { id: checkerIdentity.id },
+        decision: "approve",
+        reason_code: "ARTIFACT_BINDING_VERIFIED",
+        timestamp: now,
+      },
+      checkerIdentity,
+      { nowISO: now }
+    );
+    appendHaRecord(db, approval);
+  }
+
+  return { matched, claimedHash, recomputedHash: recomputedHashHex, slot };
 }
 
 async function signBundleDigest(identity, bundleDigest) {

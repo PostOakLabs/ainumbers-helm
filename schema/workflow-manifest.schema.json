@@ -9,6 +9,39 @@
       "description": "OCG SPEC.md §27.4 (v0.8.12) closed vocabulary, additive here per §1 item 5 of HELM-HA-BUILD-SPEC.md — mirrors hub/vendored/ocg's $defs/haGatePolicy so a pack step can declare a §27.4 human-accountability precondition helmd's run engine (hub/run.mjs gateCheck) actually enforces.",
       "enum": ["auto_pass", "review_required", "dual_control", "escalate", "hold", "reject", "emergency_override"]
     },
+    "attestedArtifact": {
+      "description": "BANK-NYDFS-HPACK-1 / HELM-HA-BUILD-SPEC.md §3.1 — the chainless analogue of computeNode: pins a tool artifact that carries no OCG chain/kernel to a stable, helmd-derived execution_hash so it can bind to a countersignature_slot gated pack. helmd computes execution_hash = sha256(JCS({tool_ref, inputs_digest, artifact})) at run time — no wall clock, no run id in the preimage — so the value is reproducible offline by anyone holding the same three pinned digests.",
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["artifact_id", "tool_ref", "artifact", "inputs_digest"],
+      "properties": {
+        "artifact_id": { "type": "string", "minLength": 1 },
+        "tool_ref": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": ["tool_id", "tool_version", "entry", "manifest_digest"],
+          "properties": {
+            "tool_id": { "type": "string", "minLength": 1 },
+            "tool_version": { "type": "string", "minLength": 1 },
+            "entry": { "type": "string", "minLength": 1, "description": "Site-repo relative path of the tool page, e.g. tools/570-nydfs-part500-certification-builder.html — provenance only, never fetched by helmd." },
+            "manifest_digest": { "$ref": "#/$defs/sha256ref", "description": "sha256 over the JCS-canonical form of the tool page's embedded MANIFEST object — the pin, chainless analogue of kernel_digest." }
+          }
+        },
+        "artifact": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": ["content_type", "content_digest"],
+          "properties": {
+            "content_type": { "type": "string", "minLength": 1 },
+            "content_digest": { "$ref": "#/$defs/sha256ref", "description": "sha256 over the exact bytes the tool emitted. Zero-PII rule: only the digest is stored here, never the bytes." }
+          }
+        },
+        "inputs_digest": { "$ref": "#/$defs/sha256ref", "description": "sha256 over the JCS-canonical form of the operator-supplied input object (the tool's own input_schema shape). Only the digest is stored, never the inputs." },
+        "gate_policy": { "$ref": "#/$defs/haGatePolicy", "description": "OPTIONAL — same §27.4 semantics as computeNode.gate_policy, evaluated against this step's own preceding step when present." },
+        "gate_role": { "type": "string", "minLength": 1 },
+        "gate_threshold": { "type": "integer", "minimum": 1 }
+      }
+    },
     "computeNode": {
       "type": "object",
       "additionalProperties": false,
@@ -106,6 +139,7 @@
       }
     },
     "nodes": { "type": "array", "items": { "$ref": "#/$defs/computeNode" } },
+    "attested_artifacts": { "type": "array", "items": { "$ref": "#/$defs/attestedArtifact" }, "description": "BANK-NYDFS-HPACK-1 §3.1 — OPTIONAL. Chainless tool artifacts pinned into this run, executed as steps between connectors and nodes (hub/run.mjs STEP_LAYERS)." },
     "connectors": { "type": "array", "items": { "$ref": "#/$defs/connectorRef" } },
     "gates": { "type": "array", "items": { "$ref": "#/$defs/gate" } },
     "actions": { "type": "array", "items": { "$ref": "#/$defs/action" } },
