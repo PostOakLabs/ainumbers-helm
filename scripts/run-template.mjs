@@ -64,4 +64,7 @@ if (json) {
   }
 }
 
-process.exit(result.state === "completed" ? 0 : 1);
+// Not process.exit(): would race stdout's flush on a piped (non-TTY)
+// stream — see list-scenarios.mjs's identical note, root-caused via a real
+// ci-macos truncation of this file's own --json output.
+process.exitCode = result.state === "completed" ? 0 : 1;

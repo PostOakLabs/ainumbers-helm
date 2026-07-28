@@ -16,14 +16,18 @@ const templateIds = new Set(templates.map((t) => t.workflow_id));
 const otherPacks = listPacks().filter((p) => !templateIds.has(p.workflow_id));
 
 if (json) {
+  // No process.exit() here: stdout is a non-blocking pipe under CI, and a
+  // forced exit races the OS pipe buffer (macOS's is 64KB) — this output
+  // is bigger than that, and an explicit exit truncated it mid-string in
+  // ci-macos. Falling through to a natural exit-0 lets Node drain stdout
+  // first.
   console.log(JSON.stringify({ templates, other_packs: otherPacks }));
-  process.exit(0);
+} else {
+  console.log(`Scenarios with sample data (run with: helmd run-template <slug>)\n`);
+  for (const t of templates) {
+    console.log(`  ${t.slug}`);
+    console.log(`    ${t.title} — ${t.blurb}`);
+    console.log(`    workflow_id: ${t.workflow_id}\n`);
+  }
+  console.log(`${otherPacks.length} other compiled packs (no sample data yet — see workflow_id, export with: helmd export-bpmn <workflow_id>)`);
 }
-
-console.log(`Scenarios with sample data (run with: helmd run-template <slug>)\n`);
-for (const t of templates) {
-  console.log(`  ${t.slug}`);
-  console.log(`    ${t.title} — ${t.blurb}`);
-  console.log(`    workflow_id: ${t.workflow_id}\n`);
-}
-console.log(`${otherPacks.length} other compiled packs (no sample data yet — see workflow_id, export with: helmd export-bpmn <workflow_id>)`);
