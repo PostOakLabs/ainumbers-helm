@@ -72,3 +72,45 @@ test("export-bpmn with an unknown workflow_id exits non-zero and reports on stde
   assert.notEqual(r.code, 0);
   assert.match(r.stderr, /unknown workflow_id/);
 });
+
+test("list-scenarios prints the bundled scenarios and exits 0", () => {
+  const r = run("list-scenarios");
+  assert.equal(r.code, 0);
+  assert.match(r.stdout, /cecl-allowance-quarterly/);
+  assert.match(r.stdout, /other compiled packs/);
+});
+
+test("list-scenarios --json prints a parseable object with templates and other_packs", () => {
+  const r = run("list-scenarios", "--json");
+  assert.equal(r.code, 0);
+  const parsed = JSON.parse(r.stdout);
+  assert.ok(Array.isArray(parsed.templates) && parsed.templates.length >= 5);
+  assert.ok(Array.isArray(parsed.other_packs) && parsed.other_packs.length > 0);
+});
+
+test("run-template with no slug fails with a usage message on stderr", () => {
+  const r = run("run-template");
+  assert.notEqual(r.code, 0);
+  assert.match(r.stderr, /usage: node scripts\/run-template\.mjs/);
+});
+
+test("run-template with an unknown slug exits non-zero and reports on stderr", () => {
+  const r = run("run-template", "not-a-real-slug");
+  assert.notEqual(r.code, 0);
+  assert.match(r.stderr, /unknown slug/);
+});
+
+test("run-template runs a bundled scenario end to end, no daemon, and prints a completed state", () => {
+  const r = run("run-template", "cecl-allowance-quarterly");
+  assert.equal(r.code, 0);
+  assert.match(r.stdout, /state:\s+completed/);
+  assert.match(r.stdout, /execution_hash:\s+sha256:/);
+});
+
+test("run-template --dry-run --json reports completed with no side effects, dryRun:true", () => {
+  const r = run("run-template", "emir-field-check", "--dry-run", "--json");
+  assert.equal(r.code, 0);
+  const parsed = JSON.parse(r.stdout);
+  assert.equal(parsed.state, "completed");
+  assert.equal(parsed.dryRun, true);
+});

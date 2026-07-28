@@ -29,6 +29,8 @@ const PKG = JSON.parse(readFileSync(join(ROOT, "package.json"), "utf8"));
 
 const HELMD_ENTRY = join(ROOT, "hub", "index.mjs");
 const EXPORT_BPMN_ENTRY = join(ROOT, "scripts", "export-bpmn.mjs");
+const LIST_SCENARIOS_ENTRY = join(ROOT, "scripts", "list-scenarios.mjs");
+const RUN_TEMPLATE_ENTRY = join(ROOT, "scripts", "run-template.mjs");
 
 // Read straight off hub/index.mjs's own dispatch, not a hand-copied guess —
 // see the row's warning: "read the dispatcher, do not grep a guessed list."
@@ -48,6 +50,10 @@ Commands:
   uninstall           remove the autostart entry / shortcut
   export-bpmn <workflow_id> [out.bpmn]
                       export a compiled pack's workflow as BPMN 2.0 XML
+  list-scenarios [--json]
+                      list bundled sample-data scenarios (and other compiled packs)
+  run-template <slug> [--dry-run] [--json]
+                      run a bundled scenario end to end using its sample data, no daemon required
 
 Options:
   -h, --help          show this help and exit 0
@@ -56,9 +62,10 @@ Options:
 Exit codes: 0 success; a subcommand's own failure exit is passed through
 unchanged; an unknown command is a usage error and exits 2.
 
-Stability: start/stop/status/doctor/open/uninstall/export-bpmn and their
-plain-text output/exit codes are STABLE. --json output shapes are
-PROVISIONAL and may change without notice until this line is removed.`);
+Stability: start/stop/status/doctor/open/uninstall/export-bpmn/list-scenarios/
+run-template and their plain-text output/exit codes are STABLE. --json output
+shapes are PROVISIONAL and may change without notice until this line is
+removed.`);
 }
 
 function printVersion() {
@@ -101,8 +108,14 @@ if (PASSTHROUGH_COMMANDS.has(cmd)) {
 } else if (cmd === "export-bpmn") {
   const result = spawnSync(process.execPath, [EXPORT_BPMN_ENTRY, ...rest], { stdio: "inherit" });
   process.exit(result.status ?? 1);
+} else if (cmd === "list-scenarios") {
+  const result = spawnSync(process.execPath, [LIST_SCENARIOS_ENTRY, ...rest], { stdio: "inherit" });
+  process.exit(result.status ?? 1);
+} else if (cmd === "run-template") {
+  const result = spawnSync(process.execPath, [RUN_TEMPLATE_ENTRY, ...rest], { stdio: "inherit" });
+  process.exit(result.status ?? 1);
 } else {
-  console.error(`helmd: unknown command "${cmd}" (expected: start | stop | status | doctor | open | uninstall | export-bpmn)`);
+  console.error(`helmd: unknown command "${cmd}" (expected: start | stop | status | doctor | open | uninstall | export-bpmn | list-scenarios | run-template)`);
   console.error("Run 'helmd --help' for usage.");
   process.exit(2);
 }
