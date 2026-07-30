@@ -63,10 +63,28 @@ function rawRequest(method, path, body, hdrs) {
   });
 }
 
-function rpc(method, params, { id = 1, extraHeaders = {} } = {}) {
-  const body = { jsonrpc: "2.0", id, method, params };
-  const headers = baseHeaders({ "Mcp-Method": method, ...extraHeaders });
-  if (method === "tools/call" && params?.name) headers["Mcp-Name"] = params.name;
+const META_VERSION = "io.modelcontextprotocol/protocolVersion";
+const META_CAPS = "io.modelcontextprotocol/clientCapabilities";
+const TASKS_EXT = "io.modelcontextprotocol/tasks";
+
+// Per-request protocol fields are REQUIRED on every 2026-07-28 request. The
+// default client here declares the Tasks extension; `capabilities` overrides it
+// so a test can act as a client that never declared support.
+function requestMeta(capabilities) {
+  return {
+    [META_VERSION]: MCP_VERSION,
+    "io.modelcontextprotocol/clientInfo": { name: "helm-mcp-test", version: "1.0.0" },
+    [META_CAPS]: capabilities ?? { extensions: { [TASKS_EXT]: {} } },
+  };
+}
+
+function rpc(method, params, { id = 1, extraHeaders = {}, capabilities, meta } = {}) {
+  const _meta = meta === null ? undefined : meta ?? requestMeta(capabilities);
+  const body = { jsonrpc: "2.0", id, method, params: { ...params, ...(_meta ? { _meta } : {}) } };
+  // Mcp-Name defaults to params.name, but an explicit extraHeaders value wins —
+  // the sentinel tests depend on being able to send a *different* encoding of it.
+  const defaults = method === "tools/call" && params?.name ? { "Mcp-Name": params.name } : {};
+  const headers = baseHeaders({ "Mcp-Method": method, ...defaults, ...extraHeaders });
   return rawRequest("POST", "/mcp", body, headers);
 }
 
@@ -125,6 +143,98 @@ test("initialize returns the pinned protocol version and Tasks extension capabil
   assert.ok(res.body.result.capabilities.extensions["io.modelcontextprotocol/tasks"]);
 });
 
+// ---------------------------------------------------------------------------
+// HELM-MCP-CONFORM-1 (2026-07-30) — the six defects from
+// research/MCP-CONFORMANCE-AUDIT-1-2026-07-30.md, each pinned by a test.
+// ---------------------------------------------------------------------------
+
+test("CONFORM-1: Mcp-Name accepts the SPEC base64 sentinel =?base64?<b64>?=", async () => {
+  // Transports/Value Encoding: `Mcp-Name: =?base64?{Base64EncodedValue}?=`.
+  const encoded = `=?base64?${Buffer.from("catalog.search", "utf8").toString("base64")}?=`;
+  const res = await rpc("tools/call", { name: "catalog.search", arguments: { query: "aca-226j" } }, { extraHeaders: { "Mcp-Name": encoded } });
+  assert.equal(res.status, 200);
+  assert.equal(res.body.result.resultType, "complete");
+});
+
+test("CONFORM-1: the legacy non-spec =?base64?B?<b64>?= form is REJECTED", async () => {
+  // Deliberate: no emitter of the `B?` form exists anywhere in the repo outside
+  // this endpoint's own source, and a second accepted encoding is a second canon.
+  // The `B?` string is not a valid sentinel, so it is compared literally against
+  // the body value and fails as an ordinary header mismatch.
+  const legacy = `=?base64?B?${Buffer.from("catalog.search", "utf8").toString("base64")}?=`;
+  const res = await rpc("tools/call", { name: "catalog.search", arguments: {} }, { extraHeaders: { "Mcp-Name": legacy } });
+  assert.equal(res.status, 400);
+  assert.equal(res.body.error.code, -32020);
+});
+
+test("CONFORM-1: the sentinel markers are case-SENSITIVE (=?BASE64? is not a sentinel)", async () => {
+  const upper = `=?BASE64?${Buffer.from("catalog.search", "utf8").toString("base64")}?=`;
+  const res = await rpc("tools/call", { name: "catalog.search", arguments: {} }, { extraHeaders: { "Mcp-Name": upper } });
+  assert.equal(res.status, 400);
+  assert.equal(res.body.error.code, -32020);
+});
+
+test("CONFORM-2: resultType is drawn from the DEFINED set — never the undefined value 'success'", async () => {
+  const defined = new Set(["complete", "input_required", "task"]);
+  for (const [method, params] of [["initialize", {}], ["server/discover", {}], ["tools/list", {}], ["tools/call", { name: "catalog.search", arguments: {} }]]) {
+    const res = await rpc(method, params);
+    assert.equal(res.status, 200, method);
+    assert.ok(defined.has(res.body.result.resultType), `${method} returned resultType ${JSON.stringify(res.body.result.resultType)}`);
+  }
+});
+
+test("CONFORM-3: server/discover returns supportedVersions + capabilities (a real DiscoverResult)", async () => {
+  const res = await rpc("server/discover", {});
+  assert.equal(res.status, 200);
+  assert.equal(res.body.result.resultType, "complete");
+  assert.deepEqual(res.body.result.supportedVersions, [MCP_VERSION]);
+  assert.ok(res.body.result.capabilities.tools);
+  // Tasks: "Include the extension in your server/discover capabilities" — as a
+  // map under capabilities.extensions, not a bare array at the result root.
+  assert.ok(res.body.result.capabilities.extensions[TASKS_EXT]);
+  assert.equal(res.body.result.extensions, undefined);
+  assert.equal(res.body.result._meta["io.modelcontextprotocol/serverInfo"].name, "co.ainumbers/helm");
+});
+
+test("CONFORM-4: a Tasks result is NOT returned to a client that did not declare the extension", async () => {
+  const res = await rpc("tools/call", { name: "workflow.dry_run", arguments: { workflow_id: KNOWN_WORKFLOW_ID } }, { capabilities: {} });
+  assert.equal(res.status, 400);
+  assert.equal(res.body.error.code, -32021);
+  assert.ok(res.body.error.data.requiredCapabilities.extensions[TASKS_EXT]);
+});
+
+test("CONFORM-4: tasks/get is gated on the same declared capability", async () => {
+  const res = await rpc("tasks/get", { taskId: "whatever" }, { capabilities: { extensions: {} } });
+  assert.equal(res.status, 400);
+  assert.equal(res.body.error.code, -32021);
+});
+
+test("CONFORM-6: a request with no _meta at all -> -32602 + HTTP 400", async () => {
+  const res = await rpc("tools/list", {}, { meta: null });
+  assert.equal(res.status, 400);
+  assert.equal(res.body.error.code, -32602);
+});
+
+test("CONFORM-6: _meta missing clientCapabilities -> -32602 + HTTP 400", async () => {
+  const res = await rpc("tools/list", {}, { meta: { [META_VERSION]: MCP_VERSION } });
+  assert.equal(res.status, 400);
+  assert.equal(res.body.error.code, -32602);
+  assert.deepEqual(res.body.error.data.missing, [META_CAPS]);
+});
+
+test("CONFORM-6: _meta protocolVersion not matching the header -> -32020 HeaderMismatch + HTTP 400", async () => {
+  const res = await rpc("tools/list", {}, { meta: { ...requestMeta(), [META_VERSION]: "2025-06-18" } });
+  assert.equal(res.status, 400);
+  assert.equal(res.body.error.code, -32020);
+  assert.equal(res.body.error.data.header, "MCP-Protocol-Version");
+});
+
+test("CONFORM: unknown method is STILL HTTP 404 (the one thing helm already got right)", async () => {
+  const res = await rpc("resources/read", { uri: "file:///nope" });
+  assert.equal(res.status, 404);
+  assert.equal(res.body.error.code, -32601);
+});
+
 test("tools/list returns the read/run tool set", async () => {
   const res = await rpc("tools/list", {});
   assert.equal(res.status, 200);
@@ -137,8 +247,13 @@ test("tools/list returns the read/run tool set", async () => {
 test("tools/call catalog.search finds the known compiled pack", async () => {
   const res = await rpc("tools/call", { name: "catalog.search", arguments: { query: "aca-226j" } });
   assert.equal(res.status, 200);
-  const { workflows } = res.body.result.content[0].json;
+  const { workflows } = res.body.result.structuredContent;
   assert.ok(workflows.some((w) => w.workflow_id === KNOWN_WORKFLOW_ID));
+  // Content block types are text|image|audio|resource_link|resource — "json" is
+  // not among them; the serialized payload is mirrored into a TextContent block.
+  assert.equal(res.body.result.content[0].type, "text");
+  assert.deepEqual(JSON.parse(res.body.result.content[0].text), res.body.result.structuredContent);
+  assert.equal(res.body.result.resultType, "complete");
 });
 
 test("tools/call workflow.describe on an unknown workflow_id -> -32602", async () => {
@@ -170,10 +285,10 @@ test("workflow.dry_run returns a Task; tasks/get reaches completed; artifact.get
   assert.equal(status, "completed");
 
   const artifactRes = await rpc("tools/call", { name: "artifact.get", arguments: { run_id: taskId } });
-  assert.equal(artifactRes.body.result.content[0].json.state, "completed");
+  assert.equal(artifactRes.body.result.structuredContent.state, "completed");
 
   const verifyRes = await rpc("tools/call", { name: "artifact.verify", arguments: { run_id: taskId } });
-  assert.equal(verifyRes.body.result.content[0].json.valid, true);
+  assert.equal(verifyRes.body.result.structuredContent.valid, true);
 });
 
 test("evidence.export refuses without a ticket, succeeds with one minted via POST /evidence/export/ticket", async () => {
@@ -193,8 +308,8 @@ test("evidence.export refuses without a ticket, succeeds with one minted via POS
   assert.ok(ticket);
 
   const exportRes = await rpc("tools/call", { name: "evidence.export", arguments: { run_id: taskId, ticket } });
-  assert.equal(exportRes.body.result.content[0].json.trust_label, "hash_verified");
-  assert.equal(exportRes.body.result.content[0].json.run_id, taskId);
+  assert.equal(exportRes.body.result.structuredContent.trust_label, "hash_verified");
+  assert.equal(exportRes.body.result.structuredContent.run_id, taskId);
 
   // single-use: the same ticket cannot be redeemed twice
   const secondUse = await rpc("tools/call", { name: "evidence.export", arguments: { run_id: taskId, ticket } });
@@ -214,13 +329,13 @@ test("AGENT-PARITY (spec §5 gate 6): MCP workflow.run and REST /run/start resol
   for (let i = 0; i < 40; i++) {
     const a = await rawRequest("GET", `/run/timeline?run_id=${restRunId}`, undefined, baseHeaders());
     const b = await rpc("tools/call", { name: "artifact.get", arguments: { run_id: mcpRunId } });
-    const bState = b.body.result.content[0].json.state;
+    const bState = b.body.result.structuredContent.state;
     if (a.body.steps.some((s) => s.state === "completed") && bState === "completed") break;
     await sleep(25);
   }
   const restArtifact = await rpc("tools/call", { name: "artifact.get", arguments: { run_id: restRunId } });
   const mcpArtifact = await rpc("tools/call", { name: "artifact.get", arguments: { run_id: mcpRunId } });
-  assert.equal(restArtifact.body.result.content[0].json.workflow_manifest_digest, mcpArtifact.body.result.content[0].json.workflow_manifest_digest);
-  assert.equal(restArtifact.body.result.content[0].json.state, "completed");
-  assert.equal(mcpArtifact.body.result.content[0].json.state, "completed");
+  assert.equal(restArtifact.body.result.structuredContent.workflow_manifest_digest, mcpArtifact.body.result.structuredContent.workflow_manifest_digest);
+  assert.equal(restArtifact.body.result.structuredContent.state, "completed");
+  assert.equal(mcpArtifact.body.result.structuredContent.state, "completed");
 });
