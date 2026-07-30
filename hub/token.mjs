@@ -102,3 +102,31 @@ export function redeemStreamTicket(ticket, now = Date.now()) {
   if (!expiresAt) return false;
   return now <= expiresAt;
 }
+
+// HELM-H9 / evidence.export consent tier (phil review, HELM-UX-BUILD-SPEC.md
+// §19.4): a bulk-export capability sitting inside the same "read" tier as
+// catalog.search/artifact.get lets any holder of the bearer token pull the
+// whole evidence corpus through a route the human consent flow never sees.
+// An export ticket is minted the SAME way a stream ticket is — a short-lived,
+// single-use value returned by an authenticated POST — but the route that
+// mints it (POST /evidence/export/ticket) is meant to be called ONLY from
+// the paired browser UI after it shows the user a consent prompt, never
+// direct from an MCP tools/call. The MCP evidence.export tool refuses to run
+// without a valid ticket, so an agent holding only the bearer token cannot
+// reach export on its own — it can request/run/read, never export, without a
+// human at the UI having minted the ticket first.
+const EXPORT_TICKET_TTL_MS = 5 * 60 * 1000;
+const exportTickets = new Map(); // ticket -> expiresAtMs
+
+export function createExportTicket(now = Date.now()) {
+  const ticket = randomBytes(16).toString("hex");
+  exportTickets.set(ticket, now + EXPORT_TICKET_TTL_MS);
+  return ticket;
+}
+
+export function redeemExportTicket(ticket, now = Date.now()) {
+  const expiresAt = exportTickets.get(ticket);
+  exportTickets.delete(ticket);
+  if (!expiresAt) return false;
+  return now <= expiresAt;
+}

@@ -10,7 +10,7 @@ import { randomUUID, createHash } from "node:crypto";
 import { readFileSync } from "node:fs";
 import { join, dirname } from "node:path";
 import { fileURLToPath } from "node:url";
-import { tokenMatches, redeemPairingNonce, createStreamTicket, redeemStreamTicket } from "./token.mjs";
+import { tokenMatches, redeemPairingNonce, createStreamTicket, redeemStreamTicket, createExportTicket } from "./token.mjs";
 import { signChallenge } from "./challenge.mjs";
 import { log } from "./log.mjs";
 import { startFlow, getFlowStatus, listConnections, revokeConnection, isSecureEndpoint } from "./oauth-pkce.mjs";
@@ -20,6 +20,8 @@ import { listTemplates, getTemplate, buildTemplateManifest } from "./templates.m
 import { executeRun } from "./run.mjs";
 import { createKernelStepRunner } from "./kernel-runner.mjs";
 import { publishRunEvent, subscribeRunEvents } from "./event-bus.mjs";
+import { startWorkflowRun, getRunsInFlightCount as getActionsRunsInFlightCount } from "./run-actions.mjs";
+import { handleMcp, handleMcpMethodNotAllowed } from "./mcp.mjs";
 import { haGateCheckFor, findHeldGate, recordReplay, submitHaRecord } from "./ha-gate.mjs";
 import { recordsForSubject, getSlot } from "./ha-store.mjs";
 import { buildKernelCard, buildEucEntry } from "./euc-register.mjs";
@@ -91,7 +93,9 @@ function checkOrigin(req, allowedOrigin) {
 function applyCors(res, allowedOrigin) {
   res.setHeader("Access-Control-Allow-Origin", allowedOrigin);
   res.setHeader("Vary", "Origin");
-  res.setHeader("Access-Control-Allow-Headers", "Authorization, Content-Type");
+  // MCP-Protocol-Version/Mcp-Method/Mcp-Name (SEP-2243, HELM-H9's /mcp) ride
+  // alongside the pre-existing Authorization/Content-Type set.
+  res.setHeader("Access-Control-Allow-Headers", "Authorization, Content-Type, MCP-Protocol-Version, Mcp-Method, Mcp-Name");
   res.setHeader("Access-Control-Allow-Methods", "GET, POST, OPTIONS");
 }
 
@@ -271,12 +275,12 @@ let sseConnections = 0;
 // an in-flight run (handleRunStart's fire-and-forget chain and
 // handleRunResume's awaited one both bump this), not merely while a client
 // is watching its /events stream.
-let runsInFlight = 0;
+let runsInFlight = 0; // handleRunResume only — startWorkflowRun tracks its own in run-actions.mjs
 export function getSseConnectionCount() {
   return sseConnections;
 }
 export function getRunsInFlightCount() {
-  return runsInFlight;
+  return runsInFlight + getActionsRunsInFlightCount();
 }
 
 // POST /events/ticket (HELM-UX-1 §7.4): authenticated the normal way (bearer
@@ -286,6 +290,16 @@ export function getRunsInFlightCount() {
 // life of a session.
 function handleEventsTicket(req, res) {
   sendJson(res, 200, { ticket: createStreamTicket() });
+}
+
+// POST /evidence/export/ticket (HELM-H9): mints the short-lived, single-use
+// ticket the MCP evidence.export tool requires (token.mjs createExportTicket
+// doc comment). This route itself rides the ordinary bearer gate like any
+// other — the separation that matters is that the paired UI is meant to call
+// this ONLY after showing the user a consent prompt, and an MCP tools/call
+// has no way to reach this route at all (it isn't an MCP tool).
+function handleEvidenceExportTicket(req, res) {
+  sendJson(res, 200, { ticket: createExportTicket() });
 }
 
 // POST /shutdown (HELM-UX-1 §8, Operate view Quit button).
@@ -465,42 +479,14 @@ async function handleRunStart(req, res, params, db) {
   } catch {
     return deny(res, 400, "invalid_json");
   }
-  let workflowId = body.workflow_id;
-  let manifest;
-  if (body.template_slug) {
-    const template = getTemplate(body.template_slug);
-    if (!template) return deny(res, 404, "template_not_found");
-    workflowId = template.workflow_id;
-    manifest = buildTemplateManifest(template);
-    if (!manifest) return deny(res, 404, "workflow_not_found");
-  } else {
-    if (!workflowId) return deny(res, 400, "missing_workflow_id");
-    const pack = getPack(workflowId);
-    if (!pack) return deny(res, 404, "workflow_not_found");
-    manifest = pack.manifest;
+  let result;
+  try {
+    result = startWorkflowRun(db, { workflowId: body.workflow_id, templateSlug: body.template_slug, dryRun: !!body.dry_run });
+  } catch (err) {
+    if (err && err.status) return deny(res, err.status, err.error);
+    throw err;
   }
-
-  const runId = randomUUID();
-  const dryRun = !!body.dry_run;
-  const kernelStepRunner = createKernelStepRunner();
-  const stepRunner = async (step, ctx) => {
-    const output = await kernelStepRunner(step, ctx);
-    publishRunEvent(runId, { run_id: runId, state: "running", step_id: step.step_id });
-    return output;
-  };
-
-  runsInFlight++;
-  executeRun(db, { runId, manifest, dryRun, stepRunner, gateCheck: haGateCheckFor(db) })
-    .then((result) => publishRunEvent(runId, {
-      run_id: runId, state: result.state, execution_hash: result.executionHash, held: result.held ?? null,
-    }))
-    .catch((err) => {
-      log.error("run engine: run failed", { runId, workflowId, error: String(err?.message || err) });
-      publishRunEvent(runId, { run_id: runId, state: "failed", error: String(err?.message || err) });
-    })
-    .finally(() => runsInFlight--);
-
-  sendJson(res, 200, { run_id: runId, state: "queued" });
+  sendJson(res, 200, result);
 }
 
 // POST /run/resume {run_id} — re-invokes executeRun for a run currently
@@ -895,6 +881,7 @@ export const ROUTES = {
   "GET /version-check": (req, res) => handleVersionCheck(req, res, DEFAULT_VERSION_CHECK_URL),
   "GET /events": handleEvents,
   "POST /events/ticket": handleEventsTicket,
+  "POST /evidence/export/ticket": handleEvidenceExportTicket,
   "POST /vault/connections/begin": handleBeginConnection,
   "GET /vault/connections": handleListConnections,
   "GET /workflows": handleWorkflows,
@@ -912,6 +899,15 @@ export const ROUTES = {
   "GET /ha/records": handleHaRecords,
   "GET /ha/slot": handleHaSlot,
   "POST /ha/records": handleHaRecordSubmit,
+  // HELM-H9: MCP v2 JSON-RPC endpoint, same Host+Origin+Bearer gate as every
+  // other route here (row: "same bearer-token auth as REST"). GET/DELETE are
+  // registered too, deliberately — SEP-2567 (final, no delta) removed the
+  // SSE/session GET stream from the MCP transport entirely, so those methods
+  // must answer 405, never fall through to the generic 404 a truly-unknown
+  // path gets.
+  "POST /mcp": handleMcp,
+  "GET /mcp": handleMcpMethodNotAllowed,
+  "DELETE /mcp": handleMcpMethodNotAllowed,
 };
 
 // docPath: the OpenAPI-style templated path (gen-openapi.mjs has no way to
