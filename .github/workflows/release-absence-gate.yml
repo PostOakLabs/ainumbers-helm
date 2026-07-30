@@ -1,0 +1,39 @@
+name: Release absence gate
+
+# HELM-RELEASE-ABSENCE-GATE-1: catches a tag that never got a release —
+# the exact failure release.yml itself cannot see, because a
+# GITHUB_TOKEN-authored push (auto-tag-release.yml) never fires a
+# tag-triggered workflow (documented GitHub behavior). release.yml has
+# not run since 2026-07-25 while auto-tag-release.yml kept tagging
+# daily, and every existing signal (auto-tag's own green run, the tag's
+# existence) stayed green throughout.
+#
+# Runs on its OWN clock — never inside release.yml — so it can detect
+# release.yml not running at all. Needs no secret: tags and releases are
+# both readable with the default GITHUB_TOKEN's read scope.
+#
+# Own silent-failure mode (see scripts/check-release-absence.mjs header):
+# GitHub disables a scheduled workflow after 60 days with zero repo
+# activity. This repo's daily auto-tag-release.yml push is expected to
+# keep resetting that clock; there is no secondary watchdog for this
+# gate itself — stated, not solved.
+on:
+  schedule:
+    - cron: "30 14 * * *" # once daily, after auto-tag-release's 14:00 UTC run
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  check:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@9c091bb21b7c1c1d1991bb908d89e4e9dddfe3e0 # v7.0.0
+      - uses: actions/setup-node@249970729cb0ef3589644e2896645e5dc5ba9c38 # v6.5.0
+        with:
+          node-version: "22"
+      - name: tag-vs-release completeness
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: node scripts/check-release-absence.mjs
