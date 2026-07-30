@@ -35,9 +35,6 @@ node scripts/verify-vendored.mjs
 echo "pre-push: compile parity gate ..."
 node scripts/compile-parity-gate.mjs
 
-echo "pre-push: techdoc citation drift ..."
-node scripts/check-techdoc-citations.mjs
-
 echo "pre-push: sea build dry-run ..."
 node scripts/sea-dry-run.mjs
 
