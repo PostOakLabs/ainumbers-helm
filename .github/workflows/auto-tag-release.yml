@@ -25,6 +25,17 @@ on:
   schedule:
     - cron: "0 14 * * *" # once daily; the if-changed gate makes idle days a no-op
   workflow_dispatch:
+    inputs:
+      tag_override:
+        description: >-
+          Verification only. Tag to push instead of today's CalVer date.
+          MUST carry an -rc suffix: the date IS the version, so tagging a
+          bare YYYY.M.D by hand would consume that day's only GA slot. An
+          -rc run pushes the tag and nothing else — no version bump, no
+          commit to main (release.yml derives the release version from the
+          tag ref, and treats -rc as a prerelease).
+        required: false
+        default: ""
 
 permissions:
   contents: read
@@ -80,10 +91,40 @@ jobs:
 
       - name: decide whether to release
         id: gate
+        env:
+          # Via env, never inlined into the script: a dispatch input is
+          # attacker-controllable text and must not be evaluated as shell.
+          TAG_OVERRIDE: ${{ inputs.tag_override }}
         run: |
           set -e
+
+          # Verification path: push one explicitly-named -rc tag, bump
+          # nothing. This is what makes `workflow_dispatch` able to exercise
+          # the pipeline end-to-end; the normal same-day guard below would
+          # otherwise make a manual run a no-op on any day already tagged.
+          if [ -n "$TAG_OVERRIDE" ]; then
+            case "$TAG_OVERRIDE" in
+              *-rc*) ;;
+              *)
+                echo "tag_override must carry an -rc suffix — a bare CalVer date is only ever cut by the daily schedule." >&2
+                exit 1
+                ;;
+            esac
+            echo "tag=$TAG_OVERRIDE" >> "$GITHUB_OUTPUT"
+            echo "bump=false" >> "$GITHUB_OUTPUT"
+            if git rev-parse -q --verify "refs/tags/$TAG_OVERRIDE" >/dev/null; then
+              echo "already tagged $TAG_OVERRIDE — a tag is a published fact, not re-pointing it."
+              echo "skip=true" >> "$GITHUB_OUTPUT"
+            else
+              echo "pushing verification tag $TAG_OVERRIDE."
+              echo "skip=false" >> "$GITHUB_OUTPUT"
+            fi
+            exit 0
+          fi
+
           TAG="$(date -u +%Y.%-m.%-d)"
           echo "tag=$TAG" >> "$GITHUB_OUTPUT"
+          echo "bump=true" >> "$GITHUB_OUTPUT"
 
           if git rev-parse -q --verify "refs/tags/$TAG" >/dev/null; then
             echo "already tagged $TAG — one release per day, skipping."
@@ -122,19 +163,25 @@ jobs:
           set -e
           TAG="${{ steps.gate.outputs.tag }}"
 
-          node --input-type=module -e "
-            import { readFileSync, writeFileSync } from 'node:fs';
-            const pkg = JSON.parse(readFileSync('package.json', 'utf8'));
-            pkg.version = '$TAG';
-            writeFileSync('package.json', JSON.stringify(pkg, null, 2) + '\n');
-          "
-          node scripts/gen-openapi.mjs
-
           git config user.name "helm-release-bot"
           git config user.email "noreply@postoaklabs.com"
-          git add package.json docs/openapi.json
-          git commit -m "release(helm): bump version to $TAG"
-          git push origin HEAD:main
+
+          # An -rc verification tag bumps nothing: release.yml reads the
+          # release version off the tag ref, so moving main's version for a
+          # throwaway tag would be a lie in package.json's four consumers.
+          if [ "${{ steps.gate.outputs.bump }}" = "true" ]; then
+            node --input-type=module -e "
+              import { readFileSync, writeFileSync } from 'node:fs';
+              const pkg = JSON.parse(readFileSync('package.json', 'utf8'));
+              pkg.version = '$TAG';
+              writeFileSync('package.json', JSON.stringify(pkg, null, 2) + '\n');
+            "
+            node scripts/gen-openapi.mjs
+
+            git add package.json docs/openapi.json
+            git commit -m "release(helm): bump version to $TAG"
+            git push origin HEAD:main
+          fi
 
           git tag "$TAG"
           git push origin "$TAG"
