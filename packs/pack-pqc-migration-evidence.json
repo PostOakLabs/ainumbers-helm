@@ -1,0 +1,40 @@
+{
+  "workflow_id": "pack-pqc-migration-evidence",
+  "name": "PQC Migration Evidence Workflow",
+  "outcome": "Structural CBOM lint and CNSA-2.0 classification feeding a per-row CNSA-2.0 deadline calculation: two receipts binding a declared cryptography inventory to its asserted quantum-vulnerable findings and its migration deadlines.",
+  "spec_version": "ocg-control-plane@1",
+  "manifest": {
+    "manifest_version": "1",
+    "workflow_id": "pack-pqc-migration-evidence",
+    "trigger": {
+      "type": "manual"
+    },
+    "nodes": [
+      {
+        "node_id": "n1",
+        "kernel_id": "art-386-lint-cbom-structure",
+        "kernel_digest": "sha256:d82c9dafda429dc646d851ed45d680724fa9e2d9c308b29e2d9a6ac10f24c257"
+      },
+      {
+        "node_id": "n2",
+        "kernel_id": "art-387-pqc-deadline-ladder-calculator",
+        "kernel_digest": "sha256:22f4891e4f4169482a7f9026e33d39349cbee9578f4001be24826afadcb85c1c"
+      }
+    ],
+    "connectors": [],
+    "gates": [],
+    "actions": []
+  },
+  "workflow_manifest_digest": "sha256:bff301d69f6a0d7ba8ce628f2b24bc9c7667c343e2ff3893b7357c29ad04b0c9",
+  "declared_inputs": [],
+  "steps_meta": [
+    {
+      "node_id": "n1",
+      "data_classification": "compute"
+    },
+    {
+      "node_id": "n2",
+      "data_classification": "compute"
+    }
+  ]
+}

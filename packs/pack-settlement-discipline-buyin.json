@@ -13,7 +13,7 @@
       {
         "node_id": "n1",
         "kernel_id": "art-78-csdr-penalty-calculator",
-        "kernel_digest": "sha256:1a1ae5b7775cad6c3619104c909084bd1b203d852325759671f8a6ad7e46a80a"
+        "kernel_digest": "sha256:696b46349d69a4f615727264f5a7a59492a6dfc1eb9b73e631af142a6d436a80"
       },
       {
         "node_id": "n2",
@@ -30,7 +30,7 @@
     "gates": [],
     "actions": []
   },
-  "workflow_manifest_digest": "sha256:a5140393fa6523df4bf15dd4587bc59169f64344b25dcdc483b06f62e709c292",
+  "workflow_manifest_digest": "sha256:17ddbeff0e84d9a2155d964d27e7ef0f730a98689f33eeef323443fa8b3c72a4",
   "declared_inputs": [
     {
       "from": "art-77-t1-settlement-readiness-diagnostic",

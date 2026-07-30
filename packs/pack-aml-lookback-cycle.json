@@ -1,0 +1,58 @@
+{
+  "workflow_id": "pack-aml-lookback-cycle",
+  "name": "AML Lookback Cycle",
+  "outcome": "Reconciles a consent-order lookback's population against the extract actually re-screened, flagging any period with no preserved list snapshot as unverifiable rather than screening it against today's list. Re-screens the verifiable population against the sanctions/export-control program in force, versioned list snapshots as policy inputs. Builds a deterministic disposition sampling frame and reviewer workload allocation for the final independent-validator disposition review.",
+  "spec_version": "ocg-control-plane@1",
+  "manifest": {
+    "manifest_version": "1",
+    "workflow_id": "pack-aml-lookback-cycle",
+    "trigger": {
+      "type": "manual"
+    },
+    "nodes": [
+      {
+        "node_id": "n1",
+        "kernel_id": "art-470-lookback-completeness-reconciler",
+        "kernel_digest": "sha256:88f0b073173f8eafac3e96acaa0200f936815a627d4985738cbf8e79217632ca"
+      },
+      {
+        "node_id": "n2",
+        "kernel_id": "art-90-sanctions-screening-fit-diagnostic",
+        "kernel_digest": "sha256:38748fbbd98786a5c965a54c809622a7dd0d1f193507e321aa3ad9fa9f06c178"
+      },
+      {
+        "node_id": "n3",
+        "kernel_id": "art-97-sanctions-screening-quality-scorer",
+        "kernel_digest": "sha256:2e0ba6416081ea51d9652a6c147199662063a9ba489b68691dc07d76f0701983"
+      },
+      {
+        "node_id": "n4",
+        "kernel_id": "art-471-disposition-sampling-frame",
+        "kernel_digest": "sha256:33d8dd00530f61c28fc39625801011c67b5ebb1694d5abe4bc9af6c882daa66c"
+      }
+    ],
+    "connectors": [],
+    "gates": [],
+    "actions": []
+  },
+  "workflow_manifest_digest": "sha256:510ea822c73b182ea842e6174b89e58e6e32a0f1407bfe938e32c24f401dbc7a",
+  "declared_inputs": [],
+  "steps_meta": [
+    {
+      "node_id": "n1",
+      "data_classification": "compute"
+    },
+    {
+      "node_id": "n2",
+      "data_classification": "compute"
+    },
+    {
+      "node_id": "n3",
+      "data_classification": "compute"
+    },
+    {
+      "node_id": "n4",
+      "data_classification": "compute"
+    }
+  ]
+}

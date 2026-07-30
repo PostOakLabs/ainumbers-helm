@@ -1,0 +1,31 @@
+{
+  "workflow_id": "pack-cbcr-annual-publish",
+  "name": "CbCR Annual Publish",
+  "outcome": "OECD BEPS Action 13 Country-by-Country Report build with internal consistency gates and anomaly-pattern surfacing in one artifact. gate_status (auto_pass / review_required) and anomaly_flags (e.g. profit-with-zero-employees) are recorded in output_payload per the §27 Human Accountability vocabulary; a PUBLIC release additionally requires a dual_control(2) preparer/tax-officer gate before disclosure -- both recorded now, enforced once HA-RETRO-1 wires runtime gating. Cross-links art-473-interquartile-benchmark (same underlying entity financial data, different arm's-length-range analysis) and art-456 GloBE safe-harbour.",
+  "spec_version": "ocg-control-plane@1",
+  "manifest": {
+    "manifest_version": "1",
+    "workflow_id": "pack-cbcr-annual-publish",
+    "trigger": {
+      "type": "manual"
+    },
+    "nodes": [
+      {
+        "node_id": "n1",
+        "kernel_id": "art-472-cbcr-builder",
+        "kernel_digest": "sha256:62a04a2495b254beb4938ec0bf7c60631fd7d37bdcb79e12677091656b0cb8ce"
+      }
+    ],
+    "connectors": [],
+    "gates": [],
+    "actions": []
+  },
+  "workflow_manifest_digest": "sha256:fe832d095513f78aac84241f42b4581c32577f5ef7ea28fe73dc36bebcef7764",
+  "declared_inputs": [],
+  "steps_meta": [
+    {
+      "node_id": "n1",
+      "data_classification": "compute"
+    }
+  ]
+}

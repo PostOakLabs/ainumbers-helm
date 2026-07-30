@@ -1,0 +1,40 @@
+{
+  "workflow_id": "pack-model-validation-cycle",
+  "name": "Model Validation Replication Cycle",
+  "outcome": "Two-step validation cycle over a declared model specification, its stated inputs and its reported outputs, routed in through the shipped workbook bridge. Step 1 recomputes the reported outputs independently and returns a per-record and aggregate tolerance diff with the failing segment named, so an independent party reruns the model offline and reaches the same verdict. Step 2 runs the deterministic-given-data battery -- discriminatory power, population and characteristic stability, back-test outcome against predicted, and calibration comparison -- each scored against policy-supplied thresholds. Step 1 is gated hold whenever replication does not succeed, including the honest not-replicable-as-specified verdict. Step 2 is gated dual_control(2) for validation sign-off, where counting distinct approver identities is what mechanically evidences that the validator is independent of the developer; a test breach holds the sign-off for review. The model owner is bound as a separate role on the subject artifact so owner and validator are named apart. This surface evidences replication and testing only. It states no validation opinion, no view on conceptual soundness or fitness for use, and no sufficiency claim under any supervisory model-risk guidance.",
+  "spec_version": "ocg-control-plane@1",
+  "manifest": {
+    "manifest_version": "1",
+    "workflow_id": "pack-model-validation-cycle",
+    "trigger": {
+      "type": "manual"
+    },
+    "nodes": [
+      {
+        "node_id": "n1",
+        "kernel_id": "art-488-model-replication-diff",
+        "kernel_digest": "sha256:5ff2146f1ae9457d37e4e6699dc331e6f8f69701f3f32a400f848761bc254ed8"
+      },
+      {
+        "node_id": "n2",
+        "kernel_id": "art-489-model-test-battery",
+        "kernel_digest": "sha256:20e07ad532c59a2c5619ce03881ce808c367002a5572176618bbb8b6ba06e178"
+      }
+    ],
+    "connectors": [],
+    "gates": [],
+    "actions": []
+  },
+  "workflow_manifest_digest": "sha256:15f0b3842093f220f08163cc6a845e790d39d593d373e8ac766cb50ce603ece7",
+  "declared_inputs": [],
+  "steps_meta": [
+    {
+      "node_id": "n1",
+      "data_classification": "compute"
+    },
+    {
+      "node_id": "n2",
+      "data_classification": "compute"
+    }
+  ]
+}

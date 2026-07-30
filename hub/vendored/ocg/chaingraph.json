@@ -6893,16 +6893,16 @@
       "status": "live",
       "conformance_fixtures": false,
       "compute_capability": "server",
-      "compute_images": [{"system":"sha256-source","image_id":"sha256:1a1ae5b7775cad6c3619104c909084bd1b203d852325759671f8a6ad7e46a80a","valid_from":"2026-07-10"},{"system":"risc0","image_id":"sha256:a1a0bc89b5b1febaeda3519f6dbade0fa5ac16beeb143c4e1b01689573567bc6","valid_from":"2026-06-28"}],
+      "compute_images": [{"system":"sha256-source","image_id":"sha256:696b46349d69a4f615727264f5a7a59492a6dfc1eb9b73e631af142a6d436a80","valid_from":"2026-07-10"},{"system":"risc0","image_id":"sha256:a1a0bc89b5b1febaeda3519f6dbade0fa5ac16beeb143c4e1b01689573567bc6","valid_from":"2026-06-28"}],
       "compute_proof": {
         "type": "ZkVmReceipt",
         "system": "risc0",
         "receiptFormat": "groth16-bn254",
         "imageId": "sha256:a1a0bc89b5b1febaeda3519f6dbade0fa5ac16beeb143c4e1b01689573567bc6",
-        "seal": "LV1OXH9Bi4zLdwCWYeUaeiHqHgPLSVzUesnaM3vMEYQjhNVbM3+QaFoQGtB5jfsNxDt00myJZiPAKmLWYNSS8xgdlii4orWjdHasOEQ4KTbkVooYcUx7v4uywPZGuWagEz0XuRmFB+gbVJoUjHCl95q3GQhK7HGwCc61/KqxsOcaZ3Q3nKUx2HS9yhkiD8sfuaB8ATIoG4oyi7KL0tizcigj95GZB0m281YRwrDd59q6UQcd1JgGOUPnoihNcQUjB0I3iTB0whuERN01j5uaaDAME3LOVvkTarxk27w2R4wMTivRVu9sHALPfTBUOA8r+uoj2VRcYzOU8kvAmJZmfA==",
+        "seal": "E23uw8nhnSct3/ECNcLSis5OfZmVE+JeI+HCosMzA3YlUteQTFfzcEwlvgQUu398/KFRwAOSI4DWr7l6nPO84yy1zIJGyul5h9YffvgZ5pYnVRPFxddGqDAXdy/gvj9vAwBnC7UAz7lORGNp99mNgxXVOV0JIuylUM2LTt2jfOgByOzhK+OOr/De74JAE3/idyUN/h5RPnXyJsXWv97IOxepzzwFiurUYOBF8eQBndx5iXYfsxgBegDdUnBLXSHjB7087K3hoijGYPcjd1bG601x8lsCJp5oMO+Jq3r5ViIdOdFjBE23soQxs19TtHZUAlkxFslQJ1dtTq2ZqB/sTQ==",
         "journal": {
           "chaingraph_version": "0.4.0",
-          "kernel_digest": "sha256:1a1ae5b7775cad6c3619104c909084bd1b203d852325759671f8a6ad7e46a80a",
+          "kernel_digest": "sha256:696b46349d69a4f615727264f5a7a59492a6dfc1eb9b73e631af142a6d436a80",
           "output": {
             "asset_class": "equity",
             "batch_detail": null,
@@ -6914,12 +6914,14 @@
             "partial_credit": 0,
             "partial_settled_pct": 0,
             "penalty_amount": 0,
+            "penalty_type": "sefp",
             "rate_table_version": "CSDR-RTS-2025-10",
             "reference": {
               "note": "Penalty rates: verify current edition at https://www.esma.europa.eu/. RTS Oct 2025 updated rate schedule — confirm rates in force.",
               "regulation": "CSDR Reg. (EU) 909/2014 Art 7; Delegated Reg. 2017/389 as amended",
               "rts": "ESMA CSDR SDR RTS — Final Report 13 Oct 2025 (ESMA74-2119945926-3430)"
-            }
+            },
+            "reference_price": 0
           }
         }
       },
@@ -21556,36 +21558,12 @@
       "status": "live",
       "conformance_fixtures": true,
       "compute_capability": "server",
-      "compute_images": [{"system":"sha256-source","image_id":"sha256:c67d83f00f9ea80df10f2691b2a0660aab5f4dd3bddeebfec93469346b192947","valid_from":"2026-07-10"},{"system":"risc0","image_id":"sha256:a1a0bc89b5b1febaeda3519f6dbade0fa5ac16beeb143c4e1b01689573567bc6","valid_from":"2026-07-17"}],
+      "compute_images": [{"system":"sha256-source","image_id":"sha256:65a08e84465e1ec8ca4a01e9b4b0c7d7d5c566ca467f6efdf622598c36511706","valid_from":"2026-07-10"},{"system":"risc0","image_id":"sha256:a1a0bc89b5b1febaeda3519f6dbade0fa5ac16beeb143c4e1b01689573567bc6","valid_from":"2026-07-17"}],
       "export_capability": [
         "json"
       ],
       "compute_proof_ready": "ready",
-      "compute_proof": {
-        "type": "ZkVmReceipt",
-        "system": "risc0",
-        "receiptFormat": "groth16-bn254",
-        "imageId": "sha256:a1a0bc89b5b1febaeda3519f6dbade0fa5ac16beeb143c4e1b01689573567bc6",
-        "seal": "CAXLDy9nLdiqBut61ueW+4JvsQ/gnaTx2CRFQOH2Iy8c8RRqpe9xEq//upcGdRcGZktMQxGQzwP5jYhR/Ol4RQDoB0jJ49wrJ4uHOEeVkJXGfRXyUaVGdSxFRYCtZG9/BJ9vujLJIvifWYdKGy3xmWf9UFYQ1jOsWpZMeLqvbBIXI033OLGCaax5RAY45xVxmOX1WNTGHe3MDxU8Nq08sQ561hos3D9Bd8ijGCFYEvNAQcrscAA+o7G4ea4jCe1SHeyZXoKF11OaNY0Z0PZDoK7jkIM5NKBKNTzwqOhcJCgFISwHG0wZRAZs/RXt88jtwNp7YFWTlMTpHZBd098QUw==",
-        "journal": {
-          "chaingraph_version": "0.4.0",
-          "kernel_digest": "sha256:b1cf4e50eda6742f9454bfe6c9f4c42b0fc3403ee6211d952211dd5530595dd0",
-          "output": {
-            "appraised_value": 500000,
-            "cltv_pct": 80,
-            "first_lien_amount": 392000,
-            "hcltv_pct": 80,
-            "heloc_credit_limit": 0,
-            "ltv_pct": 80,
-            "note": "CLTV includes closed-end subordinate financing at the drawn balance. HCLTV includes the full HELOC credit limit whether or not fully drawn, per B2-1.1-03. Value used is the lesser of appraised value and sales price for purchases; appraised value only for refinances. Not check_agency_eligibility_matrix (art-222), which consumes these ratios as inputs to its own LTV/CLTV/HCLTV eligibility checks.",
-            "regulatory_basis": "Fannie Mae Selling Guide B2-1.1-03 (LTV, CLTV, HCLTV Ratios); Freddie Mac Single-Family Seller/Servicer Guide 5401.1 (LTV/TLTV/HTLTV ratios)",
-            "sales_price": 490000,
-            "subordinate_lien_amount": 0,
-            "transaction_type": "purchase",
-            "value_used": 490000
-          }
-        }
-      }
+      "compute_proof": {"type":"ZkVmReceipt","system":"risc0","receiptFormat":"groth16-bn254","imageId":"sha256:a1a0bc89b5b1febaeda3519f6dbade0fa5ac16beeb143c4e1b01689573567bc6","seal":"KTxcvINeWMXKzskWT24frTjFA2ukX6ORhe17+NGapbUoFDxRToPz5lMpWPusMjjhSb/yoRyOglJuRbpaHt6EyQoCyx7PwAP/C/le8JPA/kCYf1zZNp/u2LZs014b3hdZCRxho5TTaZdh49fQSEqQH7O8trMaEJHZJ5SRno7ieKUHRD6t7aNpKAP357lvzCQJBRiM3mBtDtM6E0MbFZoo2Cgkp5JxyxOrtYlUeRHCSh/qTkvDT7y11dCtbGyx1ytjI8LUKtlWoan2XFYPqbNlMS9SG6123+U/mHv/6i2EnPwHt3vu8CclV2A3McJRTQ4UMddeMelovaKpKiLugC3g4Q==","journal":{"chaingraph_version":"0.4.0","kernel_digest":"sha256:65a08e84465e1ec8ca4a01e9b4b0c7d7d5c566ca467f6efdf622598c36511706","output":{"appraised_value":500000,"cltv_pct":80,"first_lien_amount":392000,"hcltv_pct":80,"heloc_credit_limit":0,"ltv_pct":80,"note":"CLTV includes closed-end subordinate financing at the drawn balance. HCLTV includes the full HELOC credit limit whether or not fully drawn, per B2-1.1-03. Value used is the lesser of appraised value and sales price for purchases; appraised value only for refinances. Not check_agency_eligibility_matrix (art-222), which consumes these ratios as inputs to its own LTV/CLTV/HCLTV eligibility checks.","regulatory_basis":"Fannie Mae Selling Guide B2-1.1-03 (LTV, CLTV, HCLTV Ratios); Freddie Mac Single-Family Seller/Servicer Guide 5401.1 (LTV/TLTV/HTLTV ratios)","sales_price":490000,"subordinate_lien_amount":0,"transaction_type":"purchase","value_used":490000}}}
     },
     {
       "tool_id": "art-338-compute-federal-withholding",
@@ -30057,9 +30035,66 @@
   "status": "live",
   "conformance_fixtures": true,
   "compute_capability": "server",
-  "compute_images": [{"system":"sha256-source","image_id":"sha256:cd37df86828dbc4c50192784c2c421b0dfda541d63b7c36735e63510f34dfb96","valid_from":"2026-07-24"}],
-  "compute_proof_ready": "deferred",
-  "deferred_reason": "New shard from AI-2 (AGENTPAY-INTEROP-BUILD-SPEC), ships ahead of the next batched proof sweep per SO #6.",
+  "compute_images": [{"system":"sha256-source","image_id":"sha256:a10219350fc810ab2fc5e6acfec6cad91e855e0b0c493b1e518b3fcc04a2e07d","valid_from":"2026-07-10"},{"system":"risc0","image_id":"sha256:a1a0bc89b5b1febaeda3519f6dbade0fa5ac16beeb143c4e1b01689573567bc6","valid_from":"2026-06-28"}],
+  "compute_proof_ready": "ready",
+  "compute_proof": {
+    "type": "ZkVmReceipt",
+    "system": "risc0",
+    "receiptFormat": "groth16-bn254",
+    "imageId": "sha256:a1a0bc89b5b1febaeda3519f6dbade0fa5ac16beeb143c4e1b01689573567bc6",
+    "seal": "KvT/bUz6kpUyxm9BQCSbD+xCVTLH+EkysF1p+TUa6EMCFgP3x4Sw4H+QK97xpZuSqR/pYCFs9JbMAvF67SttJQr6Siw4LSstwW0vXH1HlFD5dFOWVZVxIIPx7vuT3vdTBDFYmOLtG5H/XTuSpmkrLvUBZB8jNNUIC0ryVonxJ+0kr3yU2vpke1seEzVlFO3tQV1w1Ja4nESgryWUxMSycSiqJ9dQX/sA+HxNemyWYu2X7Up2aExhIXIVnHsSLB3GFMlpH7Uqscf7ws1jLY1yLMirMxk4s453TbR4yb3WWkIdj9ekYHloh8qwtrd5yXf2GFt+xW5ekWuKZ3XLZh8cjQ==",
+    "journal": {
+      "chaingraph_version": "0.4.0",
+      "kernel_digest": "sha256:a10219350fc810ab2fc5e6acfec6cad91e855e0b0c493b1e518b3fcc04a2e07d",
+      "output": {
+        "canonical_pivot": {
+          "amount": 25.5,
+          "currency": "USDC",
+          "expires_at": "2026-07-24T11:00:00Z",
+          "human_not_present": true,
+          "issued_at": "2026-07-24T10:00:00Z",
+          "mandate_id": "ap2-pay-001",
+          "max_amount": 100,
+          "payee_ref": "merchant-42",
+          "payer_ref": null,
+          "purpose": "merchant-42"
+        },
+        "mapping_ok": false,
+        "mapping_receipt": {
+          "lossy_fields": ["human_not_present"],
+          "mapping_table_version": "AI2-MAP-V1-2026-07-24",
+          "source_digest": "6f6c4f9b8f59c9a6d0b61825bdb522a00290df017299176cbcea232c6756059c",
+          "target_digest": "b190008e4f0158fa351ebd7df33bd8285b850550fb78dc1ac1bb889d74c13ded"
+        },
+        "mapping_table_version": "AI2-MAP-V1-2026-07-24",
+        "missing_required_target_fields": ["payer_ref"],
+        "protocol_versions": {
+          "ap2": "AP2 v0.2 (per art-01/art-62 field usage, live 2026-07-18)",
+          "x402": "x402 (Coinbase, scheme=exact; per art-26 field usage, live 2026-07-18)"
+        },
+        "source_protocol": "ap2",
+        "target_protocol": "x402",
+        "translated_mandate": {
+          "asset": "USDC",
+          "maxAmountRequired": 100,
+          "payTo": "merchant-42",
+          "payload": {
+            "authorization": {
+              "from": null,
+              "nonce": "ap2-pay-001",
+              "to": "merchant-42",
+              "validAfter": "2026-07-24T10:00:00Z",
+              "validBefore": "2026-07-24T11:00:00Z",
+              "value": 25.5
+            }
+          },
+          "resource": "merchant-42",
+          "scheme": "exact",
+          "x402Version": 1
+        }
+      }
+    }
+  },
   "export_capability": [
     "json"
   ]
@@ -30289,6 +30324,1102 @@
             "recourse": "with-recourse"
           }
         }
+      }
+    }
+  }
+},
+    {
+  "tool_id": "art-480-rdarr-aggregation-recompute",
+  "tool_version": "1.0.0",
+  "display_name": "RDARR Aggregation Recompute",
+  "mcp_name": "rdarr_aggregation_recompute",
+  "mandate_type": "attestation_mandate",
+  "wave": 66,
+  "gpu": false,
+  "url": "https://ainumbers.co/chaingraph/art-480-rdarr-aggregation-recompute.html",
+  "description": "Re-derives a stated risk-report figure from a SUPPLIED source extract under a declared aggregation policy (filter set, netting rule, FX rate set, hierarchy roll-up). Returns the recomputed figure, a signed delta vs the reported figure, and a per-roll-up-node contribution breakdown so a break localises to one node instead of the whole report. HARD FENCE: every FX rate is supplied and asserted, never fetched (zero-egress); this recomputes the arithmetic over declared inputs and attests THAT, never an opinion on extract or reported-figure correctness, never a data-quality assessment (see art-481-rdarr-quality-scorecard), never a materiality judgement. First entry of the BCBS 239 / RDARR family, feeding the rdarr-attestation-cycle chain (art-481 + gate + attestation bundle). Not a data-quality scorecard or any general risk-data ingester. ECB Guide on effective risk data aggregation and risk reporting (3 May 2024) referenced as informative context only.",
+  "input_schema_ref": "chaingraph/art-480-rdarr-aggregation-recompute.html#manifest",
+  "deadline": null,
+  "deadline_note": "No statutory deadline; RDARR aggregation recompute is a continuous data-governance control, not a periodic filing. The ECB named RDARR remediation a supervisory priority for 2025-2027.",
+  "consumes": [],
+  "feeds": [],
+  "status": "live",
+  "conformance_fixtures": true,
+  "compute_capability": "server",
+  "compute_images": [{"system":"sha256-source","image_id":"sha256:03ded60475d18d57aeb7093295a95854b928661cde7ba44e34bf93df28373b4b","valid_from":"2026-07-10"},{"system":"risc0","image_id":"sha256:a1a0bc89b5b1febaeda3519f6dbade0fa5ac16beeb143c4e1b01689573567bc6","valid_from":"2026-06-28"}],
+  "export_capability": [
+    "json"
+  ],
+  "compute_proof_ready": "ready",
+  "compute_proof": {
+    "type": "ZkVmReceipt",
+    "system": "risc0",
+    "receiptFormat": "groth16-bn254",
+    "imageId": "sha256:a1a0bc89b5b1febaeda3519f6dbade0fa5ac16beeb143c4e1b01689573567bc6",
+    "seal": "AyVDBbaWo0xKIV5r6zelQsBvYNZV9RQjCr5ykkl/4Wkec8+BVS8mZpflz0UgSD1KUxbAUnrK+rDLUpJfuNfNywtT2WxLJUfQwxE8vImALpglAx8YhQOvoLeXScntfONAIbmTaQf62psulUkW3ppRW89zMIwH4vFqmaigKQIdGDoSLC3CyL0sPcbOJ6/s4ttXZM6hW7G6Yuss26SA3xK5XSb7aoIn0Syczvj/jdRUUtThLJ3MHHKY6LBA18S1CcdzD4jSy7yr5a5VGOkI357ZwSX6ZurgWRBF7kJL8a7NIncX1SnxdFDSUR0mw3WfQI/yuPusPdljjrRTreUDoT2IWQ==",
+    "journal": {
+      "chaingraph_version": "0.4.0",
+      "kernel_digest": "sha256:03ded60475d18d57aeb7093295a95854b928661cde7ba44e34bf93df28373b4b",
+      "output": {
+        "base_currency": "USD",
+        "contribution_breakdown": [
+          {
+            "contribution_pct": "100.00",
+            "label": "Total Credit Risk RWA",
+            "node_id": "ROOT",
+            "parent_node_id": null,
+            "value": "4740.00"
+          },
+          {
+            "contribution_pct": "68.35",
+            "label": "Corporate",
+            "node_id": "CORP",
+            "parent_node_id": "ROOT",
+            "value": "3240.00"
+          },
+          {
+            "contribution_pct": "31.65",
+            "label": "Retail",
+            "node_id": "RETAIL",
+            "parent_node_id": "ROOT",
+            "value": "1500.00"
+          }
+        ],
+        "delta": "-260.00",
+        "delta_pct": "-5.20",
+        "fence": "FX rates and extract lines are SUPPLIED, asserted, and digested into this receipt. This kernel recomputes the ARITHMETIC over those declared inputs under the declared aggregation policy and attests THAT — never an opinion on extract or reported-figure correctness, never a data-quality assessment (see art-481), never a materiality judgement (zero-egress by contract).",
+        "lines_excluded": 1,
+        "lines_included": 3,
+        "netting_applied": true,
+        "netting_sets": [
+          {
+            "gross_value": "2500.00",
+            "line_count": 2,
+            "net_value": "1500.00",
+            "netting_key": "RETAIL::CP-A"
+          },
+          {
+            "gross_value": "3240.00",
+            "line_count": 1,
+            "net_value": "3240.00",
+            "netting_key": "CORP::CP-B"
+          }
+        ],
+        "not_proven": [
+          {
+            "detail": "Every extract line and FX rate is caller-supplied and asserted. This kernel performs no market-data or source-system lookups (zero-egress) and does not verify these values against any external source.",
+            "item": "Extract accuracy"
+          },
+          {
+            "detail": "The reported figure is a caller-supplied comparison point, not validated independently. A signed delta is reported exactly as computed, with no correctness or materiality judgement attached.",
+            "item": "Reported-figure correctness"
+          },
+          {
+            "detail": "This kernel performs arithmetic recomputation only. Completeness, referential integrity, timeliness, reconciliation coverage, and manual-adjustment ratio are scored separately by art-481-rdarr-quality-scorecard.",
+            "item": "Data quality"
+          },
+          {
+            "detail": "Whether a computed delta is material is a policy/governance judgement outside this kernel's scope — it is never emitted as a kernel output.",
+            "item": "Materiality"
+          }
+        ],
+        "recomputed_figure": "4740.00",
+        "reported_figure": "5000.00",
+        "rounding": {
+          "decimal_places": 2,
+          "mode": "half_up"
+        }
+      }
+    }
+  }
+},
+    {
+  "tool_id": "art-481-rdarr-quality-scorecard",
+  "tool_version": "1.0.0",
+  "display_name": "RDARR Quality Scorecard",
+  "mcp_name": "rdarr_quality_scorecard",
+  "mandate_type": "attestation_mandate",
+  "wave": 66,
+  "gpu": false,
+  "url": "https://ainumbers.co/chaingraph/art-481-rdarr-quality-scorecard.html",
+  "description": "Deterministic data-quality metrics over a SUPPLIED risk-data extract, keyed to the measurable RDARR prerequisites: completeness of mandatory attributes, referential integrity across the declared hierarchy, timeliness against a declared cut-off, reconciliation coverage, and manual-adjustment ratio. Each metric is scored against a policy-supplied threshold (never hardcoded) and labelled with its ECB Guide on effective risk data aggregation and risk reporting (3 May 2024) prerequisite area, so the result drops into an existing self-assessment. HARD FENCE: thresholds are policy inputs; this is never a supervisory pass mark, never a materiality judgement. Second entry of the BCBS 239 / RDARR family, feeding the rdarr-attestation-cycle chain alongside art-480-rdarr-aggregation-recompute (gate + attestation bundle). Not an aggregation recompute or any general risk-data ingester.",
+  "input_schema_ref": "chaingraph/art-481-rdarr-quality-scorecard.html#manifest",
+  "deadline": null,
+  "deadline_note": "No statutory deadline; RDARR quality scoring is a continuous data-governance control, not a periodic filing. The ECB named RDARR remediation a supervisory priority for 2025-2027.",
+  "consumes": [],
+  "feeds": [],
+  "status": "live",
+  "conformance_fixtures": true,
+  "compute_capability": "server",
+  "compute_images": [{"system":"sha256-source","image_id":"sha256:bb595b3096e163a13b9265cd83ed691343605e21a5fcb974aa04fdc9292c38ba","valid_from":"2026-07-10"},{"system":"risc0","image_id":"sha256:a1a0bc89b5b1febaeda3519f6dbade0fa5ac16beeb143c4e1b01689573567bc6","valid_from":"2026-06-28"}],
+  "export_capability": [
+    "json"
+  ],
+  "compute_proof_ready": "ready",
+  "compute_proof": {
+    "type": "ZkVmReceipt",
+    "system": "risc0",
+    "receiptFormat": "groth16-bn254",
+    "imageId": "sha256:a1a0bc89b5b1febaeda3519f6dbade0fa5ac16beeb143c4e1b01689573567bc6",
+    "seal": "BnLgspl5gd56u8xFwgHws1VPCjsMjK+2bntg8UKQ99wKxf4DH+RPrU32twxbj3Z3Bny7CfSf11+aGougQVLXLAPWZdChuxLp76kkZfzNG8UCe0ACDgcPALArdSRtrGZTCCX6ufGOFhk44NMzBslv3vN68U5MXoaODwnXlQDO1hkT5CdBbxV/PKmKpxfw/HTWFQRDyLQKdIzve4KOXBqddwmv7NPyQSEFS/bmSGRiUvYmj8S6xfZ1t4kYPpD78j9VAtKiwH7fM+n0/9H5orpupHN4FhTH9If6N7+u+RC0zzQhYHsgQY+4Qv5yoyeXbmk7fZyHpETsoFn1DZcr/+pEtA==",
+    "journal": {
+      "chaingraph_version": "0.4.0",
+      "kernel_digest": "sha256:bb595b3096e163a13b9265cd83ed691343605e21a5fcb974aa04fdc9292c38ba",
+      "output": {
+        "cutoff_date": "2026-06-30",
+        "fence": "Extract records and thresholds are SUPPLIED, asserted, and digested into this receipt. This kernel scores deterministic structural metrics against the declared thresholds and attests THAT — never a supervisory pass mark, never a materiality judgement, never confirmation the reported figures reconcile (see art-480), zero-egress by contract.",
+        "guide_version": "ECB Guide on effective risk data aggregation and risk reporting, 3 May 2024",
+        "metrics": [
+          {
+            "comparator": "min",
+            "ecb_prerequisite_area": "Completeness",
+            "metric": "completeness_pct",
+            "record_count": 3,
+            "status": "breach",
+            "threshold_pct": 98,
+            "total_records": 4,
+            "value_pct": "75.00"
+          },
+          {
+            "comparator": "min",
+            "ecb_prerequisite_area": "Accuracy and integrity",
+            "metric": "referential_integrity_pct",
+            "record_count": 3,
+            "status": "breach",
+            "threshold_pct": 100,
+            "total_records": 4,
+            "value_pct": "75.00"
+          },
+          {
+            "comparator": "min",
+            "ecb_prerequisite_area": "Timeliness",
+            "metric": "timeliness_pct",
+            "record_count": 3,
+            "status": "breach",
+            "threshold_pct": 95,
+            "total_records": 4,
+            "value_pct": "75.00"
+          },
+          {
+            "comparator": "min",
+            "ecb_prerequisite_area": "Accuracy and integrity",
+            "metric": "reconciliation_coverage_pct",
+            "record_count": 3,
+            "status": "breach",
+            "threshold_pct": 90,
+            "total_records": 4,
+            "value_pct": "75.00"
+          },
+          {
+            "comparator": "max",
+            "ecb_prerequisite_area": "Adaptability",
+            "metric": "manual_adjustment_ratio_pct",
+            "record_count": 1,
+            "status": "breach",
+            "threshold_pct": 5,
+            "total_records": 4,
+            "value_pct": "25.00"
+          }
+        ],
+        "not_proven": [
+          {
+            "detail": "Every extract record is caller-supplied and asserted. This kernel checks structural properties (presence, referential linkage, dates, flags) and performs no market-data or source-system lookups (zero-egress).",
+            "item": "Extract accuracy"
+          },
+          {
+            "detail": "Thresholds and the metric-to-prerequisite-area map are policy inputs supplied by the caller; this kernel takes no position on whether a given threshold set is correct for a given supervisor.",
+            "item": "Threshold appropriateness"
+          },
+          {
+            "detail": "Whether a breach is material is a governance judgement outside this kernel's scope — it is never emitted as a kernel output, only pass/breach against the supplied threshold.",
+            "item": "Materiality"
+          },
+          {
+            "detail": "This kernel scores data-quality structure only. Whether a reported risk figure recomputes correctly is scored separately by art-480-rdarr-aggregation-recompute.",
+            "item": "Aggregation-figure correctness"
+          }
+        ],
+        "scorecard": {
+          "breach_count": 5,
+          "missing_threshold_count": 0,
+          "overall_status": "breach",
+          "pass_count": 0
+        },
+        "total_records": 4
+      }
+    }
+  }
+},
+    {
+  "tool_id": "art-482-emir-recon-adjudicator",
+  "tool_version": "1.0.0",
+  "display_name": "EMIR Trade-Repository Reconciliation Adjudicator",
+  "mcp_name": "adjudicate_emir_reconciliation",
+  "mandate_type": "attestation_mandate",
+  "wave": 71,
+  "gpu": false,
+  "url": "https://ainumbers.co/chaingraph/art-482-emir-recon-adjudicator.html",
+  "description": "Under EMIR Refit the trade repository (TR) runs the inter-TR reconciliation and returns a daily ISO 20022 response naming matched/unreconciled fields per UTI -- a firm holds that TR response plus its own submitted state, never both counterparties' raw extracts. This node independently reproduces the reconciliation verdict from the TR response + the firm's submitted state, under a policy-supplied per-cycle field/tolerance/suppression table, and emits a stable per-break key (uti::field_name) so consecutive cycles diff cleanly. Disagreement with the TR's own stated match status is a first-class output, never an error. Lifecycle events (amendment, compression, termination) are ordinary inputs. Not art-156-emir-counterparty-pairing-reconciler, which compares two counterparties' own extracts directly -- a premise EMIR Refit's TR-mediated reconciliation model replaced. Feeds art-483-emir-break-ageing.",
+  "input_schema_ref": "chaingraph/art-482-emir-recon-adjudicator.html#manifest",
+  "consumes": [],
+  "feeds": [
+    "art-483-emir-break-ageing"
+  ],
+  "status": "live",
+  "conformance_fixtures": true,
+  "compute_capability": "server",
+  "compute_images": [{"system":"sha256-source","image_id":"sha256:ef88fb46f98773129561e13479d723e9b1d0822b713ab0816c49367014562557","valid_from":"2026-07-10"},{"system":"risc0","image_id":"sha256:a1a0bc89b5b1febaeda3519f6dbade0fa5ac16beeb143c4e1b01689573567bc6","valid_from":"2026-06-28"}],
+  "export_capability": [
+    "json"
+  ],
+  "compute_proof_ready": "ready",
+  "compute_proof": {
+    "type": "ZkVmReceipt",
+    "system": "risc0",
+    "receiptFormat": "groth16-bn254",
+    "imageId": "sha256:a1a0bc89b5b1febaeda3519f6dbade0fa5ac16beeb143c4e1b01689573567bc6",
+    "seal": "AKCfPiIB+zz4t5QFGTCenkh2BdNO7jdaiT1L2ZIXJrwhlPi/v6EjnaRDWPC14hLCP1OPkum94B/MdSg2M1f0yAqWBvuUia6o3e8ubQWPObO2tTZkgIcezR58j6N7F66pH3cxYgoANGZZwzStJN7ZQ/yNX4qR16+xxNqigXvwOaQZ8mcd2ndic+3QjxFVXltM+iwEcF11eIOQuROHWNhd+x5FvRRfOpC5lh2Mu0tdrnnZhBoPx9cG3amBHhKZkTkPHE556f4ZCTePCPWVegY5ufLtuBIjaK7yKT0lda27RC0MbicmPWrM6n2AfWbLcR5ZAHapLooq/CyGNqj0b7diPg==",
+    "journal": {
+      "chaingraph_version": "0.4.0",
+      "kernel_digest": "sha256:ef88fb46f98773129561e13479d723e9b1d0822b713ab0816c49367014562557",
+      "output": {
+        "as_of_date": "2026-07-27",
+        "break_count": 0,
+        "break_set": [],
+        "field_tolerance_table_version": "ESMA74-362-2683-PHASE2-2026-04-27",
+        "note": "Independently reproduces the EMIR trade-repository reconciliation verdict from the TR ISO 20022 response and the firm submitted state, under a policy-supplied per-cycle field/tolerance/suppression table. Disagreement with the TR verdict is a first-class output, never an error. Lifecycle events (amendment/compression/termination) are ordinary inputs. This tool computes a reconciliation verdict only; it does not itself resubmit, dispute, or file any regulatory report.",
+        "tr_disputed_count": 0,
+        "tr_matched_count": 1,
+        "trade_count": 1,
+        "trades": [
+          {
+            "computed_verdict": "MATCHED",
+            "field_results": [
+              {
+                "delta": 0,
+                "field_name": "notional_amount",
+                "firm_value": 1000000,
+                "status": "agree",
+                "tr_value": 1000000
+              },
+              {
+                "delta": 0,
+                "field_name": "price",
+                "firm_value": 101.25,
+                "status": "agree",
+                "tr_value": 101.25
+              },
+              {
+                "delta": 0,
+                "field_name": "effective_date",
+                "firm_value": "2026-01-15",
+                "status": "agree",
+                "tr_value": "2026-01-15"
+              },
+              {
+                "delta": 0,
+                "field_name": "maturity_date",
+                "firm_value": "2031-01-15",
+                "status": "agree",
+                "tr_value": "2031-01-15"
+              },
+              {
+                "delta": null,
+                "field_name": "settlement_currency",
+                "firm_value": "US DOLLAR",
+                "status": "agree",
+                "tr_value": "USD"
+              },
+              {
+                "field_name": "delta",
+                "firm_value": 0.55,
+                "status": "suppressed",
+                "tr_value": 0.42
+              }
+            ],
+            "lifecycle_event": "NEW",
+            "tr_match_status": "MATCHED",
+            "uti": "UTI0001",
+            "verdict_disagrees_with_tr": false
+          }
+        ],
+        "verdict_disagrees_with_tr_count": 0
+      }
+    }
+  }
+},
+    {
+  "tool_id": "art-483-emir-break-ageing",
+  "tool_version": "1.0.0",
+  "display_name": "EMIR Reconciliation Break Ageing",
+  "mcp_name": "age_emir_reconciliation_breaks",
+  "mandate_type": "attestation_mandate",
+  "wave": 71,
+  "gpu": false,
+  "url": "https://ainumbers.co/chaingraph/art-483-emir-break-ageing.html",
+  "description": "Diffs a current EMIR reconciliation break set (e.g. from art-482-emir-recon-adjudicator) against the prior cycle's sealed break set by stable break_key, emitting a newly-opened / persisting / newly-closed split, an ageing bucket, a recurrence count, and an escalation-clock status against policy-supplied ageing limits -- reusing the art-428-cyber-incident-clock deadline-vs-evaluated_at pattern rather than re-deriving deadline math. Ageing limits and the escalation deadline are per-cycle policy inputs, never hardcoded.",
+  "input_schema_ref": "chaingraph/art-483-emir-break-ageing.html#manifest",
+  "consumes": [
+    "art-482-emir-recon-adjudicator"
+  ],
+  "feeds": [],
+  "status": "live",
+  "conformance_fixtures": true,
+  "compute_capability": "server",
+  "compute_images": [{"system":"sha256-source","image_id":"sha256:61ca7bf25c81b012ffcf0eacf2a531f340641c6492b4f96ad95b2e17faab1a11","valid_from":"2026-07-10"},{"system":"risc0","image_id":"sha256:a1a0bc89b5b1febaeda3519f6dbade0fa5ac16beeb143c4e1b01689573567bc6","valid_from":"2026-06-28"}],
+  "export_capability": [
+    "json"
+  ],
+  "compute_proof_ready": "ready",
+  "compute_proof": {
+    "type": "ZkVmReceipt",
+    "system": "risc0",
+    "receiptFormat": "groth16-bn254",
+    "imageId": "sha256:a1a0bc89b5b1febaeda3519f6dbade0fa5ac16beeb143c4e1b01689573567bc6",
+    "seal": "Grj9B/X+U1YKl5MheSI1SNFq0UPxjziHrA6Tlz6W4QAhbz8OiXEcjdl/unhgzy2HhQ22RG2G/00trtjKusAX7R/9QXO1gz/YsBCxBzcpktCF5AaUENujppMeIpryWc+uCAtzHwjgElwULceKuf8Ub1/jL1IW4RIDArMaMm+r81kvCtdaMS8yu6qWAc2uQv6TYVV0uCLsr7HbrZUx1RFDjiWnczI2BNACBm0Tkb9dq4htwfDLgZOheiK2cL11pIF6KbTdrKTFGfvC0fzpEOeNEwA6y5IN6j9dP0JJwmjpOMEX01fZPRKQJREodPQUZ/3Ma0o9QOBXVSZX9JnCCy+4KQ==",
+    "journal": {
+      "chaingraph_version": "0.4.0",
+      "kernel_digest": "sha256:61ca7bf25c81b012ffcf0eacf2a531f340641c6492b4f96ad95b2e17faab1a11",
+      "output": {
+        "breaks": [
+          {
+            "age_days": 17,
+            "ageing_bucket": "11-20d",
+            "break_key": "UTI0002::notional_amount",
+            "escalation_clock": {
+              "deadline_iso": "2026-07-20T00:00:00.000Z",
+              "escalation_status": "breached"
+            },
+            "field_name": "notional_amount",
+            "first_seen_at": "2026-07-10T00:00:00.000Z",
+            "recurrence_count": 4,
+            "status": "persisting",
+            "uti": "UTI0002"
+          },
+          {
+            "age_days": 0,
+            "ageing_bucket": "0-5d",
+            "break_key": "UTI0005::price",
+            "escalation_clock": {
+              "deadline_iso": "2026-08-06T00:00:00.000Z",
+              "escalation_status": "on_track"
+            },
+            "field_name": "price",
+            "first_seen_at": "2026-07-27T00:00:00.000Z",
+            "recurrence_count": 1,
+            "status": "newly_opened",
+            "uti": "UTI0005"
+          }
+        ],
+        "escalation_breached_count": 1,
+        "evaluated_at": "2026-07-27T00:00:00.000Z",
+        "newly_closed": [
+          {
+            "break_key": "UTI0009::maturity_date",
+            "field_name": "maturity_date",
+            "first_seen_at": "2026-07-20T00:00:00.000Z",
+            "uti": "UTI0009"
+          }
+        ],
+        "newly_closed_count": 1,
+        "newly_opened_count": 1,
+        "note": "Deterministic ageing of a current EMIR reconciliation break set diffed against a prior sealed break set by stable break_key. Ageing buckets and the escalation clock are policy-supplied per cycle, reusing the art-428-cyber-incident-clock deadline-vs-evaluated_at pattern (first_seen_at + policy limit vs evaluated_at).",
+        "persisting_count": 1,
+        "total_current": 2
+      }
+    }
+  }
+},
+    {
+  "tool_id": "art-484-regrpt-editcheck-runner",
+  "tool_version": "1.0.0",
+  "display_name": "Published Regulatory Report Edit-Check Runner",
+  "mcp_name": "run_regrpt_edit_checks",
+  "mandate_type": "regulatory_reporting",
+  "wave": 77,
+  "gpu": false,
+  "url": "https://ainumbers.co/chaingraph/art-484-regrpt-editcheck-runner.html",
+  "description": "Evaluates a caller-supplied report instance against a caller-supplied published edit-check rule set -- FFIEC Call Report validity and quality edits (Excel/PDF, published ahead of each quarter-end, latest 2026-01-22) or the EBA ITS validation-rules list -- across four rule shapes: intra-schedule arithmetic identity, cross-schedule tie-out, sign/domain constraint, and mandatory-field completeness. Returns per-rule pass/fail/suppressed status keyed by the published edit id, with failing cell references and computed-vs-reported values. Accepts a deactivation/suppression list as a first-class policy input (the EBA publishes rules deactivated for inaccuracies or IT issues; this kernel never reports a failure on a stood-down rule, and records exactly which suppressions were applied plus any that are stale). Distinct from art-434-call-report-edit-check-gate, which runs a CURATED, HARDCODED battery of checks against a specific art-432/art-433 Schedule RC/RC-R output shape: this kernel bakes in no rule content at all, and evaluates whatever rule set the caller supplies against whatever report instance the caller supplies. Nothing access-gated is required to get a result.",
+  "input_schema_ref": "chaingraph/art-484-regrpt-editcheck-runner.html#manifest",
+  "consumes": [],
+  "feeds": [],
+  "status": "live",
+  "conformance_fixtures": true,
+  "compute_capability": "server",
+  "compute_images": [{"system":"sha256-source","image_id":"sha256:df972fbe752ce9681f083d26e59d2620a3b3675aea04b2d046537d4d5861154a","valid_from":"2026-07-10"},{"system":"risc0","image_id":"sha256:a1a0bc89b5b1febaeda3519f6dbade0fa5ac16beeb143c4e1b01689573567bc6","valid_from":"2026-06-28"}],
+  "export_capability": [
+    "json"
+  ],
+  "compute_proof_ready": "ready",
+  "compute_proof": {
+    "type": "ZkVmReceipt",
+    "system": "risc0",
+    "receiptFormat": "groth16-bn254",
+    "imageId": "sha256:a1a0bc89b5b1febaeda3519f6dbade0fa5ac16beeb143c4e1b01689573567bc6",
+    "seal": "F8IvYFhnjlfJ7mH22YypsBd0XZGZiOpfYUavD5p0qIoZpswpeTbByiLmdJEqseXOKh6ocA888jvuahSo8Mle/iDoaUVkoFwz2HSwjYhgzms0PwRDM6OFGpI/d4wDWrBBDHDnIGStw8lchXyixFjzsUg1VuAvvQLpVKeMB2q6CWQq0FYxfiH1hOQm+T3w0DJZgFClwwCLFp3xEL6InIca6hofcFI76Ql1u73Vrv003KH+V0pN2nvDj1/jWz/tn3RUDZH40blnjpmxW3klS8/pPDj5obrS40qjHDQ0vgXWiUcLl46b96UIceQjWTAyyZ9/A/RIjh8lU3oH1RsaCB4Czw==",
+    "journal": {
+      "chaingraph_version": "0.4.0",
+      "kernel_digest": "sha256:df972fbe752ce9681f083d26e59d2620a3b3675aea04b2d046537d4d5861154a",
+      "output": {
+        "compliance_flags": [],
+        "findings": [
+          {
+            "computed_value": 1000,
+            "description": "Total assets equals total liabilities plus total equity capital.",
+            "edit_id": "FFIEC-VE-0142",
+            "message": "Sum of RCON2948 + RCON3210 agrees with RCON2170 within tolerance 1.",
+            "reported_value": 1000,
+            "schedule": "RC",
+            "severity": "fatal",
+            "status": "pass",
+            "type": "arithmetic_identity"
+          },
+          {
+            "computed_value": 250,
+            "description": "CET1 capital ties out to its RC-R summary restatement.",
+            "edit_id": "FFIEC-VE-0891",
+            "message": "RCFA7206 (250) ties out to RCFA7206_TIEOUT (250) within tolerance 0.",
+            "reported_value": 250,
+            "schedule": "RC-R",
+            "severity": "fatal",
+            "status": "pass",
+            "type": "cross_schedule_tie_out"
+          },
+          {
+            "computed_value": 2000,
+            "description": "Total risk-weighted assets is positive.",
+            "edit_id": "FFIEC-VE-0203",
+            "message": "RCFAB588 (2000) satisfies domain > 0.",
+            "reported_value": 2000,
+            "schedule": "RC-R",
+            "severity": "fatal",
+            "status": "pass",
+            "type": "sign_domain"
+          },
+          {
+            "computed_value": null,
+            "description": "Entity identifier is present.",
+            "edit_id": "FFIEC-VE-0004",
+            "message": "RCONK652 is present and non-empty.",
+            "reported_value": "FDIC-CERT-1234",
+            "schedule": "RC",
+            "severity": "fatal",
+            "status": "pass",
+            "type": "mandatory_field"
+          }
+        ],
+        "note": "Evaluates a caller-supplied published edit-check rule set (FFIEC validity/quality edits or EBA ITS validation rules) against a caller-supplied report instance. The kernel is the evaluator; it carries no rule content of its own. Findings are keyed by the published edit id for round-trip into the issuer's own vocabulary.",
+        "rule_set_source": "FFIEC Call Report Validity and Quality Edits, effective 2026-01-22",
+        "rule_set_version": "FFIEC-2026-01-22",
+        "stale_suppressions": [],
+        "summary": {
+          "applied": 4,
+          "fail": 0,
+          "overall_pass": true,
+          "pass": 4,
+          "stale_suppression_count": 0,
+          "suppressed": 0,
+          "total_rules": 4
+        },
+        "suppressions_applied": []
+      }
+    }
+  }
+},
+    {
+  "tool_id": "art-485-regrpt-variance-explainer",
+  "tool_version": "1.0.0",
+  "display_name": "Regulatory Report Period-over-Period Variance Explainer",
+  "mcp_name": "explain_regrpt_variance",
+  "mandate_type": "regulatory_reporting",
+  "wave": 77,
+  "gpu": false,
+  "url": "https://ainumbers.co/chaingraph/art-485-regrpt-variance-explainer.html",
+  "description": "Computes period-over-period variance across a regulatory report instance pair -- absolute and relative movement per line item against a policy-supplied materiality threshold (default plus per-line overrides), ranked by contribution (largest absolute movement first) -- and flags which movements require a written explanation, i.e. exceed materiality with no matching explanation on file. Does not judge whether a supplied explanation is adequate; that is a human review-and-approval step downstream (RGEC-K-2's gate: an unexplained material variance routes to review_required). Pairs with art-484-regrpt-editcheck-runner's rule-based edit checks -- this node handles analytical-review variance, not rule pass/fail.",
+  "input_schema_ref": "chaingraph/art-485-regrpt-variance-explainer.html#manifest",
+  "consumes": [],
+  "feeds": [],
+  "status": "live",
+  "conformance_fixtures": true,
+  "compute_capability": "server",
+  "compute_images": [{"system":"sha256-source","image_id":"sha256:58e771301c2c6f396bfeaa0f61ea75adfce6211b68c03938500f14a37a1a5c8f","valid_from":"2026-07-10"},{"system":"risc0","image_id":"sha256:a1a0bc89b5b1febaeda3519f6dbade0fa5ac16beeb143c4e1b01689573567bc6","valid_from":"2026-06-28"}],
+  "export_capability": [
+    "json"
+  ],
+  "compute_proof_ready": "ready",
+  "compute_proof": {
+    "type": "ZkVmReceipt",
+    "system": "risc0",
+    "receiptFormat": "groth16-bn254",
+    "imageId": "sha256:a1a0bc89b5b1febaeda3519f6dbade0fa5ac16beeb143c4e1b01689573567bc6",
+    "seal": "FDIjRxHEDtq4xti2QcPVsfffwXbMfnoOrHmBwZ9KYV8DQD5/TNH5CyFm/wAeEbR+7rW6MdilBpdQhBtPiiOT9StAcVMwLBz01/2/m7sFnKrqX1dmXK7EczBzopsg+KfODIWFq/CHyLPfdHyU5i7iWa43PmPJRtBNQS+ernKgYcwdANlfF/n7cbIaMvz327nWDuIxwIvechpEsRmh+YmqYwFqPiukDsFiXMrt8tE5mtp+UQmzN08sd0F4ODVrs0ykJ7PeD4jvTvhqVTadUArt5AI1vlku/7i6g80VXigJsoEwSfELB3AVR9kwvDnvoWqAsXj5pINnpoeRJGQL/im0cw==",
+    "journal": {
+      "chaingraph_version": "0.4.0",
+      "kernel_digest": "sha256:58e771301c2c6f396bfeaa0f61ea75adfce6211b68c03938500f14a37a1a5c8f",
+      "output": {
+        "compliance_flags": [],
+        "current_as_of": "2026-06-30",
+        "note": "Period-over-period variance, ranked by absolute-movement contribution, flagged against a policy-supplied materiality threshold (default plus per-line overrides). Whether a supplied explanation is adequate is a human review step, not judged here; this output feeds that gate.",
+        "policy_version": "FFIEC-MATERIALITY-2026-Q2",
+        "prior_as_of": "2026-03-31",
+        "summary": {
+          "all_material_explained": true,
+          "material_count": 1,
+          "requires_explanation_count": 0,
+          "total_abs_movement": 1550,
+          "total_line_items": 3
+        },
+        "variances": [
+          {
+            "abs_change": 1500,
+            "contribution": 1500,
+            "current_value": 11500,
+            "has_explanation": true,
+            "is_material": true,
+            "line_item": "total_loans",
+            "pct_change": 0.15,
+            "prior_value": 10000,
+            "rank": 1,
+            "requires_explanation": false,
+            "threshold_abs": 100,
+            "threshold_pct": 0.05
+          },
+          {
+            "abs_change": 50,
+            "contribution": 50,
+            "current_value": 9050,
+            "has_explanation": false,
+            "is_material": false,
+            "line_item": "total_deposits",
+            "pct_change": 0.005555555555555556,
+            "prior_value": 9000,
+            "rank": 2,
+            "requires_explanation": false,
+            "threshold_abs": 100,
+            "threshold_pct": 0.05
+          },
+          {
+            "abs_change": null,
+            "contribution": 0,
+            "current_value": 200,
+            "has_explanation": false,
+            "is_material": false,
+            "line_item": "other_real_estate_owned",
+            "pct_change": null,
+            "prior_value": null,
+            "rank": 3,
+            "requires_explanation": false,
+            "threshold_abs": 50,
+            "threshold_pct": 0
+          }
+        ]
+      }
+    }
+  }
+},
+    {
+  "tool_id": "art-486-cscf-control-applicability",
+  "tool_version": "1.0.0",
+  "display_name": "CSCF Control Applicability & Coverage",
+  "mcp_name": "check_cscf_control_applicability",
+  "mandate_type": "compliance_mandate",
+  "wave": 66,
+  "gpu": false,
+  "url": "https://ainumbers.co/chaingraph/art-486-cscf-control-applicability.html",
+  "description": "Scores a Swift member's declared architecture type and component inventory against a policy-supplied Swift Customer Security Controls Framework (CSCF) control matrix -- the published control number, tier (mandatory/advisory), applicable-architecture-type list, and evidence column, never a hand-transcribed list. Returns the applicable mandatory/advisory control set, coverage percentages, a gap list keyed by the published control number, an evidence index mapped to the matrix's supporting-evidence column, and an explicit not-applicable set with a stated reason per exclusion so an omission can never read as a pass. Not a Swift-endorsed tool and not a KYC-SA submission; consumes the firm's own declared architecture and its own copy of the published matrix.",
+  "input_schema_ref": "chaingraph/art-486-cscf-control-applicability.html#manifest",
+  "consumes": [],
+  "feeds": [],
+  "status": "live",
+  "conformance_fixtures": true,
+  "compute_capability": "server",
+  "compute_images": [{"system":"sha256-source","image_id":"sha256:e61f7e68aeceece5e32ce4f26e110cac1da3e8f1a8d79d74304674e7de0c8484","valid_from":"2026-07-10"},{"system":"risc0","image_id":"sha256:a1a0bc89b5b1febaeda3519f6dbade0fa5ac16beeb143c4e1b01689573567bc6","valid_from":"2026-06-28"}],
+  "export_capability": [
+    "json"
+  ],
+  "compute_proof_ready": "ready",
+  "compute_proof": {
+    "type": "ZkVmReceipt",
+    "system": "risc0",
+    "receiptFormat": "groth16-bn254",
+    "imageId": "sha256:a1a0bc89b5b1febaeda3519f6dbade0fa5ac16beeb143c4e1b01689573567bc6",
+    "seal": "K1PTp1dvRePes2HN2O60no2UPb/drHvlU0T7EWtEGBwNDUE3prHJvtuylxO6TFVomXhe7uftBNL/UQPfeFiChQzJ5uD+lB0V5BoeVu88lnsIRYasLXBfXrjMpVGytZJlIg7WbCGG/ocoVuvDqyMTht4hB6AMwnQ2m9LFjU4IQ8UO+fBrAIZtZNuoHePpIOKB5Rtnn6YaXT8ZAgZwxUyDySK4ofu5l8sxFF+J53IkTHdByJtwFqHt+UNpeb/ddjyAEGnj0xDnJZ2UNI/owq68ApIESfKrCbCobuLlbLWcoYgHh1fMB/fCwpoNbunEcHCbY4B2vYSYDbfEZL/vOhMx1g==",
+    "journal": {
+      "chaingraph_version": "0.4.0",
+      "kernel_digest": "sha256:e61f7e68aeceece5e32ce4f26e110cac1da3e8f1a8d79d74304674e7de0c8484",
+      "output": {
+        "advisory_coverage_pct": 0,
+        "applicable_advisory_count": 2,
+        "applicable_mandatory_count": 4,
+        "architecture_type": "A1",
+        "component_inventory": [
+          "swift_alliance_access",
+          "hsm",
+          "jump_server"
+        ],
+        "cscf_version": "2026",
+        "evidence_index": {
+          "1.1": {
+            "evidence_provided": true,
+            "evidence_ref": "SWIFT.io evidence",
+            "tier": "mandatory"
+          },
+          "1.2": {
+            "evidence_provided": true,
+            "evidence_ref": "Network diagram",
+            "tier": "mandatory"
+          },
+          "2.1": {
+            "evidence_provided": false,
+            "evidence_ref": "Access control list",
+            "tier": "mandatory"
+          },
+          "2.4A": {
+            "evidence_provided": false,
+            "evidence_ref": "Logging config export",
+            "tier": "advisory"
+          },
+          "5.1": {
+            "evidence_provided": true,
+            "evidence_ref": "HSM audit report",
+            "tier": "mandatory"
+          },
+          "7.2": {
+            "evidence_provided": false,
+            "evidence_ref": "Pen-test report",
+            "tier": "advisory"
+          }
+        },
+        "gap_list": [
+          {
+            "control_number": "2.1",
+            "evidence_ref": "Access control list",
+            "tier": "mandatory"
+          },
+          {
+            "control_number": "2.4A",
+            "evidence_ref": "Logging config export",
+            "tier": "advisory"
+          }
+        ],
+        "mandatory_coverage_pct": 75,
+        "not_applicable_set": {
+          "7.2": "No externally exposed pen-test surface for this architecture"
+        },
+        "overall_status": "gaps_present"
+      }
+    }
+  }
+},
+    {
+  "tool_id": "art-487-assessor-independence-check",
+  "tool_version": "1.0.0",
+  "display_name": "Swift CSP Assessor Independence Eligibility",
+  "mcp_name": "check_assessor_independence",
+  "mandate_type": "compliance_mandate",
+  "wave": 66,
+  "gpu": false,
+  "url": "https://ainumbers.co/chaingraph/art-487-assessor-independence-check.html",
+  "description": "Checks eligibility of a Swift CSCF Independent Assessment Framework assessment: assessment route (internal 2nd/3rd line vs external) against a policy-supplied permitted-routes-per-architecture-type table, claimed assessor certifications against a policy-supplied required set, an independence-from-implementer test over a declared identity set using distinct-identity counting so one person wearing two hats cannot satisfy both sides, and assessment-date validity against the attestation deadline. Returns eligible/ineligible with the first failing predicate named. Not an accreditation of the assessor and not a Swift endorsement -- an eligibility check over the firm's own declared facts.",
+  "input_schema_ref": "chaingraph/art-487-assessor-independence-check.html#manifest",
+  "consumes": [],
+  "feeds": [],
+  "status": "live",
+  "conformance_fixtures": true,
+  "compute_capability": "server",
+  "compute_images": [{"system":"sha256-source","image_id":"sha256:296ba15821ab17012505cf41cea3e5915f9146eae5c97eab522579f9cd5fe663","valid_from":"2026-07-10"},{"system":"risc0","image_id":"sha256:a1a0bc89b5b1febaeda3519f6dbade0fa5ac16beeb143c4e1b01689573567bc6","valid_from":"2026-06-28"}],
+  "export_capability": [
+    "json"
+  ],
+  "compute_proof_ready": "ready",
+  "compute_proof": {
+    "type": "ZkVmReceipt",
+    "system": "risc0",
+    "receiptFormat": "groth16-bn254",
+    "imageId": "sha256:a1a0bc89b5b1febaeda3519f6dbade0fa5ac16beeb143c4e1b01689573567bc6",
+    "seal": "D9cTSIFx2B6u0jyNtmjxBnBElHtqAy/tNubDAXjO6EAuEYJ1Szy6w5xeYGQHr9XR5mv00YtLH4SfTijyhrLOUBifo+hGYEnC4YspulWqoRXGbf2eyM74YXwKrUiLgBIHIoE+A5bB8HOjP7VLeYXXyzxGimxK3QYAQWmta2OY4iAZm/eRPJ2hze07lZBCEUf5puLqGfD03fKUzCZdt48hbiANsyl6HQMyNsIYMQwcFcNsERUedEWr+QuBidAxwWobBtFx1bBjaewMNxZ14DQqq4Ck4wYwZ9b9Z11FCUlSzhwVBtaF+4XqBmBCSKGSvdAxX+U2WGWD1Y5T9TUkQZ/J9g==",
+    "journal": {
+      "chaingraph_version": "0.4.0",
+      "kernel_digest": "sha256:296ba15821ab17012505cf41cea3e5915f9146eae5c97eab522579f9cd5fe663",
+      "output": {
+        "architecture_type": "A1",
+        "assessment_date": "2026-09-15",
+        "assessment_route": "external",
+        "attestation_deadline": "2026-12-31",
+        "cert_eligible": true,
+        "date_eligible": true,
+        "eligible": true,
+        "failing_predicate": null,
+        "independence_eligible": true,
+        "overlapping_identities": [],
+        "route_eligible": true
+      }
+    }
+  }
+},
+    {
+  "tool_id": "art-488-model-replication-diff",
+  "tool_version": "1.0.0",
+  "display_name": "Model Replication Diff",
+  "mcp_name": "replicate_model_outputs",
+  "mandate_type": "compliance_control",
+  "wave": 77,
+  "gpu": false,
+  "url": "https://ainumbers.co/chaingraph/art-488-model-replication-diff.html",
+  "description": "Independently recomputes a model's reported outputs from a declared model specification (version, as-of date, transform, intercept, coefficients) and a stated input record set, then diffs the recomputation against the model's own reported outputs within a caller-supplied tolerance. Returns a per-record diff (reported, recomputed, absolute and relative diff, within-tolerance), aggregate tolerance stats, an overall replicated / not-replicated verdict, and the failing segment(s) named when not replicated. If the declared specification cannot be recomputed as stated -- unrecognized transform, no coefficients, no tolerance -- the honest result is not_replicable_as_specified with a reason, not a forced pass or fail. Deterministic recompute-and-diff only: this node never opines on conceptual soundness, assumption reasonableness, or fitness for use -- that judgment belongs in a validator's approval record, not here. Model inputs and specifications are expected to arrive as a workbook export via the shipped WB-BRIDGE-1 workbook-to-OCG artifact bridge (tool 554); this node itself accepts plain JSON records so any upstream source can feed it. Distinct from the shipped model-passport nodes (art-450/451/453), which track a model's inventory tier and revalidation cadence rather than recomputing its numeric output. Inline deterministic transcendental math (no engine Math.exp/log) so the same input always produces the same execution_hash on every surface. NaN-safe. Zero network, zero PII.",
+  "input_schema_ref": "chaingraph/art-488-model-replication-diff.html#manifest",
+  "consumes": [],
+  "feeds": [],
+  "status": "live",
+  "conformance_fixtures": true,
+  "compute_capability": "server",
+  "compute_images": [{"system":"sha256-source","image_id":"sha256:5ff2146f1ae9457d37e4e6699dc331e6f8f69701f3f32a400f848761bc254ed8","valid_from":"2026-07-10"},{"system":"risc0","image_id":"sha256:a1a0bc89b5b1febaeda3519f6dbade0fa5ac16beeb143c4e1b01689573567bc6","valid_from":"2026-06-28"}],
+  "export_capability": [
+    "json"
+  ],
+  "compute_proof_ready": "ready",
+  "compute_proof": {
+    "type": "ZkVmReceipt",
+    "system": "risc0",
+    "receiptFormat": "groth16-bn254",
+    "imageId": "sha256:a1a0bc89b5b1febaeda3519f6dbade0fa5ac16beeb143c4e1b01689573567bc6",
+    "seal": "HhTdNfqY0Dj3IM0enlIOzBgNhtMufXIqmWDoNjgqZmot9MqBbD0tMZvocVlQjYKBiGNq0UYk9Et6d4VXTS9X4x+JpNr1mjeeFZteDzCgOrGmT4WkLW0HdpWrSytV9yNJBzCx+Vo9KONVUgSZvg9hhz5X7SXDgVrd7Q5MDtc6yY0M8gKF005n9a4oH3r+yT3jKkyeY5cFYMccFprAjc0jDABuLRV6VqIEdsXgOO6eP3cMgVPzMTmU8YeQQVy8obH1B1lKqYwv9LQaI8Zo2g9CL1GiG6/jJGVbmnElPLQEz4QiMjokkjJqmwPW+/ZzRbzKzhJaMwKQDDZpNC/oMW1ZRQ==",
+    "journal": {
+      "chaingraph_version": "0.4.0",
+      "kernel_digest": "sha256:5ff2146f1ae9457d37e4e6699dc331e6f8f69701f3f32a400f848761bc254ed8",
+      "output": {
+        "aggregate": {
+          "count_computed": 2,
+          "count_out_of_tolerance": 0,
+          "count_total": 2,
+          "max_abs_diff": 0.2,
+          "mean_abs_diff": 0.1
+        },
+        "failing_segments": [],
+        "model_spec_as_of_date": "2026-01-01",
+        "model_spec_version": "credit-scorecard-v3.2",
+        "per_record": [
+          {
+            "abs_diff": 0,
+            "id": "r1",
+            "recomputed_value": 17,
+            "rel_diff": 0,
+            "reported_value": 17,
+            "segment": "prime",
+            "within_tolerance": true
+          },
+          {
+            "abs_diff": 0.2,
+            "id": "r2",
+            "recomputed_value": 10,
+            "rel_diff": 0.0204081633,
+            "reported_value": 9.8,
+            "segment": "prime",
+            "within_tolerance": true
+          }
+        ],
+        "reason": null,
+        "tolerance_applied": {
+          "abs_tolerance": 0.5,
+          "rel_tolerance": null
+        },
+        "transform": "linear",
+        "verdict": "replicated"
+      }
+    }
+  }
+},
+    {
+  "tool_id": "art-489-model-test-battery",
+  "tool_version": "1.0.0",
+  "display_name": "Model Test Battery",
+  "mcp_name": "run_model_test_battery",
+  "mandate_type": "compliance_control",
+  "wave": 77,
+  "gpu": false,
+  "url": "https://ainumbers.co/chaingraph/art-489-model-test-battery.html",
+  "description": "Runs the deterministic-given-data quantitative model validation battery: discriminatory power (Gini coefficient, Kolmogorov-Smirnov statistic) from scored outcomes, population and characteristic stability (PSI, CSI) between two declared snapshots using the caller's own bins, back-test outcome-vs-predicted per declared bin, and a calibration comparison (predicted vs actual rate, max absolute diff). Every test is graded against a POLICY-SUPPLIED threshold object -- this node never chooses or hardcodes a threshold. If a threshold is missing for a requested test, that test is reported skipped_no_threshold, never silently defaulted; if the underlying data is missing or insufficient (e.g. a single-class scored set for Gini/KS), the test is reported skipped_insufficient_data. Each result carries the test's standard name, its metric value, its threshold, and pass/breach so the artifact reads as a workpaper section, not an opinion. Model inputs and specifications are expected to arrive as a workbook export via the shipped WB-BRIDGE-1 workbook-to-OCG artifact bridge (tool 554); this node itself accepts plain JSON so any upstream source can feed it. Pairs with art-488 model-replication-diff (recompute-and-diff) as the two deterministic legs of a model validation cycle -- neither node emits a soundness or fitness-for-use opinion. Inline deterministic transcendental math (no engine Math.exp/log) so the same input always produces the same execution_hash on every surface. NaN-safe. Zero network, zero PII.",
+  "input_schema_ref": "chaingraph/art-489-model-test-battery.html#manifest",
+  "consumes": [],
+  "feeds": [],
+  "status": "live",
+  "conformance_fixtures": true,
+  "compute_capability": "server",
+  "compute_images": [{"system":"sha256-source","image_id":"sha256:20e07ad532c59a2c5619ce03881ce808c367002a5572176618bbb8b6ba06e178","valid_from":"2026-07-10"},{"system":"risc0","image_id":"sha256:a1a0bc89b5b1febaeda3519f6dbade0fa5ac16beeb143c4e1b01689573567bc6","valid_from":"2026-06-28"}],
+  "export_capability": [
+    "json"
+  ],
+  "compute_proof_ready": "ready",
+  "compute_proof": {
+    "type": "ZkVmReceipt",
+    "system": "risc0",
+    "receiptFormat": "groth16-bn254",
+    "imageId": "sha256:a1a0bc89b5b1febaeda3519f6dbade0fa5ac16beeb143c4e1b01689573567bc6",
+    "seal": "GpTmEqL3pSA6aIHJ4PWZEVFd93WO+zRi7jrg4Aj/jJkFi+zaCBStX5mM0Xe8dzdt+cJuF5rCjFWo93A5MnmfGhouHskrlZO1QMLiXmRR6uCSNBsLhbb5OcrO2+iBFV6CGTxxEYEcGm7cRbaDhr44R1bIVVRn6aWtVSYI0EyvqeUrPjpb5Zl4PISwJnCXxoSGyvuqZWM+fam1nRuqrJN65wPKr0CndimDsTKmUMmzmfyvWwqq3xFTjvYSrzK3jTFQJ6OpSgi0ghxupAmVcNfJOZNl2royRnuwKwsCboa+ErYrqzD94K9a04RGtgx7bzEWXxQGubXASDXpFa860CgiOw==",
+    "journal": {
+      "chaingraph_version": "0.4.0",
+      "kernel_digest": "sha256:20e07ad532c59a2c5619ce03881ce808c367002a5572176618bbb8b6ba06e178",
+      "output": {
+        "as_of_date": "2026-01-15",
+        "back_test": {
+          "per_bin": [
+            {
+              "abs_diff": 0.02,
+              "actual_rate": 0.07,
+              "bin": "1",
+              "n": 100,
+              "predicted_rate": 0.05
+            },
+            {
+              "abs_diff": 0.01,
+              "actual_rate": 0.09,
+              "bin": "2",
+              "n": 80,
+              "predicted_rate": 0.1
+            }
+          ]
+        },
+        "tests": [
+          {
+            "comparison": ">=",
+            "detail": {
+              "auc": 1,
+              "n_negative": 3,
+              "n_positive": 3,
+              "n_scored": 6
+            },
+            "metric_value": 1,
+            "name": "gini_coefficient",
+            "result": "pass",
+            "standard_name": "Gini coefficient",
+            "threshold": 0.4,
+            "threshold_field": "gini_min"
+          },
+          {
+            "comparison": ">=",
+            "detail": {
+              "n_negative": 3,
+              "n_positive": 3,
+              "n_scored": 6
+            },
+            "metric_value": 1,
+            "name": "ks_statistic",
+            "result": "pass",
+            "standard_name": "Kolmogorov-Smirnov statistic",
+            "threshold": 0.3,
+            "threshold_field": "ks_min"
+          },
+          {
+            "comparison": "<=",
+            "detail": [
+              {
+                "actual_pct": 0.45,
+                "bin": "low",
+                "contribution": 0.0052680258,
+                "expected_pct": 0.5
+              },
+              {
+                "actual_pct": 0.55,
+                "bin": "high",
+                "contribution": 0.004765509,
+                "expected_pct": 0.5
+              }
+            ],
+            "metric_value": 0.0100335348,
+            "name": "population_stability_index",
+            "result": "pass",
+            "standard_name": "Population Stability Index (PSI)",
+            "threshold": 0.25,
+            "threshold_field": "psi_max"
+          },
+          {
+            "comparison": "<=",
+            "detail": [
+              {
+                "characteristic": "ltv",
+                "detail": [
+                  {
+                    "actual_pct": 0.4,
+                    "bin": "low",
+                    "contribution": 0.0223143551,
+                    "expected_pct": 0.5
+                  },
+                  {
+                    "actual_pct": 0.6,
+                    "bin": "high",
+                    "contribution": 0.0182321557,
+                    "expected_pct": 0.5
+                  }
+                ],
+                "index": 0.0405465108
+              }
+            ],
+            "metric_value": 0.0405465108,
+            "name": "characteristic_stability_index",
+            "result": "pass",
+            "standard_name": "Characteristic Stability Index (CSI, max across characteristics)",
+            "threshold": 0.25,
+            "threshold_field": "csi_max"
+          },
+          {
+            "comparison": "<=",
+            "detail": [
+              {
+                "abs_diff": 0.02,
+                "actual_rate": 0.07,
+                "bin": "1",
+                "n": 100,
+                "predicted_rate": 0.05
+              },
+              {
+                "abs_diff": 0.01,
+                "actual_rate": 0.09,
+                "bin": "2",
+                "n": 80,
+                "predicted_rate": 0.1
+              }
+            ],
+            "metric_value": 0.02,
+            "name": "calibration",
+            "result": "pass",
+            "standard_name": "Calibration (predicted vs actual rate per bin, max abs diff)",
+            "threshold": 0.05,
+            "threshold_field": "calibration_max_diff"
+          }
+        ],
+        "tests_breached": 0,
+        "tests_passed": 5,
+        "tests_run": 5,
+        "tests_skipped_insufficient_data": 0,
+        "tests_skipped_no_threshold": 0,
+        "threshold_version": "policy-2026-Q1",
+        "thresholds_applied": {
+          "calibration_max_diff": 0.05,
+          "csi_max": 0.25,
+          "gini_min": 0.4,
+          "ks_min": 0.3,
+          "psi_max": 0.25
+        }
+      }
+    }
+  }
+},
+    {
+  "tool_id": "art-490-fatca-crs-submission-check",
+  "tool_version": "1.0.0",
+  "display_name": "FATCA/CRS Submission Conformance Check",
+  "mcp_name": "check_fatca_crs_submission_conformance",
+  "mandate_type": "compliance_mandate",
+  "wave": 77,
+  "gpu": false,
+  "url": "https://ainumbers.co/chaingraph/art-490-fatca-crs-submission-check.html",
+  "description": "Evaluates a FATCA/CRS submission record set against a policy-supplied schema version and business-rule set: DocTypeIndic sequencing (the public OECD CRS/FATCA XML Schema v2.0 new/corrected/void enumeration), MessageRefId/DocRefId uniqueness, CorrDocRefId referencing across corrected and voided records, mandatory-identifier structural checks (TIN presence, BirthDate format, address completeness), and the caller's own mandatory_element_rules array keyed by a published error code and element path. A suppression_list (F3) excludes stood-down rule codes from producing any finding at all, with an audit-trail count of what was suppressed. Schema versions and error-code sets are pinned policy inputs, never kernel source. Ahead of the annual Responsible Officer certification; feeds art-491 ro-remediation-closure. Not a validator competing on schema coverage -- free FATCA/CRS XML validators already exist -- the claim is the sealed, offline-verifiable evidence chain from submission error through remediation to a named RO signature.",
+  "input_schema_ref": "chaingraph/art-490-fatca-crs-submission-check.html#manifest",
+  "consumes": [],
+  "feeds": [],
+  "status": "live",
+  "conformance_fixtures": true,
+  "compute_capability": "server",
+  "compute_images": [{"system":"sha256-source","image_id":"sha256:ff7382928e6f04fd05ef9d458b2681f0d86180f02468157ccfa443450eca1d01","valid_from":"2026-07-10"},{"system":"risc0","image_id":"sha256:a1a0bc89b5b1febaeda3519f6dbade0fa5ac16beeb143c4e1b01689573567bc6","valid_from":"2026-06-28"}],
+  "compute_proof_ready": "ready",
+  "export_capability": [
+    "json"
+  ],
+  "compute_proof": {
+    "type": "ZkVmReceipt",
+    "system": "risc0",
+    "receiptFormat": "groth16-bn254",
+    "imageId": "sha256:a1a0bc89b5b1febaeda3519f6dbade0fa5ac16beeb143c4e1b01689573567bc6",
+    "seal": "AxCyHCxMUjsNI3sLQcaYMgLxC1HbhnGK082dEfwvFGUUpfQ1/z7bv2MYemvjcoDYgDY7CfjmQaz/rNQTA3hYYQGa7BljKG0yWUtQrZVHDtgV0S3U4BPpoK7mgD5BL6xlKZMSrPottq1eJ0ESyfcj4HGdmh5Q+h3ILu504EdtWIID8lbspo+w00HjaaDfcEbUBObXfiXAbm+SbEtbmD5gnwy73AXikj0qc0SJfLKj0iia6cIKpQd5KM8h7WatLsxXLxk/8I7cR73U+j+7L96xprJRfigo730ieIIbS8BHFjcpkUaM5E4kS1zEFJTxDyY/BW21ycrh2A12f5AeljToRw==",
+    "journal": {
+      "chaingraph_version": "0.4.0",
+      "kernel_digest": "sha256:ff7382928e6f04fd05ef9d458b2681f0d86180f02468157ccfa443450eca1d01",
+      "output": {
+        "certification_period": "2025",
+        "fail_count": 0,
+        "finding_count": 0,
+        "findings": [],
+        "note": "Deterministic FATCA/CRS submission conformance evaluator over a caller-declared record set, DocTypeIndic sequencing/uniqueness/referencing (public OECD CRS/FATCA XML Schema v2.0 structural vocabulary), mandatory-identifier structural checks, and a caller-supplied business-rule set keyed by published error code + element path. Schema version and error-code sets are pinned policy inputs, never kernel source. A suppressed rule_code produces no finding at all for any record. This tool evaluates conformance only; it does not itself submit, transmit, or file anything, and it is not legal or tax advice.",
+        "record_count": 2,
+        "schema_version": "OECD-CRS-XML-SCHEMA-v2.0",
+        "submission_id": "SUB-2025-US-0001",
+        "suppressed_finding_count": 0,
+        "suppressed_rule_codes": []
+      }
+    }
+  }
+},
+    {
+  "tool_id": "art-491-ro-remediation-closure",
+  "tool_version": "1.0.0",
+  "display_name": "FATCA/CRS RO Remediation Closure Tracker",
+  "mcp_name": "track_fatca_crs_ro_remediation_closure",
+  "mandate_type": "attestation_mandate",
+  "wave": 77,
+  "gpu": false,
+  "url": "https://ainumbers.co/chaingraph/art-491-ro-remediation-closure.html",
+  "description": "Tracks the returned notification set for a FATCA/CRS certification period (ICMM-style error notifications, CRS status messages) against the firm's own remediation records: per-notification open/closed/overdue status, resubmission linkage naming which corrected DocRefId closes which notification, closure coverage percentage, and a certification-period readiness verdict against a declared cut-off date. Reuses the art-428-cyber-incident-clock decision-tree attestation-slot pattern (item_state/exception vocabulary); no new notification-clock arithmetic is invented. Consumes art-490 fatca-crs-submission-check findings as the error source in the fatca-ro-certification-cycle chain. Feeds the Responsible Officer's certification evidence bundle -- never claims to itself satisfy an IRS or competent-authority filing requirement.",
+  "input_schema_ref": "chaingraph/art-491-ro-remediation-closure.html#manifest",
+  "consumes": [],
+  "feeds": [],
+  "status": "live",
+  "conformance_fixtures": true,
+  "compute_capability": "server",
+  "compute_images": [{"system":"sha256-source","image_id":"sha256:3a605809e324af32ea025897ba46618e869f3a5701025e98ba5a7ff74a25847e","valid_from":"2026-07-10"},{"system":"risc0","image_id":"sha256:a1a0bc89b5b1febaeda3519f6dbade0fa5ac16beeb143c4e1b01689573567bc6","valid_from":"2026-06-28"}],
+  "compute_proof_ready": "ready",
+  "export_capability": [
+    "json"
+  ],
+  "compute_proof": {
+    "type": "ZkVmReceipt",
+    "system": "risc0",
+    "receiptFormat": "groth16-bn254",
+    "imageId": "sha256:a1a0bc89b5b1febaeda3519f6dbade0fa5ac16beeb143c4e1b01689573567bc6",
+    "seal": "Jf0FgAqjMQqZHe+bnJHCVVkE45JtdoOYTyREe+vxVZQU/3Z+6oNUUqkQjm0LlBxHOLnuuQs30ws7mLypoasIISvVQHW9dV+Oc5QSO4lGRVrz8ZEyqbFC3Pb/PMcxZNwOJeoSZYGRMLvkeokm3fB5MeU+i8gzMHIaguWumRMYKX4T10onYL7TsGEvv6ZYd4KD/9wk/tCvunGv/b6SyTBYcAqSbqRw1z4n5THfJk+NDzqNoJX1J+UGaC37xMIn9uFML9oUhmjiK7wCihu44z2EpuowQm09Qmr3YCAC4mMHZQ8TmQzxeKqKq94bgH4Mtbj6I1+YCfNL9QsCCqpGkDkOYA==",
+    "journal": {
+      "chaingraph_version": "0.4.0",
+      "kernel_digest": "sha256:3a605809e324af32ea025897ba46618e869f3a5701025e98ba5a7ff74a25847e",
+      "output": {
+        "certification_period": "2025",
+        "closed_count": 2,
+        "closure_coverage_pct": 100,
+        "cutoff_at": "2026-07-01T00:00:00.000Z",
+        "determinations": [
+          {
+            "closed_at": "2026-05-01T00:00:00.000Z",
+            "closure_status": "closed",
+            "doc_ref_id": "US2025DOC0001",
+            "exception": null,
+            "ha_note": "Not yet an approval record. A human reviewer/approver MAY later create a separate, signed approval record over this artifact's execution_hash + this notification_id; this kernel does not fabricate or reserve a mutable slot for that record inside its own hashed output.",
+            "item_state": "done",
+            "notification_code": "ICMM-TYPE1-RECOVERABLE",
+            "notification_id": "NOTIF-0001",
+            "resubmission_linkage": {
+              "resubmitted_at": "2026-05-01T00:00:00.000Z",
+              "resubmitted_doc_ref_id": "US2025DOC0001-CORR1"
+            }
+          },
+          {
+            "closed_at": "2026-05-10T00:00:00.000Z",
+            "closure_status": "closed",
+            "doc_ref_id": "US2025DOC0002",
+            "exception": null,
+            "ha_note": "Not yet an approval record. A human reviewer/approver MAY later create a separate, signed approval record over this artifact's execution_hash + this notification_id; this kernel does not fabricate or reserve a mutable slot for that record inside its own hashed output.",
+            "item_state": "done",
+            "notification_code": "CRS-STATUS-REJECTED",
+            "notification_id": "NOTIF-0002",
+            "resubmission_linkage": {
+              "resubmitted_at": "2026-05-10T00:00:00.000Z",
+              "resubmitted_doc_ref_id": "US2025DOC0002-CORR1"
+            }
+          }
+        ],
+        "evaluated_at": "2026-06-15T00:00:00.000Z",
+        "note": "Deterministic FATCA/CRS remediation-closure tracker over a caller-declared notification set + remediation records, evaluated against one declared certification-period cut-off date. Reuses the art-428-cyber-incident-clock decision-tree attestation-slot pattern (item_state/exception vocabulary); no notification-clock arithmetic is invented here. This tool tracks closure and computes a readiness verdict only; it does not itself submit, transmit, or file anything, and it is not legal or tax advice.",
+        "notification_count": 2,
+        "open_count": 0,
+        "overdue_count": 0,
+        "readiness_verdict": "READY"
       }
     }
   }
@@ -31865,7 +32996,8 @@
                 "next": "end"
               }
             ],
-            "default": "art-227-validate-adverse-action-notice"
+            "default": "art-227-validate-adverse-action-notice",
+            "gate_policy": "review_required"
           }
         },
         {
@@ -32696,6 +33828,55 @@
       ]
     },
     {
+  "name": "aml-lookback-cycle",
+  "domain": "Sanctions",
+  "title": "AML Lookback Cycle",
+  "description": "Reconciles a consent-order lookback's population against the extract actually re-screened, flagging any period with no preserved list snapshot as unverifiable rather than screening it against today's list. Re-screens the verifiable population against the sanctions/export-control program in force, versioned list snapshots as policy inputs. Builds a deterministic disposition sampling frame and reviewer workload allocation for the final independent-validator disposition review.",
+  "composer_url": "https://ainumbers.co/chaingraph/art-470-lookback-completeness-reconciler.html",
+  "steps": [
+    {
+      "tool_id": "art-470-lookback-completeness-reconciler",
+      "handoff": "verifiable_source_count, verifiable_extract_count, and unverifiable_periods (excluded from re-screen scope) feed Stage 2's population definition"
+    },
+    {
+      "tool_id": "art-90-sanctions-screening-fit-diagnostic",
+      "handoff": "program-config diagnostic against the versioned list snapshot in force for the verifiable period feeds Stage 3's quality scorecard",
+      "gate": {
+        "input": "/program_grade",
+        "rules": [
+          {
+            "op": "eq",
+            "value": "F",
+            "next": "end"
+          }
+        ],
+        "default": "art-97-sanctions-screening-quality-scorer",
+        "gate_policy": "escalate"
+      }
+    },
+    {
+      "tool_id": "art-97-sanctions-screening-quality-scorer",
+      "handoff": "composite program-conformance grade and delta-vs-original-dispositions priorities feed Stage 4's sampling population",
+      "gate": {
+        "input": "/program_grade",
+        "rules": [
+          {
+            "op": "eq",
+            "value": "F",
+            "next": "end"
+          }
+        ],
+        "default": "art-471-disposition-sampling-frame",
+        "gate_policy": "escalate"
+      }
+    },
+    {
+      "tool_id": "art-471-disposition-sampling-frame",
+      "handoff": "reviewer_workload allocation hands off to the independent-validator human disposition review -- final stage, never an auto-generated SAR"
+    }
+  ]
+},
+    {
       "name": "aml-programme",
       "domain": "Financial Crime & KYC",
       "title": "AML Programme",
@@ -33348,7 +34529,19 @@
         },
         {
           "tool_id": "art-433-call-report-rcr-capital",
-          "handoff": "RC-R capital ratios and RWA feed Stage 3 cross-schedule edit checks against Stage 1 Schedule RC"
+          "handoff": "RC-R capital ratios and RWA feed Stage 3 cross-schedule edit checks against Stage 1 Schedule RC",
+          "gate": {
+            "input": "/ratios/total_capital_pass",
+            "rules": [
+              {
+                "op": "eq",
+                "value": false,
+                "next": "art-434-call-report-edit-check-gate"
+              }
+            ],
+            "default": "art-434-call-report-edit-check-gate",
+            "gate_policy": "review_required"
+          }
         },
         {
           "tool_id": "art-434-call-report-edit-check-gate",
@@ -33382,7 +34575,19 @@
       "steps": [
         {
           "tool_id": "sim-01-lcr-nsfr-liquidity-stress-test",
-          "handoff": "lcr_breach_probability,nsfr_ratio,time_to_breach feed Stage 2 reserve stress"
+          "handoff": "lcr_breach_probability,nsfr_ratio,time_to_breach feed Stage 2 reserve stress",
+          "gate": {
+            "input": "/verdict",
+            "rules": [
+              {
+                "op": "eq",
+                "value": "BREACH_RISK",
+                "next": "end"
+              }
+            ],
+            "default": "rca-02-mica-reserve-stress",
+            "gate_policy": "escalate"
+          }
         },
         {
           "tool_id": "rca-02-mica-reserve-stress",
@@ -33790,6 +34995,19 @@
         {
           "tool_id": "cry-04-merkle-batch-verifier",
           "handoff": "Exports composite precursor artifact with Merkle-root execution_hash (H3) -- final stage"
+        }
+      ]
+    },
+    {
+      "name": "cbcr-annual-publish",
+      "domain": "Audit & Assurance",
+      "title": "CbCR Annual Publish",
+      "description": "OECD BEPS Action 13 Country-by-Country Report build with internal consistency gates and anomaly-pattern surfacing in one artifact. gate_status (auto_pass / review_required) and anomaly_flags (e.g. profit-with-zero-employees) are recorded in output_payload per the §27 Human Accountability vocabulary; a PUBLIC release additionally requires a dual_control(2) preparer/tax-officer gate before disclosure -- both recorded now, enforced once HA-RETRO-1 wires runtime gating. Cross-links art-473-interquartile-benchmark (same underlying entity financial data, different arm's-length-range analysis) and art-456 GloBE safe-harbour.",
+      "composer_url": "https://ainumbers.co/chaingraph/chains/cbcr-annual-publish.html",
+      "steps": [
+        {
+          "tool_id": "art-472-cbcr-builder",
+          "handoff": "Builds the CbCR XML schema skeleton, runs consistency checks, surfaces anomaly_flags, and computes gate_status -- final stage. PUBLIC export_mode release requires a dual_control(2) preparer + tax-officer sign-off (recorded, not yet runtime-gated) and review_required routing on any anomaly_flags before disclosure."
         }
       ]
     },
@@ -34323,7 +35541,19 @@
         },
         {
           "tool_id": "art-10-amla-transaction-typology-risk-scorer",
-          "handoff": "Exports composite counterparty-AML artifact with execution_hash (H3) -- final stage"
+          "handoff": "Exports composite counterparty-AML artifact with execution_hash (H3) -- final stage",
+          "gate": {
+            "input": "/overall_risk",
+            "rules": [
+              {
+                "op": "eq",
+                "value": "HIGH",
+                "next": "end"
+              }
+            ],
+            "default": "end",
+            "gate_policy": "escalate"
+          }
         }
       ]
     },
@@ -34433,7 +35663,19 @@
       "steps": [
         {
           "tool_id": "art-10-amla-transaction-typology-risk-scorer",
-          "handoff": "typology risk (H1) feeds the graph engine"
+          "handoff": "typology risk (H1) feeds the graph engine",
+          "gate": {
+            "input": "/overall_risk",
+            "rules": [
+              {
+                "op": "eq",
+                "value": "HIGH",
+                "next": "end"
+              }
+            ],
+            "default": "mms-03-app-fraud-graph",
+            "gate_policy": "escalate"
+          }
         },
         {
           "tool_id": "mms-03-app-fraud-graph",
@@ -34595,7 +35837,8 @@
                 "next": "escalate"
               }
             ],
-            "default": "art-09-dora-incident-classifier"
+            "default": "art-09-dora-incident-classifier",
+            "gate_policy": "escalate"
           }
         },
         {
@@ -34699,7 +35942,19 @@
         },
         {
           "tool_id": "art-29-dora-readiness-diagnostic",
-          "handoff": "readiness_score,remediation_roadmap -- Exports DORA resilience mandate -- final stage"
+          "handoff": "readiness_score,remediation_roadmap -- Exports DORA resilience mandate -- final stage. GATE: grade='F' escalates to human review (OCG §22.8), mirroring dora-escalation-demo's proven shape on the same kernel.",
+          "gate": {
+            "input": "/grade",
+            "rules": [
+              {
+                "op": "eq",
+                "value": "F",
+                "next": "escalate"
+              }
+            ],
+            "default": "end",
+            "gate_policy": "escalate"
+          }
         }
       ]
     },
@@ -34796,7 +36051,8 @@
                 "next": "end"
               }
             ],
-            "default": "art-294-einvoice-vat-calc-verifier"
+            "default": "art-294-einvoice-vat-calc-verifier",
+            "gate_policy": "review_required"
           }
         },
         {
@@ -34811,7 +36067,8 @@
                 "next": "end"
               }
             ],
-            "default": "art-295-einvoice-jurisdiction-mandate-router"
+            "default": "art-295-einvoice-jurisdiction-mandate-router",
+            "gate_policy": "review_required"
           }
         },
         {
@@ -34904,6 +36161,51 @@
         {
           "tool_id": "325-payment-cutoff-settlement-atlas",
           "handoff": "cutoff_atlas and composite_corridor_mandate — final EM corridor mandate"
+        }
+      ]
+    },
+    {
+      "name": "emir-recon-cycle",
+      "domain": "EMIR",
+      "title": "EMIR Inter-TR Reconciliation Cycle",
+      "description": "Two-step daily cycle over the trade repository's own ISO 20022 reconciliation response and the firm's submitted state. Step 1 independently reproduces the reconciliation verdict per field against a policy-supplied field and tolerance table with a suppression list, emits agreement or disagreement with the repository, and builds a break set keyed for stable diffing across cycles. Step 2 ages that break set against the prior sealed break set, splitting newly opened, persisting and newly closed breaks and running the escalation clock. Step 1 is gated review_required for cycle sign-off, with the reporting-operations owner as reviewer. Step 2 is gated escalate once any break passes its policy ageing limit. Each break disposition is recorded as a separate annotation record naming the acting identity, so the accountability trail is per break rather than per cycle, and the prior cycle's sealed break set is referenced by subject_hash rather than mutated in place.",
+      "composer_url": "https://ainumbers.co/chaingraph/chains/emir-recon-cycle.html",
+      "regulatory_refs": [
+        "EMIR Refit reporting technical standards (inter-TR reconciliation)",
+        "ESMA validation rules and reconciliation tolerance tables"
+      ],
+      "steps": [
+        {
+          "tool_id": "art-482-emir-recon-adjudicator",
+          "handoff": "Per-field agreement or disagreement with the repository plus a stably keyed break set feed the ageing and escalation-clock stage",
+          "gate": {
+            "input": "/break_count",
+            "rules": [
+              {
+                "op": "gt",
+                "value": 0,
+                "next": "art-483-emir-break-ageing"
+              }
+            ],
+            "default": "art-483-emir-break-ageing",
+            "gate_policy": "review_required"
+          }
+        },
+        {
+          "tool_id": "art-483-emir-break-ageing",
+          "handoff": "Ageing buckets, recurrence counts, the newly-opened / persisting / newly-closed split and escalation-clock status close the cycle bundle. Final stage.",
+          "gate": {
+            "input": "/escalation_breached_count",
+            "rules": [
+              {
+                "op": "gt",
+                "value": 0,
+                "next": "end"
+              }
+            ],
+            "default": "end",
+            "gate_policy": "escalate"
+          }
         }
       ]
     },
@@ -35166,7 +36468,53 @@
                 "next": "end"
               }
             ],
-            "default": "end"
+            "default": "end",
+            "gate_policy": "review_required"
+          }
+        }
+      ]
+    },
+    {
+      "name": "fatca-ro-certification-cycle",
+      "domain": "Financial Crime & KYC",
+      "title": "Responsible-Officer Certification Cycle (FATCA / CRS)",
+      "description": "Two-step certification-period cycle over the institution's own submission file, the notifications returned against it, and its remediation records. Step 1 evaluates the submission against a policy-supplied schema and business-rule set -- element sequencing and cardinality, mandatory identifiers, and message and document reference uniqueness across corrected and voided records -- keyed by the published error code and element path, with a suppression list so stood-down rules cannot produce false findings. Step 2 triages the returned notification set against the firm's remediation records: open, closed or overdue per notification, which corrected message closes which error, closure coverage, and a readiness verdict against the declared cut-off. Step 1 is gated review_required once findings exist, with the compliance officer as reviewer, because a disclosed-and-corrected failure is a reviewed act rather than an automatic one. Step 2 is gated hold while any error remains unremediated past its policy cut-off. The certification itself carries an approval record bound to the Responsible Officer identity, which is the approver role named exactly as the regulation names it. Free validators already check these files; what this cycle adds is a sealed, offline-verifiable chain from submission errors through remediation to that named signature. The bundle is the institution's own evidence and does not satisfy an IRS or competent-authority requirement.",
+      "composer_url": "https://ainumbers.co/chaingraph/chains/fatca-ro-certification-cycle.html",
+      "regulatory_refs": [
+        "FATCA Responsible Officer certification of compliance (Treas. Reg. 1.1471-4(f)(3))",
+        "IRS FATCA XML schema and ICMM notifications; OECD CRS XML and Status Message schemas"
+      ],
+      "steps": [
+        {
+          "tool_id": "art-490-fatca-crs-submission-check",
+          "handoff": "Per-finding pass/fail keyed by published error code and element path, with the applied suppressions recorded, feeds the remediation-closure stage",
+          "gate": {
+            "input": "/fail_count",
+            "rules": [
+              {
+                "op": "gt",
+                "value": 0,
+                "next": "art-491-ro-remediation-closure"
+              }
+            ],
+            "default": "art-491-ro-remediation-closure",
+            "gate_policy": "review_required"
+          }
+        },
+        {
+          "tool_id": "art-491-ro-remediation-closure",
+          "handoff": "Open, closed and overdue determinations per notification, resubmission linkage, closure coverage and the certification-period readiness verdict close the certification evidence bundle. Final stage.",
+          "gate": {
+            "input": "/readiness_verdict",
+            "rules": [
+              {
+                "op": "eq",
+                "value": "NOT_READY",
+                "next": "end"
+              }
+            ],
+            "default": "end",
+            "gate_policy": "hold"
           }
         }
       ]
@@ -35340,7 +36688,19 @@
       "steps": [
         {
           "tool_id": "art-06-genius-act-reserve-attestation",
-          "handoff": "reserve-attestation precheck result feeds Stage 2 reserve stress simulation"
+          "handoff": "reserve-attestation precheck result feeds Stage 2 reserve stress simulation",
+          "gate": {
+            "input": "/attestation_readiness_determination",
+            "rules": [
+              {
+                "op": "eq",
+                "value": "FAIL",
+                "next": "rca-02-mica-reserve-stress"
+              }
+            ],
+            "default": "rca-02-mica-reserve-stress",
+            "gate_policy": "review_required"
+          }
         },
         {
           "tool_id": "rca-02-mica-reserve-stress",
@@ -35490,7 +36850,19 @@
       "steps": [
         {
           "tool_id": "art-06-genius-act-reserve-attestation",
-          "handoff": "attestation_readiness_score and pre_check_pass feed the monthly disclosure lint"
+          "handoff": "attestation_readiness_score and pre_check_pass feed the monthly disclosure lint",
+          "gate": {
+            "input": "/attestation_readiness_determination",
+            "rules": [
+              {
+                "op": "eq",
+                "value": "FAIL",
+                "next": "art-275-genius-reserve-disclosure-checker"
+              }
+            ],
+            "default": "art-275-genius-reserve-disclosure-checker",
+            "gate_policy": "review_required"
+          }
         },
         {
           "tool_id": "art-275-genius-reserve-disclosure-checker",
@@ -35528,7 +36900,19 @@
     },
     {
       "tool_id": "art-456-globe-safe-harbour-tests",
-      "handoff": "Evaluates de minimis / simplified ETR / routine profits tests against etr_by_jurisdiction. safe_harbour_flags gate the next stage (§21.4 conditional): if met, top-up tax is deemed zero and SBIE/top-up is skipped; if not met, SBIE/top-up runs. Safe-harbour reliance is a reviewer approval record with reason_code, not computed here."
+      "handoff": "Evaluates de minimis / simplified ETR / routine profits tests against etr_by_jurisdiction. safe_harbour_flags gate the next stage (§21.4 conditional): if met, top-up tax is deemed zero and SBIE/top-up is skipped; if not met, SBIE/top-up runs. Safe-harbour reliance is a reviewer approval record with reason_code, not computed here.",
+      "gate": {
+        "input": "/safe_harbour_met",
+        "rules": [
+          {
+            "op": "eq",
+            "value": true,
+            "next": "art-457-globe-gir-composer"
+          }
+        ],
+        "default": "art-455-globe-sbie-topup",
+        "gate_policy": "review_required"
+      }
     },
     {
       "tool_id": "art-455-globe-sbie-topup",
@@ -35846,7 +37230,8 @@
                 "next": "end"
               }
             ],
-            "default": "art-257-calculate-claims-stp-economics"
+            "default": "art-257-calculate-claims-stp-economics",
+            "gate_policy": "escalate"
           }
         },
         {
@@ -36094,7 +37479,8 @@
                 "next": "end"
               }
             ],
-            "default": "art-269-validate-w8-series-structural"
+            "default": "art-269-validate-w8-series-structural",
+            "gate_policy": "review_required"
           }
         },
         {
@@ -36183,7 +37569,19 @@
         },
         {
           "tool_id": "art-254-compute-rbc-action-level",
-          "handoff": "RBC action level classification (NO_ACTION / COMPANY_ACTION / REGULATORY_ACTION / AUTHORIZED_CONTROL / MANDATORY_CONTROL). Final stage."
+          "handoff": "RBC action level classification (NO_ACTION / COMPANY_ACTION / REGULATORY_ACTION / AUTHORIZED_CONTROL / MANDATORY_CONTROL). Final stage.",
+          "gate": {
+            "input": "/action_level_code",
+            "rules": [
+              {
+                "op": "neq",
+                "value": "NO_ACTION",
+                "next": "end"
+              }
+            ],
+            "default": "end",
+            "gate_policy": "escalate"
+          }
         }
       ]
     },
@@ -36492,7 +37890,7 @@
       "title": "Model Passport Lifecycle",
       "spec_version": "0.8.0",
       "wave": 73,
-      "description": "Linear three-step chain building an SR 26-2 model passport. Step 1 registers a model-inventory record with a completeness score and proportionality tier (art-450). Step 2 backtests the model's period predicted-vs-actual outcomes against a caller-declared error tolerance (art-451). Step 3 determines the model's SR 26-2 validation status from its tier, last-validation date, and the outcome-analysis result, applying a tier-based revalidation cadence (art-453). No routing gate -- validation_status branching lives inside art-453's own output, not chain-level routing.",
+      "description": "Linear three-step chain building an SR 26-2 model passport. Step 1 registers a model-inventory record with a completeness score and proportionality tier (art-450). Step 2 backtests the model's period predicted-vs-actual outcomes against a caller-declared error tolerance (art-451). Step 3 determines the model's SR 26-2 validation status from its tier, last-validation date, and the outcome-analysis result, applying a tier-based revalidation cadence (art-453), which also carries a terminal §27 review_required accountability gate on a restricted_use validation status.",
       "composer_url": "https://ainumbers.co/chaingraph/chains/model-passport-lifecycle.html",
       "regulatory_refs": [
         "SR 26-2 (model risk management guidance, successor to SR 11-7)",
@@ -36509,7 +37907,19 @@
         },
         {
           "tool_id": "art-453-model-validation-status",
-          "handoff": "Final SR 26-2 validation status, days-since-validation, and next-due-in-days. Final stage."
+          "handoff": "Final SR 26-2 validation status, days-since-validation, and next-due-in-days. Final stage.",
+          "gate": {
+            "input": "/validation_status",
+            "rules": [
+              {
+                "op": "eq",
+                "value": "restricted_use",
+                "next": "end"
+              }
+            ],
+            "default": "end",
+            "gate_policy": "review_required"
+          }
         }
       ]
     },
@@ -36539,6 +37949,55 @@
       ]
     },
     {
+      "name": "model-validation-cycle",
+      "domain": "Bank Capital & Credit Risk",
+      "title": "Model Validation Replication Cycle",
+      "description": "Two-step validation cycle over a declared model specification, its stated inputs and its reported outputs, routed in through the shipped workbook bridge. Step 1 recomputes the reported outputs independently and returns a per-record and aggregate tolerance diff with the failing segment named, so an independent party reruns the model offline and reaches the same verdict. Step 2 runs the deterministic-given-data battery -- discriminatory power, population and characteristic stability, back-test outcome against predicted, and calibration comparison -- each scored against policy-supplied thresholds. Step 1 is gated hold whenever replication does not succeed, including the honest not-replicable-as-specified verdict. Step 2 is gated dual_control(2) for validation sign-off, where counting distinct approver identities is what mechanically evidences that the validator is independent of the developer; a test breach holds the sign-off for review. The model owner is bound as a separate role on the subject artifact so owner and validator are named apart. This surface evidences replication and testing only. It states no validation opinion, no view on conceptual soundness or fitness for use, and no sufficiency claim under any supervisory model-risk guidance.",
+      "composer_url": "https://ainumbers.co/chaingraph/chains/model-validation-cycle.html",
+      "regulatory_refs": [
+        "SR 11-7 Supervisory Guidance on Model Risk Management",
+        "IFRS 9 and CECL expected-credit-loss model validation practice"
+      ],
+      "steps": [
+        {
+          "tool_id": "art-488-model-replication-diff",
+          "handoff": "Replication verdict, per-record and aggregate tolerance diff and the failing segments feed the quantitative test battery",
+          "gate": {
+            "input": "/verdict",
+            "rules": [
+              {
+                "op": "neq",
+                "value": "replicated",
+                "next": "end"
+              }
+            ],
+            "default": "art-489-model-test-battery",
+            "gate_policy": "hold"
+          }
+        },
+        {
+          "tool_id": "art-489-model-test-battery",
+          "handoff": "Per-test pass or breach against the declared thresholds, each labelled with its standard name, closes the validation evidence bundle under dual control. Final stage.",
+          "gate": {
+            "input": "/tests_breached",
+            "rules": [
+              {
+                "op": "gt",
+                "value": 0,
+                "next": "end"
+              }
+            ],
+            "default": "end",
+            "gate_policy": "dual_control",
+            "gate_threshold": {
+              "role": "approver",
+              "threshold": 2
+            }
+          }
+        }
+      ]
+    },
+    {
       "name": "mortgage-agency-pricing-and-eligibility",
       "domain": "Consumer Lending & Fair Lending",
       "title": "Mortgage Agency Pricing and Eligibility",
@@ -36556,7 +38015,19 @@
       "steps": [
         {
           "tool_id": "art-223-conforming-loan-limit",
-          "handoff": "Conforming/super-conforming/jumbo classification feeds Step 2 agency eligibility check"
+          "handoff": "Conforming/super-conforming/jumbo classification feeds Step 2 agency eligibility check",
+          "gate": {
+            "input": "/classification",
+            "rules": [
+              {
+                "op": "eq",
+                "value": "jumbo",
+                "next": "end"
+              }
+            ],
+            "default": "art-222-agency-eligibility-matrix",
+            "gate_policy": "review_required"
+          }
         },
         {
           "tool_id": "art-222-agency-eligibility-matrix",
@@ -36688,7 +38159,8 @@
                 "next": "art-225-va-funding-fee-residual"
               }
             ],
-            "default": "art-224-fha-mip-eligibility"
+            "default": "art-224-fha-mip-eligibility",
+            "gate_policy": "review_required"
           }
         },
         {
@@ -36728,7 +38200,8 @@
                 "next": "end"
               }
             ],
-            "default": "art-235-test-hpml-escrow"
+            "default": "art-235-test-hpml-escrow",
+            "gate_policy": "review_required"
           }
         },
         {
@@ -37250,6 +38723,23 @@
       ]
     },
     {
+  "name": "pqc-migration-evidence",
+  "domain": "Post-Quantum Cryptography",
+  "title": "PQC Migration Evidence Workflow",
+  "description": "Structural CBOM lint and CNSA-2.0 classification feeding a per-row CNSA-2.0 deadline calculation: two receipts binding a declared cryptography inventory to its asserted quantum-vulnerable findings and its migration deadlines.",
+  "composer_url": "https://ainumbers.co/chaingraph/chains/pqc-migration-evidence.html",
+  "steps": [
+    {
+      "tool_id": "art-386-lint-cbom-structure",
+      "handoff": "Components classified quantum_vulnerable or cnsa2_ready feed Stage 2 as declared inventory rows -- asset_type mapped from each finding's primitive (key-encapsulation/key-establishment -> key-establishment, signature -> signature), system_class and deployment_date supplied per system alongside the CBOM."
+    },
+    {
+      "tool_id": "art-387-pqc-deadline-ladder-calculator",
+      "handoff": "Returns the applicable CNSA-2.0 deadline, days remaining, earliest binding constraint, and FIPS 140-2 Historical-list exposure flag per inventory row -- the terminal migration-evidence receipt."
+    }
+  ]
+},
+    {
       "name": "pqc-swift-iso20022",
       "domain": "Post-Quantum Cryptography",
       "title": "SWIFT / ISO 20022 PQC Readiness",
@@ -37353,6 +38843,104 @@
         {
           "tool_id": "20-failure-analyser",
           "handoff": "failure_analysis and composite_psr_mandate — final PSR APP fraud reimbursement mandate"
+        }
+      ]
+    },
+    {
+      "name": "rdarr-attestation-cycle",
+      "domain": "Bank Capital & Credit Risk",
+      "title": "RDARR Management-Body Attestation Cycle",
+      "description": "Two-step attestation cycle for risk data aggregation and risk reporting. The attestation is the deliverable: step 1 re-derives a stated risk-report figure from a declared tabular extract under a declared aggregation policy, so the signature is backed by a recomputed number rather than a self-assessment; step 2 scores the deterministic quality metrics against policy-supplied thresholds, each labelled with its ECB Guide prerequisite area. Step 1 is gated review_required when any source line is excluded from the recompute, with the risk-data owner as reviewer. Step 2 is gated dual_control(2) for periodic attestation release, with one of the two distinct approver identities bound to a management-body role. The recompute is evidence for the institution's own internal attestation; it is not a supervisory submission and carries no supervisory pass mark.",
+      "composer_url": "https://ainumbers.co/chaingraph/chains/rdarr-attestation-cycle.html",
+      "regulatory_refs": [
+        "ECB Guide on effective risk data aggregation and risk reporting (3 May 2024)",
+        "BCBS 239 Principles for effective risk data aggregation and risk reporting"
+      ],
+      "steps": [
+        {
+          "tool_id": "art-480-rdarr-aggregation-recompute",
+          "handoff": "Recomputed figure, signed delta against the reported figure, and the per-level contribution breakdown localise a break to one roll-up node; the same extract feeds the quality scorecard",
+          "gate": {
+            "input": "/lines_excluded",
+            "rules": [
+              {
+                "op": "gt",
+                "value": 0,
+                "next": "art-481-rdarr-quality-scorecard"
+              }
+            ],
+            "default": "art-481-rdarr-quality-scorecard",
+            "gate_policy": "review_required"
+          }
+        },
+        {
+          "tool_id": "art-481-rdarr-quality-scorecard",
+          "handoff": "Per-metric pass/breach plus an overall scorecard status, each metric labelled by ECB Guide prerequisite area, released under dual control into the accountability evidence bundle for the cycle. Final stage.",
+          "gate": {
+            "input": "/scorecard/overall_status",
+            "rules": [
+              {
+                "op": "eq",
+                "value": "breach",
+                "next": "end"
+              }
+            ],
+            "default": "end",
+            "gate_policy": "dual_control",
+            "gate_threshold": {
+              "role": "approver",
+              "threshold": 2
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "regrpt-submission-cycle",
+      "domain": "Bank Capital & Credit Risk",
+      "title": "Regulatory Report Submission Cycle (Published Edit Checks)",
+      "description": "Two-step pre-submission cycle over a report instance and a freely published rule set. Step 1 evaluates the instance against policy-supplied validity and quality edits, keyed by the published edit identifier, and records which deactivated rules were suppressed so a stood-down rule cannot produce a false failure. Step 2 computes period-over-period variance per line item against policy-supplied materiality thresholds and flags which movements require a written explanation. Step 1 is gated hold on any hard-rule failure, and in that state the cycle stops before a submission bundle is produced. Step 2 is gated dual_control(2) for filing release, satisfied by a preparer and a distinct signing-officer approver; a flagged material movement carrying no explanation annotation holds the release for review, and the submitter identity is recorded separately at transmission. The bundle is the filer's own evidence and does not satisfy any issuer's submission requirement.",
+      "composer_url": "https://ainumbers.co/chaingraph/chains/regrpt-submission-cycle.html",
+      "regulatory_refs": [
+        "FFIEC Call Report validation criteria (validity and quality edits)",
+        "EBA implementing technical standards validation-rules list"
+      ],
+      "steps": [
+        {
+          "tool_id": "art-484-regrpt-editcheck-runner",
+          "handoff": "Per-rule pass/fail keyed by the published edit identifier, with failing cell references and computed-versus-reported values, feeds the variance stage",
+          "gate": {
+            "input": "/summary/overall_pass",
+            "rules": [
+              {
+                "op": "eq",
+                "value": false,
+                "next": "end"
+              }
+            ],
+            "default": "art-485-regrpt-variance-explainer",
+            "gate_policy": "hold"
+          }
+        },
+        {
+          "tool_id": "art-485-regrpt-variance-explainer",
+          "handoff": "Ranked material movements and the explained/unexplained split close the submission-evidence bundle under dual control. Final stage.",
+          "gate": {
+            "input": "/summary/all_material_explained",
+            "rules": [
+              {
+                "op": "eq",
+                "value": false,
+                "next": "end"
+              }
+            ],
+            "default": "end",
+            "gate_policy": "dual_control",
+            "gate_threshold": {
+              "role": "approver",
+              "threshold": 2
+            }
+          }
         }
       ]
     },
@@ -38206,7 +39794,19 @@
         },
         {
           "tool_id": "art-06-genius-act-reserve-attestation",
-          "handoff": "pre_check_pass,attestation_readiness_score feed Stage 4"
+          "handoff": "pre_check_pass,attestation_readiness_score feed Stage 4",
+          "gate": {
+            "input": "/attestation_readiness_determination",
+            "rules": [
+              {
+                "op": "eq",
+                "value": "FAIL",
+                "next": "cry-04-merkle-batch-verifier"
+              }
+            ],
+            "default": "cry-04-merkle-batch-verifier",
+            "gate_policy": "review_required"
+          }
         },
         {
           "tool_id": "cry-04-merkle-batch-verifier",
@@ -38310,7 +39910,19 @@
     },
     {
       "tool_id": "art-465-workpaper-bundle-composer",
-      "handoff": "Composes the per-area evidence bundle from the three kernel artifacts plus the exception list and preparer/reviewer/partner sign-off roles -- final stage."
+      "handoff": "Composes the per-area evidence bundle from the three kernel artifacts plus the exception list and preparer/reviewer/partner sign-off roles -- final stage. GATE: any recorded exception (exception_count > 0) escalates the bundle for reviewer/partner disposition rather than the default zero-exception close.",
+      "gate": {
+        "input": "/exception_count",
+        "rules": [
+          {
+            "op": "gt",
+            "value": 0,
+            "next": "escalate"
+          }
+        ],
+        "default": "end",
+        "gate_policy": "escalate"
+      }
     }
   ]
 },
@@ -38340,6 +39952,51 @@
         {
           "tool_id": "384-sfdr-pai-indicator-calculator",
           "handoff": "pai_indicators and compliance_assessment — final SFDR disclosure mandate"
+        }
+      ]
+    },
+    {
+      "name": "swift-csp-attestation-cycle",
+      "domain": "DORA / NIS2 / ICT Resilience",
+      "title": "Customer Security Controls Attestation Cycle",
+      "description": "Two-step annual attestation cycle over a declared architecture type and component inventory. Step 1 derives the applicable mandatory and advisory control set from the policy-supplied control-framework version, scores declared implementation status, and returns coverage figures, a gap list keyed by published control number, an evidence index aligned to the framework's own supporting-evidence column, and an explicit not-applicable set with stated reasons so an omission cannot read as a pass. Step 2 tests assessor eligibility: assessment route, claimed certifications against the required set, independence from the implementer by distinct-identity counting, and assessment-date validity against the attestation deadline. Step 1 is gated hold while any mandatory control gap remains. Step 2 is gated reject, a terminal human rejection, when the assessor is ineligible, and the failing predicate is carried as the reason code. Release of the attestation bundle is a dual-control act with the assessor bound as reviewer and the attesting officer as approver; an examiner role binding grants inspection only and never an approval path. The framework's annual 31 December attestation deadline is a fact about the regime. This surface produces the firm's own evidence: it is not a Swift endorsement, not an assessor accreditation, and does not satisfy a KYC-SA submission.",
+      "composer_url": "https://ainumbers.co/chaingraph/chains/swift-csp-attestation-cycle.html",
+      "regulatory_refs": [
+        "Swift Customer Security Controls Framework (CSCF) v2026",
+        "Swift Independent Assessment Framework"
+      ],
+      "steps": [
+        {
+          "tool_id": "art-486-cscf-control-applicability",
+          "handoff": "Applicable control set, coverage figures, gap list and evidence index keyed by control number feed the assessor-eligibility stage",
+          "gate": {
+            "input": "/overall_status",
+            "rules": [
+              {
+                "op": "eq",
+                "value": "gaps_present",
+                "next": "end"
+              }
+            ],
+            "default": "art-487-assessor-independence-check",
+            "gate_policy": "hold"
+          }
+        },
+        {
+          "tool_id": "art-487-assessor-independence-check",
+          "handoff": "Eligible or ineligible with the failing predicate named, closing the attestation evidence bundle. Final stage.",
+          "gate": {
+            "input": "/eligible",
+            "rules": [
+              {
+                "op": "eq",
+                "value": false,
+                "next": "end"
+              }
+            ],
+            "default": "end",
+            "gate_policy": "reject"
+          }
         }
       ]
     },
@@ -38537,7 +40194,19 @@
         },
         {
           "tool_id": "art-06-genius-act-reserve-attestation",
-          "handoff": "reserve_attestation verdict feeds Stage 3 AML pre-screen"
+          "handoff": "reserve_attestation verdict feeds Stage 3 AML pre-screen",
+          "gate": {
+            "input": "/attestation_readiness_determination",
+            "rules": [
+              {
+                "op": "eq",
+                "value": "FAIL",
+                "next": "art-10-amla-transaction-typology-risk-scorer"
+              }
+            ],
+            "default": "art-10-amla-transaction-typology-risk-scorer",
+            "gate_policy": "review_required"
+          }
         },
         {
           "tool_id": "art-10-amla-transaction-typology-risk-scorer",
@@ -38583,11 +40252,35 @@
         },
         {
           "tool_id": "art-38-tempo-onchain-aml",
-          "handoff": "sar_determination, travel_rule_attestation, and execution_hash feed Stage 3 typology scoring"
+          "handoff": "sar_determination, travel_rule_attestation, and execution_hash feed Stage 3 typology scoring",
+          "gate": {
+            "input": "/batch_verdict",
+            "rules": [
+              {
+                "op": "eq",
+                "value": "ESCALATE",
+                "next": "end"
+              }
+            ],
+            "default": "art-10-amla-transaction-typology-risk-scorer",
+            "gate_policy": "escalate"
+          }
         },
         {
           "tool_id": "art-10-amla-transaction-typology-risk-scorer",
-          "handoff": "Exports composite AML + Travel Rule mandate -- final stage"
+          "handoff": "Exports composite AML + Travel Rule mandate -- final stage",
+          "gate": {
+            "input": "/overall_risk",
+            "rules": [
+              {
+                "op": "eq",
+                "value": "HIGH",
+                "next": "end"
+              }
+            ],
+            "default": "end",
+            "gate_policy": "escalate"
+          }
         }
       ]
     },
@@ -38651,7 +40344,19 @@
       "steps": [
         {
           "tool_id": "art-38-tempo-onchain-aml",
-          "handoff": "aml_verdict and execution_hash (H1) feed Stage 2 zone disclosure attestation"
+          "handoff": "aml_verdict and execution_hash (H1) feed Stage 2 zone disclosure attestation",
+          "gate": {
+            "input": "/batch_verdict",
+            "rules": [
+              {
+                "op": "eq",
+                "value": "ESCALATE",
+                "next": "end"
+              }
+            ],
+            "default": "art-39-tempo-zone-disclosure",
+            "gate_policy": "escalate"
+          }
         },
         {
           "tool_id": "art-39-tempo-zone-disclosure",
@@ -38961,7 +40666,19 @@
       "steps": [
         {
           "tool_id": "sim-01-lcr-nsfr-liquidity-stress-test",
-          "handoff": "lcr/nsfr stress paths feed the mobilizer"
+          "handoff": "lcr/nsfr stress paths feed the mobilizer",
+          "gate": {
+            "input": "/verdict",
+            "rules": [
+              {
+                "op": "eq",
+                "value": "BREACH_RISK",
+                "next": "end"
+              }
+            ],
+            "default": "513-margin-call-collateral-mobilizer",
+            "gate_policy": "escalate"
+          }
         },
         {
           "tool_id": "513-margin-call-collateral-mobilizer",
@@ -38986,7 +40703,19 @@
         },
         {
           "tool_id": "art-10-amla-transaction-typology-risk-scorer",
-          "handoff": "typology risk score feeds the audit aggregator"
+          "handoff": "typology risk score feeds the audit aggregator",
+          "gate": {
+            "input": "/overall_risk",
+            "rules": [
+              {
+                "op": "eq",
+                "value": "HIGH",
+                "next": "end"
+              }
+            ],
+            "default": "cry-05-agent-action-audit-trail-aggregator",
+            "gate_policy": "escalate"
+          }
         },
         {
           "tool_id": "cry-05-agent-action-audit-trail-aggregator",
@@ -39181,6 +40910,23 @@
       ]
     },
     {
+      "name": "vop-liability-evidence",
+      "domain": "Fraud & Dispute",
+      "title": "VoP Liability Evidence Pack",
+      "description": "Payee name-match score (art-376) into a signed, hash-chained session receipt (art-377) binding the declared match result, the warning shown, and the consumer's action. Produces the evidence a PSP presents in an APP-fraud reimbursement liability review -- what the check found and what happened next, not who is at fault.",
+      "composer_url": "https://ainumbers.co/chaingraph/chains/vop-liability-evidence.html",
+      "steps": [
+        {
+          "tool_id": "art-376-score-payee-name-match",
+          "handoff": "declared match score and band (H1) feed the session receipt as the match result"
+        },
+        {
+          "tool_id": "art-377-build-vop-session-receipt",
+          "handoff": "binds the match result to the warning shown and the consumer's action, exports the hash-chained receipt (H2) -- final stage"
+        }
+      ]
+    },
+    {
       "name": "wealth-advisory-regbi",
       "domain": "Consumer & Wealth Compliance",
       "title": "US Wealth & Advisory — Reg BI Suitability",
@@ -39319,7 +41065,19 @@
         },
         {
           "tool_id": "sim-01-lcr-nsfr-liquidity-stress-test",
-          "handoff": "liquidity result (H2) feeds the anomaly detector"
+          "handoff": "liquidity result (H2) feeds the anomaly detector",
+          "gate": {
+            "input": "/verdict",
+            "rules": [
+              {
+                "op": "eq",
+                "value": "BREACH_RISK",
+                "next": "end"
+              }
+            ],
+            "default": "ml-03-timeseries-anomaly-detector",
+            "gate_policy": "escalate"
+          }
         },
         {
           "tool_id": "ml-03-timeseries-anomaly-detector",
@@ -39344,7 +41102,19 @@
         },
         {
           "tool_id": "art-10-amla-transaction-typology-risk-scorer",
-          "handoff": "Exports composite participant-onboarding artifact with execution_hash (H3) -- final stage"
+          "handoff": "Exports composite participant-onboarding artifact with execution_hash (H3) -- final stage",
+          "gate": {
+            "input": "/overall_risk",
+            "rules": [
+              {
+                "op": "eq",
+                "value": "HIGH",
+                "next": "end"
+              }
+            ],
+            "default": "end",
+            "gate_policy": "escalate"
+          }
         }
       ]
     },
@@ -39366,6 +41136,46 @@
         {
           "tool_id": "506-onchain-cash-leg-finality-checker",
           "handoff": "Exports composite settlement-asset artifact with execution_hash (H3) -- final stage"
+        }
+      ]
+    },
+    {
+      "name": "y9c-schedule-hc-hcr-capital",
+      "domain": "Bank Capital & Credit Risk",
+      "title": "FR Y-9C Schedule HC to HC-R Capital Chain",
+      "spec_version": "0.8.0",
+      "wave": 71,
+      "description": "Gated two-step chain for top-tier bank holding companies (Y-9C panel, total consolidated assets >= $3B). Step 1 maps caller-declared Schedule HC balance-sheet line items into Schedule HC totals and checks the balance-sheet identity. Step 2 consumes those totals alongside caller-supplied capital components to compute Schedule HC-R capital ratios and the supplementary leverage ratio, gated dual_control(2) before the capital-adequacy result is treated as final -- any failed capital-ratio or SLR threshold requires two distinct approver sign-offs (recorded, not yet runtime-gated pending HA-RETRO-1 wiring).",
+      "composer_url": "https://ainumbers.co/chaingraph/chains/y9c-schedule-hc-hcr-capital.html",
+      "regulatory_refs": [
+        "FR Y-9C (Financial Statements for Holding Companies) Schedule HC",
+        "FR Y-9C Schedule HC-R (Regulatory Capital)",
+        "eSLR final rule, published 2025-12-01, effective 2026-04-01"
+      ],
+      "steps": [
+        {
+          "tool_id": "art-435-bhc-schedule-hc-balance-sheet",
+          "handoff": "Schedule HC totals (total assets, total liabilities, total equity capital) feed Schedule HC-R capital-ratio computation"
+        },
+        {
+          "tool_id": "art-436-bhc-schedule-hcr-capital",
+          "handoff": "CET1/Tier1/Total capital ratios and SLR against caller-declared, version-pinned minimums. Final stage.",
+          "gate": {
+            "input": "/ratios/total_capital_pass",
+            "rules": [
+              {
+                "op": "eq",
+                "value": false,
+                "next": "end"
+              }
+            ],
+            "default": "end",
+            "gate_policy": "dual_control",
+            "gate_threshold": {
+              "role": "approver",
+              "threshold": 2
+            }
+          }
         }
       ]
     }

@@ -267,7 +267,16 @@ Each concept carries OKF YAML frontmatter (type, title, description, resource, t
 
 Maturity note
 
-OKF is a v0.1 specification (published June 2026). It is adopted here as a companion artifact only. Tie nothing in artifact verification to it; treat the bundle as a generated, swappable discovery surface.
+OKF is a v0.2 specification (v0.1 published June 2026; republished as v0.2 in July 2026, backward-compatible — v0.2 consumers still read legacy v0.1 concepts via documented fallbacks). It is adopted here as a companion artifact only. Tie nothing in artifact verification to it; treat the bundle as a generated, swappable discovery surface. v0.2 adds an OPTIONAL trust family to concept frontmatter (`generated:`, `verified:`); a concept's `verified:` entry, and any trust tier derived from it, is a SELF-ASSERTION made by whoever wrote that frontmatter, never an OCG verification, and MUST NOT be read as one.
+
+### §10.2 Attested Computation (optional, OKF v0.2)
+
+OKF v0.2 defines an additional concept type, `type: Attested Computation`, carrying `runtime`, `computation`, `executor: {resource, receipt}`, and `attester: {resource}`. It is generated at `okf/computations/<tool_id>.md` for every live node that publishes a §17.1 kernel identity (a `compute_images[]` `sha256-source` entry). `executor.resource` names the deployed kernel source; `executor.receipt` lists the §18.0 `ZkVmReceipt` field names a compute-integrity proof carries *when attached* — this is a description of shape, not a claim that a proof exists for any given artifact, since `audit_signature` is artifact-time and never present on a Graph Index node.
+
+`attester.resource` points at the node's `compute_images[]` entry — the kernel identity. This was a deliberate design decision (2026-07-28), made against two rejected alternatives: the verify page (a human UI, not verification code, so a category error against OKF's definition of `attester`) and a receipt endpoint (a live service, which is a runtime/availability dependency and the shape most likely to breach the §10 firewall). The kernel identity is content-addressed, already published, needs no new infrastructure, and has no availability dependency — a static pointer that cannot pull OKF into a verification path.
+
+As with every OKF field, `Attested Computation` concepts carry no `execution_hash` impact and stay outside the hash preimage; nothing in OpenChainGraph's verification path depends on them.
+
 ## §11 Profile Conformance
 
 v0.3 introduced ISO 20022 alignment via an inline semantic_profile string token. v0.3.1 makes that conformance a first-class, machine-resolvable assertion using the W3C Profiles Vocabulary (PROF) and Content Negotiation by Profile: a profile is a dct:Standard published at a dereferenceable URI and declared with dct:conformsTo. This is fully additive — the execution_hash preimage is unchanged and semantic_profile tokens stay valid as registered aliases.
@@ -357,10 +366,10 @@ node need not declare `vc`. Mapping (envelope → VC): `issued_by`→`issuer`, `
 
 **§13.11.1 agent-receipts (Obsigna) `credentialSubject` extension — NORMATIVE, extended in v0.8.11.** The
 `vc` export ADDITIONALLY carries `credentialSubject` members named to match the published
-[agent-receipts](https://github.com/agent-receipts/obsigna) `AgentReceipt` credential shape (context
-`https://agentreceipts.ai/context/v1`, added to the credential's `@context` array alongside the OCG term
-context), so a verifier written against that project's schema can read the fields it recognizes without a
-translation layer. **This is a PARTIAL, additive mapping, not a claim of full external-schema conformance**
+[agent-receipts](https://github.com/agent-receipts/obsigna) `AgentReceipt` credential shape, pinned to
+schema tag `spec-v0.5.0` (context `https://agentreceipts.ai/context/v1`, added to the credential's
+`@context` array alongside the OCG term context), so a verifier written against that project's schema can
+read the fields it recognizes without a translation layer. **This is a PARTIAL, additive mapping, not a claim of full external-schema conformance**
 — agent-receipts' `action` and `principal` objects require member fields (`action.id`, `action.risk_level`,
 `action.timestamp`, `principal.type`) this artifact does not carry and that this profile MUST NOT invent;
 only the members below are populated, exactly as §XMAP-1 already documents PARTIAL coverage for the other
@@ -811,8 +820,8 @@ fixtures — a valid k-of-n cosigned checkpoint verifies against pinned witness 
 below-threshold cosignature MUST fail; the anchor is hash-identical with and without the cosignatures.
 
 Attribution: **C2SP** (`https://github.com/C2SP/C2SP`) — tlog-checkpoint + signed-note / witness
-cosignature format (pin the cosignature note format version). Sigsum and Armored Witness are cited as
-conformant independent-witness mechanisms (named, not depended on).
+cosignature format, pinned to `tlog-checkpoint/v1.0.0`, `signed-note/v1.0.0`, `tlog-cosignature/v1.0.1`.
+Sigsum and Armored Witness are cited as conformant independent-witness mechanisms (named, not depended on).
 
 ## §21 Chain Execution (NORMATIVE — new in v0.8)
 Until v0.8 chain execution (`run_chain` / `composite_execution_hash`) was implementation-defined. §21
@@ -905,9 +914,12 @@ than its weakest link. `claim_strength` is DERIVED (a pure function of the RAN s
 hash-excluded, so it moves no `composite_execution_hash` — a receipt with and without it is byte-identical.
 It pairs naturally with §24.6 per-kernel determinism classes as the per-step strength inputs.
 
-Gate (EXISTING, extended — no new gate script): `linear-hash-freeze.mjs` (§21.1–§21.3) proves the field is
-hash-excluded (the composite hash is unchanged with and without it); `gate-parity.test.mjs` proves the
-Worker `run_chain` and the embedded `runChain` derive the SAME `min` composite.
+Gate: **UNIMPLEMENTED (SPECREF-GATEPARITY-FIX-1, 2026-07-28).** No kernel or `run_chain`/`runChain` path
+computes a chain-level composite `claim_strength` today — verified: zero occurrences of `claim_strength` (or
+`strength`) in `mcp-apps-poc/worker.mjs` or `mcp-apps-poc/embed/runChain.mjs`. Neither `linear-hash-freeze.mjs`
+nor `gate-parity.test.mjs` (`mcp-apps-poc/scripts/`) exercises it — both scripts exist and pass, but neither
+tests `claim_strength`. The "Gate (EXISTING, extended...)" framing this replaced was aspirational, not built.
+The §21.5 field definition above stays normative and OPTIONAL; only its gate is missing.
 
 Attribution: **FrankenSim** (J. Emanuel) — the evidence-color / weakest-link design, IDEAS ONLY. Its license
 carries an unvetted "AI rider"; no text or code is copied. Cited as convergent prior art.
@@ -1334,6 +1346,7 @@ the zero-dependency posture; it is revisited when a small stable verifier exists
   sane genTime) — **no second RFC 3161 implementation**. `messageImprint` MUST equal the resolved input's
   §4-canonical digest.
 - **`c2pa-manifest` (verifiable now — structural).** `proof` is a [C2PA](https://c2pa.org/) manifest
+  (pinned to C2PA Technical Specification 2.4, `https://spec.c2pa.org/specifications/specifications/2.4/index.html`)
   asserting provenance of the pointed-to input (typically a document or media input). Verification NOW is
   STRUCTURAL: the manifest parses, its claim signature is well-formed, and its hard-binding assertion digest
   MATCHES the resolved input's bytes/digest; full trust-chain evaluation of the signer is a link-out to a
@@ -1427,7 +1440,7 @@ enforces it; the profile introduces no gate of its own.
 | D1 | **Non-finite floats** (`NaN`, `±Infinity`) | An `output_payload` MUST canonicalize under RFC 8785 / I-JSON, which forbids non-finite numbers; a kernel MUST either return finite output or reject its input cleanly, never emit a silent `NaN`. | §4 canonicalization (`kernel-hash-integrity.mjs`, `lint-forbidden-hash.mjs`, `golden-parity.test.mjs`) rejects non-finite numbers at hash time; the degenerate empty-input path is swept by `empty-input-finite.test.mjs`. |
 | D2 | **Object / key iteration order** | Serialization MUST NOT depend on property insertion or enumeration order; the preimage is built by the one canonical RFC 8785 (JCS) sorter in `_hash.mjs`, never by hand. | §4 canonical `execution_hash` (`kernel-hash-integrity.mjs`, `golden-parity.test.mjs`); ad-hoc canonicalization trips `lint-forbidden-hash.mjs` ("Scheme E"). Chain-level order fixed by `gate-parity.test.mjs`. |
 | D3 | **Transcendental math** (`Math.exp/log/log2/sin/cos/pow`) | Only `+ − × ÷ √` are IEEE-754 bit-portable; every transcendental MUST route through the shared pure-JS fdlibm port `kernels/_detmath.bundle.mjs` (inlined per kernel, never engine libm), so the value users see equals the value proven (§18.5(c)). | §4 cross-surface hash stability (`golden-parity.test.mjs`) + evaluator byte-parity (`gate-parity.test.mjs`); the re-baseline is frozen by the same golden fixtures. |
-| D4 | **Wall-clock time** (`Date.*`, timers) | No `Date`, timestamp, or timer reading may enter `output_payload` or the §4 preimage. Time-bearing evidence (anchor `genTime`, escalation `opened_at`) is defined hash-EXCLUDED (§20, §22.8). The §18 guest disables `Date` at the intrinsic level (§18.5); VM-1 disables it identically. | §4 reproducibility (`golden-parity.test.mjs`, live `hash-sweep.mjs`); wall-clock exclusion of escalation records enforced by `linear-hash-freeze.mjs` / `gate-parity.test.mjs`. |
+| D4 | **Wall-clock time** (`Date.*`, timers) | No `Date`, timestamp, or timer reading may enter `output_payload` or the §4 preimage. Time-bearing evidence (anchor `genTime`, escalation `opened_at`) is defined hash-EXCLUDED (§20, §22.8). The §18 guest disables `Date` at the intrinsic level (§18.5); VM-1 disables it identically. | §4 reproducibility (`golden-parity.test.mjs`, live `hash-sweep.mjs`); wall-clock exclusion of escalation records enforced by `test-escalate-emit.mjs` (§22.8.2 — asserts `record_hash` is identical across two escalation runs with different `opened_at`; `linear-hash-freeze.mjs`/`gate-parity.test.mjs` do not exercise escalation records, corrected SPECREF-GATEPARITY-FIX-1 2026-07-28). |
 | D5 | **Randomness** (`Math.random`, CSPRNG) | No nondeterministic randomness may reach `output_payload`. `Math.random` is stubbed out of the §18 guest and the VM-1 prelude. The one CSPRNG in the standard (§13.12 SD-JWT salts) is confined to disclosure material that is EXCLUDED from the artifact hash. | §4 determinism (`golden-parity.test.mjs`); SD-JWT salt-as-sole-nondeterminism is pinned by `sd-export-roundtrip.test.mjs`. |
 | D6 | **Locale / `Intl`** | No locale-sensitive formatting may affect `output_payload`. Locale-dependent number formatting routes through a pinned `en-US` formatter verified value-for-value against V8 (§18.5(a)); the §18 guest and the QuickJS-ng VM ship **no `Intl`** at all (a determinism gift, not a gap). | §4 cross-surface parity (`golden-parity.test.mjs`); the pinned formatter's equivalence is covered by the same golden fixtures. |
 | D7 | **Environment / platform APIs** | Where a rule would otherwise depend on a V8 platform API whose result is environment-sensitive or infeasible to prove in-guest, the kernel MUST substitute a fully specified deterministic replacement used **identically on every surface**, with its out-of-scope aspects stated in source (§18.5). Network, filesystem, and ambient I/O are already forbidden by CONTRACT §0 (zero-fetch). | §18.5 replacements + §12 kernel-coverage (`kernel-coverage.mjs --strict`); cross-surface identity by `golden-parity.test.mjs` and, for gated chains, `gate-parity.test.mjs`. |
@@ -2083,7 +2096,13 @@ MUST carry a §16 whole-artifact proof bound to the named human (an unsigned app
 conformant §27 evidence — exactly the §22.11 rule for resume artifacts). Because the record only *references*
 `subject_hash` and never contains the subject's preimage, it has **zero impact on the subject's hash or
 canonicalization**: the accountability trail is portable, tamper-evident, and offline-verifiable rather than
-a row locked inside one vendor's queue.
+a row locked inside one vendor's queue. **`reason_code` is an OPEN vocabulary (NORMATIVE clarification).**
+`$defs/humanAccountabilityRecord.reason_code` is an unconstrained `string` with no `enum`, and §27
+deliberately leaves it open: rationale tokens are deployment- and regime-specific, so an implementation MAY
+mint a machine-stable token (for example `ARTIFACT_BINDING_VERIFIED`) WITHOUT a spec or schema change, and a
+verifier MUST NOT reject a record for carrying an unrecognised one. The ONLY closed §27 enums are
+`record_type` (this section), `role` (§27.1), and `$defs/haGatePolicy` (§27.4) — those three are what §27.9
+machine-checks for closure, and adding a value to any of them IS a spec change.
 
 **§27.3 Dual control and thresholds (NORMATIVE — in-toto integer threshold).** A gate MAY require **N
 distinct role-bound identities** to have signed approval records over the SAME `subject_hash` before it is
@@ -2106,6 +2125,34 @@ hard predicate evaluated before the routing rules, and an unmet precondition hol
 with §21.4 without changing its evaluator: the policy is a precondition ANNOTATION consumed by the
 accountability layer, the §21.4 `_gateval.mjs` routing math is untouched, and a chain with no HA policy
 evaluates byte-identically to today.
+
+**Non-node gate subjects (NORMATIVE, additive — new in v0.8.13).** A §27.4 gate's subject need NOT be
+produced by executing a §12 kernel node. An implementation MAY apply a gate policy to an **attested
+artifact**: the sealed output of a pinned non-OCG producer (a browser tool, a report builder — a surface with
+a content-addressed manifest but no kernel, no node, and no chain). Most reporting artifacts in practice have
+no chain, so admitting this subject class is what lets §27 evidence them at all. The subject is identified by
+an `execution_hash` computed on the ONE canonical path (§4, the single `_hash.mjs` `cgCanon`, RFC 8785/JCS —
+never a second canon), with the preimage fixed EXACTLY and exhaustively as the three-member object
+
+`execution_hash = sha256( JCS( { tool_ref, inputs_digest, artifact } ) )`
+
+where **`tool_ref`** pins the producer as `{ tool_id, tool_version, entry, manifest_digest }` —
+`manifest_digest` is the chainless analogue of the §17 `kernel_digest`, and is what makes the producer, not
+merely the output, tamper-evident; **`inputs_digest`** is the JCS digest of the producer's inputs; and
+**`artifact`** is `{ content_type, content_digest }` over the sealed output. **No wall clock, no run
+identifier, no host or session state may enter this preimage** — the value MUST be recomputable offline from
+those three members alone, by a verifier that never executed the producer. The `subject_hash` of every
+approval record over such a subject is this value, `sha256:`-prefixed, exactly as §27.2 requires; the gate
+predicate, §27.3 thresholds, §27.5 override semantics, and §27.6 bundles are evaluated unchanged.
+
+This is a SUBJECT-IDENTIFICATION rule ONLY. It introduces no envelope member, changes no existing
+`execution_hash` preimage, and leaves §27.0 additivity and `chaingraph_version` `"0.4.0"` intact; a verifier
+that ignores §27 is unaffected. ⚠ **Stated limit, normative:** an attested-artifact subject carries NO §18
+compute proof and NO §16/§17 re-execution claim. It evidences producer pinning, input binding, and content
+integrity — never that the producer's arithmetic is correct. Such a subject MUST NOT be reported as
+`replay_verified`, and omitting that flag (rather than setting it `false`) is the honest encoding, since no
+replay was attempted. A surface MUST NOT claim §27 conformance for a non-node subject whose
+`execution_hash` was derived by any preimage other than the one fixed above.
 
 **§27.5 Override and waiver (NORMATIVE — time-boxed §22.10 attenuation + mandatory evidence).** An
 `emergency_override` is NOT an unconditional bypass. It is a **time-boxed §22.10 attenuated mandate** paired
@@ -2171,8 +2218,142 @@ concept only). The statement-about-statement framing follows **IETF SCITT** (a r
 **ZCAP-LD** is cited as the anti-pattern the scope discipline (§27.0) deliberately avoids. No text or code
 is copied from any of them.
 
+## §28 Clause Binding Profile — `ocg-clause-binding@1` (NORMATIVE, OPTIONAL, profile-scoped — new in v0.8.14)
+A citation like `"MiCA"` or `"17 CFR 240.15c3-3"` sitting in a tool's `regulatory_frameworks` /
+`regulatory_citations` prose is **unpinned**: it reads present-tense forever, is never bound to any
+computation, and cannot be checked against the artifact it accompanies. §28 names a profile,
+`ocg-clause-binding@1`, that lets a citation become **pinned** — machine-declared, dated, attributed,
+and bound inside the same cryptographic preimage that already secures the artifact's `execution_hash`
+— without adding any new integrity machinery. Binding force comes entirely from **placement**: a pinned
+citation is pinned because it sits inside `policy_parameters` or `output_payload`, the two members §4
+already hashes. §28 adds a **citation object shape** (§28.1), a **declaration index**
+(`clause_bindings[]`, §28.2) that makes that placement mechanically checkable, and a **conformance
+contract** (§28.6).
+
+**§28.0 Two forms, one classification rule (NORMATIVE).** A member of `regulatory_frameworks` /
+`regulatory_citations` MAY be a bare string (the **legacy, UNPINNED form** — stays valid and fully
+conformant everywhere it already appears) or a **§28.1 citation object**. An object is **pinned** if
+and only if it sits inside the JCS-canonical preimage `execution_hash` covers — a value reachable from
+`policy_parameters` or `output_payload`. A well-formed §28.1 object copied anywhere else — a guide page,
+a manifest, an export sidecar — is not pinned no matter how complete it is; only its **preimage
+location** confers pinned status, never its shape alone.
+
+**§28.1 The pinned citation object (NORMATIVE — `$defs.regulatoryCitation`).** Required members:
+`scheme` (an OPEN enum — suggested values `cfr`, `eli`, `akn`, `bcbs-para`, `sr-letter`, `esma-vr`,
+`uscode`, `other`; closing it would exclude most of this estate, since ELI does not cover US CFR, Basel
+paragraph identifiers, or Fed SR letters), `id` (the instrument identifier), `in_force_from` (ISO date
+the cited text took legal force — a bare four-digit schedule/version year does not satisfy this),
+`mapped_by` (attributed identity of whoever made the clause-to-computation mapping — an unattributed
+mapping is not a pinned mapping), and `mapped_at` (ISO date the mapping was made — a dated observation
+expires honestly and asserts nothing about the future). Optional members: `path` (paragraph/subsection),
+`uri`, `in_force_to`, `jurisdiction`, `governing_law`, `superseded_by` (a `$defs.citationRef`
+`{scheme, id}` pair naming the instrument that replaced this one — recording supersession is additive; a
+superseded citation MUST NOT be silently stripped), and `interpretation_ref`. Where present,
+`interpretation_ref` **MUST** be a `sha256:`-prefixed content hash of the interpretation document behind
+the mapping, never a URL or a mutable registry key — a mutable pointer to an interpretation looks
+authoritative and can change without trace, which defeats the purpose of pinning it.
+
+**§28.2 Declaration index — `clause_bindings[]` (NORMATIVE — `$defs.clauseBinding`).** An artifact MAY
+carry a top-level `clause_bindings` array. Each entry is `{ "pointer": "<RFC 6901 JSON Pointer>" }`
+(an optional `profile` tag, when present, MUST equal `"ocg-clause-binding@1"` — entries in this array
+are that profile by definition whether or not the tag is present). Like §20 `anchor_bindings`, §23
+`input_attestations`, and §25 `private_inputs`, `clause_bindings` is **attached after hashing and
+excluded from `execution_hash` scope**: it is a top-level sibling of `policy_parameters` and
+`output_payload`, the two members `executionHash()` hashes, never a wrapper around either — so adding,
+removing, or re-ordering entries leaves every existing `execution_hash` byte-identical, and an artifact
+with zero entries is byte-identical to one minted before this profile existed and remains fully
+conformant. **The array itself binds nothing.** It is a machine-readable index onto citations that are
+already pinned by their preimage placement (§28.0) — it exists so a verifier can enumerate "which
+citations does this artifact claim are pinned, and where" without a schema-wide scan.
+
+**§28.3 The preimage-rooting rule, made mechanical (NORMATIVE — RED condition).** `pointer` **MUST**
+root at `/policy_parameters` or `/output_payload`. This is §28.0's classification rule turned into a
+structural check: a verifier resolves `pointer` and, if it is well-formed, additionally REQUIRES that
+its first path segment be one of those two members. A `pointer` rooted anywhere else — the artifact
+root, `audit_signature`, a guide field — **MUST be rejected**: *a citation there is unpinned and may
+not be declared in this array as though it were.* This is a **hard error**, not a warning, because the
+array's entire value is that a listed pointer can be trusted to name a preimage-covered location without
+re-deriving that fact by hand.
+
+**§28.4 Why the addition cannot move a hash (NORMATIVE, informative derivation).** `executionHash()`
+hashes exactly `{policy_parameters, output_payload}`; `clause_bindings` sits outside both, so attaching
+it can never change what gets hashed. The mechanism that puts a citation object **inside** the preimage
+is unremarkable and pre-existing: a kernel places the §28.1 object at some location under
+`policy_parameters` or `output_payload` in the same way it places any other value there, **at mint
+time**, before that artifact has ever been hashed. Nothing re-hashes an existing artifact to retrofit a
+citation into it. A helper `attachClauseBindings()` performs the top-level attach as a pure operation —
+it passes both preimage halves through by reference, never reading, rewriting, or reordering them, and
+throws rather than accept a pointer that would misdeclare an unpinned citation as pinned (§28.3) — but
+the helper is a convenience, not the source of the "no hash moves" guarantee; the preimage members
+`executionHash()` reads are the source.
+
+**§28.5 Scope — new-artifacts-only (NORMATIVE).** This profile applies to **newly-minted artifacts
+only**. An artifact minted before this profile existed, and any artifact from a kernel that has not
+adopted it, stays exactly as it was: unmigrated, its `execution_hash` and any §16/§18 proof over that
+hash remain valid forever, and its citations (if any) remain in their pre-existing, unpinned form.
+Converting an existing kernel's bare-string `regulatory_basis` into a pinned §28.1 object moves that
+kernel's `output_payload` and therefore its `execution_hash` — an already-proven artifact would go stale
+— so this profile defines **no migration path** and none is implied. Adoption is per-kernel and
+voluntary; declaring the profile makes a later retrofit **optional**, never unnecessary, and this
+section imposes no MUST-emit on any existing or future kernel.
+
+**§28.6 Relationship to §16/§18 proof coverage (informative).** A pinned citation is covered by the same
+integrity guarantee as every other `policy_parameters`/`output_payload` member — no more, no less.
+Where a §16 proof is present, it secures **the full artifact with `audit_signature.proof` removed**
+(§16.1), so a pinned citation is covered by that signature exactly as the rest of the artifact is. Where
+a §18 compute-integrity proof is present, its `journal`'s committed output **MUST equal the artifact
+`output_payload`** (§18.0) — so a citation pinned inside `output_payload` is bound by the same
+journal-equality obligation as every other output field, with no additional machinery this profile
+supplies. Where neither is present, a pinned citation carries the same tamper-evidence as the rest of
+the artifact: a verifier who recomputes `execution_hash` and finds it matches has confirmed the citation
+object is exactly what the producer minted, and no more. §28 adds no proof requirement of its own; §16
+and §18 remain independently optional exactly as they are everywhere else in this standard.
+
+**§28.7 Frozen-envelope invariance (NORMATIVE).** `clause_bindings` is declared as an OPTIONAL top-level
+artifact property, exactly as §20 `anchor_bindings`, §23 `input_attestations`, and §25 `private_inputs`
+were. `$defs/artifact.required` is UNCHANGED, the §4 preimage members are UNCHANGED, and
+`chaingraph_version` stays `"0.4.0"`. Measured against §0.4-FREEZE's three-condition bar: this addition
+(a) moves no existing artifact's `execution_hash` — no artifact was retrofitted, only new ones adopt it
+at mint time; (b) changes no `required[]` — `clause_bindings` is optional at every level, including
+each §28.1 object's optional members beyond the five required in §28.1; (c) imposes no MUST-emit —
+absence of `clause_bindings`, or absence of any pinned citation at all, is fully conformant and carries
+no meaning. All three conditions clear, so this is an additive change under §0.4-FREEZE, not a breaking
+one. A verifier correct for v0.8.13 computes an identical `execution_hash` for a v0.8.14 artifact and
+MAY ignore `clause_bindings` entirely.
+
+**§28.8 Conformance (profile-scoped).** An implementation MAY declare `ocg-clause-binding@1` for a
+kernel that pins one or more citations under this profile. The declaration asserts §28.0–§28.3 hold for
+that kernel's artifacts. Conformance is machine-checked by `clause-binding.test.mjs` (§15): citation
+shape (required members present, `in_force_from`/`in_force_to`/`mapped_at` are ISO dates,
+`interpretation_ref` is a `sha256:` content hash when present, no unknown members on the closed pinned
+form), the §28.3 preimage-rooting RED condition (a `clause_bindings` pointer outside
+`/policy_parameters` or `/output_payload` MUST fail), pointer resolution (an entry whose `pointer` does
+not resolve into the artifact MUST fail), and the no-hash-move guarantee (an artifact with entries and
+the same artifact with `clause_bindings` stripped produce byte-identical `execution_hash`). Like §18 and
+§25, the profile **defaults OFF**: no node is required to adopt it, and its absence is never itself a
+finding.
+
 ## §14 Changelog
-See `standard/CHANGELOG.md`. **v0.8.9 (2026-07-18 — SPEC-TEXT PASS; the record `spec_version` in
+See `standard/CHANGELOG.md`. **v0.8.14 (2026-07-28 — SPEC-TEXT PASS documenting §28 Clause Binding
+Profile, `ocg-clause-binding@1`; the record `spec_version` stays at whatever `chaingraph.json` carries
+until the next coordinated K landing bumps it, exactly as the v0.8.9/v0.8.7/v0.8.8 text passes were
+separated from their record bumps):** §28 names the profile that makes a regulatory citation **pinned**
+— machine-declared, dated, attributed, and bound inside the same `{policy_parameters, output_payload}`
+preimage `execution_hash` already covers — as an alternative to the pre-existing legacy bare-string
+form, which stays valid and UNPINNED. Adds `$defs.citationRef` / `$defs.regulatoryCitation` /
+`$defs.clauseBinding` and an OPTIONAL top-level `clause_bindings[]` array (schema, kernel helper
+`_clausebinding.mjs`, and gate `clause-binding.test.mjs` shipped previously and unchanged by this pass —
+this entry documents the standard). `clause_bindings` sits outside the preimage, exactly like §20
+`anchor_bindings`, §23 `input_attestations`, and §25 `private_inputs`, so it binds nothing itself; a
+`pointer` MUST root at `/policy_parameters` or `/output_payload` (§28.3), which is what makes a citation
+actually pinned. New-artifacts-only: the 105 server kernels carrying a bare-string `regulatory_basis`
+today are explicitly OUT OF SCOPE and unmigrated — converting one would move its `execution_hash` and
+stale a live proof. All additive: no envelope/hash/schema-required change, `chaingraph_version` stays
+`0.4.0`, every existing `execution_hash` is byte-identical, and the new normative MUSTs bind to the
+already-wired `clause-binding.test.mjs` (no new gate script, no new §15 row's underlying tooling — only
+a new table row citing it). Attribution: none — this profile composes only pre-existing OCG mechanisms
+(the §4 preimage, the §20/§23/§25 hash-excluded-index shape); no external prior art was drawn on.
+**v0.8.9 (2026-07-18 — SPEC-TEXT PASS; the record `spec_version` in
 `chaingraph.json` stays 0.8.8 until the next coordinated K landing bumps it, exactly as the v0.8.7 and
 v0.8.8 text passes were separated from their record bumps):** §22.11 (§EXQ-1: OPTIONAL `exception_class`
 two-class taxonomy — `business` = no retry, routes to a human queue; `application` = retry-to-N then
@@ -2334,7 +2515,7 @@ hash-remediation incident, where canonical `execution_hash` had no end-to-end ga
 | §22.3 `"escalate"` reserved target: static validation accepts `"escalate"` as a reserved forward target (not an unresolved step id); `"end"` still terminal | `validate-chains.mjs` | validate |
 | §22.2 mandate signature: `eddsa-jcs-2022` whole-artifact proof REQUIRED; an unsigned mandate is a draft and is runtime-rejected | `proof-binding.test.mjs`, `mandate-binding.test.mjs` | validate |
 | §22.5 run_chain mandate binding: no-mandate run hash-identical to pre-mandate (conditional-presence `mandate_hash`); with-mandate folds `mandate_hash` into every step `policy_parameters` + `composite_policy` (with/without → different, each stable); expired/unsigned/bad-signature/out-of-scope → structured rejection | `mandate-binding.test.mjs`, `linear-hash-freeze.mjs` | validate |
-| §22.8 `"escalate"` evaluator: recognized as a terminal target (`isTerminalTarget`/`isEscalationTarget`); `evaluateGate` decision record for an escalate route is byte-identical to a non-escalating gate (NO escalation field), so existing gate decisions + composite hashes are unchanged; classifiers byte-parity across the 4 executing surfaces | `gate-parity.test.mjs`, `linear-hash-freeze.mjs` | validate |
+| §22.8 `"escalate"` evaluator: recognized as a terminal target (`isTerminalTarget`/`isEscalationTarget`); `evaluateGate` decision record for an escalate route is byte-identical to a non-escalating gate (NO escalation field), so existing gate decisions + composite hashes are unchanged; classifiers byte-parity across the 4 executing surfaces (Worker `run_chain` vs embedded `runChain` only, actually exercised in `mcp-apps-poc/scripts/test-escalate-emit.mjs` §22.8.2 — cited gate scripts below do not themselves drive an escalate route; not yet wired to CI; §18 guest / VM-1 classifier parity uncovered; corrected SPECREF-GATEPARITY-FIX-1 2026-07-28) | `gate-parity.test.mjs`, `linear-hash-freeze.mjs` | validate |
 | §23 input attestations: hash-excluded top-level `input_attestations[]` (zero-attestation artifact hash-identical + fully conformant); each entry's RFC 6901 `pointer` resolves into `policy_parameters`; `vc-2.0` verifies via §16/§13.11 Data Integrity + subject-digest == input digest, `rfc3161-snapshot` via the §20 `rfc3161-tst` verifier (messageImprint == input digest, no second RFC 3161 impl), `c2pa-manifest` structural + hard-binding digest match; `zktls` structural-only (`verifiable:"external"`, no vendored verifier); tampered proof / unresolved pointer / digest mismatch MUST fail; verdict reported per-input alongside `execution_hash`; `$defs/artifact.required` + `chaingraph_version` 0.4.0 UNCHANGED | `validate-input-attestations.test.mjs`, `schema-validate.mjs` | validate |
 | §25 private-input profile: hash-excluded top-level `private_inputs[]` (zero-entry artifact hash-identical + fully conformant); each entry's RFC 6901 `pointer` resolves into `policy_parameters`; the pointed value IS the `sha256:` `commitment`, never plaintext (plaintext-exclusion §25.2); `commitment_scheme` ∈ {`sha256-salted@1`}; a §18 `compute_proof` is present and its `journal` commits every declared `commitment` AND `output_payload`; unknown scheme / unresolved pointer / plaintext-at-pointer / missing commitment-in-journal MUST fail; salt never appears in the artifact; verdict reported without the plaintext; `$defs/artifact.required` + `chaingraph_version` 0.4.0 UNCHANGED (§18 pairing check stays with `compute-proof.test.mjs`) | `validate-private-inputs.test.mjs`, `schema-validate.mjs` | validate |
 | §HASHRES-1 Ledger addressing: the resolution address IS the §4 `execution_hash` (no new hash, no envelope change, `chaingraph_version` 0.4.0 UNCHANGED); a dereference returns content whose recomputed §4 hash equals the address or 404, never a different value — the same live re-verifiability the §4 sweep already asserts over deployed artifacts | `hash-sweep.mjs`, `kernel-hash-integrity.mjs` | post-deploy + validate |
@@ -2343,6 +2524,7 @@ hash-remediation incident, where canonical `execution_hash` had no end-to-end ga
 | §SIDECAR.2 resource-narrowing invariant (reserved): a future delegated mandate's resource set MUST be a subset of its parent's — stated now, unenforced until multi-hop mandates ship; §22 single-hop mandate gates UNCHANGED | `mandate-binding.test.mjs` | validate |
 | §24.6.2 `seeded-stochastic` replay: a kernel declaring the class re-runs at its own declared seed to a byte-identical `execution_hash`; the SAME kernel re-run at a tampered seed MUST produce a DIFFERENT hash (the seed is load-bearing, not decorative); `prng_algorithm` + integer `seed` + `draw_count` all present; the replay and tamper-detect paths are exercised unconditionally against a committed reference vector, so they stay proven in an estate with zero `seeded-stochastic` kernels; no envelope change, no new hash, `chaingraph_version` 0.4.0 UNCHANGED | `seed-replay.test.mjs` | validate |
 | §27 human-accountability records: `$defs/humanAccountabilityRecord` shape (closed `record_type`/`role`/`haGatePolicy` enums, `subject_hash` a valid `sha256ref`); ADDITIVITY — an approval record referencing a subject leaves that subject's `execution_hash` byte-identical and a subject with zero HA records is byte-identical to a plain v0.8.11 artifact (`$defs/artifact.required` + `chaingraph_version` 0.4.0 UNCHANGED); THRESHOLD DISTINCTNESS — `dual_control(N)` counts DISTINCT `identity.id`, so a repeated identity satisfies only N=1 and two distinct identities satisfy N=2; OVERRIDE EXPIRY — an expired `emergency_override` reverts the gate policy, never a silent permanent pass; SIGNED-NAMED-HUMAN — an unsigned approval record is rejected (§16 pairing check stays with `proof-binding.test.mjs`); defaults OFF, absence conformant | `validate-ha-records.test.mjs`, `schema-validate.mjs` | validate |
+| §28 clause binding profile `ocg-clause-binding@1`: hash-excluded top-level `clause_bindings[]` (zero-entry artifact hash-identical + fully conformant); each entry's RFC 6901 `pointer` MUST root at `/policy_parameters` or `/output_payload` — a pointer rooted elsewhere is RED (§28.3); each resolved §28.1 citation object carries the five REQUIRED members (`scheme`, `id`, `in_force_from`, `mapped_by`, `mapped_at`), ISO-date fields validated, `interpretation_ref` when present is a `sha256:` content hash, no unknown members on the closed pinned form; a legacy bare-string citation is valid but classified UNPINNED and MUST NOT be declared in `clause_bindings`; unresolved pointer / malformed citation / off-preimage pointer MUST fail; `$defs/artifact.required` + `chaingraph_version` 0.4.0 UNCHANGED; defaults OFF, absence conformant, new-artifacts-only (no migration path) | `clause-binding.test.mjs`, `schema-validate.mjs` | validate |
 | every rule above has a gate (meta) | `spec-gate-coverage.mjs` | validate |
 
 **Meta-rule:** a PR that adds a normative MUST to this file without a referenced gate in this table

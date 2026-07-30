@@ -1,0 +1,40 @@
+{
+  "workflow_id": "pack-rdarr-attestation-cycle",
+  "name": "RDARR Management-Body Attestation Cycle",
+  "outcome": "Two-step attestation cycle for risk data aggregation and risk reporting. The attestation is the deliverable: step 1 re-derives a stated risk-report figure from a declared tabular extract under a declared aggregation policy, so the signature is backed by a recomputed number rather than a self-assessment; step 2 scores the deterministic quality metrics against policy-supplied thresholds, each labelled with its ECB Guide prerequisite area. Step 1 is gated review_required when any source line is excluded from the recompute, with the risk-data owner as reviewer. Step 2 is gated dual_control(2) for periodic attestation release, with one of the two distinct approver identities bound to a management-body role. The recompute is evidence for the institution's own internal attestation; it is not a supervisory submission and carries no supervisory pass mark.",
+  "spec_version": "ocg-control-plane@1",
+  "manifest": {
+    "manifest_version": "1",
+    "workflow_id": "pack-rdarr-attestation-cycle",
+    "trigger": {
+      "type": "manual"
+    },
+    "nodes": [
+      {
+        "node_id": "n1",
+        "kernel_id": "art-480-rdarr-aggregation-recompute",
+        "kernel_digest": "sha256:03ded60475d18d57aeb7093295a95854b928661cde7ba44e34bf93df28373b4b"
+      },
+      {
+        "node_id": "n2",
+        "kernel_id": "art-481-rdarr-quality-scorecard",
+        "kernel_digest": "sha256:bb595b3096e163a13b9265cd83ed691343605e21a5fcb974aa04fdc9292c38ba"
+      }
+    ],
+    "connectors": [],
+    "gates": [],
+    "actions": []
+  },
+  "workflow_manifest_digest": "sha256:8ec06b1c27faee53bfd7e02eb11138bac6867df9ee5fa7b6dfbc56546533b020",
+  "declared_inputs": [],
+  "steps_meta": [
+    {
+      "node_id": "n1",
+      "data_classification": "compute"
+    },
+    {
+      "node_id": "n2",
+      "data_classification": "compute"
+    }
+  ]
+}
