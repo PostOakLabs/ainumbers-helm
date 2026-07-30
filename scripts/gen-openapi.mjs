@@ -50,6 +50,10 @@ const ROUTE_DOCS = {
   "POST /ha/replay": { summary: "helmd re-executes a step's kernel and countersigns with replay_verified reflecting whether the hash matched.", tags: ["Accountability"] },
   "GET /autostart": { summary: "Report whether the start-at-sign-in entry and desktop shortcut are installed, and whether the recorded entry still points at a Helm that exists.", tags: ["Daemon"] },
   "POST /autostart": { summary: "Install or remove the start-at-sign-in entry and/or the shortcut. Body {autostart?: boolean, shortcut?: boolean}. The only code path that writes either — helmd never installs them on its own.", tags: ["Daemon"] },
+  "POST /mcp": { summary: "MCP v2 JSON-RPC endpoint (HELM-H9): catalog.search, workflow.describe/manifest_get/dry_run/run, artifact.get/verify, evidence.export. Same bearer-token auth as every REST route.", tags: ["MCP"] },
+  "GET /mcp": { summary: "405 — SEP-2567 removed the session/GET stream from the MCP transport.", tags: ["MCP"] },
+  "DELETE /mcp": { summary: "405 — SEP-2567 removed the session/GET stream from the MCP transport.", tags: ["MCP"] },
+  "POST /evidence/export/ticket": { summary: "Mint the short-lived, single-use consent ticket the MCP evidence.export tool requires. Meant to be called by the paired UI only, after showing a consent prompt — not reachable from tools/call.", tags: ["MCP"] },
 };
 
 function toOperation(method, path) {

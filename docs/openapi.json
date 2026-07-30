@@ -149,6 +149,37 @@
         }
       }
     },
+    "/evidence/export/ticket": {
+      "post": {
+        "summary": "Mint the short-lived, single-use consent ticket the MCP evidence.export tool requires. Meant to be called by the paired UI only, after showing a consent prompt — not reachable from tools/call.",
+        "tags": [
+          "MCP"
+        ],
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Missing or invalid bearer token."
+          },
+          "403": {
+            "description": "Host or Origin mismatch (D8 loopback hardening)."
+          }
+        }
+      }
+    },
     "/vault/connections/begin": {
       "post": {
         "summary": "Start an OAuth PKCE loopback connection flow.",
@@ -646,6 +677,95 @@
         "summary": "Fetch the countersignature_slot (maker + checker signatures) for a subject_hash.",
         "tags": [
           "Accountability"
+        ],
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Missing or invalid bearer token."
+          },
+          "403": {
+            "description": "Host or Origin mismatch (D8 loopback hardening)."
+          }
+        }
+      }
+    },
+    "/mcp": {
+      "post": {
+        "summary": "MCP v2 JSON-RPC endpoint (HELM-H9): catalog.search, workflow.describe/manifest_get/dry_run/run, artifact.get/verify, evidence.export. Same bearer-token auth as every REST route.",
+        "tags": [
+          "MCP"
+        ],
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Missing or invalid bearer token."
+          },
+          "403": {
+            "description": "Host or Origin mismatch (D8 loopback hardening)."
+          }
+        }
+      },
+      "get": {
+        "summary": "405 — SEP-2567 removed the session/GET stream from the MCP transport.",
+        "tags": [
+          "MCP"
+        ],
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Missing or invalid bearer token."
+          },
+          "403": {
+            "description": "Host or Origin mismatch (D8 loopback hardening)."
+          }
+        }
+      },
+      "delete": {
+        "summary": "405 — SEP-2567 removed the session/GET stream from the MCP transport.",
+        "tags": [
+          "MCP"
         ],
         "security": [
           {
