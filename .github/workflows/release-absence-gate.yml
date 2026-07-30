@@ -1,5 +1,22 @@
 name: Release absence gate
 
+# Two independent absence signals, on one schedule
+# (HELM-RELEASE-TRIGGER-BUILD-SPEC.md §2.1):
+#   check  — a GA CalVer tag with no published release
+#   feed   — https://ainumbers.co/helm/version.json behind the newest GA tag
+#
+# They are separate JOBS, not steps in one job, on purpose: each must be able to
+# fail without the other masking it. A step-level failure would stop the job and
+# hide whichever check ran second, and these two conditions have genuinely
+# independent causes — the release publishes via release.yml's own token, the
+# feed publishes from a SEPARATE job with a SEPARATE token
+# (SITE_REPO_PUSH_TOKEN) into the site repo. A release can ship completely while
+# the feed every running helmd actually reads stays stale, and vice versa.
+#
+# The feed job does not re-implement the tag check: it imports the tag listing
+# and the CalVer definition from scripts/check-release-absence.mjs, so the two
+# gates cannot drift apart about what counts as a tag.
+#
 # Catches a tag that never got a release — the exact failure release.yml
 # itself cannot see, because a
 # GITHUB_TOKEN-authored push (auto-tag-release.yml) never fires a
@@ -37,3 +54,18 @@ jobs:
         env:
           GH_TOKEN: ${{ github.token }}
         run: node scripts/check-release-absence.mjs
+
+  # Separate job so a stale feed is visible even when `check` is red, and so a
+  # tagless tag is visible even when the feed is fine. Same schedule, same
+  # read-only token, same surface — no new dependency.
+  feed:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@9c091bb21b7c1c1d1991bb908d89e4e9dddfe3e0 # v7.0.0
+      - uses: actions/setup-node@249970729cb0ef3589644e2896645e5dc5ba9c38 # v6.5.0
+        with:
+          node-version: "22"
+      - name: live version feed not behind newest GA tag
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: node scripts/check-version-feed-staleness.mjs

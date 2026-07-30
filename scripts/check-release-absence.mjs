@@ -62,7 +62,13 @@ function gh(args) {
   return execFileSync("gh", args, { encoding: "utf8" });
 }
 
-function listTags() {
+// Exported so the sibling version-feed staleness gate
+// (check-version-feed-staleness.mjs) can reuse the exact same notion of "a GA
+// CalVer tag" instead of re-implementing it. Two gates disagreeing about what
+// counts as a tag is its own silent-failure mode.
+export { CALVER_TAG, gh };
+
+export function listTags() {
   // name + target commit sha
   const out = gh(["api", `repos/${REPO}/tags`, "--paginate", "--jq", ".[] | .name + \" \" + .commit.sha"]);
   return out
