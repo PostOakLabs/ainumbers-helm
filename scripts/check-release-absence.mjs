@@ -2,7 +2,7 @@
 // SPDX-License-Identifier: Apache-2.0
 // Copyright (c) 2026 Post Oak Labs, Inc.
 //
-// HELM-RELEASE-ABSENCE-GATE-1: makes a tag-without-a-release LOUD.
+// Makes a tag-without-a-release LOUD.
 //
 // The failure this exists to catch: auto-tag-release.yml pushed
 // 2026.7.26/.27/.28 (GITHUB_TOKEN-authored pushes never fire a

@@ -1,7 +1,7 @@
 name: Release absence gate
 
-# HELM-RELEASE-ABSENCE-GATE-1: catches a tag that never got a release —
-# the exact failure release.yml itself cannot see, because a
+# Catches a tag that never got a release — the exact failure release.yml
+# itself cannot see, because a
 # GITHUB_TOKEN-authored push (auto-tag-release.yml) never fires a
 # tag-triggered workflow (documented GitHub behavior). release.yml has
 # not run since 2026-07-25 while auto-tag-release.yml kept tagging
