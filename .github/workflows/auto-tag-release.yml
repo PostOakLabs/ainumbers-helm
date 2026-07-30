@@ -11,6 +11,16 @@ name: Auto-tag release
 # GA tags on the same day can never both exist. `workflow_dispatch` lets
 # this be forced manually (e.g. to verify the pipeline without waiting for
 # the schedule).
+#
+# The tag push MUST be authored by a GitHub App
+# installation token, never the default GITHUB_TOKEN. GitHub documents that
+# "events triggered by the GITHUB_TOKEN will not create a new workflow run",
+# so a GITHUB_TOKEN-authored `git push origin <tag>` pushes a real tag that
+# release.yml's `on: push: tags:` never sees. Not hypothetical: that is what
+# silently happened to 2026.7.26/.27/.28/.30 while auto-tag's own run stayed
+# green every day. The App (`postoaklabs-helm-release-bot`, org-owned,
+# Contents: read+write only, installed on this repo only) is a DIFFERENT
+# actor, so its pushes do fire tag-triggered workflows.
 on:
   schedule:
     - cron: "0 14 * * *" # once daily; the if-changed gate makes idle days a no-op
@@ -23,12 +33,47 @@ jobs:
   tag-if-changed:
     runs-on: ubuntu-latest
     permissions:
-      contents: write
+      # The default GITHUB_TOKEN deliberately keeps NO write scope here: it
+      # must never be the credential that pushes the tag (see header). All
+      # writes go through the App installation token minted below.
+      contents: read
     steps:
+      # Fail loudly and specifically when the App secrets are absent, rather
+      # than letting the token step fail with a generic error — and never
+      # fall back to GITHUB_TOKEN, which would silently restore the exact
+      # defect this workflow exists to avoid.
+      - name: require release-bot secrets
+        env:
+          APP_ID: ${{ secrets.RELEASE_BOT_APP_ID }}
+          PRIVATE_KEY: ${{ secrets.RELEASE_BOT_PRIVATE_KEY }}
+        run: |
+          set -e
+          missing=""
+          [ -n "$APP_ID" ] || missing="$missing RELEASE_BOT_APP_ID"
+          [ -n "$PRIVATE_KEY" ] || missing="$missing RELEASE_BOT_PRIVATE_KEY"
+          if [ -n "$missing" ]; then
+            echo "missing required secret(s):$missing" >&2
+            echo "the tag push must be App-authored; there is no GITHUB_TOKEN fallback." >&2
+            exit 1
+          fi
+
+      # Pinned to a commit SHA, not a floating tag — the house rule already
+      # stated in release.yml, and it binds harder here because this action
+      # MINTS A CREDENTIAL.
+      - name: mint release-bot installation token
+        id: app-token
+        uses: actions/create-github-app-token@bcd2ba49218906704ab6c1aa796996da409d3eb1 # v3.2.0
+        with:
+          app-id: ${{ secrets.RELEASE_BOT_APP_ID }}
+          private-key: ${{ secrets.RELEASE_BOT_PRIVATE_KEY }}
+
       - uses: actions/checkout@9c091bb21b7c1c1d1991bb908d89e4e9dddfe3e0 # v7.0.0
         with:
           fetch-depth: 0
           ref: main
+          # Persisting the App token as the git credential is what makes the
+          # commit AND the tag push App-authored, so release.yml fires.
+          token: ${{ steps.app-token.outputs.token }}
       - uses: actions/setup-node@249970729cb0ef3589644e2896645e5dc5ba9c38 # v6.5.0
         with:
           node-version: "22"
