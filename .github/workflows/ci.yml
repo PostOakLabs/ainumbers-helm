@@ -49,6 +49,12 @@ jobs:
         run: node scripts/verify-vendored.mjs
       - name: compile parity gate (HELM-P2-C2)
         run: node scripts/compile-parity-gate.mjs
+      # Fails when a file the technical design doc cites has changed, gone
+      # missing, or shrunk past a cited line, since the last time a human
+      # re-read the doc's claims against that code. The re-stamp is
+      # deliberately NOT run here: see the header of the gate.
+      - name: techdoc citation drift
+        run: node scripts/check-techdoc-citations.mjs
       - name: sea build dry-run
         run: node scripts/sea-dry-run.mjs
 
