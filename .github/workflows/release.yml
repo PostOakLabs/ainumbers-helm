@@ -28,6 +28,23 @@ jobs:
           node-version: "22"
       - name: lint
         run: node scripts/lint.mjs
+      # Install a real Secret Service so the linux-secret-tool vault tier is
+      # genuinely reachable in CI, not just warned about. Without this the
+      # ubuntu runner has no Secret Service daemon, vaultSet's
+      # linux-secret-tool attempt throws, and every secret silently lands on
+      # the file-fallback tier instead.
+      - name: install Secret Service (libsecret + gnome-keyring) for real linux-secret-tool coverage
+        run: sudo apt-get update -qq && sudo apt-get install -y -qq gnome-keyring libsecret-tools dbus-x11
+      # Env vars land in $GITHUB_ENV (not just this step's shell) so the plain
+      # `node scripts/test.mjs` invocation below stays a single literal line —
+      # check-hook-ci-parity.mjs greps exactly that shape, and burying it
+      # inside a `bash -c '...'` wrapper would make this gate invisible to it.
+      - name: start + unlock a Secret Service session (dbus + gnome-keyring)
+        run: |
+          eval "$(dbus-launch --sh-syntax)"
+          echo "DBUS_SESSION_BUS_ADDRESS=$DBUS_SESSION_BUS_ADDRESS" >> "$GITHUB_ENV"
+          eval "$(printf '\n' | gnome-keyring-daemon --unlock --components=secrets)"
+          echo "GNOME_KEYRING_CONTROL=$GNOME_KEYRING_CONTROL" >> "$GITHUB_ENV"
       - name: test
         run: node scripts/test.mjs
       - name: validate control-plane schemas
