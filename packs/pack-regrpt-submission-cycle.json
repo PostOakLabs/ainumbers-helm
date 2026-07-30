@@ -1,0 +1,40 @@
+{
+  "workflow_id": "pack-regrpt-submission-cycle",
+  "name": "Regulatory Report Submission Cycle (Published Edit Checks)",
+  "outcome": "Two-step pre-submission cycle over a report instance and a freely published rule set. Step 1 evaluates the instance against policy-supplied validity and quality edits, keyed by the published edit identifier, and records which deactivated rules were suppressed so a stood-down rule cannot produce a false failure. Step 2 computes period-over-period variance per line item against policy-supplied materiality thresholds and flags which movements require a written explanation. Step 1 is gated hold on any hard-rule failure, and in that state the cycle stops before a submission bundle is produced. Step 2 is gated dual_control(2) for filing release, satisfied by a preparer and a distinct signing-officer approver; a flagged material movement carrying no explanation annotation holds the release for review, and the submitter identity is recorded separately at transmission. The bundle is the filer's own evidence and does not satisfy any issuer's submission requirement.",
+  "spec_version": "ocg-control-plane@1",
+  "manifest": {
+    "manifest_version": "1",
+    "workflow_id": "pack-regrpt-submission-cycle",
+    "trigger": {
+      "type": "manual"
+    },
+    "nodes": [
+      {
+        "node_id": "n1",
+        "kernel_id": "art-484-regrpt-editcheck-runner",
+        "kernel_digest": "sha256:df972fbe752ce9681f083d26e59d2620a3b3675aea04b2d046537d4d5861154a"
+      },
+      {
+        "node_id": "n2",
+        "kernel_id": "art-485-regrpt-variance-explainer",
+        "kernel_digest": "sha256:58e771301c2c6f396bfeaa0f61ea75adfce6211b68c03938500f14a37a1a5c8f"
+      }
+    ],
+    "connectors": [],
+    "gates": [],
+    "actions": []
+  },
+  "workflow_manifest_digest": "sha256:5d1b22d8b7a83e9459e0068397621e0a853d3955d21efab13eb21ec241cabf05",
+  "declared_inputs": [],
+  "steps_meta": [
+    {
+      "node_id": "n1",
+      "data_classification": "compute"
+    },
+    {
+      "node_id": "n2",
+      "data_classification": "compute"
+    }
+  ]
+}

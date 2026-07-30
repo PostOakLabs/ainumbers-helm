@@ -1,0 +1,40 @@
+{
+  "workflow_id": "pack-vop-liability-evidence",
+  "name": "VoP Liability Evidence Pack",
+  "outcome": "Payee name-match score (art-376) into a signed, hash-chained session receipt (art-377) binding the declared match result, the warning shown, and the consumer's action. Produces the evidence a PSP presents in an APP-fraud reimbursement liability review -- what the check found and what happened next, not who is at fault.",
+  "spec_version": "ocg-control-plane@1",
+  "manifest": {
+    "manifest_version": "1",
+    "workflow_id": "pack-vop-liability-evidence",
+    "trigger": {
+      "type": "manual"
+    },
+    "nodes": [
+      {
+        "node_id": "n1",
+        "kernel_id": "art-376-score-payee-name-match",
+        "kernel_digest": "sha256:de422d2d169f590fa61cfe8f37060bd7af2944def5730c83f77b88c6ed538871"
+      },
+      {
+        "node_id": "n2",
+        "kernel_id": "art-377-build-vop-session-receipt",
+        "kernel_digest": "sha256:0a05ff3c98289d522ac8c33f9348e44f835c6ace45f93a2e25e4fa6d7871f317"
+      }
+    ],
+    "connectors": [],
+    "gates": [],
+    "actions": []
+  },
+  "workflow_manifest_digest": "sha256:7225a23815809f895584f8fbe1061ffde45f76ca894804b25d6c19840ff65f26",
+  "declared_inputs": [],
+  "steps_meta": [
+    {
+      "node_id": "n1",
+      "data_classification": "compute"
+    },
+    {
+      "node_id": "n2",
+      "data_classification": "compute"
+    }
+  ]
+}

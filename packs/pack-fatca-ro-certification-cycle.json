@@ -1,0 +1,40 @@
+{
+  "workflow_id": "pack-fatca-ro-certification-cycle",
+  "name": "Responsible-Officer Certification Cycle (FATCA / CRS)",
+  "outcome": "Two-step certification-period cycle over the institution's own submission file, the notifications returned against it, and its remediation records. Step 1 evaluates the submission against a policy-supplied schema and business-rule set -- element sequencing and cardinality, mandatory identifiers, and message and document reference uniqueness across corrected and voided records -- keyed by the published error code and element path, with a suppression list so stood-down rules cannot produce false findings. Step 2 triages the returned notification set against the firm's remediation records: open, closed or overdue per notification, which corrected message closes which error, closure coverage, and a readiness verdict against the declared cut-off. Step 1 is gated review_required once findings exist, with the compliance officer as reviewer, because a disclosed-and-corrected failure is a reviewed act rather than an automatic one. Step 2 is gated hold while any error remains unremediated past its policy cut-off. The certification itself carries an approval record bound to the Responsible Officer identity, which is the approver role named exactly as the regulation names it. Free validators already check these files; what this cycle adds is a sealed, offline-verifiable chain from submission errors through remediation to that named signature. The bundle is the institution's own evidence and does not satisfy an IRS or competent-authority requirement.",
+  "spec_version": "ocg-control-plane@1",
+  "manifest": {
+    "manifest_version": "1",
+    "workflow_id": "pack-fatca-ro-certification-cycle",
+    "trigger": {
+      "type": "manual"
+    },
+    "nodes": [
+      {
+        "node_id": "n1",
+        "kernel_id": "art-490-fatca-crs-submission-check",
+        "kernel_digest": "sha256:ff7382928e6f04fd05ef9d458b2681f0d86180f02468157ccfa443450eca1d01"
+      },
+      {
+        "node_id": "n2",
+        "kernel_id": "art-491-ro-remediation-closure",
+        "kernel_digest": "sha256:3a605809e324af32ea025897ba46618e869f3a5701025e98ba5a7ff74a25847e"
+      }
+    ],
+    "connectors": [],
+    "gates": [],
+    "actions": []
+  },
+  "workflow_manifest_digest": "sha256:56e3eae46ebee2e5cdd365211bdfc11360d6035c09f43dbb4445229fa9420eef",
+  "declared_inputs": [],
+  "steps_meta": [
+    {
+      "node_id": "n1",
+      "data_classification": "compute"
+    },
+    {
+      "node_id": "n2",
+      "data_classification": "compute"
+    }
+  ]
+}

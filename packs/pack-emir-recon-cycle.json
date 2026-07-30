@@ -1,0 +1,40 @@
+{
+  "workflow_id": "pack-emir-recon-cycle",
+  "name": "EMIR Inter-TR Reconciliation Cycle",
+  "outcome": "Two-step daily cycle over the trade repository's own ISO 20022 reconciliation response and the firm's submitted state. Step 1 independently reproduces the reconciliation verdict per field against a policy-supplied field and tolerance table with a suppression list, emits agreement or disagreement with the repository, and builds a break set keyed for stable diffing across cycles. Step 2 ages that break set against the prior sealed break set, splitting newly opened, persisting and newly closed breaks and running the escalation clock. Step 1 is gated review_required for cycle sign-off, with the reporting-operations owner as reviewer. Step 2 is gated escalate once any break passes its policy ageing limit. Each break disposition is recorded as a separate annotation record naming the acting identity, so the accountability trail is per break rather than per cycle, and the prior cycle's sealed break set is referenced by subject_hash rather than mutated in place.",
+  "spec_version": "ocg-control-plane@1",
+  "manifest": {
+    "manifest_version": "1",
+    "workflow_id": "pack-emir-recon-cycle",
+    "trigger": {
+      "type": "manual"
+    },
+    "nodes": [
+      {
+        "node_id": "n1",
+        "kernel_id": "art-482-emir-recon-adjudicator",
+        "kernel_digest": "sha256:ef88fb46f98773129561e13479d723e9b1d0822b713ab0816c49367014562557"
+      },
+      {
+        "node_id": "n2",
+        "kernel_id": "art-483-emir-break-ageing",
+        "kernel_digest": "sha256:61ca7bf25c81b012ffcf0eacf2a531f340641c6492b4f96ad95b2e17faab1a11"
+      }
+    ],
+    "connectors": [],
+    "gates": [],
+    "actions": []
+  },
+  "workflow_manifest_digest": "sha256:7eb66e650ac6b8db384c41f0b652c6cf38fc506731ce9dcceaaf4f842d8b852a",
+  "declared_inputs": [],
+  "steps_meta": [
+    {
+      "node_id": "n1",
+      "data_classification": "compute"
+    },
+    {
+      "node_id": "n2",
+      "data_classification": "compute"
+    }
+  ]
+}

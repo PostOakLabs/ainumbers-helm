@@ -1,18 +1,18 @@
 {
   "sourceRepo": "https://github.com/PostOakLabs/ainumbers.git",
   "license": "MIT License, Copyright (c) 2026 PostOakLabs (same license/holder as this repo; see this repo's own LICENSE for full terms; no third-party code in this vendored subtree)",
-  "pinnedSha": "31e040291f24aa07b79adedcd35fb9b16fc40ac1",
+  "pinnedSha": "2e342b2ad1ebfa71465cd5b5b5addeab6341317f",
   "vendoredPaths": [
     "chaingraph/kernels",
     "chaingraph/standard/SPEC.md",
     "chaingraph/standard/openchain-graph-v0.4.schema.json",
     "chaingraph/chaingraph.json"
   ],
-  "fileCount": 1332,
+  "fileCount": 1359,
   "files": [
     {
       "path": "chaingraph.json",
-      "sha256": "14ab8e02d8d7e1c0e20c40f7689b1749afd4ee4cdc6ce2105637d10c17eb1921"
+      "sha256": "5b681202a991f217d162426b6ba24ea274e341a26c1ef158f1c2390b79442768"
     },
     {
       "path": "kernels/_anchor-testutil.mjs",
@@ -25,6 +25,10 @@
     {
       "path": "kernels/_checklist.mjs",
       "sha256": "d368444ff9c3066fb9676c73b0f399ea102c456c6e7f9ba1c45dce33f4b12757"
+    },
+    {
+      "path": "kernels/_clausebinding.mjs",
+      "sha256": "18380638adc16099aa610ef5640886d5ec34a693026a8c2d8b0b5e54ec7399e4"
     },
     {
       "path": "kernels/_computeproof.mjs",
@@ -77,6 +81,10 @@
     {
       "path": "kernels/_rfc3161.mjs",
       "sha256": "c262f39a66e18ace3bcbb25c5b8ecc74c1aa304de740cf0b3cf39db1f8393682"
+    },
+    {
+      "path": "kernels/_signverdict.inline.js",
+      "sha256": "63302e866aedf695401f66ae43ffe584984154a79e57820d16b9b586d92bd31e"
     },
     {
       "path": "kernels/503-canton-tokenization-readiness-diagnostic.kernel.mjs",
@@ -1192,7 +1200,7 @@
     },
     {
       "path": "kernels/art-336-compute-ltv-ratios.kernel.mjs",
-      "sha256": "c67d83f00f9ea80df10f2691b2a0660aab5f4dd3bddeebfec93469346b192947"
+      "sha256": "65a08e84465e1ec8ca4a01e9b4b0c7d7d5c566ca467f6efdf622598c36511706"
     },
     {
       "path": "kernels/art-338-compute-federal-withholding.kernel.mjs",
@@ -1712,7 +1720,7 @@
     },
     {
       "path": "kernels/art-476-map-agent-payment-mandate.kernel.mjs",
-      "sha256": "cd37df86828dbc4c50192784c2c421b0dfda541d63b7c36735e63510f34dfb96"
+      "sha256": "a10219350fc810ab2fc5e6acfec6cad91e855e0b0c493b1e518b3fcc04a2e07d"
     },
     {
       "path": "kernels/art-477-intraday-liquidity-monitoring.kernel.mjs",
@@ -1731,8 +1739,56 @@
       "sha256": "48d3f8ff6142ab47abccdd219b65da278eebaad04d4e8a1857dba56447eab906"
     },
     {
+      "path": "kernels/art-480-rdarr-aggregation-recompute.kernel.mjs",
+      "sha256": "03ded60475d18d57aeb7093295a95854b928661cde7ba44e34bf93df28373b4b"
+    },
+    {
+      "path": "kernels/art-481-rdarr-quality-scorecard.kernel.mjs",
+      "sha256": "bb595b3096e163a13b9265cd83ed691343605e21a5fcb974aa04fdc9292c38ba"
+    },
+    {
+      "path": "kernels/art-482-emir-recon-adjudicator.kernel.mjs",
+      "sha256": "ef88fb46f98773129561e13479d723e9b1d0822b713ab0816c49367014562557"
+    },
+    {
+      "path": "kernels/art-483-emir-break-ageing.kernel.mjs",
+      "sha256": "61ca7bf25c81b012ffcf0eacf2a531f340641c6492b4f96ad95b2e17faab1a11"
+    },
+    {
+      "path": "kernels/art-484-regrpt-editcheck-runner.kernel.mjs",
+      "sha256": "df972fbe752ce9681f083d26e59d2620a3b3675aea04b2d046537d4d5861154a"
+    },
+    {
+      "path": "kernels/art-485-regrpt-variance-explainer.kernel.mjs",
+      "sha256": "58e771301c2c6f396bfeaa0f61ea75adfce6211b68c03938500f14a37a1a5c8f"
+    },
+    {
+      "path": "kernels/art-486-cscf-control-applicability.kernel.mjs",
+      "sha256": "e61f7e68aeceece5e32ce4f26e110cac1da3e8f1a8d79d74304674e7de0c8484"
+    },
+    {
+      "path": "kernels/art-487-assessor-independence-check.kernel.mjs",
+      "sha256": "296ba15821ab17012505cf41cea3e5915f9146eae5c97eab522579f9cd5fe663"
+    },
+    {
+      "path": "kernels/art-488-model-replication-diff.kernel.mjs",
+      "sha256": "5ff2146f1ae9457d37e4e6699dc331e6f8f69701f3f32a400f848761bc254ed8"
+    },
+    {
+      "path": "kernels/art-489-model-test-battery.kernel.mjs",
+      "sha256": "20e07ad532c59a2c5619ce03881ce808c367002a5572176618bbb8b6ba06e178"
+    },
+    {
       "path": "kernels/art-49-clearing-access-model-selector.kernel.mjs",
       "sha256": "ff9e78cf7128918984b55cbf858c74f3ca3a6e818389e067899863b8cd570034"
+    },
+    {
+      "path": "kernels/art-490-fatca-crs-submission-check.kernel.mjs",
+      "sha256": "ff7382928e6f04fd05ef9d458b2681f0d86180f02468157ccfa443450eca1d01"
+    },
+    {
+      "path": "kernels/art-491-ro-remediation-closure.kernel.mjs",
+      "sha256": "3a605809e324af32ea025897ba46618e869f3a5701025e98ba5a7ff74a25847e"
     },
     {
       "path": "kernels/art-50-ficc-margin-netting-estimator.kernel.mjs",
@@ -1848,7 +1904,7 @@
     },
     {
       "path": "kernels/art-78-csdr-penalty-calculator.kernel.mjs",
-      "sha256": "1a1ae5b7775cad6c3619104c909084bd1b203d852325759671f8a6ad7e46a80a"
+      "sha256": "696b46349d69a4f615727264f5a7a59492a6dfc1eb9b73e631af142a6d436a80"
     },
     {
       "path": "kernels/art-79-settlement-fail-predictor.kernel.mjs",
@@ -1941,6 +1997,10 @@
     {
       "path": "kernels/checklist-selftest.test.mjs",
       "sha256": "dab1bae6788fa1e549bd585d7ea56345d0fca26d8c081a457136e90552844650"
+    },
+    {
+      "path": "kernels/clause-binding.test.mjs",
+      "sha256": "1a26c41e9a884bccc4889e78bb0e34657bb3b0deff0550b37f5083342fc45b4e"
     },
     {
       "path": "kernels/compute-proof.test.mjs",
@@ -3655,8 +3715,56 @@
       "sha256": "d3f6d9fc58b32464596c34a8f937c1b5969e492170e8e573d7e0f44b794b1c7c"
     },
     {
+      "path": "kernels/fixtures/art-480-rdarr-aggregation-recompute.fixtures.json",
+      "sha256": "1d991df54a2c5397af9bdfc33d802cb3fedc6701603675255e2196eaa354d88e"
+    },
+    {
+      "path": "kernels/fixtures/art-481-rdarr-quality-scorecard.fixtures.json",
+      "sha256": "50c51bdd26870bf88ffc120fce3d11c55e6f4d40fe368b61422809c55d22887f"
+    },
+    {
+      "path": "kernels/fixtures/art-482-emir-recon-adjudicator.fixtures.json",
+      "sha256": "80cca7f2c389c31231f4c24a53ac76bcc2a83cf9059db8be084221ea7cf3351b"
+    },
+    {
+      "path": "kernels/fixtures/art-483-emir-break-ageing.fixtures.json",
+      "sha256": "f52df2b27d7bb638362d2becb0496d3f7ab55d626c70edee04e1634913a19141"
+    },
+    {
+      "path": "kernels/fixtures/art-484-regrpt-editcheck-runner.fixtures.json",
+      "sha256": "b2fa7063eee16baa2a12c4ae2f5be33c387b430130ab031ce0d444f055dd44f2"
+    },
+    {
+      "path": "kernels/fixtures/art-485-regrpt-variance-explainer.fixtures.json",
+      "sha256": "5669fa3984f955e154cc2d463d28ce8e13494bbb53b31adac9143eba33e8555c"
+    },
+    {
+      "path": "kernels/fixtures/art-486-cscf-control-applicability.fixtures.json",
+      "sha256": "b2adf7a490cef53ca5cdf671e9111de90601235b7fd2f02cd8c274e375e0ee74"
+    },
+    {
+      "path": "kernels/fixtures/art-487-assessor-independence-check.fixtures.json",
+      "sha256": "1caa884d5846eabc5600771f5b40dbc4b7e6b4bc1bb224b9d0fb8f3e3d3a9e08"
+    },
+    {
+      "path": "kernels/fixtures/art-488-model-replication-diff.fixtures.json",
+      "sha256": "4b27881cb3a16d17081038eb7a425480eea848c6e152ee5dba09197a11ed8e2a"
+    },
+    {
+      "path": "kernels/fixtures/art-489-model-test-battery.fixtures.json",
+      "sha256": "c36ed123f1ead23f14fba478a2ad1d32c1b449fcf5e6af6949f795cf0559c392"
+    },
+    {
       "path": "kernels/fixtures/art-49-clearing-access-model-selector.fixtures.json",
       "sha256": "bd1508cb07ee2b5321fc6dbe4f3d1315b96ae7c2f7e659d55c457577743c49c5"
+    },
+    {
+      "path": "kernels/fixtures/art-490-fatca-crs-submission-check.fixtures.json",
+      "sha256": "fffae22db56de4fcb5d926abf2426bed0495250f2feaf8b038455f4169a51731"
+    },
+    {
+      "path": "kernels/fixtures/art-491-ro-remediation-closure.fixtures.json",
+      "sha256": "6cb000c70e415cdf7e159e759ab1543d64e74421638c2953bced2d5f115de099"
     },
     {
       "path": "kernels/fixtures/art-50-ficc-margin-netting-estimator.fixtures.json",
@@ -3772,7 +3880,7 @@
     },
     {
       "path": "kernels/fixtures/art-78-csdr-penalty-calculator.fixtures.json",
-      "sha256": "42686fa56d72af84d9fcbf9af7c947bdca346c67bff50130eb0ffe7baa490baf"
+      "sha256": "bf568fe6c6acc8b63bb322b1dce8f0724c2e03015988f5f8b8686b40edeadce1"
     },
     {
       "path": "kernels/fixtures/art-79-settlement-fail-predictor.fixtures.json",
@@ -4968,7 +5076,7 @@
     },
     {
       "path": "kernels/fixtures/compute-proof/art-78-csdr-penalty-calculator.receipt.json",
-      "sha256": "b400e633d80da54e61e9a2a2e4f11f9824a03cb9f379742cce8033febba85e2f"
+      "sha256": "edd724303bd38a746a5a1841a6deb64910cf081d28b07270124f68bedd7d67aa"
     },
     {
       "path": "kernels/fixtures/compute-proof/art-79-settlement-fail-predictor.receipt.json",
@@ -5200,7 +5308,7 @@
     },
     {
       "path": "kernels/index.mjs",
-      "sha256": "976fd883d01dc1fe7179e1111c8129271955afb65876d222133d3ef814ad2bf7"
+      "sha256": "eaca0d06591e3827625c2775e9bd789c94ca269584179bed2f0eb5c7210dc6db"
     },
     {
       "path": "kernels/inline-hash-equality.test.mjs",
@@ -5320,7 +5428,7 @@
     },
     {
       "path": "kernels/validate-ha-records.test.mjs",
-      "sha256": "b282a2cb5cf1346441d22abd81f01287904f7fb7e1a90a086c541fbe1430fadb"
+      "sha256": "e41d6867b271285f576a9da516a9372d21098cc21c29b7e516c279b4b6cdf89e"
     },
     {
       "path": "kernels/vm-parity-gate.mjs",
@@ -5332,11 +5440,11 @@
     },
     {
       "path": "openchain-graph-v0.4.schema.json",
-      "sha256": "7eee75e560b9b00605eb34ce557a06f60c626ae8eefdae7ed6b3b93b1c3dcf09"
+      "sha256": "929ed61c3a4e8018d9e923fbe708871c277f7899f3257463eb13fad34943d141"
     },
     {
       "path": "SPEC.md",
-      "sha256": "d8ddb702511e51a99cf7fb48dc9b492b036ee1918438d260e011383dab53838a"
+      "sha256": "51f8320d9e42bb7fca4db2afa98fd39b0855aae2790996c85f543de5c27128f2"
     }
   ]
 }
