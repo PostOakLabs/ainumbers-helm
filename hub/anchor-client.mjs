@@ -23,6 +23,8 @@ import { buildTsqDer, freshNonce } from "./vendored/anchor-suite/lib/tsq.mjs";
 import { extractMessageImprintHex } from "./vendored/ocg/kernels/_rfc3161.mjs";
 import { derRead, derChildrenOf } from "./vendored/ocg/kernels/_anchor-testutil.mjs";
 import { validate } from "../scripts/lib/schema-validator.mjs";
+import { enqueueAnchorRetry, drainAnchorQueue } from "./anchor-queue.mjs";
+import { log } from "./log.mjs";
 
 const HERE = dirname(fileURLToPath(import.meta.url));
 const ANCHOR_QUEUE_MARKER_SCHEMA = JSON.parse(
@@ -177,10 +179,31 @@ export async function anchorForCheckpoint(hashHex, { checkpointSeq, ca = "freets
     };
   }
 
+  // G1 (research/HELM-RELAY-STUB-1-2026-07-27.md §5): before making today's
+  // own anchor request, give any PREVIOUSLY queued markers a chance to
+  // resolve — this is the only real call site anchorForCheckpoint has, so
+  // it's also the only place a drain pass can ride without a new caller
+  // (index.mjs stays untouched, per this row's fence). A drain failure must
+  // never block or fail THIS checkpoint's own anchor attempt, exactly like a
+  // relay failure below — logged and swallowed, not thrown.
+  let resolvedRetries = [];
+  try {
+    resolvedRetries = await drainAnchorQueue({
+      ca, relayBase, fetchImpl,
+      anchorRfc3161Impl: anchorRfc3161,
+      buildQueueMarkerImpl: buildQueueMarker,
+    });
+  } catch (err) {
+    log.warn("anchor queue: drain pass failed, continuing with this checkpoint's own anchor attempt", {
+      checkpointSeq,
+      error: String(err?.message || err),
+    });
+  }
+
   const attemptedAt = new Date().toISOString();
   try {
     const anchor = await anchorRfc3161(clean, { ca, relayBase, timeoutMs, fetchImpl });
-    return { anchor };
+    return { anchor, resolvedRetries };
   } catch (err) {
     // anchorRfc3161 throws "anchor relay ..." Errors AFTER it has a response
     // in hand (bad status, bad content-type, or a mismatched messageImprint —
@@ -190,17 +213,20 @@ export async function anchorForCheckpoint(hashHex, { checkpointSeq, ca = "freets
     // bug, not a relay condition, and is left to throw rather than queued.
     if (err instanceof Error && err.message.startsWith("unknown relay CA")) throw err;
     const reason = err instanceof Error && err.message.startsWith("anchor relay") ? "relay_error" : "relay_unreachable";
-    return {
-      queueMarker: buildQueueMarker({
-        checkpointSeq,
-        status: "queued",
-        reason,
-        relayUrl,
-        attempts: 1,
-        lastAttemptAt: attemptedAt,
-        journalRootDigest: clean,
-      }),
-    };
+    const queueMarker = buildQueueMarker({
+      checkpointSeq,
+      status: "queued",
+      reason,
+      relayUrl,
+      attempts: 1,
+      lastAttemptAt: attemptedAt,
+      journalRootDigest: clean,
+    });
+    // G1: persist it — this is the line that used to be missing. Without it
+    // the marker lived only inside the checkpoint's signed envelope and
+    // nothing outside that envelope ever knew to retry it.
+    enqueueAnchorRetry(queueMarker);
+    return { queueMarker, resolvedRetries };
   }
 }
 
