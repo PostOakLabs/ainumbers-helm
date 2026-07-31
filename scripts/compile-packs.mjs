@@ -22,6 +22,7 @@ import { fileURLToPath } from "node:url";
 import { createHash } from "node:crypto";
 import { cgCanon, assertIJson } from "../hub/vendored/ocg/kernels/_hash.mjs";
 import { validate } from "./lib/schema-validator.mjs";
+import { loadContract } from "../hub/connector.mjs";
 
 const HERE = dirname(fileURLToPath(import.meta.url));
 const ROOT = join(HERE, "..");
@@ -42,6 +43,15 @@ const HA_GATE_OVERLAY = JSON.parse(
 // same "survives the wholesale wipe+regen" pattern as HA_GATE_OVERLAY above,
 // for packs with no source chain at all (see chainless-packs.json's own
 // comment for why a hand-placed packs/*.json file doesn't work here).
+// HELM-BIND-4 (HELM-DATA-BINDING-BUILD-SPEC.md §5): curated overlay naming
+// the packs whose kernel has no other way to get a real input value than an
+// external fetch — same "survives the wholesale wipe+regen" pattern as
+// HA_GATE_OVERLAY/CHAINLESS_PACKS above. `_comment` is a human note, not a
+// workflow_id, and is skipped everywhere this object is iterated.
+const CONNECTOR_BINDINGS = JSON.parse(
+  readFileSync(join(HERE, "connector-bindings.json"), "utf8")
+);
+
 const CHAINLESS_PACKS = JSON.parse(
   readFileSync(join(HERE, "chainless-packs.json"), "utf8")
 ).packs;
@@ -93,14 +103,35 @@ function compileChain(chain, kernelDigests, nodesById) {
     return { node_id: nodeId, kernel_id: s.tool_id, kernel_digest: kernelDigests.get(s.tool_id), ...(gateOverlay[nodeId] ?? {}) };
   });
 
+  // HELM-BIND-4: a workflow_id present in CONNECTOR_BINDINGS gets a real
+  // connector + connector_inputs + required_inputs wiring; every other pack
+  // keeps connectors:[] and both optional members ABSENT (§0.3 — an absent
+  // key does not enter the JCS canonical form, an empty array does).
+  const binding = CONNECTOR_BINDINGS[workflowId];
   const manifest = {
     manifest_version: "1",
     workflow_id: workflowId,
     trigger: { type: "manual" },
     nodes,
-    connectors: [],
+    connectors: binding
+      ? [{
+          connector_id: binding.connector_id,
+          contract_digest: loadContract(join(ROOT, "hub", "connectors", binding.contract_file)).contractDigest,
+        }]
+      : [],
     gates: [],
     actions: [],
+    ...(binding
+      ? {
+          connector_inputs: [{
+            step_id: `bind-${binding.feeds_node_id}-${binding.feeds_param}`,
+            connector_id: binding.connector_id,
+            feeds_node_id: binding.feeds_node_id,
+            feeds_param: binding.feeds_param,
+          }],
+          required_inputs: [binding.required_input],
+        }
+      : {}),
   };
 
   const errs = validate(MANIFEST_SCHEMA, manifest);
@@ -196,6 +227,16 @@ function generate() {
     for (const nodeId of Object.keys(nodeOverlays)) {
       if (!nodeIds.has(nodeId)) throw new Error(`compile-packs: ha-gate-overlay.json names node "${nodeId}" in "${workflowId}" which doesn't exist in the compiled manifest`);
     }
+  }
+
+  // Same ABSENCE-INSTRUMENT check for HELM-BIND-4's connector-bindings.json —
+  // a stale/typo'd entry must fail loudly, not silently stop wiring a real
+  // connector into what looks (from the pack alone) like an unbound pack.
+  for (const [workflowId, binding] of Object.entries(CONNECTOR_BINDINGS)) {
+    if (workflowId === "_comment") continue;
+    const nodeIds = compiledNodeIds.get(workflowId);
+    if (!nodeIds) throw new Error(`compile-packs: connector-bindings.json names workflow_id "${workflowId}" which did not compile — stale/typo'd overlay entry`);
+    if (!nodeIds.has(binding.feeds_node_id)) throw new Error(`compile-packs: connector-bindings.json names node "${binding.feeds_node_id}" in "${workflowId}" which doesn't exist in the compiled manifest`);
   }
 
   const index = {

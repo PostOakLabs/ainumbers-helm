@@ -68,6 +68,16 @@ export async function runParityGate({ packsDir = PACKS_DIR, db } = {}) {
       ...pack.manifest,
       nodes: pack.manifest.nodes.map((n) => ({ ...n, policy_parameters: sampleInputFor(n.kernel_id) })),
     };
+    // HELM-BIND-4: this gate proves per-node kernel fidelity (compiled
+    // kernel_id/kernel_digest/argument order vs the canonical direct call)
+    // against a synthetic fixture vector — it has never invoked a live
+    // connector and must not start now (no network/vault available in CI).
+    // A pack with a connector binding gets that binding stripped for THIS
+    // check only, so the loop below still runs every node on the fixture
+    // vector it always has; the on-disk packs/*.json keeps the real binding.
+    manifest.connectors = [];
+    delete manifest.connector_inputs;
+    delete manifest.required_inputs;
 
     const helmdArtifacts = new Map(); // step_id -> artifact, captured as the daemon's real stepRunner is invoked
     let helmdResult;
