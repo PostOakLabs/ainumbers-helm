@@ -155,30 +155,24 @@ export async function recordReplay(db, { runId, stepId, checkerIdentity, nowISO 
     signature,
     signed_at: now,
     replay_verified: matched,
+    // MC-2.1/MC-2.4 (HELM-MAKERCHECKER-BUILD-SPEC.md): the re-execution
+    // above ALWAYS runs inside helmd itself (runKernelNode), regardless of
+    // who triggered it — the signing key here is, by MC-2.4's definition,
+    // daemon-held for as long as helmd can use it without a person present.
+    // Never inferred from checkerIdentity — this function IS the automated
+    // path.
+    attester_kind: "automated",
   };
   const slot = addCountersignature(db, claimedHash, countersignature);
 
-  // A matched replay ALSO counts as a distinct-identity §27.2 approval, so
-  // evaluateHaGate's dual_control/review_required threshold counting (which
-  // reads ha_records, not the countersignature slot) sees this checker too —
-  // one act, two views of the same evidence, never two separate approval
-  // paths that could drift.
-  if (matched) {
-    const approval = await signHaRecord(
-      {
-        record_type: "approval",
-        role: "approver",
-        subject_hash: claimedHash,
-        identity: { id: checkerIdentity.id },
-        decision: "approve",
-        reason_code: "REPLAY_VERIFIED",
-        timestamp: now,
-      },
-      checkerIdentity,
-      { nowISO: now }
-    );
-    appendHaRecord(db, approval);
-  }
+  // MC-2.3: an `automated` attestation MUST NOT mint a threshold-counting
+  // approval record. Previously this minted one unconditionally on a match,
+  // which is the exact hole HELM-MAKERCHECKER-BUILD-SPEC.md §0.5 found:
+  // evaluateHaGate's distinctApprovers (reads ha_records, not the
+  // countersignature slot) counted the daemon as one of the N distinct
+  // humans a dual_control(2)/review_required gate demands. A matched replay
+  // stays valuable, retained, readable evidence in the slot — it just never
+  // by itself satisfies a human-accountability gate.
 
   return { matched, claimedHash, recomputedHash: fresh.artifact.execution_hash, slot };
 }
@@ -223,6 +217,15 @@ export async function recordArtifactBindingVerification(db, { runId, stepId, che
     signature,
     signed_at: now,
     // ⛔ replay_verified deliberately OMITTED — see comment above.
+    //
+    // MC-2 scope note: unlike recordReplay, this function has no production
+    // route wiring it to helmd's own identity (grep confirms no server.mjs
+    // caller) — §0.4/§0.5's "100% of production checkers are daemon-signed"
+    // finding is specific to POST /ha/replay, not this Tier-B path. Absent
+    // that evidence, attester_kind is left unasserted here rather than
+    // guessed; MC-2's daemon-only refusal is enforced where it was
+    // actually measured (recordReplay below). Determining this path's real
+    // custody model, if it needs one, is a separate, later decision.
   };
   const slot = addCountersignature(db, claimedHash, countersignature);
 

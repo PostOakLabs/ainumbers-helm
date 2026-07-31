@@ -13,6 +13,7 @@ const { executeRun, planSteps } = await import("./run.mjs");
 const { pinnedKernelDigest, runKernelNode } = await import("./kernel-runner.mjs");
 const { appendHaRecord } = await import("./ha-store.mjs");
 const { haGateCheckFor, findHeldGate, recordReplay, signHaRecord, verifyHaRecordSignature, submitHaRecord, getSlot } = await import("./ha-gate.mjs");
+const { getOrInitSlot, recordsForSubject } = await import("./ha-store.mjs");
 const { sign, rawPubkeyToDidKey } = await import("./vendored/ocg/kernels/_proof.mjs");
 const { validate } = await import("../scripts/lib/schema-validator.mjs");
 
@@ -164,24 +165,43 @@ test("submitHaRecord: refuses a record whose signature doesn't verify (tampered 
   db.close();
 });
 
-test("recordReplay: a genuine re-execution match sets replay_verified true and mints a counting approval", async () => {
+test("recordReplay: a genuine re-execution match sets replay_verified true, tags the countersignature automated, and mints NO counting approval (MC-2.1/MC-2.3)", async () => {
   const db = dbAt("replay-match.db");
   const stepRunner = async (step) => runKernelNode(step, {});
   const manifest = gatedManifest();
   await executeRun(db, { runId: "run-replay", manifest, stepRunner }); // no gate — just populate step_results for n1
 
-  const checker = await newIdentity();
+  // Establish the slot's maker_signature FIRST — MC-1.1 refuses any
+  // countersignature over a subject with no recorded maker, so a real
+  // deployment's maker act (out of this WU's scope, HELM-MAKERCHECKER
+  // -BUILD-SPEC.md §0.6) is stood up here via the existing getOrInitSlot
+  // capability, not a new producer.
   const [n1] = planSteps(manifest);
+  const subjectHashHex = await runToArtifactHash("replay-match-probe.db");
+  const subjectHash = `sha256:${subjectHashHex}`;
+  const maker = await newIdentity();
+  getOrInitSlot(db, subjectHash, { keyid: maker.id, sig: "probe-sig", alg: "EdDSA" });
+
+  const checker = await newIdentity();
   const result = await recordReplay(db, { runId: "run-replay", stepId: n1.step_id, checkerIdentity: checker, nowISO: "2026-07-24T13:00:00Z" });
 
   assert.equal(result.matched, true);
-  assert.equal(getSlot(db, result.claimedHash).countersignatures.length, 1);
-  assert.equal(getSlot(db, result.claimedHash).countersignatures[0].replay_verified, true);
+  assert.equal(result.claimedHash, subjectHash);
+  const slot = getSlot(db, result.claimedHash);
+  assert.equal(slot.countersignatures.length, 1);
+  assert.equal(slot.countersignatures[0].replay_verified, true);
+  assert.equal(slot.countersignatures[0].attester_kind, "automated");
+
+  // MC-2.3: the old code minted a counting "approval" ha_record here —
+  // the exact hole §0.5 found (the daemon counted as a distinct human
+  // approver). It must not exist now.
+  const approvals = recordsForSubject(db, subjectHash).filter((r) => r.record_type === "approval");
+  assert.equal(approvals.length, 0, "MC-2.3: an automated attestation must not mint a threshold-counting approval record");
 
   // signBundleDigest's output feeds this exact object shape — it must
   // conform to countersignature_slot.schema.json's `alg` enum
   // (["EdDSA", "ML-DSA-44"]), not the WebCrypto algorithm-name "Ed25519".
-  const sig = getSlot(db, result.claimedHash).countersignatures[0].signature;
+  const sig = slot.countersignatures[0].signature;
   const errs = validate(COUNTERSIG_SCHEMA.$defs.signature, sig, COUNTERSIG_SCHEMA);
   assert.deepEqual(errs, [], `countersignature signature must validate against countersignature_slot.schema.json: ${errs.join("; ")}`);
   db.close();
@@ -201,11 +221,64 @@ test("recordReplay: NEVER infers replay_verified — a mismatched re-execution r
   tampered.artifact.execution_hash = "0".repeat(64);
   db.prepare("UPDATE step_results SET output_json = ? WHERE run_id = ? AND step_id = ?").run(JSON.stringify(tampered), "run-replay-bad", n1.step_id);
 
+  const maker = await newIdentity();
+  getOrInitSlot(db, `sha256:${"0".repeat(64)}`, { keyid: maker.id, sig: "probe-sig", alg: "EdDSA" });
+
   const checker = await newIdentity();
   const result = await recordReplay(db, { runId: "run-replay-bad", stepId: n1.step_id, checkerIdentity: checker, nowISO: "2026-07-24T13:00:00Z" });
   assert.equal(result.matched, false);
   const slot = getSlot(db, result.claimedHash);
   assert.equal(slot.countersignatures[0].replay_verified, false);
+  db.close();
+});
+
+test("addCountersignature (via recordReplay): refuses a countersignature whose identity equals the slot's maker (MC-1, RED without the fix)", async () => {
+  const db = dbAt("replay-same-identity.db");
+  const stepRunner = async (step) => runKernelNode(step, {});
+  const manifest = gatedManifest();
+  await executeRun(db, { runId: "run-replay-selfsame", manifest, stepRunner });
+
+  const [n1] = planSteps(manifest);
+  const subjectHashHex = await runToArtifactHash("replay-same-identity-probe.db");
+  const subjectHash = `sha256:${subjectHashHex}`;
+
+  // The maker and the "checker" are the SAME did:key — exactly the hole
+  // HELM-MAKERCHECKER-BUILD-SPEC.md §0.2 quotes at ha-store.mjs:135-137: the
+  // old predicate compared checkers against each other only, never against
+  // the maker, so one keypair satisfied both roles.
+  const sameParty = await newIdentity();
+  getOrInitSlot(db, subjectHash, { keyid: sameParty.id, sig: "probe-sig", alg: "EdDSA" });
+
+  await assert.rejects(
+    recordReplay(db, { runId: "run-replay-selfsame", stepId: n1.step_id, checkerIdentity: sameParty, nowISO: "2026-07-24T13:00:00Z" }),
+    /same-identity countersignature forbidden/
+  );
+  db.close();
+});
+
+test("recordReplay: a matched automated attestation does NOT, by itself, satisfy even a review_required(1) gate (MC-2, RED without the fix)", async () => {
+  const db = dbAt("replay-automated-no-gate.db");
+  const stepRunner = async (step) => runKernelNode(step, {});
+  const manifest = gatedManifest({ gatePolicy: "review_required", gateThreshold: 1 });
+
+  const held = await executeRun(db, { runId: "run-replay-auto", manifest, stepRunner, gateCheck: haGateCheckFor(db) });
+  assert.equal(held.state, "awaiting_data");
+  const foundHold = await findHeldGate(db, db.prepare("SELECT * FROM runs WHERE run_id = ?").get("run-replay-auto"));
+
+  // n2's gate subject IS n1's own artifact hash (the step preceding the
+  // gate) — recordReplay against n1's step_id operates on that SAME
+  // subject, so a matched replay is a direct attempt to satisfy this gate.
+  const maker = await newIdentity();
+  getOrInitSlot(db, foundHold.subjectHash, { keyid: maker.id, sig: "probe-sig", alg: "EdDSA" });
+
+  const [n1] = planSteps(manifest);
+  const daemonChecker = await newIdentity();
+  const replay = await recordReplay(db, { runId: "run-replay-auto", stepId: n1.step_id, checkerIdentity: daemonChecker, nowISO: "2026-07-24T13:00:00Z" });
+  assert.equal(replay.matched, true);
+  assert.equal(replay.claimedHash, foundHold.subjectHash);
+
+  const stillHeld = await executeRun(db, { runId: "run-replay-auto", manifest, stepRunner, gateCheck: haGateCheckFor(db) });
+  assert.equal(stillHeld.state, "awaiting_data", "MC-2: a daemon-held (automated) countersignature must never satisfy the checker threshold alone");
   db.close();
 });
 

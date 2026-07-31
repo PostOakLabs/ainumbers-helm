@@ -129,9 +129,42 @@ export function getSlot(db, subjectHash) {
 // caller (ha-gate.mjs recordReplay) is the ONLY code path permitted to set it
 // true, having already done the real re-execution; this function just stores
 // what it's handed.
+//
+// HELM-MAKERCHECKER-BUILD-SPEC.md MC-1/MC-1.1: refuses (throws, never
+// persists) rather than silently admitting a countersignature that cannot be
+// proven distinct from the maker. This is the fix for the hole quoted in
+// that spec's §0.2 — the old predicate below compared checkers against each
+// other only, never against the maker, so one keypair satisfied both roles.
 export function addCountersignature(db, subjectHash, countersignature, { makerSignature = null } = {}) {
   initHaTables(db);
   const slot = getOrInitSlot(db, subjectHash, makerSignature);
+
+  // MC-1.1: absence of a maker identity is a REFUSAL, never a pass. Every
+  // slot minted before a maker_signature producer exists has
+  // maker_signature:null — comparing a checker id against null would admit
+  // everything, so an unresolvable comparison fails closed instead.
+  const makerKeyid = slot.maker_signature?.keyid;
+  if (!makerKeyid) {
+    throw new Error(
+      "ha-store: refused countersignature — slot has no maker_signature.keyid to compare against (MC-1.1: absence of a maker is a refusal, never a pass)"
+    );
+  }
+
+  // MC-1: same-identity countersignature is forbidden. Exact did:key string
+  // comparison, case-sensitive, trimmed only — no other normalisation.
+  const checkerId = (countersignature?.identity?.id ?? "").trim();
+  if (checkerId && checkerId === makerKeyid.trim()) {
+    throw new Error(
+      "ha-store: refused countersignature — checker identity equals the slot's maker identity (MC-1: same-identity countersignature forbidden)"
+    );
+  }
+
+  // MC-1.3: distinctness among checkers is by identity.id ALONE. Two acts by
+  // the same identity at different signed_at are both retained here (an
+  // audit trail of two acts, permitted) — only an exact-duplicate
+  // resubmission (identical identity.id AND signed_at) is a no-op. Counting
+  // toward a threshold, wherever that happens, must collapse same-identity
+  // entries to one regardless of signed_at; this function does not count.
   const already = slot.countersignatures.some(
     (c) => c.identity?.id === countersignature.identity?.id && c.signed_at === countersignature.signed_at
   );
