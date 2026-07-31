@@ -466,7 +466,7 @@ function handleWorkflowManifest(req, res) {
   sendJson(res, 200, pack.manifest);
 }
 
-// POST /run/start {workflow_id, dry_run} — kicks off the H4 run engine
+// POST /run/start {workflow_id, dry_run, inputs?} — kicks off the H4 run engine
 // (run.mjs executeRun) against a compiled pack. Responds with the run_id
 // immediately (fire-and-forget) so the caller can open the /events?run_id=
 // SSE stream before the run finishes — that's what makes progress "live"
@@ -481,7 +481,14 @@ async function handleRunStart(req, res, params, db) {
   }
   let result;
   try {
-    result = startWorkflowRun(db, { workflowId: body.workflow_id, templateSlug: body.template_slug, dryRun: !!body.dry_run });
+    result = startWorkflowRun(db, {
+      workflowId: body.workflow_id, templateSlug: body.template_slug, dryRun: !!body.dry_run,
+      // HELM-BIND-0: optional, keyed by node_id -> policy_parameters. Not
+      // reachable via POST /mcp — mcp.mjs's workflow.run/dry_run tool
+      // schemas declare only workflow_id/template_slug and destructure args
+      // explicitly, so an MCP client cannot supply this field.
+      inputs: body.inputs,
+    });
   } catch (err) {
     if (err && err.status) return deny(res, err.status, err.error);
     throw err;

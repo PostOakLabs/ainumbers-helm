@@ -28,6 +28,22 @@ export function pinnedKernelDigest(kernelId) {
   return digest;
 }
 
+// HELM-BIND-0: checks whether policy_parameters (caller-supplied or the
+// manifest's own default, which feeds the SAME `?? {}` fallback below) would
+// make this kernel's compute() throw — the kernel's own required-field
+// checks ARE the parameter contract, so this needs no separate schema
+// language. Pure and side-effect-free: never persists, never touches a run.
+export function validateKernelInputs(kernelId, policyParameters) {
+  const kernelModule = KERNELS[kernelId];
+  if (!kernelModule) throw new Error(`kernel runner: unknown kernel_id "${kernelId}" (not in vendored registry)`);
+  try {
+    kernelModule.compute(policyParameters ?? {});
+    return { ok: true };
+  } catch (err) {
+    return { ok: false, error: String(err?.message || err) };
+  }
+}
+
 // Invokes the vendored kernel a run.mjs "nodes" step pins. Always returns
 // trust_label "kernel_verified" (§26.6: reproducing the recorded deterministic
 // kernel/version from recorded inputs IS the definition of that label) — a
