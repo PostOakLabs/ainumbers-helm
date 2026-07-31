@@ -25,7 +25,15 @@ import { redeemExportTicket } from "./token.mjs";
 import { log } from "./log.mjs";
 
 export const MCP_PROTOCOL_VERSION = "2026-07-28";
-const SUPPORTED_PROTOCOL_VERSIONS = [MCP_PROTOCOL_VERSION];
+// HELM-MCP-FALLBACK-1: dual-era window, reusing anchor-suite's shipped shape
+// verbatim (board/done/MCP728-CONFORM-FIX-1.md, anchor-suite/src/worker.mjs)
+// rather than compute's SDK-header-strip shape. Anchor is the closer analogue:
+// both it and helm are hand-rolled zero-dep HTTP servers with no MCP SDK
+// transport to intercept, so "advertise multiple versions, era-gate the
+// 2026-07-28-only enforcement" applies directly here; compute's fix instead
+// patches around an SDK transport helm does not have.
+const LEGACY_PROTOCOL_VERSION = "2025-06-18";
+const SUPPORTED_PROTOCOL_VERSIONS = [MCP_PROTOCOL_VERSION, LEGACY_PROTOCOL_VERSION];
 
 const TASKS_EXTENSION = "io.modelcontextprotocol/tasks";
 const META_PROTOCOL_VERSION = "io.modelcontextprotocol/protocolVersion";
@@ -258,14 +266,16 @@ function missingCapability(id, capability) {
 }
 
 // Returns {status, body}, or null for an unimplemented method (caller answers
-// HTTP 404 + -32601 per the transport's Protocol Version Header section).
-function dispatch(db, req_) {
+// HTTP 404 + -32601 for a modern-era request, 200 + -32601 for a legacy one —
+// per the transport's Protocol Version Header section and anchor's shipped
+// dual-era shape).
+function dispatch(db, req_, negotiatedVersion) {
   const { id, method, params } = req_;
   switch (method) {
     case "initialize":
       return { status: 200, body: jsonRpcResult(id, {
         resultType: "complete",
-        protocolVersion: MCP_PROTOCOL_VERSION,
+        protocolVersion: negotiatedVersion,
         capabilities: { tools: {}, extensions: { [TASKS_EXTENSION]: {} } },
         serverInfo: SERVER_INFO,
       }) };
@@ -331,15 +341,23 @@ function dispatch(db, req_) {
   }
 }
 
+// Per-request protocol fields live in params._meta, NOT at the body root
+// (spec 2026-07-28, Basic §Per-request protocol fields) — same read path
+// anchor-suite uses (worker.mjs's requestMeta).
+function requestMeta(body) {
+  return body?.params?._meta;
+}
+
+// A client asserts its version via the MCP-Protocol-Version header (modern) or
+// _meta[protocolVersion] (modern); anchor's assertedProtocolVersion, reused verbatim.
+function assertedProtocolVersion(protocolVersionHeader, body) {
+  return protocolVersionHeader || requestMeta(body)?.[META_PROTOCOL_VERSION] || undefined;
+}
+
 // POST /mcp — same Host+Origin+Bearer gate as every other route (already
 // applied by the time this handler runs, per server.mjs's dispatch order).
 export async function handleMcp(req, res, params, db) {
   if (!db) return sendJson(res, 503, jsonRpcError(null, -32603, "engine_unavailable"));
-
-  const protocolVersionHeader = decodeHeaderValue(req.headers["mcp-protocol-version"]);
-  if (!protocolVersionHeader || hasInvalidChar(protocolVersionHeader) || !SUPPORTED_PROTOCOL_VERSIONS.includes(protocolVersionHeader)) {
-    return sendJson(res, 400, jsonRpcError(null, -32022, "unsupported_protocol_version", { supported: SUPPORTED_PROTOCOL_VERSIONS, requested: protocolVersionHeader ?? null }));
-  }
 
   let body;
   try {
@@ -348,58 +366,115 @@ export async function handleMcp(req, res, params, db) {
     return sendJson(res, 400, jsonRpcError(null, -32700, "parse_error"));
   }
 
-  const mcpMethodHeader = decodeHeaderValue(req.headers["mcp-method"]);
-  if (!mcpMethodHeader || hasInvalidChar(mcpMethodHeader) || mcpMethodHeader !== body.method) {
+  if (body.jsonrpc !== "2.0" || typeof body.method !== "string") {
+    return sendJson(res, 400, jsonRpcError(body.id ?? null, -32600, "invalid_request"));
+  }
+
+  const rawProtocolHeader = req.headers["mcp-protocol-version"];
+  const protocolVersionHeader = decodeHeaderValue(rawProtocolHeader);
+  if (rawProtocolHeader !== undefined && (protocolVersionHeader === null || hasInvalidChar(protocolVersionHeader))) {
+    return sendJson(res, 400, jsonRpcError(body.id ?? null, -32022, "unsupported_protocol_version", { supported: SUPPORTED_PROTOCOL_VERSIONS, requested: protocolVersionHeader ?? null }));
+  }
+
+  // Version selection (anchor's shipped shape, board/done/MCP728-CONFORM-FIX-1.md):
+  // a client may assert its version via the header, _meta, or (on `initialize`
+  // only) the legacy params.protocolVersion handshake field. Asserting nothing at
+  // all is a legacy request and gets today's permissive behavior — this is the
+  // fallback this row exists to add; helm previously required the header on
+  // every request unconditionally, which is the defect HELM-MCP-FALLBACK-1 fixes.
+  const asserted = assertedProtocolVersion(protocolVersionHeader, body);
+
+  // A header/_meta assertion is a hard requirement (per SEP-2243 / Basic
+  // §Per-request protocol fields) — unsupported is -32022 + HTTP 400, unchanged
+  // from before this row. It differs from anchor's literal reuse in one respect,
+  // stated here rather than invented silently: the legacy `initialize`
+  // params.protocolVersion field is advisory under classic (pre-2026) MCP
+  // negotiation — "if the server does not support the requested version, it can
+  // respond with a different one it does support" — so it does NOT trigger
+  // -32022; only an explicit modern assertion does. This matters in practice: a
+  // real off-the-shelf @modelcontextprotocol/sdk client's own supported-version
+  // list has zero overlap with helm's SUPPORTED_PROTOCOL_VERSIONS above
+  // 2025-06-18 (its LATEST_PROTOCOL_VERSION as of SDK 1.29.0 is 2025-11-25, a
+  // revision helm never claims to implement), so treating that body field as a
+  // hard requirement would fail the exact real-client handshake this row exists
+  // to unblock — proven live below.
+  if (asserted && !SUPPORTED_PROTOCOL_VERSIONS.includes(asserted)) {
+    return sendJson(res, 400, jsonRpcError(body.id ?? null, -32022, "unsupported_protocol_version", { supported: SUPPORTED_PROTOCOL_VERSIONS, requested: asserted }));
+  }
+
+  const legacyRequestedVersion = body.method === "initialize" ? body.params?.protocolVersion : undefined;
+  const negotiatedVersion = asserted
+    || (legacyRequestedVersion && SUPPORTED_PROTOCOL_VERSIONS.includes(legacyRequestedVersion) ? legacyRequestedVersion : undefined)
+    // Client named a version we don't implement (or none at all is what an
+    // asking-nothing legacy `initialize` gets by staying on our default): if it
+    // asked for something specific and unsupported, meet it at our legacy floor
+    // rather than our newest — a client naming an older/unrecognized revision is
+    // unlikely to understand 2026-07-28 either.
+    || (legacyRequestedVersion ? LEGACY_PROTOCOL_VERSION : MCP_PROTOCOL_VERSION);
+
+  // ERA SELECTION — modern iff the client EXPLICITLY asserted 2026-07-28, never
+  // by the server default falling through (an unversioned legacy client must
+  // stay legacy, not get judged modern and rejected). `initialize` is the
+  // legacy opening handshake and stays legacy-era regardless of what it asks
+  // for — identical to anchor's modernEra rule.
+  const modernEra = body.method !== "initialize" && asserted === MCP_PROTOCOL_VERSION;
+
+  // SEP-2243: Mcp-Method and (on tools/call) Mcp-Name MUST agree with the body
+  // when present. Absence is a violation only for a MODERN-era request — a
+  // legacy client sends neither header and keeps today's permissive behavior.
+  const rawMethodHeader = req.headers["mcp-method"];
+  const mcpMethodHeader = decodeHeaderValue(rawMethodHeader);
+  const methodHeaderBad = rawMethodHeader === undefined
+    ? modernEra
+    : (mcpMethodHeader === null || hasInvalidChar(mcpMethodHeader) || mcpMethodHeader !== body.method);
+  if (methodHeaderBad) {
     return sendJson(res, 400, jsonRpcError(body.id ?? null, -32020, "HeaderMismatch", { header: "Mcp-Method", requested: body.method ?? null, header_value: mcpMethodHeader ?? null }));
   }
   if (body.method === "tools/call") {
-    const mcpNameHeader = decodeHeaderValue(req.headers["mcp-name"]);
+    const rawNameHeader = req.headers["mcp-name"];
+    const mcpNameHeader = decodeHeaderValue(rawNameHeader);
     const bodyName = body.params?.name;
-    if (!mcpNameHeader || hasInvalidChar(mcpNameHeader) || mcpNameHeader !== bodyName) {
+    const nameHeaderBad = rawNameHeader === undefined
+      ? modernEra
+      : (mcpNameHeader === null || hasInvalidChar(mcpNameHeader) || mcpNameHeader !== bodyName);
+    if (nameHeaderBad) {
       return sendJson(res, 400, jsonRpcError(body.id ?? null, -32020, "HeaderMismatch", { header: "Mcp-Name", requested: bodyName ?? null, header_value: mcpNameHeader ?? null }));
     }
-  }
-
-  if (body.jsonrpc !== "2.0" || typeof body.method !== "string") {
-    return sendJson(res, 400, jsonRpcError(body.id ?? null, -32600, "invalid_request"));
   }
 
   // Per-request protocol fields (/basic). 2026-07-28 moved version, identity and
   // capabilities out of a handshake and into every request's _meta:
   // io.modelcontextprotocol/protocolVersion and .../clientCapabilities are
-  // REQUIRED on every request (clientInfo is only SHOULD), and "A request missing
-  // any required field is malformed; the server MUST reject it with JSON-RPC
-  // error code -32602 (Invalid params). On HTTP, the response status MUST be
-  // 400 Bad Request."
-  //
-  // HELM-MCP-CONFORM-1: helm read the version from the header only and never
-  // inspected params._meta, so a body with no _meta at all was served in full.
-  // This is enforced uniformly, including on `initialize`: helm supports exactly
-  // one protocol version, and a request that got this far already carried a
-  // conforming MCP-Protocol-Version header, so it is a modern-era request
-  // whatever method it names. A true legacy client never reaches here — it is
-  // stopped by the version gate above.
-  const meta = body.params?._meta;
-  const missingMeta = [META_PROTOCOL_VERSION, META_CLIENT_CAPABILITIES].filter((k) => meta?.[k] === undefined || meta?.[k] === null);
-  if (missingMeta.length) {
-    return sendJson(res, 400, jsonRpcError(body.id ?? null, -32602, "missing_required_meta", { missing: missingMeta }));
+  // REQUIRED on every MODERN-era request (clientInfo is only SHOULD); "A request
+  // missing any required field is malformed; the server MUST reject it with
+  // JSON-RPC error code -32602 ... 400 Bad Request." Legacy-era requests carry
+  // no _meta by definition and are exempt — same era-gating as anchor.
+  if (modernEra) {
+    const meta = requestMeta(body);
+    const missingMeta = [META_PROTOCOL_VERSION, META_CLIENT_CAPABILITIES].filter((k) => meta?.[k] === undefined || meta?.[k] === null);
+    if (missingMeta.length) {
+      return sendJson(res, 400, jsonRpcError(body.id ?? null, -32602, "missing_required_meta", { missing: missingMeta }));
+    }
+
+    // Protocol Version Header (/basic/transports/streamable-http): "The header
+    // value MUST match the io.modelcontextprotocol/protocolVersion field carried
+    // in the request body's _meta. If the values do not match, the server MUST
+    // reject the request with 400 Bad Request and a HeaderMismatch JSON-RPC error."
+    if (meta[META_PROTOCOL_VERSION] !== protocolVersionHeader) {
+      return sendJson(res, 400, jsonRpcError(body.id ?? null, -32020, "HeaderMismatch", {
+        header: "MCP-Protocol-Version",
+        requested: meta[META_PROTOCOL_VERSION] ?? null,
+        header_value: protocolVersionHeader,
+      }));
+    }
   }
 
-  // Protocol Version Header (/basic/transports/streamable-http): "The header
-  // value MUST match the io.modelcontextprotocol/protocolVersion field carried
-  // in the request body's _meta. If the values do not match, the server MUST
-  // reject the request with 400 Bad Request and a HeaderMismatch JSON-RPC error."
-  if (meta[META_PROTOCOL_VERSION] !== protocolVersionHeader) {
-    return sendJson(res, 400, jsonRpcError(body.id ?? null, -32020, "HeaderMismatch", {
-      header: "MCP-Protocol-Version",
-      requested: meta[META_PROTOCOL_VERSION] ?? null,
-      header_value: protocolVersionHeader,
-    }));
-  }
-
-  const dispatched = dispatch(db, body);
+  const dispatched = dispatch(db, body, negotiatedVersion);
   if (dispatched === null) {
-    return sendJson(res, 404, jsonRpcError(body.id ?? null, -32601, `method_not_found:${body.method}`));
+    // Modern-era unknown method is 404 (spec: http §Protocol Version Header);
+    // a legacy client keeps its 200, since 2025-06-18 carried no such
+    // requirement — anchor's shipped dual-era status split, reused verbatim.
+    return sendJson(res, modernEra ? 404 : 200, jsonRpcError(body.id ?? null, -32601, `method_not_found:${body.method}`));
   }
   sendJson(res, dispatched.status, dispatched.body);
 }
