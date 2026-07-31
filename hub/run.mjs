@@ -258,13 +258,44 @@ export function planSteps(manifest) {
   return orderStepsByEdges(steps, edges);
 }
 
-function stepInputDigest({ runId, step, priorOutputDigest, dryRun }) {
+// HELM-BIND-2 (§3.1/§3.2): resolves a bound "nodes" step's connector_inputs
+// against outputs already produced earlier IN THIS RUN. `stepOutputs` is keyed
+// by step_id and is populated by both executeRun() and replayExecutionHash()
+// as each step completes, so the two stay the same code path (§0.4). Returns
+// null for an unbound step (no `step.bindings`) so callers can tell "nothing
+// to fold into the digest" apart from "resolved to an empty object".
+//
+// ⛔ §3.3: an unresolvable binding (the producing step has not run, or ran
+// under a different step_id) throws a NAMED error here, before any digest is
+// computed and before stepRunner is ever invoked — never a silent `{}`.
+function resolveBoundParams(step, stepOutputs) {
+  if (!step.bindings) return null;
+  const resolved = {};
+  for (const b of step.bindings) {
+    if (!stepOutputs.has(b.from_step_id)) {
+      throw new Error(
+        `run engine: unresolved connector_inputs binding — step "${step.step_id}" feeds_param "${b.feeds_param}" needs the output of "${b.from_step_id}", which has not produced one`
+      );
+    }
+    resolved[b.feeds_param] = stepOutputs.get(b.from_step_id);
+  }
+  return resolved;
+}
+
+// §3.2: a bound step's resolved values enter stepInputDigest — two runs on
+// different upstream data MUST produce different input_digests and MUST NOT
+// share a memo row. §3.4: an unbound step (resolvedParams === null) omits the
+// key entirely rather than writing `resolved_bindings: null`, so its digest
+// object has the exact same shape as before this WU and its digest does not
+// move.
+function stepInputDigest({ runId, step, priorOutputDigest, dryRun, resolvedParams = null }) {
   return sha256ref(jcsDigestHex({
     run_id: runId,
     step_id: step.step_id,
     content_digest: step.contentDigest,
     prior_output_digest: priorOutputDigest,
     dry_run: !!dryRun,
+    ...(resolvedParams !== null ? { resolved_bindings: resolvedParams } : {}),
   }));
 }
 
@@ -371,9 +402,13 @@ export async function executeRun(db, { runId, manifest, stepRunner, dryRun = fal
   let priorOutputDigest = null;
   let priorOutput = null;
   const stepDigests = [];
+  const stepOutputs = new Map();
   try {
     for (const step of steps) {
-      const inputDigest = stepInputDigest({ runId, step, priorOutputDigest, dryRun });
+      // §3.1: resolve BEFORE the digest so a bound step's actual upstream
+      // value (not just its digest) is what stepInputDigest folds in.
+      const resolvedParams = resolveBoundParams(step, stepOutputs);
+      const inputDigest = stepInputDigest({ runId, step, priorOutputDigest, dryRun, resolvedParams });
       let memo = getMemoizedStep(db, { runId, stepId: step.step_id, inputDigest });
       if (!memo) {
         // HELM-HA-1: a step whose pack item declares §27.4 gate_policy HOLDS
@@ -398,6 +433,9 @@ export async function executeRun(db, { runId, manifest, stepRunner, dryRun = fal
         if (dryRun && stepRunner.canDispatch && !stepRunner.canDispatch(step)) {
           throw new Error(`kernel runner: no runner configured for step kind "${step.kind}" (step ${step.step_id})`);
         }
+        // §3.1: kernel-runner.mjs reads `step.resolvedParams` to override the
+        // node's static policy_parameters for bound feeds_param keys.
+        if (resolvedParams !== null) step.resolvedParams = resolvedParams;
         const output = dryRun
           ? { dry_run: true, step_id: step.step_id, kind: step.kind }
           : await stepRunner(step, { priorOutputDigest, runId });
@@ -407,6 +445,7 @@ export async function executeRun(db, { runId, manifest, stepRunner, dryRun = fal
       stepDigests.push({ step_id: step.step_id, input_digest: inputDigest, output_digest: memo.outputDigest });
       priorOutputDigest = memo.outputDigest;
       priorOutput = memo.output;
+      stepOutputs.set(step.step_id, memo.output);
     }
   } catch (err) {
     transitionState(db, { runId, workflowManifestDigest, fromState: "running", toState: "failed", humansInvolved });
@@ -432,12 +471,18 @@ export function replayExecutionHash(db, runId) {
 
   let priorOutputDigest = null;
   const stepDigests = [];
+  const stepOutputs = new Map();
   for (const step of steps) {
-    const inputDigest = stepInputDigest({ runId, step, priorOutputDigest, dryRun: !!run.dry_run });
+    // Same resolution rule as executeRun() (§0.4: crash-resume and replay are
+    // the SAME code path) — stepOutputs is rebuilt from the memo table itself,
+    // in the same topological order, so it resolves identically.
+    const resolvedParams = resolveBoundParams(step, stepOutputs);
+    const inputDigest = stepInputDigest({ runId, step, priorOutputDigest, dryRun: !!run.dry_run, resolvedParams });
     const memo = getMemoizedStep(db, { runId, stepId: step.step_id, inputDigest });
     if (!memo) throw new Error(`run engine: replay — missing memoized result for run=${runId} step=${step.step_id}`);
     stepDigests.push({ step_id: step.step_id, input_digest: inputDigest, output_digest: memo.outputDigest });
     priorOutputDigest = memo.outputDigest;
+    stepOutputs.set(step.step_id, memo.output);
   }
   return sha256ref(jcsDigestHex({ run_id: runId, workflow_manifest_digest: run.workflow_manifest_digest, steps: stepDigests }));
 }

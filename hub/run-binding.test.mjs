@@ -3,6 +3,10 @@
 // HELM-BIND-1: `connector_inputs[]` topology in the run engine (SPEC-S26
 // §26.3.1, HELM-DATA-BINDING-BUILD-SPEC.md §2). Topology only — no value is
 // resolved or threaded (§2.5).
+//
+// HELM-BIND-2 (§3, same file): value resolution and threading into
+// stepInputDigest / policy_parameters. See the tests below the HELM-BIND-1
+// block.
 import { test } from "node:test";
 import assert from "node:assert/strict";
 import { mkdtempSync, rmSync } from "node:fs";
@@ -181,23 +185,119 @@ test("validation runs BEFORE any write — a rejected manifest leaves no run and
   db.close();
 });
 
-test("a valid binding still executes, fetch first, with no value threading", async () => {
+test("a valid binding executes fetch first; ctx still carries only digests (§2.5) — HELM-BIND-2 threads via step.resolvedParams instead", async () => {
   const db = dbAt("bound.db");
   const calls = [];
+  const seenResolvedParams = [];
   const result = await executeRun(db, {
     runId: "run-bound",
     manifest: manifest({
       connector_inputs: [binding({ connector_id: "c2", feeds_node_id: "n1", feeds_param: "amount" })],
     }),
     stepRunner: async (step, ctx) => {
-      // §2.5: the executor still passes only digests forward in this WU.
       assert.deepEqual(Object.keys(ctx).sort(), ["priorOutputDigest", "runId"]);
       calls.push(step.step_id);
+      if (step.step_id === "nodes:n1") seenResolvedParams.push(step.resolvedParams);
+      if (step.step_id === "connectors:c2") return { fetched: "c2-value" };
       return { ok: true, step_id: step.step_id };
     },
   });
   assert.equal(result.state, "completed");
   assert.ok(calls.indexOf("connectors:c2") < calls.indexOf("nodes:n1"));
+  // §3.1: the bound node's step carries the producing step's output, keyed by
+  // feeds_param — connector step is NOT invoked yet when planSteps() runs, but
+  // by the time nodes:n1 is invoked, run.mjs has resolved it.
+  assert.deepEqual(seenResolvedParams, [{ amount: { fetched: "c2-value" } }]);
+  db.close();
+});
+
+// ---------------------------------------------------------------------------
+// HELM-BIND-2 (§3): thread the resolved value into stepInputDigest and into
+// the node's policy_parameters (kernel-runner.mjs covers the latter).
+// ---------------------------------------------------------------------------
+
+function connectorAwareStepRunner(outputByConnectorId) {
+  return async (step) => {
+    if (step.kind === "connectors" && step.item.connector_id in outputByConnectorId) {
+      return outputByConnectorId[step.item.connector_id];
+    }
+    return { ok: true, step_id: step.step_id };
+  };
+}
+
+test("§3.2: two runs of the same manifest on DIFFERENT connector data get DIFFERENT input_digests and no shared memo row", async () => {
+  const db = dbAt("divergence.db");
+  const m = manifest({
+    connector_inputs: [binding({ connector_id: "c2", feeds_node_id: "n1", feeds_param: "amount" })],
+  });
+
+  const r1 = await executeRun(db, {
+    runId: "run-a",
+    manifest: m,
+    stepRunner: connectorAwareStepRunner({ c2: { value: 100 } }),
+  });
+  const r2 = await executeRun(db, {
+    runId: "run-b",
+    manifest: m,
+    stepRunner: connectorAwareStepRunner({ c2: { value: 999 } }),
+  });
+
+  const nodeStepA = r1.steps.find((s) => s.step_id === "nodes:n1");
+  const nodeStepB = r2.steps.find((s) => s.step_id === "nodes:n1");
+  assert.notEqual(nodeStepA.input_digest, nodeStepB.input_digest);
+  assert.notEqual(r1.executionHash, r2.executionHash);
+
+  const rows = db
+    .prepare("SELECT DISTINCT input_digest FROM step_results WHERE step_id = 'nodes:n1'")
+    .all();
+  assert.equal(rows.length, 2, "different upstream data must NOT collide in the memo table");
+  db.close();
+});
+
+test("§3.3: an unresolvable binding fails the step with a named error — never a silent {} fallback", async () => {
+  const db = dbAt("unresolvable.db");
+  const m = manifest({
+    connector_inputs: [binding({ connector_id: "c2", feeds_node_id: "n1", feeds_param: "amount" })],
+  });
+  await assert.rejects(
+    executeRun(db, {
+      runId: "run-unresolvable",
+      manifest: m,
+      // The connector step's OWN runner throws, so it never produces an
+      // output for stepOutputs to resolve nodes:n1's binding against.
+      stepRunner: async (step) => {
+        if (step.kind === "connectors") throw new Error("connector fetch failed (simulated)");
+        return { ok: true, step_id: step.step_id };
+      },
+    }),
+    /connector fetch failed \(simulated\)/
+  );
+  // The node step must never have run at all — no memo row exists for it.
+  const nodeRows = db.prepare("SELECT COUNT(*) AS c FROM step_results WHERE step_id = 'nodes:n1'").get().c;
+  assert.equal(nodeRows, 0);
+  db.close();
+});
+
+test("§3.4: an unbound pack's execution_hash is unchanged before/after HELM-BIND-2 — quoted, not asserted", async () => {
+  // No connector_inputs declared at all — resolveBoundParams must return null
+  // for every step, so stepInputDigest's object shape (and hence every
+  // digest) is bit-identical to the pre-HELM-BIND-2 formula.
+  const db = dbAt("unbound-hash.db");
+  const m = manifest(); // absent connector_inputs (§0.3)
+  const result = await executeRun(db, {
+    runId: "run-unbound",
+    manifest: m,
+    stepRunner: async (step) => ({ ok: true, step_id: step.step_id }),
+  });
+  assert.equal(result.state, "completed");
+  // Measured directly against the pre-HELM-BIND-2 formula (HELM-BIND-1 @
+  // 53dc303): this exact manifest + stepRunner produced this exact hash
+  // BEFORE this WU's changes, and produces it again AFTER — bit-identical,
+  // not merely "looks the same".
+  assert.equal(
+    result.executionHash,
+    "sha256:ad591412cd082b4495e5da940956697e84c52321f6e2ffc73e861658f657f634"
+  );
   db.close();
 });
 
