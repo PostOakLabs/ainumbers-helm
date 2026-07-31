@@ -10,24 +10,29 @@ import { readFileSync, mkdtempSync, rmSync } from "node:fs";
 import { join, dirname } from "node:path";
 import { fileURLToPath } from "node:url";
 import { tmpdir } from "node:os";
-import {
-  anchorRfc3161, anchorOpenTimestamps, anchorForCheckpoint, buildQueueMarker,
-  toCheckpointAnchorEntry, ANCHOR_QUEUE_MARKER_SCHEMA_REF, RELAY_CA_LIST, OTS_CALENDAR_LIST,
-} from "./anchor-client.mjs";
-import { buildCheckpoint, verifyCheckpoint } from "./checkpoint.mjs";
-import { verifyAnchorBinding } from "../ui/lib/verify-bundle.mjs";
-import { validate } from "../scripts/lib/schema-validator.mjs";
-import { liveTest } from "../test-support/live.mjs";
-import { verifyRfc3161, FREETSA_ROOT_PEM, extractMessageImprintHex } from "./vendored/ocg/kernels/_rfc3161.mjs";
-import { derSeq, derInt, derEnc } from "./vendored/ocg/kernels/_anchor-testutil.mjs";
 
 const HERE = dirname(fileURLToPath(import.meta.url));
 
-// Set BEFORE any dynamic import of keys.mjs/journal.mjs (both read HELM_HOME
-// lazily via state-dir.mjs, but round-trip.test.mjs's convention is to fix
-// this at module top so no test can race a env-var mutation mid-run).
+// Set BEFORE any dynamic import of keys.mjs/journal.mjs/anchor-client.mjs
+// (all read HELM_HOME lazily via state-dir.mjs) — round-trip.test.mjs's
+// convention, fixing this at module top so no test can race an env-var
+// mutation mid-run. HELM-ANCHOR-RETRY-1: anchorForCheckpoint now persists
+// queued markers here too (statePath() → HELM_HOME/anchor-queue.json), so
+// this same tmp dir keeps that off the real ~/.helm as well.
 const SEC3_TMP = mkdtempSync(join(tmpdir(), "helm-sec3-test-"));
 process.env.HELM_HOME = SEC3_TMP;
+
+const {
+  anchorRfc3161, anchorOpenTimestamps, anchorForCheckpoint, buildQueueMarker,
+  toCheckpointAnchorEntry, ANCHOR_QUEUE_MARKER_SCHEMA_REF, RELAY_CA_LIST, OTS_CALENDAR_LIST,
+} = await import("./anchor-client.mjs");
+const { buildCheckpoint, verifyCheckpoint } = await import("./checkpoint.mjs");
+const { verifyAnchorBinding } = await import("../ui/lib/verify-bundle.mjs");
+const { validate } = await import("../scripts/lib/schema-validator.mjs");
+const { liveTest } = await import("../test-support/live.mjs");
+const { verifyRfc3161, FREETSA_ROOT_PEM, extractMessageImprintHex } = await import("./vendored/ocg/kernels/_rfc3161.mjs");
+const { derSeq, derInt, derEnc } = await import("./vendored/ocg/kernels/_anchor-testutil.mjs");
+const { loadAnchorQueue } = await import("./anchor-queue.mjs");
 const { loadOrCreateKeys, publicKeysOf } = await import("./keys.mjs");
 const { openJournal, appendEntry } = await import("./journal.mjs");
 
@@ -78,6 +83,10 @@ test("anchorForCheckpoint: offline (zero-egress) — no network call, skipped ma
   assert.equal(queueMarker.status, "skipped");
   assert.equal(queueMarker.reason, "egress_blocked");
   assert.deepEqual(validate(ANCHOR_QUEUE_MARKER_SCHEMA_REF, queueMarker), []);
+  // phil's non-negotiable (this row's contract): a marker the operator chose
+  // NOT to anchor (offline/egress_blocked) must never become a retry the
+  // client dials out for on its own later.
+  assert.deepEqual(loadAnchorQueue(), [], "an offline/skipped marker must never be persisted for retry");
 });
 
 test("anchorForCheckpoint: relay unreachable (network throw) — queued with relay_unreachable, never throws", async () => {
@@ -87,6 +96,13 @@ test("anchorForCheckpoint: relay unreachable (network throw) — queued with rel
   assert.equal(queueMarker.status, "queued");
   assert.equal(queueMarker.reason, "relay_unreachable");
   assert.deepEqual(validate(ANCHOR_QUEUE_MARKER_SCHEMA_REF, queueMarker), []);
+  // G1: this is the specific gap the row exists to close — the marker must
+  // survive OUTSIDE the (not-yet-signed) checkpoint, on disk, so a later
+  // drain pass can find it.
+  const persisted = loadAnchorQueue().find((e) => e.checkpoint_seq === 7);
+  assert.ok(persisted, "a queued marker must be persisted to the anchor queue, not just returned");
+  assert.equal(persisted.status, "queued");
+  assert.equal(persisted.reason, "relay_unreachable");
 });
 
 test("anchorForCheckpoint: relay HTTP error — queued with relay_error, not silently dropped", async () => {
