@@ -1,9 +1,17 @@
 // SPDX-License-Identifier: Apache-2.0
 // Copyright (c) 2026 Post Oak Labs, Inc.
 // Run engine (D4, HELM-H4): SQLite step-checkpoint executor over the H3
-// journal. A workflow manifest's `nodes[]` has no edges field yet (§26.3) —
-// Phase 1 treats manifest order as the DAG (a linear chain); a later WU that
-// adds edges only needs to change planSteps(), not the executor around it.
+// journal. Manifest layer order is the default DAG (a linear chain); where a
+// manifest declares `connector_inputs[]` (§26.3.1, HELM-BIND-1) those
+// bindings order a connector fetch ahead of the node it feeds.
+//
+// HELM-BIND-1 note on this file's ORIGINAL prediction ("a later WU that adds
+// edges only needs to change planSteps(), not the executor around it"): the
+// step-execution loop indeed needed no change, but the prediction was
+// incomplete — §2.4 requires a bad binding graph to be rejected at
+// VALIDATION, and planSteps() cannot own that (replayExecutionHash() calls it
+// on an already-accepted manifest). So executeRun() gained one guard call
+// ahead of its first write, and nothing else.
 //
 // Every step result is memoized by (run_id, step_id, input_digest) so
 // crash-resume and deterministic replay are the SAME code path: resuming a
@@ -67,8 +75,8 @@ export function manifestDigest(manifest) {
   return sha256ref(jcsDigestHex(manifest));
 }
 
-// Phase 1: manifest layer order IS the DAG (§26.3 has no edges field yet).
-// Same convention as ui/lib/manifest-dag.mjs (buildDag): connectors -> nodes
+// Manifest layer order is the DEFAULT DAG, used whenever no binding is
+// declared. Same convention as ui/lib/manifest-dag.mjs (buildDag): connectors -> nodes
 // -> gates -> actions, `${layerKey}:${item_id}` as the stable id — trigger
 // starts a run rather than being executed as a step, so it's excluded here.
 // Within a layer, array order is the execution order (a hand-rolled
@@ -83,6 +91,120 @@ const STEP_LAYERS = [
   { key: "gates", idField: "gate_id" },
   { key: "actions", idField: "action_id" },
 ];
+
+// ---------------------------------------------------------------------------
+// HELM-BIND-1: `connector_inputs[]` topology (SPEC-S26 §26.3.1,
+// HELM-DATA-BINDING-BUILD-SPEC.md §2). TOPOLOGY ONLY — no value is resolved
+// or threaded here (§2.5; HELM-BIND-2 owns that).
+//
+// ⛔ No schema member was added: `connector_inputs[]`
+// ($defs.connectorInputStep, DEC-6a: {step_id, connector_id, feeds_node_id,
+// feeds_param}) and `required_inputs[]` already exist in
+// schema/workflow-manifest.schema.json. Both stay OPTIONAL and, per §0.3,
+// MUST be ABSENT — never `[]` — from a manifest that declares no binding: the
+// digest is the SHA-256 of the JCS-canonical manifest, and an empty array
+// enters that canonical form while an absent key does not. Nothing here ever
+// writes either member back into a manifest.
+// ---------------------------------------------------------------------------
+
+const CONNECTOR_STEP = (connectorId) => `connectors:${connectorId}`;
+const NODE_STEP = (nodeId) => `nodes:${nodeId}`;
+
+// What a node will accept as a bound parameter. The kernel registry declares
+// no parameter schema (vendored kernels export only meta/compute/buildArtifact
+// and chaingraph.json's `input_schema_ref` points at an HTML page, so there is
+// no offline machine-readable param list), so the manifest's own declarations
+// are the acceptance surface: the node's `policy_parameters` keys plus any
+// `required_inputs[]` entry targeting that node. A node that declares NEITHER
+// declares no surface at all — the check cannot fire there and the binding is
+// accepted, which is the intended case of a connector supplying a value the
+// node does not otherwise carry.
+function acceptedParams(manifest, nodeId) {
+  const node = (manifest.nodes ?? []).find((n) => n.node_id === nodeId);
+  if (!node) return null;
+  const declared = new Set(Object.keys(node.policy_parameters ?? {}));
+  for (const req of manifest.required_inputs ?? []) {
+    if (req.target_node_id === nodeId) declared.add(req.target_param);
+  }
+  return declared;
+}
+
+// Stable topological order: `steps` in their base (layer) order, re-ordered so
+// every `from` precedes its `to`. Ties break on base index, so a manifest whose
+// bindings impose nothing keeps exactly today's order. Throws on a cycle.
+//
+// `edges` is [{from, to}] of step_ids rather than connector_inputs rows on
+// purpose: the cycle detector is then generic over whatever edge kinds later
+// WUs introduce. With TODAY's vocabulary every edge runs connector -> node, so
+// the graph is bipartite and a cycle is structurally unreachable through a
+// real manifest — the detector is kept, and unit-tested on synthetic edges, so
+// that stays true by test rather than by assumption.
+export function orderStepsByEdges(steps, edges) {
+  if (!edges.length) return steps;
+  const index = new Map(steps.map((s, i) => [s.step_id, i]));
+  const adjacency = steps.map(() => new Set());
+  const indegree = steps.map(() => 0);
+  for (const { from, to } of edges) {
+    const f = index.get(from);
+    const t = index.get(to);
+    if (f === undefined || t === undefined) continue; // validation rejects these
+    if (adjacency[f].has(t)) continue; // duplicate edge must not inflate indegree
+    adjacency[f].add(t);
+    indegree[t] += 1;
+  }
+  const ready = steps.map((_, i) => i).filter((i) => indegree[i] === 0);
+  const ordered = [];
+  while (ready.length) {
+    ready.sort((a, b) => a - b);
+    const i = ready.shift();
+    ordered.push(steps[i]);
+    for (const t of adjacency[i]) {
+      if (--indegree[t] === 0) ready.push(t);
+    }
+  }
+  if (ordered.length !== steps.length) {
+    const stuck = steps.filter((_, i) => indegree[i] > 0).map((s) => s.step_id).join(", ");
+    throw new Error(`run engine: manifest binding cycle — connector_inputs form a cycle through [${stuck}]`);
+  }
+  return ordered;
+}
+
+// §2.4: VALIDATION rejects a bad binding graph — not execution. Called by
+// executeRun() before it writes anything, because a run that dies mid-way has
+// already written journal entries while a rejected manifest has not.
+//
+// The `connector_id` ∈ `connectors[]` rule is stated in the schema's own
+// description and is NOT expressible as a JSON Schema constraint (§0.25), so
+// it is enforced here or it is not enforced at all.
+export function validateManifestBindings(manifest) {
+  const bindings = manifest.connector_inputs;
+  if (bindings === undefined) return; // no binding declared — nothing to check
+  if (!Array.isArray(bindings)) {
+    throw new Error("run engine: manifest binding invalid — connector_inputs must be an array");
+  }
+  const connectorIds = new Set((manifest.connectors ?? []).map((c) => c.connector_id));
+  const seenStepIds = new Set();
+  for (const b of bindings) {
+    const where = `connector_inputs step "${b?.step_id ?? "(unnamed)"}"`;
+    if (seenStepIds.has(b.step_id)) {
+      throw new Error(`run engine: manifest binding invalid — duplicate ${where}`);
+    }
+    seenStepIds.add(b.step_id);
+    if (!connectorIds.has(b.connector_id)) {
+      throw new Error(`run engine: manifest binding invalid — ${where} names connector_id "${b.connector_id}", which is absent from connectors[]`);
+    }
+    const accepted = acceptedParams(manifest, b.feeds_node_id);
+    if (accepted === null) {
+      throw new Error(`run engine: manifest binding invalid — ${where} names feeds_node_id "${b.feeds_node_id}", which matches no node in nodes[]`);
+    }
+    if (accepted.size > 0 && !accepted.has(b.feeds_param)) {
+      throw new Error(`run engine: manifest binding invalid — ${where} feeds_param "${b.feeds_param}", which node "${b.feeds_node_id}" does not accept`);
+    }
+  }
+  // Cycle detection runs over the same plan the executor will use, so a graph
+  // that cannot be ordered is rejected here rather than at execution time.
+  planSteps(manifest);
+}
 
 export function planSteps(manifest) {
   const steps = [];
@@ -108,7 +230,32 @@ export function planSteps(manifest) {
       });
     }
   }
-  return steps;
+
+  // HELM-BIND-1: absent `connector_inputs` -> today's STEP_LAYERS member order,
+  // unchanged. Present -> each declared fetch is ordered ahead of the node it
+  // feeds. `seq` deliberately stays the BASE index: it identifies a step within
+  // the manifest, and re-numbering it on reorder would be a silent identity
+  // change. Nothing here touches contentDigest, so no step's input_digest moves.
+  const bindings = manifest.connector_inputs;
+  if (bindings === undefined) return steps;
+
+  const byNode = new Map();
+  for (const b of bindings) {
+    if (!byNode.has(b.feeds_node_id)) byNode.set(b.feeds_node_id, []);
+    byNode.get(b.feeds_node_id).push(b);
+  }
+  for (const step of steps) {
+    const bound = byNode.get(step.kind === "nodes" ? step.item.node_id : null);
+    // Topology metadata only — the value is resolved by HELM-BIND-2 (§2.5).
+    if (bound) step.bindings = bound.map((b) => ({
+      step_id: b.step_id,
+      connector_id: b.connector_id,
+      feeds_param: b.feeds_param,
+      from_step_id: CONNECTOR_STEP(b.connector_id),
+    }));
+  }
+  const edges = bindings.map((b) => ({ from: CONNECTOR_STEP(b.connector_id), to: NODE_STEP(b.feeds_node_id) }));
+  return orderStepsByEdges(steps, edges);
 }
 
 function stepInputDigest({ runId, step, priorOutputDigest, dryRun }) {
@@ -195,6 +342,9 @@ function currentState(db, runId) {
 // crash (state still "running", some steps memoized) replays the memoized
 // steps for free and only re-invokes stepRunner for what's left.
 export async function executeRun(db, { runId, manifest, stepRunner, dryRun = false, humansInvolved = [], gateCheck = null }) {
+  // §2.4: reject a bad binding graph BEFORE any table, row or journal entry
+  // exists — a rejected manifest must leave no trace, a failed run does not.
+  validateManifestBindings(manifest);
   initRunTables(db);
   const workflowManifestDigest = manifestDigest(manifest);
   const steps = planSteps(manifest);
