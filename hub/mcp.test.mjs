@@ -102,13 +102,16 @@ test("DELETE /mcp is 405", async () => {
   assert.equal(res.status, 405);
 });
 
-test("missing MCP-Protocol-Version -> -32022 + HTTP 400 with supported/requested", async () => {
+// HELM-MCP-FALLBACK-1: a request with NO protocol-version assertion at all
+// (no header, no _meta) is a legacy-era request, not an error — mirrors
+// anchor-suite's shipped dual-era fallback (board/done/MCP728-CONFORM-FIX-1.md).
+// Requiring the header unconditionally was the defect this row fixes.
+test("missing MCP-Protocol-Version on a non-initialize request -> treated as legacy-era, succeeds", async () => {
   const res = await rawRequest("POST", "/mcp", { jsonrpc: "2.0", id: 1, method: "tools/list" }, {
-    Host: `127.0.0.1:${PORT}`, Origin: ORIGIN, Authorization: `Bearer ${token}`, "Mcp-Method": "tools/list",
+    Host: `127.0.0.1:${PORT}`, Origin: ORIGIN, Authorization: `Bearer ${token}`,
   });
-  assert.equal(res.status, 400);
-  assert.equal(res.body.error.code, -32022);
-  assert.deepEqual(res.body.error.data.supported, [MCP_VERSION]);
+  assert.equal(res.status, 200);
+  assert.equal(res.body.result.resultType, "complete");
 });
 
 test("unsupported MCP-Protocol-Version -> -32022 + HTTP 400", async () => {
@@ -141,6 +144,52 @@ test("initialize returns the pinned protocol version and Tasks extension capabil
   assert.equal(res.status, 200);
   assert.equal(res.body.result.protocolVersion, MCP_VERSION);
   assert.ok(res.body.result.capabilities.extensions["io.modelcontextprotocol/tasks"]);
+});
+
+// ---------------------------------------------------------------------------
+// HELM-MCP-FALLBACK-1 (2026-07-31) — dual-era protocol-version fallback,
+// reusing anchor-suite's shipped shape (board/done/MCP728-CONFORM-FIX-1.md).
+// ---------------------------------------------------------------------------
+
+test("FALLBACK-1: legacy initialize (params.protocolVersion, no header) negotiates 2025-06-18", async () => {
+  const res = await rawRequest("POST", "/mcp", { jsonrpc: "2.0", id: 1, method: "initialize", params: { protocolVersion: "2025-06-18" } }, {
+    Host: `127.0.0.1:${PORT}`, Origin: ORIGIN, Authorization: `Bearer ${token}`,
+  });
+  assert.equal(res.status, 200);
+  assert.equal(res.body.result.protocolVersion, "2025-06-18");
+});
+
+test("FALLBACK-1: legacy tools/list (no headers, no _meta) succeeds without the modern-era enforcement", async () => {
+  const res = await rawRequest("POST", "/mcp", { jsonrpc: "2.0", id: 1, method: "tools/list" }, {
+    Host: `127.0.0.1:${PORT}`, Origin: ORIGIN, Authorization: `Bearer ${token}`,
+  });
+  assert.equal(res.status, 200);
+  const names = res.body.result.tools.map((t) => t.name);
+  assert.ok(names.includes("catalog.search"));
+});
+
+test("FALLBACK-1: legacy tools/call (no Mcp-Name header, no _meta) succeeds", async () => {
+  const res = await rawRequest("POST", "/mcp", { jsonrpc: "2.0", id: 1, method: "tools/call", params: { name: "catalog.search", arguments: { query: "aca-226j" } } }, {
+    Host: `127.0.0.1:${PORT}`, Origin: ORIGIN, Authorization: `Bearer ${token}`,
+  });
+  assert.equal(res.status, 200);
+  assert.equal(res.body.result.resultType, "complete");
+});
+
+test("FALLBACK-1: legacy unknown method -> HTTP 200 + -32601 (modern stays 404, legacy is not stranded)", async () => {
+  const res = await rawRequest("POST", "/mcp", { jsonrpc: "2.0", id: 1, method: "no/such/method" }, {
+    Host: `127.0.0.1:${PORT}`, Origin: ORIGIN, Authorization: `Bearer ${token}`,
+  });
+  assert.equal(res.status, 200);
+  assert.equal(res.body.error.code, -32601);
+});
+
+test("FALLBACK-1: explicit MCP-Protocol-Version: 2026-07-28 with no _meta is a MODERN request -> -32602 (not silently downgraded to legacy)", async () => {
+  const res = await rawRequest("POST", "/mcp", { jsonrpc: "2.0", id: 1, method: "tools/list" }, {
+    Host: `127.0.0.1:${PORT}`, Origin: ORIGIN, Authorization: `Bearer ${token}`, "MCP-Protocol-Version": MCP_VERSION, "Mcp-Method": "tools/list",
+  });
+  assert.equal(res.status, 400);
+  assert.equal(res.body.error.code, -32602);
 });
 
 // ---------------------------------------------------------------------------
@@ -187,7 +236,7 @@ test("CONFORM-3: server/discover returns supportedVersions + capabilities (a rea
   const res = await rpc("server/discover", {});
   assert.equal(res.status, 200);
   assert.equal(res.body.result.resultType, "complete");
-  assert.deepEqual(res.body.result.supportedVersions, [MCP_VERSION]);
+  assert.deepEqual(res.body.result.supportedVersions, [MCP_VERSION, "2025-06-18"]);
   assert.ok(res.body.result.capabilities.tools);
   // Tasks: "Include the extension in your server/discover capabilities" — as a
   // map under capabilities.extensions, not a bare array at the result root.
