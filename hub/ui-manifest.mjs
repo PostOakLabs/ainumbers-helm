@@ -78,6 +78,7 @@ const FILES = [
   "vendored/schemas/connector_contract.schema.mjs",
   "vendored/schemas/evidence_bundle_manifest.schema.mjs",
   "vendored/tsa-roots.mjs",
+  "views/agents.mjs",
   "views/canvas.mjs",
   "views/choose.mjs",
   "views/connect.mjs",
