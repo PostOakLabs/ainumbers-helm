@@ -18,6 +18,11 @@ const { loadOrCreateToken, createPairingNonce } = await import("./token.mjs");
 const { loadOrCreateKeys } = await import("./keys.mjs");
 const { verifyChallenge } = await import("./challenge.mjs");
 const { createHelmServer, bindOrExit, MAX_SSE_CONNECTIONS, DAEMON_VERSION, SUPPORTED_API_VERSIONS } = await import("./server.mjs");
+const { openJournal } = await import("./journal.mjs");
+const { vaultSet } = await import("./vault.mjs");
+const { __setHostResolverForTest } = await import("./connector.mjs");
+const { __setManifestOverrideForTest } = await import("./run-actions.mjs");
+const { subscribeRunEvents } = await import("./event-bus.mjs");
 
 const config = loadConfig();
 const token = loadOrCreateToken();
@@ -823,5 +828,138 @@ test("autostart: shortcut toggles through the same gate, independently of autost
     assert.deepEqual(calls, ["installShortcut"]);
     assert.equal(JSON.parse(res.body).shortcut.installed, true);
     assert.equal(JSON.parse(res.body).autostart.installed, false, "the two toggles are not wired together");
+  });
+});
+
+// --- HELM-BIND-WIRE-1: connector/action dispatch is gated by caller origin ---
+//
+// No shipped pack has a "connectors"/"actions" step yet (compile-packs.mjs:101
+// hardcodes connectors: []; that's HELM-BIND-4's, not this row's). So
+// __setManifestOverrideForTest (run-actions.mjs) stands in for a compiled
+// pack: the REAL server.mjs POST /run/start route and the REAL mcp.mjs
+// POST /mcp handler both run completely unmodified — only which manifest a
+// workflow_id resolves to is swapped, for one test-only id, for the
+// duration of this block. An "actions" step (action_id/type/target_host) is
+// used, not a bare "connectors" one — dispatch.mjs's own tests establish
+// that a bare connectors item has no target_host to build a request from and
+// always fails loud regardless of wiring (HELM-BIND-3's documented gap).
+const WIRE_WORKFLOW_ID = "helm-bind-wire-1-test-fixture";
+const WIRE_CREDENTIAL_REF = "vault://helm/connectors/http/example/credential"; // http-send.contract.json's vault_scope[0]
+
+function wireTestManifest() {
+  return {
+    manifest_version: "1",
+    workflow_id: WIRE_WORKFLOW_ID,
+    trigger: { type: "manual" },
+    connectors: [],
+    nodes: [],
+    gates: [],
+    actions: [{ action_id: "a1", type: "http.send", target_host: "api.example.com" }],
+  };
+}
+
+async function withRunEngineServer(fn) {
+  const port = asPortSeq++;
+  const origin = `http://127.0.0.1:${port}`;
+  const dbDir = mkdtempSync(join(tmpdir(), "helm-bind-wire-test-"));
+  const db = openJournal(join(dbDir, "journal.db"));
+  const server6 = createHelmServer({ port, allowedOrigin: origin, token, db });
+  const call6 = (opts) => asRequest(port, opts);
+  const headers6 = (overrides = {}) => ({ Host: `127.0.0.1:${port}`, Origin: origin, Authorization: `Bearer ${token}`, ...overrides });
+  vaultSet(WIRE_CREDENTIAL_REF, { access_token: "tok-wire-1" });
+  __setHostResolverForTest(async (hostname) => {
+    if (hostname === "api.example.com") return ["93.184.216.34"];
+    throw new Error(`test resolver: unexpected hostname ${hostname}`);
+  });
+  __setManifestOverrideForTest((workflowId) => (workflowId === WIRE_WORKFLOW_ID ? wireTestManifest() : null));
+  const originalFetch = globalThis.fetch;
+  globalThis.fetch = async (url) => {
+    assert.equal(new URL(url).host, "api.example.com", "connector dispatch must reach the contract-allowlisted host, nothing else");
+    return new Response(Buffer.from('{"ok":true}'), { status: 200 });
+  };
+  try {
+    await fn({ call: call6, headers: headers6, port, db });
+  } finally {
+    globalThis.fetch = originalFetch;
+    __setHostResolverForTest(null);
+    __setManifestOverrideForTest(null);
+    await new Promise((resolve) => server6.close(resolve));
+    db.close();
+    rmSync(dbDir, { recursive: true, force: true });
+  }
+}
+
+// Polls the in-process event bus (which replays the last event to a late
+// subscriber — event-bus.mjs's lastEventByRun) for a terminal state, up to
+// ~1s. Works for both outcomes here: a "completed" run has one, and so does
+// a "failed" one — startWorkflowRun's own .catch() always publishes one of
+// the two, even though a mid-run throw never updates the `runs` table's
+// state column (that gap predates this row and is not in its fence).
+async function waitForRunEvent(runId) {
+  for (let i = 0; i < 40; i++) {
+    let seen = null;
+    const unsubscribe = subscribeRunEvents(runId, (data) => { seen = data; });
+    unsubscribe();
+    if (seen && (seen.state === "completed" || seen.state === "failed")) return seen;
+    await new Promise((r) => setTimeout(r, 25));
+  }
+  throw new Error(`run ${runId} never reached a terminal event`);
+}
+
+test("HELM-BIND-WIRE-1 POSITIVE: POST /run/start (the UI/human path) dispatches an actions step to http.send and attests it", async () => {
+  await withRunEngineServer(async ({ call, headers, db }) => {
+    const res = await call({ method: "POST", path: "/run/start", headers: headers(), body: { workflow_id: WIRE_WORKFLOW_ID } });
+    assert.equal(res.status, 200);
+    const runId = JSON.parse(res.body).run_id;
+
+    const event = await waitForRunEvent(runId);
+    assert.equal(event.state, "completed", `UI-initiated run with an actions step must complete, got: ${JSON.stringify(event)}`);
+
+    const row = db.prepare("SELECT output_json FROM step_results WHERE run_id = ? AND step_id = ?").get(runId, "actions:a1");
+    assert.ok(row, "the actions:a1 step must have actually run and memoized an output");
+    const output = JSON.parse(row.output_json);
+    const attestation = output.attestation;
+    assert.equal(attestation.connector_id, "http.send");
+    assert.equal(attestation.endpoint_host, "api.example.com");
+    assert.ok(attestation.payload_digest.startsWith("sha256:"));
+    // quoted proof for the check-off:
+    console.log("HELM-BIND-WIRE-1 UI-path connector_attestation:", JSON.stringify(attestation));
+  });
+});
+
+test("HELM-BIND-WIRE-1 NEGATIVE: POST /mcp tools/call workflow.run (the MCP/agent path) on the SAME manifest does NOT dispatch the actions step", async () => {
+  await withRunEngineServer(async ({ call, headers, db }) => {
+    const rpcBody = {
+      jsonrpc: "2.0",
+      id: 1,
+      method: "tools/call",
+      params: {
+        name: "workflow.run",
+        arguments: { workflow_id: WIRE_WORKFLOW_ID },
+        _meta: {
+          "io.modelcontextprotocol/protocolVersion": "2026-07-28",
+          "io.modelcontextprotocol/clientInfo": { name: "helm-bind-wire-1-test", version: "1.0.0" },
+          "io.modelcontextprotocol/clientCapabilities": { extensions: { "io.modelcontextprotocol/tasks": {} } },
+        },
+      },
+    };
+    const mcpHeaders = headers({ "MCP-Protocol-Version": "2026-07-28", "Mcp-Method": "tools/call", "Mcp-Name": "workflow.run" });
+    const res = await call({ method: "POST", path: "/mcp", headers: mcpHeaders, body: rpcBody });
+    assert.equal(res.status, 200);
+    const body = JSON.parse(res.body);
+    const runId = body.result.task.taskId;
+
+    const event = await waitForRunEvent(runId);
+    assert.equal(event.state, "failed", `MCP-initiated run with an actions step must FAIL, never complete, got: ${JSON.stringify(event)}`);
+    assert.match(
+      event.error,
+      /no runner configured for step kind "actions"/,
+      "the failure must be the unwired-otherKindsRunner throw, not something unrelated"
+    );
+
+    const row = db.prepare("SELECT 1 FROM step_results WHERE run_id = ? AND step_id = ?").get(runId, "actions:a1");
+    assert.equal(row, undefined, "the actions:a1 step must never have run — no memoized output at all");
+    // quoted proof for the check-off:
+    console.log("HELM-BIND-WIRE-1 MCP request:", JSON.stringify(rpcBody), "-> response:", res.body, "-> terminal event:", JSON.stringify(event));
   });
 });
