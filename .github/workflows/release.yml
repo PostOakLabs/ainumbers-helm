@@ -75,6 +75,19 @@ jobs:
       - uses: actions/setup-node@249970729cb0ef3589644e2896645e5dc5ba9c38 # v6.5.0
         with:
           node-version: "22"
+      # Stamp package.json's version to the EXACT tag string (including any
+      # -rc suffix) before build-sea.mjs embeds it, so the binary and the
+      # eventual signed manifest both carry the real tag — never a
+      # committed placeholder.
+      - name: stamp package.json version from tag
+        shell: bash
+        run: |
+          node -e "
+            const fs = require('node:fs');
+            const pkg = JSON.parse(fs.readFileSync('package.json', 'utf8'));
+            pkg.version = process.env.GITHUB_REF_NAME;
+            fs.writeFileSync('package.json', JSON.stringify(pkg, null, 2) + '\n');
+          "
       - name: build SEA binary (${{ matrix.tag }})
         run: node scripts/build-sea.mjs
       - uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4.6.2
@@ -130,6 +143,15 @@ jobs:
           else
             echo "is_ga=true" >> "$GITHUB_OUTPUT"
           fi
+
+      - name: stamp package.json version from tag
+        run: |
+          node -e "
+            const fs = require('node:fs');
+            const pkg = JSON.parse(fs.readFileSync('package.json', 'utf8'));
+            pkg.version = process.env.GITHUB_REF_NAME;
+            fs.writeFileSync('package.json', JSON.stringify(pkg, null, 2) + '\n');
+          "
 
       - name: sign release manifest
         env:
