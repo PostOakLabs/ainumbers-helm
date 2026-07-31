@@ -89,3 +89,28 @@ test("countersignature slot: getOrInitSlot creates once, addCountersignature acc
   assert.equal(getSlot(db, SUBJECT).countersignatures.length, 2);
   db.close();
 });
+
+test("addCountersignature: refuses when the slot has no maker_signature.keyid (MC-1.1, RED without the fix)", async () => {
+  const db = dbAt("mc11-no-maker.db");
+  getOrInitSlot(db, SUBJECT, null);
+  const c = { role: "checker", identity: { id: "did:key:zChecker" }, signature: { keyid: "did:key:zChecker", sig: "s1", alg: "Ed25519" }, signed_at: "2026-07-24T12:00:00Z" };
+  assert.throws(() => addCountersignature(db, SUBJECT, c), /MC-1\.1: absence of a maker is a refusal/);
+  db.close();
+});
+
+test("addCountersignature: refuses a countersignature whose identity equals the maker's (MC-1, RED without the fix)", async () => {
+  const db = dbAt("mc1-same-identity.db");
+  getOrInitSlot(db, SUBJECT, { keyid: "did:key:zMaker", sig: "x", alg: "Ed25519" });
+  const c = { role: "checker", identity: { id: "did:key:zMaker" }, signature: { keyid: "did:key:zMaker", sig: "s1", alg: "Ed25519" }, signed_at: "2026-07-24T12:00:00Z" };
+  assert.throws(() => addCountersignature(db, SUBJECT, c), /MC-1: same-identity countersignature forbidden/);
+  db.close();
+});
+
+test("addCountersignature: a checker distinct from the maker is accepted", async () => {
+  const db = dbAt("mc1-distinct.db");
+  getOrInitSlot(db, SUBJECT, { keyid: "did:key:zMaker", sig: "x", alg: "Ed25519" });
+  const c = { role: "checker", identity: { id: "did:key:zChecker" }, signature: { keyid: "did:key:zChecker", sig: "s1", alg: "Ed25519" }, signed_at: "2026-07-24T12:00:00Z" };
+  const slot = addCountersignature(db, SUBJECT, c);
+  assert.equal(slot.countersignatures.length, 1);
+  db.close();
+});

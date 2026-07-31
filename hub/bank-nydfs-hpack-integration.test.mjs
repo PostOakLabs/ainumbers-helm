@@ -20,7 +20,7 @@ const { executeRun, planSteps } = await import("./run.mjs");
 const { getPack } = await import("./packs.mjs");
 const { createKernelStepRunner } = await import("./kernel-runner.mjs");
 const { haGateCheckFor, findHeldGate, signHaRecord, submitHaRecord, recordArtifactBindingVerification, getSlot } = await import("./ha-gate.mjs");
-const { recordsForSubject } = await import("./ha-store.mjs");
+const { recordsForSubject, getOrInitSlot } = await import("./ha-store.mjs");
 const { rawPubkeyToDidKey } = await import("./vendored/ocg/kernels/_proof.mjs");
 const { buildCommitteePackHtml } = await import("../ui/lib/committee-pack.mjs");
 const { DEMO_GOLDEN_BUNDLE } = await import("../ui/fixtures/verify-demo.mjs");
@@ -99,6 +99,16 @@ test("§3.3 Tier B + maker approval: one distinct identity is NOT enough, two re
 
   // Checker: §3.3 Tier B binding-integrity verification — never replay,
   // never a kernel re-run.
+  //
+  // HELM-MAKERCHECKER-1 / MC-1.1: addCountersignature refuses unless the
+  // slot already carries a maker_signature. This WU builds no maker-
+  // signature producer (HELM-MAKERCHECKER-BUILD-SPEC.md §0.6) — separate
+  // from, and in addition to, the maker's §27.2 approval record above —
+  // so the test stands one up directly via the existing getOrInitSlot
+  // capability before the checker's binding-integrity verification.
+  const makerSlotKey = await newIdentity();
+  getOrInitSlot(db, foundHold.subjectHash, { keyid: makerSlotKey.id, sig: "probe-sig", alg: "EdDSA" });
+
   const checker = await newIdentity();
   const verification = await recordArtifactBindingVerification(db, { runId, stepId: "attested_artifacts:nydfs-cert-2026", checkerIdentity: checker, nowISO: "2026-07-26T13:00:00Z" });
   assert.equal(verification.matched, true);

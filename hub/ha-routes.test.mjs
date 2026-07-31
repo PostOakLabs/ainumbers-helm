@@ -23,6 +23,7 @@ const { createHelmServer } = await import("./server.mjs");
 const { executeRun, planSteps } = await import("./run.mjs");
 const { pinnedKernelDigest, runKernelNode } = await import("./kernel-runner.mjs");
 const { haGateCheckFor } = await import("./ha-gate.mjs");
+const { getOrInitSlot } = await import("./ha-store.mjs");
 const { loadOrCreateHaIdentity } = await import("./ha-identity.mjs");
 const { sign, rawPubkeyToDidKey } = await import("./vendored/ocg/kernels/_proof.mjs");
 
@@ -147,6 +148,17 @@ test("route wiring: POST /ha/replay re-executes the kernel and returns a real re
   const stepRunner = async (step) => runKernelNode(step, {});
   await executeRun(db, { runId: "route-run-replay", manifest, stepRunner });
   const [n1] = planSteps(manifest);
+
+  // HELM-MAKERCHECKER-1 / MC-1.1: a countersignature is refused unless the
+  // slot already has a maker_signature to compare against. This WU builds
+  // no maker-signature producer (HELM-MAKERCHECKER-BUILD-SPEC.md §0.6), so
+  // the test stands one up directly via the existing getOrInitSlot
+  // capability — the same thing a real maker-signing step would do.
+  const fresh = await runKernelNode(n1, {});
+  const subjectHash = `sha256:${fresh.artifact.execution_hash}`;
+  const makerKeys = await globalThis.crypto.subtle.generateKey({ name: "Ed25519" }, true, ["sign", "verify"]);
+  const makerId = await rawPubkeyToDidKey(makerKeys.publicKey);
+  getOrInitSlot(db, subjectHash, { keyid: makerId, sig: "probe-sig", alg: "EdDSA" });
 
   const res = await post("/ha/replay", { run_id: "route-run-replay", step_id: n1.step_id }, headers());
   assert.equal(res.status, 200);
