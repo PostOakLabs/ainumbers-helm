@@ -24,6 +24,26 @@ test("tab-meta: every disabled tab has no matching VIEWS entry", () => {
   }
 });
 
+// HELM-AGENTS-TAB-3: "agents" was the last `disabled: true` tab, and it just
+// flipped — the assertion above is now vacuously true over the real TABS
+// array (there is nothing left to exclude) and would stay green even if the
+// exclusion logic itself broke. This fixture reproduces the exact filter
+// from the first test above against a synthetic reserved slot, so the next
+// row that reserves a nav slot has live proof the mechanism still works,
+// independent of what's currently in tab-meta.mjs.
+test("tab-meta: the disabled-tab exclusion mechanism itself still works, demonstrated on a fixture", () => {
+  const fixtureTabs = [
+    { id: "shipped", label: "Shipped", group: "Test", intro: "A routable tab.", requiresPairing: false },
+    { id: "reserved", label: "Reserved", group: "Test", intro: "A future reserved slot.", requiresPairing: false, disabled: true },
+  ];
+  const fixtureViews = { shipped: () => {} };
+
+  const tabIds = new Set(fixtureTabs.filter((t) => !t.disabled).map((t) => t.id));
+  const viewIds = new Set(Object.keys(fixtureViews));
+  assert.deepEqual([...tabIds].sort(), [...viewIds].sort(), "the disabled fixture tab must be excluded from the parity set");
+  assert.equal(fixtureViews["reserved"], undefined, "a disabled fixture tab must not resolve to a view");
+});
+
 test("tab-meta: every intro is non-empty and at most 150 characters", () => {
   for (const tab of TABS) {
     assert.ok(typeof tab.intro === "string" && tab.intro.length > 0, `${tab.id}: intro must be non-empty`);
