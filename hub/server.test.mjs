@@ -506,6 +506,34 @@ test("negative: null Origin rejected against a served-UI (non-null) allowedOrigi
   }
 });
 
+// --- HELM-ORIGIN-1: same-origin GET requests carry no Origin header at all
+// (fetch spec omits it for same-origin GET/HEAD) and Referrer-Policy:
+// no-referrer (static.mjs) rules out Referer as a fallback too — Sec-Fetch-
+// Site is the only browser-guaranteed, JS-unspoofable signal left standing.
+
+test("GET /health with NO Origin header but Sec-Fetch-Site: same-origin succeeds (real browser same-origin GET shape)", async () => {
+  const res = await get("/health", { Host: `127.0.0.1:${PORT}`, Authorization: `Bearer ${token}`, "Sec-Fetch-Site": "same-origin" });
+  assert.equal(res.status, 200);
+});
+
+test("negative: GET /health with NO Origin header and NO Sec-Fetch-Site header stays rejected (fail-closed unchanged)", async () => {
+  const res = await get("/health", { Host: `127.0.0.1:${PORT}`, Authorization: `Bearer ${token}` });
+  assert.equal(res.status, 403);
+  assert.equal(JSON.parse(res.body).error, "origin_mismatch");
+});
+
+test("negative: GET /health with NO Origin header but Sec-Fetch-Site: cross-site is rejected", async () => {
+  const res = await get("/health", { Host: `127.0.0.1:${PORT}`, Authorization: `Bearer ${token}`, "Sec-Fetch-Site": "cross-site" });
+  assert.equal(res.status, 403);
+  assert.equal(JSON.parse(res.body).error, "origin_mismatch");
+});
+
+test("negative: a present-but-wrong Origin is never forgiven by the Sec-Fetch-Site fallback", async () => {
+  const res = await get("/health", { Host: `127.0.0.1:${PORT}`, Origin: "https://evil.example", Authorization: `Bearer ${token}`, "Sec-Fetch-Site": "same-origin" });
+  assert.equal(res.status, 403);
+  assert.equal(JSON.parse(res.body).error, "origin_mismatch");
+});
+
 test("negative: POST /vault/connections/begin with http authorizationEndpoint rejected (F4)", async () => {
   const res = await post(
     "/vault/connections/begin",
@@ -541,6 +569,31 @@ test("GET /version: still reachable from the loopback UI's own origin (no bearer
 
 test("negative: GET /version from an arbitrary third-party origin rejected", async () => {
   const res = await get("/version", { Host: `127.0.0.1:${PORT}`, Origin: "https://evil.example" });
+  assert.equal(res.status, 403);
+  assert.equal(JSON.parse(res.body).error, "origin_mismatch");
+});
+
+// HELM-ORIGIN-1: the detection surface has the same same-origin-GET blind
+// spot — the loopback UI's own real-browser GET /version omits Origin too.
+test("GET /version: NO Origin header but Sec-Fetch-Site: same-origin succeeds, and echoes allowedOrigin (not undefined) in CORS", async () => {
+  const res = await new Promise((resolve, reject) => {
+    const req = request(
+      { host: "127.0.0.1", port: PORT, path: "/version", method: "GET", headers: { Host: `127.0.0.1:${PORT}`, "Sec-Fetch-Site": "same-origin" } },
+      (r) => {
+        let body = "";
+        r.on("data", (c) => (body += c));
+        r.on("end", () => resolve({ status: r.statusCode, body, headers: r.headers }));
+      }
+    );
+    req.on("error", reject);
+    req.end();
+  });
+  assert.equal(res.status, 200);
+  assert.equal(res.headers["access-control-allow-origin"], ORIGIN);
+});
+
+test("negative: GET /version with NO Origin and NO Sec-Fetch-Site stays rejected", async () => {
+  const res = await get("/version", { Host: `127.0.0.1:${PORT}` });
   assert.equal(res.status, 403);
   assert.equal(JSON.parse(res.body).error, "origin_mismatch");
 });
