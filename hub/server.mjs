@@ -87,8 +87,24 @@ function logPath(req) {
   }
 }
 
+// HELM-ORIGIN-1: browsers omit the Origin header on same-origin GET/HEAD
+// requests (fetch spec — Origin is only appended for CORS requests, POST/
+// other unsafe methods, and navigations) while always including it on POST,
+// which is why the loopback UI's own GETs (/health, /events, /version-check,
+// ...) were rejected while its POSTs succeeded. Referer can't stand in for
+// it either: static.mjs serves the UI shell with Referrer-Policy:
+// no-referrer, so Referer is absent on the exact same requests. Sec-Fetch-Site
+// is the fix — every modern browser sets it unconditionally, it is a
+// forbidden header name a page's own JS cannot set or override (same
+// guarantee Origin itself relies on), and it is untouched by
+// Referrer-Policy. Fall back to it ONLY when Origin is genuinely absent —
+// a present-but-wrong Origin is never forgiven by this fallback.
+function isSameOriginFallback(req) {
+  return req.headers.origin === undefined && req.headers["sec-fetch-site"] === "same-origin";
+}
+
 function checkOrigin(req, allowedOrigin) {
-  return req.headers.origin === allowedOrigin;
+  return req.headers.origin === allowedOrigin || isSameOriginFallback(req);
 }
 
 function applyCors(res, allowedOrigin) {
@@ -245,7 +261,7 @@ async function handlePairRedeem(req, res) {
 
 function checkDetectionOrigin(req, allowedOrigin) {
   const origin = req.headers.origin;
-  return origin === allowedOrigin || origin === DETECTION_ORIGIN;
+  return origin === allowedOrigin || origin === DETECTION_ORIGIN || isSameOriginFallback(req);
 }
 
 // GET /version + GET /pair/challenge: reachable cross-origin from the
@@ -258,7 +274,10 @@ function handleDetectionRoute(req, res, pathname, identityKeys, allowedOrigin) {
     log.warn("rejected: detection-route origin mismatch", { origin: req.headers.origin, path: pathname });
     return deny(res, 403, "origin_mismatch");
   }
-  res.setHeader("Access-Control-Allow-Origin", req.headers.origin);
+  // A same-origin fallback request (isSameOriginFallback) has no Origin
+  // header to echo — fall back to allowedOrigin, since that's what the
+  // request actually matched against in checkDetectionOrigin above.
+  res.setHeader("Access-Control-Allow-Origin", req.headers.origin || allowedOrigin);
   res.setHeader("Vary", "Origin");
   if (pathname === "/version") {
     return sendJson(res, 200, { daemon: DAEMON_VERSION, api: SUPPORTED_API_VERSIONS });
@@ -274,7 +293,7 @@ function handleDetectionRoute(req, res, pathname, identityKeys, allowedOrigin) {
 // probe (P3-D3) work at all in a Chrome-managed profile with LNA enabled.
 function handleDetectionPreflight(req, res, allowedOrigin) {
   if (!checkDetectionOrigin(req, allowedOrigin)) return deny(res, 403, "origin_mismatch");
-  res.setHeader("Access-Control-Allow-Origin", req.headers.origin);
+  res.setHeader("Access-Control-Allow-Origin", req.headers.origin || allowedOrigin);
   res.setHeader("Vary", "Origin");
   res.setHeader("Access-Control-Allow-Methods", "GET, OPTIONS");
   res.setHeader("Access-Control-Allow-Private-Network", "true");
