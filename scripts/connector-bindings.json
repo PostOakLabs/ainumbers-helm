@@ -1,0 +1,15 @@
+{
+  "_comment": "HELM-BIND-4 curated overlay (HELM-DATA-BINDING-BUILD-SPEC.md §5) — same 'survives the wholesale packs/ wipe+regen' pattern as ha-gate-overlay.json / chainless-packs.json. Keyed by workflow_id. compile-packs.mjs is the ONLY place that reads this file; it never writes it back. A workflow_id absent here keeps connectors:[] and BOTH connector_inputs/required_inputs ABSENT (§0.3) — its digest does not move. Adding an entry here is a deliberate, reviewed decision that a pack's kernel has no other way to get a real input value than an external fetch.",
+  "pack-2052a-classify-daily": {
+    "connector_id": "google-drive.fetch",
+    "contract_file": "google-drive-fetch.contract.json",
+    "feeds_node_id": "n1",
+    "feeds_param": "rows",
+    "required_input": {
+      "input_id": "drive_file_id",
+      "description": "Google Drive file id of the daily FR 2052a inflow/outflow rows export to fetch via the google-drive.fetch connector.",
+      "target_node_id": "n1",
+      "target_param": "rows"
+    }
+  }
+}

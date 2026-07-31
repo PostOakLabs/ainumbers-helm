@@ -2,7 +2,7 @@
 
 Local-first control plane for verifiable connected workflows: a self-installed hub daemon (`helmd`) plus a static browser UI (`app.html`) that run deterministic OCG kernels against connector-retrieved data and emit independently verifiable, regulator-legible evidence bundles.
 
-**Status:** Phase 1 foundation — pre-release, private.
+**Status:** Public repository since 2026-07-24; Phases 1-4 shipped.
 
 - Build spec: `HELM-PHASE1-BUILD-SPEC.md` (workspace root, AINumbers estate)
 - Normative profile: OCG SPEC.md §26 `ocg-control-plane@1` (draft: `SPEC-S26-CONTROL-PLANE-PROFILE-DRAFT.md`)

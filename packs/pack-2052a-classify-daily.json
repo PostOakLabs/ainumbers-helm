@@ -16,11 +16,32 @@
         "kernel_digest": "sha256:e6b15395a2f44a43b2968b7f10f6d7ef12137cd68b1a0ff292e5031b775f4f97"
       }
     ],
-    "connectors": [],
+    "connectors": [
+      {
+        "connector_id": "google-drive.fetch",
+        "contract_digest": "sha256:8fd90b4f5bd21849b385ee1441ca7ad17946d84e22eb912c57c17ac5065bfa90"
+      }
+    ],
     "gates": [],
-    "actions": []
+    "actions": [],
+    "connector_inputs": [
+      {
+        "step_id": "bind-n1-rows",
+        "connector_id": "google-drive.fetch",
+        "feeds_node_id": "n1",
+        "feeds_param": "rows"
+      }
+    ],
+    "required_inputs": [
+      {
+        "input_id": "drive_file_id",
+        "description": "Google Drive file id of the daily FR 2052a inflow/outflow rows export to fetch via the google-drive.fetch connector.",
+        "target_node_id": "n1",
+        "target_param": "rows"
+      }
+    ]
   },
-  "workflow_manifest_digest": "sha256:f4dc5e0d8b47d67277e4b22abb329a83d081e54935c82c164247d4b5a331ce91",
+  "workflow_manifest_digest": "sha256:d7399c1642b36f2fcb446587aa9ac7d969f1d0d00e04772bf437e7efface03c6",
   "declared_inputs": [],
   "steps_meta": [
     {
