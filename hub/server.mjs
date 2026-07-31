@@ -196,6 +196,35 @@ function handleListConnections(req, res) {
   sendJson(res, 200, { connections: listConnections() });
 }
 
+// HELM-BIND-3 §4.2: ui/views/connect.mjs's "Daemon connectors" section fetches
+// "/connectors" — a route that never existed (only POST /connectors/inbound-
+// webhook did), so the tab could not succeed against any shipped daemon.
+// Measured directly (unmodified origin/main daemon, real HTTP request): GET
+// /connectors returned a bare 404 {"error":"not_found"}, no cached prior
+// response, so fetchWithFallback's state was "unavailable" -> classifyBlockedState
+// returned "too-old" -> the tab rendered "helmd answered, but the connector
+// catalog isn't served by this version of Helm yet." for every visitor,
+// forever. Measured after this route exists: GET /connectors returns 200
+// with the catalog below, so the tab renders real cards instead. This lists
+// the connector contracts bundled with this daemon build (the ones
+// connectors/*.mjs can actually execute) — status is deliberately static
+// "not connected": none of these local allowlist contracts corresponds to an
+// oauth-pkce.mjs provider key (listConnections() tracks browser-OAuth
+// connections, a different set), so there is no live status to report yet.
+function connectorCatalogEntries(inboundWebhookContractPath) {
+  const paths = [
+    join(HERE, "connectors", "http-send.contract.json"),
+    join(HERE, "connectors", "google-drive-fetch.contract.json"),
+    join(HERE, "connectors", "smtp-send.contract.json"),
+    inboundWebhookContractPath,
+  ];
+  return paths.map((p) => ({ contract: loadContract(p).contract, status: "not connected" }));
+}
+
+function handleListConnectors(req, res, params, reqDb, inboundWebhookContractPath) {
+  sendJson(res, 200, { connectors: connectorCatalogEntries(inboundWebhookContractPath) });
+}
+
 // POST /pair/redeem {nonce} — records that a given pairing LINK was
 // consumed (P3-D9 single-use). Requires the durable bearer token like any
 // other route (the nonce alone unlocks nothing); a failed redeem is
@@ -891,6 +920,7 @@ export const ROUTES = {
   "POST /evidence/export/ticket": handleEvidenceExportTicket,
   "POST /vault/connections/begin": handleBeginConnection,
   "GET /vault/connections": handleListConnections,
+  "GET /connectors": (req, res) => handleListConnectors(req, res, null, null, DEFAULT_INBOUND_WEBHOOK_CONTRACT_PATH),
   "GET /workflows": handleWorkflows,
   "GET /templates": handleTemplates,
   "GET /workflow-manifest": handleWorkflowManifest,
@@ -960,6 +990,7 @@ export function createHelmServer({
     "POST /shutdown": (req, res, params, reqDb) => handleShutdown(req, res, params, reqDb, exitFn),
     "GET /autostart": (req, res, params, reqDb) => handleAutostartStatus(req, res, params, reqDb, autostartOps),
     "POST /autostart": (req, res, params, reqDb) => handleAutostartSet(req, res, params, reqDb, autostartOps),
+    "GET /connectors": (req, res, params, reqDb) => handleListConnectors(req, res, params, reqDb, inboundWebhookContractPath),
   };
   const server = createServer((req, res) => {
     if (!checkHost(req, port)) {

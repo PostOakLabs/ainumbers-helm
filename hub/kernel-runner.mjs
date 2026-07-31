@@ -112,7 +112,14 @@ export function createKernelStepRunner({ otherKindsRunner = null, now } = {}) {
   function canDispatch(step) {
     if (step.kind === "nodes") return true;
     if (step.kind === "attested_artifacts") return true;
-    return !!otherKindsRunner;
+    if (!otherKindsRunner) return false;
+    // HELM-BIND-3: an otherKindsRunner MAY carry its own canDispatch (the
+    // connector dispatcher does) to answer per-step, not just per-kind — a
+    // step naming an unknown connector/action id must predict the same
+    // throw dry-run would otherwise miss. A plain runner with no such
+    // predicate keeps today's per-kind-only behavior.
+    if (typeof otherKindsRunner.canDispatch === "function") return otherKindsRunner.canDispatch(step);
+    return true;
   }
   async function stepRunner(step, ctx) {
     if (step.kind === "nodes") return runKernelNode(step, { now });

@@ -242,6 +242,37 @@
         }
       }
     },
+    "/connectors": {
+      "get": {
+        "summary": "List the connector contracts bundled with this daemon build, for review before authorizing any of them (HELM-BIND-3 §4.2).",
+        "tags": [
+          "Vault"
+        ],
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Missing or invalid bearer token."
+          },
+          "403": {
+            "description": "Host or Origin mismatch (D8 loopback hardening)."
+          }
+        }
+      }
+    },
     "/workflows": {
       "get": {
         "summary": "List available workflows.",

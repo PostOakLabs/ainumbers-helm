@@ -140,6 +140,33 @@ test("GET /vault/connections is authenticated and starts empty", async () => {
   assert.deepEqual(JSON.parse(res.body), { connections: [] });
 });
 
+// HELM-BIND-3 §4.2: before this route existed, ui/views/connect.mjs's fetch
+// to "/connectors" hit the generic 404 every other undefined path gets —
+// the Connect tab's "Daemon connectors" section could never render anything
+// but a blocked-state card. This is the route ui/views/connect.mjs's
+// fetchWithFallback("/connectors", ...) call already expects: {connectors:
+// [{contract, status}]}, one entry per bundled connector contract, in the
+// exact shape connectorCard() in that view reads.
+test("GET /connectors: lists the bundled connector contracts in the shape the Connect tab reads", async () => {
+  const res = await get("/connectors", headers());
+  assert.equal(res.status, 200);
+  const body = JSON.parse(res.body);
+  const ids = body.connectors.map((e) => e.contract.connector_id).sort();
+  assert.deepEqual(ids, ["google-drive.fetch", "http.send", "inbound-webhook", "smtp.send"]);
+  for (const entry of body.connectors) {
+    assert.ok(Array.isArray(entry.contract.allowed_hosts) && entry.contract.allowed_hosts.length > 0);
+    assert.ok(Array.isArray(entry.contract.allowed_methods) && entry.contract.allowed_methods.length > 0);
+    assert.equal(typeof entry.status, "string");
+  }
+});
+
+test("negative: GET /connectors is authenticated like every other route", async () => {
+  const h = headers();
+  delete h.Authorization;
+  const res = await get("/connectors", h);
+  assert.equal(res.status, 401);
+});
+
 test("GET /vault/connections/flow/:id 404s for an unknown flow", async () => {
   const res = await get("/vault/connections/flow/does-not-exist", headers());
   assert.equal(res.status, 404);
