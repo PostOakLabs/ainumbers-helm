@@ -62,7 +62,13 @@ export async function runKernelNode(step, { now = new Date().toISOString() } = {
     );
   }
 
-  const artifact = await kernelModule.buildArtifact(item.policy_parameters ?? {}, {
+  // HELM-BIND-2 (§3.1): run.mjs resolves a bound step's connector_inputs and
+  // attaches the result as `step.resolvedParams`, keyed by feeds_param — those
+  // override the node's static policy_parameters. An unbound step never gets
+  // this property, so `?? {}` below is unchanged for all 230 existing packs.
+  const policyParameters = { ...(item.policy_parameters ?? {}), ...(step.resolvedParams ?? {}) };
+
+  const artifact = await kernelModule.buildArtifact(policyParameters, {
     now,
     parent_hashes: item.parent_hashes ?? [],
     parent_tool_ids: item.parent_tool_ids ?? [],

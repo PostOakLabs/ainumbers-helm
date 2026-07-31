@@ -129,3 +129,30 @@ test("manifestDigest is stable for the fixture manifest (sanity check for round-
   const d = manifestDigest(npvManifest());
   assert.match(d, /^sha256:[0-9a-f]{64}$/);
 });
+
+// ---------------------------------------------------------------------------
+// HELM-BIND-2 (§3.1): a bound step's resolved value reaches buildArtifact via
+// step.resolvedParams, overriding the node's static policy_parameters for
+// just the bound feeds_param key.
+// ---------------------------------------------------------------------------
+
+test("runKernelNode: step.resolvedParams overrides policy_parameters for the bound key and changes the artifact", async () => {
+  const manifest = npvManifest();
+  const [step] = planSteps(manifest);
+
+  const baseline = await runKernelNode(step, { now: "2026-07-23T00:00:00.000Z" });
+
+  const bound = { ...step, resolvedParams: { discount_rate_pct: 50 } };
+  const overridden = await runKernelNode(bound, { now: "2026-07-23T00:00:00.000Z" });
+
+  assert.notEqual(overridden.artifact.output_payload.npv, baseline.artifact.output_payload.npv);
+  assert.notEqual(overridden.artifact.execution_hash, baseline.artifact.execution_hash);
+});
+
+test("runKernelNode: no resolvedParams (unbound step) is byte-identical to today's `?? {}` behaviour", async () => {
+  const manifest = npvManifest();
+  const [step] = planSteps(manifest);
+  assert.equal(step.resolvedParams, undefined);
+  const result = await runKernelNode(step, { now: "2026-07-23T00:00:00.000Z" });
+  assert.equal(result.artifact.output_payload.npv, (await runKernelNode({ ...step }, { now: "2026-07-23T00:00:00.000Z" })).artifact.output_payload.npv);
+});
