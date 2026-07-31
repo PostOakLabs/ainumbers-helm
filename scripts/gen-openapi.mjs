@@ -28,6 +28,7 @@ const ROUTE_DOCS = {
   "POST /events/ticket": { summary: "Mint a short-lived, single-use ticket for /events — EventSource can't set an Authorization header, so this keeps the durable bearer token out of that one query string (HELM-UX-1 §7.4).", tags: ["Runs"] },
   "POST /vault/connections/begin": { summary: "Start an OAuth PKCE loopback connection flow.", tags: ["Vault"] },
   "GET /vault/connections": { summary: "List connected OAuth providers.", tags: ["Vault"] },
+  "GET /connectors": { summary: "List the connector contracts bundled with this daemon build, for review before authorizing any of them (HELM-BIND-3 §4.2).", tags: ["Vault"] },
   "GET /vault/connections/flow/{flowId}": { summary: "Poll the status of an in-flight connection flow.", tags: ["Vault"] },
   "POST /vault/connections/{id}/revoke": { summary: "Revoke a connected provider.", tags: ["Vault"] },
   "GET /workflows": { summary: "List available workflows.", tags: ["Workflows"] },
