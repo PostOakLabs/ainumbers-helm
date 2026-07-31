@@ -11,7 +11,7 @@ import { randomUUID } from "node:crypto";
 import { getPack } from "./packs.mjs";
 import { getTemplate, buildTemplateManifest } from "./templates.mjs";
 import { executeRun } from "./run.mjs";
-import { createKernelStepRunner } from "./kernel-runner.mjs";
+import { createKernelStepRunner, validateKernelInputs } from "./kernel-runner.mjs";
 import { publishRunEvent } from "./event-bus.mjs";
 import { haGateCheckFor } from "./ha-gate.mjs";
 import { log } from "./log.mjs";
@@ -37,9 +37,61 @@ export function resolveRunManifest({ workflowId, templateSlug }) {
   return { workflowId, manifest: pack.manifest };
 }
 
-export function startWorkflowRun(db, { workflowId, templateSlug, dryRun }) {
+// HELM-BIND-0 §1.2: caller-supplied inputs are keyed by node_id and land in
+// that node's policy_parameters, replacing the manifest's own default
+// (usually none). Validated against the node's kernel BEFORE the manifest
+// clone is handed to executeRun — an invalid blob never reaches `validated`,
+// let alone buildArtifact, because startWorkflowRun throws synchronously
+// before a run row is ever inserted.
+function applyInputs(manifest, inputs) {
+  if (!inputs) return manifest;
+  const clone = JSON.parse(JSON.stringify(manifest));
+  clone.nodes = (clone.nodes ?? []).map((node) => {
+    if (!Object.prototype.hasOwnProperty.call(inputs, node.node_id)) return node;
+    const supplied = inputs[node.node_id];
+    const check = validateKernelInputs(node.kernel_id, supplied);
+    if (!check.ok) throw { status: 400, error: "invalid_inputs", detail: `node "${node.node_id}": ${check.error}` };
+    return { ...node, policy_parameters: supplied };
+  });
+  return clone;
+}
+
+// HELM-BIND-0 §1.4: a "nodes" step whose policy_parameters (whatever their
+// origin — caller-supplied above, or the manifest's own unfilled default)
+// would make its kernel throw is NOT a hard failure — it's a run that needs
+// data it doesn't have yet. Only holds for nodes the caller did NOT supply:
+// a caller who supplied inputs and still failed validation already got
+// rejected above (§1.2), so a hold here only ever means "nobody tried".
+// Composed ahead of haGateCheckFor so an HA approval gate still runs once
+// data is present. Reuses the existing `running -> awaiting_data -> running`
+// transition (run.mjs) — no new lifecycle state.
+function missingDataGateCheck(suppliedNodeIds) {
+  return async (step) => {
+    if (step.kind !== "nodes" || suppliedNodeIds.has(step.item.node_id)) return { held: false };
+    const check = validateKernelInputs(step.item.kernel_id, step.item.policy_parameters);
+    if (check.ok) return { held: false };
+    return { held: true, reason: `awaiting_data: node "${step.item.node_id}" needs policy_parameters (${check.error})` };
+  };
+}
+
+function composeGateChecks(checks) {
+  return async (step, ctx) => {
+    for (const check of checks) {
+      const result = await check(step, ctx);
+      if (result?.held) return result;
+    }
+    return { held: false };
+  };
+}
+
+export function startWorkflowRun(db, { workflowId, templateSlug, dryRun, inputs }) {
   if (!db) throw { status: 503, error: "engine_unavailable" };
-  const { manifest } = resolveRunManifest({ workflowId, templateSlug });
+  if (inputs !== undefined && (typeof inputs !== "object" || inputs === null || Array.isArray(inputs))) {
+    throw { status: 400, error: "invalid_inputs", detail: "inputs must be an object keyed by node_id" };
+  }
+  const { manifest: resolvedManifest } = resolveRunManifest({ workflowId, templateSlug });
+  const manifest = applyInputs(resolvedManifest, inputs);
+  const suppliedNodeIds = new Set(inputs ? Object.keys(inputs) : []);
 
   const runId = randomUUID();
   const kernelStepRunner = createKernelStepRunner();
@@ -48,9 +100,10 @@ export function startWorkflowRun(db, { workflowId, templateSlug, dryRun }) {
     publishRunEvent(runId, { run_id: runId, state: "running", step_id: step.step_id });
     return output;
   };
+  const gateCheck = composeGateChecks([missingDataGateCheck(suppliedNodeIds), haGateCheckFor(db)]);
 
   runsInFlight++;
-  executeRun(db, { runId, manifest, dryRun: !!dryRun, stepRunner, gateCheck: haGateCheckFor(db) })
+  executeRun(db, { runId, manifest, dryRun: !!dryRun, stepRunner, gateCheck })
     .then((result) => publishRunEvent(runId, {
       run_id: runId, state: result.state, execution_hash: result.executionHash, held: result.held ?? null,
     }))

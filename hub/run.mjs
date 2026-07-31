@@ -93,9 +93,17 @@ export function planSteps(manifest) {
         step_id: `${key}:${item[idField]}`,
         kind: key,
         item,
-        // nodes carry kernel_digest; other kinds fold their whole item into
-        // the content digest below since they have no single pin field.
-        contentDigest: item.kernel_digest ?? jcsDigestHex(item),
+        // HELM-BIND-0: a "nodes" step used to content-digest on kernel_digest
+        // ALONE — two runs of the same manifest with DIFFERENT
+        // policy_parameters got the same content digest, hence the same
+        // input_digest (§0.4), hence collided in the memo table and replay
+        // silently returned the wrong step's output. Folding
+        // policy_parameters into the digest is what makes different inputs
+        // produce different memo rows. Other kinds have no single pin field,
+        // so their whole item already goes through jcsDigestHex(item) below.
+        contentDigest: key === "nodes" && item.kernel_digest
+          ? jcsDigestHex({ kernel_digest: item.kernel_digest, policy_parameters: item.policy_parameters ?? {} })
+          : (item.kernel_digest ?? jcsDigestHex(item)),
         seq: seq++,
       });
     }
