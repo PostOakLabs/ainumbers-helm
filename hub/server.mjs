@@ -17,10 +17,11 @@ import { startFlow, getFlowStatus, listConnections, revokeConnection, isSecureEn
 import { serveStatic } from "./static.mjs";
 import { listPacks, getPack } from "./packs.mjs";
 import { listTemplates, getTemplate, buildTemplateManifest } from "./templates.mjs";
-import { executeRun } from "./run.mjs";
+import { executeRun, manifestDigest } from "./run.mjs";
 import { createKernelStepRunner } from "./kernel-runner.mjs";
 import { publishRunEvent, subscribeRunEvents } from "./event-bus.mjs";
 import { startWorkflowRun, getRunsInFlightCount as getActionsRunsInFlightCount } from "./run-actions.mjs";
+import { createConnectorStepDispatcher } from "./connectors/dispatch.mjs";
 import { handleMcp, handleMcpMethodNotAllowed } from "./mcp.mjs";
 import { haGateCheckFor, findHeldGate, recordReplay, submitHaRecord } from "./ha-gate.mjs";
 import { recordsForSubject, getSlot } from "./ha-store.mjs";
@@ -517,6 +518,11 @@ async function handleRunStart(req, res, params, db) {
       // schemas declare only workflow_id/template_slug and destructure args
       // explicitly, so an MCP client cannot supply this field.
       inputs: body.inputs,
+      // HELM-BIND-WIRE-1 §4.3: this REST route is the human/UI path — the
+      // ONLY call site allowed to enable connector/action dispatch. mcp.mjs's
+      // call to the same startWorkflowRun never sets this, so an MCP
+      // tools/call gets callerOrigin undefined and dispatch stays off.
+      callerOrigin: "ui",
     });
   } catch (err) {
     if (err && err.status) return deny(res, err.status, err.error);
@@ -546,12 +552,22 @@ async function handleRunResume(req, res, params, db) {
 
   const manifest = JSON.parse(row.manifest_json);
   const runId = body.run_id;
-  const kernelStepRunner = createKernelStepRunner();
+  // HELM-BIND-WIRE-1 §4.1: /run/resume is REST-only — mcp.mjs has no
+  // resume tool at all (grep confirms no "resume" case in its tools/call
+  // switch), so this call site can never be reached via POST /mcp and needs
+  // no origin gate: unlike startWorkflowRun, there is no ambiguous caller
+  // here to fail closed against.
+  const workflowManifestDigest = manifestDigest(manifest);
+  const kernelStepRunner = createKernelStepRunner({ otherKindsRunner: createConnectorStepDispatcher({ db, workflowManifestDigest }) });
   const stepRunner = async (step, ctx) => {
     const output = await kernelStepRunner(step, ctx);
     publishRunEvent(runId, { run_id: runId, state: "running", step_id: step.step_id });
     return output;
   };
+  // HELM-BIND-WIRE-1: canDispatch parity, same reasoning as run-actions.mjs's
+  // startWorkflowRun — the wrapper stepRunner passed to executeRun must
+  // carry kernelStepRunner's canDispatch or dry-run silently stops checking it.
+  stepRunner.canDispatch = kernelStepRunner.canDispatch;
 
   runsInFlight++;
   try {

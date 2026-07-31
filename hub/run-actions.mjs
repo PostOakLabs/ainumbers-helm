@@ -10,20 +10,40 @@
 import { randomUUID } from "node:crypto";
 import { getPack } from "./packs.mjs";
 import { getTemplate, buildTemplateManifest } from "./templates.mjs";
-import { executeRun } from "./run.mjs";
+import { executeRun, manifestDigest } from "./run.mjs";
 import { createKernelStepRunner, validateKernelInputs } from "./kernel-runner.mjs";
 import { publishRunEvent } from "./event-bus.mjs";
 import { haGateCheckFor } from "./ha-gate.mjs";
 import { log } from "./log.mjs";
+import { createConnectorStepDispatcher } from "./connectors/dispatch.mjs";
 
 let runsInFlight = 0;
 export function getRunsInFlightCount() {
   return runsInFlight;
 }
 
+// HELM-BIND-WIRE-1 test-only seam (same shape as connector.mjs's
+// __setHostResolverForTest): lets a test resolve a workflow_id to an
+// arbitrary manifest — e.g. one carrying a "connectors"/"actions" step — so
+// the real server.mjs/mcp.mjs call sites can be exercised end-to-end without
+// a schema-valid compiled pack. No shipped pack has a connector step yet
+// (compile-packs.mjs:101 hardcodes connectors: []; HELM-BIND-4, not this
+// row, is what will make one) and packs.mjs has no such seam of its own
+// (out of this row's fence). Production never sets this; resolveRunManifest
+// falls through to the real getPack/getTemplate lookup whenever it's unset
+// or returns nothing for the given id.
+let manifestOverrideForTest = null;
+export function __setManifestOverrideForTest(fn) {
+  manifestOverrideForTest = fn;
+}
+
 // Throws a {status, error} shaped object for the caller to translate into
 // its own transport's error format (HTTP 4xx vs JSON-RPC -32602/-32601).
 export function resolveRunManifest({ workflowId, templateSlug }) {
+  if (!templateSlug && workflowId && manifestOverrideForTest) {
+    const manifest = manifestOverrideForTest(workflowId);
+    if (manifest) return { workflowId, manifest };
+  }
   if (templateSlug) {
     const template = getTemplate(templateSlug);
     if (!template) throw { status: 404, error: "template_not_found" };
@@ -84,7 +104,18 @@ function composeGateChecks(checks) {
   };
 }
 
-export function startWorkflowRun(db, { workflowId, templateSlug, dryRun, inputs }) {
+// callerOrigin (HELM-BIND-WIRE-1 §4.3): a caller-supplied literal, not
+// inferred from anything on the wire. server.mjs's REST /run/start is the
+// ONLY call site that passes "ui" (handleRunStart, below). mcp.mjs's
+// workflow.run/workflow.dry_run tool calls this same function (that sharing
+// is the whole point of this module, per the file-header comment) but is
+// fenced out of this row — its call site is unedited and has never passed
+// this field, so callerOrigin arrives here as undefined for every MCP
+// call, structurally, not by a check either of us added. Anything other
+// than the literal "ui" fails CLOSED: otherKindsRunner stays null, so
+// createKernelStepRunner throws on a "connectors"/"actions" step exactly as
+// it does today for every caller — no new agent-reachable capability.
+export function startWorkflowRun(db, { workflowId, templateSlug, dryRun, inputs, callerOrigin }) {
   if (!db) throw { status: 503, error: "engine_unavailable" };
   if (inputs !== undefined && (typeof inputs !== "object" || inputs === null || Array.isArray(inputs))) {
     throw { status: 400, error: "invalid_inputs", detail: "inputs must be an object keyed by node_id" };
@@ -94,12 +125,24 @@ export function startWorkflowRun(db, { workflowId, templateSlug, dryRun, inputs 
   const suppliedNodeIds = new Set(inputs ? Object.keys(inputs) : []);
 
   const runId = randomUUID();
-  const kernelStepRunner = createKernelStepRunner();
+  const workflowManifestDigest = manifestDigest(manifest);
+  const kernelStepRunner = createKernelStepRunner(
+    callerOrigin === "ui" ? { otherKindsRunner: createConnectorStepDispatcher({ db, workflowManifestDigest }) } : {}
+  );
   const stepRunner = async (step, ctx) => {
     const output = await kernelStepRunner(step, ctx);
     publishRunEvent(runId, { run_id: runId, state: "running", step_id: step.step_id });
     return output;
   };
+  // HELM-BIND-WIRE-1: canDispatch must stay in step with stepRunner
+  // (DRYRUN-PARITY-1) — but run.mjs's dry-run path reads it off the exact
+  // object passed as `stepRunner` into executeRun, which is this wrapper,
+  // not kernelStepRunner. Without this line the wrapper carries no
+  // canDispatch at all, so `dryRun && stepRunner.canDispatch && ...` never
+  // fires and dry-run silently skips the "would a real run throw on this
+  // kind" check — a latent gap that never surfaced because otherKindsRunner
+  // was never wired before this row.
+  stepRunner.canDispatch = kernelStepRunner.canDispatch;
   const gateCheck = composeGateChecks([missingDataGateCheck(suppliedNodeIds), haGateCheckFor(db)]);
 
   runsInFlight++;
