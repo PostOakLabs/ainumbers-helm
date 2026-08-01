@@ -187,7 +187,7 @@ export function buildCommitteePackHtml({ bundle, entries, checkpoints, manifest,
   <h1>Committee Pack</h1>
   <table class="cp-title-meta">
     <tr><th>Entity</th><td>${esc(meta.entity ?? "—")}</td><th>Period</th><td>${esc(meta.period ?? "—")}</td></tr>
-    <tr><th>Preparer</th><td>${esc(meta.preparer ?? "—")}</td><th>Date</th><td>${esc(generatedAt ?? "—")}</td></tr>
+    <tr><th>Prepared by</th><td>${esc(meta.preparer ?? "—")}</td><th>Date</th><td>${esc(generatedAt ?? "—")}</td></tr>
     <tr><th>Version / digest</th><td colspan="3"><code>${esc(manifestDigest ?? predicate.workflow_manifest_digest ?? "—")}</code></td></tr>
   </table>
 </header>
@@ -214,7 +214,7 @@ ${renderDecisionTable(entries)}
 </details>
 
 <section class="cp-attestation">
-  <h2>Attestation</h2>
+  <h2>Sign-off</h2>
   <p>This report was generated from a signed evidence bundle. The appendix above verifies independently against <code>bundle.json</code> using the offline verifier shipped in the same export — re-verification does not depend on this document or its author.</p>
   <p><span class="cp-sign-line"></span> Reviewed by / date</p>
   <p><span class="cp-sign-line"></span> Approved by / date</p>

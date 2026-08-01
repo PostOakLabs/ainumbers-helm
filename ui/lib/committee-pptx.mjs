@@ -63,7 +63,7 @@ function addTitleSlide(pptx, title) {
   slide.addText("Committee Pack", { x: 0.5, y: 0.5, w: 9, h: 0.8, fontSize: 28, bold: true });
   const rows = [
     ["Entity", title.entity, "Period", title.period],
-    ["Preparer", title.preparer, "Date", title.generatedAt],
+    ["Prepared by", title.preparer, "Date", title.generatedAt],
   ];
   slide.addTable(rows, { x: 0.5, y: 1.5, w: 9, fontSize: 12, border: { type: "solid", color: "CCCCCC", pt: 0.5 } });
   slide.addText(`Version / digest: ${title.versionDigest}`, { x: 0.5, y: 2.6, w: 9, h: 0.4, fontSize: 10, color: "666666" });
