@@ -1,7 +1,7 @@
 {
   "sourceRepo": "https://github.com/PostOakLabs/ainumbers.git",
   "license": "MIT License, Copyright (c) 2026 PostOakLabs (same license/holder as this repo; see this repo's own LICENSE for full terms; no third-party code in this vendored subtree)",
-  "pinnedSha": "2e342b2ad1ebfa71465cd5b5b5addeab6341317f",
+  "pinnedSha": "2d2736b187d322d2100b4dbadbaf53c3371035d0",
   "paths": [
     "chaingraph/kernels",
     "chaingraph/standard/SPEC.md",

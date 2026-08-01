@@ -46,6 +46,10 @@ const DEFAULT_TRUST_LABEL = {
   external_action_intent: "hash_verified",
   external_action_receipt: "external_ack_captured",
   disclosure_receipt: "hash_verified",
+  // HELMCHECK-BUILD-1: a `helm check` recompute result is produced the same
+  // way step_result is — a direct kernel-runner.mjs invocation that already
+  // proved reproduction before returning — so it earns the same label.
+  check_result: "kernel_verified",
 };
 
 // Structural redaction backstop (§26.7 "no secret values, no raw credential

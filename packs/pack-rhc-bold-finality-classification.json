@@ -13,7 +13,7 @@
       {
         "node_id": "n1",
         "kernel_id": "art-59-settlement-asset-finality-classifier",
-        "kernel_digest": "sha256:6e5f40137139c4daa1f923ead6929ad30a66ce97c477702730064bc683fb6f05"
+        "kernel_digest": "sha256:f03969b8c19acf958fd9f90055c4580aa2432c04700b20a42156fa57473ace45"
       },
       {
         "node_id": "n2",
@@ -25,7 +25,7 @@
     "gates": [],
     "actions": []
   },
-  "workflow_manifest_digest": "sha256:297f6ba0ac2783bc748f52836e2d4e1ea3ff775ac4f09f915fde4fb14afd41fd",
+  "workflow_manifest_digest": "sha256:74f0e833773b2daa0be1c36172e7edadc0413457225fcafb4b83370883530854",
   "declared_inputs": [
     {
       "from": "art-56-tokenized-settlement-fit-diagnostic",

@@ -39,6 +39,26 @@
         "gates": [],
         "actions": []
       }
+    },
+    {
+      "workflow_id": "pack-art-508-recompute-bordereau",
+      "name": "Delegated Authority Bordereau Recomputation",
+      "outcome": "Recomputes a delegated authority bordereau the way the carrier reviewer does, from the same file the coverholder sent: footing per currency, authority-limit utilisation, and population-integrity checks. Single-node chainless pack — HELMCHECK-BUILD-1's `helm check` pack for this kernel; no chain exists for a standalone node.",
+      "manifest": {
+        "manifest_version": "1",
+        "workflow_id": "pack-art-508-recompute-bordereau",
+        "trigger": { "type": "manual" },
+        "nodes": [
+          {
+            "node_id": "n1",
+            "kernel_id": "art-508-recompute-bordereau",
+            "kernel_digest": "sha256:400131baae5bef4da3dcb65a389b7eae6ef0e310ab7d91747a5a89bb26666102"
+          }
+        ],
+        "connectors": [],
+        "gates": [],
+        "actions": []
+      }
     }
   ]
 }

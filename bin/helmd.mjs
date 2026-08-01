@@ -31,6 +31,7 @@ const HELMD_ENTRY = join(ROOT, "hub", "index.mjs");
 const EXPORT_BPMN_ENTRY = join(ROOT, "scripts", "export-bpmn.mjs");
 const LIST_SCENARIOS_ENTRY = join(ROOT, "scripts", "list-scenarios.mjs");
 const RUN_TEMPLATE_ENTRY = join(ROOT, "scripts", "run-template.mjs");
+const CHECK_ENTRY = join(ROOT, "scripts", "check.mjs");
 
 // Read straight off hub/index.mjs's own dispatch, not a hand-copied guess —
 // see the row's warning: "read the dispatcher, do not grep a guessed list."
@@ -54,18 +55,24 @@ Commands:
                       list bundled sample-data scenarios (and other compiled packs)
   run-template <slug> [--dry-run] [--json]
                       run a bundled scenario end to end using its sample data, no daemon required
+  check <pack_id> <input_file> [--out <bundle.json>] [--no-anchor] [--json]
+                      recompute a pack's kernel against a reviewer's own extract and diff
+                      it against an asserted value — no daemon, no upload. Exit codes: 0
+                      match, 1 differs, 2 no asserted value (recompute-only), 3 insufficient
+                      input, 4 usage error, 5 scope disagreement.
 
 Options:
   -h, --help          show this help and exit 0
   -v, --version       print the version and exit 0
 
 Exit codes: 0 success; a subcommand's own failure exit is passed through
-unchanged; an unknown command is a usage error and exits 2.
+unchanged (check has its own six-way exit contract, see above); an unknown
+command is a usage error and exits 2.
 
 Stability: start/stop/status/doctor/open/uninstall/export-bpmn/list-scenarios/
-run-template and their plain-text output/exit codes are STABLE. --json output
-shapes are PROVISIONAL and may change without notice until this line is
-removed.`);
+run-template/check and their plain-text output/exit codes are STABLE. --json
+output shapes are PROVISIONAL and may change without notice until this line
+is removed.`);
 }
 
 function printVersion() {
@@ -114,8 +121,11 @@ if (PASSTHROUGH_COMMANDS.has(cmd)) {
 } else if (cmd === "run-template") {
   const result = spawnSync(process.execPath, [RUN_TEMPLATE_ENTRY, ...rest], { stdio: "inherit" });
   process.exit(result.status ?? 1);
+} else if (cmd === "check") {
+  const result = spawnSync(process.execPath, [CHECK_ENTRY, ...rest], { stdio: "inherit" });
+  process.exit(result.status ?? 1);
 } else {
-  console.error(`helmd: unknown command "${cmd}" (expected: start | stop | status | doctor | open | uninstall | export-bpmn | list-scenarios | run-template)`);
+  console.error(`helmd: unknown command "${cmd}" (expected: start | stop | status | doctor | open | uninstall | export-bpmn | list-scenarios | run-template | check)`);
   console.error("Run 'helmd --help' for usage.");
   process.exit(2);
 }

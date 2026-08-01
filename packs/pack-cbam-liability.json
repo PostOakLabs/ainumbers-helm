@@ -13,7 +13,7 @@
       {
         "node_id": "n1",
         "kernel_id": "art-70-cbam-default-value-resolver",
-        "kernel_digest": "sha256:749508d39ecd4cd00b1a5edd8752b21cd96eabf325052c24702fe3b2124624a0"
+        "kernel_digest": "sha256:d4e0e283b6e1384fcd684e12c55e68e57ce1522b619bdab563f28f5e79ab4838"
       },
       {
         "node_id": "n2",
@@ -30,7 +30,7 @@
     "gates": [],
     "actions": []
   },
-  "workflow_manifest_digest": "sha256:6b815aff795512884f52f7ae37e841c4cfdecb98c04a20521e735a67b08b5c28",
+  "workflow_manifest_digest": "sha256:2b6f18f57d15d04184a30f19cce679fc60cb2a334ca38b27721b283106cf4096",
   "declared_inputs": [
     {
       "from": "art-68-carbon-compliance-fit-diagnostic",

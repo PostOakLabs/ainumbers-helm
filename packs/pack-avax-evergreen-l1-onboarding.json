@@ -1,0 +1,58 @@
+{
+  "workflow_id": "pack-avax-evergreen-l1-onboarding",
+  "name": "Avalanche Evergreen L1 Onboarding",
+  "outcome": "Evergreen permissioning-control classifier > precompile segregation-of-duties check > validator change-control receipt > L1 continuous-fee runway model: composite Evergreen L1 onboarding walkthrough.",
+  "spec_version": "ocg-control-plane@1",
+  "manifest": {
+    "manifest_version": "1",
+    "workflow_id": "pack-avax-evergreen-l1-onboarding",
+    "trigger": {
+      "type": "manual"
+    },
+    "nodes": [
+      {
+        "node_id": "n1",
+        "kernel_id": "art-495-avax-permissioning-control-classifier",
+        "kernel_digest": "sha256:e2226e2a5e87529aafc4e91fc031b0238f9158ef93e1f8bfe0ffae3e57e692a0"
+      },
+      {
+        "node_id": "n2",
+        "kernel_id": "art-459-sod-matrix-check",
+        "kernel_digest": "sha256:991bda6ad22de1f56d310c7cfbe98b6a7a9e4fdace9805007b0cc161d05cd7cd"
+      },
+      {
+        "node_id": "n3",
+        "kernel_id": "art-497-validator-change-control-receipt",
+        "kernel_digest": "sha256:54af35dcf6e35f959764ddf334f63dafbdf57047a8f810e47e3f980586a861b3"
+      },
+      {
+        "node_id": "n4",
+        "kernel_id": "art-496-l1-continuous-fee-runway",
+        "kernel_digest": "sha256:645615515f1d1e2eff3358be3eb19499b93dc0e184ac08ae8b124ee65d4637c5"
+      }
+    ],
+    "connectors": [],
+    "gates": [],
+    "actions": []
+  },
+  "workflow_manifest_digest": "sha256:64c3ca02421d2c510afab81ba7c891ee8a5e0960d09ebbba25674984e6e09b0e",
+  "declared_inputs": [],
+  "steps_meta": [
+    {
+      "node_id": "n1",
+      "data_classification": "compute"
+    },
+    {
+      "node_id": "n2",
+      "data_classification": "compute"
+    },
+    {
+      "node_id": "n3",
+      "data_classification": "compute"
+    },
+    {
+      "node_id": "n4",
+      "data_classification": "compute"
+    }
+  ]
+}

@@ -57,12 +57,12 @@
         ],
         "oecd_tp_compliant": true,
         "table_version": "OECD-TP-IHB-INTEREST-ALLOC-2022",
-        "table_source": "OECD Transfer Pricing Guidelines 2022 Ch.I (arm's-length standard) + Ch.VIII (IHB cash pools); SWIFT IHB banking guide; ECB TARGET2 compensation methodology",
-        "regulatory_basis": "Interest allocation per OECD TP Guidelines 2022 Ch.VIII (cash pooling, arm's-length principle); pool leader earns spread between lending/borrowing rates; arm_length_rate should reflect comparable uncontrolled transactions. ACT/360 default per SWIFT TARGET2.",
+        "table_source": "OECD Transfer Pricing Guidelines 2022 Ch.I (arm's-length standard) + Ch.X §C (intra-group financial transactions, cash pooling); OECD BEPS Action 4 (interest deductibility); ACT/360, ACT/365 and 30/360 day-count conventions per ISDA Definitions 2006 §4.16",
+        "regulatory_basis": "Interest allocation per OECD TP Guidelines 2022 Ch.X §C (cash pooling, arm's-length principle); pool leader earns spread between lending/borrowing rates; arm_length_rate should reflect comparable uncontrolled transactions. Day-count per ISDA Definitions 2006 §4.16; ACT/360 default per euro money-market convention (the Eurosystem applies the day-count convention actual/360, per the ECB monetary policy glossary). Withholding tax per member jurisdiction. ZERO PII.",
         "pii_note": "ZERO PII: entity IDs, aggregate balances, rates, and period parameters only. No account holder, ultimate beneficiary, or personal data enters this kernel.",
         "not_legal_advice": "Not tax, legal, or accounting advice. IHB structures require review by qualified transfer-pricing advisors and local tax counsel."
       },
-      "golden_hash": "17fecfe583fb2794b9141afd28767955a1fca8b5200ca924b0c387a48b08a423"
+      "golden_hash": "9ecd4413215f42a26b41bef06bcf87ddc900246aa986612fc6389d591aaa3e6f"
     },
     {
       "name": "zba_sweep_with_withholding",
@@ -119,12 +119,12 @@
         ],
         "oecd_tp_compliant": true,
         "table_version": "OECD-TP-IHB-INTEREST-ALLOC-2022",
-        "table_source": "OECD Transfer Pricing Guidelines 2022 Ch.I (arm's-length standard) + Ch.VIII (IHB cash pools); SWIFT IHB banking guide; ECB TARGET2 compensation methodology",
-        "regulatory_basis": "Interest allocation per OECD TP Guidelines 2022 Ch.VIII (cash pooling, arm's-length principle); pool leader earns spread between lending/borrowing rates; arm_length_rate should reflect comparable uncontrolled transactions. ACT/360 default per SWIFT TARGET2.",
+        "table_source": "OECD Transfer Pricing Guidelines 2022 Ch.I (arm's-length standard) + Ch.X §C (intra-group financial transactions, cash pooling); OECD BEPS Action 4 (interest deductibility); ACT/360, ACT/365 and 30/360 day-count conventions per ISDA Definitions 2006 §4.16",
+        "regulatory_basis": "Interest allocation per OECD TP Guidelines 2022 Ch.X §C (cash pooling, arm's-length principle); pool leader earns spread between lending/borrowing rates; arm_length_rate should reflect comparable uncontrolled transactions. Day-count per ISDA Definitions 2006 §4.16; ACT/360 default per euro money-market convention (the Eurosystem applies the day-count convention actual/360, per the ECB monetary policy glossary). Withholding tax per member jurisdiction. ZERO PII.",
         "pii_note": "ZERO PII: entity IDs, aggregate balances, rates, and period parameters only. No account holder, ultimate beneficiary, or personal data enters this kernel.",
         "not_legal_advice": "Not tax, legal, or accounting advice. IHB structures require review by qualified transfer-pricing advisors and local tax counsel."
       },
-      "golden_hash": "b517cf0b61fbe4ef0ab715ba8e6f03e2f0ebb624b98aa39836b89b411fbac685"
+      "golden_hash": "08e7387f4df9c33aaff5f9b79ecb798d107981178952455fa8ef83650f601aab"
     },
     {
       "name": "zero_rate_zero_interest",
@@ -167,12 +167,12 @@
         ],
         "oecd_tp_compliant": true,
         "table_version": "OECD-TP-IHB-INTEREST-ALLOC-2022",
-        "table_source": "OECD Transfer Pricing Guidelines 2022 Ch.I (arm's-length standard) + Ch.VIII (IHB cash pools); SWIFT IHB banking guide; ECB TARGET2 compensation methodology",
-        "regulatory_basis": "Interest allocation per OECD TP Guidelines 2022 Ch.VIII (cash pooling, arm's-length principle); pool leader earns spread between lending/borrowing rates; arm_length_rate should reflect comparable uncontrolled transactions. ACT/360 default per SWIFT TARGET2.",
+        "table_source": "OECD Transfer Pricing Guidelines 2022 Ch.I (arm's-length standard) + Ch.X §C (intra-group financial transactions, cash pooling); OECD BEPS Action 4 (interest deductibility); ACT/360, ACT/365 and 30/360 day-count conventions per ISDA Definitions 2006 §4.16",
+        "regulatory_basis": "Interest allocation per OECD TP Guidelines 2022 Ch.X §C (cash pooling, arm's-length principle); pool leader earns spread between lending/borrowing rates; arm_length_rate should reflect comparable uncontrolled transactions. Day-count per ISDA Definitions 2006 §4.16; ACT/360 default per euro money-market convention (the Eurosystem applies the day-count convention actual/360, per the ECB monetary policy glossary). Withholding tax per member jurisdiction. ZERO PII.",
         "pii_note": "ZERO PII: entity IDs, aggregate balances, rates, and period parameters only. No account holder, ultimate beneficiary, or personal data enters this kernel.",
         "not_legal_advice": "Not tax, legal, or accounting advice. IHB structures require review by qualified transfer-pricing advisors and local tax counsel."
       },
-      "golden_hash": "8ca5a22d6d9c3542eac94c2c2b73a8ca38299fb9f496a844713414a07f1121c6"
+      "golden_hash": "f7d293babde243c6f89e9d8fe861b2657457361e0cc1daa80bcddb37b0f54c90"
     }
   ]
 }

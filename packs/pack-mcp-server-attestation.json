@@ -17,6 +17,11 @@
       },
       {
         "node_id": "n2",
+        "kernel_id": "art-18-mcp-developer-readiness-scorecard",
+        "kernel_digest": "sha256:c81916c6a7e22cfeeef2b25f1f7aabff7bdbe4b32867e558653e5324e016ab4c"
+      },
+      {
+        "node_id": "n3",
         "kernel_id": "art-33-mcp-server-self-attestation-pack",
         "kernel_digest": "sha256:0fa24d32f68661ef9900f03ddab76d94fc674c6cf4327d809bd7bd5d2451c316"
       }
@@ -25,7 +30,7 @@
     "gates": [],
     "actions": []
   },
-  "workflow_manifest_digest": "sha256:a474be22da1434be4a6ec5c8e1ef91f95927f8241b46811bf9fb4081dc0976d1",
+  "workflow_manifest_digest": "sha256:994304b8ea9b6ca7dfd185eaf3148cb1345cb6755501b55ce3a0415ee94de274",
   "declared_inputs": [],
   "steps_meta": [
     {
@@ -34,6 +39,10 @@
     },
     {
       "node_id": "n2",
+      "data_classification": "compute"
+    },
+    {
+      "node_id": "n3",
       "data_classification": "compute"
     }
   ]

@@ -3,10 +3,10 @@
   "system": "risc0",
   "receiptFormat": "groth16-bn254",
   "imageId": "sha256:a1a0bc89b5b1febaeda3519f6dbade0fa5ac16beeb143c4e1b01689573567bc6",
-  "seal": "G1tVP1wzBCLEDNJMpf8SuVhRKccA7umogFJjIixJPCQJ8OCYImAl39L2UoActVNC1CaHXHkha9DWCDWXhCu7RxUPXpw7P+ltao3XVVYcyULrcEhfMYMk0AbH2Y38yO/hErWT+IYMTKDuMi7lLBhLu9ckG/J+31FnNsXrt2RzQFwnGLoEEVmyjD1P0UdrFQZAK7X4L8RIElq+xtyC4m+Y+icirMkDo7OUszrcQJn8WE8OIL5X7HC8y2kWFaMxqXEYFRPbsKQHpdNteHhr3OMgrKtk6h8+MkDrctJ02P6jcTcb48UFaRv3c2piX0UBHinmS5kvCk620XJbjYZx//m9JQ==",
+  "seal": "GTp6qxHd+RUyLgUqrGdFL3RwR2jYrz6VYOS3fX15NJcgKdnhR/oZcvbQBTl2icVHG5CLlaCY5bwnWjep8Lec4A8NwuTvqkSgkHXbqNNjKkUTWCrs8YjJRHMbXuGlVNnvBRNBV7dD7XNsWbiQONTb6zMcP4UQB/iwNmocafpo4wQszZK7EGJ47U5DEl9jos/MyOApCQXo7Dd87fqVo0910htSatvZhRaAepp24nbhlcRUU5S0IK+lkd2WjG+bfw7nHD2mG3ebnSYEAK8QlUsRqrRgK0w1aHlg6sdhj0NJjGwb8k55z7l2D6pFiyBvbuYRUEZ5WLdkNkzZUARRsypvIw==",
   "journal": {
     "chaingraph_version": "0.4.0",
-    "kernel_digest": "sha256:79e7ffc0ec59dd6cc416d286ba26ebaaf057bcd30156e46466f2e900423fb64b",
+    "kernel_digest": "sha256:6e9a9c6e57168ff88d9a4933856fe6f04ecc88942a01e7937c076d1e80235b76",
     "output": {
       "allocations": [
         {
@@ -40,8 +40,8 @@
       "pii_note": "ZERO PII: entity IDs, aggregate balances, rates, and period parameters only. No account holder, ultimate beneficiary, or personal data enters this kernel.",
       "pool_net_balance": 300000,
       "pool_type": "notional",
-      "regulatory_basis": "Interest allocation per OECD TP Guidelines 2022 Ch.VIII (cash pooling, arm's-length principle); pool leader earns spread between lending/borrowing rates; arm_length_rate should reflect comparable uncontrolled transactions. ACT/360 default per SWIFT TARGET2.",
-      "table_source": "OECD Transfer Pricing Guidelines 2022 Ch.I (arm's-length standard) + Ch.VIII (IHB cash pools); SWIFT IHB banking guide; ECB TARGET2 compensation methodology",
+      "regulatory_basis": "Interest allocation per OECD TP Guidelines 2022 Ch.X §C (cash pooling, arm's-length principle); pool leader earns spread between lending/borrowing rates; arm_length_rate should reflect comparable uncontrolled transactions. Day-count per ISDA Definitions 2006 §4.16; ACT/360 default per euro money-market convention (the Eurosystem applies the day-count convention actual/360, per the ECB monetary policy glossary). Withholding tax per member jurisdiction. ZERO PII.",
+      "table_source": "OECD Transfer Pricing Guidelines 2022 Ch.I (arm's-length standard) + Ch.X §C (intra-group financial transactions, cash pooling); OECD BEPS Action 4 (interest deductibility); ACT/360, ACT/365 and 30/360 day-count conventions per ISDA Definitions 2006 §4.16",
       "table_version": "OECD-TP-IHB-INTEREST-ALLOC-2022",
       "total_interest_allocated": 1250
     }

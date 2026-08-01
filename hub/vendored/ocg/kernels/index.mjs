@@ -82,6 +82,7 @@ import * as art146    from './art-146-nis2-governance-readiness-checker.kernel.m
 import * as art147    from './art-147-mcp-server-identity-attestation-validator.kernel.mjs';
 import * as art148    from './art-148-mcp-authorization-metadata-validator.kernel.mjs';
 import * as art149    from './art-149-mcp-registry-entry-conformance.kernel.mjs';
+import * as art15     from './art-15-agentic-mandate-sandbox.kernel.mjs';
 import * as art150    from './art-150-mcp-tool-scope-revocation-auditor.kernel.mjs';
 import * as art151    from './art-151-agent-obo-mandate-validator.kernel.mjs';
 import * as art152    from './art-152-mcp-task-lifecycle-validator.kernel.mjs';
@@ -92,6 +93,7 @@ import * as art156    from './art-156-emir-counterparty-pairing-reconciler.kerne
 import * as art157    from './art-157-emir-lifecycle-event-validator.kernel.mjs';
 import * as art158    from './art-158-emir-reporting-readiness-diagnostic.kernel.mjs';
 import * as art159    from './art-159-vida-einvoice-en16931-conformance-validator.kernel.mjs';
+import * as art16     from './art-16-google-ap2-mandate-builder.kernel.mjs';
 import * as art160    from './art-160-vida-drr-transaction-reporter.kernel.mjs';
 import * as art161    from './art-161-vida-recapitulative-statement-migration-assessor.kernel.mjs';
 import * as art162    from './art-162-vida-platform-deemed-supplier-classifier.kernel.mjs';
@@ -102,6 +104,7 @@ import * as art166    from './art-166-eudr-geolocation-plot-validator.kernel.mjs
 import * as art167    from './art-167-eudr-commodity-scope-classifier.kernel.mjs';
 import * as art168    from './art-168-eudr-country-benchmark-risk-scorer.kernel.mjs';
 import * as art169    from './art-169-eudr-supply-chain-traceability-linker.kernel.mjs';
+import * as art17     from './art-17-ap2-mcp-policy-validator.kernel.mjs';
 import * as art170    from './art-170-eudr-readiness-diagnostic.kernel.mjs';
 import * as art171    from './art-171-iso42001-aims-clause-conformance.kernel.mjs';
 import * as art172    from './art-172-ai-risk-impact-assessment-validator.kernel.mjs';
@@ -112,6 +115,7 @@ import * as art176    from './art-176-ai-governance-readiness-diagnostic.kernel.
 import * as art177    from './art-177-ifrs17-measurement-model-classifier.kernel.mjs';
 import * as art178    from './art-178-ifrs17-csm-rollforward-validator.kernel.mjs';
 import * as art179    from './art-179-ifrs17-risk-adjustment-checker.kernel.mjs';
+import * as art18     from './art-18-mcp-developer-readiness-scorecard.kernel.mjs';
 import * as art180    from './art-180-solvency2-scr-ratio-calculator.kernel.mjs';
 import * as art181    from './art-181-sii-ifrs17-reconciliation-bridger.kernel.mjs';
 import * as art182    from './art-182-insurance-reporting-readiness-diagnostic.kernel.mjs';
@@ -425,8 +429,27 @@ import * as art489    from './art-489-model-test-battery.kernel.mjs';
 import * as art49     from './art-49-clearing-access-model-selector.kernel.mjs';
 import * as art490    from './art-490-fatca-crs-submission-check.kernel.mjs';
 import * as art491    from './art-491-ro-remediation-closure.kernel.mjs';
+import * as art492    from './art-492-classify-settlement-finality.kernel.mjs';
+import * as art494    from './art-494-icm-quorum-forgery-classifier.kernel.mjs';
+import * as art495    from './art-495-avax-permissioning-control-classifier.kernel.mjs';
+import * as art496    from './art-496-l1-continuous-fee-runway.kernel.mjs';
+import * as art497    from './art-497-validator-change-control-receipt.kernel.mjs';
+import * as art498    from './art-498-reward-flow-related-party.kernel.mjs';
+import * as art499    from './art-499-check-safeguarding-reconciliation.kernel.mjs';
 import * as art50     from './art-50-ficc-margin-netting-estimator.kernel.mjs';
+import * as art500    from './art-500-classify-safeguarding-method.kernel.mjs';
+import * as art501    from './art-501-build-safeguarding-audit-evidence.kernel.mjs';
+import * as art502    from './art-502-bind-attested-subject.kernel.mjs';
+import * as art503    from './art-503-build-dual-control-certification.kernel.mjs';
+import * as art504    from './art-504-classify-carf-reportable.kernel.mjs';
+import * as art505    from './art-505-dispose-carf-status-message.kernel.mjs';
+import * as art506    from './art-506-classify-t1-posttrade-timing.kernel.mjs';
+import * as art507    from './art-507-determine-deposit-insurance-coverage.kernel.mjs';
+import * as art508    from './art-508-recompute-bordereau.kernel.mjs';
+import * as art509    from './art-509-recompute-payment-waterfall.kernel.mjs';
 import * as art51     from './art-51-cross-margining-benefit-estimator.kernel.mjs';
+import * as art510    from './art-510-build-art5-diligence-evidence.kernel.mjs';
+import * as art511    from './art-511-recompute-fund-fees.kernel.mjs';
 import * as art52     from './art-52-digital-trade-fit-diagnostic.kernel.mjs';
 import * as art53     from './art-53-mletr-ebl-conformance-validator.kernel.mjs';
 import * as art54     from './art-54-digital-trade-rules-checker.kernel.mjs';
@@ -573,6 +596,7 @@ export const KERNELS = {
   'art-147-mcp-server-identity-attestation-validator':        art147,
   'art-148-mcp-authorization-metadata-validator':             art148,
   'art-149-mcp-registry-entry-conformance':                   art149,
+  'art-15-agentic-mandate-sandbox':                           art15,
   'art-150-mcp-tool-scope-revocation-auditor':                art150,
   'art-151-agent-obo-mandate-validator':                      art151,
   'art-152-mcp-task-lifecycle-validator':                     art152,
@@ -583,6 +607,7 @@ export const KERNELS = {
   'art-157-emir-lifecycle-event-validator':                   art157,
   'art-158-emir-reporting-readiness-diagnostic':              art158,
   'art-159-vida-einvoice-en16931-conformance-validator':      art159,
+  'art-16-google-ap2-mandate-builder':                        art16,
   'art-160-vida-drr-transaction-reporter':                    art160,
   'art-161-vida-recapitulative-statement-migration-assessor': art161,
   'art-162-vida-platform-deemed-supplier-classifier':         art162,
@@ -593,6 +618,7 @@ export const KERNELS = {
   'art-167-eudr-commodity-scope-classifier':                  art167,
   'art-168-eudr-country-benchmark-risk-scorer':               art168,
   'art-169-eudr-supply-chain-traceability-linker':            art169,
+  'art-17-ap2-mcp-policy-validator':                          art17,
   'art-170-eudr-readiness-diagnostic':                        art170,
   'art-171-iso42001-aims-clause-conformance':                 art171,
   'art-172-ai-risk-impact-assessment-validator':              art172,
@@ -603,6 +629,7 @@ export const KERNELS = {
   'art-177-ifrs17-measurement-model-classifier':              art177,
   'art-178-ifrs17-csm-rollforward-validator':                 art178,
   'art-179-ifrs17-risk-adjustment-checker':                   art179,
+  'art-18-mcp-developer-readiness-scorecard':                 art18,
   'art-180-solvency2-scr-ratio-calculator':                   art180,
   'art-181-sii-ifrs17-reconciliation-bridger':                art181,
   'art-182-insurance-reporting-readiness-diagnostic':         art182,
@@ -916,8 +943,27 @@ export const KERNELS = {
   'art-49-clearing-access-model-selector':                    art49,
   'art-490-fatca-crs-submission-check':                       art490,
   'art-491-ro-remediation-closure':                           art491,
+  'art-492-classify-settlement-finality':                     art492,
+  'art-494-icm-quorum-forgery-classifier':                    art494,
+  'art-495-avax-permissioning-control-classifier':            art495,
+  'art-496-l1-continuous-fee-runway':                         art496,
+  'art-497-validator-change-control-receipt':                 art497,
+  'art-498-reward-flow-related-party':                        art498,
+  'art-499-check-safeguarding-reconciliation':                art499,
   'art-50-ficc-margin-netting-estimator':                     art50,
+  'art-500-classify-safeguarding-method':                     art500,
+  'art-501-build-safeguarding-audit-evidence':                art501,
+  'art-502-bind-attested-subject':                            art502,
+  'art-503-build-dual-control-certification':                 art503,
+  'art-504-classify-carf-reportable':                         art504,
+  'art-505-dispose-carf-status-message':                      art505,
+  'art-506-classify-t1-posttrade-timing':                     art506,
+  'art-507-determine-deposit-insurance-coverage':             art507,
+  'art-508-recompute-bordereau':                              art508,
+  'art-509-recompute-payment-waterfall':                      art509,
   'art-51-cross-margining-benefit-estimator':                 art51,
+  'art-510-build-art5-diligence-evidence':                    art510,
+  'art-511-recompute-fund-fees':                              art511,
   'art-52-digital-trade-fit-diagnostic':                      art52,
   'art-53-mletr-ebl-conformance-validator':                   art53,
   'art-54-digital-trade-rules-checker':                       art54,
