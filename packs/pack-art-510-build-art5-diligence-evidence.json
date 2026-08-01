@@ -1,0 +1,31 @@
+{
+  "workflow_id": "pack-art-510-build-art5-diligence-evidence",
+  "name": "Article 5 Due-Diligence Evidence Record",
+  "outcome": "Records, per position and period, which Article 5 verification and ongoing-monitoring duties an investor performed, the evidence behind each, and what remains outstanding as a named gap list. Single-node chainless pack — no chain exists for a standalone node. This kernel has no asserted-vs-recomputed comparison surface (it assembles an evidence record; it does not recompute a figure against a report), so it is registered for pack resolution and the shared kernel-runner execution path but is not wired into `helm check`'s CHECK_ADAPTERS — see SECZ-PACK-1's check-off note.",
+  "spec_version": "ocg-control-plane@1",
+  "manifest": {
+    "manifest_version": "1",
+    "workflow_id": "pack-art-510-build-art5-diligence-evidence",
+    "trigger": {
+      "type": "manual"
+    },
+    "nodes": [
+      {
+        "node_id": "n1",
+        "kernel_id": "art-510-build-art5-diligence-evidence",
+        "kernel_digest": "sha256:72798cbb71379e42e0b388c97b0781d1189fd20a06e289e2bbff86254b0dd17e"
+      }
+    ],
+    "connectors": [],
+    "gates": [],
+    "actions": []
+  },
+  "workflow_manifest_digest": "sha256:0f875685ccb6b65b811784eb1b77dca399b401bd5fe8a4efee685065786d2534",
+  "declared_inputs": [],
+  "steps_meta": [
+    {
+      "node_id": "n1",
+      "data_classification": "compute"
+    }
+  ]
+}

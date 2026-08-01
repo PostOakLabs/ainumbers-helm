@@ -53,6 +53,29 @@ const CHECK_ADAPTERS = {
     // differ.
     scopeCurrencyField: "currencies",
   },
+  // SECZ-PACK-1 (SECURITISATION-WATERFALL-BUILD-SPEC.md §5): `asserted` maps
+  // to `asserted_allocations` (spec §2) — what the Article 7 investor report
+  // says was paid per step. The kernel derives the recomputed side from the
+  // caller-declared ladder and caller-supplied available funds independently
+  // (never lifted from the report), then self-diffs into `comparison_state`
+  // ("matches" | "differs" | "recompute_only") and `diff[]` — the SAME shape
+  // this file already classifies for the bordereau pack, so no second diff
+  // implementation is added here. No scopeCurrencyField: the kernel's scope
+  // marker (`currency`) is a single top-level string, not a per-row field on
+  // `diff`/`asserted`, so the structural scope-disagreement check (exit 5)
+  // does not apply to this pack — every run resolves to match/differs/
+  // no_assertion, never exit 5. (art-510-build-art5-diligence-evidence, the
+  // spec's second kernel, is NOT registered here: it assembles a due-diligence
+  // evidence record and has no asserted-vs-recomputed comparison surface — its
+  // output_payload has no comparison_state/diff to classify. It IS registered
+  // as a compiled pack, so `getPack`/kernel-runner reach it identically; only
+  // `helm check`'s match/differs classification is out of scope for it. See
+  // SECZ-PACK-1's check-off note before adding a synthetic comparison here.)
+  "pack-art-509-recompute-payment-waterfall": {
+    assertedInputKey: "asserted_allocations",
+    comparisonStateField: "comparison_state",
+    diffField: "diff",
+  },
 };
 
 function currenciesOf(list) {
