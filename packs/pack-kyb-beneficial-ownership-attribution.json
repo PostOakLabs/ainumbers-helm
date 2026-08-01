@@ -13,7 +13,7 @@
       {
         "node_id": "n1",
         "kernel_id": "art-268-compute-cdd-ownership-25pct",
-        "kernel_digest": "sha256:0dc3051e04237f9ec574f8ef5ff8b7c1eefcbd0e415204906089b327c6a90378"
+        "kernel_digest": "sha256:642fc536fb114413087309fee7485f146927deeabb3ad8e9eac8e3bf98f5d36a"
       },
       {
         "node_id": "n2",
@@ -25,7 +25,7 @@
     "gates": [],
     "actions": []
   },
-  "workflow_manifest_digest": "sha256:c25fc0e60062f224aef4497896c02c497d7392f910827bdc9eab9cf6d6864224",
+  "workflow_manifest_digest": "sha256:2bcfb20220ab97fbb58bc968e3cd2205493bcd0eee3abdd37e61cd74140d6589",
   "declared_inputs": [],
   "steps_meta": [
     {

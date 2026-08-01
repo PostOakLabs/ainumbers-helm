@@ -18,14 +18,14 @@
       {
         "node_id": "n2",
         "kernel_id": "art-260-allocate-ihb-interest",
-        "kernel_digest": "sha256:79e7ffc0ec59dd6cc416d286ba26ebaaf057bcd30156e46466f2e900423fb64b"
+        "kernel_digest": "sha256:6e9a9c6e57168ff88d9a4933856fe6f04ecc88942a01e7937c076d1e80235b76"
       }
     ],
     "connectors": [],
     "gates": [],
     "actions": []
   },
-  "workflow_manifest_digest": "sha256:c8d81f071f6f2d5c8104920fd3c52ace0e6c5d2571133b7cb2898cbdf00de296",
+  "workflow_manifest_digest": "sha256:99493a53e6327baf816a5a507dd965847eb997bb3799df529330b19f255a17ca",
   "declared_inputs": [],
   "steps_meta": [
     {
