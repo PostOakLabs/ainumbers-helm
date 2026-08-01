@@ -377,15 +377,36 @@ jobs:
             --schema helm/schema/version_notice.schema.json \
             --out site/helm/version.json
 
+      # Run the guide-freshness generator in WRITE mode here so a GA release
+      # never leaves the site repo owing a human-run sync. Scoped tolerance,
+      # not a job-level one: gen-helm-guide-freshness.mjs exits 1 whenever the
+      # walkthrough is byte-identical to the last synced release (evaluate()
+      # L69-78) — that is the gate correctly deferring to a human judgment
+      # call (the site repo's acknowledged_no_change escape), NOT a failure
+      # of this job. version.json must still publish in that case, so only
+      # this step is allowed to fail without failing the job; every other
+      # step keeps failing normally.
+      - name: sync helm guide-freshness (non-fatal — see comment)
+        id: guide_freshness
+        working-directory: site
+        continue-on-error: true
+        run: node scripts/gen-helm-guide-freshness.mjs
+
+      - name: report guide-freshness sync outcome
+        run: |
+          if [ "${{ steps.guide_freshness.outcome }}" != "success" ]; then
+            echo "::warning::gen-helm-guide-freshness.mjs exited non-zero for ${GITHUB_REF_NAME} — likely a byte-identical walkthrough needing a human acknowledged_no_change entry in the site repo. version.json will still publish; the freshness snapshot stays unsynced until a human judges it."
+          fi
+
       - name: commit + push (no-op if unchanged)
         working-directory: site
         run: |
           git config user.name "helm-release-bot"
           git config user.email "noreply@postoaklabs.com"
-          if git diff --quiet -- helm/version.json; then
-            echo "version.json unchanged, nothing to push"
+          if git diff --quiet -- helm/version.json helm/guide-freshness.json; then
+            echo "version.json and guide-freshness.json unchanged, nothing to push"
             exit 0
           fi
-          git add helm/version.json
+          git add helm/version.json helm/guide-freshness.json
           git commit -m "chore(helm): publish version.json for ${GITHUB_REF_NAME}"
           git push origin HEAD:main
