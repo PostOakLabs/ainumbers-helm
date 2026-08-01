@@ -59,6 +59,46 @@
         "gates": [],
         "actions": []
       }
+    },
+    {
+      "workflow_id": "pack-art-509-recompute-payment-waterfall",
+      "name": "Securitisation Payment Waterfall Recomputation",
+      "outcome": "Recomputes a securitisation payment waterfall for one stated period from the available funds and the caller-declared priority ladder, so an investor can check it against the Article 7 investor report locally without uploading it. Single-node chainless pack — SECZ-PACK-1's `helm check` pack for this kernel; no chain exists for a standalone node.",
+      "manifest": {
+        "manifest_version": "1",
+        "workflow_id": "pack-art-509-recompute-payment-waterfall",
+        "trigger": { "type": "manual" },
+        "nodes": [
+          {
+            "node_id": "n1",
+            "kernel_id": "art-509-recompute-payment-waterfall",
+            "kernel_digest": "sha256:79ba683f5f9684c6c7ab2b2cfe7cdd8546591b5de200da9f10a3bb9637e408f1"
+          }
+        ],
+        "connectors": [],
+        "gates": [],
+        "actions": []
+      }
+    },
+    {
+      "workflow_id": "pack-art-510-build-art5-diligence-evidence",
+      "name": "Article 5 Due-Diligence Evidence Record",
+      "outcome": "Records, per position and period, which Article 5 verification and ongoing-monitoring duties an investor performed, the evidence behind each, and what remains outstanding as a named gap list. Single-node chainless pack — no chain exists for a standalone node. This kernel has no asserted-vs-recomputed comparison surface (it assembles an evidence record; it does not recompute a figure against a report), so it is registered for pack resolution and the shared kernel-runner execution path but is not wired into `helm check`'s CHECK_ADAPTERS — see SECZ-PACK-1's check-off note.",
+      "manifest": {
+        "manifest_version": "1",
+        "workflow_id": "pack-art-510-build-art5-diligence-evidence",
+        "trigger": { "type": "manual" },
+        "nodes": [
+          {
+            "node_id": "n1",
+            "kernel_id": "art-510-build-art5-diligence-evidence",
+            "kernel_digest": "sha256:72798cbb71379e42e0b388c97b0781d1189fd20a06e289e2bbff86254b0dd17e"
+          }
+        ],
+        "connectors": [],
+        "gates": [],
+        "actions": []
+      }
     }
   ]
 }

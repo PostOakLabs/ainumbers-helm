@@ -1,0 +1,31 @@
+{
+  "workflow_id": "pack-art-509-recompute-payment-waterfall",
+  "name": "Securitisation Payment Waterfall Recomputation",
+  "outcome": "Recomputes a securitisation payment waterfall for one stated period from the available funds and the caller-declared priority ladder, so an investor can check it against the Article 7 investor report locally without uploading it. Single-node chainless pack — SECZ-PACK-1's `helm check` pack for this kernel; no chain exists for a standalone node.",
+  "spec_version": "ocg-control-plane@1",
+  "manifest": {
+    "manifest_version": "1",
+    "workflow_id": "pack-art-509-recompute-payment-waterfall",
+    "trigger": {
+      "type": "manual"
+    },
+    "nodes": [
+      {
+        "node_id": "n1",
+        "kernel_id": "art-509-recompute-payment-waterfall",
+        "kernel_digest": "sha256:79ba683f5f9684c6c7ab2b2cfe7cdd8546591b5de200da9f10a3bb9637e408f1"
+      }
+    ],
+    "connectors": [],
+    "gates": [],
+    "actions": []
+  },
+  "workflow_manifest_digest": "sha256:05c42e66bcebe6ac36af27fe460ce52c17dc6124fa53f8aa8e6bc231ca2f6b39",
+  "declared_inputs": [],
+  "steps_meta": [
+    {
+      "node_id": "n1",
+      "data_classification": "compute"
+    }
+  ]
+}
