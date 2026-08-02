@@ -1,10 +1,13 @@
 // SPDX-License-Identifier: Apache-2.0
 // Copyright (c) 2026 Post Oak Labs, Inc.
 // EUC register entry + kernel validation card generator (HELM-P3-E12,
-// HELM-PHASE3-BUILD-SPEC.md §3 item 5). Turns SR 11-7/SS1-23 model-risk
+// HELM-PHASE3-BUILD-SPEC.md §3 item 5). Turns EUC-register/change-control
 // paperwork into a one-click export instead of manual spreadsheet upkeep —
 // generated entirely from already-vendored kernel metadata + committed
 // fixtures (D2 zero-dep: no new persistence, no live kernel execution).
+// Kernels are deterministic, non-statistical calculations — outside SR 26-2's
+// definition of "model" — so these cards are not SR 11-7 model-validation
+// artifacts.
 //
 // Scope note: owner/purpose/control_description/last_validated aren't
 // tracked anywhere in helm today (confirmed — no workflow record carries
@@ -40,9 +43,9 @@ function loadFixtures(kernelId) {
 }
 
 // Per-kernel validation card: formula/description, source ref, version hash,
-// test vectors + expected outputs, replay instructions — everything an
-// SR 11-7 model-validation reviewer needs to independently re-derive the
-// kernel's behavior without running Helm.
+// test vectors + expected outputs, replay instructions — everything a
+// governance/EUC/change-control reviewer needs to independently re-derive
+// the kernel's behavior without running Helm.
 export function buildKernelCard(kernelId, { now } = {}) {
   const node = loadChaingraph().get(kernelId);
   if (!node) throw new Error(`euc-register: unknown kernel_id "${kernelId}" (not in vendored chaingraph.json)`);

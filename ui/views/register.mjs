@@ -1,10 +1,13 @@
 // SPDX-License-Identifier: Apache-2.0
 // Copyright (c) 2026 Post Oak Labs, Inc.
 // Register view (HELM-P3-E12): one-click EUC register entry + per-kernel
-// validation card exports. Turns SR 11-7/SS1-23 model-risk paperwork into a
+// validation card exports. Turns EUC-register/change-control paperwork into a
 // button instead of a hand-maintained spreadsheet — generated entirely from
 // the compiled pack + vendored kernel metadata already on the daemon
-// (hub/euc-register.mjs); nothing here is persisted.
+// (hub/euc-register.mjs); nothing here is persisted. Kernels are
+// deterministic, non-statistical calculations — outside SR 26-2's
+// definition of "model" — so these are not SR 11-7 model-validation
+// artifacts.
 import { fetchWithFallback, call, callText } from "../api.mjs";
 import { blockedStateHtml, classifyBlockedState } from "../lib/blocked-state.mjs";
 
@@ -67,7 +70,7 @@ export async function renderRegister(root, { port, token }) {
   }
 
   root.innerHTML = `
-    <p class="field-row">EUC register entries and per-kernel validation cards — SR 11-7/SS1-23 model-risk paperwork, generated instead of hand-maintained.</p>
+    <p class="field-row">EUC register entries and per-kernel validation cards — governance/change-control evidence for deterministic kernels (outside SR 26-2's "model" definition), generated instead of hand-maintained.</p>
     <form id="register-form">
       <label for="wf-select">Workflow</label>
       <select id="wf-select">${packs.map((p) => `<option value="${p.workflow_id}">${p.name ?? p.workflow_id}</option>`).join("")}</select>
