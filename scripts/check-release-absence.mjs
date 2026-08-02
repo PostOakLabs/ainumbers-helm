@@ -58,6 +58,16 @@ const LOOKBACK_DAYS = 90;
 const GRACE_MINUTES = 30;
 const CALVER_TAG = /^20\d\d\.\d+\.\d+$/; // matches release.yml's own trigger glob "20[0-9][0-9].*"
 
+// Tags Tim ruled, in HELM-RELEASE-TRIGGER-1, will NEVER be backfilled — the
+// GITHUB_TOKEN tag-trigger bug this gate exists to catch, before
+// HELM-RELEASE-TRIGGER-1's fix landed. This is not "not yet released," it is
+// a closed decision: no binary will ever exist for these tags. Re-flagging a
+// decided permanent fact every day for the next 90 days is exactly the noise
+// LOOKBACK_DAYS exists to prevent, just reached early by ruling instead of
+// by elapsed time. Extend this list ONLY on an equally explicit written
+// ruling — never to silence an unexplained or still-open gap.
+const ACKNOWLEDGED_NO_RELEASE = new Set(["2026.7.26", "2026.7.27", "2026.7.28", "2026.7.30"]);
+
 function gh(args) {
   return execFileSync("gh", args, { encoding: "utf8" });
 }
@@ -113,7 +123,9 @@ export function evaluate({ now = new Date() } = {}) {
     }
     const assets = releaseAssetCount(tag.name);
     if (assets <= 0) {
-      rows.push({ tag: tag.name, pushedAt, status: assets === -1 ? "NO-RELEASE" : "NO-ASSETS", assets });
+      const base = assets === -1 ? "NO-RELEASE" : "NO-ASSETS";
+      const status = ACKNOWLEDGED_NO_RELEASE.has(tag.name) ? `ACKNOWLEDGED-${base}` : base;
+      rows.push({ tag: tag.name, pushedAt, status, assets });
     } else {
       rows.push({ tag: tag.name, pushedAt, status: "OK", assets });
     }
@@ -124,16 +136,20 @@ export function evaluate({ now = new Date() } = {}) {
 function main() {
   const rows = evaluate();
   const failing = rows.filter((r) => r.status === "NO-RELEASE" || r.status === "NO-ASSETS");
+  const acknowledged = rows.filter((r) => r.status.startsWith("ACKNOWLEDGED-"));
 
   for (const r of rows) {
     console.log(`${r.tag}\tpushed=${r.pushedAt.toISOString()}\t${r.status}${"assets" in r ? `\tassets=${r.assets}` : ""}`);
   }
 
+  if (acknowledged.length > 0) {
+    console.log(`\nACKNOWLEDGED (permanent, never backfilled per HELM-RELEASE-TRIGGER-1): ${acknowledged.map((r) => r.tag).join(", ")}`);
+  }
   if (failing.length > 0) {
     console.error(`\nFAIL: ${failing.length} tag(s) with no released assets: ${failing.map((r) => r.tag).join(", ")}`);
     process.exit(1);
   }
-  console.log(`\nOK: 0 tagless tags in the last ${LOOKBACK_DAYS}d.`);
+  console.log(`\nOK: 0 unacknowledged tagless tags in the last ${LOOKBACK_DAYS}d.`);
 }
 
 if (import.meta.url === pathToFileURL(process.argv[1]).href) {
