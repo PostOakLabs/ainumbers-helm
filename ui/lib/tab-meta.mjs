@@ -28,7 +28,7 @@ export const TABS = [
   { id: "review", label: "Review", group: "Execute", intro: "Sign off on runs that are waiting for a person before they can continue.", requiresPairing: true },
   { id: "verify", label: "Verify", group: "Execute", intro: "Check an evidence file's signatures and hashes, with no network connection.", requiresPairing: false },
   { id: "operate", label: "Operate", group: "Operate", intro: "Check how Helm is running on this computer, and take a backup.", requiresPairing: true },
-  { id: "register", label: "Register", group: "Operate", intro: "Produce the model-risk register entry and validation cards for a workflow.", requiresPairing: true },
+  { id: "register", label: "Register", group: "Operate", intro: "Produce the governance/EUC/change-control register entry and validation cards for a workflow.", requiresPairing: true },
   { id: "deadlines", label: "Deadlines", group: "Operate", intro: "Regulatory dates that matter, and which of your workflows cover them.", requiresPairing: false },
   { id: "learn", label: "Learn", group: "Operate", intro: "How Helm works, how to fix a connection, and where the standard is written down.", requiresPairing: false },
   { id: "agents", label: "Agents / MCP", group: "Agents / MCP", intro: "Connect your own agent or MCP client to Helm.", requiresPairing: true },
