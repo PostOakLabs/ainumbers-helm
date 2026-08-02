@@ -2,7 +2,7 @@
   "$schema": "https://json-schema.org/draft/2020-12/schema",
   "$id": "https://ainumbers.co/helm/schema/kernel_card.schema.json",
   "title": "Kernel validation card (HELM-PHASE3-BUILD-SPEC.md P3-E12, §3 item 5)",
-  "description": "Per-kernel model-validation artifact for SR 11-7/SS1-23 reviewers: formula/description, source ref, version hash, test vectors + expected outputs, replay instructions. Generated entirely from vendored chaingraph.json metadata + committed kernels/fixtures/*.fixtures.json — no live kernel execution.",
+  "description": "Per-kernel evidentiary artifact for governance/EUC/change-control review: formula/description, source ref, version hash, test vectors + expected outputs, replay instructions. Kernels are deterministic, non-statistical calculations — outside SR 26-2's definition of 'model' — so this is not an SR 11-7 model-validation artifact. Generated entirely from vendored chaingraph.json metadata + committed kernels/fixtures/*.fixtures.json — no live kernel execution.",
   "type": "object",
   "additionalProperties": false,
   "required": ["kernel_id", "display_name", "description", "kernel_digest", "conformance_fixtures_vendored", "test_vectors", "replay_instructions", "generated_at"],
