@@ -1,0 +1,784 @@
+{
+  "tool_id": "art-518-bulk-disbursement-integrity",
+  "note": "Vectors computed directly from the shipped kernel. Covers a clean reconciled run, DISB_CONTROL_TOTAL_BREAK, DISB_DUPLICATE_CANDIDATE, DISB_SPLIT_CANDIDATE, DISB_LIMIT_BREACH (single-payment), DISB_DESTINATION_CAP_BREACH (INBOUND-EVIDENCE-BUILD-SPEC.md §10.2 item 1 -- a payment authorized, funded, and reconciled that still cannot land because the destination wallet is at its KYC-tier cap, distinct from both sender-side limit kinds), DISB_ROSTER_MOVEMENT, the ABSENCE-INSTRUMENT rule for a missing prior-run roster, and the section-6.9 second-jurisdiction region-portability case (a structurally different vendor-payment run in a different currency with a different limit structure and rail set).",
+  "vectors": [
+    {
+      "name": "clean-pension-salary-run-jurisdiction-a",
+      "description": "Jurisdiction A: a Family-Islands-style pension/salary disbursement run in USD. Records reconcile to authorization in count and value, no shared duplicate keys, no limit breaches, roster identical to the prior run. DISB_RECONCILED only.",
+      "policy_parameters": {
+        "run_reference": "RUN-2026-07-31-PENSION",
+        "as_of": "2026-07-31",
+        "currency": "USD",
+        "authorized_control_total": {
+          "payee_count": 4,
+          "total_minor_units": 400000
+        },
+        "per_payee_limit_minor_units": 150000,
+        "per_run_limit_minor_units": 1000000,
+        "payee_records": [
+          {
+            "payee_ref": "PAYEE-A001",
+            "amount_minor_units": 100000,
+            "rail": "ach",
+            "duplicate_key": "h_9f2c1a"
+          },
+          {
+            "payee_ref": "PAYEE-A002",
+            "amount_minor_units": 100000,
+            "rail": "ach",
+            "duplicate_key": "h_3b7d90"
+          },
+          {
+            "payee_ref": "PAYEE-A003",
+            "amount_minor_units": 100000,
+            "rail": "mobile_wallet",
+            "duplicate_key": "h_51ae22"
+          },
+          {
+            "payee_ref": "PAYEE-A004",
+            "amount_minor_units": 100000,
+            "rail": "cash_agent",
+            "duplicate_key": "h_e40d18"
+          }
+        ],
+        "declared_exclusions": [],
+        "prior_run_payee_refs": [
+          "PAYEE-A001",
+          "PAYEE-A002",
+          "PAYEE-A003",
+          "PAYEE-A004"
+        ]
+      },
+      "output_payload": {
+        "run_reference": "RUN-2026-07-31-PENSION",
+        "as_of": "2026-07-31",
+        "currency": "USD",
+        "authorized_payee_count": 4,
+        "authorized_total_minor_units": 400000,
+        "authorized_total_display": "4000.00",
+        "reconciled_record_count": 4,
+        "reconciled_total_minor_units": 400000,
+        "reconciled_total_display": "4000.00",
+        "count_break": 0,
+        "value_break_minor_units": 0,
+        "value_break_display": "0.00",
+        "control_total_reconciled": true,
+        "declared_exclusions": [],
+        "duplicate_candidate_cluster_count": 0,
+        "duplicate_candidate_clusters": [],
+        "per_payee_limit_minor_units": 150000,
+        "per_run_limit_minor_units": 1000000,
+        "limit_breaches": [],
+        "per_run_limit_breach": null,
+        "has_limit_breach": false,
+        "destination_cap_breaches": [],
+        "has_destination_cap_breach": false,
+        "split_payment_candidates": [],
+        "roster_movement_verifiable": true,
+        "prior_run_payee_count": 4,
+        "new_this_run": [],
+        "absent_this_run": [],
+        "has_roster_movement": false,
+        "rejected_inputs": [],
+        "rationale": [
+          "Authorized: 4 payees, 4000.00 USD. Run records: 4 payees, 4000.00 USD.",
+          "Run reconciles to the authorized control total in both count and value.",
+          "No payee records share a caller-declared duplicate-candidate key.",
+          "No payee received multiple sub-limit payments summing past the declared per-payee limit.",
+          "No payee exceeds a declared destination-tier balance cap.",
+          "Roster compared against 4 prior-run payee ref(s): 0 new this run, 0 absent this run. This is movement to be explained, not an accusation.",
+          "This is an arithmetic attestation over the figures supplied for this run. It does not itself investigate any payee, and no flag here is a determination of fraud, misconduct, or an ineligible beneficiary."
+        ],
+        "note": "Deterministic bulk disbursement integrity attestation over a caller-supplied authorization, per-payee record set, declared exclusions, and prior-run roster. Attests control-total reconciliation in count and value, surfaces duplicate-candidate clusters and split-payment candidates by the caller's own opaque keys, and reports roster movement -- all as candidates and observations for a human reviewer, never as findings of fraud, misconduct, or ineligible beneficiaries."
+      },
+      "golden_hash": "63360aa45e7f17b046997605954aba3058498ebb281546138aad59a0e34762c6"
+    },
+    {
+      "name": "control-total-break-and-duplicate-candidate",
+      "description": "Run total exceeds authorization (value break) and two payee refs share a caller-declared duplicate key -- a candidate for review, not an accusation. DISB_CONTROL_TOTAL_BREAK + DISB_DUPLICATE_CANDIDATE.",
+      "policy_parameters": {
+        "run_reference": "RUN-2026-07-31-VENDOR-DUP",
+        "as_of": "2026-07-31",
+        "currency": "USD",
+        "authorized_control_total": {
+          "payee_count": 3,
+          "total_minor_units": 300000
+        },
+        "per_payee_limit_minor_units": 500000,
+        "per_run_limit_minor_units": 1000000,
+        "payee_records": [
+          {
+            "payee_ref": "PAYEE-B001",
+            "amount_minor_units": 100000,
+            "rail": "ach",
+            "duplicate_key": "h_shared_key"
+          },
+          {
+            "payee_ref": "PAYEE-B002",
+            "amount_minor_units": 100000,
+            "rail": "ach",
+            "duplicate_key": "h_shared_key"
+          },
+          {
+            "payee_ref": "PAYEE-B003",
+            "amount_minor_units": 150000,
+            "rail": "card",
+            "duplicate_key": "h_unique_2"
+          }
+        ],
+        "declared_exclusions": [],
+        "prior_run_payee_refs": [
+          "PAYEE-B001",
+          "PAYEE-B002",
+          "PAYEE-B003"
+        ]
+      },
+      "output_payload": {
+        "run_reference": "RUN-2026-07-31-VENDOR-DUP",
+        "as_of": "2026-07-31",
+        "currency": "USD",
+        "authorized_payee_count": 3,
+        "authorized_total_minor_units": 300000,
+        "authorized_total_display": "3000.00",
+        "reconciled_record_count": 3,
+        "reconciled_total_minor_units": 350000,
+        "reconciled_total_display": "3500.00",
+        "count_break": 0,
+        "value_break_minor_units": 50000,
+        "value_break_display": "500.00",
+        "control_total_reconciled": false,
+        "declared_exclusions": [],
+        "duplicate_candidate_cluster_count": 1,
+        "duplicate_candidate_clusters": [
+          {
+            "duplicate_key": "h_shared_key",
+            "payee_refs": [
+              "PAYEE-B001",
+              "PAYEE-B002"
+            ],
+            "member_count": 2
+          }
+        ],
+        "per_payee_limit_minor_units": 500000,
+        "per_run_limit_minor_units": 1000000,
+        "limit_breaches": [],
+        "per_run_limit_breach": null,
+        "has_limit_breach": false,
+        "destination_cap_breaches": [],
+        "has_destination_cap_breach": false,
+        "split_payment_candidates": [],
+        "roster_movement_verifiable": true,
+        "prior_run_payee_count": 3,
+        "new_this_run": [],
+        "absent_this_run": [],
+        "has_roster_movement": false,
+        "rejected_inputs": [],
+        "rationale": [
+          "Authorized: 3 payees, 3000.00 USD. Run records: 3 payees, 3500.00 USD.",
+          "Run does NOT reconcile: count break 0, value break 500.00 USD.",
+          "1 duplicate-candidate cluster(s) share a caller-declared key. These are candidates for review, not findings of fraud or duplication -- shared keys can be legitimate.",
+          "No payee received multiple sub-limit payments summing past the declared per-payee limit.",
+          "No payee exceeds a declared destination-tier balance cap.",
+          "Roster compared against 3 prior-run payee ref(s): 0 new this run, 0 absent this run. This is movement to be explained, not an accusation.",
+          "This is an arithmetic attestation over the figures supplied for this run. It does not itself investigate any payee, and no flag here is a determination of fraud, misconduct, or an ineligible beneficiary."
+        ],
+        "note": "Deterministic bulk disbursement integrity attestation over a caller-supplied authorization, per-payee record set, declared exclusions, and prior-run roster. Attests control-total reconciliation in count and value, surfaces duplicate-candidate clusters and split-payment candidates by the caller's own opaque keys, and reports roster movement -- all as candidates and observations for a human reviewer, never as findings of fraud, misconduct, or ineligible beneficiaries."
+      },
+      "golden_hash": "0d484bbfc441c34517f154db51b89adf993b0bcab3ad91981e7bd4014e54a451"
+    },
+    {
+      "name": "split-payment-candidate-and-roster-movement",
+      "description": "One payee receives two sub-limit payments summing past the per-payee limit (split-payment candidate, not a finding), and the roster has one new payee and one absent versus the prior run. DISB_SPLIT_CANDIDATE + DISB_ROSTER_MOVEMENT.",
+      "policy_parameters": {
+        "run_reference": "RUN-2026-07-31-VENDOR-SPLIT",
+        "as_of": "2026-07-31",
+        "currency": "USD",
+        "authorized_control_total": {
+          "payee_count": 2,
+          "total_minor_units": 180000
+        },
+        "per_payee_limit_minor_units": 100000,
+        "per_run_limit_minor_units": 1000000,
+        "payee_records": [
+          {
+            "payee_ref": "PAYEE-C001",
+            "amount_minor_units": 90000,
+            "rail": "ach",
+            "duplicate_key": null
+          },
+          {
+            "payee_ref": "PAYEE-C001",
+            "amount_minor_units": 30000,
+            "rail": "ach",
+            "duplicate_key": null
+          },
+          {
+            "payee_ref": "PAYEE-C002",
+            "amount_minor_units": 60000,
+            "rail": "ach",
+            "duplicate_key": null
+          }
+        ],
+        "declared_exclusions": [
+          {
+            "payee_ref": "PAYEE-C099",
+            "reason_code": "withheld_pending_documentation"
+          }
+        ],
+        "prior_run_payee_refs": [
+          "PAYEE-C001",
+          "PAYEE-C003"
+        ]
+      },
+      "output_payload": {
+        "run_reference": "RUN-2026-07-31-VENDOR-SPLIT",
+        "as_of": "2026-07-31",
+        "currency": "USD",
+        "authorized_payee_count": 2,
+        "authorized_total_minor_units": 180000,
+        "authorized_total_display": "1800.00",
+        "reconciled_record_count": 3,
+        "reconciled_total_minor_units": 180000,
+        "reconciled_total_display": "1800.00",
+        "count_break": 1,
+        "value_break_minor_units": 0,
+        "value_break_display": "0.00",
+        "control_total_reconciled": false,
+        "declared_exclusions": [
+          {
+            "payee_ref": "PAYEE-C099",
+            "reason_code": "withheld_pending_documentation"
+          }
+        ],
+        "duplicate_candidate_cluster_count": 0,
+        "duplicate_candidate_clusters": [],
+        "per_payee_limit_minor_units": 100000,
+        "per_run_limit_minor_units": 1000000,
+        "limit_breaches": [],
+        "per_run_limit_breach": null,
+        "has_limit_breach": false,
+        "destination_cap_breaches": [],
+        "has_destination_cap_breach": false,
+        "split_payment_candidates": [
+          {
+            "payee_ref": "PAYEE-C001",
+            "payment_count": 2,
+            "total_minor_units": 120000,
+            "total_display": "1200.00",
+            "limit_minor_units": 100000
+          }
+        ],
+        "roster_movement_verifiable": true,
+        "prior_run_payee_count": 2,
+        "new_this_run": [
+          "PAYEE-C002"
+        ],
+        "absent_this_run": [
+          "PAYEE-C003"
+        ],
+        "has_roster_movement": true,
+        "rejected_inputs": [],
+        "rationale": [
+          "Authorized: 2 payees, 1800.00 USD. Run records: 3 payees, 1800.00 USD.",
+          "Run does NOT reconcile: count break 1, value break 0.00 USD.",
+          "No payee records share a caller-declared duplicate-candidate key.",
+          "1 payee(s) received multiple sub-limit payments summing past the declared per-payee limit. This is a candidate for review, not a finding -- a split can be a corrected underpayment.",
+          "No payee exceeds a declared destination-tier balance cap.",
+          "Roster compared against 2 prior-run payee ref(s): 1 new this run, 1 absent this run. This is movement to be explained, not an accusation.",
+          "This is an arithmetic attestation over the figures supplied for this run. It does not itself investigate any payee, and no flag here is a determination of fraud, misconduct, or an ineligible beneficiary."
+        ],
+        "note": "Deterministic bulk disbursement integrity attestation over a caller-supplied authorization, per-payee record set, declared exclusions, and prior-run roster. Attests control-total reconciliation in count and value, surfaces duplicate-candidate clusters and split-payment candidates by the caller's own opaque keys, and reports roster movement -- all as candidates and observations for a human reviewer, never as findings of fraud, misconduct, or ineligible beneficiaries."
+      },
+      "golden_hash": "1d2d7f6fb08cd05c85c1d32e3984f49701adcc5f225d1fbddab6bc680ed07725"
+    },
+    {
+      "name": "single-payment-limit-breach",
+      "description": "A single payment exceeds the declared per-payee limit outright (not a split shape). DISB_LIMIT_BREACH, and the payee is NOT also reported as a split-payment candidate.",
+      "policy_parameters": {
+        "run_reference": "RUN-2026-07-31-VENDOR-LIMIT",
+        "as_of": "2026-07-31",
+        "currency": "USD",
+        "authorized_control_total": {
+          "payee_count": 1,
+          "total_minor_units": 200000
+        },
+        "per_payee_limit_minor_units": 150000,
+        "per_run_limit_minor_units": 1000000,
+        "payee_records": [
+          {
+            "payee_ref": "PAYEE-D001",
+            "amount_minor_units": 200000,
+            "rail": "rtgs",
+            "duplicate_key": null
+          }
+        ],
+        "declared_exclusions": [],
+        "prior_run_payee_refs": [
+          "PAYEE-D001"
+        ]
+      },
+      "output_payload": {
+        "run_reference": "RUN-2026-07-31-VENDOR-LIMIT",
+        "as_of": "2026-07-31",
+        "currency": "USD",
+        "authorized_payee_count": 1,
+        "authorized_total_minor_units": 200000,
+        "authorized_total_display": "2000.00",
+        "reconciled_record_count": 1,
+        "reconciled_total_minor_units": 200000,
+        "reconciled_total_display": "2000.00",
+        "count_break": 0,
+        "value_break_minor_units": 0,
+        "value_break_display": "0.00",
+        "control_total_reconciled": true,
+        "declared_exclusions": [],
+        "duplicate_candidate_cluster_count": 0,
+        "duplicate_candidate_clusters": [],
+        "per_payee_limit_minor_units": 150000,
+        "per_run_limit_minor_units": 1000000,
+        "limit_breaches": [
+          {
+            "payee_ref": "PAYEE-D001",
+            "kind": "single_payment_over_limit",
+            "amount_minor_units": 200000,
+            "amount_display": "2000.00",
+            "limit_minor_units": 150000
+          }
+        ],
+        "per_run_limit_breach": null,
+        "has_limit_breach": true,
+        "destination_cap_breaches": [],
+        "has_destination_cap_breach": false,
+        "split_payment_candidates": [],
+        "roster_movement_verifiable": true,
+        "prior_run_payee_count": 1,
+        "new_this_run": [],
+        "absent_this_run": [],
+        "has_roster_movement": false,
+        "rejected_inputs": [],
+        "rationale": [
+          "Authorized: 1 payees, 2000.00 USD. Run records: 1 payees, 2000.00 USD.",
+          "Run reconciles to the authorized control total in both count and value.",
+          "No payee records share a caller-declared duplicate-candidate key.",
+          "No payee received multiple sub-limit payments summing past the declared per-payee limit.",
+          "No payee exceeds a declared destination-tier balance cap.",
+          "Roster compared against 1 prior-run payee ref(s): 0 new this run, 0 absent this run. This is movement to be explained, not an accusation.",
+          "This is an arithmetic attestation over the figures supplied for this run. It does not itself investigate any payee, and no flag here is a determination of fraud, misconduct, or an ineligible beneficiary."
+        ],
+        "note": "Deterministic bulk disbursement integrity attestation over a caller-supplied authorization, per-payee record set, declared exclusions, and prior-run roster. Attests control-total reconciliation in count and value, surfaces duplicate-candidate clusters and split-payment candidates by the caller's own opaque keys, and reports roster movement -- all as candidates and observations for a human reviewer, never as findings of fraud, misconduct, or ineligible beneficiaries."
+      },
+      "golden_hash": "aae08a3ef1667c4178b1411f0e782637419ebd451587551f90b7bed8a90c2a6c"
+    },
+    {
+      "name": "destination-tier-cap-breach",
+      "description": "INBOUND-EVIDENCE-BUILD-SPEC.md §10.2 item 1: the run reconciles cleanly and is within every sender-side limit, but the sole payee's disbursed amount would exceed their declared destination-tier balance cap -- the payment is authorized and funded but cannot land at the receiving wallet's current KYC tier. DISB_DESTINATION_CAP_BREACH only, distinct from single_payment_over_limit / run_total_over_limit and NOT folded into limit_breaches.",
+      "policy_parameters": {
+        "run_reference": "RUN-2026-08-01-VENDOR-TIERCAP",
+        "as_of": "2026-08-01",
+        "currency": "USD",
+        "authorized_control_total": {
+          "payee_count": 1,
+          "total_minor_units": 150000
+        },
+        "per_payee_limit_minor_units": 500000,
+        "per_run_limit_minor_units": 1000000,
+        "payee_records": [
+          {
+            "payee_ref": "PAYEE-H001",
+            "amount_minor_units": 150000,
+            "rail": "mobile_wallet",
+            "duplicate_key": null,
+            "destination_tier_limit_minor_units": 100000
+          }
+        ],
+        "declared_exclusions": [],
+        "prior_run_payee_refs": [
+          "PAYEE-H001"
+        ]
+      },
+      "output_payload": {
+        "run_reference": "RUN-2026-08-01-VENDOR-TIERCAP",
+        "as_of": "2026-08-01",
+        "currency": "USD",
+        "authorized_payee_count": 1,
+        "authorized_total_minor_units": 150000,
+        "authorized_total_display": "1500.00",
+        "reconciled_record_count": 1,
+        "reconciled_total_minor_units": 150000,
+        "reconciled_total_display": "1500.00",
+        "count_break": 0,
+        "value_break_minor_units": 0,
+        "value_break_display": "0.00",
+        "control_total_reconciled": true,
+        "declared_exclusions": [],
+        "duplicate_candidate_cluster_count": 0,
+        "duplicate_candidate_clusters": [],
+        "per_payee_limit_minor_units": 500000,
+        "per_run_limit_minor_units": 1000000,
+        "limit_breaches": [],
+        "per_run_limit_breach": null,
+        "has_limit_breach": false,
+        "destination_cap_breaches": [
+          {
+            "payee_ref": "PAYEE-H001",
+            "kind": "destination_cap_breach",
+            "amount_minor_units": 150000,
+            "amount_display": "1500.00",
+            "destination_tier_limit_minor_units": 100000
+          }
+        ],
+        "has_destination_cap_breach": true,
+        "split_payment_candidates": [],
+        "roster_movement_verifiable": true,
+        "prior_run_payee_count": 1,
+        "new_this_run": [],
+        "absent_this_run": [],
+        "has_roster_movement": false,
+        "rejected_inputs": [],
+        "rationale": [
+          "Authorized: 1 payees, 1500.00 USD. Run records: 1 payees, 1500.00 USD.",
+          "Run reconciles to the authorized control total in both count and value.",
+          "No payee records share a caller-declared duplicate-candidate key.",
+          "No payee received multiple sub-limit payments summing past the declared per-payee limit.",
+          "1 payee(s) exceed a declared destination-tier balance cap -- the payment is authorized and funded but cannot land at the receiving wallet's current tier.",
+          "Roster compared against 1 prior-run payee ref(s): 0 new this run, 0 absent this run. This is movement to be explained, not an accusation.",
+          "This is an arithmetic attestation over the figures supplied for this run. It does not itself investigate any payee, and no flag here is a determination of fraud, misconduct, or an ineligible beneficiary."
+        ],
+        "note": "Deterministic bulk disbursement integrity attestation over a caller-supplied authorization, per-payee record set, declared exclusions, and prior-run roster. Attests control-total reconciliation in count and value, surfaces duplicate-candidate clusters and split-payment candidates by the caller's own opaque keys, and reports roster movement -- all as candidates and observations for a human reviewer, never as findings of fraud, misconduct, or ineligible beneficiaries."
+      },
+      "golden_hash": "ac0191e60f81fab41ab89006d752a2bb9e153fd7eee4d78f282d61027bd64f0e"
+    },
+    {
+      "name": "prior-run-roster-absent-not-a-false-clean",
+      "description": "ABSENCE-INSTRUMENT rule: prior_run_payee_refs is not supplied at all (key absent), so roster movement is reported as unverifiable rather than falsely clean, even though the run itself reconciles.",
+      "policy_parameters": {
+        "run_reference": "RUN-2026-08-01-VENDOR-NOPRIOR",
+        "as_of": "2026-08-01",
+        "currency": "USD",
+        "authorized_control_total": {
+          "payee_count": 1,
+          "total_minor_units": 50000
+        },
+        "per_payee_limit_minor_units": 100000,
+        "per_run_limit_minor_units": 1000000,
+        "payee_records": [
+          {
+            "payee_ref": "PAYEE-E001",
+            "amount_minor_units": 50000,
+            "rail": "ach",
+            "duplicate_key": null
+          }
+        ],
+        "declared_exclusions": []
+      },
+      "output_payload": {
+        "run_reference": "RUN-2026-08-01-VENDOR-NOPRIOR",
+        "as_of": "2026-08-01",
+        "currency": "USD",
+        "authorized_payee_count": 1,
+        "authorized_total_minor_units": 50000,
+        "authorized_total_display": "500.00",
+        "reconciled_record_count": 1,
+        "reconciled_total_minor_units": 50000,
+        "reconciled_total_display": "500.00",
+        "count_break": 0,
+        "value_break_minor_units": 0,
+        "value_break_display": "0.00",
+        "control_total_reconciled": true,
+        "declared_exclusions": [],
+        "duplicate_candidate_cluster_count": 0,
+        "duplicate_candidate_clusters": [],
+        "per_payee_limit_minor_units": 100000,
+        "per_run_limit_minor_units": 1000000,
+        "limit_breaches": [],
+        "per_run_limit_breach": null,
+        "has_limit_breach": false,
+        "destination_cap_breaches": [],
+        "has_destination_cap_breach": false,
+        "split_payment_candidates": [],
+        "roster_movement_verifiable": false,
+        "prior_run_payee_count": 0,
+        "new_this_run": [],
+        "absent_this_run": [],
+        "has_roster_movement": false,
+        "rejected_inputs": [],
+        "rationale": [
+          "Authorized: 1 payees, 500.00 USD. Run records: 1 payees, 500.00 USD.",
+          "Run reconciles to the authorized control total in both count and value.",
+          "No payee records share a caller-declared duplicate-candidate key.",
+          "No payee received multiple sub-limit payments summing past the declared per-payee limit.",
+          "No payee exceeds a declared destination-tier balance cap.",
+          "Prior-run payee roster was not supplied, so roster movement cannot be evaluated this cycle. This is reported as unverifiable, never as a clean result.",
+          "This is an arithmetic attestation over the figures supplied for this run. It does not itself investigate any payee, and no flag here is a determination of fraud, misconduct, or an ineligible beneficiary."
+        ],
+        "note": "Deterministic bulk disbursement integrity attestation over a caller-supplied authorization, per-payee record set, declared exclusions, and prior-run roster. Attests control-total reconciliation in count and value, surfaces duplicate-candidate clusters and split-payment candidates by the caller's own opaque keys, and reports roster movement -- all as candidates and observations for a human reviewer, never as findings of fraud, misconduct, or ineligible beneficiaries."
+      },
+      "golden_hash": "00a1f9b08b905f4eeb198aa49c98e57715a8d0a42083c5332c562bdf8e955f33"
+    },
+    {
+      "name": "clean-vendor-payment-run-jurisdiction-b-region-portability",
+      "description": "§6.9 second, structurally different jurisdiction: a EUR vendor-payment run (not a pension/salary run) with a different currency, a different per-payee limit, and a card/SEPA rail set instead of ACH/mobile-wallet/cash-agent. Same kernel, only the declared inputs change. Reconciles cleanly.",
+      "policy_parameters": {
+        "run_reference": "RUN-2026-08-01-EU-VENDOR",
+        "as_of": "2026-08-01",
+        "currency": "EUR",
+        "authorized_control_total": {
+          "payee_count": 3,
+          "total_minor_units": 750000
+        },
+        "per_payee_limit_minor_units": 300000,
+        "per_run_limit_minor_units": 2000000,
+        "payee_records": [
+          {
+            "payee_ref": "VENDOR-EU-001",
+            "amount_minor_units": 250000,
+            "rail": "sepa_credit_transfer",
+            "duplicate_key": "h_eu_a1"
+          },
+          {
+            "payee_ref": "VENDOR-EU-002",
+            "amount_minor_units": 250000,
+            "rail": "sepa_credit_transfer",
+            "duplicate_key": "h_eu_b2"
+          },
+          {
+            "payee_ref": "VENDOR-EU-003",
+            "amount_minor_units": 250000,
+            "rail": "card",
+            "duplicate_key": "h_eu_c3"
+          }
+        ],
+        "declared_exclusions": [],
+        "prior_run_payee_refs": [
+          "VENDOR-EU-001",
+          "VENDOR-EU-002",
+          "VENDOR-EU-003"
+        ]
+      },
+      "output_payload": {
+        "run_reference": "RUN-2026-08-01-EU-VENDOR",
+        "as_of": "2026-08-01",
+        "currency": "EUR",
+        "authorized_payee_count": 3,
+        "authorized_total_minor_units": 750000,
+        "authorized_total_display": "7500.00",
+        "reconciled_record_count": 3,
+        "reconciled_total_minor_units": 750000,
+        "reconciled_total_display": "7500.00",
+        "count_break": 0,
+        "value_break_minor_units": 0,
+        "value_break_display": "0.00",
+        "control_total_reconciled": true,
+        "declared_exclusions": [],
+        "duplicate_candidate_cluster_count": 0,
+        "duplicate_candidate_clusters": [],
+        "per_payee_limit_minor_units": 300000,
+        "per_run_limit_minor_units": 2000000,
+        "limit_breaches": [],
+        "per_run_limit_breach": null,
+        "has_limit_breach": false,
+        "destination_cap_breaches": [],
+        "has_destination_cap_breach": false,
+        "split_payment_candidates": [],
+        "roster_movement_verifiable": true,
+        "prior_run_payee_count": 3,
+        "new_this_run": [],
+        "absent_this_run": [],
+        "has_roster_movement": false,
+        "rejected_inputs": [],
+        "rationale": [
+          "Authorized: 3 payees, 7500.00 EUR. Run records: 3 payees, 7500.00 EUR.",
+          "Run reconciles to the authorized control total in both count and value.",
+          "No payee records share a caller-declared duplicate-candidate key.",
+          "No payee received multiple sub-limit payments summing past the declared per-payee limit.",
+          "No payee exceeds a declared destination-tier balance cap.",
+          "Roster compared against 3 prior-run payee ref(s): 0 new this run, 0 absent this run. This is movement to be explained, not an accusation.",
+          "This is an arithmetic attestation over the figures supplied for this run. It does not itself investigate any payee, and no flag here is a determination of fraud, misconduct, or an ineligible beneficiary."
+        ],
+        "note": "Deterministic bulk disbursement integrity attestation over a caller-supplied authorization, per-payee record set, declared exclusions, and prior-run roster. Attests control-total reconciliation in count and value, surfaces duplicate-candidate clusters and split-payment candidates by the caller's own opaque keys, and reports roster movement -- all as candidates and observations for a human reviewer, never as findings of fraud, misconduct, or ineligible beneficiaries."
+      },
+      "golden_hash": "482ce9e0fb5c2bd0192beed3ba62c95e41a12710329b30a144c329c24a49226a"
+    },
+    {
+      "name": "duplicate-key-sha256-salted-commitment-accepted",
+      "description": "SPEC.md §25.0-§25.2 (ocg-private-input@1): the run declares duplicate_key_commitment_scheme sha256-salted@1 and both payee_records carry a well-formed sha256:<64-hex> commitment as duplicate_key. Both are accepted, cluster the same as any duplicate-candidate key, and are declared in the artifact's top-level private_inputs[] -- one entry per accepted commitment, pointer indexed to the record's position in policy_parameters.payee_records.",
+      "policy_parameters": {
+        "run_reference": "RUN-2026-08-01-VENDOR-PRIVIN",
+        "as_of": "2026-08-01",
+        "currency": "USD",
+        "authorized_control_total": {
+          "payee_count": 2,
+          "total_minor_units": 200000
+        },
+        "per_payee_limit_minor_units": 500000,
+        "per_run_limit_minor_units": 1000000,
+        "duplicate_key_commitment_scheme": "sha256-salted@1",
+        "payee_records": [
+          {
+            "payee_ref": "PAYEE-F001",
+            "amount_minor_units": 100000,
+            "rail": "ach",
+            "duplicate_key": "sha256:aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa"
+          },
+          {
+            "payee_ref": "PAYEE-F002",
+            "amount_minor_units": 100000,
+            "rail": "ach",
+            "duplicate_key": "sha256:aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa"
+          }
+        ],
+        "declared_exclusions": [],
+        "prior_run_payee_refs": [
+          "PAYEE-F001",
+          "PAYEE-F002"
+        ]
+      },
+      "output_payload": {
+        "run_reference": "RUN-2026-08-01-VENDOR-PRIVIN",
+        "as_of": "2026-08-01",
+        "currency": "USD",
+        "authorized_payee_count": 2,
+        "authorized_total_minor_units": 200000,
+        "authorized_total_display": "2000.00",
+        "reconciled_record_count": 2,
+        "reconciled_total_minor_units": 200000,
+        "reconciled_total_display": "2000.00",
+        "count_break": 0,
+        "value_break_minor_units": 0,
+        "value_break_display": "0.00",
+        "control_total_reconciled": true,
+        "declared_exclusions": [],
+        "duplicate_candidate_cluster_count": 1,
+        "duplicate_candidate_clusters": [
+          {
+            "duplicate_key": "sha256:aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+            "payee_refs": [
+              "PAYEE-F001",
+              "PAYEE-F002"
+            ],
+            "member_count": 2
+          }
+        ],
+        "per_payee_limit_minor_units": 500000,
+        "per_run_limit_minor_units": 1000000,
+        "limit_breaches": [],
+        "per_run_limit_breach": null,
+        "has_limit_breach": false,
+        "destination_cap_breaches": [],
+        "has_destination_cap_breach": false,
+        "split_payment_candidates": [],
+        "roster_movement_verifiable": true,
+        "prior_run_payee_count": 2,
+        "new_this_run": [],
+        "absent_this_run": [],
+        "has_roster_movement": false,
+        "rejected_inputs": [],
+        "rationale": [
+          "Authorized: 2 payees, 2000.00 USD. Run records: 2 payees, 2000.00 USD.",
+          "Run reconciles to the authorized control total in both count and value.",
+          "1 duplicate-candidate cluster(s) share a caller-declared key. These are candidates for review, not findings of fraud or duplication -- shared keys can be legitimate.",
+          "No payee received multiple sub-limit payments summing past the declared per-payee limit.",
+          "No payee exceeds a declared destination-tier balance cap.",
+          "Roster compared against 2 prior-run payee ref(s): 0 new this run, 0 absent this run. This is movement to be explained, not an accusation.",
+          "This is an arithmetic attestation over the figures supplied for this run. It does not itself investigate any payee, and no flag here is a determination of fraud, misconduct, or an ineligible beneficiary."
+        ],
+        "note": "Deterministic bulk disbursement integrity attestation over a caller-supplied authorization, per-payee record set, declared exclusions, and prior-run roster. Attests control-total reconciliation in count and value, surfaces duplicate-candidate clusters and split-payment candidates by the caller's own opaque keys, and reports roster movement -- all as candidates and observations for a human reviewer, never as findings of fraud, misconduct, or ineligible beneficiaries."
+      },
+      "golden_hash": "35eff8fc05d10b8832345329a7d8b7b1df240af3a7d8503315cb4981d4641256"
+    },
+    {
+      "name": "duplicate-key-commitment-scheme-unknown-rejected",
+      "description": "SPEC.md §25.0/§25.4: the run declares an unrecognised duplicate_key_commitment_scheme. A verifier MUST reject an unknown scheme rather than treat it as opaque -- every declared duplicate_key in the run is excluded from clustering and recorded in rejected_inputs, even though each value happens to be well-formed sha256:<64-hex> text. Nothing is declared in private_inputs[] for a rejected key.",
+      "policy_parameters": {
+        "run_reference": "RUN-2026-08-01-VENDOR-UNKNOWNSCHEME",
+        "as_of": "2026-08-01",
+        "currency": "USD",
+        "authorized_control_total": {
+          "payee_count": 2,
+          "total_minor_units": 200000
+        },
+        "per_payee_limit_minor_units": 500000,
+        "per_run_limit_minor_units": 1000000,
+        "duplicate_key_commitment_scheme": "md5-unsalted@1",
+        "payee_records": [
+          {
+            "payee_ref": "PAYEE-G001",
+            "amount_minor_units": 100000,
+            "rail": "ach",
+            "duplicate_key": "sha256:bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb"
+          },
+          {
+            "payee_ref": "PAYEE-G002",
+            "amount_minor_units": 100000,
+            "rail": "ach",
+            "duplicate_key": "sha256:bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb"
+          }
+        ],
+        "declared_exclusions": [],
+        "prior_run_payee_refs": [
+          "PAYEE-G001",
+          "PAYEE-G002"
+        ]
+      },
+      "output_payload": {
+        "run_reference": "RUN-2026-08-01-VENDOR-UNKNOWNSCHEME",
+        "as_of": "2026-08-01",
+        "currency": "USD",
+        "authorized_payee_count": 2,
+        "authorized_total_minor_units": 200000,
+        "authorized_total_display": "2000.00",
+        "reconciled_record_count": 2,
+        "reconciled_total_minor_units": 200000,
+        "reconciled_total_display": "2000.00",
+        "count_break": 0,
+        "value_break_minor_units": 0,
+        "value_break_display": "0.00",
+        "control_total_reconciled": true,
+        "declared_exclusions": [],
+        "duplicate_candidate_cluster_count": 0,
+        "duplicate_candidate_clusters": [],
+        "per_payee_limit_minor_units": 500000,
+        "per_run_limit_minor_units": 1000000,
+        "limit_breaches": [],
+        "per_run_limit_breach": null,
+        "has_limit_breach": false,
+        "destination_cap_breaches": [],
+        "has_destination_cap_breach": false,
+        "split_payment_candidates": [],
+        "roster_movement_verifiable": true,
+        "prior_run_payee_count": 2,
+        "new_this_run": [],
+        "absent_this_run": [],
+        "has_roster_movement": false,
+        "rejected_inputs": [
+          {
+            "where": "duplicate_key_commitment_scheme",
+            "reason": "unknown commitment scheme -- \"sha256-salted@1\" is the sole scheme accepted (SPEC.md §25.1); every declared duplicate_key in this run is excluded rather than trusted as opaque",
+            "supplied": "md5-unsalted@1"
+          },
+          {
+            "where": "payee_records[0].duplicate_key",
+            "reason": "declared duplicate_key_commitment_scheme \"md5-unsalted@1\" is not a known commitment scheme",
+            "supplied": "sha256:bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb"
+          },
+          {
+            "where": "payee_records[1].duplicate_key",
+            "reason": "declared duplicate_key_commitment_scheme \"md5-unsalted@1\" is not a known commitment scheme",
+            "supplied": "sha256:bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb"
+          }
+        ],
+        "rationale": [
+          "Authorized: 2 payees, 2000.00 USD. Run records: 2 payees, 2000.00 USD.",
+          "Run reconciles to the authorized control total in both count and value.",
+          "No payee records share a caller-declared duplicate-candidate key.",
+          "No payee received multiple sub-limit payments summing past the declared per-payee limit.",
+          "No payee exceeds a declared destination-tier balance cap.",
+          "Roster compared against 2 prior-run payee ref(s): 0 new this run, 0 absent this run. This is movement to be explained, not an accusation.",
+          "This is an arithmetic attestation over the figures supplied for this run. It does not itself investigate any payee, and no flag here is a determination of fraud, misconduct, or an ineligible beneficiary."
+        ],
+        "note": "Deterministic bulk disbursement integrity attestation over a caller-supplied authorization, per-payee record set, declared exclusions, and prior-run roster. Attests control-total reconciliation in count and value, surfaces duplicate-candidate clusters and split-payment candidates by the caller's own opaque keys, and reports roster movement -- all as candidates and observations for a human reviewer, never as findings of fraud, misconduct, or ineligible beneficiaries."
+      },
+      "golden_hash": "94cbf6acfb7c428830fe65f95aacba5cd37be7fb15638ae76d3edb2074500aff"
+    }
+  ]
+}

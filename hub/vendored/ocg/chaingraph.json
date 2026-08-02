@@ -3735,12 +3735,12 @@
       "tool_id": "art-33-mcp-server-self-attestation-pack",
       "tool_version": "1.0.0",
       "display_name": "MCP Server Self-Attestation Pack",
-      "mcp_name": "attest_mcp_server",
+      "mcp_name": "lint_mcp_server_conformance",
       "mandate_type": "infrastructure_mandate",
       "wave": 6,
       "gpu": false,
       "url": "https://ainumbers.co/chaingraph/art-33-mcp-server-self-attestation-pack.html",
-      "description": "Combines the five MCP-dev checks: tool-definition lint (JSON Schema 2020-12), server.json validation (2025-12-11 schema), OAuth 2.1 audit (RFC 9728 PRM, RFC 8707 audience), tool-poisoning scan, and ops/readiness, into one signed attestation: composite A-F ship-readiness grade + per-domain scores + ordered remediation. Dogfooding: the AINumbers server can attest itself.",
+      "description": "Combines the five MCP-dev checks: tool-definition lint (JSON Schema 2020-12), server.json validation (2025-12-11 schema), OAuth 2.1 audit (RFC 9728 PRM, RFC 8707 audience), tool-poisoning scan, and ops/readiness, into one self-reported conformance lint: composite A-F ship-readiness grade plus per-domain scores and ordered remediation. This is an unsigned lint result, not a signed attestation. audit_signature.signatures is empty by design, as it is on every unsigned OpenChainGraph node. Dogfooding: the AINumbers server can lint itself. Formerly named attest_mcp_server; that name remains accepted permanently.",
       "input_schema_ref": "chaingraph/art-33-mcp-server-self-attestation-pack.html#manifest",
       "deadline": null,
       "deadline_note": "MCP 2026-07-28 spec hardening makes server attestation a live need.",
@@ -6144,91 +6144,91 @@
       "status": "live",
       "conformance_fixtures": false,
       "compute_capability": "server",
-      "compute_images": [{"system":"sha256-source","image_id":"sha256:586d2012166bfe8fc88259c3ca7e325a06b321e423167347d5b97ef049eaa88d","valid_from":"2026-07-10"},{"system":"risc0","image_id":"sha256:a1a0bc89b5b1febaeda3519f6dbade0fa5ac16beeb143c4e1b01689573567bc6","valid_from":"2026-06-28"}],
+      "compute_images": [{"system":"sha256-source","image_id":"sha256:e7cbaf562ec7a4b991bdd70cfafb39fcd09bb43a73d085fd0ea270e45dd2c0cb","valid_from":"2026-07-10"},{"system":"risc0","image_id":"sha256:a1a0bc89b5b1febaeda3519f6dbade0fa5ac16beeb143c4e1b01689573567bc6","valid_from":"2026-06-28"}],
       "compute_proof": {
-        "type": "ZkVmReceipt",
-        "system": "risc0",
-        "receiptFormat": "groth16-bn254",
-        "imageId": "sha256:a1a0bc89b5b1febaeda3519f6dbade0fa5ac16beeb143c4e1b01689573567bc6",
-        "seal": "DrTjdkc1eDTlIepmZwnRkINS4se6WhfwVC/FbDUEADYpa8ldzk2QM7odXI+YDpQfk21dq1VdwuclKzQDJoAD8itIc0H+QunodbXngH6zva5AFiVz6WiEhHahwLNaRTvXD9NvRUUV/4Qg3gtLFDfL2BEDrOE5YZWJ8sms4QNOH5ssmf6Dv6lFYCyASp35/JGW+CjuQT78SLF5O7qpKrjf2i90WR3fPBhjwHWAH7nA+3telUJsPrc6kveJYd+5facHEs5kkhCZGG3tx8ffz6GJWxoOzk1Y+3vNjancU4J+/00XK0iSspUaZ7SlPzK4rc15qf17MX8aMzwaJwfb562mgw==",
-        "journal": {
-          "chaingraph_version": "0.4.0",
-          "kernel_digest": "sha256:586d2012166bfe8fc88259c3ca7e325a06b321e423167347d5b97ef049eaa88d",
-          "output": {
-            "ai_literacy_grade": "F",
-            "annex_iii_basis": "Use-case-specific analysis required — review consolidated Annex III against actual deployment context",
-            "applicable_date": {
-              "digital_omnibus_date": "2026-12-02",
-              "note": "Verify current status: Digital Omnibus (provisional agreement 7 May 2026) proposes Annex III high-risk obligations → 2 Dec 2027. Legal effect only on formal adoption and publication in Official Journal before 2 Aug 2026. If not adopted in time, original 2 Aug 2026 date applies. Always check the current AI Act timeline before relying on this date.",
-              "original_date": "2026-08-02"
-            },
-            "dim_scores": {
-              "articles_9_15": {
-                "grade": "F",
-                "score": 0
-              },
-              "classification": {
-                "grade": "A",
-                "score": 100
-              },
-              "deployer": {
-                "grade": "F",
-                "score": 0
-              },
-              "gpai": {
-                "grade": "A",
-                "score": 100
-              },
-              "literacy": {
-                "grade": "F",
-                "score": 0
-              },
-              "maturity": {
-                "grade": "F",
-                "score": 0
-              },
-              "prohibited": {
-                "grade": "A",
-                "score": 100
-              },
-              "role": {
-                "grade": "B",
-                "score": 75
-              }
-            },
-            "do_now_checklist": [
-              {
-                "action": "Art 4 AI literacy — in force 2 Feb 2025. Implement AI-literacy programme for all staff deploying or using AI systems. Verify against consolidated AI Act Art 4 text.",
-                "obligation": "Art 4 AI Literacy",
-                "status": "IN FORCE 2 Feb 2025"
-              },
-              {
-                "action": "DORA (Reg. 2022/2554) — fully enforced since 17 Jan 2025. Treat the AI system as an ICT system: ICT risk management, incident reporting, vendor management (TPRM), TLPT. Run aig-resilience-overlap chain.",
-                "obligation": "DORA ICT Risk (if AI is an ICT system)",
-                "status": "IN FORCE 17 Jan 2025"
-              },
-              {
-                "action": "Non-discrimination / fair-lending (existing law, independent of AI Act date). Screen credit/insurance AI models for protected-characteristic bias. Run aig-fairness-bias chain.",
-                "obligation": "Non-Discrimination / Fair-Lending (existing law)",
-                "status": "IN FORCE"
-              }
-            ],
-            "gpai_applicability": "Not applicable — no GPAI/foundation-model dependency",
-            "high_risk_verdict": "OUT-OF-SCOPE — current assessment indicates system does not meet Annex III criteria. Re-assess if use case changes.",
-            "note": "Educational decision-support diagnostic. Outputs are not legal conformity certificates. EU AI Act timeline is in flux (Digital Omnibus pending formal adoption as of 2026-06-20) — carry both dates (2 Aug 2026 / 2 Dec 2027) and verify against the current AI Act / Official Journal. Verify all Article/Annex references against EU AI Act (Reg. 2024/1689) consolidated text at https://eur-lex.europa.eu/eli/reg/2024/1689/oj and Digital Omnibus updates.",
-            "overall_grade": "D",
-            "overall_score": 49.5,
-            "prepare_ahead_checklist": [],
-            "primary_recommendation": "aig-audit-pack",
-            "prohibited_practice_verdict": "PASS — no obvious prohibited-practice exposure.",
-            "role": "deployer",
-            "secondary_recommendations": [
-              "aig-resilience-overlap",
-              "aig-fairness-bias"
-            ]
+    "type": "ZkVmReceipt",
+    "system": "risc0",
+    "receiptFormat": "groth16-bn254",
+    "imageId": "sha256:a1a0bc89b5b1febaeda3519f6dbade0fa5ac16beeb143c4e1b01689573567bc6",
+    "seal": "G3n0EC97rsE0+Prf5dc8vCNEj2tiGN5SokjaWkTIxcIcxtKQlKr2C4Xmn3EoJ4iFVE7UzTv3lWmjTEest7xo5w6fdhxo2+LC52f+aN9QM2HcaVE/v78tOXGCViwPm3biIGnnVtpkenTlmKvhP1kbj3pXY2bYGBaUtLG9lBTMC8Qj4pl6wNn7PT+L0cxpdtnWRkAvkWIa/OYHckz5aNb3YAQKFnvvrn+Ri5i/MOhmlJ/xxh/PtwkeaoJiacsvvaBID/mNOQ6e1wnZDqAtnIpI0MUGjft1Ur1IpcJIPuTGC4MriVQgIu7xx1noCGSpJGkaiK5V6/hxPBPO6N/5GJ8cUA==",
+    "journal": {
+      "chaingraph_version": "0.4.0",
+      "kernel_digest": "sha256:e7cbaf562ec7a4b991bdd70cfafb39fcd09bb43a73d085fd0ea270e45dd2c0cb",
+      "output": {
+        "ai_literacy_grade": "F",
+        "annex_iii_basis": "Use-case-specific analysis required — review consolidated Annex III against actual deployment context",
+        "applicable_date": {
+          "digital_omnibus_date": "2026-12-02",
+          "note": "Verify current status: Digital Omnibus (provisional agreement 7 May 2026) proposes Annex III high-risk obligations → 2 Dec 2027. Legal effect only on formal adoption and publication in Official Journal before 2 Aug 2026. If not adopted in time, original 2 Aug 2026 date applies. Always check the current AI Act timeline before relying on this date.",
+          "original_date": "2026-08-02"
+        },
+        "dim_scores": {
+          "articles_9_15": {
+            "grade": "F",
+            "score": 0
+          },
+          "classification": {
+            "grade": "A",
+            "score": 100
+          },
+          "deployer": {
+            "grade": "F",
+            "score": 0
+          },
+          "gpai": {
+            "grade": "A",
+            "score": 100
+          },
+          "literacy": {
+            "grade": "F",
+            "score": 0
+          },
+          "maturity": {
+            "grade": "F",
+            "score": 0
+          },
+          "prohibited": {
+            "grade": "A",
+            "score": 100
+          },
+          "role": {
+            "grade": "B",
+            "score": 75
           }
-        }
-      },
+        },
+        "do_now_checklist": [
+          {
+            "action": "Art 4 AI literacy — in force 2 Feb 2025. Implement AI-literacy programme for all staff deploying or using AI systems. Verify against consolidated AI Act Art 4 text.",
+            "obligation": "Art 4 AI Literacy",
+            "status": "IN FORCE 2 Feb 2025"
+          },
+          {
+            "action": "DORA (Reg. 2022/2554) — fully enforced since 17 Jan 2025. Treat the AI system as an ICT system: ICT risk management, incident reporting, vendor management (TPRM), TLPT. Run aig-resilience-overlap chain.",
+            "obligation": "DORA ICT Risk (if AI is an ICT system)",
+            "status": "IN FORCE 17 Jan 2025"
+          },
+          {
+            "action": "Non-discrimination / fair-lending (existing law, independent of AI Act date). Screen credit/insurance AI models for protected-characteristic bias. Run aig-fairness-bias chain.",
+            "obligation": "Non-Discrimination / Fair-Lending (existing law)",
+            "status": "IN FORCE"
+          }
+        ],
+        "gpai_applicability": "Not applicable — no GPAI/foundation-model dependency",
+        "high_risk_verdict": "OUT-OF-SCOPE — current assessment indicates system does not meet Annex III criteria. Re-assess if use case changes.",
+        "note": "Educational decision-support diagnostic. Outputs are not legal conformity certificates. EU AI Act timeline is in flux (Digital Omnibus pending formal adoption as of 2026-06-20) — carry both dates (2 Aug 2026 / 2 Dec 2027) and verify against the current AI Act / Official Journal. Verify all Article/Annex references against EU AI Act (Reg. 2024/1689) consolidated text at https://eur-lex.europa.eu/eli/reg/2024/1689/oj and Digital Omnibus updates.",
+        "overall_grade": "D",
+        "overall_score": 49.5,
+        "prepare_ahead_checklist": [],
+        "primary_recommendation": "aig-audit-pack",
+        "prohibited_practice_verdict": "PASS — no obvious prohibited-practice exposure.",
+        "role": "deployer",
+        "secondary_recommendations": [
+          "aig-resilience-overlap",
+          "aig-fairness-bias"
+        ]
+      }
+    }
+  },
       "export_capability": [
         "pdf"
       ]
@@ -19710,12 +19710,12 @@
       "tool_id": "art-292-attest-settlement-orchestrator",
       "tool_version": "1.0.0",
       "display_name": "Settlement Orchestrator Attestation",
-      "mcp_name": "attest_settlement_orchestrator",
+      "mcp_name": "lint_settlement_orchestrator_conformance",
       "mandate_type": "infrastructure_mandate",
       "wave": 53,
       "gpu": false,
       "url": "https://ainumbers.co/chaingraph/art-292-attest-settlement-orchestrator.html",
-      "description": "Extends the attest_mcp_server (art-33) self-attestation doctrine to the settlement decision path: attests the off-chain orchestrator deciding commit/halt on a shared-ledger orchestration layer, never the ledger itself. Four-domain check (manifest lint, decision-policy reference, kernel-binding audit, transport audit) into a composite ship-readiness grade, binding the decision policy and invoked kernels to an execution-receipt chain.",
+      "description": "Extends the lint_mcp_server_conformance (art-33) self-reported conformance lint to the settlement decision path: checks the off-chain orchestrator deciding commit/halt on a shared-ledger orchestration layer, never the ledger itself. Four-domain check (manifest lint, decision-policy reference, kernel-binding audit, transport audit) into a composite ship-readiness grade, binding the decision policy and invoked kernels to an execution-receipt chain. This is an unsigned lint result, not a signed attestation. audit_signature.signatures is empty by design, as it is on every unsigned OpenChainGraph node. Formerly named attest_settlement_orchestrator; that name remains accepted permanently.",
       "input_schema_ref": "chaingraph/art-292-attest-settlement-orchestrator.html#manifest",
       "deadline": null,
       "deadline_note": "Swift shared-ledger MVP live 2026-07-09; orchestration-layer attestation need follows the settlement-contract lint.",
@@ -19726,7 +19726,7 @@
       "status": "live",
       "conformance_fixtures": true,
       "compute_capability": "server",
-      "compute_images": [{"system":"sha256-source","image_id":"sha256:4e7ce5129e31667f5c70ae5a5beb2d34564f5217b8e87133a8732f2bfdfee90d","valid_from":"2026-07-10"},{"system":"risc0","image_id":"sha256:a1a0bc89b5b1febaeda3519f6dbade0fa5ac16beeb143c4e1b01689573567bc6","valid_from":"2026-07-13"}],
+      "compute_images": [{"system":"sha256-source","image_id":"sha256:e62a92dde406825f63c0b95978cb5a1070ed19f539f9c3a665a53cd2257c5ee0","valid_from":"2026-07-10"},{"system":"risc0","image_id":"sha256:a1a0bc89b5b1febaeda3519f6dbade0fa5ac16beeb143c4e1b01689573567bc6","valid_from":"2026-07-13"}],
       "export_capability": [
         "pdf",
         "xlsx"
@@ -23121,7 +23121,7 @@
   "status": "live",
   "conformance_fixtures": true,
   "compute_capability": "server",
-  "compute_images": [{"system":"sha256-source","image_id":"sha256:26c871dce0c13abab30f09deb7464533b71aeb0efca02e190a0bd388dd7274a1","valid_from":"2026-07-10"},{"system":"risc0","image_id":"sha256:a1a0bc89b5b1febaeda3519f6dbade0fa5ac16beeb143c4e1b01689573567bc6","valid_from":"2026-07-10"}],
+  "compute_images": [{"system":"sha256-source","image_id":"sha256:7536fd33a1939b2ccca8c639a235de97b52d53a4897d621ce3a6af1218aae4a5","valid_from":"2026-07-10"},{"system":"risc0","image_id":"sha256:a1a0bc89b5b1febaeda3519f6dbade0fa5ac16beeb143c4e1b01689573567bc6","valid_from":"2026-07-10"}],
   "export_capability": [
     "json"
   ],
@@ -28337,28 +28337,17 @@
   "status": "live",
   "conformance_fixtures": true,
   "compute_capability": "server",
-  "compute_images": [
-    {
-      "system": "sha256-source",
-      "image_id": "sha256:56df585464140fcefbfbbc2e7b6131b2c47dc68f68df3c43db1224690069237d",
-      "valid_from": "2026-07-10"
-    },
-    {
-      "system": "risc0",
-      "image_id": "sha256:a1a0bc89b5b1febaeda3519f6dbade0fa5ac16beeb143c4e1b01689573567bc6",
-      "valid_from": "2026-07-23"
-    }
-  ],
+  "compute_images": [{"system":"sha256-source","image_id":"sha256:fd23920a354af2d91e43fa946991d108f2d99c7a9565ba3dbca922aba445e5ad","valid_from":"2026-07-10"},{"system":"risc0","image_id":"sha256:a1a0bc89b5b1febaeda3519f6dbade0fa5ac16beeb143c4e1b01689573567bc6","valid_from":"2026-07-23"}],
   "compute_proof_ready": "ready",
   "compute_proof": {
     "type": "ZkVmReceipt",
     "system": "risc0",
     "receiptFormat": "groth16-bn254",
     "imageId": "sha256:a1a0bc89b5b1febaeda3519f6dbade0fa5ac16beeb143c4e1b01689573567bc6",
-    "seal": "I6KuCx6WbpRvZdlolChILr8xjhjWflXpkQ2E1twLKf0RqvJSy1eUjPiGuaScFEZ0yjLLI46bGG62rWbdwZb+iwagEbGUosurLKfny4KCFNs/fJ+99VA1UDVJkKUeaP+BJh1mYiGlnC2tazI09rET74e3QHBgnKqTMn1fQdlOWeERf4SnX/NgJhRb3aHKprb/t69SMcRfc+t9gSqW7F3Dpx4+gZqeulzCLM8ysTqz8GiPM5G5Jc8uJWhLq698I6P7IFHlUrNKbpxEtbQ0Xyq0uiIfB4rT8EmEMuG5JEdnrDYus8E3gaWGjUZ49glSJMN04vEQHh7XkKYKL7MCFwE1Lg==",
+    "seal": "DbLn4f1O/b1GmYDwBx/Zuxc/giU/4/1UDriy0epMnlwjCGDZvDtuT0mNK+6SaSTT3i9Rd9+0pKFc97zGAsm3Cw6iE0n59nt6R/3JF3kayrphwmvf+UGmfDyN+X1qy0SAFa8Bd+aIL9fD04DVZKXmzoMp7bmYumrlkytxWFQ90FYTGuUQ6I+CjPOpGzvaYXso7H8BwcUsI5hnKvpBu5P96AuAI+sKuNJPnKphzr7R5m3ytZbdTQ9oVqL9z9yZbm+LGlpW9ysM8uB5H3Gof+si8HcF4mEfwb3cCKQNQEIMXV4FpSPN0aiBk+OZ3gyYMFoU4vLdYRZX1XD2NotVJgGKeg==",
     "journal": {
       "chaingraph_version": "0.4.0",
-      "kernel_digest": "sha256:56df585464140fcefbfbbc2e7b6131b2c47dc68f68df3c43db1224690069237d",
+      "kernel_digest": "sha256:fd23920a354af2d91e43fa946991d108f2d99c7a9565ba3dbca922aba445e5ad",
       "output": {
         "chain_position": "first",
         "checks": [
@@ -28395,7 +28384,7 @@
         "operator_id": "mrm-data-governance-team",
         "record_status": "COMPLETE",
         "referenced_receipt": null,
-        "regulatory_basis": "EU AI Act (Reg. 2024/1689) Art 10 (data and data governance), Annex IV 2(d) (technical documentation: data provenance, collection, labelling, cleaning); SR 11-7 model risk management data-lineage practice (US domestic analog)",
+        "regulatory_basis": "EU AI Act (Reg. 2024/1689) Art 10 (data and data governance), Annex IV 2(d) (technical documentation: data provenance, collection, labelling, cleaning); SR 26-2 model risk management data-lineage practice (US domestic analog; supersedes SR 11-7 from 2026-04-17)",
         "retention_months": 12,
         "scope_note": "Documents dataset lineage and governance metadata for a training run. Does NOT validate dataset quality, bias, or representativeness -- those remain a firm judgment call outside this kernel's deterministic boundary.",
         "sha256_prev_lineage_hash": null,
@@ -33916,12 +33905,304 @@
   "status": "live",
   "conformance_fixtures": true,
   "compute_capability": "server",
-  "compute_images": [{"system":"sha256-source","image_id":"sha256:400131baae5bef4da3dcb65a389b7eae6ef0e310ab7d91747a5a89bb26666102","valid_from":"2026-07-10"}],
-  "compute_proof_ready": "deferred",
-  "deferred_reason": "New node shipped by BDX-K-1. Proving runs on the asynchronous GPU queue outside this repository, so no receipt can be attached in the change that introduces the kernel. Queued for a follow-up prove row against the universal guest image; the deferral raises the ratchet baseline and re-opens the gap until that row lands.",
+  "compute_images": [
+    {
+      "system": "sha256-source",
+      "image_id": "sha256:400131baae5bef4da3dcb65a389b7eae6ef0e310ab7d91747a5a89bb26666102",
+      "valid_from": "2026-07-10"
+    },
+    {
+      "system": "risc0",
+      "image_id": "sha256:a1a0bc89b5b1febaeda3519f6dbade0fa5ac16beeb143c4e1b01689573567bc6",
+      "valid_from": "2026-08-01"
+    }
+  ],
+  "compute_proof_ready": "ready",
   "export_capability": [
     "json"
-  ]
+  ],
+  "compute_proof": {
+    "type": "ZkVmReceipt",
+    "system": "risc0",
+    "receiptFormat": "groth16-bn254",
+    "imageId": "sha256:a1a0bc89b5b1febaeda3519f6dbade0fa5ac16beeb143c4e1b01689573567bc6",
+    "seal": "IVCyDEfOHmcBqG5B64cd40fKzNszpy/OhBKMy+Ykd1QAHJOjw7MkzOxZVDopuRi0SWa8nA8VOK0qLzbTfho0Bw2yNNYgzNZM4rKlMsAB8fJUnEakP03m1L7JMjG1kwk7BUN1kgEhREhMA9kiS+3ZFDrBR7QSssthWjQgJpNc8qQL0nJ535o6UKQrRLYei6OCOGwOb6uspQ1Jhps/Tar0si4Ljw5x+Ug/4FgKQ+JkmSiPls2A6Bza+nTxcqwYy9YuG58202JF/etOvP3EpuFOVlXYhp6BofWZg5InSwV8uPUvCZUD+nju01yFh12YMM70poemk0lzYpYt+rCs/ofZIQ==",
+    "journal": {
+      "chaingraph_version": "0.4.0",
+      "kernel_digest": "sha256:400131baae5bef4da3dcb65a389b7eae6ef0e310ab7d91747a5a89bb26666102",
+      "output": {
+        "aggregate_utilisation": {
+          "assessed": false,
+          "basis": "gross_premium",
+          "breached": false,
+          "consumed_display": null,
+          "consumed_minor_units": null,
+          "headroom_display": null,
+          "headroom_minor_units": null,
+          "limit_currency": null,
+          "limit_display": null,
+          "limit_minor_units": null,
+          "reason": "No aggregate limit was supplied, so utilisation of the binding authority could not be assessed. The limit is held by the carrier and is deliberately not derived from the bordereau.",
+          "utilisation_basis_points": null,
+          "utilisation_display": null
+        },
+        "amounts_in": "major_units",
+        "basis": {
+          "basis_id": "CALLER-SUPPLIED-MAPPING",
+          "basis_label": "Column mapping, standard label and standard version as declared by the caller",
+          "field_set_version": "1.0.0",
+          "mapping_source": "caller_declared",
+          "shipped_field_list": false,
+          "shipped_rate_table": false,
+          "standard_conformance_checked": false,
+          "standard_note": "No market data standard is bundled, read, validated or asserted here. The caller names which of their own columns carries each measure, and the standard label and version they pin are echoed so a later revision dates an old receipt rather than falsifying it."
+        },
+        "bordereau_class": "premium",
+        "comparison_basis": "The recomputed side of every comparison is footed here from the rows supplied. The authority limits on the other side are carrier held and are declared by the caller, never derived from the bordereau, which is what gives that comparison independent provenance. Exact agreement on a footing is a weak result because both sides added the same column.",
+        "comparison_state": "matches",
+        "currencies": [
+          {
+            "brokerage_display": "1250.05",
+            "brokerage_minor_units": 125005,
+            "ceded_display": "2000.00",
+            "ceded_minor_units": 200000,
+            "coverholder_commission_display": "1875.00",
+            "coverholder_commission_minor_units": 187500,
+            "currency": "GBP",
+            "gross_premium_display": "12500.55",
+            "gross_premium_minor_units": 1250055,
+            "line_count": 2,
+            "net_agrees_internally": true,
+            "net_as_mapped_display": "5831.68",
+            "net_as_mapped_minor_units": 583168,
+            "net_internal_difference_display": "0.00",
+            "net_internal_difference_minor_units": 0,
+            "net_recomputed_display": "5831.68",
+            "net_recomputed_minor_units": 583168,
+            "taxes_by_column": [
+              {
+                "column": "IPT Amount",
+                "total_display": "1500.07",
+                "total_minor_units": 150007
+              },
+              {
+                "column": "Levy Amount",
+                "total_display": "43.75",
+                "total_minor_units": 4375
+              }
+            ],
+            "taxes_display": "1543.82",
+            "taxes_minor_units": 154382
+          },
+          {
+            "brokerage_display": "400.00",
+            "brokerage_minor_units": 40000,
+            "ceded_display": "0.00",
+            "ceded_minor_units": 0,
+            "coverholder_commission_display": "600.00",
+            "coverholder_commission_minor_units": 60000,
+            "currency": "EUR",
+            "gross_premium_display": "4000.00",
+            "gross_premium_minor_units": 400000,
+            "line_count": 1,
+            "net_agrees_internally": true,
+            "net_as_mapped_display": "3000.00",
+            "net_as_mapped_minor_units": 300000,
+            "net_internal_difference_display": "0.00",
+            "net_internal_difference_minor_units": 0,
+            "net_recomputed_display": "3000.00",
+            "net_recomputed_minor_units": 300000,
+            "taxes_by_column": [
+              {
+                "column": "IPT Amount",
+                "total_display": "0.00",
+                "total_minor_units": 0
+              },
+              {
+                "column": "Levy Amount",
+                "total_display": "0.00",
+                "total_minor_units": 0
+              }
+            ],
+            "taxes_display": "0.00",
+            "taxes_minor_units": 0
+          }
+        ],
+        "diff": [
+          {
+            "agrees": true,
+            "asserted_display": "12500.55",
+            "asserted_minor_units": 1250055,
+            "currency": "GBP",
+            "detail": "The total footed from the rows supplied equals the total asserted for this measure.",
+            "difference_display": "0.00",
+            "difference_minor_units": 0,
+            "in_rows": true,
+            "measure": "gross_premium",
+            "recomputed_display": "12500.55",
+            "recomputed_minor_units": 1250055
+          },
+          {
+            "agrees": true,
+            "asserted_display": "1250.05",
+            "asserted_minor_units": 125005,
+            "currency": "GBP",
+            "detail": "The total footed from the rows supplied equals the total asserted for this measure.",
+            "difference_display": "0.00",
+            "difference_minor_units": 0,
+            "in_rows": true,
+            "measure": "brokerage",
+            "recomputed_display": "1250.05",
+            "recomputed_minor_units": 125005
+          },
+          {
+            "agrees": true,
+            "asserted_display": "1875.00",
+            "asserted_minor_units": 187500,
+            "currency": "GBP",
+            "detail": "The total footed from the rows supplied equals the total asserted for this measure.",
+            "difference_display": "0.00",
+            "difference_minor_units": 0,
+            "in_rows": true,
+            "measure": "coverholder_commission",
+            "recomputed_display": "1875.00",
+            "recomputed_minor_units": 187500
+          },
+          {
+            "agrees": true,
+            "asserted_display": "2000.00",
+            "asserted_minor_units": 200000,
+            "currency": "GBP",
+            "detail": "The total footed from the rows supplied equals the total asserted for this measure.",
+            "difference_display": "0.00",
+            "difference_minor_units": 0,
+            "in_rows": true,
+            "measure": "ceded",
+            "recomputed_display": "2000.00",
+            "recomputed_minor_units": 200000
+          },
+          {
+            "agrees": true,
+            "asserted_display": "5831.68",
+            "asserted_minor_units": 583168,
+            "currency": "GBP",
+            "detail": "The total footed from the rows supplied equals the total asserted for this measure.",
+            "difference_display": "0.00",
+            "difference_minor_units": 0,
+            "in_rows": true,
+            "measure": "net",
+            "recomputed_display": "5831.68",
+            "recomputed_minor_units": 583168
+          },
+          {
+            "agrees": true,
+            "asserted_display": "1543.82",
+            "asserted_minor_units": 154382,
+            "currency": "GBP",
+            "detail": "The total footed from the rows supplied equals the total asserted for this measure.",
+            "difference_display": "0.00",
+            "difference_minor_units": 0,
+            "in_rows": true,
+            "measure": "taxes",
+            "recomputed_display": "1543.82",
+            "recomputed_minor_units": 154382
+          },
+          {
+            "agrees": true,
+            "asserted_display": "4000.00",
+            "asserted_minor_units": 400000,
+            "currency": "EUR",
+            "detail": "The total footed from the rows supplied equals the total asserted for this measure.",
+            "difference_display": "0.00",
+            "difference_minor_units": 0,
+            "in_rows": true,
+            "measure": "gross_premium",
+            "recomputed_display": "4000.00",
+            "recomputed_minor_units": 400000
+          },
+          {
+            "agrees": true,
+            "asserted_display": "3000.00",
+            "asserted_minor_units": 300000,
+            "currency": "EUR",
+            "detail": "The total footed from the rows supplied equals the total asserted for this measure.",
+            "difference_display": "0.00",
+            "difference_minor_units": 0,
+            "in_rows": true,
+            "measure": "net",
+            "recomputed_display": "3000.00",
+            "recomputed_minor_units": 300000
+          }
+        ],
+        "duplicates": [],
+        "expected_periods": [],
+        "limit_breaches": [],
+        "line_count": 3,
+        "lines_with_absent_mapped_fields": [],
+        "mapped_columns": [
+          "Brokerage Amount",
+          "Coverholder Commission Amount",
+          "Gross Written Premium",
+          "IPT Amount",
+          "Levy Amount",
+          "Limit Of Liability",
+          "Net Premium Due To Carrier",
+          "Reinsurance Ceded Premium",
+          "Reporting Period",
+          "Risk Inception Date",
+          "Settlement Currency",
+          "Unique Market Reference"
+        ],
+        "measures_mapped": {
+          "brokerage": true,
+          "ceded": true,
+          "coverholder_commission": true,
+          "currency": true,
+          "gross_premium": true,
+          "inception_date": true,
+          "net": true,
+          "period": true,
+          "policy_ref": true,
+          "sum_insured": true,
+          "taxes": true
+        },
+        "minor_unit_exponent": 2,
+        "missing_periods": [],
+        "no_standard_claim": "This tool bundles no data standard field list, no schema and no rate or commission table, reads none, and asserts conformance with none. The mapping and the standard version are the caller declaration.",
+        "note": "Deterministic delegated authority bordereau recomputation for one stated period. Single-run and stateless: it holds no records, runs on no schedule, and retains nothing. It foots the rows supplied, compares them against asserted totals where given, and measures utilisation against binding authority limits the caller declares. It makes no assertion that authority was properly exercised, performs no data standard conformance validation, no sanctions or terms of business screening, and no reserving or pricing adequacy assessment. It is not a regulatory filing and not legal advice.",
+        "observed_periods": [
+          "2025-07"
+        ],
+        "out_of_scope_lines": [],
+        "per_risk_basis": "sum_insured",
+        "per_risk_limit_display": null,
+        "per_risk_limit_minor_units": null,
+        "period_label": "2025-07 monthly premium bordereau",
+        "pii_note": "Only columns named in field_mapping are read. Unmapped columns are ignored and appear nowhere in this artifact, and no rejection record echoes a supplied cell value. Inputs should be anonymised or synthetic.",
+        "population_defect": false,
+        "rationale": [
+          "Bordereau recomputed for period 2025-07 monthly premium bordereau over 3 supplied lines, class premium, against the column mapping the caller declared and the standard pinned as Coverholder premium bordereau layout as agreed in the binding authority version 2025-04 revision.",
+          "Only the columns named in the mapping were read. Every other column was ignored and appears nowhere in these results, which is what keeps insured names, addresses and claim narratives out of the computed output. Where a mapped cell was unusable it is named by column and type, and the cell contents are never echoed.",
+          "6 supplied cells sat in columns the mapping does not name. Nothing was read from them and none reached these results. They are counted rather than listed, because listing them would be the leak this tool exists to avoid. If these rows were handed straight to the artifact builder without being cut down to the mapped columns first, those cells will still appear in the echoed input parameters, so cut the file down to the mapped columns before building a receipt from it.",
+          "Footing produced totals in 2 currencies: GBP gross premium 12500.55, net recomputed 5831.68; EUR gross premium 4000.00, net recomputed 3000.00. Net is derived as gross premium less brokerage, coverholder commission, mapped taxes and ceded premium.",
+          "Exact agreement on a footing is a weak result and is reported as such: the coverholder footed the same column, so agreement is expected. The check that carries weight is utilisation of the binding authority, because that limit is held by the carrier and is not on the bordereau. It is a declared input here and is never derived from the file under review.",
+          "No aggregate limit was supplied, so utilisation of the binding authority could not be assessed. The limit is held by the carrier and is deliberately not derived from the bordereau.",
+          "No line and no aggregate exceeded a limit the caller declared.",
+          "No repeated policy reference, no absent expected period and no line with an unusable mapped field were found in the population supplied.",
+          "The footing agrees with every one of the 8 asserted figures supplied. Agreement on a footing means both sides added the same column the same way.",
+          "No data standard field list, schema, rate table or commission table is held in this tool, and nothing here claims which revision of any standard is current. A later revision makes this receipt dated, not wrong."
+        ],
+        "recompute_only_note": "Where comparison_state is recompute_only, no asserted totals were supplied and this artifact records what the rows foot to, never agreement. A scripted caller must not read it as a pass.",
+        "rejected_inputs": [],
+        "standard_label": "Coverholder premium bordereau layout as agreed in the binding authority",
+        "standard_pinned": true,
+        "standard_version": "2025-04 revision",
+        "unexpected_periods": [],
+        "unmapped_column_cells_ignored": 6,
+        "unmapped_measures": []
+      }
+    }
+  }
 },
     {
   "tool_id": "art-509-recompute-payment-waterfall",
@@ -33941,12 +34222,314 @@
   "status": "live",
   "conformance_fixtures": true,
   "compute_capability": "server",
-  "compute_images": [{"system":"sha256-source","image_id":"sha256:79ba683f5f9684c6c7ab2b2cfe7cdd8546591b5de200da9f10a3bb9637e408f1","valid_from":"2026-07-10"}],
-  "compute_proof_ready": "deferred",
-  "deferred_reason": "New node shipped by SECZ-K-1. Proving runs on the asynchronous GPU queue outside this repository, so no receipt can be attached in the change that introduces the kernel. Queued for a follow-up prove row against the universal guest image; the deferral raises the ratchet baseline and re-opens the gap until that row lands.",
+  "compute_images": [
+    {
+      "system": "sha256-source",
+      "image_id": "sha256:79ba683f5f9684c6c7ab2b2cfe7cdd8546591b5de200da9f10a3bb9637e408f1",
+      "valid_from": "2026-07-10"
+    },
+    {
+      "system": "risc0",
+      "image_id": "sha256:a1a0bc89b5b1febaeda3519f6dbade0fa5ac16beeb143c4e1b01689573567bc6",
+      "valid_from": "2026-08-01"
+    }
+  ],
+  "compute_proof_ready": "ready",
   "export_capability": [
     "json"
-  ]
+  ],
+  "compute_proof": {
+    "type": "ZkVmReceipt",
+    "system": "risc0",
+    "receiptFormat": "groth16-bn254",
+    "imageId": "sha256:a1a0bc89b5b1febaeda3519f6dbade0fa5ac16beeb143c4e1b01689573567bc6",
+    "seal": "HRcJQ0P6fx+FFKRgwWSdqySc6vFH8m7f5P2Ai1ywV2Emusvp45nDH6kQOmoWx6Lc7G2P5IO6ESG78yR7JzGe3Ce+Jj3vWn1tITCSTtBlWohci8pADCLvoi+0kUH2QuspGNwS5UO21LSbgxoKOeawXCb/pI5pql4Id8e+XqDrHnkWP7Hp849zsZzP6b5sucN1ok27SjtR6NkI0tHq2QZCfSzTdX55rvofgKuXMQlNFLud0Y7958KNzh33XK5GleYqHYZ2SG8aHnYJZsBOCdV18qSGYc3Er6/gcyXrjBJiCNwIVxDoKMaUKeFd7/B+jShMbLAOIte0F029+JjtrncJQg==",
+    "journal": {
+      "chaingraph_version": "0.4.0",
+      "kernel_digest": "sha256:79ba683f5f9684c6c7ab2b2cfe7cdd8546591b5de200da9f10a3bb9637e408f1",
+      "output": {
+        "asserted_step_count": 2,
+        "available_funds_by_ledger": [
+          {
+            "ledger": "interest",
+            "opening_display": "125000.00",
+            "opening_minor_units": 12500000
+          }
+        ],
+        "basis": {
+          "basis_id": "CALLER-SUPPLIED-LADDER",
+          "basis_label": "Priority of payments as declared by the caller from the transaction documents",
+          "field_set_version": "1.0.0",
+          "ladder_source": "transaction_documents",
+          "template_conformance_checked": false,
+          "template_note": "No Article 7 disclosure template is read, validated or asserted anywhere in this tool. The ladder comes from the deal documents the investor already holds."
+        },
+        "citations": {
+          "investor_diligence": {
+            "id": "Regulation (EU) 2017/2402 Article 5(4)",
+            "in_force_from": "2019-01-01",
+            "mapped_at": "2026-07-31",
+            "mapped_by": "AINumbers SECZ-K-1",
+            "scheme": "eu-regulation",
+            "uri": "https://eur-lex.europa.eu/eli/reg/2017/2402/oj"
+          },
+          "investor_report": {
+            "id": "Regulation (EU) 2017/2402 Article 7(1)(e)",
+            "in_force_from": "2019-01-01",
+            "mapped_at": "2026-07-31",
+            "mapped_by": "AINumbers SECZ-K-1",
+            "scheme": "eu-regulation",
+            "uri": "https://eur-lex.europa.eu/eli/reg/2017/2402/oj"
+          }
+        },
+        "comparison_basis": "The recomputed side of every comparison is derived here by running the caller declared ladder against the caller supplied available funds. It is not read from the investor report. A comparison is only meaningful because the two sides have independent provenance.",
+        "comparison_state": "matches",
+        "currency": "EUR",
+        "deal_ref": "SYNTH-2025-A",
+        "diff": [
+          {
+            "agrees": true,
+            "asserted_display": "1500.00",
+            "asserted_minor_units": 150000,
+            "detail": "The independently recomputed allocation equals the allocation the report asserts for this step.",
+            "difference_display": "0.00",
+            "difference_minor_units": 0,
+            "in_ladder": true,
+            "recomputed_display": "1500.00",
+            "recomputed_minor_units": 150000,
+            "step_id": "a"
+          },
+          {
+            "agrees": true,
+            "asserted_display": "3500.00",
+            "asserted_minor_units": 350000,
+            "detail": "The independently recomputed allocation equals the allocation the report asserts for this step.",
+            "difference_display": "0.00",
+            "difference_minor_units": 0,
+            "in_ladder": true,
+            "recomputed_display": "3500.00",
+            "recomputed_minor_units": 350000,
+            "step_id": "b"
+          },
+          {
+            "agrees": true,
+            "asserted_display": "62000.00",
+            "asserted_minor_units": 6200000,
+            "detail": "The independently recomputed allocation equals the allocation the report asserts for this step.",
+            "difference_display": "0.00",
+            "difference_minor_units": 0,
+            "in_ladder": true,
+            "recomputed_display": "62000.00",
+            "recomputed_minor_units": 6200000,
+            "step_id": "c"
+          },
+          {
+            "agrees": true,
+            "asserted_display": "40000.00",
+            "asserted_minor_units": 4000000,
+            "detail": "The independently recomputed allocation equals the allocation the report asserts for this step.",
+            "difference_display": "0.00",
+            "difference_minor_units": 0,
+            "in_ladder": true,
+            "recomputed_display": "40000.00",
+            "recomputed_minor_units": 4000000,
+            "step_id": "d"
+          },
+          {
+            "agrees": true,
+            "asserted_display": "18000.00",
+            "asserted_minor_units": 1800000,
+            "detail": "The independently recomputed allocation equals the allocation the report asserts for this step.",
+            "difference_display": "0.00",
+            "difference_minor_units": 0,
+            "in_ladder": true,
+            "recomputed_display": "18000.00",
+            "recomputed_minor_units": 1800000,
+            "step_id": "e"
+          }
+        ],
+        "first_unfunded_step": "e",
+        "ladder_ref": {
+          "dated": "2025-05-01",
+          "document_ref": "SYNTHETIC PROSPECTUS SYNTH-2025-A",
+          "section_ref": "Priority of Payments, items a to f",
+          "supplied": true,
+          "version": "1.0"
+        },
+        "minor_unit_exponent": 2,
+        "no_template_claim": "This tool reads no Article 7 disclosure template, validates no field set, and asserts conformance with no annex. The priority of payments is taken from the caller transaction documents.",
+        "note": "Deterministic securitisation payment waterfall recomputation for one stated period. Single-run and stateless: it holds no records, runs on no schedule, and retains nothing. The allocation is derived here from a caller declared priority ladder and caller supplied available funds, so a comparison against an investor report is an independent recomputation rather than a re-footing of published totals. It forecasts nothing, models no scenario, performs no credit or rating analysis, and makes no assertion about the compliance status of the deal. It is not a regulatory filing and not legal advice.",
+        "period_label": "2025-07 collection period",
+        "rationale": [
+          "Waterfall recomputed for period 2025-07 collection period on deal reference SYNTH-2025-A, against the priority ladder pinned as SYNTHETIC PROSPECTUS SYNTH-2025-A Priority of Payments, items a to f version 1.0 dated 2025-05-01.",
+          "Total available funds of 125000.00 EUR across 1 ledger were allocated down 5 ladder steps in the order supplied, honouring every declared cap.",
+          "2 of 5 steps carry an amount the caller declared as ASSERTED rather than recomputed, typically a trustee fee or a senior expense set by a fee letter that is not a public document. Those amounts are allocated exactly as supplied and are reported as asserted inputs, never as figures this tool derived.",
+          "Funds ran out at step e, which is the first step whose claim could not be met in full. Total shortfall across the ladder is 6000.00 EUR.",
+          "Residual after the ladder is 0.00 EUR.",
+          "1 test evaluated against caller-supplied thresholds: 1 pass, 0 fail, 0 undetermined. No market convention threshold is baked into this tool.",
+          "The independently recomputed allocation agrees with every one of the 5 steps the supplied report allocations name. The left-hand side of that comparison was computed here from the ladder, not lifted from the report.",
+          "No Article 7 disclosure template was read, validated or asserted. The priority of payments used here is the one declared from the transaction documents, which is why a template amendment cannot reach this arithmetic."
+        ],
+        "recompute_only_note": "Where comparison_state is recompute_only, no asserted allocations were supplied and this artifact records what the ladder produces, never agreement with an investor report.",
+        "recomputed_step_count": 3,
+        "rejected_inputs": [],
+        "residual_by_ledger": [
+          {
+            "ledger": "interest",
+            "opening_display": "125000.00",
+            "opening_minor_units": 12500000,
+            "residual_display": "0.00",
+            "residual_minor_units": 0
+          }
+        ],
+        "residual_display": "0.00",
+        "residual_minor_units": 0,
+        "step_count": 5,
+        "steps": [
+          {
+            "amount_source": "asserted",
+            "basis": "Fee letter, not a public document",
+            "cap_applied": false,
+            "cap_display": null,
+            "cap_minor_units": null,
+            "claim_display": "1500.00",
+            "claim_minor_units": 150000,
+            "due_display": "1500.00",
+            "due_minor_units": 150000,
+            "fully_paid": true,
+            "label": "Trustee fee",
+            "ledger": "interest",
+            "ledger_supplied": true,
+            "paid_display": "1500.00",
+            "paid_minor_units": 150000,
+            "position": 1,
+            "shortfall_display": "0.00",
+            "shortfall_minor_units": 0,
+            "step_id": "a",
+            "suppressed_by_test": null
+          },
+          {
+            "amount_source": "asserted",
+            "basis": "Fee letter, not a public document",
+            "cap_applied": false,
+            "cap_display": "4000.00",
+            "cap_minor_units": 400000,
+            "claim_display": "3500.00",
+            "claim_minor_units": 350000,
+            "due_display": "3500.00",
+            "due_minor_units": 350000,
+            "fully_paid": true,
+            "label": "Senior expenses",
+            "ledger": "interest",
+            "ledger_supplied": true,
+            "paid_display": "3500.00",
+            "paid_minor_units": 350000,
+            "position": 2,
+            "shortfall_display": "0.00",
+            "shortfall_minor_units": 0,
+            "step_id": "b",
+            "suppressed_by_test": null
+          },
+          {
+            "amount_source": "recomputed",
+            "basis": "Prospectus interest provisions",
+            "cap_applied": false,
+            "cap_display": null,
+            "cap_minor_units": null,
+            "claim_display": "62000.00",
+            "claim_minor_units": 6200000,
+            "due_display": "62000.00",
+            "due_minor_units": 6200000,
+            "fully_paid": true,
+            "label": "Class A interest",
+            "ledger": "interest",
+            "ledger_supplied": true,
+            "paid_display": "62000.00",
+            "paid_minor_units": 6200000,
+            "position": 3,
+            "shortfall_display": "0.00",
+            "shortfall_minor_units": 0,
+            "step_id": "c",
+            "suppressed_by_test": null
+          },
+          {
+            "amount_source": "recomputed",
+            "basis": "Prospectus reserve provisions",
+            "cap_applied": false,
+            "cap_display": "40000.00",
+            "cap_minor_units": 4000000,
+            "claim_display": "40000.00",
+            "claim_minor_units": 4000000,
+            "due_display": "40000.00",
+            "due_minor_units": 4000000,
+            "fully_paid": true,
+            "label": "Cash reserve replenishment",
+            "ledger": "interest",
+            "ledger_supplied": true,
+            "paid_display": "40000.00",
+            "paid_minor_units": 4000000,
+            "position": 4,
+            "shortfall_display": "0.00",
+            "shortfall_minor_units": 0,
+            "step_id": "d",
+            "suppressed_by_test": null
+          },
+          {
+            "amount_source": "recomputed",
+            "basis": "Prospectus interest provisions",
+            "cap_applied": false,
+            "cap_display": null,
+            "cap_minor_units": null,
+            "claim_display": "24000.00",
+            "claim_minor_units": 2400000,
+            "due_display": "24000.00",
+            "due_minor_units": 2400000,
+            "fully_paid": false,
+            "label": "Class B interest",
+            "ledger": "interest",
+            "ledger_supplied": true,
+            "paid_display": "18000.00",
+            "paid_minor_units": 1800000,
+            "position": 5,
+            "shortfall_display": "6000.00",
+            "shortfall_minor_units": 600000,
+            "step_id": "e",
+            "suppressed_by_test": null
+          }
+        ],
+        "test_results": [
+          {
+            "basis": "Threshold declared by the caller from the transaction documents",
+            "basis_detail": "Ratio test evaluated by integer cross-multiplication against the threshold supplied for it. No division is performed on the comparison path.",
+            "comparator": "gte",
+            "divert_applied": false,
+            "divert_declared": false,
+            "divert_description": "The caller declared no diversion for this test, so a failure suppresses nothing. Divert behaviour is never inferred here.",
+            "label": "Credit enhancement test",
+            "measured": {
+              "denominator": 10000,
+              "form": "ratio",
+              "numerator": 1450
+            },
+            "outcome": "pass",
+            "suppress_step_ids": [],
+            "test_id": "credit-enhancement",
+            "threshold": {
+              "denominator": 10000,
+              "form": "ratio",
+              "numerator": 1000
+            }
+          }
+        ],
+        "total_available_display": "125000.00",
+        "total_available_minor_units": 12500000,
+        "total_paid_display": "125000.00",
+        "total_paid_minor_units": 12500000,
+        "total_shortfall_display": "6000.00",
+        "total_shortfall_minor_units": 600000
+      }
+    }
+  }
 },
     {
   "tool_id": "art-510-build-art5-diligence-evidence",
@@ -33966,12 +34549,627 @@
   "status": "live",
   "conformance_fixtures": true,
   "compute_capability": "server",
-  "compute_images": [{"system":"sha256-source","image_id":"sha256:72798cbb71379e42e0b388c97b0781d1189fd20a06e289e2bbff86254b0dd17e","valid_from":"2026-07-10"}],
-  "compute_proof_ready": "deferred",
-  "deferred_reason": "New node shipped by SECZ-K-1. Proving runs on the asynchronous GPU queue outside this repository, so no receipt can be attached in the change that introduces the kernel. Queued for a follow-up prove row against the universal guest image; the deferral raises the ratchet baseline and re-opens the gap until that row lands.",
+  "compute_images": [
+    {
+      "system": "sha256-source",
+      "image_id": "sha256:72798cbb71379e42e0b388c97b0781d1189fd20a06e289e2bbff86254b0dd17e",
+      "valid_from": "2026-07-10"
+    },
+    {
+      "system": "risc0",
+      "image_id": "sha256:a1a0bc89b5b1febaeda3519f6dbade0fa5ac16beeb143c4e1b01689573567bc6",
+      "valid_from": "2026-08-01"
+    }
+  ],
+  "compute_proof_ready": "ready",
   "export_capability": [
     "json"
-  ]
+  ],
+  "compute_proof": {
+    "type": "ZkVmReceipt",
+    "system": "risc0",
+    "receiptFormat": "groth16-bn254",
+    "imageId": "sha256:a1a0bc89b5b1febaeda3519f6dbade0fa5ac16beeb143c4e1b01689573567bc6",
+    "seal": "AljYChzZedxh9+Ba33VdAXxg6iGHe25nKu3qih7cE9gLoebsjK1nVt/rSLF/regO/ltpuAeUql6gETxM1EEoFRzlz5AUK70b6Wf4BeM5BHlyyamiIA/MH/QSCxrHr9P7H+3sayvq0NxNj596fAO0MCH5JKBtpSRdh3nl77JACNEiWpIwPjWB4cBydQy6qI59hk8pR/C+JGOD8jzGBgGOWRxgSNjyj+/v86RV4qNUH1rhbOlDlAMtAsU4mtg9VNGzDqPfkzoMi2Iz02DBvsyDiHqU41oau89Bdx0ha/w05DwnXLhsAlqZEln4rnML7TZ9pBhzfR4UQThDyyoWkjBtCg==",
+    "journal": {
+      "chaingraph_version": "0.4.0",
+      "kernel_digest": "sha256:72798cbb71379e42e0b388c97b0781d1189fd20a06e289e2bbff86254b0dd17e",
+      "output": {
+        "agent_parity_findings": [
+          {
+            "code": "ART5_AGENT_WITHOUT_HUMAN_ROLE_MANDATE",
+            "detail": "An agent identity filed this sign-off and carries no explicit human-role mandate, so under SPEC.md §27.8 it does not satisfy the role. The record is carried and is not counted toward the trail.",
+            "duty_id": "monitor_ongoing_performance",
+            "identity_id": "did:example:agent-1",
+            "role": "approver"
+          }
+        ],
+        "citations": {
+          "art5_1_a_credit_granting": {
+            "id": "Regulation (EU) 2017/2402 Article 5(1)(a)",
+            "in_force_from": "2021-04-09",
+            "mapped_at": "2026-07-31",
+            "mapped_by": "AINumbers SECZ-K-1",
+            "scheme": "eu-regulation",
+            "uri": "https://eur-lex.europa.eu/eli/reg/2021/557/oj"
+          },
+          "art5_1_c_risk_retention": {
+            "id": "Regulation (EU) 2017/2402 Article 5(1)(c)",
+            "in_force_from": "2021-04-09",
+            "mapped_at": "2026-07-31",
+            "mapped_by": "AINumbers SECZ-K-1",
+            "scheme": "eu-regulation",
+            "uri": "https://eur-lex.europa.eu/eli/reg/2021/557/oj"
+          },
+          "art5_1_e_disclosure": {
+            "id": "Regulation (EU) 2017/2402 Article 5(1)(e)",
+            "in_force_from": "2021-04-09",
+            "mapped_at": "2026-07-31",
+            "mapped_by": "AINumbers SECZ-K-1",
+            "scheme": "eu-regulation",
+            "uri": "https://eur-lex.europa.eu/eli/reg/2021/557/oj"
+          },
+          "art5_3_risk_assessment": {
+            "id": "Regulation (EU) 2017/2402 Article 5(3)",
+            "in_force_from": "2019-01-01",
+            "mapped_at": "2026-07-31",
+            "mapped_by": "AINumbers SECZ-K-1",
+            "scheme": "eu-regulation",
+            "uri": "https://eur-lex.europa.eu/eli/reg/2017/2402/oj"
+          },
+          "art5_4_b_stress_testing": {
+            "id": "Regulation (EU) 2017/2402 Article 5(4)(b)",
+            "in_force_from": "2019-01-01",
+            "mapped_at": "2026-07-31",
+            "mapped_by": "AINumbers SECZ-K-1",
+            "scheme": "eu-regulation",
+            "uri": "https://eur-lex.europa.eu/eli/reg/2017/2402/oj"
+          },
+          "art5_4_d_internal_reporting": {
+            "id": "Regulation (EU) 2017/2402 Article 5(4)(d)",
+            "in_force_from": "2019-01-01",
+            "mapped_at": "2026-07-31",
+            "mapped_by": "AINumbers SECZ-K-1",
+            "scheme": "eu-regulation",
+            "uri": "https://eur-lex.europa.eu/eli/reg/2017/2402/oj"
+          },
+          "art5_4_ongoing_monitoring": {
+            "id": "Regulation (EU) 2017/2402 Article 5(4)",
+            "in_force_from": "2019-01-01",
+            "mapped_at": "2026-07-31",
+            "mapped_by": "AINumbers SECZ-K-1",
+            "scheme": "eu-regulation",
+            "uri": "https://eur-lex.europa.eu/eli/reg/2017/2402/oj"
+          },
+          "art7_investor_report": {
+            "id": "Regulation (EU) 2017/2402 Article 7(1)(e)",
+            "in_force_from": "2019-01-01",
+            "mapped_at": "2026-07-31",
+            "mapped_by": "AINumbers SECZ-K-1",
+            "scheme": "eu-regulation",
+            "uri": "https://eur-lex.europa.eu/eli/reg/2017/2402/oj"
+          }
+        },
+        "deal_ref": "SYNTH-2025-A",
+        "distinctness_basis": "Roles count DISTINCT identity.id (SPEC.md §27.3), never records and never signing keys. One human rotating keys, or signing twice, counts once.",
+        "duty_count": 7,
+        "duty_results": [
+          {
+            "accountability_trail": {
+              "by_role": {
+                "approver": {
+                  "approval_count": 0,
+                  "counted_identities": [],
+                  "counted_identity_count": 0,
+                  "reason": "No qualifying signed record for this role on this duty. Absent evidence holds; it is never a fall-through pass.",
+                  "rejection_count": 0,
+                  "role": "approver",
+                  "status": "hold",
+                  "unsigned_approval_count": 0
+                },
+                "performer": {
+                  "approval_count": 0,
+                  "counted_identities": [],
+                  "counted_identity_count": 0,
+                  "reason": "No qualifying signed record for this role on this duty. Absent evidence holds; it is never a fall-through pass.",
+                  "rejection_count": 0,
+                  "role": "performer",
+                  "status": "hold",
+                  "unsigned_approval_count": 0
+                }
+              },
+              "duty_id": "verify_credit_granting_standards",
+              "record_count": 0,
+              "required_roles": [
+                "performer",
+                "approver"
+              ],
+              "roles_required_count": 2,
+              "roles_satisfied_count": 0,
+              "status": "hold"
+            },
+            "citation": {
+              "id": "Regulation (EU) 2017/2402 Article 5(1)(a)",
+              "in_force_from": "2021-04-09",
+              "mapped_at": "2026-07-31",
+              "mapped_by": "AINumbers SECZ-K-1",
+              "scheme": "eu-regulation",
+              "uri": "https://eur-lex.europa.eu/eli/reg/2021/557/oj"
+            },
+            "citation_source": "shipped_pin",
+            "decided_by": "The investor investment or credit function that performed the verification. This tool does not decide it.",
+            "duty_class": "verification_before_holding",
+            "duty_id": "verify_credit_granting_standards",
+            "evidence": [],
+            "evidence_count": 0,
+            "judgment_required": null,
+            "label": "Verify that the originator or original lender grants credits on the same sound and well-defined criteria it applies to non-securitised exposures.",
+            "performed_asserted": false,
+            "performed_note": null,
+            "position": 1,
+            "status": "outstanding",
+            "status_basis": "The investor has not declared this duty performed for this position and period. Absent evidence holds; nothing here treats silence as performance.",
+            "typical_evidence": "The originator credit policy, and the investor record of the comparison made against its non-securitised book."
+          },
+          {
+            "accountability_trail": {
+              "by_role": {
+                "approver": {
+                  "approval_count": 1,
+                  "counted_identities": [
+                    "did:example:officer-b"
+                  ],
+                  "counted_identity_count": 1,
+                  "reason": "At least one signed record names a distinct identity in this role on this duty.",
+                  "rejection_count": 0,
+                  "role": "approver",
+                  "status": "satisfied",
+                  "unsigned_approval_count": 0
+                },
+                "performer": {
+                  "approval_count": 1,
+                  "counted_identities": [
+                    "did:example:analyst-a"
+                  ],
+                  "counted_identity_count": 1,
+                  "reason": "At least one signed record names a distinct identity in this role on this duty.",
+                  "rejection_count": 0,
+                  "role": "performer",
+                  "status": "satisfied",
+                  "unsigned_approval_count": 0
+                }
+              },
+              "duty_id": "verify_risk_retention",
+              "record_count": 2,
+              "required_roles": [
+                "performer",
+                "approver"
+              ],
+              "roles_required_count": 2,
+              "roles_satisfied_count": 2,
+              "status": "satisfied"
+            },
+            "citation": {
+              "id": "Regulation (EU) 2017/2402 Article 5(1)(c)",
+              "in_force_from": "2021-04-09",
+              "mapped_at": "2026-07-31",
+              "mapped_by": "AINumbers SECZ-K-1",
+              "scheme": "eu-regulation",
+              "uri": "https://eur-lex.europa.eu/eli/reg/2021/557/oj"
+            },
+            "citation_source": "shipped_pin",
+            "decided_by": "The investor function that performed the retention verification. This tool does not decide it.",
+            "duty_class": "verification_before_holding",
+            "duty_id": "verify_risk_retention",
+            "evidence": [
+              {
+                "dated": "2025-07-05",
+                "description": "Retention statement in the transaction documents naming the retention holder and the form relied on.",
+                "evidence_ref": "EV-RET-1",
+                "evidence_type": "transaction_document",
+                "within_period": true
+              }
+            ],
+            "evidence_count": 1,
+            "judgment_required": null,
+            "label": "Verify that the originator, sponsor or original lender retains a material net economic interest of not less than 5 percent and discloses it to institutional investors.",
+            "performed_asserted": true,
+            "performed_note": null,
+            "position": 2,
+            "status": "performed",
+            "status_basis": "The duty is declared performed, evidence is named, and a conformant signed record names both a performer and an approver by distinct identity. This records evidence of a human act. It is not a statement that what was done was adequate.",
+            "typical_evidence": "The retention statement in the transaction documents, the retention holder identity, and the retention form relied on."
+          },
+          {
+            "accountability_trail": {
+              "by_role": {
+                "approver": {
+                  "approval_count": 0,
+                  "counted_identities": [],
+                  "counted_identity_count": 0,
+                  "reason": "No qualifying signed record for this role on this duty. Absent evidence holds; it is never a fall-through pass.",
+                  "rejection_count": 0,
+                  "role": "approver",
+                  "status": "hold",
+                  "unsigned_approval_count": 0
+                },
+                "performer": {
+                  "approval_count": 0,
+                  "counted_identities": [],
+                  "counted_identity_count": 0,
+                  "reason": "No qualifying signed record for this role on this duty. Absent evidence holds; it is never a fall-through pass.",
+                  "rejection_count": 0,
+                  "role": "performer",
+                  "status": "hold",
+                  "unsigned_approval_count": 0
+                }
+              },
+              "duty_id": "verify_article_7_disclosure",
+              "record_count": 0,
+              "required_roles": [
+                "performer",
+                "approver"
+              ],
+              "roles_required_count": 2,
+              "roles_satisfied_count": 0,
+              "status": "hold"
+            },
+            "citation": {
+              "id": "Regulation (EU) 2017/2402 Article 5(1)(e)",
+              "in_force_from": "2021-04-09",
+              "mapped_at": "2026-07-31",
+              "mapped_by": "AINumbers SECZ-K-1",
+              "scheme": "eu-regulation",
+              "uri": "https://eur-lex.europa.eu/eli/reg/2021/557/oj"
+            },
+            "citation_source": "shipped_pin",
+            "decided_by": "The investor function that obtained the information. This tool does not decide it.",
+            "duty_class": "verification_before_holding",
+            "duty_id": "verify_article_7_disclosure",
+            "evidence": [],
+            "evidence_count": 0,
+            "judgment_required": null,
+            "label": "Verify that the originator, sponsor or securitisation special purpose entity has made available the information required by Article 7.",
+            "performed_asserted": false,
+            "performed_note": null,
+            "position": 3,
+            "status": "outstanding",
+            "status_basis": "The investor has not declared this duty performed for this position and period. Absent evidence holds; nothing here treats silence as performance.",
+            "typical_evidence": "The reference to where the information was made available, and the investor record of having obtained it. Availability is what is verified; the content of any disclosure template is not assessed here."
+          },
+          {
+            "accountability_trail": {
+              "by_role": {
+                "approver": {
+                  "approval_count": 0,
+                  "counted_identities": [],
+                  "counted_identity_count": 0,
+                  "reason": "No qualifying signed record for this role on this duty. Absent evidence holds; it is never a fall-through pass.",
+                  "rejection_count": 0,
+                  "role": "approver",
+                  "status": "hold",
+                  "unsigned_approval_count": 0
+                },
+                "performer": {
+                  "approval_count": 0,
+                  "counted_identities": [],
+                  "counted_identity_count": 0,
+                  "reason": "No qualifying signed record for this role on this duty. Absent evidence holds; it is never a fall-through pass.",
+                  "rejection_count": 0,
+                  "role": "performer",
+                  "status": "hold",
+                  "unsigned_approval_count": 0
+                }
+              },
+              "duty_id": "assess_risk_characteristics",
+              "record_count": 0,
+              "required_roles": [
+                "performer",
+                "approver"
+              ],
+              "roles_required_count": 2,
+              "roles_satisfied_count": 0,
+              "status": "hold"
+            },
+            "citation": {
+              "id": "Regulation (EU) 2017/2402 Article 5(3)",
+              "in_force_from": "2019-01-01",
+              "mapped_at": "2026-07-31",
+              "mapped_by": "AINumbers SECZ-K-1",
+              "scheme": "eu-regulation",
+              "uri": "https://eur-lex.europa.eu/eli/reg/2017/2402/oj"
+            },
+            "citation_source": "shipped_pin",
+            "decided_by": "The investor function that carried out the assessment. This tool does not decide it.",
+            "duty_class": "assessment_before_holding",
+            "duty_id": "assess_risk_characteristics",
+            "evidence": [],
+            "evidence_count": 0,
+            "judgment_required": null,
+            "label": "Carry out a due-diligence assessment enabling the risks of the position to be assessed, covering the risk characteristics of the position and of the underlying exposures, and the structural features of the transaction.",
+            "performed_asserted": false,
+            "performed_note": null,
+            "position": 4,
+            "status": "outstanding",
+            "status_basis": "The investor has not declared this duty performed for this position and period. Absent evidence holds; nothing here treats silence as performance.",
+            "typical_evidence": "The written pre-investment assessment, and the source data and structural analysis it rests on."
+          },
+          {
+            "accountability_trail": {
+              "by_role": {
+                "approver": {
+                  "approval_count": 1,
+                  "counted_identities": [],
+                  "counted_identity_count": 0,
+                  "reason": "No qualifying signed record for this role on this duty. Absent evidence holds; it is never a fall-through pass.",
+                  "rejection_count": 0,
+                  "role": "approver",
+                  "status": "hold",
+                  "unsigned_approval_count": 0
+                },
+                "performer": {
+                  "approval_count": 1,
+                  "counted_identities": [
+                    "did:example:analyst-a"
+                  ],
+                  "counted_identity_count": 1,
+                  "reason": "At least one signed record names a distinct identity in this role on this duty.",
+                  "rejection_count": 0,
+                  "role": "performer",
+                  "status": "satisfied",
+                  "unsigned_approval_count": 0
+                }
+              },
+              "duty_id": "monitor_ongoing_performance",
+              "record_count": 2,
+              "required_roles": [
+                "performer",
+                "approver"
+              ],
+              "roles_required_count": 2,
+              "roles_satisfied_count": 1,
+              "status": "hold"
+            },
+            "citation": {
+              "id": "Regulation (EU) 2017/2402 Article 5(4)",
+              "in_force_from": "2019-01-01",
+              "mapped_at": "2026-07-31",
+              "mapped_by": "AINumbers SECZ-K-1",
+              "scheme": "eu-regulation",
+              "uri": "https://eur-lex.europa.eu/eli/reg/2017/2402/oj"
+            },
+            "citation_source": "shipped_pin",
+            "decided_by": "The investor function that operates the monitoring procedure. This tool does not decide it.",
+            "duty_class": "ongoing_monitoring",
+            "duty_id": "monitor_ongoing_performance",
+            "evidence": [
+              {
+                "dated": "2025-09-30",
+                "description": "Waterfall recomputation for the period, produced by art-509 from the period investor report and the priority ladder.",
+                "evidence_ref": "EV-MON-1",
+                "evidence_type": "recomputation",
+                "within_period": true
+              }
+            ],
+            "evidence_count": 1,
+            "judgment_required": null,
+            "label": "Establish written procedures to monitor, on an ongoing basis and for the life of the position, the performance of the position and of the underlying exposures.",
+            "performed_asserted": true,
+            "performed_note": null,
+            "position": 5,
+            "status": "evidence_unsigned",
+            "status_basis": "The duty is declared performed and evidence is named, but the accountability trail is not satisfied, so no conformant signed record shows who stands behind it.",
+            "typical_evidence": "The written monitoring procedure, and the monitoring output for this period, including any waterfall recomputation performed on the period investor report."
+          },
+          {
+            "accountability_trail": {
+              "by_role": {
+                "approver": {
+                  "approval_count": 0,
+                  "counted_identities": [],
+                  "counted_identity_count": 0,
+                  "reason": "No qualifying signed record for this role on this duty. Absent evidence holds; it is never a fall-through pass.",
+                  "rejection_count": 0,
+                  "role": "approver",
+                  "status": "hold",
+                  "unsigned_approval_count": 0
+                },
+                "performer": {
+                  "approval_count": 0,
+                  "counted_identities": [],
+                  "counted_identity_count": 0,
+                  "reason": "No qualifying signed record for this role on this duty. Absent evidence holds; it is never a fall-through pass.",
+                  "rejection_count": 0,
+                  "role": "performer",
+                  "status": "hold",
+                  "unsigned_approval_count": 0
+                }
+              },
+              "duty_id": "perform_stress_tests",
+              "record_count": 0,
+              "required_roles": [
+                "performer",
+                "approver"
+              ],
+              "roles_required_count": 2,
+              "roles_satisfied_count": 0,
+              "status": "hold"
+            },
+            "citation": {
+              "id": "Regulation (EU) 2017/2402 Article 5(4)(b)",
+              "in_force_from": "2019-01-01",
+              "mapped_at": "2026-07-31",
+              "mapped_by": "AINumbers SECZ-K-1",
+              "scheme": "eu-regulation",
+              "uri": "https://eur-lex.europa.eu/eli/reg/2017/2402/oj"
+            },
+            "citation_source": "shipped_pin",
+            "decided_by": "The investor risk function that owns the stress testing. This tool does not decide it.",
+            "duty_class": "ongoing_monitoring",
+            "duty_id": "perform_stress_tests",
+            "evidence": [],
+            "evidence_count": 0,
+            "judgment_required": {
+              "decided_by": "The investor risk committee.",
+              "named_completely": true,
+              "resolving_input": "The risk committee proportionality determination recorded for this position.",
+              "what_is_undetermined": "Whether a quarterly stress test is proportionate to the risk of this position, given its seniority and the size of the holding."
+            },
+            "label": "Perform regular stress tests on the cash flows and collateral values supporting the underlying exposures, proportionate to the risk of the position.",
+            "performed_asserted": false,
+            "performed_note": null,
+            "position": 6,
+            "status": "judgment_required",
+            "status_basis": "The caller declared that this duty turns on a question the facts supplied do not settle. What is undetermined, which input resolves it, and who decides are all named.",
+            "typical_evidence": "The stress test run for this period, its assumptions, and the record of who ran it."
+          },
+          {
+            "accountability_trail": {
+              "by_role": {
+                "approver": {
+                  "approval_count": 0,
+                  "counted_identities": [],
+                  "counted_identity_count": 0,
+                  "reason": "No qualifying signed record for this role on this duty. Absent evidence holds; it is never a fall-through pass.",
+                  "rejection_count": 0,
+                  "role": "approver",
+                  "status": "hold",
+                  "unsigned_approval_count": 0
+                },
+                "performer": {
+                  "approval_count": 0,
+                  "counted_identities": [],
+                  "counted_identity_count": 0,
+                  "reason": "No qualifying signed record for this role on this duty. Absent evidence holds; it is never a fall-through pass.",
+                  "rejection_count": 0,
+                  "role": "performer",
+                  "status": "hold",
+                  "unsigned_approval_count": 0
+                }
+              },
+              "duty_id": "report_internally",
+              "record_count": 0,
+              "required_roles": [
+                "performer",
+                "approver"
+              ],
+              "roles_required_count": 2,
+              "roles_satisfied_count": 0,
+              "status": "hold"
+            },
+            "citation": {
+              "id": "Regulation (EU) 2017/2402 Article 5(4)(d)",
+              "in_force_from": "2019-01-01",
+              "mapped_at": "2026-07-31",
+              "mapped_by": "AINumbers SECZ-K-1",
+              "scheme": "eu-regulation",
+              "uri": "https://eur-lex.europa.eu/eli/reg/2017/2402/oj"
+            },
+            "citation_source": "shipped_pin",
+            "decided_by": "The investor management body, on the report placed before it. This tool does not decide it.",
+            "duty_class": "ongoing_monitoring",
+            "duty_id": "report_internally",
+            "evidence": [],
+            "evidence_count": 0,
+            "judgment_required": null,
+            "label": "Ensure internal reporting to the management body so that material risks arising from the position are known and are managed.",
+            "performed_asserted": false,
+            "performed_note": null,
+            "position": 7,
+            "status": "outstanding",
+            "status_basis": "The investor has not declared this duty performed for this position and period. Absent evidence holds; nothing here treats silence as performance.",
+            "typical_evidence": "The internal report covering this position and period, and the record of it reaching the management body."
+          }
+        ],
+        "duty_set": {
+          "duty_set_id": "EU-SECR-ART5-PARAGRAPHS",
+          "duty_set_label": "The duties stated in Article 5 of Regulation (EU) 2017/2402, as amended by Regulation (EU) 2021/557",
+          "exhaustive": false,
+          "exhaustiveness_note": "This is the Article 5 paragraph set, not a maintained template or field set, and it is not presented as an exhaustive statement of everything an institutional investor must do. A caller may declare additional duties carrying their own pinned citations.",
+          "field_set_version": "1.0.0",
+          "shipped_duty_count": 7
+        },
+        "investor_ref": "INV-SYNTH-1",
+        "judgment_duties": [
+          {
+            "citation_id": "Regulation (EU) 2017/2402 Article 5(4)(b)",
+            "decided_by": "The investor risk committee.",
+            "duty_id": "perform_stress_tests",
+            "label": "Perform regular stress tests on the cash flows and collateral values supporting the underlying exposures, proportionate to the risk of the position.",
+            "resolving_input": "The risk committee proportionality determination recorded for this position.",
+            "what_is_undetermined": "Whether a quarterly stress test is proportionate to the risk of this position, given its seniority and the size of the holding."
+          }
+        ],
+        "no_adequacy_claim": "Every status recorded here is evidence OF a human act. Nothing here states that the diligence performed was adequate, that a duty was discharged to any supervisor satisfaction, or that any regulator has accepted anything.",
+        "no_ratio_published": "This artifact publishes counts and a named gap list. It deliberately publishes no coverage ratio, no percentage of duties met and no score, because a proportion invites a reader to treat a partial record as partial compliance.",
+        "not_a_filing": "This is an evidence record assembled for the investor own file. It is not a regulatory filing, it is not submittable to any competent authority, and it does not discharge Article 5.",
+        "note": "Deterministic Article 5 due-diligence evidence record for one securitisation position over one stated period. Single-run and stateless: it holds no records, runs on no schedule, and retains nothing. It records which duties the investor declares performed, the evidence references behind each, what remains outstanding as a named gap list, and the §27 accountability trail naming who signed each off. It performs none of the duties, recomputes no underlying arithmetic, reads no disclosure template, publishes no coverage ratio, and expresses no view on whether the diligence was adequate. It is not a filing and not legal advice.",
+        "outstanding_duties": [
+          {
+            "citation_id": "Regulation (EU) 2017/2402 Article 5(1)(a)",
+            "decided_by": "The investor investment or credit function that performed the verification. This tool does not decide it.",
+            "duty_id": "verify_credit_granting_standards",
+            "label": "Verify that the originator or original lender grants credits on the same sound and well-defined criteria it applies to non-securitised exposures.",
+            "status": "outstanding",
+            "what_is_missing": "The duty is not declared performed for this position and period."
+          },
+          {
+            "citation_id": "Regulation (EU) 2017/2402 Article 5(1)(e)",
+            "decided_by": "The investor function that obtained the information. This tool does not decide it.",
+            "duty_id": "verify_article_7_disclosure",
+            "label": "Verify that the originator, sponsor or securitisation special purpose entity has made available the information required by Article 7.",
+            "status": "outstanding",
+            "what_is_missing": "The duty is not declared performed for this position and period."
+          },
+          {
+            "citation_id": "Regulation (EU) 2017/2402 Article 5(3)",
+            "decided_by": "The investor function that carried out the assessment. This tool does not decide it.",
+            "duty_id": "assess_risk_characteristics",
+            "label": "Carry out a due-diligence assessment enabling the risks of the position to be assessed, covering the risk characteristics of the position and of the underlying exposures, and the structural features of the transaction.",
+            "status": "outstanding",
+            "what_is_missing": "The duty is not declared performed for this position and period."
+          },
+          {
+            "citation_id": "Regulation (EU) 2017/2402 Article 5(4)",
+            "decided_by": "The investor function that operates the monitoring procedure. This tool does not decide it.",
+            "duty_id": "monitor_ongoing_performance",
+            "label": "Establish written procedures to monitor, on an ongoing basis and for the life of the position, the performance of the position and of the underlying exposures.",
+            "status": "evidence_unsigned",
+            "what_is_missing": "The duty names evidence but no conformant signed record satisfies both required roles."
+          },
+          {
+            "citation_id": "Regulation (EU) 2017/2402 Article 5(4)(d)",
+            "decided_by": "The investor management body, on the report placed before it. This tool does not decide it.",
+            "duty_id": "report_internally",
+            "label": "Ensure internal reporting to the management body so that material risks arising from the position are known and are managed.",
+            "status": "outstanding",
+            "what_is_missing": "The duty is not declared performed for this position and period."
+          }
+        ],
+        "override_handling": "A §27.5 override is time-boxed and its expiry can only be judged against an instant. This kernel reads no clock, so an override record NEVER satisfies a sign-off here and is reported instead. On expiry an override lapses and the underlying policy reverts; it can never become a silent permanent auto-pass through this surface.",
+        "override_record_count": 0,
+        "performed_count": 1,
+        "period": {
+          "bounds_present": true,
+          "end_date": "2025-09-30",
+          "label": "2025-Q3",
+          "order_valid": true,
+          "start_date": "2025-07-01"
+        },
+        "position_ref": "POS-SYNTH-1",
+        "rationale": [
+          "Article 5 due-diligence evidence recorded for position POS-SYNTH-1 on deal SYNTH-2025-A, held by investor INV-SYNTH-1, for period 2025-Q3 running 2025-07-01 to 2025-09-30.",
+          "7 duties are recorded: the 7 Article 5 paragraph duties shipped with this tool, plus 0 declared by the caller. The shipped set is the Article 5 paragraph set and is never presented as an exhaustive statement of everything an investor must do.",
+          "1 of the 7 duties carry a performance declaration, named evidence, and a signed record naming both a performer and an approver by distinct identity.",
+          "5 duties are outstanding, each named in the gap list with what is missing against it. No proportion or coverage figure is published anywhere in this artifact, because a percentage would invite a reader to treat a partial record as partial compliance.",
+          "1 duty turns on a question the facts supplied do not settle. Each names what is undetermined, which input resolves it, and who decides, rather than carrying a bare flag.",
+          "Every status here is evidence of a human act. Nothing in this artifact states that the diligence performed was adequate, that any duty was discharged to a supervisor satisfaction, or that any regulator has accepted anything. Those are for the investor and its supervisor.",
+          "No Article 7 disclosure template is read, validated or asserted anywhere in this tool. Where a duty concerns Article 7 information, what is recorded is that the information was obtained, never an assessment of a template field set."
+        ],
+        "rejected_citations": []
+      }
+    }
+  }
 },
     {
   "tool_id": "art-511-recompute-fund-fees",
@@ -33991,13 +35189,1313 @@
   "status": "live",
   "conformance_fixtures": true,
   "compute_capability": "server",
-  "compute_images": [{"system":"sha256-source","image_id":"sha256:02852a75e044e31ef50b68a146d4ffef30f3ed54d1299618963963301c82cf40","valid_from":"2026-07-10"}],
-  "compute_proof_ready": "deferred",
-  "deferred_reason": "New node shipped by FEE-K-1. Proving runs on the asynchronous GPU queue outside this repository, so no receipt can be attached in the change that introduces the kernel. Queued for a follow-up prove row against the universal guest image; the deferral raises the ratchet baseline and re-opens the gap until that row lands.",
+  "compute_images": [
+    {
+      "system": "sha256-source",
+      "image_id": "sha256:02852a75e044e31ef50b68a146d4ffef30f3ed54d1299618963963301c82cf40",
+      "valid_from": "2026-07-10"
+    },
+    {
+      "system": "risc0",
+      "image_id": "sha256:a1a0bc89b5b1febaeda3519f6dbade0fa5ac16beeb143c4e1b01689573567bc6",
+      "valid_from": "2026-08-01"
+    }
+  ],
+  "compute_proof_ready": "ready",
   "export_capability": [
     "pdf",
     "xlsx"
+  ],
+  "compute_proof": {
+    "type": "ZkVmReceipt",
+    "system": "risc0",
+    "receiptFormat": "groth16-bn254",
+    "imageId": "sha256:a1a0bc89b5b1febaeda3519f6dbade0fa5ac16beeb143c4e1b01689573567bc6",
+    "seal": "J0CIsuHc+hs9JiLIvs8hiMswGXPg9OpMKkpHSoRmko8drANqiOTLfeeJMOm0XtFgk+avzmLSg3kdYzcgJQq48guWU6fVnyGkocL7Kxoi4esxUtfXVIRIXMukUhLBUNsvCLmqHI/A0jc4ncpKAn4TE2fQUGHdg/mOdzjgl03gNhIfubfer9LOsiHaN9Xrc6YIxPrjQSzsxTKt0Q37c7m19QMojZLyNQgeVtOohoh3owrCANbB5dNe/aKMk4by1wK7FYTTXrwEAfbxKGA+El2rEBiWly0YaM9MQQxmy84PJnwvCur1ciM1y+3TPbf8NjWD9Z/b+HahwO3J3nH1bGTepQ==",
+    "journal": {
+      "chaingraph_version": "0.4.0",
+      "kernel_digest": "sha256:02852a75e044e31ef50b68a146d4ffef30f3ed54d1299618963963301c82cf40",
+      "output": {
+        "agreement_ref": "LPA-2024-08",
+        "as_of": "2026-12-31",
+        "diff": [],
+        "fence": "Fee rate, hurdle rate/type, high-water mark, crystallisation policy, accrual basis and day count are every one of them a caller input transcribed from the fund agreement — this kernel ships no rate table, no fund library, no term database (zero-egress by contract). agreement_ref + terms_version are pinned so a later side letter makes an old receipt dated, not wrong.",
+        "fund_id": "FUND-FEE-01",
+        "judgment_required": null,
+        "management_fee_computed": "2120000.00",
+        "not_proven": [
+          {
+            "detail": "The management-fee rate, hurdle rate/type, high-water mark, crystallisation policy, accrual basis, and day count are every one of them caller-supplied and asserted. This kernel performs no fund-administrator or market-data lookups (zero-egress) and does not verify these terms against the underlying fund agreement.",
+            "item": "Fee rate and term accuracy"
+          },
+          {
+            "detail": "The opening and closing NAV figures are caller-supplied. Recomputing the NAV itself is the scope of art-373-recompute-fund-nav, a separate node this kernel consumes rather than reimplements.",
+            "item": "NAV accuracy"
+          },
+          {
+            "detail": "Where supplied, charged_amounts is asserted, taken as given from the fee statement being checked. This kernel does not verify that the statement itself was correctly transcribed from the manager's books.",
+            "item": "Charged-amount provenance"
+          },
+          {
+            "detail": "A diff is a finding that the recomputation disagrees with the charged figure on the supplied terms — never an allegation that the manager overcharged. Every disagreement can equally originate from a term this run had wrong.",
+            "item": "Manager overcharge / wrongdoing"
+          }
+        ],
+        "performance_fee": {
+          "crystallisation": "period",
+          "eligible_gain": "7000000.00",
+          "first_period_no_prior_hwm": false,
+          "gain_above_hwm": "12000000.00",
+          "hurdle_cleared": true,
+          "hurdle_excess_amount": "7000000.00",
+          "hurdle_rate": "0.0500",
+          "hurdle_type": "hard",
+          "hwm_exceeded": true,
+          "loss_carryforward": true,
+          "new_high_water_mark": "112000000.00",
+          "performance_fee_accrued": "0.00",
+          "performance_fee_crystallised": "1400000.00",
+          "period_return_pct": "0.1200",
+          "prior_high_water_mark": "100000000.00"
+        },
+        "period_days": 365,
+        "period_end": "2026-12-31",
+        "period_start": "2026-01-01",
+        "rationale": [
+          "Management fee accrued over 365 declared days on a fee base of 106000000.00.",
+          "Hard hurdle: performance fee, if any, applies only to the return in excess of the hurdle rate.",
+          "High-water mark carried forward from 100000000.00; a prior loss is NOT cleared by this period ending.",
+          "Closing NAV exceeds the high-water mark by 12000000.00.",
+          "Crystallisation is period-based — the full computed performance fee is payable now.",
+          "No charged_amounts were supplied — this run is recompute-only, not a match/mismatch determination."
+        ],
+        "recompute_only": true,
+        "rounding": {
+          "decimal_places": 2,
+          "mode": "half_up"
+        },
+        "terms_version": "1.0"
+      }
+    }
+  }
+},
+    {
+  "tool_id": "art-512-check-mica-reserve-disclosure",
+  "tool_version": "1.0.0",
+  "display_name": "Check MiCA Reserve Disclosure",
+  "mcp_name": "check_mica_reserve_disclosure",
+  "mandate_type": "compliance_mandate",
+  "wave": 79,
+  "gpu": false,
+  "url": "https://ainumbers.co/chaingraph/art-512-check-mica-reserve-disclosure.html",
+  "description": "Checks a token issuer's published reserve disclosure, the amount in circulation and the value and composition of the reserve, against the composition, concentration, segregation and publication-cadence terms the reader supplies. Deterministic and backward-looking: it reads what was published and compares it to declared rules, and contains no simulation of any kind. Coverage is the reserve total against tokens in circulation, with the surplus or shortfall. Composition tests each component against the caller's declared eligible asset classes and per-class concentration limits, listing every component that falls outside and keeping its amount inside the reserve total, because excluding it would flatter the coverage figure. Segregation tests the segregated proportion against the declared minimum, and lists every component whose custodian type the caller did not declare acceptable. Cadence names each period that ran longer than the declared interval with no publication, individually and with its dates, never as a count. HARD FENCE: the eligible asset classes, concentration limits, minimum segregated percentage, acceptable custodian types and disclosure cadence are every one of them a caller input, pinned in the artifact and shown on screen. This kernel ships no reporting template, no eligible-asset table and no issuer library, performs no lookups of any kind (zero-egress), and makes no claim about what the current rules are, so a rule change makes an old receipt dated rather than wrong. The one regime constant is the e-money-token minimum of 30 percent, applied only when the caller declared nothing, labelled at source in the receipt; for an asset-referenced token an absent minimum raises judgment_required naming the field rather than inventing a threshold. Every verdict is against the caller's declared rules: this is not a determination that the issuer complies, not legal advice, and not a submission. Where a named human attests the check, the dual-control certification surface art-503-build-dual-control-certification is reused and no second threshold evaluator is built. Distinct from rca-02-mica-reserve-stress, which is a Monte Carlo redemption stress asking whether the reserve survives a run, a forward-looking simulation this node neither imports nor edits, and from art-105-mica-token-service-scoper and tools/332-mica-casp-authorization-checker, neither of which reads a reserve disclosure. Out of scope: redemption stress simulation, authorisation and service scoping, white-paper conformance, template validation, any statement that an issuer is or is not compliant, and any coverage ratio about our own estate.",
+  "input_schema_ref": "chaingraph/art-512-check-mica-reserve-disclosure.html#manifest",
+  "deadline": null,
+  "deadline_note": "No statutory filing deadline is encoded. The publication cadence is a caller input, because a bundled cadence is a standing duty that goes silently false when the terms change.",
+  "consumes": [],
+  "feeds": [],
+  "status": "live",
+  "conformance_fixtures": true,
+  "compute_capability": "server",
+  "compute_images": [
+    {
+      "system": "sha256-source",
+      "image_id": "sha256:3123cd816d8e2879a6ea052f973621b149340b5cd6072232bf2666e1bbe9c333",
+      "valid_from": "2026-07-10"
+    },
+    {
+      "system": "risc0",
+      "image_id": "sha256:a1a0bc89b5b1febaeda3519f6dbade0fa5ac16beeb143c4e1b01689573567bc6",
+      "valid_from": "2026-08-01"
+    }
+  ],
+  "compute_proof_ready": "ready",
+  "export_capability": [
+    "pdf",
+    "xlsx"
+  ],
+  "compute_proof": {
+    "type": "ZkVmReceipt",
+    "system": "risc0",
+    "receiptFormat": "groth16-bn254",
+    "imageId": "sha256:a1a0bc89b5b1febaeda3519f6dbade0fa5ac16beeb143c4e1b01689573567bc6",
+    "seal": "Fv7mPSCdmtLbIEHoXcGBGcEClaFOg6qS/ipqqI5fGF8ktaKDsGxFU0je2bQ9aCbm2wnzr1Htico8j3+jLDw0eQmmcyO7HWejR+ohWwRRfRztv21lmBgZF/dpNMX5TY4SHZbARmIcYQAlcI0DvOT5pSr3JejLvhH0gQdCNUtyUTwCYfH7C1TQVxpi2UYM2vABcGz5UNyw3Jw4WRqN5ngMzhOBiEJI1Wj7W4BuzmoiS/Qx+NLMFGFcV6s/+0UTrCAeJ7dXFh5Nc70G/lB3FHvgv5Jbo05T12C4p/zTWcs4MP4JF0u2X4rDc0bN33eIu7WzxHXomvI/IFbSc24cQtmY5g==",
+    "journal": {
+      "chaingraph_version": "0.4.0",
+      "kernel_digest": "sha256:3123cd816d8e2879a6ea052f973621b149340b5cd6072232bf2666e1bbe9c333",
+      "output": {
+        "as_of": "2026-06-30",
+        "cadence": {
+          "cadence_days_declared": 31,
+          "disclosure_dates_ordered": [
+            "2026-01-31",
+            "2026-02-28",
+            "2026-03-31",
+            "2026-04-30",
+            "2026-05-31",
+            "2026-06-30"
+          ],
+          "invalid_disclosure_dates": [],
+          "missed_periods": [],
+          "window_end": "2026-06-30",
+          "window_start": "2026-01-01"
+        },
+        "composition": {
+          "class_totals": [
+            {
+              "amount": "205000000.00",
+              "asset_class": "bank_deposit",
+              "limit_pct": "60",
+              "pct_of_reserve": "40.00"
+            },
+            {
+              "amount": "200000000.00",
+              "asset_class": "sovereign_bill",
+              "limit_pct": "60",
+              "pct_of_reserve": "39.02"
+            },
+            {
+              "amount": "107500000.00",
+              "asset_class": "reverse_repo",
+              "limit_pct": "30",
+              "pct_of_reserve": "20.98"
+            }
+          ],
+          "concentration_breaches": [],
+          "eligible_asset_classes_declared": [
+            "bank_deposit",
+            "sovereign_bill",
+            "reverse_repo"
+          ],
+          "ineligible_components": [],
+          "ineligible_total": "0.00"
+        },
+        "coverage": {
+          "circulation_positive": true,
+          "coverage_ratio": "1.0250",
+          "covered": true,
+          "eligible_coverage_ratio": "1.0250",
+          "eligible_reserve_total": "512500000.00",
+          "reserve_empty": false,
+          "reserve_total": "512500000.00",
+          "surplus_or_shortfall": "12500000.00",
+          "tokens_in_circulation": "500000000.00"
+        },
+        "disclosure_ref": "RESERVE-DISCLOSURE-2026-06",
+        "fence": "Eligible asset classes, concentration limits, the minimum segregated percentage, acceptable custodian types and the disclosure cadence are every one of them a caller input, transcribed from the terms the reader is holding the issuer to. This kernel ships no reporting template, no eligible-asset table and no issuer library, and performs no lookups of any kind (zero-egress by contract). disclosure_ref and rules_version are pinned so a later rule change makes an old receipt dated, not wrong.",
+        "issuer_id": "ISSUER-DEMO-01",
+        "judgment_required": null,
+        "not_proven": [
+          {
+            "detail": "The eligible asset classes, concentration limits, minimum segregated percentage, acceptable custodian types and disclosure cadence are every one of them caller-supplied and asserted. This kernel ships no reporting template and no eligible-asset table, performs no lookups of any kind (zero-egress), and does not verify these rules against the regulation, a technical standard, or any supervisory expectation.",
+            "item": "Rule accuracy"
+          },
+          {
+            "detail": "The amount in circulation, the component amounts, the custodian types, the segregation markers and the publication dates are taken as given from the disclosure being checked. This kernel does not verify that the published document says what was transcribed from it, nor that the reserve exists.",
+            "item": "Disclosure accuracy"
+          },
+          {
+            "detail": "Component amounts are asserted at the values supplied. No independent valuation, haircut, or mark to market is performed, and no market data is read.",
+            "item": "Valuation"
+          },
+          {
+            "detail": "Every verdict here is against the CALLER's declared rules. This is not a determination that the issuer complies with MiCA or with anything else, not legal advice, and not a submission to any authority. A finding can equally originate from a rule this run had wrong.",
+            "item": "Compliance"
+          }
+        ],
+        "rationale": [
+          "Reserve total of 512500000.00 checked against 500000000.00 of tokens in circulation.",
+          "The reserve carries 3 declared components across 3 asset classes.",
+          "Every component sits inside the declared eligible asset classes.",
+          "No declared concentration limit is exceeded.",
+          "Segregated proportion is 40.00% against a minimum of 30% (the e-money-token default, applied only because the caller declared nothing).",
+          "Every component sits with a custodian type the caller declared acceptable.",
+          "Every interval between publications is within the declared 31-day cadence.",
+          "Every verdict above is against the rules supplied with this run. It is not a determination that the issuer complies, not legal advice, and not a submission."
+        ],
+        "rounding": {
+          "decimal_places": 2,
+          "mode": "half_up"
+        },
+        "rules_version": "reader-rules-1.0",
+        "segregation": {
+          "acceptable_custodian_types_declared": [
+            "credit_institution",
+            "investment_firm",
+            "casp"
+          ],
+          "meets_declared_minimum": true,
+          "min_segregated_pct_applied": "30",
+          "min_segregated_pct_source": "default_emt_30",
+          "segregated_amount": "205000000.00",
+          "segregation_pct": "40.00",
+          "undeclared_custodian_components": []
+        },
+        "sign_off": {
+          "note": "Where a named human attests this check, the dual-control certification surface is the one to use. This kernel emits the receipt and evaluates no threshold of its own.",
+          "surface": "art-503-build-dual-control-certification"
+        },
+        "token_type": "EMT"
+      }
+    }
+  }
+},
+    {
+  "tool_id": "art-513-public-money-settlement-receipt",
+  "tool_version": "1.0.0",
+  "display_name": "Public-Money Settlement Receipt",
+  "mcp_name": "build_public_money_settlement_receipt",
+  "mandate_type": "compliance_control",
+  "wave": 79,
+  "gpu": false,
+  "url": "https://ainumbers.co/chaingraph/art-513-public-money-settlement-receipt.html",
+  "description": "Turns one caller-transcribed payment of public money into settlement evidence an audit authority can check with no access to the operator's database: a single-settlement verdict confirming the obligation was discharged exactly once across all declared rail legs, a ministry/agency attribution verdict against the caller's own revenue-code table, an at-par verdict comparing amount credited to amount collected with every fee itemised and never netted, a finality class echoed per rail from the caller's own declared basis, and a structural exceptions list. Portable to any government payment platform, any treasury-single-account regime, any supreme audit institution -- not built to any one vendor's data model. No rail connector, no switch, no live payment observation: the event is transcribed by the caller, exactly as art-497 transcribes a validator change. Does not classify finality itself -- art-492-classify-settlement-finality and art-59-settlement-asset-finality-classifier already do that; a chain composes them upstream of this node. Zero PII: payer is a class plus an opaque reference, never a name, account number, or address. compliance_control.",
+  "input_schema_ref": "chaingraph/art-513-public-money-settlement-receipt.html#manifest",
+  "consumes": [],
+  "feeds": [],
+  "status": "live",
+  "conformance_fixtures": true,
+  "compute_capability": "server",
+  "compute_images": [
+    {
+      "system": "sha256-source",
+      "image_id": "sha256:3a5d8a2058fde07defccc3491be7a54c5ef221c869295059f337ffe08db4dd03",
+      "valid_from": "2026-08-01"
+    },
+    {
+      "system": "risc0",
+      "image_id": "sha256:a1a0bc89b5b1febaeda3519f6dbade0fa5ac16beeb143c4e1b01689573567bc6",
+      "valid_from": "2026-08-01"
+    }
+  ],
+  "export_capability": [
+    "json"
+  ],
+  "compute_proof_ready": "ready",
+  "compute_proof": {
+    "type": "ZkVmReceipt",
+    "system": "risc0",
+    "receiptFormat": "groth16-bn254",
+    "imageId": "sha256:a1a0bc89b5b1febaeda3519f6dbade0fa5ac16beeb143c4e1b01689573567bc6",
+    "seal": "GeOFD7sP32Tre+XvU1PpSkRvgddBwuL0pNMYH1G6iUIKCgwISO2hvskj0VNAIjpzdPXDswNOs/yf0i4loRTvLgL6qoNMFIencUy+1T7lfreLOo5nGTLGIVHWWteup+L1CgshrOjd2VG7kI7ZfrR9j3C8jwqEUWi+Qlm+6zyjaC0DJpnMuhBZgz1ar5sE2jbJ+1vF7sfCA37VEFTNtrwdnQgpfx6zFUhxIGfITPx+gS8P5TtLqGJXlY/DfGacB9O1KNh/TyAIWw2H4vlnzlRc/J6Hrj2gb6Wp5dIXocW0IdICQ96ifo+jugJKkgMHjPq4MIdtOxjMUybEdO8P2liyzg==",
+    "journal": {
+      "chaingraph_version": "0.4.0",
+      "kernel_digest": "sha256:3a5d8a2058fde07defccc3491be7a54c5ef221c869295059f337ffe08db4dd03",
+      "output": {
+        "amount_collected": 1000,
+        "amount_credited": 997.5,
+        "as_of": "2026-07-31T23:59:59Z",
+        "at_par": true,
+        "at_par_discrepancy": 0,
+        "attributed_ministry": "Ministry of Revenue and Customs",
+        "attribution_matched": true,
+        "currency": "USD",
+        "declared_revenue_code": "REV-1200-CUSTOMS",
+        "exceptions": [],
+        "expected_credit": 997.5,
+        "fees": [
+          {
+            "amount": 2.5,
+            "type": "acquirer_fee"
+          }
+        ],
+        "payer_class": "business",
+        "payer_class_valid": true,
+        "payment_ref": "PMT-2026-0001-OPAQUE",
+        "rails": [
+          {
+            "declared_finality_basis": "central_bank_settlement_finality_statute",
+            "rail": "rtgs",
+            "rail_valid": true,
+            "settled": true,
+            "settlement_ref": "RTGS-REF-88431"
+          }
+        ],
+        "reconciled": true,
+        "reconciliation_window": "2026-07-01/2026-07-31",
+        "single_settlement_status": "SINGLE",
+        "total_fees_itemised": 2.5,
+        "treasury_account_credited": "TSA-MAIN-001"
+      }
+    }
+  }
+},
+    {
+  "tool_id": "art-514-conditional-relief-collateral-receipt",
+  "tool_version": "1.0.0",
+  "display_name": "Conditional-Relief Collateral Receipt",
+  "mcp_name": "build_conditional_relief_collateral_receipt",
+  "mandate_type": "compliance_control",
+  "wave": 79,
+  "gpu": false,
+  "url": "https://ainumbers.co/chaingraph/art-514-conditional-relief-collateral-receipt.html",
+  "description": "Shows, per acceptance and per day, that every condition of a conditional regulatory relief -- no-action, exemptive, or comfort-letter -- held before a firm accepted an asset as collateral in reliance on it: a per-condition PASS/FAIL/UNDECIDABLE verdict against the caller's own versioned condition set (never a silent PASS on absent evidence), a version-staleness check comparing the version the caller relied on against the version the condition set was evidenced against, the applicable capital charge from the caller's own table, and a revocation-exposure figure -- the capital and eligibility delta if the relief were withdrawn at as_of. Portable to any regime -- CFTC, SEC, OCC, FCA, MAS -- the regime label and every condition are caller-supplied policy input, never a hardcoded rule set. Does not rebuild reserve checking (art-06, art-512, art-280) or haircuts/eligibility (art-444, 505, 508, art-320) -- reused upstream in a chain. Renders no eligibility opinion and no investment advice: it reports whether the caller's declared conditions were met against the caller's declared evidence. compliance_control.",
+  "input_schema_ref": "chaingraph/art-514-conditional-relief-collateral-receipt.html#manifest",
+  "consumes": [],
+  "feeds": [],
+  "status": "live",
+  "conformance_fixtures": true,
+  "compute_capability": "server",
+  "compute_images": [
+    {
+      "system": "sha256-source",
+      "image_id": "sha256:b4e574eae79a1ae5d3d37e79cb155af73e2d4d9a14b9e346737a1b9c144daefa",
+      "valid_from": "2026-08-01"
+    },
+    {
+      "system": "risc0",
+      "image_id": "sha256:a1a0bc89b5b1febaeda3519f6dbade0fa5ac16beeb143c4e1b01689573567bc6",
+      "valid_from": "2026-08-01"
+    }
+  ],
+  "export_capability": [
+    "json"
+  ],
+  "compute_proof_ready": "ready",
+  "compute_proof": {
+    "type": "ZkVmReceipt",
+    "system": "risc0",
+    "receiptFormat": "groth16-bn254",
+    "imageId": "sha256:a1a0bc89b5b1febaeda3519f6dbade0fa5ac16beeb143c4e1b01689573567bc6",
+    "seal": "Foset+XtvDU+uUTQJhbqS+6GLoYlm4Dw5/dFitk3XJAfA4VtrVv4HDUMmyn8uR9FxCGBL278JSGAEhOs6MlRcCsy1LwhK3AUS1ZQ9VZSFsrNC0sRYDM6TnlVJgHKdN2wCPJm1DVXbjg5Hcdd9qFUMcYAgPrsuhOa4KRuzMV7TSgOf08z9vZQtUotPJ3//b5v/ywn+6k+nukWYO80A1TJLRgrSd+ZxROKVFU6c/KcFAGlBhxHPBgCG2SCPCHpZ7dFKze6NMxha+8tx3CGHDMGrhKwjG+xIqhWeVIsHVPjypYs/7Uwh+OeNvh0ECqXGitCG4mVHRKKQcOiHfIAb5nMnQ==",
+    "journal": {
+      "chaingraph_version": "0.4.0",
+      "kernel_digest": "sha256:b4e574eae79a1ae5d3d37e79cb155af73e2d4d9a14b9e346737a1b9c144daefa",
+      "output": {
+        "all_conditions_met": true,
+        "applicable_capital_charge": 400000,
+        "applicable_charge_pct": 8,
+        "as_of": "2026-07-31T23:59:59Z",
+        "asset_class": "payment_stablecoin",
+        "asset_class_valid": true,
+        "condition_set_version": "2026-03-01",
+        "conditions": [
+          {
+            "condition_id": "COND-01",
+            "description": "Reserve attestation filed for the period",
+            "evidence_status": "met",
+            "verdict": "PASS"
+          },
+          {
+            "condition_id": "COND-02",
+            "description": "Issuer remains on the declared permitted list",
+            "evidence_status": "met",
+            "verdict": "PASS"
+          },
+          {
+            "condition_id": "COND-03",
+            "description": "Daily valuation reported to the declared cadence",
+            "evidence_status": "met",
+            "verdict": "PASS"
+          }
+        ],
+        "declared_haircut_pct": 2,
+        "declared_reporting_cadence": "daily",
+        "declared_valuation": 5000000,
+        "eligibility_lost_on_revocation": false,
+        "exceptions": [],
+        "issuer_permitted_status": true,
+        "issuer_permitted_status_declared": true,
+        "last_report_ref": "RPT-2026-07-31-001",
+        "position_size": 5000000,
+        "relied_on_version": "2026-03-01",
+        "relief_regime": "conditional_no_action_relief",
+        "revocation_capital_charge": 5000000,
+        "revocation_capital_delta": 4600000,
+        "revocation_charge_pct": 100,
+        "revocation_eligible_without_relief": true,
+        "revocation_eligible_without_relief_declared": true,
+        "revocation_exposure_material": true,
+        "version_stale": false
+      }
+    }
+  }
+},
+    {
+  "tool_id": "art-515-build-allocation-decision-receipt",
+  "tool_version": "1.0.0",
+  "display_name": "Build Allocation Decision Receipt",
+  "mcp_name": "build_allocation_decision_receipt",
+  "mandate_type": "attestation_mandate",
+  "wave": 80,
+  "gpu": false,
+  "url": "https://ainumbers.co/chaingraph/art-515-build-allocation-decision-receipt.html",
+  "description": "Re-derives whether an allocation produced by an optimizer is explained by the objective and inputs that were true when it was made: the eligibility schedule snapshot, the inventory snapshot offered, the haircut table version, and the declared objective. Portable to any optimizer, not collateral only, so the same input shape covers a liquidity sweep, a treasury cash placement, a payment-routing choice, or an order allocation. Re-derives ONE candidate allocation for a declared objective (cheapest_to_deliver, preserve_hqla, or minimise_movements) using a fixed, published greedy rule, and compares it to the allocation the caller says was actually chosen: a reproducibility verdict, the delta versus the re-derived allocation in cost and in eligibility terms, and the binding constraint explaining each difference. A caller-named objective outside the three known ones is recorded but not solved, since this kernel has no fixed re-derivation rule for it. ADR_DIVERGENT is not a finding of error: a divergence means the chosen allocation is not explained by the declared objective and inputs, which is routinely legitimate (a trader override, an undeclared constraint, a stale snapshot); no output here characterises intent. This is not a competing optimizer and never claims the re-derived allocation is better than the one chosen. Eligibility, inventory, haircuts and the objective are every one of them a caller input, transcribed from the snapshot in force when the allocation was made; this kernel ships no eligibility table, no inventory feed and no haircut table of its own, and performs no lookups of any kind (zero-egress). Distinct from art-370-supervisory-scenario-replay, which replays the Fed's published macro scenario paths against caller loss/PPNR functions (a scenario replay over regulator-published inputs, not a decision re-derivation), and from art-236-build-ai-decision-log-record, which builds an EU AI Act Art 12(2) decision-log record (metadata about a decision, with no reproducibility verdict and no optimal-allocation computation). Reuses 505-tokenized-collateral-eligibility-checker for eligibility of each candidate and art-444-collateral-haircut-engine for the haircut applied; consumes their outcome as a caller-declared input and edits neither.",
+  "input_schema_ref": "chaingraph/art-515-build-allocation-decision-receipt.html#manifest",
+  "consumes": [],
+  "feeds": [],
+  "status": "live",
+  "conformance_fixtures": true,
+  "compute_capability": "server",
+  "compute_images": [
+    {
+      "system": "sha256-source",
+      "image_id": "sha256:cfa8312a00a78e19af8654199d3cfbc6224cc85e41ade3919d9eca0e60f46b40",
+      "valid_from": "2026-07-10"
+    },
+    {
+      "system": "risc0",
+      "image_id": "sha256:a1a0bc89b5b1febaeda3519f6dbade0fa5ac16beeb143c4e1b01689573567bc6",
+      "valid_from": "2026-08-01"
+    }
+  ],
+  "export_capability": [
+    "pdf",
+    "xlsx"
+  ],
+  "compute_proof_ready": "ready",
+  "compute_proof": {
+    "type": "ZkVmReceipt",
+    "system": "risc0",
+    "receiptFormat": "groth16-bn254",
+    "imageId": "sha256:a1a0bc89b5b1febaeda3519f6dbade0fa5ac16beeb143c4e1b01689573567bc6",
+    "seal": "EMLZXPw7FJRQQwVehm5T129y4Gc53TzvyRExpESD4IgY+c9Wq5v9DDY46X7fx/07nmkWEyIfU16ebmakNbyUkRG+i8dumPNOB75wWtSW1Z0ZZIYKJWrczz9mA5LlM9sXL6xlf3lrelH2WisRuZEvEbAz55LcaHjgBZ7DZOKpreIUtSO8t2GhrApWAJUVceqDTBCcOf5EMUmhnIxKpn0dTBkeamziY5FafsKNGX3cwndLq26bAutDWqgw4VhHvy7fDY0T3WAA2UFEcOhnrLpkX3pg5osO4I+8JMBtx3IsMO4RQOQrAtFy3Hp9yo2vOsv5dGXydwLHeQxzpdos5FqtyA==",
+    "journal": {
+      "chaingraph_version": "0.4.0",
+      "kernel_digest": "sha256:cfa8312a00a78e19af8654199d3cfbc6224cc85e41ade3919d9eca0e60f46b40",
+      "output": {
+        "as_of": "2026-06-30",
+        "binding_constraints": [],
+        "delta": {
+          "cost_chosen": "3200000.00",
+          "cost_delta": "0.00",
+          "cost_optimal": "3200000.00",
+          "eligibility": {
+            "ineligible_amount_total": "0.00",
+            "ineligible_assets_in_chosen": []
+          }
+        },
+        "eligibility_schedule_ref": "ELIG-2026-06",
+        "exceptions": [],
+        "fence": "Eligibility, inventory, haircuts and the declared objective are every one of them a caller input, transcribed from the snapshot in force when the allocation was made. This kernel ships no eligibility table, no inventory feed and no haircut table of its own, performs no lookups of any kind (zero-egress by contract), and re-derives against the SAME declared objective and inputs the caller supplied — it is not a competing optimizer and does not claim to find a better allocation.",
+        "haircut_table_version": "HC-2026Q2",
+        "inventory_ref": "INV-2026-06-30",
+        "judgment_required": null,
+        "not_proven": [
+          {
+            "detail": "The eligibility schedule snapshot is a caller input, transcribed from whatever was in force when the allocation was made. This kernel does not verify it against a live eligibility feed and holds no eligibility table of its own.",
+            "item": "Eligibility accuracy"
+          },
+          {
+            "detail": "The inventory snapshot (available amounts, movement cost, HQLA flag, haircut) is asserted at the values supplied. No independent valuation or market data is read.",
+            "item": "Inventory accuracy"
+          },
+          {
+            "detail": "This kernel re-derives ONE candidate allocation for the declared objective using a fixed, published greedy rule. A divergence from the caller's allocation is not proof the caller's allocation was wrong, and a match is not proof no better allocation exists — only that this re-derivation agrees or disagrees with what was chosen.",
+            "item": "Optimality of the caller's allocation"
+          },
+          {
+            "detail": "ADR_DIVERGENT records that the chosen allocation is not explained by the declared objective and inputs. It never characterises why: a trader override, an undeclared constraint and a stale snapshot are all consistent with the same flag.",
+            "item": "Intent"
+          }
+        ],
+        "objective": "cheapest_to_deliver",
+        "obligation": {
+          "amount": "1000000.00",
+          "positive": true
+        },
+        "obligation_ref": "OBL-DEMO-01",
+        "rationale": [
+          "Objective \"cheapest_to_deliver\" was re-derived against 2 eligible inventory items using this kernel's fixed greedy rule for that objective.",
+          "The declared eligibility schedule, inventory snapshot and obligation amount were sufficient to attempt a re-derivation.",
+          "The chosen allocation exactly matches this kernel's re-derivation of the declared objective over the declared inputs.",
+          "This kernel re-derives one candidate allocation using a fixed, published rule. It is not a competing optimizer and does not claim the re-derived allocation is better than the one chosen."
+        ],
+        "reproducibility": {
+          "chosen_allocation": [
+            {
+              "amount": "600000.00",
+              "asset_id": "A2"
+            },
+            {
+              "amount": "400000.00",
+              "asset_id": "A1"
+            }
+          ],
+          "obligation_covered_by_chosen": true,
+          "obligation_covered_by_optimal": true,
+          "optimal_allocation": [
+            {
+              "amount": "600000.00",
+              "asset_id": "A2"
+            },
+            {
+              "amount": "400000.00",
+              "asset_id": "A1"
+            }
+          ],
+          "verdict": "ADR_REPRODUCED"
+        },
+        "rounding": {
+          "decimal_places": 2,
+          "mode": "half_up"
+        }
+      }
+    }
+  },
+  "deadline": null,
+  "deadline_note": "No statutory deadline. The eligibility schedule, inventory snapshot, haircut table version and objective are every one of them a caller input, because a bundled version of any of them would be a standing duty that goes silently false when the terms change."
+},
+    {
+  "tool_id": "art-516-daily-reconciliation-attestation",
+  "tool_version": "1.0.0",
+  "display_name": "Daily Reconciliation Attestation",
+  "mcp_name": "attest_daily_reconciliation",
+  "mandate_type": "attestation_mandate",
+  "wave": 80,
+  "gpu": false,
+  "url": "https://ainumbers.co/chaingraph/art-516-daily-reconciliation-attestation.html",
+  "description": "Attests that a daily reconciliation duty was discharged over a caller-declared population, rather than computing the reconciliation match itself. Checks population completeness in both count and value (declared population vs matched+unmatched+partially-matched), ages open exceptions against a caller-declared tolerance, and diffs the current exception list against the prior period's carried-forward exception set to detect an exception that disappeared without a documented resolution. Where the prior-period exception set is not supplied at all, continuity is reported as unverifiable rather than falsely clean. Region-portable: every fact is a caller-declared input, with no country, currency, or scheme hardcoded. Deterministic arithmetic only. Zero network, zero PII.",
+  "input_schema_ref": "chaingraph/art-516-daily-reconciliation-attestation.html#manifest",
+  "consumes": [],
+  "feeds": [],
+  "status": "live",
+  "conformance_fixtures": true,
+  "compute_capability": "server",
+  "compute_images": [
+    {
+      "system": "sha256-source",
+      "image_id": "sha256:cd7f7a7436413bdff06e19d14156760a6a8401f9e48a936fa26a9e3b60b6a3d8",
+      "valid_from": "2026-07-10"
+    },
+    {
+      "system": "risc0",
+      "image_id": "sha256:a1a0bc89b5b1febaeda3519f6dbade0fa5ac16beeb143c4e1b01689573567bc6",
+      "valid_from": "2026-08-01"
+    }
+  ],
+  "export_capability": [
+    "json"
+  ],
+  "compute_proof_ready": "ready",
+  "compute_proof": {
+    "type": "ZkVmReceipt",
+    "system": "risc0",
+    "receiptFormat": "groth16-bn254",
+    "imageId": "sha256:a1a0bc89b5b1febaeda3519f6dbade0fa5ac16beeb143c4e1b01689573567bc6",
+    "seal": "Lj4vchaRV3SPB4/sz3PL/2Cku49eZTBebRKpx0et6SsaD1aNNB8+vaProffEe7V9M1UNg2XvO8xEg5R9DgZGZRe4YiYJwraoCax7GCRvwcU2b9H2r1v+CcItONTPYUc7ElpcVsk4DM6EszjAhGoPY0Z/NOfwAjzOQ4opSpNgI6goveeCI9ZDnvWm51WPnrQG3Qgth1h088Dea5Z6q5Y8HCBos1wh5so4GhBqvz83/6955vWakPlrwGrbfgOfXgd8Lsj5/W9yemOcxOigj61G2LRxQw0nbUqpQf24kFe7KhEezn1fYqR55T7Y5ExCa7f1I5XfhUmFi+Zg1+b1QRz8jw==",
+    "journal": {
+      "chaingraph_version": "0.4.0",
+      "kernel_digest": "sha256:cd7f7a7436413bdff06e19d14156760a6a8401f9e48a936fa26a9e3b60b6a3d8",
+      "output": {
+        "aged_exception_count": 0,
+        "ageing_tolerance_days": 5,
+        "as_of": "2026-07-31",
+        "attested": false,
+        "continuity_verifiable": true,
+        "count_break": 0,
+        "currency": "USD",
+        "declared_control_total_display": "50000.00",
+        "declared_control_total_minor_units": 5000000,
+        "declared_record_count": 1000,
+        "documented_resolutions": [
+          {
+            "exception_id": "EXC-0000",
+            "resolution_reason": "matched in overnight batch, evidenced by settlement confirmation SC-2026-0725-11"
+          }
+        ],
+        "exception_count": 2,
+        "exceptions": [
+          {
+            "age_days": 2,
+            "aged": false,
+            "amount_display": "600.00",
+            "amount_minor_units": 60000,
+            "exception_id": "EXC-0001",
+            "opened_date": "2026-07-29",
+            "reason_code": "timing_difference"
+          },
+          {
+            "age_days": 1,
+            "aged": false,
+            "amount_display": "400.00",
+            "amount_minor_units": 40000,
+            "exception_id": "EXC-0002",
+            "opened_date": "2026-07-30",
+            "reason_code": "duplicate_submission"
+          }
+        ],
+        "has_unexplained_difference": true,
+        "matched": {
+          "record_count": 970,
+          "total_minor_units": 4850000
+        },
+        "note": "Deterministic daily reconciliation attestation over a caller-supplied population, matched/unmatched/partial breakdown, exception list, and prior-period exception set. It attests that the daily reconciliation duty was discharged -- population completeness in count and value, exception ageing against a declared tolerance, and carried-forward exception continuity -- rather than performing the underlying transaction match itself.",
+        "partially_matched": {
+          "record_count": 10,
+          "total_minor_units": 50000
+        },
+        "population_complete": true,
+        "population_count_complete": true,
+        "population_value_complete": true,
+        "prior_period_exception_count": 1,
+        "rationale": [
+          "Declared population: 1000 records, control total 50000.00 USD. Reconciled (matched+unmatched+partial): 1000 records, 50000.00 USD.",
+          "Population reconciles to the declared count and value.",
+          "Continuity evaluated against 1 prior-period exception: 0 vanished without a documented resolution, 1 closed with one.",
+          "-1000.00 USD of the value break is not accounted for by the declared exception list.",
+          "This is an arithmetic attestation over the figures supplied for this cycle. It does not itself perform the reconciliation match and is not a determination that any underlying control has or has not been met."
+        ],
+        "reconciled_record_count": 1000,
+        "reconciled_value_display": "50000.00",
+        "reconciled_value_minor_units": 5000000,
+        "reconciliation_date": "2026-07-31",
+        "rejected_inputs": [],
+        "unexplained_difference_display": "-1000.00",
+        "unexplained_difference_minor_units": -100000,
+        "unexplained_exception_total_minor_units": 100000,
+        "unmatched": {
+          "record_count": 20,
+          "total_minor_units": 100000
+        },
+        "value_break_display": "0.00",
+        "value_break_minor_units": 0,
+        "vanished_exception_count": 0,
+        "vanished_exceptions": []
+      }
+    }
+  }
+},
+    {
+  "tool_id": "art-517-audit-trail-completeness",
+  "tool_version": "1.0.0",
+  "display_name": "Audit-Trail Completeness Attestation",
+  "mcp_name": "validate_audit_trail_completeness",
+  "mandate_type": "compliance_mandate",
+  "wave": 80,
+  "gpu": false,
+  "url": "https://ainumbers.co/chaingraph/art-517-audit-trail-completeness.html",
+  "description": "Attests that an audit log covering transactions and user activity is complete and gap-free over a caller-declared window, against a caller-declared continuity mechanism: sequence numbers, hash-chain links, or periodic control totals. Enumerates gap position where the mechanism can localize one, reports privileged-action coverage separately from transaction coverage (a trail that logs transactions but not administrator actions fails the 'and user activities' requirement explicitly), checks retention conformance, and reports an undecidable list where the declared mechanism cannot support a position-level verdict (control totals confirm a period is short but cannot localize which event is missing). No log ingestion, no vendor log format parsing -- the caller supplies counts and the declared mechanism only. Zero PII: users are role classes and opaque refs, never a username, email, or IP. Region-portable: window, retention requirement, and mechanism are entirely caller-declared inputs, with no country, currency, scheme, or statute hardcoded. Disambiguation: art-237-validate-agent-audit-trail validates the field structure of one IETF AAT agent-to-agent record; cry-05-agent-action-audit-trail-aggregator builds a Merkle root over this suite's own execution receipts. Neither evaluates a window, detects a gap across a population of external log events, or checks privileged-action coverage -- that is this node.",
+  "input_schema_ref": "chaingraph/art-517-audit-trail-completeness.html#manifest",
+  "consumes": [],
+  "feeds": [],
+  "status": "live",
+  "conformance_fixtures": true,
+  "compute_capability": "server",
+  "compute_images": [{"system":"sha256-source","image_id":"sha256:10ff11fc5e0034422df62658e0ca6d0c810e4f3a171d94f3a5be120cf5dfec41","valid_from":"2026-07-10"},{"system":"risc0","image_id":"sha256:a1a0bc89b5b1febaeda3519f6dbade0fa5ac16beeb143c4e1b01689573567bc6","valid_from":"2026-08-01"}],
+  "export_capability": [
+    "json"
+  ],
+  "compute_proof_ready": "ready",
+  "compute_proof": {
+    "type": "ZkVmReceipt",
+    "system": "risc0",
+    "receiptFormat": "groth16-bn254",
+    "imageId": "sha256:a1a0bc89b5b1febaeda3519f6dbade0fa5ac16beeb143c4e1b01689573567bc6",
+    "seal": "JZ6qO4w82X1eEYcDY1OB+1LBpHGjwGvA70QHGVcdTtIi1V2sTDlLCX3du5oo04wcrNmiLxrrHJlwXkKnHSWaczAuiS5XreuhPXBRSHNBLi7amksYkK3hboDv+luPPoLGBaOUeATcF1QV/9XXVVEYRwevwtaJbIHZqiyuEmXYAB4nVjPt1FvgTNLL+SoYrrCw8UPe+zKXATMo9Fv6FGLz1SXKlO9fl2clpoX/5lX8keorFx0YxEqQ1NWkktETZlTdGYpO3UL1eRZY+9bZUjTA8fmjdB87qOFzV0AhwL7d4PYVeWZZyMA4iVugjrztkzOvv30jKZazw/6CtMXtkPlkfg==",
+    "journal": {
+      "chaingraph_version": "0.4.0",
+      "kernel_digest": "sha256:10ff11fc5e0034422df62658e0ca6d0c810e4f3a171d94f3a5be120cf5dfec41",
+      "output": {
+        "continuity_mechanism": "sequence_number",
+        "continuity_verdict": "CONTINUOUS",
+        "event_counts_by_type": {
+          "privileged_action": 12,
+          "transaction": 850,
+          "user_activity": 140
+        },
+        "gap_count": 0,
+        "gaps": [],
+        "known_gap_candidates_reconciled": [],
+        "privileged_action_coverage": {
+          "covered": true,
+          "privileged_events_logged": 12,
+          "transaction_events_logged": 850
+        },
+        "regulatory_basis": "RFP CDGPSS202601 §4.5 (audit trails for transactions and user activities, generalised); portable to any regime declaring an audit-trail continuity and retention duty (e.g. EU DORA Art 15 / RTS ICT-related incident record-keeping) via caller-supplied inputs only",
+        "retention_conformance": {
+          "conforms": true,
+          "declared_days": 120,
+          "required_days": 90
+        },
+        "table_version": "AUDIT-TRAIL-COMPLETENESS-2026",
+        "undecidable": [],
+        "window_end": "2026-07-01T23:59:59Z",
+        "window_start": "2026-07-01T00:00:00Z"
+      }
+    }
+  }
+},
+    {
+  "tool_id": "art-518-bulk-disbursement-integrity",
+  "tool_version": "1.0.0",
+  "display_name": "Bulk Disbursement Integrity",
+  "mcp_name": "attest_bulk_disbursement_integrity",
+  "mandate_type": "attestation_mandate",
+  "wave": 80,
+  "gpu": false,
+  "url": "https://ainumbers.co/chaingraph/art-518-bulk-disbursement-integrity.html",
+  "description": "Attests that a bulk payment run -- salaries, pensions, social transfers, vendor payments -- is internally consistent and matches its authorization. Reconciles per-payee records against the authorized control total in both count and value, surfaces duplicate-candidate clusters by a caller-supplied opaque key, reports payee roster movement against the prior run, and flags limit breaches including split-payment candidates (multiple sub-limit payments to one payee ref summing past a declared limit) and destination-tier cap breaches (a payment authorized and funded but unable to land because the destination wallet is at its KYC-tier balance cap). Duplicate, split, and cap-breach flags are candidates for review, never findings of fraud or misconduct. Region-portable: every fact is a caller-declared input, with no country, currency, or scheme hardcoded. Deterministic arithmetic only. Zero network, zero PII -- payee is an opaque ref plus an amount and a rail.",
+  "input_schema_ref": "chaingraph/art-518-bulk-disbursement-integrity.html#manifest",
+  "consumes": [],
+  "feeds": [],
+  "status": "live",
+  "conformance_fixtures": true,
+  "compute_capability": "server",
+  "compute_images": [{"system":"sha256-source","image_id":"sha256:3c590d0a9987e270cb032c31ba74642ab9a7f3dab1f9fd32eca587058484bfba","valid_from":"2026-07-10"},{"system":"risc0","image_id":"sha256:a1a0bc89b5b1febaeda3519f6dbade0fa5ac16beeb143c4e1b01689573567bc6","valid_from":"2026-08-01"}],
+  "export_capability": [
+    "json"
+  ],
+  "compute_proof_ready": "ready",
+  "compute_proof": {
+    "type": "ZkVmReceipt",
+    "system": "risc0",
+    "receiptFormat": "groth16-bn254",
+    "imageId": "sha256:a1a0bc89b5b1febaeda3519f6dbade0fa5ac16beeb143c4e1b01689573567bc6",
+    "seal": "I0H0gPHYiHXnDQzQmJg0hTob69w8IDEyXqa9GmGD79QjZ1YjHoXX1jiAcHy1rUE7x6I/Cw/z1z8oRWa2IGH0hh+aoChVi0odnge4BH5MvoXltLmqZvRNyT2qeAKrNhOGJvLOBSBY58SPiGH/SC4f8LtLL4VroNgeFyfq7hpD2ycTpIs1b4JW50Ca0LclLWLv+4lxP0zdSo+90kxhiKn1UAqzPFcm1M90x0aTLnSR+BX9OqTwBgsdm6kXXWOESOvbDVb5qpSPA5TwxJcnSpps3t++7ABf3skqr/L7eUmpPpQZ+7QrVMn9qEK0DoppMrofTRjn7Ej7l91An20elzi/IQ==",
+    "journal": {
+      "chaingraph_version": "0.4.0",
+      "kernel_digest": "sha256:3c590d0a9987e270cb032c31ba74642ab9a7f3dab1f9fd32eca587058484bfba",
+      "output": {
+        "absent_this_run": [],
+        "as_of": "2026-07-31",
+        "authorized_payee_count": 4,
+        "authorized_total_display": "4000.00",
+        "authorized_total_minor_units": 400000,
+        "control_total_reconciled": true,
+        "count_break": 0,
+        "currency": "USD",
+        "declared_exclusions": [],
+        "destination_cap_breaches": [],
+        "duplicate_candidate_cluster_count": 0,
+        "duplicate_candidate_clusters": [],
+        "has_destination_cap_breach": false,
+        "has_limit_breach": false,
+        "has_roster_movement": false,
+        "limit_breaches": [],
+        "new_this_run": [],
+        "note": "Deterministic bulk disbursement integrity attestation over a caller-supplied authorization, per-payee record set, declared exclusions, and prior-run roster. Attests control-total reconciliation in count and value, surfaces duplicate-candidate clusters and split-payment candidates by the caller's own opaque keys, and reports roster movement -- all as candidates and observations for a human reviewer, never as findings of fraud, misconduct, or ineligible beneficiaries.",
+        "per_payee_limit_minor_units": 150000,
+        "per_run_limit_breach": null,
+        "per_run_limit_minor_units": 1000000,
+        "prior_run_payee_count": 4,
+        "rationale": [
+          "Authorized: 4 payees, 4000.00 USD. Run records: 4 payees, 4000.00 USD.",
+          "Run reconciles to the authorized control total in both count and value.",
+          "No payee records share a caller-declared duplicate-candidate key.",
+          "No payee received multiple sub-limit payments summing past the declared per-payee limit.",
+          "No payee exceeds a declared destination-tier balance cap.",
+          "Roster compared against 4 prior-run payee ref(s): 0 new this run, 0 absent this run. This is movement to be explained, not an accusation.",
+          "This is an arithmetic attestation over the figures supplied for this run. It does not itself investigate any payee, and no flag here is a determination of fraud, misconduct, or an ineligible beneficiary."
+        ],
+        "reconciled_record_count": 4,
+        "reconciled_total_display": "4000.00",
+        "reconciled_total_minor_units": 400000,
+        "rejected_inputs": [],
+        "roster_movement_verifiable": true,
+        "run_reference": "RUN-2026-07-31-PENSION",
+        "split_payment_candidates": [],
+        "value_break_display": "0.00",
+        "value_break_minor_units": 0
+      }
+    }
+  }
+},
+    {
+  "tool_id": "art-519-payment-data-migration-completeness",
+  "tool_version": "1.0.0",
+  "display_name": "Payment Data Migration Completeness",
+  "mcp_name": "verify_migration_completeness",
+  "mandate_type": "attestation_mandate",
+  "wave": 80,
+  "gpu": false,
+  "url": "https://ainumbers.co/chaingraph/art-519-payment-data-migration-completeness.html",
+  "description": "Verifies that data moved from a legacy system to a successor is complete, value-preserving, and reconcilable, using caller-declared per-partition source and target record counts and control totals rather than reading any dataset. Checks each declared partition for count and value completeness against a declared tolerance and known exclusions, and separately checks the aggregate (the sum of every partition) against the individual partitions -- a grand total that reconciles while one or more partitions underneath do not is flagged as the inconsistency it is, not passed silently. Also checks transformation coverage (fields observed to change value with no declared transformation rule) and flags any partition verified by sampling only as a residual-risk statement, never as equivalent to a full completeness verdict. Region-portable: every fact is a caller-declared input, with no country, currency, agency, or rail hardcoded. Deterministic arithmetic only. Zero data ingestion, zero PII.",
+  "input_schema_ref": "chaingraph/art-519-payment-data-migration-completeness.html#manifest",
+  "consumes": [],
+  "feeds": [],
+  "status": "live",
+  "conformance_fixtures": true,
+  "compute_capability": "server",
+  "compute_images": [
+    {
+      "system": "sha256-source",
+      "image_id": "sha256:d9e4f0984fd3d85463ece41f052a47bf3b98fed2df72e38ab131273cacd5d587",
+      "valid_from": "2026-07-10"
+    },
+    {
+      "system": "risc0",
+      "image_id": "sha256:a1a0bc89b5b1febaeda3519f6dbade0fa5ac16beeb143c4e1b01689573567bc6",
+      "valid_from": "2026-08-01"
+    }
+  ],
+  "export_capability": [
+    "json"
+  ],
+  "compute_proof_ready": "ready",
+  "compute_proof": {
+    "type": "ZkVmReceipt",
+    "system": "risc0",
+    "receiptFormat": "groth16-bn254",
+    "imageId": "sha256:a1a0bc89b5b1febaeda3519f6dbade0fa5ac16beeb143c4e1b01689573567bc6",
+    "seal": "IayhBMIZghIXpHNBnax5guNGDTXKcbpMdWG86CFK0K0SjnxmkrplkZTg5BtRE8RwmvVpoBmplBz/osDS0DHMbS4xVYLFLt9fCLgf60c/we38Tj8/PNakKyywLC45cS8qBj/sovG0UBbZ5MjKQJS3cAmNFOtY69cB4gEjobVMDH0RPdo02D2gB2KRPLmVQem834DnS5d9y9tu5OUTfDFGpi/OvRyj7zKlCIfwIAy8LAFm2+kk0hP4NiKYcemsUAzkGZGYtIHVnFqaYd5DB0isfQDSO+tabNCuHC9szH3MGCsBB2i24T0MKoUAEigQZRgjytfFwPMQTeE59YHy4ZzL9Q==",
+    "journal": {
+      "chaingraph_version": "0.4.0",
+      "kernel_digest": "sha256:d9e4f0984fd3d85463ece41f052a47bf3b98fed2df72e38ab131273cacd5d587",
+      "output": {
+        "aggregate_complete": true,
+        "aggregate_count_variance": 0,
+        "aggregate_value_variance_display": "0.00",
+        "aggregate_value_variance_minor_units": 0,
+        "all_partitions_complete": true,
+        "any_sampled_only": false,
+        "as_of": "2026-07-31",
+        "currency": "PAGES",
+        "declared_transformation_rules": [],
+        "migration_complete": true,
+        "migration_id": "MIGR-2026-CASEDOCS-01",
+        "note": "Deterministic payment data migration completeness verifier over caller-declared per-partition source/target record counts and control totals, known exclusions with reasons, declared transformation rules, and observed changed fields. Checks per-partition and aggregate-vs-partition completeness (a reconciling aggregate over broken partitions is the finding), transformation coverage, and flags any partition verified by sampling only as a residual-risk statement rather than a completeness verdict. Never reads a source or target dataset.",
+        "observed_changed_field_count": 0,
+        "partition_count": 2,
+        "partition_inconsistent": false,
+        "partitions": [
+          {
+            "count_complete": true,
+            "count_variance": 0,
+            "excluded_record_count": 5,
+            "excluded_value_display": "15.00",
+            "excluded_value_minor_units": 1500,
+            "expected_target_record_count": 3995,
+            "expected_target_value_display": "12485.00",
+            "expected_target_value_minor_units": 1248500,
+            "known_exclusions": [
+              {
+                "excluded_record_count": 5,
+                "excluded_value_display": "15.00",
+                "excluded_value_minor_units": 1500,
+                "reason_code": "duplicate_scan_deduplicated_pre_migration"
+              }
+            ],
+            "partition_complete": true,
+            "partition_label": "CONTRACTS",
+            "sample_discrepancies_found": 0,
+            "sample_size": 0,
+            "sampled": false,
+            "source_control_total_display": "12500.00",
+            "source_control_total_minor_units": 1250000,
+            "source_record_count": 4000,
+            "target_control_total_display": "12485.00",
+            "target_control_total_minor_units": 1248500,
+            "target_record_count": 3995,
+            "value_complete": true,
+            "value_variance_display": "0.00",
+            "value_variance_minor_units": 0
+          },
+          {
+            "count_complete": true,
+            "count_variance": 0,
+            "excluded_record_count": 0,
+            "excluded_value_display": "0.00",
+            "excluded_value_minor_units": 0,
+            "expected_target_record_count": 8000,
+            "expected_target_value_display": "9600.00",
+            "expected_target_value_minor_units": 960000,
+            "known_exclusions": [],
+            "partition_complete": true,
+            "partition_label": "CORRESPONDENCE",
+            "sample_discrepancies_found": 0,
+            "sample_size": 0,
+            "sampled": false,
+            "source_control_total_display": "9600.00",
+            "source_control_total_minor_units": 960000,
+            "source_record_count": 8000,
+            "target_control_total_display": "9600.00",
+            "target_control_total_minor_units": 960000,
+            "target_record_count": 8000,
+            "value_complete": true,
+            "value_variance_display": "0.00",
+            "value_variance_minor_units": 0
+          }
+        ],
+        "partitions_with_variance_count": 0,
+        "rationale": [
+          "2 declared partitions evaluated; 2 of 2 reconcile in both count and value within the declared 0.00 PAGES tolerance.",
+          "Aggregate (sum of declared partitions) reconciles: count variance 0, value variance 0.00 PAGES.",
+          "This is a deterministic reconciliation over caller-declared source/target counts and control totals. It does not read the source or target dataset and is not a determination that any underlying data quality control has been met."
+        ],
+        "reconciliation_tolerance_minor_units": 0,
+        "rejected_inputs": [],
+        "sample_discrepancies_total": 0,
+        "sampled_partition_count": 0,
+        "undeclared_transformed_fields": []
+      }
+    }
+  }
+},
+    {
+  "tool_id": "art-520-operator-exit-data-portability",
+  "tool_version": "1.0.0",
+  "display_name": "Operator Exit & Data Portability",
+  "mcp_name": "check_operator_exit_portability",
+  "mandate_type": "attestation_mandate",
+  "wave": 80,
+  "gpu": false,
+  "url": "https://ainumbers.co/chaingraph/art-520-operator-exit-data-portability.html",
+  "description": "Evaluates a caller-declared operator-exit and data-portability posture: per data category, whether an export path exists and whether its format is open or proprietary, producing a stranded-category list rather than a coverage ratio. Checks declared operator- versus supplier-control of named components and flags a contractual-operator claim unsupported by that declared control, single-supplier dependencies with no declared substitute, escrow arrangements, and notice period / transition-assistance terms. Undeclared is a distinct, non-failing state from an explicit negative declaration throughout. Evaluates declarations only -- never a supplier audit, vendor rating, or enforceability opinion, and no output names or characterises a supplier. Region-portable: every fact is a caller-declared input, with no country, currency, scheme or supplier hardcoded. Deterministic arithmetic only. Zero network, zero PII.",
+  "input_schema_ref": "chaingraph/art-520-operator-exit-data-portability.html#manifest",
+  "consumes": [],
+  "feeds": [],
+  "status": "live",
+  "conformance_fixtures": true,
+  "compute_capability": "server",
+  "compute_images": [
+    {
+      "system": "sha256-source",
+      "image_id": "sha256:f788f6feb29648cf1c09156f55bc79fa0da7511e5ce55547e00b893c8f6e826b",
+      "valid_from": "2026-07-10"
+    },
+    {
+      "system": "risc0",
+      "image_id": "sha256:a1a0bc89b5b1febaeda3519f6dbade0fa5ac16beeb143c4e1b01689573567bc6",
+      "valid_from": "2026-08-01"
+    }
+  ],
+  "export_capability": [
+    "json"
+  ],
+  "compute_proof_ready": "ready",
+  "compute_proof": {
+    "type": "ZkVmReceipt",
+    "system": "risc0",
+    "receiptFormat": "groth16-bn254",
+    "imageId": "sha256:a1a0bc89b5b1febaeda3519f6dbade0fa5ac16beeb143c4e1b01689573567bc6",
+    "seal": "D4Ix0Ycz0uf2uWpls4oOriPBYLK9tSxFvSfbPnmaw2UqbdD5FZyONaf2mgyqNdEcTw9RNZxMte09fvpUORkWtQZWOKLuLNWrCR93+OB/xxwuGNLtY00k7ei8UrpbsYxYCTCrVUUjfCwMruIZpl8GRlg3I6A0I6Zd1ovovbweB4sPS6GOvhWQIgPVsUsUXqrqbjyo+wKhWxedolQo6v+YsRsB1Qo14Kbv4D30gJhoSjgM8XFl6yqAHiT5iRgmRkm6DNmv9WGRY7LLZocnCo0SuT4XOBID+VnMarVVjme99SYJvvZ3fnMGQjZJ3F2FigJBxCYcicSAV0EjHljJvM3ldA==",
+    "journal": {
+      "chaingraph_version": "0.4.0",
+      "kernel_digest": "sha256:f788f6feb29648cf1c09156f55bc79fa0da7511e5ce55547e00b893c8f6e826b",
+      "output": {
+        "as_of": "2026-08-01",
+        "categories": [
+          {
+            "category": "transaction_ledger",
+            "export_cadence": "daily",
+            "export_exists": "true",
+            "format": "csv",
+            "format_open": "true",
+            "last_successful_export": "2026-07-31",
+            "verdict": "PORTABLE"
+          },
+          {
+            "category": "customer_account_master",
+            "export_cadence": "weekly",
+            "export_exists": "true",
+            "format": "json",
+            "format_open": "true",
+            "last_successful_export": "2026-07-28",
+            "verdict": "PORTABLE"
+          }
+        ],
+        "category_count": 2,
+        "components": [
+          {
+            "controlled_by": "operator",
+            "name": "core_ledger_engine"
+          },
+          {
+            "controlled_by": "operator",
+            "name": "reporting_warehouse"
+          }
+        ],
+        "contractual_operator": "true",
+        "declared_component_count": 2,
+        "dependencies": [
+          {
+            "name": "clearing_network_access",
+            "single_supplier": "false",
+            "substitutable": "true"
+          }
+        ],
+        "escrow_description": "source escrow held by a third-party agent",
+        "escrow_exists": "true",
+        "exit_readiness_exceptions": [],
+        "note": "Deterministic evaluation of a caller-declared operator-exit and data-portability posture: per-category export/format portability with a stranded-category list, declared operator- vs supplier-control of named components (with an unsupported-operator-claim check), single-supplier dependencies with no declared substitute, escrow declaration, and notice/transition terms. Evaluates declarations only -- never a supplier audit, rating, or enforceability opinion.",
+        "notice_period_days": 180,
+        "notice_period_declared": true,
+        "operator_claim_unsupported": false,
+        "operator_control_ratio_declared": "2/2",
+        "operator_controlled_count": 2,
+        "portable": true,
+        "proprietary_format_categories": [],
+        "rationale": [
+          "2 declared data categories: 0 stranded (no export path), 0 portable in a proprietary format, 0 with export status or format openness undeclared.",
+          "No stranded categories declared.",
+          "Operator-control ratio as declared: 2/2 of definitively-declared components (0 undeclared).",
+          "Escrow arrangement declared.",
+          "This evaluates the declared exit posture only. It does not audit a supplier, rate a vendor, or opine on contract enforceability."
+        ],
+        "rejected_inputs": [],
+        "single_supplier_no_substitute": [],
+        "stranded_categories": [],
+        "stranded_category_count": 0,
+        "supplier_controlled_count": 0,
+        "transition_assistance_declared": true,
+        "transition_assistance_terms": "180 days of vendor-supplied migration support per the exit schedule",
+        "undeclared_categories": [],
+        "undeclared_component_count": 0
+      }
+    }
+  }
+},
+    {
+  "tool_id": "art-521-settlement-asset-backing-invariant",
+  "tool_version": "1.0.0",
+  "display_name": "Settlement-Asset Backing Invariant",
+  "mcp_name": "verify_settlement_asset_backing",
+  "mandate_type": "compliance_mandate",
+  "wave": 80,
+  "gpu": false,
+  "url": "https://ainumbers.co/chaingraph/art-521-settlement-asset-backing-invariant.html",
+  "description": "Checks whether value held across an issuance topology stays fully backed in aggregate, not merely per account, as balances move between caller-declared buffers. The caller names each buffer (its role, asset type, and what it backs), declares a backing-ratio requirement, per-buffer floor and ceiling, and a movement set. Evaluates the aggregate backing verdict before and after the declared movements, per-buffer floor/ceiling breaches, the thinnest safe margin per buffer, declared idle-balance cost versus declared crossing cost, and the specific movement that first breaks the invariant. Settlement-asset agnostic: the same kernel runs unchanged for centrally-issued digital cash, pooled-account-backed digital cash, and a reserve-backed stablecoin, demonstrated on fixtures with zero kernel difference. Does not sweep, net, or attest reserves, and issues no recommendation to move money.",
+  "input_schema_ref": "chaingraph/art-521-settlement-asset-backing-invariant.html#manifest",
+  "consumes": [],
+  "feeds": [],
+  "status": "live",
+  "conformance_fixtures": true,
+  "compute_capability": "server",
+  "compute_images": [{"system":"sha256-source","image_id":"sha256:2c62975ee6e29f7fd6568274a00305cd6d0043e1c89119d37e1e5d16ce3371ef","valid_from":"2026-07-10"},{"system":"risc0","image_id":"sha256:a1a0bc89b5b1febaeda3519f6dbade0fa5ac16beeb143c4e1b01689573567bc6","valid_from":"2026-08-01"}],
+  "export_capability": [
+    "json"
+  ],
+  "compute_proof_ready": "ready",
+  "compute_proof": {
+    "type": "ZkVmReceipt",
+    "system": "risc0",
+    "receiptFormat": "groth16-bn254",
+    "imageId": "sha256:a1a0bc89b5b1febaeda3519f6dbade0fa5ac16beeb143c4e1b01689573567bc6",
+    "seal": "FQeAgCGnSV1eoklPvd7IDhJJUhjlA9o5KeVGq3F2y2YSbNJWOM/oFob8AO5TvJWuTIc/Yiyz0ppLgcTl9dee1SEnop4gP4IH72Tp2IF+YsalSisdSARf8eC6KKbTpKy5HdcjQY1yuWxIIZXQzzeTz5dorOLxSRIT+W+Dh0XBuEgI0EbONjedgFQ6XWWZvmmyoR42SnrkJfWHJxCf3+WWlwCxtdkQ9LlH84hwEMpIbRFQOcNEnvoz1ucwpkhY8IOHAQIwQoUF0Fwz1lt7Qdjb35jXrqg8+WhGxtDsXOLW5kMHPTeondLoWO5auBN+mSVyVBwlV/q1UvP4BjHjqoaBoQ==",
+    "journal": {
+      "chaingraph_version": "0.4.0",
+      "kernel_digest": "sha256:2c62975ee6e29f7fd6568274a00305cd6d0043e1c89119d37e1e5d16ce3371ef",
+      "output": {
+        "aggregate_backing_after_display": "102000.00",
+        "aggregate_backing_after_minor_units": 10200000,
+        "aggregate_backing_before_display": "102000.00",
+        "aggregate_backing_before_minor_units": 10200000,
+        "as_of": "2026-08-01",
+        "backing_applicable": true,
+        "backing_intact_after": true,
+        "backing_intact_before": true,
+        "backing_model": "segregated",
+        "backing_ratio_bps": 10000,
+        "breaches_after": [],
+        "breaches_before": [],
+        "buffer_count": 3,
+        "buffer_margins": [
+          {
+            "buffer_id": "buffer-backing",
+            "safe_margin_minor_units": 4800000
+          },
+          {
+            "buffer_id": "buffer-payout",
+            "safe_margin_minor_units": 3900000
+          },
+          {
+            "buffer_id": "buffer-issuance",
+            "safe_margin_minor_units": 700000
+          }
+        ],
+        "buffers": [
+          {
+            "asset_type": "conventional-asset",
+            "backs": "circulation",
+            "balance_after_minor_units": 5800000,
+            "balance_before_minor_units": 6000000,
+            "buffer_id": "buffer-backing",
+            "max_minor_units": null,
+            "min_minor_units": 1000000,
+            "role": "backing_account"
+          },
+          {
+            "asset_type": "settlement-asset",
+            "backs": "circulation",
+            "balance_after_minor_units": 4400000,
+            "balance_before_minor_units": 4200000,
+            "buffer_id": "buffer-payout",
+            "max_minor_units": 8000000,
+            "min_minor_units": 500000,
+            "role": "payout_buffer"
+          },
+          {
+            "asset_type": "settlement-asset",
+            "backs": "new_issuance",
+            "balance_after_minor_units": 900000,
+            "balance_before_minor_units": 900000,
+            "buffer_id": "buffer-issuance",
+            "max_minor_units": null,
+            "min_minor_units": 200000,
+            "role": "settlement_balance"
+          }
+        ],
+        "crossing_cost_display": "15.00",
+        "crossing_cost_minor_units": 1500,
+        "crossing_count": 1,
+        "idle_amount_minor_units": 9400000,
+        "idle_cost_display": "470.00",
+        "idle_cost_minor_units": 47000,
+        "movement_breaks_invariant": null,
+        "movements": [
+          {
+            "amount_minor_units": 200000,
+            "applied": true,
+            "external_crossing": true,
+            "from": "buffer-backing",
+            "movement_id": "MOVE-1",
+            "to": "buffer-payout"
+          }
+        ],
+        "note": "Deterministic aggregate settlement-asset backing invariant check over caller-declared buffers, backing ratio, value in circulation, and a declared movement set. Verifies the AGGREGATE composition of the buffer set before and after the declared movements, not merely per-account totals or their grand sum. Settlement-asset agnostic: no currency, scheme, country, or issuer is named in this kernel. It performs no sweep, no netting, no reserve attestation, and issues no recommendation to move money. The caller declares backing_model (\"segregated\", default, or \"vacuous\" for a direct/two-tier CBDC with no backing set); the kernel never infers this from the buffer count, and BACKING_NOT_APPLICABLE is a defined non-pass answer, not BACKING_INTACT.",
+        "rationale": [
+          "3 declared buffers; aggregate circulation-backing 102000.00 before movements, required 100000.00 at a 10000 bps ratio against 100000.00 in circulation.",
+          "Backing was intact before the declared movements.",
+          "After 1 applied movement, aggregate circulation-backing is 102000.00.",
+          "Backing remains intact after the declared movements.",
+          "This is an arithmetic check over declared balances and declared movements. It proves nothing about whether those declarations match any external ledger, and it recommends no action."
+        ],
+        "rejected_inputs": [],
+        "required_backing_display": "100000.00",
+        "required_backing_minor_units": 10000000,
+        "thinnest_buffer": {
+          "buffer_id": "buffer-issuance",
+          "safe_margin_minor_units": 700000
+        },
+        "value_in_circulation_display": "100000.00",
+        "value_in_circulation_minor_units": 10000000
+      }
+    }
+  }
+},
+    {
+  "tool_id": "art-523-identity-proofing-assurance-level",
+  "tool_version": "1.0.0",
+  "display_name": "Identity-Proofing Assurance Level Evaluator",
+  "mcp_name": "compute_identity_proofing_assurance_level",
+  "mandate_type": "regulatory_reporting",
+  "wave": 72,
+  "gpu": false,
+  "url": "https://ainumbers.co/chaingraph/art-523-identity-proofing-assurance-level.html",
+  "description": "Rates whether a DECLARED identity-evidence set reaches a DECLARED target level of a caller-supplied, versioned assurance-level framework (the art-444 policy-input pattern) -- never a hardcoded framework such as NIST 800-63-3 or eIDAS. The level definition supplies levels ordered lowest-to-highest rigor, each with criteria naming a required evidence type and a numeric min_strength on a caller-normalized 0-100 scale; the kernel never interprets a framework's own named tiers. A criterion the definition cannot express (no required_evidence_type or no min_strength) is flagged IAL_DEFINITION_INSUFFICIENT, distinct from IAL_SHORTFALL (evidence present but not meeting a well-formed criterion) -- the two are never conflated. When the target level is not met, achieved level falls back to the highest fully-met level below it. This node rates an evidence set against a declared policy; it does NOT assert that a person is who they claim to be, and no output or copy implies verification of a natural person. No identity attributes are ever computed over -- evidence items are types, strengths and verification methods, with an optional opaque attribute reference (caller-supplied, no commitment scheme claimed by this node) carried through unread, never a plaintext value. No approver identity, signature, approval field or role -- manual review/EDD escalation is a separate signed §27 human_accountability_record, not minted by this kernel. This is the assurance-LEVEL evaluator specifically, distinct from any private-check-receipt evidencing scheme or a re-verification-cadence evaluator (neither built in this exercise). Not 490-eudi-kyc-flow-designer (an eIDAS/LoA-specific flow-design tool) -- this is framework-agnostic by construction and takes any structurally-expressible level definition as a policy input, with no dependency on any named jurisdiction or procurement.",
+  "input_schema_ref": "chaingraph/art-523-identity-proofing-assurance-level.html#manifest",
+  "deadline": null,
+  "deadline_note": "An ongoing identity-assurance evidencing capability, jurisdiction-neutral by design -- every regime fact is a caller-supplied policy input, so there is no filing deadline of its own.",
+  "consumes": [],
+  "feeds": [],
+  "status": "live",
+  "conformance_fixtures": true,
+  "compute_capability": "server",
+  "compute_images": [
+    {
+      "system": "sha256-source",
+      "image_id": "sha256:f691517dd02006a5787bea91055d22c567fb6049e1f3d15c3bb2a474032cd335",
+      "valid_from": "2026-07-10"
+    },
+    {
+      "system": "risc0",
+      "image_id": "sha256:a1a0bc89b5b1febaeda3519f6dbade0fa5ac16beeb143c4e1b01689573567bc6",
+      "valid_from": "2026-08-01"
+    }
+  ],
+  "export_capability": [
+    "json"
+  ],
+  "compute_proof_ready": "ready",
+  "compute_proof": {
+    "type": "ZkVmReceipt",
+    "system": "risc0",
+    "receiptFormat": "groth16-bn254",
+    "imageId": "sha256:a1a0bc89b5b1febaeda3519f6dbade0fa5ac16beeb143c4e1b01689573567bc6",
+    "seal": "EChOWFKr39lwrZ8zEWd2aolUizs6sdRVHlGBlEY1xy8GXoiW4a4QGEqr54RKvuHW2aftEDCROnVboOzjx0gpwCMgrlPdC2lOSqzeiS1JowpOxrv7TThlmg5JzM6RLip3Ac5sczD0Pxl+IM+6DmSYew2kHfeTvtDl98TN/iQ0wZYkl06v3AolQYz0Fe8e1cl20+UFzbUXlANJSR65VfOAZh3JuAxWUrH3PbAtorJ/tbuy+onJDCMp8+WHMatav6CwIvrdLTqKhsUvTOcR07kxD60onHR7T32nlji07ZHGTisq3cqVbtylDVSR1FVCSCzaGzmTy9HUot8HM4dthNe2ZA==",
+    "journal": {
+      "chaingraph_version": "0.4.0",
+      "kernel_digest": "sha256:f691517dd02006a5787bea91055d22c567fb6049e1f3d15c3bb2a474032cd335",
+      "output": {
+        "achieved_level": "tier-2",
+        "as_of": "2026-08-01",
+        "criteria_evaluated": 2,
+        "criteria_met": 2,
+        "criteria_shortfall_count": 0,
+        "criteria_undecidable_count": 0,
+        "declared_target_level": "tier-2",
+        "evidence_item_count": 2,
+        "framework_id": "vendor-framework-A-tiers",
+        "framework_version": "2026-01",
+        "levels_defined": 3,
+        "note": "Rates a DECLARED evidence set against a caller-supplied, versioned assurance-level framework -- never a hardcoded one. Does not assert a person is who they claim to be: this evidences that a declared evidence set was measured against a declared policy, not the truth of the declarations. A criterion the definition cannot express (no required_evidence_type or no min_strength) is reported as IAL_DEFINITION_INSUFFICIENT, distinct from IAL_SHORTFALL (evidence present but not meeting a well-formed criterion) -- the two are never conflated. No identity attributes are ever computed over; evidence items are types, strengths and verification methods, with an optional opaque attribute reference (caller-supplied, no commitment scheme claimed by this node) carried through unread.",
+        "shortfall": [],
+        "target_level_found": true,
+        "target_met": true,
+        "undecidable": []
+      }
+    }
+  }
+},
+    {
+  "tool_id": "art-524-source-arrival-freshness-register",
+  "tool_version": "1.0.0",
+  "display_name": "Source Arrival & Freshness Register",
+  "mcp_name": "register_source_arrival_freshness",
+  "mandate_type": "compliance_control",
+  "wave": 81,
+  "gpu": false,
+  "url": "https://ainumbers.co/chaingraph/art-524-source-arrival-freshness-register.html",
+  "description": "Reconciles a caller-declared EXPECTED-source inventory against caller-declared OBSERVED arrivals, per source: arrived, missing, late (arrived after its declared expected-as-of), or stale (arrived but older than its declared freshness threshold relative to a declared reference-as-of). The expected inventory is always an independently supplied caller input, never derived from the observed set -- a register that only counts what showed up cannot tell 'nothing broke' from 'a whole source never arrived,' and closing that blind spot is this node's purpose. If no expected-source inventory is declared, the node refuses to report on arrivals alone and emits a did-not-run execution state instead of a degraded pass. All sources current yields auto_pass; any late-but-present source yields review_required (which routes to an exception step, never a human blocker); any missing expected source yields reject; an observed arrival supplied with no as-of yields a ran-stale execution state rather than a guessed decision. Deterministic reconciliation arithmetic only, no clock, no network, zero PII. Not a log tailer: completeness is measured against the declared expected inventory, never the extract's own self-reported arrivals. Clause: GAO-25-107721 SS13.07 (currency as an attribute of the information itself); ECB RDARR Guide (May 2024) SS3.5(1) (timeliness).",
+  "input_schema_ref": "chaingraph/art-524-source-arrival-freshness-register.html#manifest",
+  "consumes": [],
+  "feeds": [],
+  "status": "live",
+  "conformance_fixtures": true,
+  "compute_capability": "server",
+  "compute_images": [{"system":"sha256-source","image_id":"sha256:27d4e48514eb2b1eed2231094e43e116be6b1457bbd2be49c4c5eca810550c64","valid_from":"2026-07-10"}],
+  "compute_proof_ready": "deferred",
+  "deferred_reason": "New shard; awaiting the async GPU proving queue (S18 steady-state).",
+  "export_capability": [
+    "json"
   ]
+},
+    {
+  "tool_id": "art-525-nway-balance-closure-check",
+  "tool_version": "1.0.0",
+  "display_name": "N-Way Balance Closure Check",
+  "mcp_name": "check_nway_balance_closure",
+  "mandate_type": "compliance_control",
+  "wave": 81,
+  "gpu": false,
+  "url": "https://ainumbers.co/chaingraph/art-525-nway-balance-closure-check.html",
+  "description": "Takes three or more caller-declared balances for the same measure, at the same as-of moment, across named internal systems, and ENFORCES the arithmetic closure identity (A minus B) plus (B minus C) equals (A minus C) within a caller-declared tolerance. Reports every pairwise difference, the closure residual for every triple, which pair carries the break, and which system is the single consistent explanation for all breaking pairs. This is not a fourth balance display: three pairwise tables enforce nothing across each other, because the third difference is fully determined by the other two, and the residual is the test a dashboard leaves to a human. Where a firm already reconciles hop by hop, each hop's own reconciled difference can be declared as an independent input, and the node then checks that those hops close against each other and agree with the declared balances. Tolerance is always a declared input, never defaulted, since an unstated tolerance turns every rounding difference into a break. Residual within tolerance yields auto_pass; outside tolerance, or a pairwise break, or a declared hop that disagrees with the balances, yields review_required, which routes to an exception step and never blocks. Balances at differing or undeclared as-of moments yield a ran-stale execution state; fewer than three systems, an undeclared tolerance, or no designated authoritative system yields a did-not-run execution state rather than a degraded pass. Balances, hop differences and the tolerance are integer minor units, so the arithmetic is exact. Scoped to internal system-boundary hops inside one firm, ahead of any filing. Clause: BCBS 239 Principle 2 fn.16 (robust automated reconciliation where multiple systems are in use); BCBS 239 SS36(d) (reconcile to a designated authoritative source, never consumer to consumer).",
+  "input_schema_ref": "chaingraph/art-525-nway-balance-closure-check.html#manifest",
+  "consumes": [],
+  "feeds": [],
+  "status": "live",
+  "conformance_fixtures": true,
+  "compute_capability": "server",
+  "compute_images": [{"system":"sha256-source","image_id":"sha256:43bb37390c65a71cf845232d1f01cd24d40f3ddadba827618355b0386bfb82c9","valid_from":"2026-07-10"}],
+  "compute_proof_ready": "deferred",
+  "deferred_reason": "New shard; awaiting the async GPU proving queue (S18 steady-state).",
+  "export_capability": [
+    "json"
+  ]
+},
+    {
+  "tool_id": "art-526-report-gl-reconciliation",
+  "tool_version": "1.0.0",
+  "display_name": "Report-to-General-Ledger Reconciliation",
+  "mcp_name": "reconcile_report_to_general_ledger",
+  "mandate_type": "attestation_mandate",
+  "wave": 82,
+  "gpu": false,
+  "url": "https://ainumbers.co/chaingraph/art-526-report-gl-reconciliation.html",
+  "description": "Ties a caller-declared reported figure to a caller-declared general-ledger figure, by account -- the only node in this reconciliation programme checked against an independent book of record rather than a second declared value. A designed plug (for example FR 2052a field S.B.6 Carrying Value Adjustment) is a first-class declared input, netted before the residual and never counted as a break. Appendix and supplemental-schedule semantics are versioned policy inputs, never hardcoded. Refuses to run where the requested reporting cadence is finer than the underlying GL schedule's own cadence, and treats a general ledger not yet declared closed as a distinct did_not_run outcome from a genuine tie-out break -- the failure that otherwise surfaces only at quarter-end. Emits a §27.4 gate-policy value plus a sibling execution_state at a predictable output_payload pointer. Clause: BCBS 239 §36(c), ECB RDARR Guide §3.5(1)/(2). Not a transaction matcher and not a filing tool.",
+  "input_schema_ref": "chaingraph/art-526-report-gl-reconciliation.html#manifest",
+  "consumes": [],
+  "feeds": [],
+  "status": "live",
+  "conformance_fixtures": true,
+  "compute_capability": "server",
+  "compute_images": [{"system":"sha256-source","image_id":"sha256:ac0706aea54457a53cc1f56d8642d7b5f4bf09c4377b8bc7d1e52562a9d59e12","valid_from":"2026-07-10"}],
+  "export_capability": [
+    "json"
+  ],
+  "compute_proof_ready": "deferred",
+  "deferred_reason": "New shard; awaiting the async GPU proving queue (S18 steady-state)."
 },
     {
       "tool_id": "cry-01-zk-compliance-proof-generator",
@@ -36403,6 +38901,33 @@
       ]
     },
     {
+      "name": "allocation-decision-receipt",
+      "domain": "Bank Capital & Credit Risk",
+      "title": "Allocation Decision Receipt",
+      "spec_version": "0.8.0",
+      "wave": 80,
+      "description": "Linear three-step chain instantiating the allocation-decision-receipt pattern on a collateral-allocation worked example. Step 1 classifies each candidate asset's DTC/Fed eligibility and Basel HQLA tier. Step 2 applies the Basel CRE22 comprehensive-approach haircut to each eligible candidate. Step 3 re-derives whether the allocation actually chosen is explained by the declared objective over the eligibility and haircut snapshots that were true at the time, reporting a reproducibility verdict and the binding constraint behind any divergence. All three steps always run; the node's re-derivation logic is portable to any optimizer, this chain is one collateral instance of it.",
+      "composer_url": "https://ainumbers.co/chaingraph/chains/allocation-decision-receipt.html",
+      "regulatory_refs": [
+        "BCBS d349/SCO60 (HQLA)",
+        "Basel CRE22 (comprehensive approach collateral haircuts)"
+      ],
+      "steps": [
+        {
+          "tool_id": "505-tokenized-collateral-eligibility-checker",
+          "handoff": "DTC/Fed eligibility and Basel HQLA tier of each candidate feed the haircut step's eligibility snapshot."
+        },
+        {
+          "tool_id": "art-444-collateral-haircut-engine",
+          "handoff": "Basel CRE22 haircut applied per candidate feeds the haircut-table-version input to the allocation re-derivation."
+        },
+        {
+          "tool_id": "art-515-build-allocation-decision-receipt",
+          "handoff": "Re-derives the chosen allocation against the declared objective over the eligibility schedule and haircut snapshots from steps 1-2. Reproducibility verdict, delta, and binding constraint are the chain output. Terminal stage."
+        }
+      ]
+    },
+    {
   "name": "aml-lookback-cycle",
   "domain": "Sanctions",
   "title": "AML Lookback Cycle",
@@ -37848,6 +40373,56 @@
         {
           "tool_id": "art-265-amortize-asc606-commissions",
           "handoff": "ASC 340-40 amortization: apply_expedient (bool), monthly_amortization, cumulative_amortized_pct, remaining_book_value. Final stage."
+        }
+      ]
+    },
+    {
+      "name": "conditional-relief-collateral",
+      "domain": "Digital-Asset Rails",
+      "title": "Conditional-Relief Collateral Evidence",
+      "description": "Six-step composed evidence chain for accepting a payment stablecoin as collateral under a conditional regulatory relief. Step 1 confirms GENIUS Act reserve-attestation readiness for the permitted payment stablecoin. Step 2 checks the MiCA reserve disclosure and records, via a gate on token_type, whether the issuer is also a regulated e-money-token issuer; either branch continues to the reserve-proof stage, since the GENIUS Act attestation from step 1 stands on its own regardless of MiCA classification. Step 3 independently verifies the reserve proof and Chainlink PoR/NAVLink depeg staleness. Step 4 classifies the tokenized leg's DTC/Fed eligibility and Basel HQLA tier. Step 5 applies the Basel CRE22 comprehensive-approach collateral haircut. Step 6 builds the conditional-relief collateral receipt: a per-condition PASS/FAIL/UNDECIDABLE verdict against the caller's own condition set, a version-staleness check, the applicable capital charge, and the revocation-exposure figure if the relief were withdrawn.",
+      "composer_url": "https://ainumbers.co/chaingraph/chains/conditional-relief-collateral.html",
+      "regulatory_refs": [
+        "GENIUS Act S.394 (permitted payment stablecoin reserves)",
+        "MiCA Title IV / RTS on reserve of assets (e-money token reserve disclosure)",
+        "BCBS d349/SCO60 (HQLA tier)",
+        "Basel CRE22 comprehensive-approach collateral haircuts"
+      ],
+      "steps": [
+        {
+          "tool_id": "art-06-genius-act-reserve-attestation",
+          "handoff": "attestation_readiness_determination and coverage_ratio_pct establish the payment stablecoin's GENIUS Act reserve-attestation readiness before the MiCA leg is checked."
+        },
+        {
+          "tool_id": "art-512-check-mica-reserve-disclosure",
+          "handoff": "token_type, coverage, and judgment_required record whether the issuer is also a MiCA e-money-token issuer and whether that leg resolved cleanly.",
+          "gate": {
+            "input": "/token_type",
+            "rules": [
+              {
+                "op": "eq",
+                "value": "EMT",
+                "next": "art-280-reserve-proof-verifier"
+              }
+            ],
+            "default": "art-280-reserve-proof-verifier"
+          }
+        },
+        {
+          "tool_id": "art-280-reserve-proof-verifier",
+          "handoff": "reserve_proof_determination and root_hash_match feed the tokenized-collateral eligibility check with an independently verified reserve and depeg-staleness record."
+        },
+        {
+          "tool_id": "505-tokenized-collateral-eligibility-checker",
+          "handoff": "dtc_status and hqla_tier feed the Basel haircut engine as the tokenized leg's eligibility tier."
+        },
+        {
+          "tool_id": "art-444-collateral-haircut-engine",
+          "handoff": "collateral_adjusted_total and net_exposure feed the conditional-relief receipt as the haircut-adjusted collateral value."
+        },
+        {
+          "tool_id": "art-514-conditional-relief-collateral-receipt",
+          "handoff": "all_conditions_met, applicable_capital_charge, and revocation_capital_delta are the chain output."
         }
       ]
     },
@@ -39524,6 +42099,75 @@
     {
       "tool_id": "art-457-globe-gir-composer",
       "handoff": "Assembles the OECD GloBE Information Return jurisdictional-summary shape from art-454/455/456 outputs (deemed-zero top-up where safe harbour was met): OECD GIR XML (schema version pinned) + form-shaped JSON, both NOT-submittable. Election choices review_required; GIR release dual_control(2) preparer + tax-officer; evidence bundle per filing cycle -- final stage."
+    }
+  ]
+},
+    {
+  "name": "government-payment-lifecycle",
+  "domain": "Public Finance & Government Payments",
+  "title": "Government Payment Lifecycle",
+  "description": "One settlement-asset-agnostic shape for a government payment programme, from backing through disbursement to audit. Backs and issues the settlement asset, confirming the aggregate backing invariant and, only where the asset is issuer-reserve-backed, pulling its reserve facts. Collects a public-money payment once across declared rails at par. Nets the period and crosses only the residual, reported as a crossing count -- skipped entirely when no netting period exists. Disburses in bulk with duplicate and split-payment integrity checks. Reconciles and attests daily. Evidences the controls with audit-trail completeness and RBAC segregation-of-duties. A central bank digital currency and a reserve-backed stablecoin run the identical chain: the settlement asset is a declared parameter, not a different shape.",
+  "composer_url": "https://ainumbers.co/chaingraph/art-521-settlement-asset-backing-invariant.html",
+  "steps": [
+    {
+      "tool_id": "art-521-settlement-asset-backing-invariant",
+      "handoff": "the declared backing_model routes the chain: a reserve-backed asset falls through to its reserve facts (Stage 1b), a centrally-issued asset (backing_model=vacuous, no backing set) skips straight to Stage 2 collection",
+      "gate": {
+        "input": "/backing_model",
+        "rules": [
+          { "op": "eq", "value": "vacuous", "next": "art-513-public-money-settlement-receipt" }
+        ],
+        "default": "art-06-genius-act-reserve-attestation",
+        "gate_policy": "escalate"
+      }
+    },
+    {
+      "tool_id": "art-06-genius-act-reserve-attestation",
+      "handoff": "reserve-attestation precheck feeds the MiCA-style reserve disclosure check (reserve-backed path only)"
+    },
+    {
+      "tool_id": "art-512-check-mica-reserve-disclosure",
+      "handoff": "reserve disclosure verdict feeds the reserve proof-of-reserves check"
+    },
+    {
+      "tool_id": "art-280-reserve-proof-verifier",
+      "handoff": "proof-of-reserves verdict closes out the backing stage; both settlement-asset paths rejoin at Stage 2 collection"
+    },
+    {
+      "tool_id": "art-513-public-money-settlement-receipt",
+      "handoff": "single-settlement, at-par collection receipt feeds the netting stage"
+    },
+    {
+      "tool_id": "art-259-compute-multilateral-netting",
+      "handoff": "net position per entity feeds the cross-currency residual step when a netting period exists (gross_count > 0); with no netting period the chain skips straight to disbursement",
+      "gate": {
+        "input": "/gross_count",
+        "rules": [
+          { "op": "eq", "value": 0, "next": "art-518-bulk-disbursement-integrity" }
+        ],
+        "default": "art-368-compute-fx-netting-positions",
+        "gate_policy": "escalate"
+      }
+    },
+    {
+      "tool_id": "art-368-compute-fx-netting-positions",
+      "handoff": "cross-currency residual position feeds bulk disbursement; crossing count is the cost driver reported, not a new netting node"
+    },
+    {
+      "tool_id": "art-518-bulk-disbursement-integrity",
+      "handoff": "control-total-reconciled, duplicate/split-checked disbursement run feeds the daily reconciliation attestation"
+    },
+    {
+      "tool_id": "art-516-daily-reconciliation-attestation",
+      "handoff": "reconciliation attestation, including any vanished exception, feeds the audit-trail completeness check"
+    },
+    {
+      "tool_id": "art-517-audit-trail-completeness",
+      "handoff": "audit-trail gap enumeration feeds the RBAC segregation-of-duties check -- the last of the two controls-evidence steps"
+    },
+    {
+      "tool_id": "art-459-sod-matrix-check",
+      "handoff": "segregation-of-duties verdict is the terminal control evidence for this run"
     }
   ]
 },
@@ -41450,6 +44094,66 @@
         {
           "tool_id": "20-failure-analyser",
           "handoff": "failure_analysis and composite_psr_mandate — final PSR APP fraud reimbursement mandate"
+        }
+      ]
+    },
+    {
+      "name": "public-money-settlement-receipt",
+      "domain": "Public Finance & Government Payments",
+      "title": "Public-Money Settlement Receipt",
+      "description": "A payment of public money reconciles from payer to the correct government revenue line (art-513), with its finality (art-492) and settlement-asset legal-finality class (art-59) classified. Where the receipt actually declares a settlement currency, a multi-currency PvP atomicity check runs (511); where that PvP leg is not itself a Canton/DLT-native leg, an ISO 20022 address-migration check runs on the messaging leg (rca-03). GATED (OCG Standard v0.8 §21.4): gate 1 on art-513's own /currency (a receipt with no declared currency has nothing further to classify or PvP-check, so the automated path ends); gate 2 on 511's own /has_canton_leg (a Canton-native PvP leg does not carry an ISO 20022 message, so rca-03 does not apply). Portable to any government payment platform, any treasury-single-account regime, any supreme audit institution -- not specific to any one jurisdiction, ministry or vendor.",
+      "composer_url": "https://ainumbers.co/chaingraph/chains/public-money-settlement-receipt.html",
+      "regulatory_refs": [
+        "CPMI-IOSCO PFMI Principle 12 (PvP settlement)",
+        "EU Settlement Finality Directive 98/26/EC",
+        "UCC Article 12 (controllable electronic records, 2022 amendments)",
+        "ISO 20022 pacs.008.001.10"
+      ],
+      "regulatory_basis_status": "not_assessed",
+      "regulatory_basis_decided_by": "INBOUND-PMR-CHAIN-1",
+      "regulatory_basis_decided_at": "2026-08-01",
+      "steps": [
+        {
+          "tool_id": "art-513-public-money-settlement-receipt",
+          "handoff": "Single-settlement, attribution and at-par verdicts. Gate: a declared /currency continues to finality classification; no declared currency means there is nothing further to classify, and the automated path ends.",
+          "gate": {
+            "input": "/currency",
+            "rules": [
+              {
+                "op": "neq",
+                "value": null,
+                "next": "art-492-classify-settlement-finality"
+              }
+            ],
+            "default": "end"
+          }
+        },
+        {
+          "tool_id": "art-492-classify-settlement-finality",
+          "handoff": "Rail-agnostic settlement-finality tier feeds the settlement-asset legal-finality classification."
+        },
+        {
+          "tool_id": "art-59-settlement-asset-finality-classifier",
+          "handoff": "Settlement-asset legal-finality tier and singleness verdict feed the multi-currency PvP check."
+        },
+        {
+          "tool_id": "511-multi-currency-pvp-validator",
+          "handoff": "PFMI Principle 12 atomicity and Herstatt-risk verdict for the currency leg. Gate: a Canton/DLT-native leg carries no ISO 20022 message and ends here; any other leg continues to the address-migration check.",
+          "gate": {
+            "input": "/has_canton_leg",
+            "rules": [
+              {
+                "op": "eq",
+                "value": true,
+                "next": "end"
+              }
+            ],
+            "default": "rca-03-iso20022-address-migration-verifier"
+          }
+        },
+        {
+          "tool_id": "rca-03-iso20022-address-migration-verifier",
+          "handoff": "ISO 20022 pacs.008 Nov-2026 address-field readiness verdict for the messaging leg -- final stage."
         }
       ]
     },

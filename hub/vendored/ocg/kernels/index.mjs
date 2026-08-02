@@ -450,7 +450,21 @@ import * as art509    from './art-509-recompute-payment-waterfall.kernel.mjs';
 import * as art51     from './art-51-cross-margining-benefit-estimator.kernel.mjs';
 import * as art510    from './art-510-build-art5-diligence-evidence.kernel.mjs';
 import * as art511    from './art-511-recompute-fund-fees.kernel.mjs';
+import * as art512    from './art-512-check-mica-reserve-disclosure.kernel.mjs';
+import * as art513    from './art-513-public-money-settlement-receipt.kernel.mjs';
+import * as art514    from './art-514-conditional-relief-collateral-receipt.kernel.mjs';
+import * as art515    from './art-515-build-allocation-decision-receipt.kernel.mjs';
+import * as art516    from './art-516-daily-reconciliation-attestation.kernel.mjs';
+import * as art517    from './art-517-audit-trail-completeness.kernel.mjs';
+import * as art518    from './art-518-bulk-disbursement-integrity.kernel.mjs';
+import * as art519    from './art-519-payment-data-migration-completeness.kernel.mjs';
 import * as art52     from './art-52-digital-trade-fit-diagnostic.kernel.mjs';
+import * as art520    from './art-520-operator-exit-data-portability.kernel.mjs';
+import * as art521    from './art-521-settlement-asset-backing-invariant.kernel.mjs';
+import * as art523    from './art-523-identity-proofing-assurance-level.kernel.mjs';
+import * as art524    from './art-524-source-arrival-freshness-register.kernel.mjs';
+import * as art525    from './art-525-nway-balance-closure-check.kernel.mjs';
+import * as art526    from './art-526-report-gl-reconciliation.kernel.mjs';
 import * as art53     from './art-53-mletr-ebl-conformance-validator.kernel.mjs';
 import * as art54     from './art-54-digital-trade-rules-checker.kernel.mjs';
 import * as art55     from './art-55-trade-document-provenance-verifier.kernel.mjs';
@@ -964,7 +978,21 @@ export const KERNELS = {
   'art-51-cross-margining-benefit-estimator':                 art51,
   'art-510-build-art5-diligence-evidence':                    art510,
   'art-511-recompute-fund-fees':                              art511,
+  'art-512-check-mica-reserve-disclosure':                    art512,
+  'art-513-public-money-settlement-receipt':                  art513,
+  'art-514-conditional-relief-collateral-receipt':            art514,
+  'art-515-build-allocation-decision-receipt':                art515,
+  'art-516-daily-reconciliation-attestation':                 art516,
+  'art-517-audit-trail-completeness':                         art517,
+  'art-518-bulk-disbursement-integrity':                      art518,
+  'art-519-payment-data-migration-completeness':              art519,
   'art-52-digital-trade-fit-diagnostic':                      art52,
+  'art-520-operator-exit-data-portability':                   art520,
+  'art-521-settlement-asset-backing-invariant':               art521,
+  'art-523-identity-proofing-assurance-level':                art523,
+  'art-524-source-arrival-freshness-register':                art524,
+  'art-525-nway-balance-closure-check':                       art525,
+  'art-526-report-gl-reconciliation':                         art526,
   'art-53-mletr-ebl-conformance-validator':                   art53,
   'art-54-digital-trade-rules-checker':                       art54,
   'art-55-trade-document-provenance-verifier':                art55,
