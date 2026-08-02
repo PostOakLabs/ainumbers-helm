@@ -1,0 +1,195 @@
+{
+  "_comment": "Anti-drift stamp for HELM-TECHNICAL-DESIGN-IMPLEMENTATION.md. Each entry is a file the doc cites, digested as of the last time a human re-read the doc's claims against that code. Enforced by scripts/check-techdoc-citations.mjs. Re-stamp with scripts/stamp-techdoc-citations.mjs, by hand, in the same pull request that re-verifies the prose. Never automatically.",
+  "doc": "docs/HELM-TECHNICAL-DESIGN-IMPLEMENTATION.md",
+  "stampedAtSha": "8cddd4aac981115011487a21ad283c12d14a6f7f",
+  "files": [
+    {
+      "path": "bin/helmd.mjs",
+      "sha256": "137077b53f57a1a0ad4a7466d81fe32b0e6e1eacb799ed9e761bf90474ef662b"
+    },
+    {
+      "path": "bin/zero-dep.test.mjs",
+      "sha256": "a3b7d130c13895560ce8c814df9693da099d060c15ce0917bed5000a7d9151ed"
+    },
+    {
+      "path": "docs/CATEGORIZATION-SUBMISSIONS-RUNBOOK.md",
+      "sha256": "3e03e138115617e7570b1447f75a34d96637e31a694446e72e9b2fd872cd7bce"
+    },
+    {
+      "path": "docs/INSTALL.md",
+      "sha256": "35c74db35d52310fd65a962e5469737163d453f79176329fbfcf40d7bea11c6d"
+    },
+    {
+      "path": "docs/IT-DEPLOYMENT.md",
+      "sha256": "e07effb8fc0c55ffc425bc0516696aff76d295e6f72f06008eceaf8167f0cb88"
+    },
+    {
+      "path": "hub/anchor-client.mjs",
+      "sha256": "0e48bf1a8e90f4b10d6cf69afd6477ab72290d4dc13e1229772b267d930e0cc0"
+    },
+    {
+      "path": "hub/autostart.mjs",
+      "sha256": "62c92834749e46951d278aa24647cca92e6310405753edc00593cb192a38e563"
+    },
+    {
+      "path": "hub/bpmn-export.mjs",
+      "sha256": "dadd58b1ddf55b08a0cedb05dcd4c3e5383495b605ce2466a62214b3586264cd"
+    },
+    {
+      "path": "hub/bundle.mjs",
+      "sha256": "c488f97d5cfe5a624d202bb92d51a6c13ccd52aa30b9988f59a9caaee3708284"
+    },
+    {
+      "path": "hub/checkpoint.mjs",
+      "sha256": "9473c659f30c609ab874c088fed02c2a112c80147914da9d446483d8690f18ae"
+    },
+    {
+      "path": "hub/cli-channel.mjs",
+      "sha256": "52d97b083cdb05bf065d3ca45ceb866495507aa5164c804509b64437dc9bd976"
+    },
+    {
+      "path": "hub/config.mjs",
+      "sha256": "fcf246957b1b7db9ed89b8be4566d3dbc4a1101543a73e8a605360e7477049b0"
+    },
+    {
+      "path": "hub/connector.mjs",
+      "sha256": "b5b4adc1dde39660321ea888ca5f12c0176e48cd7d22ea3b12936f509319206a"
+    },
+    {
+      "path": "hub/connectors/dispatch.mjs",
+      "sha256": "ac2649af53f7bc7ec052894cd2cd00cba4858d20504c75aef8bc0f24f36cb3b3"
+    },
+    {
+      "path": "hub/connectors/google-drive-fetch.mjs",
+      "sha256": "53b1d7f82fdb22aeaaa5ff61c0d4395995a4bb275b233541cb9eda715b25b6c7"
+    },
+    {
+      "path": "hub/connectors/inbound-webhook.contract.json",
+      "sha256": "763d2698e65e2547fde2e4e85eabb9915ccbb240ff37f300a161c25715928a01"
+    },
+    {
+      "path": "hub/connectors/smtp-send.mjs",
+      "sha256": "b62b8c32ed90c47bdc80fe789ca815f99a2e4383c21a0bdb6a891e0e31d56d60"
+    },
+    {
+      "path": "hub/credential-provider.mjs",
+      "sha256": "b92c0b6471ac7fd12cfb1c65b610e122f365a2d86121333cde61f434685e8f15"
+    },
+    {
+      "path": "hub/envelope.mjs",
+      "sha256": "2f13a789deedeceedd04fe16437cdebd20b1453a5562e6c70a3311d2d4af1b16"
+    },
+    {
+      "path": "hub/ha-gate.mjs",
+      "sha256": "83abb66e5a3975598f1e93197f352dc5834a9f54e34fedb55f11e3f707212114"
+    },
+    {
+      "path": "hub/idle-timer.mjs",
+      "sha256": "77c507a07ed4f6d4487b0d22635722e4cb924688e58becb2f4ec31735c025a2e"
+    },
+    {
+      "path": "hub/index.mjs",
+      "sha256": "cb9dc8704f54f420320479fb340fb7ef26230385f0e685f9b8086b1e5b3f39b7"
+    },
+    {
+      "path": "hub/journal.mjs",
+      "sha256": "00c82416505e53d1cb3828c9f4e4b3f91e7ce436766acdf3a3b6625c331f5f9f"
+    },
+    {
+      "path": "hub/kernel-runner.mjs",
+      "sha256": "9181b70ac91212a861a2c4a33679f82538b37876351cec4bdf927be09cdbd39c"
+    },
+    {
+      "path": "hub/oauth-pkce.mjs",
+      "sha256": "c72e55602b698c6b71216f60ec0bc554e43d5aad3cebd630471e609922149ce8"
+    },
+    {
+      "path": "hub/oauth-providers.mjs",
+      "sha256": "1f5306455eb5a8a305c5735d43f0f78d624f957509fd0315fadb44c4ee77cee8"
+    },
+    {
+      "path": "hub/recovery.mjs",
+      "sha256": "a7b050305c456825b62b73d66e1d949ec64758fff9e5b08092b59c284f9dc636"
+    },
+    {
+      "path": "hub/run-actions.mjs",
+      "sha256": "e3957ec810d1a6408df8599ada77f68e250bd186dfb196a6a178ed4d07ce38d9"
+    },
+    {
+      "path": "hub/run.mjs",
+      "sha256": "eafb2edd6b3acf02210eb4bee4d9d0b048733b69c0433f43fac4d72128976065"
+    },
+    {
+      "path": "hub/server.mjs",
+      "sha256": "74d90cc757a2c94396d3c4e03c8fb6b4afec4fab26b86e5f5b2561e208b5fbcf"
+    },
+    {
+      "path": "hub/state-dir.mjs",
+      "sha256": "03f2e5234f3dac4cc856f023c6c4b148342222636a08547fdf26e1ca9e8bd382"
+    },
+    {
+      "path": "hub/static.mjs",
+      "sha256": "847c17f2b11d908ca7375c358d28cd9530601b10d0a6647f9f99ca0d9090cad7"
+    },
+    {
+      "path": "hub/token.mjs",
+      "sha256": "f498d4b8e48f0a6482d6f56a2b3dd2dacc0fd08627701ce9fb8d2098b5efd301"
+    },
+    {
+      "path": "hub/ui-manifest.mjs",
+      "sha256": "f67eb699e46667ebaabafa3c8e93cf74fd03c4f92577de9410e25996730aa298"
+    },
+    {
+      "path": "hub/vault.mjs",
+      "sha256": "e996fad7f7b6487d7af4457202fab50ceaa91726f76fb29210ff77c6b7a82d42"
+    },
+    {
+      "path": "hub/vendored/anchor-suite/MANIFEST.json",
+      "sha256": "ec8ee8099d30dc78f290e06a731ee362157f65bbc5b1a55b91a7bdc65a2a601e"
+    },
+    {
+      "path": "hub/vendored/ocg/MANIFEST.json",
+      "sha256": "c3cb859e42d96555fc74cd1edb94bdf5051e35c7490e41f7b898989a2a5d0735"
+    },
+    {
+      "path": "hub/vendored/ocg/kernels/_proof.mjs",
+      "sha256": "1254a6a3bb5f227ce68b882d484ff13825ce3018a8b5dd00f9adbdead8d2272f"
+    },
+    {
+      "path": "hub/webhook-guard.mjs",
+      "sha256": "4bf4dae3a88d06b1f97b1290e6d87740b2fa522e976eac70b1f39873e9ba0196"
+    },
+    {
+      "path": "package.json",
+      "sha256": "515731434245028902d8a4a655c2cfcadc64b1ea523951947c678de0b11e7529"
+    },
+    {
+      "path": "packs/pack-2052a-classify-daily.json",
+      "sha256": "66a6a28a60dd4dd8f355acf67eae48b24f7153984d9b698d82e2fc5f769842d6"
+    },
+    {
+      "path": "packs/pack-bank-nydfs-annual-certification.json",
+      "sha256": "ccb4b99182fd2e6704e493abc116c2e80771afc2c372303f09a49dad59000fc0"
+    },
+    {
+      "path": "schema/workflow-manifest.schema.json",
+      "sha256": "e9ca56bcd1db3f378d513db645a3dc18520ade5a81ee4e74593a5b514f22eaae"
+    },
+    {
+      "path": "scripts/export-bpmn.mjs",
+      "sha256": "fae0ba1bc45ab80b96d88a9a0ada2b32e667e46721293a03e3a4c593215fd790"
+    },
+    {
+      "path": "scripts/lib/schema-validator.mjs",
+      "sha256": "dd34a6ccda7778a9fe7cd76a9f61e91f97dafabac78327be2302fb71847d080e"
+    },
+    {
+      "path": "scripts/vendor.mjs",
+      "sha256": "01f9d8e4adc9c48ba952580b3ce1b7def857a4448b51b4be1ad4cb9b314173da"
+    },
+    {
+      "path": "ui/lib/decision-table.mjs",
+      "sha256": "e54ab337139bdeb4ab8b86269457017ba104c965630f67a504f26be46c5068d5"
+    }
+  ]
+}
