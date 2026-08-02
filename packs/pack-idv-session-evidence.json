@@ -18,7 +18,7 @@
       {
         "node_id": "n2",
         "kernel_id": "art-359-idv-session-receipt-builder",
-        "kernel_digest": "sha256:26c871dce0c13abab30f09deb7464533b71aeb0efca02e190a0bd388dd7274a1"
+        "kernel_digest": "sha256:7536fd33a1939b2ccca8c639a235de97b52d53a4897d621ce3a6af1218aae4a5"
       },
       {
         "node_id": "n3",
@@ -30,7 +30,7 @@
     "gates": [],
     "actions": []
   },
-  "workflow_manifest_digest": "sha256:b7cdafc6983e7f1ca92494500ae6588a5f76d06d87c04cf751634e70bd0bc56b",
+  "workflow_manifest_digest": "sha256:bddbecbb088ed1687af28b33cd32f60bcdb9789a8002baaa2953a0f122fc6106",
   "declared_inputs": [],
   "steps_meta": [
     {

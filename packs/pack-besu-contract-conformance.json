@@ -18,7 +18,7 @@
       {
         "node_id": "n2",
         "kernel_id": "art-292-attest-settlement-orchestrator",
-        "kernel_digest": "sha256:4e7ce5129e31667f5c70ae5a5beb2d34564f5217b8e87133a8732f2bfdfee90d"
+        "kernel_digest": "sha256:e62a92dde406825f63c0b95978cb5a1070ed19f539f9c3a665a53cd2257c5ee0"
       },
       {
         "node_id": "n3",
@@ -30,7 +30,7 @@
     "gates": [],
     "actions": []
   },
-  "workflow_manifest_digest": "sha256:5ba96b62278519d2640a549fd4fff34d0d2475d37b6f0a253eb372161a46f798",
+  "workflow_manifest_digest": "sha256:fd770e8b147c4fe71eb560a630f5727203438b205ee96239c129b401a75d0c9d",
   "declared_inputs": [],
   "steps_meta": [
     {

@@ -1,0 +1,67 @@
+{
+  "workflow_id": "pack-public-money-settlement-receipt",
+  "name": "Public-Money Settlement Receipt",
+  "outcome": "A payment of public money reconciles from payer to the correct government revenue line (art-513), with its finality (art-492) and settlement-asset legal-finality class (art-59) classified. Where the receipt actually declares a settlement currency, a multi-currency PvP atomicity check runs (511); where that PvP leg is not itself a Canton/DLT-native leg, an ISO 20022 address-migration check runs on the messaging leg (rca-03). GATED (OCG Standard v0.8 §21.4): gate 1 on art-513's own /currency (a receipt with no declared currency has nothing further to classify or PvP-check, so the automated path ends); gate 2 on 511's own /has_canton_leg (a Canton-native PvP leg does not carry an ISO 20022 message, so rca-03 does not apply). Portable to any government payment platform, any treasury-single-account regime, any supreme audit institution -- not specific to any one jurisdiction, ministry or vendor.",
+  "spec_version": "ocg-control-plane@1",
+  "manifest": {
+    "manifest_version": "1",
+    "workflow_id": "pack-public-money-settlement-receipt",
+    "trigger": {
+      "type": "manual"
+    },
+    "nodes": [
+      {
+        "node_id": "n1",
+        "kernel_id": "art-513-public-money-settlement-receipt",
+        "kernel_digest": "sha256:3a5d8a2058fde07defccc3491be7a54c5ef221c869295059f337ffe08db4dd03"
+      },
+      {
+        "node_id": "n2",
+        "kernel_id": "art-492-classify-settlement-finality",
+        "kernel_digest": "sha256:46e7fe0b9f14a69f3dc986d9646148d94f230f1f25765dbffe60f3082b8e7185"
+      },
+      {
+        "node_id": "n3",
+        "kernel_id": "art-59-settlement-asset-finality-classifier",
+        "kernel_digest": "sha256:f03969b8c19acf958fd9f90055c4580aa2432c04700b20a42156fa57473ace45"
+      },
+      {
+        "node_id": "n4",
+        "kernel_id": "511-multi-currency-pvp-validator",
+        "kernel_digest": "sha256:2675f0d22096ace35e1dfb500c6f332c77fc66bba78a1e3878575bb466267925"
+      },
+      {
+        "node_id": "n5",
+        "kernel_id": "rca-03-iso20022-address-migration-verifier",
+        "kernel_digest": "sha256:b41abc8dbbec9f4b614bec77a444fbf320cdc1ff4f6fea220336759777c104e4"
+      }
+    ],
+    "connectors": [],
+    "gates": [],
+    "actions": []
+  },
+  "workflow_manifest_digest": "sha256:494ff6a9f7388fa596f1492295e3570dd22c67cd13b2a6349b5c6d4b8d19db00",
+  "declared_inputs": [],
+  "steps_meta": [
+    {
+      "node_id": "n1",
+      "data_classification": "compute"
+    },
+    {
+      "node_id": "n2",
+      "data_classification": "compute"
+    },
+    {
+      "node_id": "n3",
+      "data_classification": "compute"
+    },
+    {
+      "node_id": "n4",
+      "data_classification": "compute"
+    },
+    {
+      "node_id": "n5",
+      "data_classification": "compute"
+    }
+  ]
+}
