@@ -13,7 +13,7 @@
       {
         "node_id": "n1",
         "kernel_id": "art-64-ai-act-highrisk-fit-diagnostic",
-        "kernel_digest": "sha256:586d2012166bfe8fc88259c3ca7e325a06b321e423167347d5b97ef049eaa88d"
+        "kernel_digest": "sha256:e7cbaf562ec7a4b991bdd70cfafb39fcd09bb43a73d085fd0ea270e45dd2c0cb"
       },
       {
         "node_id": "n2",
@@ -42,7 +42,7 @@
     "gates": [],
     "actions": []
   },
-  "workflow_manifest_digest": "sha256:a6fcce3c53d6f8d091e6f2d5d1353da1aba9872dee475485ca8db2db6f347378",
+  "workflow_manifest_digest": "sha256:e6bb5d045de444aac2c30d29d6e873f11ee7a1dd1e14ead865649d6159fd38a1",
   "declared_inputs": [],
   "steps_meta": [
     {

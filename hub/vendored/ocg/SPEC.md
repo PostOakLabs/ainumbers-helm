@@ -712,8 +712,11 @@ heavy/nondeterministic-cost nodes cannot be proven at acceptable cost — while 
 proof an unreliable, and therefore unusable, trust signal (a consumer cannot depend on a proof that "might" be
 present). The profile is the middle path: a MUST exactly over the class where it is achievable, leaving the base
 standard unchanged for external implementers and for nondeterministic nodes. Its endgame — zero `deferred` on
-`gpu:false` — is the state "every deterministic live node carries a real compute-integrity proof"; the AINumbers
-reference deployment conforms with zero deferrals.
+`gpu:false` — is the state "every deterministic live node carries a real compute-integrity proof". The AINumbers
+reference deployment conforms; its live deferred count is not asserted here, because a newly landed node is
+deferred until the proving queue clears it. Derive it from the gate rather than from this sentence:
+`node scripts/check-compute-proof-coverage.mjs` prints the proven/deferred split, and
+`scripts/compute-proof-baseline.json` pins the downward-only ceiling.
 
 > Informative: a narrated walkthrough of how the AINumbers reference deployment reached full §18.6 coverage (universal guest, the deferred set, and the cross-engine determinism gate) is at [chaingraph/zkvm-compute-integrity.html](../chaingraph/zkvm-compute-integrity.html).
 
@@ -2100,9 +2103,12 @@ a row locked inside one vendor's queue. **`reason_code` is an OPEN vocabulary (N
 `$defs/humanAccountabilityRecord.reason_code` is an unconstrained `string` with no `enum`, and §27
 deliberately leaves it open: rationale tokens are deployment- and regime-specific, so an implementation MAY
 mint a machine-stable token (for example `ARTIFACT_BINDING_VERIFIED`) WITHOUT a spec or schema change, and a
-verifier MUST NOT reject a record for carrying an unrecognised one. The ONLY closed §27 enums are
-`record_type` (this section), `role` (§27.1), and `$defs/haGatePolicy` (§27.4) — those three are what §27.9
-machine-checks for closure, and adding a value to any of them IS a spec change.
+verifier MUST NOT reject a record for carrying an unrecognised one. The closed §27 enums are
+`record_type` (this section), `role` (§27.1), `$defs/haGatePolicy` (§27.4), `$defs/haRunState` (§27.10), and
+the `evidence_verification` vocabulary (§27.11.2) — adding a value to any of them IS a spec change. The first
+three are what §27.9 machine-checks for closure; `haRunState` is closed by its schema `enum` under
+`schema-validate` (§27.10); `evidence_verification` is closed by §27.11.2 prose, since it is a member of a
+gate-evaluation RESULT rather than of any schema-governed artifact.
 
 **§27.3 Dual control and thresholds (NORMATIVE — in-toto integer threshold).** A gate MAY require **N
 distinct role-bound identities** to have signed approval records over the SAME `subject_hash` before it is
@@ -2211,6 +2217,149 @@ override reverts the gate policy, never a silent permanent pass); and the **sign
 and §25, the layer **defaults OFF**: a node MUST NOT synthesize accountability records, and absence of §27
 records is fully conformant and carries no meaning. Backward compatible and purely additive: no existing
 artifact, hash, gate, or golden vector moves.
+
+**§27.10 Subject run-state — the `subject_run_state` sibling (NORMATIVE, OPTIONAL — new in v0.8.15).** A §27
+record can say who acted and what they decided, but it cannot say **whether the thing they acted on actually
+ran**. "No approval record exists", "the control did not execute at all", and "the control executed against
+inputs that were already stale" are three different facts that collapse into the same silence, and an
+examiner asks for exactly that distinction. §27.10 settles where those facts live, once, so no surface has to
+mint its own name for them.
+
+**The carrier is ONE optional sibling field, `subject_run_state`, on `$defs/humanAccountabilityRecord` —
+a sibling of `record_type`, NOT a new `record_type` member.** `record_type` is closed by construction: it is
+an `enum` in `openchain-graph-v0.4.schema.json` and `validate-ha-records.test.mjs` (§15) asserts that closure,
+so adding a member would fork verifier behaviour — an artifact carrying the new value would be REJECTED by
+every already-deployed verifier until it updated. A sibling field has no such effect: a verifier that has
+never heard of `subject_run_state` validates every record exactly as before. Run-state is also a different
+kind of fact from `record_type`: `record_type` names the **human act**, `subject_run_state` reports the
+**machine state of the subject** at the moment of that act. Conflating them would make "nothing ran" look
+like a species of approval.
+
+`subject_run_state` takes a closed vocabulary, `$defs/haRunState`:
+
+- `ran` — the subject was produced by an execution that completed, on inputs the acting party accepted as
+  current. A positive claim, not a default.
+- `did_not_run` — the computation, check, or control the subject stands for **did not execute**. The record
+  evidences the absence itself, which is why it needs a home: an absent artifact cannot carry a field.
+- `ran_stale` — the subject was produced, but from inputs already past their freshness bound (§23's
+  `freshness_status: "stale"` is the machine-side observation this mirrors on the accountability side).
+
+**Absence means NO CLAIM, and MUST NOT be read as `ran`.** A record without `subject_run_state` is fully
+conformant and byte-identical to one that predates this clause — the same posture §25.0 gives `private_inputs`
+and §27.0 gives §27 as a whole. Correspondingly a verifier MUST NOT synthesize a value, and a surface MUST
+NOT report a subject whose record says `did_not_run` as verified, replayed, or auto-passed.
+
+**Additivity (the constraint this clause is written to satisfy).** `subject_run_state` is OPTIONAL, appears in
+no `required[]` anywhere in the schema, and enters **no `execution_hash` preimage of any subject**: like every
+§27 construct it lives in a record ABOUT a sealed artifact and never in it, so minting, revising, or
+discarding one leaves the subject's `execution_hash` byte-identical, `$defs/artifact.required` untouched, and
+`chaingraph_version` at `"0.4.0"`. The only hash it can ever move is that of a NEW §27 record an author
+chooses to populate it in — the record's own §4 hash over its own `{policy_parameters, output_payload}`,
+computed the one canonical way (§4). No existing record, artifact, or golden vector moves.
+
+**Reporting-only, exactly as §23 staleness is.** `subject_run_state` never invalidates a `structural`, a
+`verifiable`, or an `execution_hash` verdict, and it is not itself a gate predicate: a §21.4 decision gate MAY
+target a copied-forward value (so a mandate can require `ran` before proceeding), and the §21.4 `_gateval.mjs`
+routing math is unchanged. §27.4's hard rule is untouched — an unmet human precondition still holds the step
+and still does not fall through to `default`.
+
+**Naming duty (why this clause exists at all).** Any surface reporting run-state MUST use this field name and
+this vocabulary rather than a local synonym, and MUST cite §27.10 rather than deriving a sibling name from a
+neighbouring node. ⚠ Copying the value **forward into a node's own `output_payload`** is permitted for NEW
+artifacts only: `output_payload` IS inside the §4 preimage, so adding it to an already-published node moves
+that node's `execution_hash` and stales any §16/§18 proof bound to it — a hash-moving edit that MUST re-prove
+in the same change, never a silent field addition.
+
+**§27.10 closure note (NORMATIVE clarification to §27.2).** §27.2 states that the only closed §27 enums are
+`record_type`, `role`, and `$defs/haGatePolicy`. `$defs/haRunState` is now a fourth: it is closed, and adding
+a value to it IS a spec change, for the same decision-affecting reason — a verifier must not silently accept
+an unknown run-state and thereby treat it as "ran". It differs from `reason_code`, which stays an OPEN
+vocabulary because a rationale token is deployment-specific and carries no verdict. Closure of `haRunState` is
+enforced by its schema `enum` under `schema-validate` (§15); `validate-ha-records.test.mjs` continues to
+assert closure of the original three.
+
+**§27.11 Evidence-verification state of a gate evaluation — `evidence_verification` (NORMATIVE, OPTIONAL — new in v0.8.16).** §27.3 counts *how many distinct identities filed a conformant approval record*. §27.2
+requires each such record to carry a §16 `eddsa-jcs-2022` whole-artifact proof bound to the named human.
+**Those are two different obligations, and an evaluator can discharge the first while never testing the
+second.** A structural check that the proof BLOCK is present and well-shaped — a `cryptosuite` of
+`eddsa-jcs-2022`, a `verificationMethod` prefixed by the record's own `identity.id` — is not a signature
+check: no bytes are verified against any key. **A surface that reports only `satisfied` therefore conflates
+"the threshold was met" with "the evidence was verified", and two hand-typed records carrying a plausible
+but unsigned proof block are indistinguishable from two real sign-offs.** §27.11 settles what such an
+evaluator must SAY, so a reader can tell those two facts apart.
+
+**§27.11.1 The two facts are separate and MUST be reported separately (NORMATIVE).** A §27.4 gate
+evaluation has, at minimum, two independent outcomes:
+
+- **the threshold outcome** — the §27.3/§27.4 predicate over the records the evaluator counted (`satisfied`,
+  `hold`, `rejected`, `override_active`, `escalate`); and
+- **the evidence-verification outcome** — **whether the §16 proof on each counted record was
+  cryptographically verified**, reported in a sibling field named **`evidence_verification`**.
+
+A surface **MUST NOT** render, export, or log the threshold outcome as a standalone verdict when
+`evidence_verification` is anything other than `verified`. **`satisfied` alone is not a conformant report of
+a §27 gate evaluation**; the pair is. The field is a SIBLING of the threshold outcome for the same reason
+§27.10's `subject_run_state` is a sibling of `record_type`: it reports a different kind of fact, and folding
+it into the existing status vocabulary would make "unverified" look like a species of pass or fail when it
+is neither.
+
+**§27.11.2 The `evidence_verification` vocabulary (NORMATIVE, closed).** `evidence_verification` takes one
+of exactly four values:
+
+- `verified` — **every** record the evaluator counted toward the reported outcome had its §16 proof
+  verified against the key resolved from the acting `identity.id`, and every such verification returned
+  true. A positive claim about cryptography actually performed.
+- `structural_only` — the counted records passed the §27.2 STRUCTURAL shape check and **no signature bytes
+  were verified**, because the evaluating context had no verifier, no key material, or no async capability
+  available. This is the honest label for a pure-ECMA-262, synchronous, offline evaluator.
+- `invalid` — at least one record that would otherwise have been counted had its proof CHECKED and the
+  check FAILED.
+- `not_applicable` — the outcome counted zero records and therefore makes no claim about any evidence
+  (`auto_pass`, an unconditional `reject`, or the unknown-policy `hold`).
+
+The vocabulary is CLOSED, joining `record_type` (§27.2), `role` (§27.1), `$defs/haGatePolicy` (§27.4), and
+`$defs/haRunState` (§27.10) as a fifth closed §27 enum: a verifier MUST NOT silently accept an unknown value
+and thereby treat it as `verified`. Adding a value IS a spec change.
+
+**§27.11.3 The gate is an EVIDENCE RECORDER, not a live blocker (NORMATIVE — the governing rule).**
+An `evidence_verification` of `structural_only` **MUST NOT** convert a met threshold into a `hold`, a
+`rejected`, an error, or a refusal to evaluate. The evaluator **records** the fact and **reports it
+alongside** the threshold outcome; the reader — a reviewer, an examiner, a downstream mandate — decides what
+that pairing is worth. This follows the estate-wide rule that a site-side gate evidences rather than blocks,
+and preserves the property that an agent driving a §27 surface end-to-end always receives an evaluable
+answer rather than an execution-environment failure. **A surface MUST NOT report a `structural_only`
+evaluation as verified, and MUST NOT suppress the threshold outcome either.**
+
+**§27.11.4 A CHECKED-and-FAILED proof is not conformant evidence (NORMATIVE clarification to §27.2).**
+`invalid` is the one case that changes what is counted, and it does so under §27.2 as already written rather
+than as a new blocking rule: §27.2 requires a conformant record to carry a §16 proof bound to the named
+human, and a proof whose verification was ATTEMPTED and RETURNED FALSE does not satisfy that requirement any
+more than an absent one does. Such a record **MUST NOT** be counted toward a §27.3 threshold, MUST NOT
+satisfy a §27.5 override, and its exclusion **MUST** be reported: the evaluation reports the threshold
+outcome computed WITHOUT it, paired with `evidence_verification: "invalid"`. **The distinction from
+§27.11.3 is exactly the distinction between a check that was never run and a check that was run and
+failed** — silence about a signature is not the same fact as a bad signature, and neither is the same fact
+as a good one.
+
+**§27.11.5 Where the value is carried.** `evidence_verification` is a member of the **gate-evaluation
+result** — the value an evaluator returns and a surface displays or exports. It is **not** a new artifact
+member and requires **no schema change**: it appears in no `required[]`, in no `$defs` used by
+`$defs/artifact`, and in no `execution_hash` preimage. Where an implementation carries the pairing into a
+§27.6 evidence bundle it belongs in the bundle's existing `verification_result` slot, alongside the §16/§18/
+§20 verdict that slot already holds, and never as a new top-level artifact property. Absence of the field is
+fully conformant for every artifact and record that predates this clause, and a verifier that has never
+heard of it behaves exactly as before. **A verifier MUST NOT synthesize a value**, and in particular MUST
+NOT read absence as `verified` — absence means the surface made NO CLAIM about signature verification,
+which is precisely the state §27.11 exists to make visible rather than to assume away.
+
+**§27.11.6 Additivity (demonstrated, not asserted).** §27.11 introduces no envelope member, no schema
+property, and no new `required[]` entry; it moves no `execution_hash` preimage, since it describes a value
+computed ABOUT records rather than a value stored IN any artifact; and it imposes no MUST-emit — a surface
+that emits no `evidence_verification` at all remains conformant, and merely makes no claim. `chaingraph_version`
+stays `"0.4.0"`, `$defs/artifact.required` is UNCHANGED, and every existing artifact, record, proof, and
+golden vector is byte-identical before and after. The one MUST it does impose is a **reporting** duty, and
+it binds only a surface that CHOOSES to report a §27.4 gate evaluation: such a surface must not present the
+threshold outcome as if it were a verification verdict.
 
 **Attribution.** The identity-split shape follows **C2PA / CAWG** (assertions about content, separated from
 content; design pattern only). The integer `threshold` follows **in-toto** (the ITE-5 threshold construction;
@@ -2334,7 +2483,37 @@ the same artifact with `clause_bindings` stripped produce byte-identical `execut
 finding.
 
 ## §14 Changelog
-See `standard/CHANGELOG.md`. **v0.8.14 (2026-07-28 — SPEC-TEXT PASS documenting §28 Clause Binding
+See `standard/CHANGELOG.md`. **v0.8.16 (2026-08-02 — SPEC-TEXT PASS settling what a §27.4 gate evaluator must
+SAY when it never verified the signature bytes; the record `spec_version` stays at whatever `chaingraph.json`
+carries until the next coordinated K landing bumps it, exactly as the v0.8.15/v0.8.14 text passes were
+separated from their record bumps):** §27.11 splits the two facts a §27 gate evaluation carries — the §27.3
+threshold outcome, and whether the §16 proofs on the counted records were actually verified — and requires
+them reported as a PAIR, never as a single `satisfied`. The sibling field `evidence_verification` takes a
+closed four-value vocabulary `{verified, structural_only, invalid, not_applicable}`; `structural_only` is the
+honest label for a synchronous offline evaluator that checked the proof BLOCK's shape and no signature bytes.
+§27.11.3 fixes the governing posture: the gate is an EVIDENCE RECORDER, so `structural_only` MUST NOT convert
+a met threshold into a hold, an error, or a refusal — it is recorded and reported beside the outcome.
+§27.11.4 keeps the one case that does change counting inside §27.2 as already written: a proof CHECKED and
+FAILED is not conformant evidence, is excluded, and the exclusion is reported. Purely additive: no schema
+property, no `required[]` entry, no `execution_hash` preimage member, no MUST-emit — absence is fully
+conformant and means NO CLAIM, and a verifier MUST NOT read absence as `verified`. `$defs/artifact.required`
+untouched, `chaingraph_version` still `"0.4.0"`, golden parity clean before and after. §27.2's closed-enum
+sentence now names `evidence_verification` as a fifth closed §27 vocabulary. No new gate, no new script, no
+kernel or page code touched. **v0.8.15 (2026-08-01 — SPEC-TEXT PASS settling where run-state lives; the
+record `spec_version` stays at whatever `chaingraph.json` carries until the next coordinated K landing bumps
+it, exactly as the v0.8.14/v0.8.9/v0.8.7 text passes were separated from their record bumps):** §27.10 defines
+ONE optional sibling field, `subject_run_state`, on `$defs/humanAccountabilityRecord`, carrying the closed
+`$defs/haRunState` vocabulary `{ran, did_not_run, ran_stale}`. It is a SIBLING, deliberately **not** a
+`record_type` member: `record_type` is closed by schema `enum` and asserted closed by
+`validate-ha-records.test.mjs`, so extending it would fork every deployed verifier, whereas an unknown sibling
+is simply ignored. Absence means NO CLAIM and MUST NOT be read as `ran`. Purely additive: OPTIONAL, in no
+`required[]`, in no subject's `execution_hash` preimage, `$defs/artifact.required` untouched,
+`chaingraph_version` still `"0.4.0"`, every existing `execution_hash` byte-identical (golden parity clean
+across all pinned vectors before and after). Reporting-only in the §23 `freshness_status` sense: it never
+invalidates a verdict and never changes §21.4 routing math, though a gate MAY target a copied-forward value.
+Copy-forward into a node's own `output_payload` is NEW-ARTIFACTS-ONLY, since `output_payload` is inside the §4
+preimage. §27.2's closed-enum sentence is updated to name `haRunState` as a fourth closed enum. No new gate,
+no new script, no node retrofitted. **v0.8.14 (2026-07-28 — SPEC-TEXT PASS documenting §28 Clause Binding
 Profile, `ocg-clause-binding@1`; the record `spec_version` stays at whatever `chaingraph.json` carries
 until the next coordinated K landing bumps it, exactly as the v0.8.9/v0.8.7/v0.8.8 text passes were
 separated from their record bumps):** §28 names the profile that makes a regulatory citation **pinned**

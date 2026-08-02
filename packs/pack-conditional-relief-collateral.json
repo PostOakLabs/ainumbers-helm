@@ -1,0 +1,76 @@
+{
+  "workflow_id": "pack-conditional-relief-collateral",
+  "name": "Conditional-Relief Collateral Evidence",
+  "outcome": "Six-step composed evidence chain for accepting a payment stablecoin as collateral under a conditional regulatory relief. Step 1 confirms GENIUS Act reserve-attestation readiness for the permitted payment stablecoin. Step 2 checks the MiCA reserve disclosure and records, via a gate on token_type, whether the issuer is also a regulated e-money-token issuer; either branch continues to the reserve-proof stage, since the GENIUS Act attestation from step 1 stands on its own regardless of MiCA classification. Step 3 independently verifies the reserve proof and Chainlink PoR/NAVLink depeg staleness. Step 4 classifies the tokenized leg's DTC/Fed eligibility and Basel HQLA tier. Step 5 applies the Basel CRE22 comprehensive-approach collateral haircut. Step 6 builds the conditional-relief collateral receipt: a per-condition PASS/FAIL/UNDECIDABLE verdict against the caller's own condition set, a version-staleness check, the applicable capital charge, and the revocation-exposure figure if the relief were withdrawn.",
+  "spec_version": "ocg-control-plane@1",
+  "manifest": {
+    "manifest_version": "1",
+    "workflow_id": "pack-conditional-relief-collateral",
+    "trigger": {
+      "type": "manual"
+    },
+    "nodes": [
+      {
+        "node_id": "n1",
+        "kernel_id": "art-06-genius-act-reserve-attestation",
+        "kernel_digest": "sha256:8e520c99a42e6c53799b4c14a5d31d7face65414f1d0fd590a089488f621dc24"
+      },
+      {
+        "node_id": "n2",
+        "kernel_id": "art-512-check-mica-reserve-disclosure",
+        "kernel_digest": "sha256:3123cd816d8e2879a6ea052f973621b149340b5cd6072232bf2666e1bbe9c333"
+      },
+      {
+        "node_id": "n3",
+        "kernel_id": "art-280-reserve-proof-verifier",
+        "kernel_digest": "sha256:309081fd66892352af23884e11bc1173c96b88fc3bbebe8ffce1db60bb235dba"
+      },
+      {
+        "node_id": "n4",
+        "kernel_id": "505-tokenized-collateral-eligibility-checker",
+        "kernel_digest": "sha256:37bbe20bf9c7e913038c93cc07f1425e4956c47da12a2663b58e35f50c3173c2"
+      },
+      {
+        "node_id": "n5",
+        "kernel_id": "art-444-collateral-haircut-engine",
+        "kernel_digest": "sha256:1d708d8172b54b003ff2da60df4711a8999f6e0d8f327a28ef3538e1eae84cb7"
+      },
+      {
+        "node_id": "n6",
+        "kernel_id": "art-514-conditional-relief-collateral-receipt",
+        "kernel_digest": "sha256:b4e574eae79a1ae5d3d37e79cb155af73e2d4d9a14b9e346737a1b9c144daefa"
+      }
+    ],
+    "connectors": [],
+    "gates": [],
+    "actions": []
+  },
+  "workflow_manifest_digest": "sha256:5cbc0f7d2d96d54651023f3cd4dcffdddc2d83b6aee660e68e7ecfa234f03d84",
+  "declared_inputs": [],
+  "steps_meta": [
+    {
+      "node_id": "n1",
+      "data_classification": "compute"
+    },
+    {
+      "node_id": "n2",
+      "data_classification": "compute"
+    },
+    {
+      "node_id": "n3",
+      "data_classification": "compute"
+    },
+    {
+      "node_id": "n4",
+      "data_classification": "compute"
+    },
+    {
+      "node_id": "n5",
+      "data_classification": "compute"
+    },
+    {
+      "node_id": "n6",
+      "data_classification": "compute"
+    }
+  ]
+}

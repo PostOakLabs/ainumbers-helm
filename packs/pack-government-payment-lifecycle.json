@@ -1,0 +1,121 @@
+{
+  "workflow_id": "pack-government-payment-lifecycle",
+  "name": "Government Payment Lifecycle",
+  "outcome": "One settlement-asset-agnostic shape for a government payment programme, from backing through disbursement to audit. Backs and issues the settlement asset, confirming the aggregate backing invariant and, only where the asset is issuer-reserve-backed, pulling its reserve facts. Collects a public-money payment once across declared rails at par. Nets the period and crosses only the residual, reported as a crossing count -- skipped entirely when no netting period exists. Disburses in bulk with duplicate and split-payment integrity checks. Reconciles and attests daily. Evidences the controls with audit-trail completeness and RBAC segregation-of-duties. A central bank digital currency and a reserve-backed stablecoin run the identical chain: the settlement asset is a declared parameter, not a different shape.",
+  "spec_version": "ocg-control-plane@1",
+  "manifest": {
+    "manifest_version": "1",
+    "workflow_id": "pack-government-payment-lifecycle",
+    "trigger": {
+      "type": "manual"
+    },
+    "nodes": [
+      {
+        "node_id": "n1",
+        "kernel_id": "art-521-settlement-asset-backing-invariant",
+        "kernel_digest": "sha256:2c62975ee6e29f7fd6568274a00305cd6d0043e1c89119d37e1e5d16ce3371ef"
+      },
+      {
+        "node_id": "n2",
+        "kernel_id": "art-06-genius-act-reserve-attestation",
+        "kernel_digest": "sha256:8e520c99a42e6c53799b4c14a5d31d7face65414f1d0fd590a089488f621dc24"
+      },
+      {
+        "node_id": "n3",
+        "kernel_id": "art-512-check-mica-reserve-disclosure",
+        "kernel_digest": "sha256:3123cd816d8e2879a6ea052f973621b149340b5cd6072232bf2666e1bbe9c333"
+      },
+      {
+        "node_id": "n4",
+        "kernel_id": "art-280-reserve-proof-verifier",
+        "kernel_digest": "sha256:309081fd66892352af23884e11bc1173c96b88fc3bbebe8ffce1db60bb235dba"
+      },
+      {
+        "node_id": "n5",
+        "kernel_id": "art-513-public-money-settlement-receipt",
+        "kernel_digest": "sha256:3a5d8a2058fde07defccc3491be7a54c5ef221c869295059f337ffe08db4dd03"
+      },
+      {
+        "node_id": "n6",
+        "kernel_id": "art-259-compute-multilateral-netting",
+        "kernel_digest": "sha256:b7089aa25886b5b582762b25cc7ac53e5df80ad74303d473ee1f0a86788e6b9d"
+      },
+      {
+        "node_id": "n7",
+        "kernel_id": "art-368-compute-fx-netting-positions",
+        "kernel_digest": "sha256:f7c40844e14788edbc93617ffab9ff10e02f9ced7a427a11d232041defcb2f78"
+      },
+      {
+        "node_id": "n8",
+        "kernel_id": "art-518-bulk-disbursement-integrity",
+        "kernel_digest": "sha256:3c590d0a9987e270cb032c31ba74642ab9a7f3dab1f9fd32eca587058484bfba"
+      },
+      {
+        "node_id": "n9",
+        "kernel_id": "art-516-daily-reconciliation-attestation",
+        "kernel_digest": "sha256:cd7f7a7436413bdff06e19d14156760a6a8401f9e48a936fa26a9e3b60b6a3d8"
+      },
+      {
+        "node_id": "n10",
+        "kernel_id": "art-517-audit-trail-completeness",
+        "kernel_digest": "sha256:10ff11fc5e0034422df62658e0ca6d0c810e4f3a171d94f3a5be120cf5dfec41"
+      },
+      {
+        "node_id": "n11",
+        "kernel_id": "art-459-sod-matrix-check",
+        "kernel_digest": "sha256:991bda6ad22de1f56d310c7cfbe98b6a7a9e4fdace9805007b0cc161d05cd7cd"
+      }
+    ],
+    "connectors": [],
+    "gates": [],
+    "actions": []
+  },
+  "workflow_manifest_digest": "sha256:8d1f234c3619540105f05b027405c9a2131e6971436b3f7b46ff7ac78428e89a",
+  "declared_inputs": [],
+  "steps_meta": [
+    {
+      "node_id": "n1",
+      "data_classification": "compute"
+    },
+    {
+      "node_id": "n2",
+      "data_classification": "compute"
+    },
+    {
+      "node_id": "n3",
+      "data_classification": "compute"
+    },
+    {
+      "node_id": "n4",
+      "data_classification": "compute"
+    },
+    {
+      "node_id": "n5",
+      "data_classification": "compute"
+    },
+    {
+      "node_id": "n6",
+      "data_classification": "compute"
+    },
+    {
+      "node_id": "n7",
+      "data_classification": "compute"
+    },
+    {
+      "node_id": "n8",
+      "data_classification": "compute"
+    },
+    {
+      "node_id": "n9",
+      "data_classification": "compute"
+    },
+    {
+      "node_id": "n10",
+      "data_classification": "compute"
+    },
+    {
+      "node_id": "n11",
+      "data_classification": "compute"
+    }
+  ]
+}

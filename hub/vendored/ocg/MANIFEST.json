@@ -1,18 +1,18 @@
 {
   "sourceRepo": "https://github.com/PostOakLabs/ainumbers.git",
   "license": "MIT License, Copyright (c) 2026 PostOakLabs (same license/holder as this repo; see this repo's own LICENSE for full terms; no third-party code in this vendored subtree)",
-  "pinnedSha": "2d2736b187d322d2100b4dbadbaf53c3371035d0",
+  "pinnedSha": "6e6a46551bf168c59ab007873286e9411be749c2",
   "vendoredPaths": [
     "chaingraph/kernels",
     "chaingraph/standard/SPEC.md",
     "chaingraph/standard/openchain-graph-v0.4.schema.json",
     "chaingraph/chaingraph.json"
   ],
-  "fileCount": 1405,
+  "fileCount": 1434,
   "files": [
     {
       "path": "chaingraph.json",
-      "sha256": "0e600311e5532ccf9ed2468b7bdfce5ec4ef3ce3df0a0d6df993496355016d81"
+      "sha256": "bace767172e302a01da433c8ea483211372e08e175b43524e4432697b4d178ab"
     },
     {
       "path": "kernels/_anchor-testutil.mjs",
@@ -52,7 +52,7 @@
     },
     {
       "path": "kernels/_hagate.mjs",
-      "sha256": "44a2baad065ee3ae397a7396b4245108d48d220f19ce7ddadae798061c8f9600"
+      "sha256": "2b39e4a8ff62ebcc5d5c37e8f703c9338f563a676a6e060a82af47b3e3d3805b"
     },
     {
       "path": "kernels/_hash.mjs",
@@ -1044,7 +1044,7 @@
     },
     {
       "path": "kernels/art-292-attest-settlement-orchestrator.kernel.mjs",
-      "sha256": "4e7ce5129e31667f5c70ae5a5beb2d34564f5217b8e87133a8732f2bfdfee90d"
+      "sha256": "e62a92dde406825f63c0b95978cb5a1070ed19f539f9c3a665a53cd2257c5ee0"
     },
     {
       "path": "kernels/art-293-einvoice-format-validator.kernel.mjs",
@@ -1292,7 +1292,7 @@
     },
     {
       "path": "kernels/art-359-idv-session-receipt-builder.kernel.mjs",
-      "sha256": "26c871dce0c13abab30f09deb7464533b71aeb0efca02e190a0bd388dd7274a1"
+      "sha256": "7536fd33a1939b2ccca8c639a235de97b52d53a4897d621ce3a6af1218aae4a5"
     },
     {
       "path": "kernels/art-36-tempo-mpp-agent-mandate.kernel.mjs",
@@ -1640,7 +1640,7 @@
     },
     {
       "path": "kernels/art-452-build-ai-training-data-lineage-record.kernel.mjs",
-      "sha256": "56df585464140fcefbfbbc2e7b6131b2c47dc68f68df3c43db1224690069237d"
+      "sha256": "fd23920a354af2d91e43fa946991d108f2d99c7a9565ba3dbca922aba445e5ad"
     },
     {
       "path": "kernels/art-453-model-validation-status.kernel.mjs",
@@ -1891,8 +1891,64 @@
       "sha256": "02852a75e044e31ef50b68a146d4ffef30f3ed54d1299618963963301c82cf40"
     },
     {
+      "path": "kernels/art-512-check-mica-reserve-disclosure.kernel.mjs",
+      "sha256": "3123cd816d8e2879a6ea052f973621b149340b5cd6072232bf2666e1bbe9c333"
+    },
+    {
+      "path": "kernels/art-513-public-money-settlement-receipt.kernel.mjs",
+      "sha256": "3a5d8a2058fde07defccc3491be7a54c5ef221c869295059f337ffe08db4dd03"
+    },
+    {
+      "path": "kernels/art-514-conditional-relief-collateral-receipt.kernel.mjs",
+      "sha256": "b4e574eae79a1ae5d3d37e79cb155af73e2d4d9a14b9e346737a1b9c144daefa"
+    },
+    {
+      "path": "kernels/art-515-build-allocation-decision-receipt.kernel.mjs",
+      "sha256": "cfa8312a00a78e19af8654199d3cfbc6224cc85e41ade3919d9eca0e60f46b40"
+    },
+    {
+      "path": "kernels/art-516-daily-reconciliation-attestation.kernel.mjs",
+      "sha256": "cd7f7a7436413bdff06e19d14156760a6a8401f9e48a936fa26a9e3b60b6a3d8"
+    },
+    {
+      "path": "kernels/art-517-audit-trail-completeness.kernel.mjs",
+      "sha256": "10ff11fc5e0034422df62658e0ca6d0c810e4f3a171d94f3a5be120cf5dfec41"
+    },
+    {
+      "path": "kernels/art-518-bulk-disbursement-integrity.kernel.mjs",
+      "sha256": "3c590d0a9987e270cb032c31ba74642ab9a7f3dab1f9fd32eca587058484bfba"
+    },
+    {
+      "path": "kernels/art-519-payment-data-migration-completeness.kernel.mjs",
+      "sha256": "d9e4f0984fd3d85463ece41f052a47bf3b98fed2df72e38ab131273cacd5d587"
+    },
+    {
       "path": "kernels/art-52-digital-trade-fit-diagnostic.kernel.mjs",
       "sha256": "77e46eb235dae3d94185744d9e44a284d15fe90eac9988e6d32b3162804dd663"
+    },
+    {
+      "path": "kernels/art-520-operator-exit-data-portability.kernel.mjs",
+      "sha256": "f788f6feb29648cf1c09156f55bc79fa0da7511e5ce55547e00b893c8f6e826b"
+    },
+    {
+      "path": "kernels/art-521-settlement-asset-backing-invariant.kernel.mjs",
+      "sha256": "2c62975ee6e29f7fd6568274a00305cd6d0043e1c89119d37e1e5d16ce3371ef"
+    },
+    {
+      "path": "kernels/art-523-identity-proofing-assurance-level.kernel.mjs",
+      "sha256": "f691517dd02006a5787bea91055d22c567fb6049e1f3d15c3bb2a474032cd335"
+    },
+    {
+      "path": "kernels/art-524-source-arrival-freshness-register.kernel.mjs",
+      "sha256": "27d4e48514eb2b1eed2231094e43e116be6b1457bbd2be49c4c5eca810550c64"
+    },
+    {
+      "path": "kernels/art-525-nway-balance-closure-check.kernel.mjs",
+      "sha256": "43bb37390c65a71cf845232d1f01cd24d40f3ddadba827618355b0386bfb82c9"
+    },
+    {
+      "path": "kernels/art-526-report-gl-reconciliation.kernel.mjs",
+      "sha256": "ac0706aea54457a53cc1f56d8642d7b5f4bf09c4377b8bc7d1e52562a9d59e12"
     },
     {
       "path": "kernels/art-53-mletr-ebl-conformance-validator.kernel.mjs",
@@ -1940,7 +1996,7 @@
     },
     {
       "path": "kernels/art-64-ai-act-highrisk-fit-diagnostic.kernel.mjs",
-      "sha256": "586d2012166bfe8fc88259c3ca7e325a06b321e423167347d5b97ef049eaa88d"
+      "sha256": "e7cbaf562ec7a4b991bdd70cfafb39fcd09bb43a73d085fd0ea270e45dd2c0cb"
     },
     {
       "path": "kernels/art-65-ai-conformity-pack-builder.kernel.mjs",
@@ -3332,7 +3388,7 @@
     },
     {
       "path": "kernels/fixtures/art-359-idv-session-receipt-builder.fixtures.json",
-      "sha256": "8423d19d2a22c24bdbb747c7fb50d2ce878dea9eb8bf8b3622549509daa21dce"
+      "sha256": "3d8623e10a5edda9c7ec538042c3aff3b8d62406b9b958d9ac840702fbb0a90b"
     },
     {
       "path": "kernels/fixtures/art-36-tempo-mpp-agent-mandate.fixtures.json",
@@ -3708,7 +3764,7 @@
     },
     {
       "path": "kernels/fixtures/art-452-build-ai-training-data-lineage-record.fixtures.json",
-      "sha256": "125c688369f93864a9cb7828a39af280a7125e354094a040644bdbdf6fd1ab60"
+      "sha256": "4c918671b009f71dd4d3edfa6c2387dd89076ae416ac593da1b192a65f7e16a5"
     },
     {
       "path": "kernels/fixtures/art-453-model-validation-status.fixtures.json",
@@ -3959,8 +4015,64 @@
       "sha256": "3c597daeb3da9952fa4452ed1ad3eddc620bafc69ca1a9cfd76c4656798ddb05"
     },
     {
+      "path": "kernels/fixtures/art-512-check-mica-reserve-disclosure.fixtures.json",
+      "sha256": "5c7b6c1bda26d0e0c71bd89411c6392a62ea44caf6787da248b836b8d31103a5"
+    },
+    {
+      "path": "kernels/fixtures/art-513-public-money-settlement-receipt.fixtures.json",
+      "sha256": "b18dd0ec0c478b81e3a4fd8789cf25fc28a443ff1e5270de8f35c3b63d6378b4"
+    },
+    {
+      "path": "kernels/fixtures/art-514-conditional-relief-collateral-receipt.fixtures.json",
+      "sha256": "b9dfb0a6528e7cc8836dc7ed0b975e89daf0d39b47c1ac41af4ea87067a8a224"
+    },
+    {
+      "path": "kernels/fixtures/art-515-build-allocation-decision-receipt.fixtures.json",
+      "sha256": "22d81590f12c903a244b18df35bd6caae9063a82c5c2f89678c0a8354eb12ed4"
+    },
+    {
+      "path": "kernels/fixtures/art-516-daily-reconciliation-attestation.fixtures.json",
+      "sha256": "c50a38fbe59b2e20f5c61163501d4ea97e91e0dafd47fd8e12b5a6f37ada513e"
+    },
+    {
+      "path": "kernels/fixtures/art-517-audit-trail-completeness.fixtures.json",
+      "sha256": "9906a8d004700005cecdca390951e3a8d55419e77f448abbf9b2aecd0a25c9c2"
+    },
+    {
+      "path": "kernels/fixtures/art-518-bulk-disbursement-integrity.fixtures.json",
+      "sha256": "fa184750fdc3bf4b5ec6a2664462544daba02599969ee12b54ca9af837e2e9ad"
+    },
+    {
+      "path": "kernels/fixtures/art-519-payment-data-migration-completeness.fixtures.json",
+      "sha256": "1d89285301023e23ad22efd1769ce328114c6c4961cf9e72f7d6fdc2f0e6b4c6"
+    },
+    {
       "path": "kernels/fixtures/art-52-digital-trade-fit-diagnostic.fixtures.json",
       "sha256": "7905a8775edf5f5956863362e6478b89183799287e9254dee54eb7a53595253f"
+    },
+    {
+      "path": "kernels/fixtures/art-520-operator-exit-data-portability.fixtures.json",
+      "sha256": "db14362ab4bbeced0ba580edc99c411aeb5229ee7d612e4fec2977d9520bbac4"
+    },
+    {
+      "path": "kernels/fixtures/art-521-settlement-asset-backing-invariant.fixtures.json",
+      "sha256": "6c9674d85b6059daa419018926e3e331497fd9915357924c092d072605021b65"
+    },
+    {
+      "path": "kernels/fixtures/art-523-identity-proofing-assurance-level.fixtures.json",
+      "sha256": "f93abf8f599da6f7f4201d412e590947cfa407ff41a0c5257a5690c8a65eb5c7"
+    },
+    {
+      "path": "kernels/fixtures/art-524-source-arrival-freshness-register.fixtures.json",
+      "sha256": "104ac6275b65275969a2d0b5dfc2c38981874ac0cdf7ac92a1f9b28d033cecc4"
+    },
+    {
+      "path": "kernels/fixtures/art-525-nway-balance-closure-check.fixtures.json",
+      "sha256": "a1727f68aa159c19e507afe412507ff0f94f6a5d3f431b654a6a1b76c4a785e5"
+    },
+    {
+      "path": "kernels/fixtures/art-526-report-gl-reconciliation.fixtures.json",
+      "sha256": "80225fa85a791e298f409313c68718f541e3d982c46ca18670cc7af898aff44b"
     },
     {
       "path": "kernels/fixtures/art-53-mletr-ebl-conformance-validator.fixtures.json",
@@ -5491,8 +5603,12 @@
       "sha256": "ba45a80f148e2c319329b1bab8b9bb893a6255898f4c4fe8a50f876d0a77e61c"
     },
     {
+      "path": "kernels/hagate-evidence-verification.test.mjs",
+      "sha256": "a2ecda3f17e3cc7599c1110955a31b776eaa334404ebd92a707c7ed9b2a346ad"
+    },
+    {
       "path": "kernels/index.mjs",
-      "sha256": "00914e243ae1eaa0e526fd8b13478698205bc2f0f4c5697f0573716bacc9320e"
+      "sha256": "5e22a071ed32a1f2e040beeb424420266f95f1820e1d282b32959cba05d0d9d2"
     },
     {
       "path": "kernels/inline-hash-equality.test.mjs",
@@ -5624,11 +5740,11 @@
     },
     {
       "path": "openchain-graph-v0.4.schema.json",
-      "sha256": "929ed61c3a4e8018d9e923fbe708871c277f7899f3257463eb13fad34943d141"
+      "sha256": "c9c1708d89183f9a93f871842f645b31189dd7c5be5346e9417f22eb05ce023c"
     },
     {
       "path": "SPEC.md",
-      "sha256": "51f8320d9e42bb7fca4db2afa98fd39b0855aae2790996c85f543de5c27128f2"
+      "sha256": "900e9f03d0faa32d6b9ab7de88974733a23e62b78be88416ffc997771580c091"
     }
   ]
 }
