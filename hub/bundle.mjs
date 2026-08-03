@@ -258,3 +258,97 @@ export async function exportBundleZip(bundle, keys, { generatedAt } = {}) {
     ]),
   };
 }
+
+// AGENTGLUE-BUILD-3 (AGENT-GLUE-BUILD-SPEC.md §(c)): a sibling to
+// exportBundleZip that exports ONE run, not the whole estate. A full bundle's
+// checkpoint covers the WHOLE journal_root_digest — every stream, many runs'
+// worth of state — so handing over exportBundleZip's output to answer "prove
+// this one run happened" hands over far more evidence than the question
+// needs. This re-assembles a subset bundle (this run's sealed objects + the
+// smallest checkpoint that covers them) and signs a fresh manifest over just
+// that subset — same self-verifying shape as a full bundle (verifyBundle
+// never assumes completeness of the whole estate, only internal consistency
+// of what's present), no second Merkle/inclusion-proof implementation.
+//
+// bundle: an assembleBundle() result (or anything with the same
+// { objects, checkpoints, manifest } shape) to slice from. runId: the run to
+// extract. keys: the Node keypair (loadOrCreateKeys() shape) — needed to sign
+// the subset's own manifest, since it covers a different entry/checkpoint set
+// than the source bundle's manifest and so is a genuinely different
+// statement.
+export async function exportRunProofZip(bundle, runId, keys, { generatedAt } = {}) {
+  const runObjects = bundle.objects.filter((obj) => {
+    try {
+      return statementOf(obj.envelope).predicate.run_id === runId;
+    } catch {
+      return false;
+    }
+  });
+  if (runObjects.length === 0) {
+    throw new Error(`evidence bundle: no objects found for run "${runId}"`);
+  }
+
+  const checkpoints = bundle.checkpoints ?? [];
+  if (checkpoints.length === 0) {
+    throw new Error(`evidence bundle: no checkpoint available to prove run "${runId}" offline`);
+  }
+  // "smallest" = fewest streams shared with a recipient who only asked about
+  // one run; every checkpoint the source bundle carries already covers this
+  // run's contribution (the caller only attaches checkpoints taken at or
+  // after the run completed), so the earliest by checkpoint_seq is both
+  // sufficient and minimal.
+  const coveringCheckpoint = checkpoints.reduce((min, cp) => (cp.checkpointSeq < min.checkpointSeq ? cp : min));
+
+  const subsetBundle = assembleBundle({
+    bundleId: `${bundle.manifest.predicate.bundle_id}--run-${runId}`,
+    runId,
+    workflowManifestDigest: bundle.manifest.predicate.workflow_manifest_digest,
+    specs: runObjects,
+    checkpoints: [coveringCheckpoint],
+    keys,
+  });
+
+  const publicKeys = browserPublicKeys(keys);
+  const verifyResult = await verifyBundleOffline(subsetBundle, publicKeys);
+  const manifestDigest = await envelopeDigestOffline(subsetBundle.manifest.envelope);
+
+  const checkpointsWithBinding = verifyResult.detail.checkpoints.map((cp) => {
+    if (!cp.predicate) return cp;
+    const anchors = (cp.predicate.anchors ?? []).map((a) => ({
+      ...a,
+      binding: verifyAnchorBinding(a, cp.predicate.journal_root_digest),
+    }));
+    return { ...cp, predicate: { ...cp.predicate, anchors } };
+  });
+
+  const verifyHtml = buildStandaloneVerifierHtml({ bundle: subsetBundle, publicKeys });
+  const auditorHtml = buildAuditorHtml({
+    bundle: subsetBundle,
+    entries: verifyResult.detail.entries,
+    checkpoints: checkpointsWithBinding,
+    manifestDigest,
+    generatedAt,
+  });
+  const readme = `Helm per-run anchor proof — run "${runId}"\n\n` +
+    `THIS IS A PER-RUN PROOF, NOT THE FULL EVIDENCE BUNDLE. It contains only the sealed objects for ` +
+    `this one run plus the one checkpoint (checkpoint_seq ${coveringCheckpoint.checkpointSeq}) that covers ` +
+    `them — not every stream and every checkpoint in the estate. Do not mistake this for the complete journal.\n\n` +
+    `bundle.json   — the raw signed subset bundle (this IS the evidence; everything else here is a view onto it)\n` +
+    `verify.html   — open this in any browser, fully offline, to re-verify the subset bundle from scratch\n` +
+    `auditor.html  — human-readable audit record; print or "print to PDF" for paper records\n\n` +
+    `Bundle verified ${verifyResult.valid ? "VALID" : "INVALID"} at export time` +
+    (verifyResult.reasons.length ? `: ${verifyResult.reasons.join("; ")}\n` : ".\n");
+
+  return {
+    valid: verifyResult.valid,
+    reasons: verifyResult.reasons,
+    runId,
+    checkpointSeq: coveringCheckpoint.checkpointSeq,
+    zip: buildZip([
+      { name: "bundle.json", data: JSON.stringify(subsetBundle, null, 2) },
+      { name: "verify.html", data: verifyHtml },
+      { name: "auditor.html", data: auditorHtml },
+      { name: "README.txt", data: readme },
+    ]),
+  };
+}
