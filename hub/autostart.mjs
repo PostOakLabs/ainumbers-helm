@@ -38,9 +38,18 @@ const HERE = dirname(fileURLToPath(import.meta.url));
 // invoked — works for the packaged SEA binary (`process.execPath` alone,
 // argv[1] is the binary itself) and for a dev/npm checkout (`node
 // .../hub/index.mjs start`).
-export function autostartCommand({ execPath = process.execPath, entry = process.argv[1] } = {}) {
+//
+// HELM-WINSPAM-1: `open` defaults false — this is the command the AUTOSTART
+// entry (Run key / LaunchAgent) writes, which fires on every login with no
+// user watching, so it must never carry `--open` (index.mjs already opens a
+// tab on a genuine first run regardless). shortcut.mjs passes `open: true`
+// for its OWN default, since a Start Menu double-click is the explicit user
+// action the tab exists for.
+export function autostartCommand({ execPath = process.execPath, entry = process.argv[1], open = false } = {}) {
   const isSea = !entry || entry === execPath;
-  return isSea ? { command: execPath, args: ["start"] } : { command: execPath, args: [entry, "start"] };
+  const args = isSea ? ["start"] : [entry, "start"];
+  if (open) args.push("--open");
+  return { command: execPath, args };
 }
 
 function launchAgentPath(home) {

@@ -98,16 +98,17 @@ test("start -> status -> stop round trip", async () => {
   assert.match(status.out, /running \(pid \d+\)/);
   assert.match(status.out, new RegExp(`port\\s+${PORT}`));
 
-  // Regression: `helmd start` auto-opens a browser tab on EVERY start, so an
-  // automated caller that spawns the daemon hijacks the machine's browser. Run
-  // from a pre-push hook, that is one tab per push attempt. HELM_NO_OPEN (set in
-  // ENV above) is the opt-out; this asserts it is honoured, not merely set.
-  // Polled, not sampled: this line is written after the "Helm is running."
-  // banner that waitForRunning resolves on, and the child's stdout is a pipe.
-  for (let i = 0; i < 60 && !/browser auto-open suppressed/.test(allOutput); i++) {
-    await new Promise((r) => setTimeout(r, 50));
-  }
-  assert.match(allOutput, /browser auto-open suppressed/);
+  // HELM-WINSPAM-1: `helmd start` used to auto-open a browser tab on EVERY
+  // start, so an automated caller that spawns the daemon (this suite, a
+  // pre-push hook, autostart at login) hijacked the machine's browser once
+  // per invocation — with autostart re-firing that's unbounded. Fixed: a
+  // RETURNING run (this one — the token was pre-seeded above) never even
+  // attempts to open, so neither the attempt log line nor its HELM_NO_OPEN
+  // suppression notice should appear at all. See winspam-regression.test.mjs
+  // for the full restart-loop coverage and the first-run positive control.
+  await new Promise((r) => setTimeout(r, 200)); // let any (unexpected) late log line land before asserting its absence
+  assert.doesNotMatch(allOutput, /auto-opening browser tab/, "a returning run must not attempt to open a browser tab");
+  assert.doesNotMatch(allOutput, /browser auto-open suppressed/, "nothing to suppress — the attempt should never have been made");
 
   const exited = new Promise((resolve) => daemon.on("exit", resolve));
   const stop = helmd("stop");
