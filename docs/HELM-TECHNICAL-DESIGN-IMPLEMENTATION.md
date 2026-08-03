@@ -275,7 +275,7 @@ Anchoring is off by default (`hub/config.mjs:44`) and is logged once per boot wh
 
 | Component | Where it came from | License | Why |
 |---|---|---|---|
-| OCG kernels, `_hash.mjs`, `_computeproof.mjs`, `_proof.mjs`, `_rfc3161.mjs`, SPEC.md, v0.4 schema, `chaingraph.json` | `github.com/PostOakLabs/ainumbers`, pinned at `31e0402` | MIT (site repository `LICENSE`) | The kernels are the deterministic compute. Reimplementing them here would create a second canonical hash path, which is exactly the failure the pin exists to prevent. |
+| OCG kernels, `_hash.mjs`, `_computeproof.mjs`, `_proof.mjs`, `_rfc3161.mjs`, SPEC.md, v0.4 schema, `chaingraph.json` | `github.com/PostOakLabs/ainumbers`, pinned at `84dbe4d` | MIT (site repository `LICENSE`) | The kernels are the deterministic compute. Reimplementing them here would create a second canonical hash path, which is exactly the failure the pin exists to prevent. |
 | Anchor Suite `tsq.mjs` (RFC 3161 TimeStampReq builder) and its PKI.js bundle | `github.com/PostOakLabs/anchor-suite`, pinned at `1aa6d22` | MIT, with third-party BSD-3-Clause and MIT code preserved in-file inside the PKI.js bundle; see NOTICE (`hub/vendored/anchor-suite/MANIFEST.json`) | DER encoding for timestamp requests is exacting and already shipped and exercised in the browser. Vendoring the shipped code beats a second implementation. |
 | ML-DSA-44 implementation | Reached through `hub/vendored/ocg/kernels/_proof.mjs` | Follows the OCG vendored tree above | Same reason as the kernels. One implementation, one canonical form. |
 | Helm itself: `hub/`, `ui/`, `scripts/`, `schema/` | Written here | Apache-2.0 (`LICENSE`, `package.json`, SPDX header on every source file) | Phase 4 decision. The repository is public under Apache-2.0. |
@@ -354,8 +354,6 @@ Published deliberately. A reader finding these is worse than a reader being told
 
 7. **No agent-facing MCP endpoint exists.** The navigation slot ships disabled. The read-tier ruling in §5 constrains a surface that has not been built.
 
-8. **`hub/vendored/ocg/MANIFEST.json` records no license field**, unlike the Anchor Suite manifest which does. The license is MIT, from the site repository's own `LICENSE`, but the vendor manifest does not state it, so the fact lives one repository away from the vendored code.
-
 ### Two limitations on record elsewhere that the code no longer supports
 
 Both are recorded here because the accuracy rule requires the disagreement to be written down rather than silently resolved.
@@ -363,3 +361,5 @@ Both are recorded here because the accuracy rule requires the disagreement to be
 - **"Journal corruption crashes rather than degrades" is no longer true.** It was true when it was written. `hub/recovery.mjs` and the boot path at `hub/index.mjs:126-148` now quarantine the broken state directory with a timestamp, never delete it, carry `config.json` forward, write a crash log into the quarantined copy, and re-enter boot against fresh state, announcing all of it in the banner. The residual risk is different and smaller: an install whose journal breaks starts over from empty, and the old data is preserved only as a quarantined directory a human must go look at.
 
 - **"`exportBpmn` is unreachable" is no longer true.** It is reachable from the CLI: `helmd export-bpmn <workflow_id> [out.bpmn]` dispatches to `scripts/export-bpmn.mjs`, which loads a compiled pack and calls `exportBpmn` from `hub/bpmn-export.mjs` (`bin/helmd.mjs:31`, `115-116`). It is documented in `helmd --help` and listed among the stable verbs (`bin/helmd.mjs:52-53`, `72`). What remains true is that there is no HTTP route and no UI button for it, so it is CLI-only.
+
+- **"`hub/vendored/ocg/MANIFEST.json` records no license field" is no longer true.** The vendor config was fixed at its source, so `vendor.mjs` now writes a `license` field into the vendor manifest the same way the Anchor Suite manifest already did; both manifests state their license inline.

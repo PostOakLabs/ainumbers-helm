@@ -1,7 +1,7 @@
 {
   "workflow_id": "pack-dw-capacity-check",
   "name": "Discount Window Borrowing-Capacity Check",
-  "outcome": "Single-node Federal Reserve Discount Window borrowing-capacity check: lendable collateral value against a runnable-liability / uninsured-deposit coverage target.",
+  "outcome": "Two-step BCBS 248 / Federal Reserve intraday liquidity chain. Step 1 computes daily maximum intraday liquidity usage from a caller-supplied time-stamped transaction list and classifies it against a caller-supplied list of available intraday liquidity sources. Step 2 checks Discount Window borrowing capacity -- lendable collateral value against a runnable-liability / uninsured-deposit coverage target -- as one of those declared sources.",
   "spec_version": "ocg-control-plane@1",
   "manifest": {
     "manifest_version": "1",
@@ -12,6 +12,11 @@
     "nodes": [
       {
         "node_id": "n1",
+        "kernel_id": "art-477-intraday-liquidity-monitoring",
+        "kernel_digest": "sha256:647771786d54eec94e4c54281af4b03bd11032678c1c363c7cbc39b9cc0a8b73"
+      },
+      {
+        "node_id": "n2",
         "kernel_id": "art-427-discount-window-capacity",
         "kernel_digest": "sha256:9229d3650b52b9385576c8f0c878c174906804fb4ccca5ae197016f655fa4aea"
       }
@@ -20,11 +25,15 @@
     "gates": [],
     "actions": []
   },
-  "workflow_manifest_digest": "sha256:b35bcca83d51f9d80fef07a26b21c9ec34babcb90761d927a97e20f7edd47735",
+  "workflow_manifest_digest": "sha256:50bdcccd3daf346a138f04e1ac3db5296b9e34ae81e8fd73b0a0d5581b87c03c",
   "declared_inputs": [],
   "steps_meta": [
     {
       "node_id": "n1",
+      "data_classification": "compute"
+    },
+    {
+      "node_id": "n2",
       "data_classification": "compute"
     }
   ]

@@ -1,7 +1,7 @@
 {
   "sourceRepo": "https://github.com/PostOakLabs/ainumbers.git",
   "license": "MIT License, Copyright (c) 2026 PostOakLabs (same license/holder as this repo; see this repo's own LICENSE for full terms; no third-party code in this vendored subtree)",
-  "pinnedSha": "d31498aacff6d57cea534163fb2c3739ffc1724c",
+  "pinnedSha": "84dbe4d9bab3b2ef992f7df39846d8ea4f44f7f9",
   "vendoredPaths": [
     "chaingraph/kernels",
     "chaingraph/standard/SPEC.md",
@@ -12,7 +12,7 @@
   "files": [
     {
       "path": "chaingraph.json",
-      "sha256": "264febd8d7c9361a3be928e7c97ed4d7ca96c90f89205780b0a294b1743e6898"
+      "sha256": "d5eaf302a57305361b410df821e9459dbcc45d4f317a112e697ed378ae0c7e87"
     },
     {
       "path": "kernels/_anchor-testutil.mjs",
@@ -1416,7 +1416,7 @@
     },
     {
       "path": "kernels/art-391-compute-canton-traffic-cost.kernel.mjs",
-      "sha256": "c712461e3738d99efd948256b9a9bf6a56f0c3c18aeca6685fb4acad40be39be"
+      "sha256": "6784aa8d8ebe52de0d2ab52e2bb48d95559cd4796016eb7fd5388ca559b9d73b"
     },
     {
       "path": "kernels/art-392-compute-canton-app-reward-estimate.kernel.mjs",
@@ -3528,7 +3528,7 @@
     },
     {
       "path": "kernels/fixtures/art-391-compute-canton-traffic-cost.fixtures.json",
-      "sha256": "3dbeec4f85e0a4801831db5e02850637c00d7f538a858cc2dd0f4f45ef386da0"
+      "sha256": "ab92e5773c304387c3180b18e6bcef9511ed99d695111589465981a6f24d9b67"
     },
     {
       "path": "kernels/fixtures/art-392-compute-canton-app-reward-estimate.fixtures.json",
@@ -5744,7 +5744,7 @@
     },
     {
       "path": "SPEC.md",
-      "sha256": "900e9f03d0faa32d6b9ab7de88974733a23e62b78be88416ffc997771580c091"
+      "sha256": "de6def3fc54859e657c6b4e829e75c1e25bdb503f369f7aabe89da8961f7152c"
     }
   ]
 }

@@ -1,7 +1,7 @@
 {
   "workflow_id": "pack-y9c-schedule-hc-hcr-capital",
   "name": "FR Y-9C Schedule HC to HC-R Capital Chain",
-  "outcome": "Gated two-step chain for top-tier bank holding companies (Y-9C panel, total consolidated assets >= $3B). Step 1 maps caller-declared Schedule HC balance-sheet line items into Schedule HC totals and checks the balance-sheet identity. Step 2 consumes those totals alongside caller-supplied capital components to compute Schedule HC-R capital ratios and the supplementary leverage ratio, gated dual_control(2) before the capital-adequacy result is treated as final -- any failed capital-ratio or SLR threshold requires two distinct approver sign-offs (recorded, not yet runtime-gated pending HA-RETRO-1 wiring).",
+  "outcome": "Gated three-step chain for top-tier bank holding companies (Y-9C panel, total consolidated assets >= $3B). Step 1 maps caller-declared Schedule HC balance-sheet line items into Schedule HC totals and checks the balance-sheet identity. Step 2 consumes those totals alongside caller-supplied capital components to compute Schedule HC-R capital ratios and the supplementary leverage ratio, gated dual_control(2) before the capital-adequacy result is treated as final -- any failed capital-ratio or SLR threshold requires two distinct approver sign-offs (recorded, not yet runtime-gated pending HA-RETRO-1 wiring). Step 3, reached only on a passing capital-adequacy result, rolls forward the caller-declared FR Y-14A/Q capital worksheet and cross-checks its ending total capital against Step 2's reported total-capital figure.",
   "spec_version": "ocg-control-plane@1",
   "manifest": {
     "manifest_version": "1",
@@ -19,13 +19,18 @@
         "node_id": "n2",
         "kernel_id": "art-436-bhc-schedule-hcr-capital",
         "kernel_digest": "sha256:3eb8ae80e279ce36b74155e260a9f47adda9dd53dc62f3668ff6dd3a1e90b295"
+      },
+      {
+        "node_id": "n3",
+        "kernel_id": "art-439-y14-capital-worksheet-rollforward",
+        "kernel_digest": "sha256:c6c4a22b53316a6e6ccebc23773eb8e8509b3aea2dd9591b8ac65c6cd03e31db"
       }
     ],
     "connectors": [],
     "gates": [],
     "actions": []
   },
-  "workflow_manifest_digest": "sha256:71091ee3ac8c133130301764101c4d3f06168986ceffc9d96a745235c125b92e",
+  "workflow_manifest_digest": "sha256:46e4cc93d73cd9771f2744dbf1027ca450f7f1f0e136a4c6ba89c198f5e39a13",
   "declared_inputs": [],
   "steps_meta": [
     {
@@ -34,6 +39,10 @@
     },
     {
       "node_id": "n2",
+      "data_classification": "compute"
+    },
+    {
+      "node_id": "n3",
       "data_classification": "compute"
     }
   ]
