@@ -40,24 +40,33 @@ import { isBackupInFlight } from "./backup.mjs";
 // parses `&` as a command separator REGARDLESS of the argv-level quoting
 // execFileSync applies — cmd splits "...token=x&pair=y&fp=z" into three
 // commands and the last two fail with "'pair' is not recognized...". This
-// silently killed auto-open on every Windows run (not just non-first-run —
-// see the isFirstRun/--open gate below, a separate bug). rundll32's
-// url.dll,FileProtocolHandler entry point opens the default browser without
-// going through cmd.exe's command-line grammar at all, so it isn't exposed
-// to this class of bug.
+// silently killed auto-open on every Windows run that WAS supposed to open
+// (first run / --open — see the isFirstRun/open gate at the call site
+// below). rundll32's url.dll,FileProtocolHandler entry point opens the
+// default browser without going through cmd.exe's command-line grammar at
+// all, so it isn't exposed to this class of bug.
 // HELM_NO_OPEN: automated callers (the test suite, CI, a scripted install)
 // start a real daemon and must not hijack the machine's browser to do it.
-// Every `helmd start` opens a tab (see the call site below), so a test that
-// spawns the daemon opened a tab on the developer's desktop on every run, and
-// a suite that spawns it repeatedly opened one every few minutes. Opt-out, not
-// opt-in: a human running `helmd start` by hand still gets the tab, which is
-// the behaviour the auto-open exists for. Also gates the first-run autostart/
+// A FIRST run (no token on disk yet) opens a tab regardless of how it was
+// invoked (see the call site below), so a test suite that boots a fresh
+// state dir — deliberately, as recovery.test.mjs's quarantine/reinit path
+// does — opened a tab on the developer's desktop every run. Opt-out, not
+// opt-in: a human's genuine first run still gets the tab, which is the
+// behaviour the auto-open exists for. Also gates the first-run autostart/
 // shortcut installation below (same "automated caller must not touch the
 // machine persistently" contract) — HELM-JOURNAL-REPAIR-1's recovery boot
 // re-enters first-run (a quarantined state dir has no token yet), so a test
 // that exercises that path needs the same opt-out or it writes a real
 // registry/LaunchAgent entry on the test machine.
 function openBrowser(url) {
+  // HELM-WINSPAM-1 regression test observable: logged unconditionally, ahead
+  // of the HELM_NO_OPEN check below, so "did the call site's (isFirstRun ||
+  // open) gate let us reach here at all" is visible even in a test run that
+  // (correctly, and same as every other suite in this repo) sets
+  // HELM_NO_OPEN=1 so it never hijacks a real browser. Stubbing the real OS
+  // opener binary on PATH instead is not reliable on Windows besides —
+  // System32 wins the search order over anything prepended to PATH.
+  log.info("auto-opening browser tab", { url });
   if (process.env.HELM_NO_OPEN === "1") {
     log.info("browser auto-open suppressed by HELM_NO_OPEN", { url });
     return;
@@ -80,8 +89,13 @@ async function cmdDoctor() {
   process.exit(report.ok ? 0 : 1);
 }
 
-async function cmdStart({ open = false, _recoveredFrom = null } = {}) {
+async function cmdStart({ open = false, _recoveredFrom = null, _isFirstRun = null } = {}) {
   const config = loadConfig();
+  // HELM-WINSPAM-1: captured BEFORE loadOrCreateToken() writes the token
+  // file, and threaded through the quarantine-recovery recursion below via
+  // `_isFirstRun` — recomputing it after recovery would see the token this
+  // same boot just wrote and wrongly read as a returning run.
+  const isFirstRun = _isFirstRun !== null ? _isFirstRun : !existsSync(statePath("token"));
   const token = loadOrCreateToken();
   const identityKeys = loadOrCreateKeys();
   const haIdentity = await loadOrCreateHaIdentity();
@@ -144,7 +158,7 @@ async function cmdStart({ open = false, _recoveredFrom = null } = {}) {
     // exactly what Tim's confirmed manual recovery does by hand.
     const recovery = quarantineStateDir(stateDir(), verified.brokenAt);
     log.error("broken state quarantined (not deleted); re-initializing fresh state and continuing boot", recovery);
-    return cmdStart({ open, _recoveredFrom: recovery });
+    return cmdStart({ open, _recoveredFrom: recovery, _isFirstRun: isFirstRun });
   }
 
   // Advance the checkpoint frontier every boot a verification just proved
@@ -309,14 +323,16 @@ async function cmdStart({ open = false, _recoveredFrom = null } = {}) {
     console.log(`  failure details:   ${_recoveredFrom.crashLogPath}`);
   }
 
-  // HELM-WIN-INSTALL-1: this used to auto-open ONLY on first run
-  // (`isFirstRun || open`) — every later start (including the very next
-  // double-click after a crash, or after closing the tab) printed the URL
-  // to a console window a double-click never leaves open long enough to
-  // read, and opened nothing. Auto-open is harmless to repeat (it's just a
-  // browser tab), so do it on every start; `open`/`--open` is now redundant
-  // but stays as an explicit override for callers that want to force it.
-  openBrowser(url);
+  // HELM-WINSPAM-1: opening a tab on EVERY start (not just first-run/
+  // explicit) was tried — HELM-WIN-INSTALL-1's rationale was "harmless to
+  // repeat, it's just a browser tab" — and that was wrong: autostart re-fires
+  // `helmd start` with no console attached to notice, so any run of restarts
+  // (a login, sleep/wake, a crash loop) opened one tab per restart with no
+  // ceiling. Tim disabled Helm entirely over this (2026-08-03). A daemon
+  // (re)start opens NOTHING by itself now — only a genuine first run (no
+  // token on disk yet) or an explicit ask (`--open`, or the Start Menu
+  // shortcut, which always passes it — see shortcut.mjs) opens a tab.
+  if (isFirstRun || open) openBrowser(url);
 
   // HELM-AUTOSTART-1: first run used to install BOTH the per-user autostart
   // entry and a Start Menu shortcut here, unconditionally, gated on nothing

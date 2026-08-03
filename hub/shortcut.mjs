@@ -79,7 +79,13 @@ function isInstalledWindows({ home }) {
 
 // `exec`/`home`/`plat` are injectable so tests never write into a real Start
 // Menu or spawn a real PowerShell.
-export function installShortcut({ plat = platform(), home = homedir(), exec = defaultExec, cmd = autostartCommand() } = {}) {
+//
+// HELM-WINSPAM-1: `cmd` defaults to `autostartCommand({ open: true })`, NOT
+// the bare `autostartCommand()` the autostart entry uses — a double-click on
+// this shortcut IS the explicit user action the pairing tab exists for, and
+// with index.mjs no longer auto-opening on every start, this is now the only
+// thing that makes that click show the daemon's tab.
+export function installShortcut({ plat = platform(), home = homedir(), exec = defaultExec, cmd = autostartCommand({ open: true }) } = {}) {
   if (plat === "win32") return installWindows({ home, exec, cmd });
   // macOS wants a .app bundle and Linux a .desktop entry; neither is written
   // yet, and reporting `supported: false` is honest where a silent no-op
