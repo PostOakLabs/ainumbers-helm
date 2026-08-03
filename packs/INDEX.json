@@ -1,8 +1,8 @@
 {
-  "pinnedSha": "d31498aacff6d57cea534163fb2c3739ffc1724c",
+  "pinnedSha": "84dbe4d9bab3b2ef992f7df39846d8ea4f44f7f9",
   "generatedFrom": "hub/vendored/ocg/chaingraph.json",
   "compiledCount": 239,
-  "chainlessCount": 5,
+  "chainlessCount": 4,
   "skippedCount": 102,
   "skips": [
     {

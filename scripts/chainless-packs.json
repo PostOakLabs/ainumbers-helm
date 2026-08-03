@@ -41,36 +41,6 @@
       }
     },
     {
-      "workflow_id": "pack-government-payment-programme-assurance",
-      "name": "Government Payment Programme Assurance",
-      "outcome": "Lifecycle-of-the-programme evidence, complementing the payment-level lifecycle chain: entering a programme (identity assurance for an onboarding agency), migrating into it (legacy data arrives complete and reconcilable), and leaving it (the operator can hand the data back in an open format). Rates a declared identity-evidence set against a declared assurance-level framework, then checks declared legacy migration counts and control totals for completeness, then evaluates a declared operator-exit and data-portability posture. Every fact is a caller-declared input -- no country, agency, or framework is hardcoded. RFPPACK-HELM-1: registered here rather than compiled from the vendored chaingraph mirror because the new site chain (RFPPACK-CHAIN-1/LAND-1) is not yet re-vendored into helm's pinned OCG copy; all three step kernels are already vendored, so this manifest runs for real.",
-      "manifest": {
-        "manifest_version": "1",
-        "workflow_id": "pack-government-payment-programme-assurance",
-        "trigger": { "type": "manual" },
-        "nodes": [
-          {
-            "node_id": "n1",
-            "kernel_id": "art-523-identity-proofing-assurance-level",
-            "kernel_digest": "sha256:f691517dd02006a5787bea91055d22c567fb6049e1f3d15c3bb2a474032cd335"
-          },
-          {
-            "node_id": "n2",
-            "kernel_id": "art-519-payment-data-migration-completeness",
-            "kernel_digest": "sha256:d9e4f0984fd3d85463ece41f052a47bf3b98fed2df72e38ab131273cacd5d587"
-          },
-          {
-            "node_id": "n3",
-            "kernel_id": "art-520-operator-exit-data-portability",
-            "kernel_digest": "sha256:f788f6feb29648cf1c09156f55bc79fa0da7511e5ce55547e00b893c8f6e826b"
-          }
-        ],
-        "connectors": [],
-        "gates": [],
-        "actions": []
-      }
-    },
-    {
       "workflow_id": "pack-art-508-recompute-bordereau",
       "name": "Delegated Authority Bordereau Recomputation",
       "outcome": "Recomputes a delegated authority bordereau the way the carrier reviewer does, from the same file the coverholder sent: footing per currency, authority-limit utilisation, and population-integrity checks. Single-node chainless pack — HELMCHECK-BUILD-1's `helm check` pack for this kernel; no chain exists for a standalone node.",
