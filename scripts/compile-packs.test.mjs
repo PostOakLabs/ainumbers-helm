@@ -171,10 +171,30 @@ const BAAS_PILOT_WORKFLOW_IDS = [
 ];
 const SENTINEL_DIGEST = `sha256:${"0".repeat(64)}`;
 
+// Other *.test.mjs files run concurrently in sibling processes (scripts/test.mjs
+// uses node:test's run() over the whole tree) and some of them also shell out
+// to `node scripts/compile-packs.mjs`, which wipes+rewrites the SHARED packs/
+// directory wholesale. A read landing in that window sees a transient ENOENT —
+// pre-existing hazard of the shared-directory design, not a compile defect.
+// readPackRetrying re-runs the compiler and retries the read a few times so
+// this test observes ITS OWN fresh compile rather than someone else's in-flight one.
+function readPackRetrying(workflowId, attempts = 5) {
+  let lastErr;
+  for (let i = 0; i < attempts; i++) {
+    try {
+      return JSON.parse(readFileSync(join(PACKS_DIR, `${workflowId}.json`), "utf8"));
+    } catch (e) {
+      lastErr = e;
+      run([]);
+    }
+  }
+  throw lastErr;
+}
+
 test("compile-packs: all 5 BaaS pilot chains compile with verified:false + sentinel digest on the marked (browser-tool) nodes only", () => {
   run([]);
   for (const workflowId of BAAS_PILOT_WORKFLOW_IDS) {
-    const pack = JSON.parse(readFileSync(join(PACKS_DIR, `${workflowId}.json`), "utf8"));
+    const pack = readPackRetrying(workflowId);
     assert.deepEqual(validate(SCHEMA, pack.manifest), [], `${workflowId}: manifest failed schema validation`);
     let sawMarked = false;
     for (const node of pack.manifest.nodes) {
