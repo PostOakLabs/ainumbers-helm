@@ -1,0 +1,62 @@
+{
+  "workflow_id": "pack-embedded-finance-licensing",
+  "name": "Embedded Finance Licensing",
+  "outcome": "Seller onboarding classification > MTL licensing risk mapping > fintech compliance control mapping > sponsor-bank readiness scoring: composite embedded finance licensing mandate.",
+  "spec_version": "ocg-control-plane@1",
+  "manifest": {
+    "manifest_version": "1",
+    "workflow_id": "pack-embedded-finance-licensing",
+    "trigger": {
+      "type": "manual"
+    },
+    "nodes": [
+      {
+        "node_id": "n1",
+        "kernel_id": "149-seller-onboarding-classifier",
+        "kernel_digest": "sha256:0000000000000000000000000000000000000000000000000000000000000000",
+        "verified": false
+      },
+      {
+        "node_id": "n2",
+        "kernel_id": "150-mtl-licensing-risk-mapper",
+        "kernel_digest": "sha256:0000000000000000000000000000000000000000000000000000000000000000",
+        "verified": false
+      },
+      {
+        "node_id": "n3",
+        "kernel_id": "158-fintech-compliance-control-mapper",
+        "kernel_digest": "sha256:0000000000000000000000000000000000000000000000000000000000000000",
+        "verified": false
+      },
+      {
+        "node_id": "n4",
+        "kernel_id": "162-sponsor-bank-readiness-scorer",
+        "kernel_digest": "sha256:0000000000000000000000000000000000000000000000000000000000000000",
+        "verified": false
+      }
+    ],
+    "connectors": [],
+    "gates": [],
+    "actions": []
+  },
+  "workflow_manifest_digest": "sha256:3d7d2a4767f3d3d50b96e6fe23d66ccf12f847267529fc5e7dd0b39c22af927f",
+  "declared_inputs": [],
+  "steps_meta": [
+    {
+      "node_id": "n1",
+      "data_classification": "compute"
+    },
+    {
+      "node_id": "n2",
+      "data_classification": "compute"
+    },
+    {
+      "node_id": "n3",
+      "data_classification": "compute"
+    },
+    {
+      "node_id": "n4",
+      "data_classification": "compute"
+    }
+  ]
+}

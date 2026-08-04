@@ -56,6 +56,37 @@ const CHAINLESS_PACKS = JSON.parse(
   readFileSync(join(HERE, "chainless-packs.json"), "utf8")
 ).packs;
 
+// PACK-MARKER-COMPILE-1 (PACK-MARKER-BUILD-SPEC.md §4, §6, §9 row 2): pilot
+// scope is the BaaS & Embedded Finance domain's 5 chains only (PACK-VENDOR-2's
+// domain) — every other chain keeps today's all-or-nothing skip, untouched.
+const MARKER_PILOT_CHAINS = new Set([
+  "baas-programme",
+  "baas-sponsor-bank",
+  "embedded-finance-licensing",
+  "neobank-baas",
+  "pi-emi-authorisation",
+]);
+// §4.4: fixed sentinel — unambiguous, never producible by cgCanon from real
+// kernel bytes.
+const MARKER_SENTINEL_DIGEST = `sha256:${"0".repeat(64)}`;
+
+// Same missing-step test PACKVENDOR-RESOLVE-1 used: no nodes[] entry for the
+// tool_id in chaingraph.json (it is a browser-tool step, not an unvendored
+// kernel) and not a gpu:true node. This compiler runs standalone in the
+// ainumbers-helm repo (CI checks out no sibling site-repo tree — the two
+// repos are deploy-independent per CONTRACT.md), so it cannot probe
+// repo/tools/<id>.html live; that half of the test was verified manually
+// against the site repo at authorship time for every missing tool_id in
+// MARKER_PILOT_CHAINS's 5 chains (PACK-MARKER-COMPILE-1, PR #188) — all 24
+// resolve to a live tools/<id>.html page. A future chain added to this
+// allowlist needs the same one-time manual check before landing.
+function isConfirmedBrowserTool(toolId, nodesById) {
+  const node = nodesById.get(toolId);
+  if (node && node.gpu === true) return false;
+  if (node) return false; // present in nodes[] => a real (if unvendored) kernel, not a browser tool
+  return true;
+}
+
 function jcsDigestHex(obj) {
   assertIJson(obj);
   return createHash("sha256").update(JSON.stringify(cgCanon(obj))).digest("hex");
@@ -92,7 +123,17 @@ function declaredInputsFor(chain, nodesById) {
 
 function compileChain(chain, kernelDigests, nodesById) {
   const missing = chain.steps.filter((s) => !kernelDigests.has(s.tool_id)).map((s) => s.tool_id);
-  if (missing.length > 0) {
+
+  // PACK-MARKER-COMPILE-1: for the BaaS pilot's 5 chains only, a missing step
+  // that is a confirmed browser-tool (§4's marker) compiles as a
+  // verified:false node instead of skipping the whole chain. Any missing
+  // step that is NOT a confirmed browser-tool (an unvendored real kernel)
+  // still fails the whole chain, unchanged — the marker never substitutes
+  // for vendoring.
+  const markable = MARKER_PILOT_CHAINS.has(chain.name) && missing.length > 0
+    && missing.every((toolId) => isConfirmedBrowserTool(toolId, nodesById));
+
+  if (missing.length > 0 && !markable) {
     return { skip: { name: chain.name, reason: `non-kernel or unvendored step(s): ${missing.join(", ")}` } };
   }
 
@@ -100,7 +141,15 @@ function compileChain(chain, kernelDigests, nodesById) {
   const gateOverlay = HA_GATE_OVERLAY[workflowId] ?? {};
   const nodes = chain.steps.map((s, i) => {
     const nodeId = `n${i + 1}`;
-    return { node_id: nodeId, kernel_id: s.tool_id, kernel_digest: kernelDigests.get(s.tool_id), ...(gateOverlay[nodeId] ?? {}) };
+    const marked = markable && !kernelDigests.has(s.tool_id);
+    const kernelDigest = marked ? MARKER_SENTINEL_DIGEST : kernelDigests.get(s.tool_id);
+    return {
+      node_id: nodeId,
+      kernel_id: s.tool_id,
+      kernel_digest: kernelDigest,
+      ...(marked ? { verified: false } : {}),
+      ...(gateOverlay[nodeId] ?? {}),
+    };
   });
 
   // HELM-BIND-4: a workflow_id present in CONNECTOR_BINDINGS gets a real

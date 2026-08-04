@@ -1,0 +1,62 @@
+{
+  "workflow_id": "pack-baas-programme",
+  "name": "BaaS Provider Selection to Compliance Mapping",
+  "outcome": "BaaS provider scoring > embedded lending unit economics > compliance control mapping > B2B fraud detection.",
+  "spec_version": "ocg-control-plane@1",
+  "manifest": {
+    "manifest_version": "1",
+    "workflow_id": "pack-baas-programme",
+    "trigger": {
+      "type": "manual"
+    },
+    "nodes": [
+      {
+        "node_id": "n1",
+        "kernel_id": "152-baas-provider-comparator",
+        "kernel_digest": "sha256:0000000000000000000000000000000000000000000000000000000000000000",
+        "verified": false
+      },
+      {
+        "node_id": "n2",
+        "kernel_id": "160-embedded-lending-unit-economics",
+        "kernel_digest": "sha256:0000000000000000000000000000000000000000000000000000000000000000",
+        "verified": false
+      },
+      {
+        "node_id": "n3",
+        "kernel_id": "158-fintech-compliance-control-mapper",
+        "kernel_digest": "sha256:0000000000000000000000000000000000000000000000000000000000000000",
+        "verified": false
+      },
+      {
+        "node_id": "n4",
+        "kernel_id": "140-b2b-payment-fraud-detector",
+        "kernel_digest": "sha256:0000000000000000000000000000000000000000000000000000000000000000",
+        "verified": false
+      }
+    ],
+    "connectors": [],
+    "gates": [],
+    "actions": []
+  },
+  "workflow_manifest_digest": "sha256:c6714247a9fea60d769ce13511c381a5a26e48d46d19881cae1b64ad0c9efd48",
+  "declared_inputs": [],
+  "steps_meta": [
+    {
+      "node_id": "n1",
+      "data_classification": "compute"
+    },
+    {
+      "node_id": "n2",
+      "data_classification": "compute"
+    },
+    {
+      "node_id": "n3",
+      "data_classification": "compute"
+    },
+    {
+      "node_id": "n4",
+      "data_classification": "compute"
+    }
+  ]
+}

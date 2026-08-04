@@ -1,9 +1,9 @@
 {
   "pinnedSha": "84dbe4d9bab3b2ef992f7df39846d8ea4f44f7f9",
   "generatedFrom": "hub/vendored/ocg/chaingraph.json",
-  "compiledCount": 239,
+  "compiledCount": 244,
   "chainlessCount": 4,
-  "skippedCount": 102,
+  "skippedCount": 97,
   "skips": [
     {
       "name": "a2a-payment-rail-compliance",
@@ -68,14 +68,6 @@
     {
       "name": "b2b-payments-ap-automation",
       "reason": "non-kernel or unvendored step(s): 132-invoice-to-payment-orchestrator, 134-ap-automation-savings-calculator, 135-supplier-payment-terms-optimiser, 137-payment-orchestration-vendor-scorecard, 139-erp-payment-integration-scorer"
-    },
-    {
-      "name": "baas-programme",
-      "reason": "non-kernel or unvendored step(s): 152-baas-provider-comparator, 160-embedded-lending-unit-economics, 158-fintech-compliance-control-mapper, 140-b2b-payment-fraud-detector"
-    },
-    {
-      "name": "baas-sponsor-bank",
-      "reason": "non-kernel or unvendored step(s): 152-baas-provider-comparator, 153-fbo-account-structure-simulator, 154-ledger-architecture-builder, 158-fintech-compliance-control-mapper, 162-sponsor-bank-readiness-scorer"
     },
     {
       "name": "bank-capital-liquidity",
@@ -178,10 +170,6 @@
       "reason": "non-kernel or unvendored step(s): 179-vida-drr-readiness-scorer, 180-b2b-einvoice-compliance-scorer, 174-peppol-xml-auditor, 178-invoice-to-iso20022-bridge"
     },
     {
-      "name": "embedded-finance-licensing",
-      "reason": "non-kernel or unvendored step(s): 149-seller-onboarding-classifier, 150-mtl-licensing-risk-mapper, 158-fintech-compliance-control-mapper, 162-sponsor-bank-readiness-scorer"
-    },
-    {
       "name": "emerging-market-fx-corridor",
       "reason": "non-kernel or unvendored step(s): 157-settlement-orchestration-simulator, 217-em-fx-risk-classifier, 218-pvp-settlement-sync-model, 220-correspondent-derisking-modeler, 221-cross-border-finality-comparator, 325-payment-cutoff-settlement-atlas"
     },
@@ -282,10 +270,6 @@
       "reason": "non-kernel or unvendored step(s): 07-ach-nacha-validator, 224-nacha-ach-rule-compliance-checker"
     },
     {
-      "name": "neobank-baas",
-      "reason": "non-kernel or unvendored step(s): 152-baas-provider-comparator, 168-baas-provider-comparison, 343-psd3-psr2-transition-impact-assessor, 414-psd3-sca-transition-checker, 289-verification-of-payee-simulator, 26-app-fraud-matrix, 322-app-scam-risk-assessor, 406-psr-app-reimbursement-liability-splitter, 43-batch-sanctions-screening, 112-pep-sanctions-simulator, 149-seller-onboarding-classifier, 114-kyc-document-checklist, 162-sponsor-bank-readiness-scorer, 163-card-programme-launch-readiness-checker"
-    },
-    {
       "name": "open-banking-api-lifecycle",
       "reason": "non-kernel or unvendored step(s): 10-open-banking-api-explorer, 11-vrp-mandate-sepa-validator, 03-consent-compliance-auditor"
     },
@@ -300,10 +284,6 @@
     {
       "name": "pd-lgd-covenant",
       "reason": "non-kernel or unvendored step(s): 198-pd-lgd-ead-modeller, 201-basel-rwa-calculator, 199-financial-covenant-compliance-checker"
-    },
-    {
-      "name": "pi-emi-authorisation",
-      "reason": "non-kernel or unvendored step(s): 404-payment-institution-authorisation-readiness-checker, 405-emi-capital-requirements-calculator, 418-pi-own-funds-calculator, 269-psp-safeguarding-assessment, 406-psr-app-reimbursement-liability-splitter"
     },
     {
       "name": "pillar-two-globe",

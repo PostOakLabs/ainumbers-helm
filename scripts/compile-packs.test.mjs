@@ -159,3 +159,45 @@ test("compile-packs: end-to-end — a connector-fetched value reaches buildArtif
   // Different connector-fetched data changes execution_hash.
   assert.notEqual(artifactA.execution_hash, artifactB.execution_hash);
 });
+
+// PACK-MARKER-COMPILE-1 (PACK-MARKER-BUILD-SPEC.md §4, §6, §9 row 2) --------
+
+const BAAS_PILOT_WORKFLOW_IDS = [
+  "pack-baas-programme",
+  "pack-baas-sponsor-bank",
+  "pack-embedded-finance-licensing",
+  "pack-neobank-baas",
+  "pack-pi-emi-authorisation",
+];
+const SENTINEL_DIGEST = `sha256:${"0".repeat(64)}`;
+
+test("compile-packs: all 5 BaaS pilot chains compile with verified:false + sentinel digest on the marked (browser-tool) nodes only", () => {
+  run([]);
+  for (const workflowId of BAAS_PILOT_WORKFLOW_IDS) {
+    const pack = JSON.parse(readFileSync(join(PACKS_DIR, `${workflowId}.json`), "utf8"));
+    assert.deepEqual(validate(SCHEMA, pack.manifest), [], `${workflowId}: manifest failed schema validation`);
+    let sawMarked = false;
+    for (const node of pack.manifest.nodes) {
+      if (node.verified === false) {
+        sawMarked = true;
+        assert.equal(node.kernel_digest, SENTINEL_DIGEST, `${workflowId}/${node.node_id}: marked node must carry the sentinel digest`);
+        assert.equal(node.kernel_id, node.kernel_id, "kernel_id carries the tool_id unchanged");
+      } else {
+        assert.equal("verified" in node, false, `${workflowId}/${node.node_id}: a real kernel node must never carry verified:true or any other value`);
+        assert.notEqual(node.kernel_digest, SENTINEL_DIGEST, `${workflowId}/${node.node_id}: a real kernel node must never carry the sentinel digest`);
+      }
+    }
+    assert.ok(sawMarked, `${workflowId}: expected at least one verified:false node`);
+  }
+});
+
+test("compile-packs: marking is scoped to the BaaS pilot chains only — no other compiled pack ever carries verified", () => {
+  run([]);
+  const packFiles = readdirSync(PACKS_DIR).filter((f) => f !== "INDEX.json" && !BAAS_PILOT_WORKFLOW_IDS.includes(f.replace(/\.json$/, "")));
+  for (const file of packFiles) {
+    const pack = JSON.parse(readFileSync(join(PACKS_DIR, file), "utf8"));
+    for (const node of pack.manifest.nodes) {
+      assert.equal("verified" in node, false, `${file}/${node.node_id}: verified must be absent outside the BaaS pilot chains`);
+    }
+  }
+});
