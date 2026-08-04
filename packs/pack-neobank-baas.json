@@ -1,0 +1,171 @@
+{
+  "workflow_id": "pack-neobank-baas",
+  "name": "Neobank & BaaS Launch Chain",
+  "outcome": "Compare BaaS sponsor bank providers → assess PSD3/PSR2 transition impact and SCA requirements → simulate Verification of Payee outcomes → score APP fraud liability, risk, PSR reimbursement exposure, and fraud network propagation → run batch sanctions screening and PEP exposure check → classify seller onboarding, build KYC checklist, score sponsor bank readiness, and check card programme launch readiness. End-to-end neobank and BaaS programme compliance journey.",
+  "spec_version": "ocg-control-plane@1",
+  "manifest": {
+    "manifest_version": "1",
+    "workflow_id": "pack-neobank-baas",
+    "trigger": {
+      "type": "manual"
+    },
+    "nodes": [
+      {
+        "node_id": "n1",
+        "kernel_id": "152-baas-provider-comparator",
+        "kernel_digest": "sha256:0000000000000000000000000000000000000000000000000000000000000000",
+        "verified": false
+      },
+      {
+        "node_id": "n2",
+        "kernel_id": "168-baas-provider-comparison",
+        "kernel_digest": "sha256:0000000000000000000000000000000000000000000000000000000000000000",
+        "verified": false
+      },
+      {
+        "node_id": "n3",
+        "kernel_id": "343-psd3-psr2-transition-impact-assessor",
+        "kernel_digest": "sha256:0000000000000000000000000000000000000000000000000000000000000000",
+        "verified": false
+      },
+      {
+        "node_id": "n4",
+        "kernel_id": "414-psd3-sca-transition-checker",
+        "kernel_digest": "sha256:0000000000000000000000000000000000000000000000000000000000000000",
+        "verified": false
+      },
+      {
+        "node_id": "n5",
+        "kernel_id": "289-verification-of-payee-simulator",
+        "kernel_digest": "sha256:0000000000000000000000000000000000000000000000000000000000000000",
+        "verified": false
+      },
+      {
+        "node_id": "n6",
+        "kernel_id": "26-app-fraud-matrix",
+        "kernel_digest": "sha256:0000000000000000000000000000000000000000000000000000000000000000",
+        "verified": false
+      },
+      {
+        "node_id": "n7",
+        "kernel_id": "322-app-scam-risk-assessor",
+        "kernel_digest": "sha256:0000000000000000000000000000000000000000000000000000000000000000",
+        "verified": false
+      },
+      {
+        "node_id": "n8",
+        "kernel_id": "406-psr-app-reimbursement-liability-splitter",
+        "kernel_digest": "sha256:0000000000000000000000000000000000000000000000000000000000000000",
+        "verified": false
+      },
+      {
+        "node_id": "n9",
+        "kernel_id": "mms-03-app-fraud-graph",
+        "kernel_digest": "sha256:e4475d26f24233cd44e35864937108b85615179add6786403c54a4540d903def"
+      },
+      {
+        "node_id": "n10",
+        "kernel_id": "43-batch-sanctions-screening",
+        "kernel_digest": "sha256:0000000000000000000000000000000000000000000000000000000000000000",
+        "verified": false
+      },
+      {
+        "node_id": "n11",
+        "kernel_id": "112-pep-sanctions-simulator",
+        "kernel_digest": "sha256:0000000000000000000000000000000000000000000000000000000000000000",
+        "verified": false
+      },
+      {
+        "node_id": "n12",
+        "kernel_id": "149-seller-onboarding-classifier",
+        "kernel_digest": "sha256:0000000000000000000000000000000000000000000000000000000000000000",
+        "verified": false
+      },
+      {
+        "node_id": "n13",
+        "kernel_id": "114-kyc-document-checklist",
+        "kernel_digest": "sha256:0000000000000000000000000000000000000000000000000000000000000000",
+        "verified": false
+      },
+      {
+        "node_id": "n14",
+        "kernel_id": "162-sponsor-bank-readiness-scorer",
+        "kernel_digest": "sha256:0000000000000000000000000000000000000000000000000000000000000000",
+        "verified": false
+      },
+      {
+        "node_id": "n15",
+        "kernel_id": "163-card-programme-launch-readiness-checker",
+        "kernel_digest": "sha256:0000000000000000000000000000000000000000000000000000000000000000",
+        "verified": false
+      }
+    ],
+    "connectors": [],
+    "gates": [],
+    "actions": []
+  },
+  "workflow_manifest_digest": "sha256:e2e03bf782704d19d84335776021195c6ea0a8fbf0b46032471786310e39a999",
+  "declared_inputs": [],
+  "steps_meta": [
+    {
+      "node_id": "n1",
+      "data_classification": "compute"
+    },
+    {
+      "node_id": "n2",
+      "data_classification": "compute"
+    },
+    {
+      "node_id": "n3",
+      "data_classification": "compute"
+    },
+    {
+      "node_id": "n4",
+      "data_classification": "compute"
+    },
+    {
+      "node_id": "n5",
+      "data_classification": "compute"
+    },
+    {
+      "node_id": "n6",
+      "data_classification": "compute"
+    },
+    {
+      "node_id": "n7",
+      "data_classification": "compute"
+    },
+    {
+      "node_id": "n8",
+      "data_classification": "compute"
+    },
+    {
+      "node_id": "n9",
+      "data_classification": "compute"
+    },
+    {
+      "node_id": "n10",
+      "data_classification": "compute"
+    },
+    {
+      "node_id": "n11",
+      "data_classification": "compute"
+    },
+    {
+      "node_id": "n12",
+      "data_classification": "compute"
+    },
+    {
+      "node_id": "n13",
+      "data_classification": "compute"
+    },
+    {
+      "node_id": "n14",
+      "data_classification": "compute"
+    },
+    {
+      "node_id": "n15",
+      "data_classification": "compute"
+    }
+  ]
+}
