@@ -1,0 +1,62 @@
+{
+  "workflow_id": "pack-ccd2-consumer-credit",
+  "name": "EU Consumer Credit (CCD2)",
+  "outcome": "Scope classification > Art. 18 creditworthiness > SECCI pre-contractual disclosure > readiness. CCD2 (Directive (EU) 2023/2225) applies from 20 Nov 2026.",
+  "spec_version": "ocg-control-plane@1",
+  "manifest": {
+    "manifest_version": "1",
+    "workflow_id": "pack-ccd2-consumer-credit",
+    "trigger": {
+      "type": "manual"
+    },
+    "nodes": [
+      {
+        "node_id": "n1",
+        "kernel_id": "481-ccd2-scope-classifier",
+        "kernel_digest": "sha256:0000000000000000000000000000000000000000000000000000000000000000",
+        "verified": false
+      },
+      {
+        "node_id": "n2",
+        "kernel_id": "482-ccd2-creditworthiness-assessment-builder",
+        "kernel_digest": "sha256:0000000000000000000000000000000000000000000000000000000000000000",
+        "verified": false
+      },
+      {
+        "node_id": "n3",
+        "kernel_id": "483-ccd2-secci-precontractual-disclosure-generator",
+        "kernel_digest": "sha256:0000000000000000000000000000000000000000000000000000000000000000",
+        "verified": false
+      },
+      {
+        "node_id": "n4",
+        "kernel_id": "484-ccd2-readiness-scorer",
+        "kernel_digest": "sha256:0000000000000000000000000000000000000000000000000000000000000000",
+        "verified": false
+      }
+    ],
+    "connectors": [],
+    "gates": [],
+    "actions": []
+  },
+  "workflow_manifest_digest": "sha256:dfd2cec2ed05c5e2b45ea88d27fdee76eb6be7fd97d91988a313d99b73ba1df1",
+  "declared_inputs": [],
+  "steps_meta": [
+    {
+      "node_id": "n1",
+      "data_classification": "compute"
+    },
+    {
+      "node_id": "n2",
+      "data_classification": "compute"
+    },
+    {
+      "node_id": "n3",
+      "data_classification": "compute"
+    },
+    {
+      "node_id": "n4",
+      "data_classification": "compute"
+    }
+  ]
+}

@@ -1,0 +1,50 @@
+{
+  "workflow_id": "pack-digital-trade-counterparty-aml",
+  "name": "Trade Counterparty Screening & AML",
+  "outcome": "W-D. Party allowlist (LEI/OFAC/sanctions/FATF Rec 16, 509) -> counterparty risk rating (customer_risk_rating) -> TBML typology score (art-10). KYC/sanctions/AML pack for a trade counterparty.",
+  "spec_version": "ocg-control-plane@1",
+  "manifest": {
+    "manifest_version": "1",
+    "workflow_id": "pack-digital-trade-counterparty-aml",
+    "trigger": {
+      "type": "manual"
+    },
+    "nodes": [
+      {
+        "node_id": "n1",
+        "kernel_id": "509-canton-party-allowlist-validator",
+        "kernel_digest": "sha256:83887e461c79e0e1d5966dc6ad1887b4f0e205494e6dda2381001970b364930a"
+      },
+      {
+        "node_id": "n2",
+        "kernel_id": "110-customer-risk-rating",
+        "kernel_digest": "sha256:0000000000000000000000000000000000000000000000000000000000000000",
+        "verified": false
+      },
+      {
+        "node_id": "n3",
+        "kernel_id": "art-10-amla-transaction-typology-risk-scorer",
+        "kernel_digest": "sha256:c02483af798b9da4593d70b071619e12487bbd02e21b016eb9d46ced84c5ab90"
+      }
+    ],
+    "connectors": [],
+    "gates": [],
+    "actions": []
+  },
+  "workflow_manifest_digest": "sha256:77d5bdb53f41b5b5f10d5ffb8c34c6f7abb7a77e0de1d70f8e36f7d2d6527e53",
+  "declared_inputs": [],
+  "steps_meta": [
+    {
+      "node_id": "n1",
+      "data_classification": "compute"
+    },
+    {
+      "node_id": "n2",
+      "data_classification": "compute"
+    },
+    {
+      "node_id": "n3",
+      "data_classification": "compute"
+    }
+  ]
+}

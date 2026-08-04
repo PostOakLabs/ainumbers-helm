@@ -1,0 +1,50 @@
+{
+  "workflow_id": "pack-ai-governance-credit-ai-conformity",
+  "name": "Credit-Scoring AI Conformity & FRIA",
+  "outcome": "W-E. Credit-scoring conformity (art-05) -> risk-class confirmation (327) -> deployer FRIA (ART-66). The Annex III credit-scoring vertical end-to-end: the single most common high-risk financial AI use case. Decision-support draft.",
+  "spec_version": "ocg-control-plane@1",
+  "manifest": {
+    "manifest_version": "1",
+    "workflow_id": "pack-ai-governance-credit-ai-conformity",
+    "trigger": {
+      "type": "manual"
+    },
+    "nodes": [
+      {
+        "node_id": "n1",
+        "kernel_id": "art-05-eu-ai-act-credit-scoring-conformity",
+        "kernel_digest": "sha256:fcb93e8040bc73e15337abc8b67a8e70b03cd115900de0221cee4a2bf125136f"
+      },
+      {
+        "node_id": "n2",
+        "kernel_id": "327-eu-ai-act-risk-class-mapper",
+        "kernel_digest": "sha256:0000000000000000000000000000000000000000000000000000000000000000",
+        "verified": false
+      },
+      {
+        "node_id": "n3",
+        "kernel_id": "art-66-fria-postmarket-monitoring-builder",
+        "kernel_digest": "sha256:3aff37d79ff68de2a055c1d32bdabb4376e3fe242656398b2c1d35ca48331cc0"
+      }
+    ],
+    "connectors": [],
+    "gates": [],
+    "actions": []
+  },
+  "workflow_manifest_digest": "sha256:8914cb8cd9070c00a89684c7c937253868aafdbf743d711e84a1b11948507db2",
+  "declared_inputs": [],
+  "steps_meta": [
+    {
+      "node_id": "n1",
+      "data_classification": "compute"
+    },
+    {
+      "node_id": "n2",
+      "data_classification": "compute"
+    },
+    {
+      "node_id": "n3",
+      "data_classification": "compute"
+    }
+  ]
+}

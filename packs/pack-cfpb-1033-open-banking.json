@@ -1,0 +1,52 @@
+{
+  "workflow_id": "pack-cfpb-1033-open-banking",
+  "name": "CFPB 1033 Open Banking Compliance",
+  "outcome": "Institution classification > data-rights scope > TPPP authorisation mapping: composite CFPB 1033 open-banking mandate.",
+  "spec_version": "ocg-control-plane@1",
+  "manifest": {
+    "manifest_version": "1",
+    "workflow_id": "pack-cfpb-1033-open-banking",
+    "trigger": {
+      "type": "manual"
+    },
+    "nodes": [
+      {
+        "node_id": "n1",
+        "kernel_id": "165-cfpb-1033-institution-classifier",
+        "kernel_digest": "sha256:0000000000000000000000000000000000000000000000000000000000000000",
+        "verified": false
+      },
+      {
+        "node_id": "n2",
+        "kernel_id": "166-cfpb-1033-data-rights-scoper",
+        "kernel_digest": "sha256:0000000000000000000000000000000000000000000000000000000000000000",
+        "verified": false
+      },
+      {
+        "node_id": "n3",
+        "kernel_id": "167-cfpb-1033-tppp-mapper",
+        "kernel_digest": "sha256:0000000000000000000000000000000000000000000000000000000000000000",
+        "verified": false
+      }
+    ],
+    "connectors": [],
+    "gates": [],
+    "actions": []
+  },
+  "workflow_manifest_digest": "sha256:b151fada7485e5debfdc5f877fa331b28ba43e5963ac1f59194f57e09bcfa92f",
+  "declared_inputs": [],
+  "steps_meta": [
+    {
+      "node_id": "n1",
+      "data_classification": "compute"
+    },
+    {
+      "node_id": "n2",
+      "data_classification": "compute"
+    },
+    {
+      "node_id": "n3",
+      "data_classification": "compute"
+    }
+  ]
+}

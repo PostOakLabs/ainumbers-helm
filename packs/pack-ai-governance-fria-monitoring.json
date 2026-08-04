@@ -1,0 +1,55 @@
+{
+  "workflow_id": "pack-ai-governance-fria-monitoring",
+  "name": "Deployer FRIA & Post-Market Monitoring",
+  "outcome": "W-B. Article 27 FRIA + Article 72 post-market monitoring + logging/oversight (ART-66) -> SR 11-7 model-risk evidence (451) -> audit receipt (cry-05). The flagship deployer lifecycle for a bank/insurer using a high-risk AI system. Decision-support draft.",
+  "spec_version": "ocg-control-plane@1",
+  "manifest": {
+    "manifest_version": "1",
+    "workflow_id": "pack-ai-governance-fria-monitoring",
+    "trigger": {
+      "type": "manual"
+    },
+    "nodes": [
+      {
+        "node_id": "n1",
+        "kernel_id": "art-66-fria-postmarket-monitoring-builder",
+        "kernel_digest": "sha256:3aff37d79ff68de2a055c1d32bdabb4376e3fe242656398b2c1d35ca48331cc0"
+      },
+      {
+        "node_id": "n2",
+        "kernel_id": "451-sr11-7-model-risk-management-gap-assessor",
+        "kernel_digest": "sha256:0000000000000000000000000000000000000000000000000000000000000000",
+        "verified": false
+      },
+      {
+        "node_id": "n3",
+        "kernel_id": "cry-05-agent-action-audit-trail-aggregator",
+        "kernel_digest": "sha256:5f7f6ab0bb2e2b736805ecde518ca59ba9a83ad38b17545a8c7c133cffa1481f"
+      }
+    ],
+    "connectors": [],
+    "gates": [],
+    "actions": []
+  },
+  "workflow_manifest_digest": "sha256:4f46c29add46e1584732558092fcd709e89fe086d2a4f6873741b557dc002087",
+  "declared_inputs": [
+    {
+      "from": "art-64-ai-act-highrisk-fit-diagnostic",
+      "kind": "external"
+    }
+  ],
+  "steps_meta": [
+    {
+      "node_id": "n1",
+      "data_classification": "compute"
+    },
+    {
+      "node_id": "n2",
+      "data_classification": "compute"
+    },
+    {
+      "node_id": "n3",
+      "data_classification": "compute"
+    }
+  ]
+}

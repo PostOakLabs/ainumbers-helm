@@ -1,0 +1,50 @@
+{
+  "workflow_id": "pack-fedwire-address-migration",
+  "name": "Fedwire/CHIPS Structured-Address Migration",
+  "outcome": "Fedwire and CHIPS structured-address readiness for the 2026-11-16 cutover. Lint a single message (art-349, network param selects fedwire or chips -- rules are byte-identical between the two networks), gate on the lint result: a fully compliant message ends the chain immediately, anything else continues to a batch sweep (art-350) of the full payment file for a rejection-risk report, then a before/after remediation diff receipt (tools/548) binding both file digests and the rule-clearance delta a bank shows its regulator or correspondents.",
+  "spec_version": "ocg-control-plane@1",
+  "manifest": {
+    "manifest_version": "1",
+    "workflow_id": "pack-fedwire-address-migration",
+    "trigger": {
+      "type": "manual"
+    },
+    "nodes": [
+      {
+        "node_id": "n1",
+        "kernel_id": "art-349-fedwire-structured-address-linter",
+        "kernel_digest": "sha256:5d00ddaa78f298a5fa938bf6f520102ef38a75b1de34b7fdb631905ef13cadc8"
+      },
+      {
+        "node_id": "n2",
+        "kernel_id": "art-350-fedwire-address-sweep",
+        "kernel_digest": "sha256:64b884c3d7960d52db974c9c447144a64692ab993d434cad556a8b72ee062104"
+      },
+      {
+        "node_id": "n3",
+        "kernel_id": "548-fedwire-remediation-diff-receipt",
+        "kernel_digest": "sha256:0000000000000000000000000000000000000000000000000000000000000000",
+        "verified": false
+      }
+    ],
+    "connectors": [],
+    "gates": [],
+    "actions": []
+  },
+  "workflow_manifest_digest": "sha256:577145d96c7621132cd04b8b15bc72cf44418528a25ed24e54e7fb5a6993ef47",
+  "declared_inputs": [],
+  "steps_meta": [
+    {
+      "node_id": "n1",
+      "data_classification": "compute"
+    },
+    {
+      "node_id": "n2",
+      "data_classification": "compute"
+    },
+    {
+      "node_id": "n3",
+      "data_classification": "compute"
+    }
+  ]
+}

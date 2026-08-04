@@ -1,0 +1,136 @@
+{
+  "workflow_id": "pack-stablecoin-issuer-genius-mica",
+  "name": "Stablecoin Issuer GENIUS + MiCA Chain",
+  "outcome": "Classify digital asset regulatory status and GENIUS Act issuer type → stress-test reserves, optimise composition, and calculate MiCA EMT compliance → check reserve attestation checklist and pre-check readiness → verify Merkle batch proof and aggregate execution receipts → validate deposit token compliance, disclose Tempo zone, and build MiCA white paper.",
+  "spec_version": "ocg-control-plane@1",
+  "manifest": {
+    "manifest_version": "1",
+    "workflow_id": "pack-stablecoin-issuer-genius-mica",
+    "trigger": {
+      "type": "manual"
+    },
+    "nodes": [
+      {
+        "node_id": "n1",
+        "kernel_id": "510-digital-asset-regulatory-classifier",
+        "kernel_digest": "sha256:e70b5a1adf38189f6a6f09d6b4b0dcfaf16394beb5f30f8b397cadbb0ffa2a5f"
+      },
+      {
+        "node_id": "n2",
+        "kernel_id": "336-genius-act-issuer-classification-mapper",
+        "kernel_digest": "sha256:0000000000000000000000000000000000000000000000000000000000000000",
+        "verified": false
+      },
+      {
+        "node_id": "n3",
+        "kernel_id": "388-stablecoin-reserve-stress-test-modeller",
+        "kernel_digest": "sha256:0000000000000000000000000000000000000000000000000000000000000000",
+        "verified": false
+      },
+      {
+        "node_id": "n4",
+        "kernel_id": "328-genius-act-reserve-optimizer",
+        "kernel_digest": "sha256:0000000000000000000000000000000000000000000000000000000000000000",
+        "verified": false
+      },
+      {
+        "node_id": "n5",
+        "kernel_id": "346-mica-emt-reserve-compliance-calculator",
+        "kernel_digest": "sha256:0000000000000000000000000000000000000000000000000000000000000000",
+        "verified": false
+      },
+      {
+        "node_id": "n6",
+        "kernel_id": "337-genius-act-reserve-attestation-checklist",
+        "kernel_digest": "sha256:0000000000000000000000000000000000000000000000000000000000000000",
+        "verified": false
+      },
+      {
+        "node_id": "n7",
+        "kernel_id": "art-06-genius-act-reserve-attestation",
+        "kernel_digest": "sha256:8e520c99a42e6c53799b4c14a5d31d7face65414f1d0fd590a089488f621dc24"
+      },
+      {
+        "node_id": "n8",
+        "kernel_id": "cry-04-merkle-batch-verifier",
+        "kernel_digest": "sha256:7c89b9651f986ed6652903c6d41e9fbda29d12db9fbc0a6acd4f7270160b7ccb"
+      },
+      {
+        "node_id": "n9",
+        "kernel_id": "cry-05-agent-action-audit-trail-aggregator",
+        "kernel_digest": "sha256:5f7f6ab0bb2e2b736805ecde518ca59ba9a83ad38b17545a8c7c133cffa1481f"
+      },
+      {
+        "node_id": "n10",
+        "kernel_id": "art-57-deposit-token-compliance-validator",
+        "kernel_digest": "sha256:2fd5b0a6674a558949495837e3105a855ebde50c43c0441c61008f9a10204f44"
+      },
+      {
+        "node_id": "n11",
+        "kernel_id": "art-39-tempo-zone-disclosure",
+        "kernel_digest": "sha256:05bec4999682594eba3e6bccae123325059131b7d46c30a259ce4f0037610adf"
+      },
+      {
+        "node_id": "n12",
+        "kernel_id": "390-mica-white-paper-builder",
+        "kernel_digest": "sha256:0000000000000000000000000000000000000000000000000000000000000000",
+        "verified": false
+      }
+    ],
+    "connectors": [],
+    "gates": [],
+    "actions": []
+  },
+  "workflow_manifest_digest": "sha256:9019ff9ee2763bbb5a2b13123c74884be7c9c5eaefea2340ffd5a7a956d590ca",
+  "declared_inputs": [],
+  "steps_meta": [
+    {
+      "node_id": "n1",
+      "data_classification": "compute"
+    },
+    {
+      "node_id": "n2",
+      "data_classification": "compute"
+    },
+    {
+      "node_id": "n3",
+      "data_classification": "compute"
+    },
+    {
+      "node_id": "n4",
+      "data_classification": "compute"
+    },
+    {
+      "node_id": "n5",
+      "data_classification": "compute"
+    },
+    {
+      "node_id": "n6",
+      "data_classification": "compute"
+    },
+    {
+      "node_id": "n7",
+      "data_classification": "compute"
+    },
+    {
+      "node_id": "n8",
+      "data_classification": "compute"
+    },
+    {
+      "node_id": "n9",
+      "data_classification": "compute"
+    },
+    {
+      "node_id": "n10",
+      "data_classification": "compute"
+    },
+    {
+      "node_id": "n11",
+      "data_classification": "compute"
+    },
+    {
+      "node_id": "n12",
+      "data_classification": "compute"
+    }
+  ]
+}

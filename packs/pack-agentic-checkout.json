@@ -1,0 +1,52 @@
+{
+  "workflow_id": "pack-agentic-checkout",
+  "name": "Agentic Checkout Protocol Readiness",
+  "outcome": "Protocol selector (UCP/ACP/x402/Visa TAP) > ACP/UCP product-feed conformance auditor > agent-traffic acceptance policy builder.",
+  "spec_version": "ocg-control-plane@1",
+  "manifest": {
+    "manifest_version": "1",
+    "workflow_id": "pack-agentic-checkout",
+    "trigger": {
+      "type": "manual"
+    },
+    "nodes": [
+      {
+        "node_id": "n1",
+        "kernel_id": "495-agentic-checkout-protocol-selector",
+        "kernel_digest": "sha256:0000000000000000000000000000000000000000000000000000000000000000",
+        "verified": false
+      },
+      {
+        "node_id": "n2",
+        "kernel_id": "496-acp-ucp-product-feed-conformance-auditor",
+        "kernel_digest": "sha256:0000000000000000000000000000000000000000000000000000000000000000",
+        "verified": false
+      },
+      {
+        "node_id": "n3",
+        "kernel_id": "498-agent-traffic-acceptance-policy-builder",
+        "kernel_digest": "sha256:0000000000000000000000000000000000000000000000000000000000000000",
+        "verified": false
+      }
+    ],
+    "connectors": [],
+    "gates": [],
+    "actions": []
+  },
+  "workflow_manifest_digest": "sha256:9c12345c83b3ec26bf10e97b9aea49da2acbc5d0e5a9ea21305f740df9cab244",
+  "declared_inputs": [],
+  "steps_meta": [
+    {
+      "node_id": "n1",
+      "data_classification": "compute"
+    },
+    {
+      "node_id": "n2",
+      "data_classification": "compute"
+    },
+    {
+      "node_id": "n3",
+      "data_classification": "compute"
+    }
+  ]
+}

@@ -1,0 +1,52 @@
+{
+  "workflow_id": "pack-securities-lending-impact",
+  "name": "Securities Lending Settlement Impact",
+  "outcome": "Recall/revenue impact modelling > non-DVP retail fund settlement impact > US/EU settlement mismatch impact: composite securities-lending settlement mandate.",
+  "spec_version": "ocg-control-plane@1",
+  "manifest": {
+    "manifest_version": "1",
+    "workflow_id": "pack-securities-lending-impact",
+    "trigger": {
+      "type": "manual"
+    },
+    "nodes": [
+      {
+        "node_id": "n1",
+        "kernel_id": "371-securities-lending-recall-revenue-impact-modeler",
+        "kernel_digest": "sha256:0000000000000000000000000000000000000000000000000000000000000000",
+        "verified": false
+      },
+      {
+        "node_id": "n2",
+        "kernel_id": "373-non-dvp-retail-fund-settlement-impact-assessor",
+        "kernel_digest": "sha256:0000000000000000000000000000000000000000000000000000000000000000",
+        "verified": false
+      },
+      {
+        "node_id": "n3",
+        "kernel_id": "378-us-eu-settlement-mismatch-impact-estimator",
+        "kernel_digest": "sha256:0000000000000000000000000000000000000000000000000000000000000000",
+        "verified": false
+      }
+    ],
+    "connectors": [],
+    "gates": [],
+    "actions": []
+  },
+  "workflow_manifest_digest": "sha256:e9f8baca70c937daa3bf6b798b80488f2c1ea59b5d6e9a13919d885b4b30fe03",
+  "declared_inputs": [],
+  "steps_meta": [
+    {
+      "node_id": "n1",
+      "data_classification": "compute"
+    },
+    {
+      "node_id": "n2",
+      "data_classification": "compute"
+    },
+    {
+      "node_id": "n3",
+      "data_classification": "compute"
+    }
+  ]
+}

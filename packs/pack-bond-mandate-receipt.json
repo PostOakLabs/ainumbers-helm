@@ -1,0 +1,50 @@
+{
+  "workflow_id": "pack-bond-mandate-receipt",
+  "name": "Agentic Bond-Trading Mandate Receipt",
+  "outcome": "Compiles size, spread, and issuer limits into a work mandate, simulates the spend policy against it, then runs the mandate through the agentic mandate sandbox against synthetic bond-trade transactions. GATE: any breach halts the run and opens an escalation record (OCG §22.8) referencing the verify_escalation_closure tail on the anchor worker; a clean run emits the per-session bond-trading mandate receipt.",
+  "spec_version": "ocg-control-plane@1",
+  "manifest": {
+    "manifest_version": "1",
+    "workflow_id": "pack-bond-mandate-receipt",
+    "trigger": {
+      "type": "manual"
+    },
+    "nodes": [
+      {
+        "node_id": "n1",
+        "kernel_id": "art-274-compile-work-mandate",
+        "kernel_digest": "sha256:dfaeb21e94c9b39448879e93b1365cb0b50c1251a16b57a90133275b8739d6ad"
+      },
+      {
+        "node_id": "n2",
+        "kernel_id": "art-02-agent-spend-policy-simulator",
+        "kernel_digest": "sha256:236e163038383b05b4d5d18a1d3cf7d32a974a1035496ab1c00fbad3e84f412a"
+      },
+      {
+        "node_id": "n3",
+        "kernel_id": "rbe-06-agentic-mandate-sandbox",
+        "kernel_digest": "sha256:0000000000000000000000000000000000000000000000000000000000000000",
+        "verified": false
+      }
+    ],
+    "connectors": [],
+    "gates": [],
+    "actions": []
+  },
+  "workflow_manifest_digest": "sha256:6fdc5f5ea904f66d8b61d2b7f8103a0aa4f934da2f9568f582e0ff9fa0797974",
+  "declared_inputs": [],
+  "steps_meta": [
+    {
+      "node_id": "n1",
+      "data_classification": "compute"
+    },
+    {
+      "node_id": "n2",
+      "data_classification": "compute"
+    },
+    {
+      "node_id": "n3",
+      "data_classification": "compute"
+    }
+  ]
+}

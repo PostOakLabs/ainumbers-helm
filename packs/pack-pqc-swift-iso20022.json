@@ -1,0 +1,50 @@
+{
+  "workflow_id": "pack-pqc-swift-iso20022",
+  "name": "SWIFT / ISO 20022 PQC Readiness",
+  "outcome": "HNDL quantum-risk prioritisation (500) -> SWIFT/ISO 20022 PQC readiness + BAH signature-bloat sizing per BIS Leap Phase 2 (ART-87) -> Merkle integrity (cry-04). Sizes the ~12.9x payload growth against message limits.",
+  "spec_version": "ocg-control-plane@1",
+  "manifest": {
+    "manifest_version": "1",
+    "workflow_id": "pack-pqc-swift-iso20022",
+    "trigger": {
+      "type": "manual"
+    },
+    "nodes": [
+      {
+        "node_id": "n1",
+        "kernel_id": "500-hndl-quantum-risk-scorer",
+        "kernel_digest": "sha256:0000000000000000000000000000000000000000000000000000000000000000",
+        "verified": false
+      },
+      {
+        "node_id": "n2",
+        "kernel_id": "art-87-iso20022-pqc-readiness-checker",
+        "kernel_digest": "sha256:6e468a348055e83bb98d072b1f2879af2e98a5d8fcca76f119320f136edc0955"
+      },
+      {
+        "node_id": "n3",
+        "kernel_id": "cry-04-merkle-batch-verifier",
+        "kernel_digest": "sha256:7c89b9651f986ed6652903c6d41e9fbda29d12db9fbc0a6acd4f7270160b7ccb"
+      }
+    ],
+    "connectors": [],
+    "gates": [],
+    "actions": []
+  },
+  "workflow_manifest_digest": "sha256:8dcb457903fe6cbb8ce388cfe3e7076436e95f7d767a1bc882d954c9bfa119b5",
+  "declared_inputs": [],
+  "steps_meta": [
+    {
+      "node_id": "n1",
+      "data_classification": "compute"
+    },
+    {
+      "node_id": "n2",
+      "data_classification": "compute"
+    },
+    {
+      "node_id": "n3",
+      "data_classification": "compute"
+    }
+  ]
+}

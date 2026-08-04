@@ -1,0 +1,110 @@
+{
+  "workflow_id": "pack-dora-resilience",
+  "name": "DORA Operational Resilience Chain",
+  "outcome": "Classify ICT incidents → model ICT concentration risk → simulate cascade failure propagation → build ICT TPP register → assess TLPT scope and design resilience tests → track NCA submission and score full DORA readiness. End-to-end DORA Article 5-30 operational resilience journey.",
+  "spec_version": "ocg-control-plane@1",
+  "manifest": {
+    "manifest_version": "1",
+    "workflow_id": "pack-dora-resilience",
+    "trigger": {
+      "type": "manual"
+    },
+    "nodes": [
+      {
+        "node_id": "n1",
+        "kernel_id": "303-dora-incident-classification-engine",
+        "kernel_digest": "sha256:0000000000000000000000000000000000000000000000000000000000000000",
+        "verified": false
+      },
+      {
+        "node_id": "n2",
+        "kernel_id": "rbe-11-dora-incident-classifier",
+        "kernel_digest": "sha256:0000000000000000000000000000000000000000000000000000000000000000",
+        "verified": false
+      },
+      {
+        "node_id": "n3",
+        "kernel_id": "306-dora-ict-concentration-risk-modeller",
+        "kernel_digest": "sha256:0000000000000000000000000000000000000000000000000000000000000000",
+        "verified": false
+      },
+      {
+        "node_id": "n4",
+        "kernel_id": "pnr-01-dora-ict-cascade-simulator",
+        "kernel_digest": "sha256:d4edfa0ba9cd195aecdc9a77ffd6e108ca1c8d56ad899e79cfe848617854b65c"
+      },
+      {
+        "node_id": "n5",
+        "kernel_id": "358-dora-ict-tpp-register-builder",
+        "kernel_digest": "sha256:0000000000000000000000000000000000000000000000000000000000000000",
+        "verified": false
+      },
+      {
+        "node_id": "n6",
+        "kernel_id": "359-dora-tlpt-scope-assessor",
+        "kernel_digest": "sha256:0000000000000000000000000000000000000000000000000000000000000000",
+        "verified": false
+      },
+      {
+        "node_id": "n7",
+        "kernel_id": "304-dora-resilience-testing-designer",
+        "kernel_digest": "sha256:0000000000000000000000000000000000000000000000000000000000000000",
+        "verified": false
+      },
+      {
+        "node_id": "n8",
+        "kernel_id": "308-dora-nca-submission-tracker",
+        "kernel_digest": "sha256:0000000000000000000000000000000000000000000000000000000000000000",
+        "verified": false
+      },
+      {
+        "node_id": "n9",
+        "kernel_id": "art-29-dora-readiness-diagnostic",
+        "kernel_digest": "sha256:2fc2a970c1e7b9f554cbc414c18f307b5b950e11931a9861c342ced9253b8f71"
+      }
+    ],
+    "connectors": [],
+    "gates": [],
+    "actions": []
+  },
+  "workflow_manifest_digest": "sha256:9243198fd37ce20d210348c49ba0c8b493fe6b08c18ff39667dce4f4dea99c96",
+  "declared_inputs": [],
+  "steps_meta": [
+    {
+      "node_id": "n1",
+      "data_classification": "compute"
+    },
+    {
+      "node_id": "n2",
+      "data_classification": "compute"
+    },
+    {
+      "node_id": "n3",
+      "data_classification": "compute"
+    },
+    {
+      "node_id": "n4",
+      "data_classification": "compute"
+    },
+    {
+      "node_id": "n5",
+      "data_classification": "compute"
+    },
+    {
+      "node_id": "n6",
+      "data_classification": "compute"
+    },
+    {
+      "node_id": "n7",
+      "data_classification": "compute"
+    },
+    {
+      "node_id": "n8",
+      "data_classification": "compute"
+    },
+    {
+      "node_id": "n9",
+      "data_classification": "compute"
+    }
+  ]
+}

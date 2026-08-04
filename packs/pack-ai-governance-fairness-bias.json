@@ -1,0 +1,50 @@
+{
+  "workflow_id": "pack-ai-governance-fairness-bias",
+  "name": "Fair-Lending & AI Bias Assessment",
+  "outcome": "W-C. Fair-lending / bias assessment (452) -> the credit model under test (ml-02) -> subgroup/outlier performance anomaly (ml-01). Article 10 data-governance + non-discrimination evidence for a high-risk credit model.",
+  "spec_version": "ocg-control-plane@1",
+  "manifest": {
+    "manifest_version": "1",
+    "workflow_id": "pack-ai-governance-fairness-bias",
+    "trigger": {
+      "type": "manual"
+    },
+    "nodes": [
+      {
+        "node_id": "n1",
+        "kernel_id": "452-fair-lending-ai-bias-assessment",
+        "kernel_digest": "sha256:0000000000000000000000000000000000000000000000000000000000000000",
+        "verified": false
+      },
+      {
+        "node_id": "n2",
+        "kernel_id": "ml-02-credit-default-risk-scorer",
+        "kernel_digest": "sha256:a2933b0418c10f52d341cae29d664e594f88937aa4ad42187f95eaf86af9bb2f"
+      },
+      {
+        "node_id": "n3",
+        "kernel_id": "ml-01-isolation-forest",
+        "kernel_digest": "sha256:78207d018dcf3f06b8aa059f913a99be9170d053e9cdccb55f4db93837d377fb"
+      }
+    ],
+    "connectors": [],
+    "gates": [],
+    "actions": []
+  },
+  "workflow_manifest_digest": "sha256:326a4a924febcc3ce2c3d3702ae162ef2ba9b5234ff44fd31c6e1bc8e93bff34",
+  "declared_inputs": [],
+  "steps_meta": [
+    {
+      "node_id": "n1",
+      "data_classification": "compute"
+    },
+    {
+      "node_id": "n2",
+      "data_classification": "compute"
+    },
+    {
+      "node_id": "n3",
+      "data_classification": "compute"
+    }
+  ]
+}

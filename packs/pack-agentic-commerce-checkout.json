@@ -1,0 +1,124 @@
+{
+  "workflow_id": "pack-agentic-commerce-checkout",
+  "name": "Agentic Commerce Checkout Chain",
+  "outcome": "Select optimal agentic checkout protocol → validate ACP conformance and APP fraud risk → verify agent identity attestation and A2A trust chain → simulate spend policy and build traffic acceptance policy → model x402 settlement, reconcile batch, verify receipts, and certify agent commerce conformance.",
+  "spec_version": "ocg-control-plane@1",
+  "manifest": {
+    "manifest_version": "1",
+    "workflow_id": "pack-agentic-commerce-checkout",
+    "trigger": {
+      "type": "manual"
+    },
+    "nodes": [
+      {
+        "node_id": "n1",
+        "kernel_id": "495-agentic-checkout-protocol-selector",
+        "kernel_digest": "sha256:0000000000000000000000000000000000000000000000000000000000000000",
+        "verified": false
+      },
+      {
+        "node_id": "n2",
+        "kernel_id": "art-12-acp-checkout-conformance-validator",
+        "kernel_digest": "sha256:4ee210e9f360aea1ea09609253ca4e223bc00065d42aa2a672f4ffb5a866afc2"
+      },
+      {
+        "node_id": "n3",
+        "kernel_id": "26-app-fraud-matrix",
+        "kernel_digest": "sha256:0000000000000000000000000000000000000000000000000000000000000000",
+        "verified": false
+      },
+      {
+        "node_id": "n4",
+        "kernel_id": "art-04-agent-identity-attestation-checker",
+        "kernel_digest": "sha256:f4e9e5aed913e80c7f97e3d0d2501e7349c523de4ffd433a1d29081620197b1f"
+      },
+      {
+        "node_id": "n5",
+        "kernel_id": "art-32-a2a-agent-card-trust-chain-validator",
+        "kernel_digest": "sha256:b559ef728aacf8aa3f1ee6cb9db684bf7b32b917bafcbcacb0cc88c16c76c008"
+      },
+      {
+        "node_id": "n6",
+        "kernel_id": "art-02-agent-spend-policy-simulator",
+        "kernel_digest": "sha256:236e163038383b05b4d5d18a1d3cf7d32a974a1035496ab1c00fbad3e84f412a"
+      },
+      {
+        "node_id": "n7",
+        "kernel_id": "498-agent-traffic-acceptance-policy-builder",
+        "kernel_digest": "sha256:0000000000000000000000000000000000000000000000000000000000000000",
+        "verified": false
+      },
+      {
+        "node_id": "n8",
+        "kernel_id": "art-03-x402-settlement-modeler",
+        "kernel_digest": "sha256:5d693ae08f52fbf0719d500857977fff760b19d533358ae2f5edd6693854de81"
+      },
+      {
+        "node_id": "n9",
+        "kernel_id": "art-61-x402-batch-settlement-reconciler",
+        "kernel_digest": "sha256:93f57377ae56edc40fdb3e1381a0bc126350b4fa9584d9b59a931175ef17d054"
+      },
+      {
+        "node_id": "n10",
+        "kernel_id": "art-62-ap2-payment-receipt-verifier",
+        "kernel_digest": "sha256:ca4201c7c2cff9069746a1e76dc3f53f390845654f2049dfb8769857a7ae12b9"
+      },
+      {
+        "node_id": "n11",
+        "kernel_id": "art-30-agent-commerce-conformance-validator",
+        "kernel_digest": "sha256:48228bd926421bc7b6d0b41aa34880912b7d96d3f048f2865ee2ba72a1b9a2f0"
+      }
+    ],
+    "connectors": [],
+    "gates": [],
+    "actions": []
+  },
+  "workflow_manifest_digest": "sha256:fbc5813d65c18fc6eff2761db5aefba976778a2321e6ad4e5e0d20e8e367df12",
+  "declared_inputs": [],
+  "steps_meta": [
+    {
+      "node_id": "n1",
+      "data_classification": "compute"
+    },
+    {
+      "node_id": "n2",
+      "data_classification": "compute"
+    },
+    {
+      "node_id": "n3",
+      "data_classification": "compute"
+    },
+    {
+      "node_id": "n4",
+      "data_classification": "compute"
+    },
+    {
+      "node_id": "n5",
+      "data_classification": "compute"
+    },
+    {
+      "node_id": "n6",
+      "data_classification": "compute"
+    },
+    {
+      "node_id": "n7",
+      "data_classification": "compute"
+    },
+    {
+      "node_id": "n8",
+      "data_classification": "compute"
+    },
+    {
+      "node_id": "n9",
+      "data_classification": "compute"
+    },
+    {
+      "node_id": "n10",
+      "data_classification": "compute"
+    },
+    {
+      "node_id": "n11",
+      "data_classification": "compute"
+    }
+  ]
+}

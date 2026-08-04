@@ -1,0 +1,129 @@
+{
+  "workflow_id": "pack-financial-crime-compliance",
+  "name": "Financial Crime Compliance Chain",
+  "outcome": "Dual customer risk rating → triple-layer sanctions, PEP, and batch screening → fuzzy-match calibration scoring → layering typology and AMLA transaction risk scoring → ML anomaly detection and structuring pattern detection → final AML programme health scorecard.",
+  "spec_version": "ocg-control-plane@1",
+  "manifest": {
+    "manifest_version": "1",
+    "workflow_id": "pack-financial-crime-compliance",
+    "trigger": {
+      "type": "manual"
+    },
+    "nodes": [
+      {
+        "node_id": "n1",
+        "kernel_id": "110-customer-risk-rating",
+        "kernel_digest": "sha256:0000000000000000000000000000000000000000000000000000000000000000",
+        "verified": false
+      },
+      {
+        "node_id": "n2",
+        "kernel_id": "477-fatf-customer-risk-rating",
+        "kernel_digest": "sha256:0000000000000000000000000000000000000000000000000000000000000000",
+        "verified": false
+      },
+      {
+        "node_id": "n3",
+        "kernel_id": "316-sanctions-programme-health-checker",
+        "kernel_digest": "sha256:0000000000000000000000000000000000000000000000000000000000000000",
+        "verified": false
+      },
+      {
+        "node_id": "n4",
+        "kernel_id": "112-pep-sanctions-simulator",
+        "kernel_digest": "sha256:0000000000000000000000000000000000000000000000000000000000000000",
+        "verified": false
+      },
+      {
+        "node_id": "n5",
+        "kernel_id": "43-batch-sanctions-screening",
+        "kernel_digest": "sha256:0000000000000000000000000000000000000000000000000000000000000000",
+        "verified": false
+      },
+      {
+        "node_id": "n6",
+        "kernel_id": "art-93-fuzzy-match-calibration-scorer",
+        "kernel_digest": "sha256:280862d6b27e8364c05290b99e446bb8938364dc1c03fb90835464743ef0cdc8"
+      },
+      {
+        "node_id": "n7",
+        "kernel_id": "120-layering-typology-identifier",
+        "kernel_digest": "sha256:0000000000000000000000000000000000000000000000000000000000000000",
+        "verified": false
+      },
+      {
+        "node_id": "n8",
+        "kernel_id": "art-10-amla-transaction-typology-risk-scorer",
+        "kernel_digest": "sha256:c02483af798b9da4593d70b071619e12487bbd02e21b016eb9d46ced84c5ab90"
+      },
+      {
+        "node_id": "n9",
+        "kernel_id": "ml-03-timeseries-anomaly-detector",
+        "kernel_digest": "sha256:ae20b291caf5eac025d4e7103782427565fe7cf0c99f4045122257c87db0d9c6"
+      },
+      {
+        "node_id": "n10",
+        "kernel_id": "117-structuring-pattern-detector",
+        "kernel_digest": "sha256:0000000000000000000000000000000000000000000000000000000000000000",
+        "verified": false
+      },
+      {
+        "node_id": "n11",
+        "kernel_id": "316-sanctions-programme-health-checker",
+        "kernel_digest": "sha256:0000000000000000000000000000000000000000000000000000000000000000",
+        "verified": false
+      }
+    ],
+    "connectors": [],
+    "gates": [],
+    "actions": []
+  },
+  "workflow_manifest_digest": "sha256:c671ccadb8947a40ae91aabff0ee013f3d700e61a0bef75e3bc71a6755c16b62",
+  "declared_inputs": [],
+  "steps_meta": [
+    {
+      "node_id": "n1",
+      "data_classification": "compute"
+    },
+    {
+      "node_id": "n2",
+      "data_classification": "compute"
+    },
+    {
+      "node_id": "n3",
+      "data_classification": "compute"
+    },
+    {
+      "node_id": "n4",
+      "data_classification": "compute"
+    },
+    {
+      "node_id": "n5",
+      "data_classification": "compute"
+    },
+    {
+      "node_id": "n6",
+      "data_classification": "compute"
+    },
+    {
+      "node_id": "n7",
+      "data_classification": "compute"
+    },
+    {
+      "node_id": "n8",
+      "data_classification": "compute"
+    },
+    {
+      "node_id": "n9",
+      "data_classification": "compute"
+    },
+    {
+      "node_id": "n10",
+      "data_classification": "compute"
+    },
+    {
+      "node_id": "n11",
+      "data_classification": "compute"
+    }
+  ]
+}

@@ -1,0 +1,122 @@
+{
+  "workflow_id": "pack-t1-csdr-settlement",
+  "name": "T+1 / CSDR Settlement Chain",
+  "outcome": "Verify allocation affirmation conformance and T+1 readiness → predict settlement fails and assess FX exposure → calculate CSDR cash penalties → compute settlement efficiency KPIs → model buy-in exposure and classify scope. End-to-end T+1 and CSDR settlement compliance journey.",
+  "spec_version": "ocg-control-plane@1",
+  "manifest": {
+    "manifest_version": "1",
+    "workflow_id": "pack-t1-csdr-settlement",
+    "trigger": {
+      "type": "manual"
+    },
+    "nodes": [
+      {
+        "node_id": "n1",
+        "kernel_id": "art-81-allocation-affirmation-conformance",
+        "kernel_digest": "sha256:bfd9eea1801c12c0b1358e111e33f08fcc221f3e847edd481053c5e90f81cd12"
+      },
+      {
+        "node_id": "n2",
+        "kernel_id": "351-t1-settlement-operational-readiness-assessor",
+        "kernel_digest": "sha256:0000000000000000000000000000000000000000000000000000000000000000",
+        "verified": false
+      },
+      {
+        "node_id": "n3",
+        "kernel_id": "art-79-settlement-fail-predictor",
+        "kernel_digest": "sha256:660bc62de036808e6dcb648dd7ef377f3d403d9f3b2771459507ff4c7702ea0c"
+      },
+      {
+        "node_id": "n4",
+        "kernel_id": "215-fx-settlement-fails-assessor",
+        "kernel_digest": "sha256:0000000000000000000000000000000000000000000000000000000000000000",
+        "verified": false
+      },
+      {
+        "node_id": "n5",
+        "kernel_id": "art-78-csdr-penalty-calculator",
+        "kernel_digest": "sha256:696b46349d69a4f615727264f5a7a59492a6dfc1eb9b73e631af142a6d436a80"
+      },
+      {
+        "node_id": "n6",
+        "kernel_id": "368-csdr-settlement-fails-penalty-calculator",
+        "kernel_digest": "sha256:0000000000000000000000000000000000000000000000000000000000000000",
+        "verified": false
+      },
+      {
+        "node_id": "n7",
+        "kernel_id": "art-84-settlement-efficiency-kpi",
+        "kernel_digest": "sha256:6689dbe2c2f23a87ca2ee46102cd5d983d628b2edebd17f51773a2749d6aa9e6"
+      },
+      {
+        "node_id": "n8",
+        "kernel_id": "370-settlement-efficiency-rate-calculator",
+        "kernel_digest": "sha256:0000000000000000000000000000000000000000000000000000000000000000",
+        "verified": false
+      },
+      {
+        "node_id": "n9",
+        "kernel_id": "art-83-buy-in-exposure-modeler",
+        "kernel_digest": "sha256:712b7d6c95243d64d2a14195636f2436a56610776c59001a266d2dcf1691ef04"
+      },
+      {
+        "node_id": "n10",
+        "kernel_id": "372-buyin-scope-classifier-cost-penalty-estimator",
+        "kernel_digest": "sha256:0000000000000000000000000000000000000000000000000000000000000000",
+        "verified": false
+      }
+    ],
+    "connectors": [],
+    "gates": [],
+    "actions": []
+  },
+  "workflow_manifest_digest": "sha256:7f65c571b3e9ea3f11e832315e9ff2d5b8eaff613e598d730f4443aaccdd2847",
+  "declared_inputs": [
+    {
+      "from": "art-77-t1-settlement-readiness-diagnostic",
+      "kind": "external"
+    }
+  ],
+  "steps_meta": [
+    {
+      "node_id": "n1",
+      "data_classification": "compute"
+    },
+    {
+      "node_id": "n2",
+      "data_classification": "compute"
+    },
+    {
+      "node_id": "n3",
+      "data_classification": "compute"
+    },
+    {
+      "node_id": "n4",
+      "data_classification": "compute"
+    },
+    {
+      "node_id": "n5",
+      "data_classification": "compute"
+    },
+    {
+      "node_id": "n6",
+      "data_classification": "compute"
+    },
+    {
+      "node_id": "n7",
+      "data_classification": "compute"
+    },
+    {
+      "node_id": "n8",
+      "data_classification": "compute"
+    },
+    {
+      "node_id": "n9",
+      "data_classification": "compute"
+    },
+    {
+      "node_id": "n10",
+      "data_classification": "compute"
+    }
+  ]
+}

@@ -1,0 +1,55 @@
+{
+  "workflow_id": "pack-ai-governance-conformity",
+  "name": "AI Act High-Risk Conformity Pack (Provider)",
+  "outcome": "W-A. Annex IV technical documentation + conformity route + CE/DoC readiness (ART-65) -> Article 9 risk-management system (333) -> conformity assessment (art-05). The flagship provider lifecycle: is this high-risk financial AI system ready to CE-mark? Decision-support draft, not a certificate.",
+  "spec_version": "ocg-control-plane@1",
+  "manifest": {
+    "manifest_version": "1",
+    "workflow_id": "pack-ai-governance-conformity",
+    "trigger": {
+      "type": "manual"
+    },
+    "nodes": [
+      {
+        "node_id": "n1",
+        "kernel_id": "art-65-ai-conformity-pack-builder",
+        "kernel_digest": "sha256:4d9a56ae5ea8a88287765b48baed1e6137e5d8cac49886082c0a07310239f74e"
+      },
+      {
+        "node_id": "n2",
+        "kernel_id": "333-eu-ai-act-article9-risk-mgmt-builder",
+        "kernel_digest": "sha256:0000000000000000000000000000000000000000000000000000000000000000",
+        "verified": false
+      },
+      {
+        "node_id": "n3",
+        "kernel_id": "art-05-eu-ai-act-credit-scoring-conformity",
+        "kernel_digest": "sha256:fcb93e8040bc73e15337abc8b67a8e70b03cd115900de0221cee4a2bf125136f"
+      }
+    ],
+    "connectors": [],
+    "gates": [],
+    "actions": []
+  },
+  "workflow_manifest_digest": "sha256:c7670fc3a6ae0e3168f92b0b412e9c870ef830cd107d501fdb45a03dc2206da1",
+  "declared_inputs": [
+    {
+      "from": "art-64-ai-act-highrisk-fit-diagnostic",
+      "kind": "external"
+    }
+  ],
+  "steps_meta": [
+    {
+      "node_id": "n1",
+      "data_classification": "compute"
+    },
+    {
+      "node_id": "n2",
+      "data_classification": "compute"
+    },
+    {
+      "node_id": "n3",
+      "data_classification": "compute"
+    }
+  ]
+}

@@ -1,0 +1,50 @@
+{
+  "workflow_id": "pack-agent-payment-dispute-evidence",
+  "name": "Agent Payment Dispute Evidence",
+  "outcome": "AP2 mandate-chain validator confirms the payment mandate's signature chain and scope; agent token scope checker evaluates the disputed action against the mandate's declared bounds; chargeback evidence bundle composer assembles both verdicts plus mandate/receipt, payment-protocol, and session/delivery evidence into a Merkle-rooted adjudication bundle.",
+  "spec_version": "ocg-control-plane@1",
+  "manifest": {
+    "manifest_version": "1",
+    "workflow_id": "pack-agent-payment-dispute-evidence",
+    "trigger": {
+      "type": "manual"
+    },
+    "nodes": [
+      {
+        "node_id": "n1",
+        "kernel_id": "art-01-ap2-mandate-chain-validator",
+        "kernel_digest": "sha256:623495f9378cb65cb88c889831f43c2c82c8844af29dfaa32e3a5d1e6cfa5337"
+      },
+      {
+        "node_id": "n2",
+        "kernel_id": "art-385-agent-token-scope-checker",
+        "kernel_digest": "sha256:ceb4b481b11aabd4718fed5d5c1d67fb69a5b58a07e48c5d1be12bbe8113af1a"
+      },
+      {
+        "node_id": "n3",
+        "kernel_id": "567-chargeback-evidence-bundle-composer",
+        "kernel_digest": "sha256:0000000000000000000000000000000000000000000000000000000000000000",
+        "verified": false
+      }
+    ],
+    "connectors": [],
+    "gates": [],
+    "actions": []
+  },
+  "workflow_manifest_digest": "sha256:4b1828dc079c863d8fd917cf87868f36dc69d98f39ecb198aaf0eba7839bb684",
+  "declared_inputs": [],
+  "steps_meta": [
+    {
+      "node_id": "n1",
+      "data_classification": "compute"
+    },
+    {
+      "node_id": "n2",
+      "data_classification": "compute"
+    },
+    {
+      "node_id": "n3",
+      "data_classification": "compute"
+    }
+  ]
+}
