@@ -52,7 +52,12 @@
         "kernel_digest": { "$ref": "#/$defs/sha256ref" },
         "gate_policy": { "$ref": "#/$defs/haGatePolicy", "description": "OPTIONAL — when present, the run engine HOLDS immediately before this node executes until §27.4 is satisfied against the preceding node's artifact." },
         "gate_role": { "type": "string", "minLength": 1, "description": "OPTIONAL — the OCG SPEC.md §27.1 haRole a satisfying record must carry. Defaults to \"approver\" when omitted." },
-        "gate_threshold": { "type": "integer", "minimum": 1, "description": "OPTIONAL — N distinct identities required for dual_control/review_required/hold (§27.3). Defaults per hub/vendored/ocg's evaluateHaGate (2 for dual_control, 1 otherwise) when omitted." }
+        "gate_threshold": { "type": "integer", "minimum": 1, "description": "OPTIONAL — N distinct identities required for dual_control/review_required/hold (§27.3). Defaults per hub/vendored/ocg's evaluateHaGate (2 for dual_control, 1 otherwise) when omitted." },
+        "verified": {
+          "type": "boolean",
+          "const": false,
+          "description": "OPTIONAL. Present and false ONLY on a node whose tool_id is a non-kernel (browser-tool) step the compiler could not verify — absent (not present, not true) on every kernel-backed node. A node WITHOUT this member is verified by construction."
+        }
       }
     },
     "connectorRef": {
