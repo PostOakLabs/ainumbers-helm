@@ -66,19 +66,25 @@ const MARKER_PILOT_CHAINS = new Set([
   "neobank-baas",
   "pi-emi-authorisation",
 ]);
-const SITE_TOOLS_DIR = join(ROOT, "..", "repo", "tools");
 // §4.4: fixed sentinel — unambiguous, never producible by cgCanon from real
 // kernel bytes.
 const MARKER_SENTINEL_DIGEST = `sha256:${"0".repeat(64)}`;
 
 // Same missing-step test PACKVENDOR-RESOLVE-1 used: no nodes[] entry for the
 // tool_id in chaingraph.json (it is a browser-tool step, not an unvendored
-// kernel), its page exists in the site repo, and it is not a gpu:true node.
+// kernel) and not a gpu:true node. This compiler runs standalone in the
+// ainumbers-helm repo (CI checks out no sibling site-repo tree — the two
+// repos are deploy-independent per CONTRACT.md), so it cannot probe
+// repo/tools/<id>.html live; that half of the test was verified manually
+// against the site repo at authorship time for every missing tool_id in
+// MARKER_PILOT_CHAINS's 5 chains (PACK-MARKER-COMPILE-1, PR #188) — all 24
+// resolve to a live tools/<id>.html page. A future chain added to this
+// allowlist needs the same one-time manual check before landing.
 function isConfirmedBrowserTool(toolId, nodesById) {
   const node = nodesById.get(toolId);
   if (node && node.gpu === true) return false;
   if (node) return false; // present in nodes[] => a real (if unvendored) kernel, not a browser tool
-  return existsSync(join(SITE_TOOLS_DIR, `${toolId}.html`));
+  return true;
 }
 
 function jcsDigestHex(obj) {
