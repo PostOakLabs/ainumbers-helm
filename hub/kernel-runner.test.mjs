@@ -1,11 +1,14 @@
 import { test } from "node:test";
 import assert from "node:assert/strict";
-import { mkdtempSync } from "node:fs";
+import { mkdtempSync, readFileSync } from "node:fs";
 import { tmpdir } from "node:os";
-import { join } from "node:path";
+import { join, dirname } from "node:path";
+import { fileURLToPath } from "node:url";
 import { pinnedKernelDigest, runKernelNode, createKernelStepRunner } from "./kernel-runner.mjs";
 import { manifestDigest, planSteps, executeRun } from "./run.mjs";
 import { openJournal } from "./journal.mjs";
+
+const HERE = dirname(fileURLToPath(import.meta.url));
 
 const TMP = mkdtempSync(join(tmpdir(), "helm-kernel-runner-test-"));
 
@@ -155,4 +158,58 @@ test("runKernelNode: no resolvedParams (unbound step) is byte-identical to today
   assert.equal(step.resolvedParams, undefined);
   const result = await runKernelNode(step, { now: "2026-07-23T00:00:00.000Z" });
   assert.equal(result.artifact.output_payload.npv, (await runKernelNode({ ...step }, { now: "2026-07-23T00:00:00.000Z" })).artifact.output_payload.npv);
+});
+
+// ---------------------------------------------------------------------------
+// PACK-MARKER-RUNNER-1 (§5): a node carrying `verified: false` is skipped —
+// never a kernel_digest lookup, never executed, never `kernel_verified`.
+// ---------------------------------------------------------------------------
+
+test("runKernelNode: verified:false node is skipped-by-design, never resolves kernel_digest, never claims kernel_verified", async () => {
+  const manifest = npvManifest({
+    kernel_id: "152-baas-provider-comparator", // not in the vendored registry at all
+    kernel_digest: "sha256:" + "0".repeat(64), // §4.4 sentinel — would never resolve
+    verified: false,
+  });
+  const [step] = planSteps(manifest);
+  const result = await runKernelNode(step, { now: "2026-07-23T00:00:00.000Z" });
+
+  assert.equal(result.execution_state, "skipped_by_design");
+  assert.equal(result.node_id, "n1");
+  assert.equal(result.kernel_id, "152-baas-provider-comparator");
+  assert.equal(result.trust_label, undefined, "no §26.6 trust_label — 'skipped' isn't one of the 5 closed values");
+  assert.equal(result.artifact, undefined);
+});
+
+test("createKernelStepRunner: dispatches a verified:false node to the skip path, not the kernel", async () => {
+  const stepRunner = createKernelStepRunner({ now: "2026-07-23T00:00:00.000Z" });
+  const manifest = npvManifest({ kernel_id: "not-a-real-kernel", kernel_digest: "sha256:" + "0".repeat(64), verified: false });
+  const [step] = planSteps(manifest);
+  const result = await stepRunner(step, {});
+  assert.equal(result.execution_state, "skipped_by_design");
+});
+
+test("PACK-MARKER-RUNNER-1: a real run against the compiled BaaS pilot pack skips every marked node, completes, never marks a skipped node completed", async () => {
+  const pack = JSON.parse(readFileSync(join(HERE, "..", "packs", "pack-baas-programme.json"), "utf8"));
+  const manifest = pack.manifest;
+  assert.ok(manifest.nodes.every((n) => n.verified === false), "fixture sanity: every node in this pilot pack is marked");
+
+  const stepRunner = createKernelStepRunner({ now: "2026-07-23T00:00:00.000Z" });
+  const db = openJournal(join(TMP, "pack-marker-runner.db"));
+  const result = await executeRun(db, { runId: "run-pack-marker-baas", manifest, stepRunner, dryRun: false });
+
+  assert.equal(result.state, "completed"); // the RUN completes — its terminal state is unrelated to any single node's execution
+  assert.equal(result.steps.length, manifest.nodes.length);
+
+  for (const n of manifest.nodes) {
+    const row = db
+      .prepare("SELECT output_json FROM step_results WHERE run_id = ? AND step_id = ?")
+      .get("run-pack-marker-baas", `nodes:${n.node_id}`);
+    assert.ok(row, `no step_results row recorded for skipped node ${n.node_id}`);
+    const output = JSON.parse(row.output_json);
+    assert.equal(output.execution_state, "skipped_by_design");
+    assert.notEqual(output.execution_state, "completed");
+    assert.equal(output.trust_label, undefined);
+  }
+  db.close();
 });

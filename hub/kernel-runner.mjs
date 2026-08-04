@@ -51,6 +51,24 @@ export function validateKernelInputs(kernelId, policyParameters) {
 // label, since §26.6 forbids collapsing/mislabeling trust claims.
 export async function runKernelNode(step, { now = new Date().toISOString() } = {}) {
   const item = step.item;
+
+  // PACK-MARKER-RUNNER-1 (§5): a node carrying `verified: false` (§4.1 schema)
+  // has no vendored kernel — the compiler emitted a sentinel kernel_digest
+  // that never resolves in MANIFEST.json (§4.4). Skip BEFORE any registry or
+  // digest lookup: never resolve kernel_digest, never execute as a compute
+  // step. The returned shape carries no `trust_label` — none of the closed
+  // §26.6 set describes "not run", and inventing a 6th value is out of scope
+  // — so it can never be mistaken for a kernel_verified (completed) result by
+  // anything reading step_results downstream.
+  if (item.verified === false) {
+    return {
+      execution_state: "skipped_by_design",
+      node_id: item.node_id,
+      kernel_id: item.kernel_id,
+      reason: `verified:false — no vendored kernel for tool_id "${item.kernel_id}"; node marked, not executed`,
+    };
+  }
+
   const kernelId = item.kernel_id;
   const kernelModule = KERNELS[kernelId];
   if (!kernelModule) throw new Error(`kernel runner: kernel "${kernelId}" not found in vendored registry`);
