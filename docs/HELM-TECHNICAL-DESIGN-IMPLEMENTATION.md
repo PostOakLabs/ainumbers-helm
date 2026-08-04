@@ -348,7 +348,7 @@ Published deliberately. A reader finding these is worse than a reader being told
 
 4. **The OpenTimestamps anchor is stored as a pending attestation only.** Upgrading it to a full Merkle-to-block-header proof, the step a complete OTS client performs later, is not built (`hub/anchor-client.mjs:12-17`).
 
-5. **Manifests have one kind of edge, not a general DAG.** This limitation used to read "manifests have no edges". A manifest may now declare `connector_inputs[]`, and each binding orders a connector fetch ahead of the node it feeds, resolved by a stable topological sort that throws on a cycle (`schema/workflow-manifest.schema.json:149`, `hub/run.mjs:237-283`). That is the only edge vocabulary there is: every edge runs connector to node. Conditional execution, fan-out, and fan-in are still not implemented, so a workflow that needs real branching cannot be expressed.
+5. **Manifests have one kind of edge, not a general DAG.** This limitation used to read "manifests have no edges". A manifest may now declare `connector_inputs[]`, and each binding orders a connector fetch ahead of the node it feeds, resolved by a stable topological sort that throws on a cycle (`schema/workflow-manifest.schema.json:153`, `hub/run.mjs:237-283`). That is the only edge vocabulary there is: every edge runs connector to node. Conditional execution, fan-out, and fan-in are still not implemented, so a workflow that needs real branching cannot be expressed.
 
 6. **Review states are not in this engine.** The run lifecycle here is a Phase 1 subset; review states are named in the spec and not reachable through this executor (`hub/run.mjs:23-28`).
 
