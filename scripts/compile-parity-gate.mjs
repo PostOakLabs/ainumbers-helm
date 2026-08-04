@@ -57,16 +57,29 @@ export async function runParityGate({ packsDir = PACKS_DIR, db } = {}) {
     throw new Error(`compile-parity-gate: ${packsDir} is empty — run \`npm run packs:compile\` first`);
   }
 
-  let checkedPacks = 0, checkedNodes = 0, matched = 0, diverged = 0, hardErrors = 0;
+  let checkedPacks = 0, checkedNodes = 0, matched = 0, diverged = 0, hardErrors = 0, skippedPacks = 0, skippedNodes = 0;
   const divergences = [];
 
   for (const file of packFiles) {
     const pack = JSON.parse(readFileSync(join(packsDir, file), "utf8"));
+
+    // PACK-MARKER-COMPILE-1: a verified:false node's kernel_id is a
+    // browser-tool tool_id with no vendored kernel and no fixtures file —
+    // there is nothing to prove parity against, per §5's skip-execution
+    // rule. Exclude marked nodes from the parity manifest; if a pack has NO
+    // real kernel node left, skip the whole pack (nothing left to check).
+    const markedCount = pack.manifest.nodes.filter((n) => n.verified === false).length;
+    skippedNodes += markedCount;
+    const kernelNodes = pack.manifest.nodes.filter((n) => n.verified !== false);
+    if (kernelNodes.length === 0) {
+      skippedPacks++;
+      continue;
+    }
     checkedPacks++;
 
     const manifest = {
       ...pack.manifest,
-      nodes: pack.manifest.nodes.map((n) => ({ ...n, policy_parameters: sampleInputFor(n.kernel_id) })),
+      nodes: kernelNodes.map((n) => ({ ...n, policy_parameters: sampleInputFor(n.kernel_id) })),
     };
     // HELM-BIND-4: this gate proves per-node kernel fidelity (compiled
     // kernel_id/kernel_digest/argument order vs the canonical direct call)
@@ -154,7 +167,7 @@ export async function runParityGate({ packsDir = PACKS_DIR, db } = {}) {
     }
   }
 
-  return { checkedPacks, checkedNodes, matched, diverged, hardErrors, divergences };
+  return { checkedPacks, checkedNodes, matched, diverged, hardErrors, divergences, skippedPacks, skippedNodes };
 }
 
 async function main() {
@@ -170,7 +183,8 @@ async function main() {
 
   console.log(
     `\ncompile-parity: ${result.matched}/${result.checkedNodes} node(s) byte-identical across ` +
-    `${result.checkedPacks} pack(s) (${result.diverged} divergence(s), ${result.hardErrors} hard error(s)).`
+    `${result.checkedPacks} pack(s) (${result.diverged} divergence(s), ${result.hardErrors} hard error(s)); ` +
+    `${result.skippedNodes} verified:false node(s) in ${result.skippedPacks} pack(s) skipped (no kernel to check parity against).`
   );
 
   if (result.hardErrors > 0) {
