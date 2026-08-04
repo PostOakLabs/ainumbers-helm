@@ -16,6 +16,15 @@ function templateCard(t) {
     </article>`;
 }
 
+// PACK-MARKER-BUILD-SPEC.md §4.3: pack-level, un-missable at the catalog
+// level too — names count only (never a percentage), detail (which
+// tool_id(s)) lives one click away in Canvas's own banner.
+function unverifiedBadge(pack) {
+  const n = pack.unverifiedStepCount ?? 0;
+  if (!n) return "";
+  return `<p class="field-row-note" data-testid="pack-card-unverified">⚠ ${n} step(s) outside kernel verification — not evaluated, run out of band</p>`;
+}
+
 function packCard(pack) {
   const outcome = pack.outcome ?? "";
   return `
@@ -23,6 +32,7 @@ function packCard(pack) {
       <h3 id="pack-${pack.workflow_id}">${pack.name ?? pack.workflow_id}</h3>
       <p class="field-row-note">${outcome}</p>
       <p class="field-row"><span>Status</span><span>${pack.status ?? "not yet run"}</span></p>
+      ${unverifiedBadge(pack)}
       <a class="button-link" href="#/canvas?wf=${encodeURIComponent(pack.workflow_id)}">Open in Canvas</a>
     </article>`;
 }

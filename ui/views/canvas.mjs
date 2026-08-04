@@ -14,6 +14,23 @@ import { buildExecSummary } from "../lib/canvas-exec-summary.mjs";
 import { esc as escapeHtml } from "../lib/esc.mjs";
 import { blockedStateHtml, classifyBlockedState } from "../lib/blocked-state.mjs";
 
+// PACK-MARKER-BUILD-SPEC.md §4.2 path (a)/§4.3: pack-level, un-missable —
+// rendered outside the Present/Analyst toggle so it's visible regardless of
+// which tab is open. Distinct heading from verify.mjs's "Trust label
+// vocabulary (SPEC.md §26.6)" — this is not a §26.6 label, no run has
+// occurred, so no trust label applies. Never a coverage percentage.
+function renderUnverifiedBanner(unverified) {
+  if (!unverified.length) return "";
+  return `
+    <section class="canvas-unverified-banner" data-testid="canvas-unverified-banner">
+      <h3>Unverified steps in this pack</h3>
+      <p class="empty-state">Not evaluated — browser-tool step(s), run out of band. These step(s) have no kernel proof and no §26.6 trust label:</p>
+      <ul>
+        ${unverified.map((u) => `<li><code>${escapeHtml(u.toolId)}</code> (${escapeHtml(u.nodeId)})</li>`).join("")}
+      </ul>
+    </section>`;
+}
+
 function renderExecSummary(summary) {
   return `
     <section class="canvas-exec-summary" data-outcome="green">
@@ -102,6 +119,7 @@ export async function renderCanvas(root, { port, token, params }) {
 
   root.innerHTML = `
     <p class="view-subtitle">${escapeHtml(manifest.workflow_id)}${staleBadge}</p>
+    ${renderUnverifiedBanner(execSummary.unverified)}
     <div class="canvas-present-toggle" role="tablist" aria-label="Presentation mode">
       <button type="button" id="tab-present" role="tab" aria-selected="false">Present</button>
       <button type="button" id="tab-analyst" role="tab" aria-selected="true">Analyst</button>

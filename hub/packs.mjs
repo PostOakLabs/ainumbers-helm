@@ -32,7 +32,15 @@ function loadAll() {
 }
 
 export function listPacks() {
-  return [...loadAll().values()].map(({ workflow_id, name, outcome }) => ({ workflow_id, name, outcome }));
+  // PACK-MARKER-BUILD-SPEC.md §4.3: the catalog card must surface a pack
+  // carrying unverified (browser-tool) step(s) without waiting for the
+  // canvas detail fetch — count only, never a coverage percentage.
+  return [...loadAll().values()].map(({ workflow_id, name, outcome, manifest }) => ({
+    workflow_id,
+    name,
+    outcome,
+    unverifiedStepCount: (manifest?.nodes ?? []).filter((n) => n.verified === false).length,
+  }));
 }
 
 export function getPack(workflowId) {
