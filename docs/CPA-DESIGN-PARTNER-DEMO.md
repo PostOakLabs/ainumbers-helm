@@ -1,7 +1,6 @@
 # CPA design-partner demo pack — one-pager + synthetic-data runbook
 
-**CPARAILS-DEMOPACK-1.** Docs only — no code in this repo changed to produce this file.
-Anchor: `CPA-RAILS-BUILD-SPEC.md` §5 item 3 + §6 WU table row 1.
+Docs only — no code in this repo changed to produce this file.
 
 ⚠ **Everything in this document and in the accompanying fixture
 (`helm/fixtures/cpa-demo-substantive-procedure-cycle.synthetic.json`) is synthetic.**
@@ -117,8 +116,8 @@ repo's tracked tree** and run it with `node run-cpa-demo.mjs` from the
 `helm/` directory:
 
 ```js
-// Illustrative only — not a committed repo script (CPARAILS-DEMOPACK-1 is
-// docs-only). Run from the helm/ directory: node run-cpa-demo.mjs
+// Illustrative only — not a committed repo script. Run from the helm/
+// directory: node run-cpa-demo.mjs
 import { readFileSync } from "node:fs";
 import { getPack } from "./hub/packs.mjs";
 import { openJournal } from "./hub/journal.mjs";
