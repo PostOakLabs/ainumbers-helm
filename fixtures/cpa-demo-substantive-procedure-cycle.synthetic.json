@@ -1,0 +1,146 @@
+{
+  "_notice": "SYNTHETIC DEMO DATA ONLY. Every entity, account, balance, user id, and confirmation below is fictional, invented for CPARAILS-DEMOPACK-1. Do not treat any value here as a real client's data. See helm/docs/CPA-DESIGN-PARTNER-DEMO.md.",
+  "engagement_label": "Fictional Co. — FY2026 Q2 substantive-procedure walkthrough (synthetic)",
+  "n1_je_ruleset_screen": {
+    "ruleset_version": "2026.1",
+    "extract_population_hash": "sha256:demo0000000000000000000000000000000000000000000000000000000000",
+    "active_rules": [
+      "weekend_holiday",
+      "round_number",
+      "suspense_manual",
+      "post_close",
+      "unusual_user_account"
+    ],
+    "rule_params": {
+      "weekend_days": [0, 6],
+      "holiday_dates": ["2026-01-01"],
+      "round_number_increment": 1000,
+      "suspense_accounts": ["9999-SUSPENSE"],
+      "post_close_date": "2026-06-30",
+      "authorized_user_account_pairs": [
+        { "user_id": "demo-u1", "account_id": "1000-CASH" },
+        { "user_id": "demo-u2", "account_id": "2000-AP" }
+      ]
+    },
+    "entries": [
+      {
+        "entry_id": "DEMO-JE-1",
+        "posting_date": "2026-04-11",
+        "amount": 6000,
+        "account_id": "1000-CASH",
+        "user_id": "demo-u1",
+        "description": "synthetic round-number posting",
+        "is_manual": false
+      },
+      {
+        "entry_id": "DEMO-JE-2",
+        "posting_date": "2026-04-12",
+        "amount": 2431.09,
+        "account_id": "9999-SUSPENSE",
+        "user_id": "demo-u2",
+        "description": "synthetic suspense clearing",
+        "is_manual": false
+      },
+      {
+        "entry_id": "DEMO-JE-3",
+        "posting_date": "2026-04-18",
+        "amount": 875.5,
+        "account_id": "1000-CASH",
+        "user_id": "demo-u1",
+        "description": "synthetic clean entry",
+        "is_manual": false
+      }
+    ]
+  },
+  "n2_recalc_suite": {
+    "tolerance": { "abs": 0, "pct": 5 },
+    "depreciation": [
+      {
+        "asset_id": "DEMO-A-1",
+        "method": "straight_line",
+        "cost": 12000,
+        "salvage_value": 2000,
+        "useful_life_years": 5,
+        "period_number": 2,
+        "client_reported_depreciation": 2000
+      }
+    ],
+    "interest_accrual": [
+      {
+        "item_id": "DEMO-I-1",
+        "principal": 80000,
+        "annual_rate_pct": 5.5,
+        "days_accrued": 91,
+        "day_count_basis": "actual_360",
+        "client_reported_interest": 1112
+      }
+    ],
+    "prepaid_rollforward": [
+      {
+        "item_id": "DEMO-P-1",
+        "beginning_balance": 24000,
+        "additions": 6000,
+        "amortized_current_period": 3000,
+        "client_reported_ending_balance": 27000
+      }
+    ]
+  },
+  "n3_confirmation_matcher": {
+    "tolerance_abs": 0,
+    "tolerance_pct": 2,
+    "confirmations": [
+      {
+        "confirmation_id": "DEMO-C-1",
+        "counterparty_id": "demo-cp-A",
+        "type": "bank",
+        "confirmed_balance": 240000,
+        "confirmation_date": "2026-06-30"
+      },
+      {
+        "confirmation_id": "DEMO-C-2",
+        "counterparty_id": "demo-cp-B",
+        "type": "ar",
+        "confirmed_balance": 18500,
+        "confirmation_date": "2026-06-30"
+      }
+    ],
+    "ledger_balances": [
+      {
+        "counterparty_id": "demo-cp-A",
+        "type": "bank",
+        "ledger_balance": 240000,
+        "as_of_date": "2026-06-30"
+      },
+      {
+        "counterparty_id": "demo-cp-B",
+        "type": "ar",
+        "ledger_balance": 17900,
+        "as_of_date": "2026-06-30"
+      }
+    ]
+  },
+  "n4_workpaper_bundle_composer_roles": {
+    "procedure_id": "DEMO-PROC-SUBSTANTIVE-2026Q2",
+    "population_hash": "sha256:demo0000000000000000000000000000000000000000000000000000000000",
+    "exceptions": [
+      {
+        "item_id": "DEMO-EXC-1",
+        "reason_code": "TOLERANCE_EXCEEDED",
+        "disposition": "ACCEPTED_IMMATERIAL",
+        "disposed_by_role": "engagement_reviewer"
+      }
+    ],
+    "preparer": {
+      "role": "staff_auditor",
+      "statement": "Prepared the synthetic-demo substantive procedure workpapers for this area."
+    },
+    "reviewer": {
+      "role": "engagement_reviewer",
+      "statement": "Reviewed the prepared workpapers and disposed all noted exceptions."
+    },
+    "partner": {
+      "role": "engagement_partner",
+      "statement": "Released the synthetic demo area for walkthrough purposes only — no real engagement was reported on."
+    }
+  }
+}
