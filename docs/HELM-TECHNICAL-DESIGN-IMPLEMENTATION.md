@@ -192,7 +192,7 @@ The final `execution_hash` is SHA-256 over the JCS-canonical `{run_id, workflow_
 
 A `nodes` step invokes a vendored OCG kernel. Before it runs, the manifest's `kernel_digest` is checked against the vendored file's own digest from `hub/vendored/ocg/MANIFEST.json`. A stale or tampered pin fails loudly rather than silently invoking a different kernel version than the manifest recorded (`hub/kernel-runner.mjs:3-8`, `19-47`).
 
-A node carrying `verified: false` (the PACK-MARKER pilot's schema-level marker for a browser-tool step no kernel exists for yet) is a special case handled before any of the above: `runKernelNode` skips it outright — never resolving its sentinel `kernel_digest`, never invoking a kernel — and returns `execution_state: "skipped_by_design"` with no `trust_label`, so it can never be mistaken for a `kernel_verified` result in `step_results` (`hub/kernel-runner.mjs:55-70`).
+A node carrying `verified: false` (the PACK-MARKER pilot's schema-level marker for a browser-tool step no kernel exists for yet) is handled before any of the above. `runKernelNode` skips it outright, never resolving its sentinel `kernel_digest` and never invoking a kernel, and returns `execution_state: "skipped_by_design"` with no `trust_label`, so it can never be mistaken for a `kernel_verified` result in `step_results` (`hub/kernel-runner.mjs:55-70`).
 
 When a kernel attaches a compute proof, both the binding and, for `groth16-bn254` receipts, the seal must verify before the step may complete. An unverifiable proof is a hard failure of the step, never a silent downgrade to a weaker trust label (`hub/kernel-runner.mjs:101-108`).
 
