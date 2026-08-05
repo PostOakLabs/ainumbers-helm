@@ -1,0 +1,31 @@
+{
+  "workflow_id": "pack-treasury-clearing-pqd-benchmark",
+  "name": "Cross-CCP PQD Benchmark",
+  "outcome": "Single-node cross-CCP public quantitative disclosure (PQD) benchmark: compares a caller-selected set of CPMI-IOSCO PQD fields across FICC and ICE using a source-cited fixture dataset, flagging any caller-declared threshold breach per entity. CCPCORE-HELM-1 (CCP-CORE-BUILD-SPEC.md §4): the curated treasury-clearing-domain sibling pack for chain-ccp-pqd-benchmark, alongside that chain's own auto-compiled pack-chain-ccp-pqd-benchmark.",
+  "spec_version": "ocg-control-plane@1",
+  "manifest": {
+    "manifest_version": "1",
+    "workflow_id": "pack-treasury-clearing-pqd-benchmark",
+    "trigger": {
+      "type": "manual"
+    },
+    "nodes": [
+      {
+        "node_id": "n1",
+        "kernel_id": "art-528-cross-ccp-pqd-comparator",
+        "kernel_digest": "sha256:fd251101f928b941bade8919f9fc8215154f87e82c9ec9e6953ea483c95b82f1"
+      }
+    ],
+    "connectors": [],
+    "gates": [],
+    "actions": []
+  },
+  "workflow_manifest_digest": "sha256:6cacea280cacc175413f45717911ecbb2c126d6b47d448efeb7dda191649b0ac",
+  "declared_inputs": [],
+  "steps_meta": [
+    {
+      "node_id": "n1",
+      "data_classification": "compute"
+    }
+  ]
+}

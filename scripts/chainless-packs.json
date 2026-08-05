@@ -99,6 +99,76 @@
         "gates": [],
         "actions": []
       }
+    },
+    {
+      "workflow_id": "pack-treasury-clearing-default-waterfall",
+      "name": "CCP Default Waterfall Recompute to Cover-2 Sizing",
+      "outcome": "Recomputes a CCP's sequential default-waterfall loss allocation for a caller-declared defaulting-member loss, then checks whether the recomputed allocation stays within the CCP's Cover-2 default fund sizing or breaches it. CCPCORE-HELM-1 (CCP-CORE-BUILD-SPEC.md §4): the curated treasury-clearing-domain sibling pack for chain-ccp-default-waterfall, alongside that chain's own auto-compiled pack-chain-ccp-default-waterfall — registered here (not auto-compiled under this name) because the source chain is named chain-ccp-default-waterfall, not treasury-clearing-default-waterfall.",
+      "manifest": {
+        "manifest_version": "1",
+        "workflow_id": "pack-treasury-clearing-default-waterfall",
+        "trigger": { "type": "manual" },
+        "nodes": [
+          {
+            "node_id": "n1",
+            "kernel_id": "art-529-ccp-default-waterfall-recompute",
+            "kernel_digest": "sha256:1fa3932e10c166675cb5eaf1c41a165ee448e916df2086e1cf963e95ee4a2f97"
+          },
+          {
+            "node_id": "n2",
+            "kernel_id": "art-530-default-fund-cover2-sizing",
+            "kernel_digest": "sha256:4d53619712ff1da614212e1de80b28da3a815322d590e9fa5f7dd3db647c59b2"
+          }
+        ],
+        "connectors": [],
+        "gates": [],
+        "actions": []
+      }
+    },
+    {
+      "workflow_id": "pack-treasury-clearing-pqd-benchmark",
+      "name": "Cross-CCP PQD Benchmark",
+      "outcome": "Single-node cross-CCP public quantitative disclosure (PQD) benchmark: compares a caller-selected set of CPMI-IOSCO PQD fields across FICC and ICE using a source-cited fixture dataset, flagging any caller-declared threshold breach per entity. CCPCORE-HELM-1 (CCP-CORE-BUILD-SPEC.md §4): the curated treasury-clearing-domain sibling pack for chain-ccp-pqd-benchmark, alongside that chain's own auto-compiled pack-chain-ccp-pqd-benchmark.",
+      "manifest": {
+        "manifest_version": "1",
+        "workflow_id": "pack-treasury-clearing-pqd-benchmark",
+        "trigger": { "type": "manual" },
+        "nodes": [
+          {
+            "node_id": "n1",
+            "kernel_id": "art-528-cross-ccp-pqd-comparator",
+            "kernel_digest": "sha256:fd251101f928b941bade8919f9fc8215154f87e82c9ec9e6953ea483c95b82f1"
+          }
+        ],
+        "connectors": [],
+        "gates": [],
+        "actions": []
+      }
+    },
+    {
+      "workflow_id": "pack-treasury-clearing-margin-call-porting",
+      "name": "Member Margin Call Lifecycle to Client Porting Check",
+      "outcome": "Attests a clearing member's margin call lifecycle against its SLA window; an unmet-SLA call (disputed, escalated, or still-open past the SLA) routes to the client porting check as a contingency path, while a funded within-SLA call ends. CCPCORE-HELM-1 (CCP-CORE-BUILD-SPEC.md §4): the curated treasury-clearing-domain sibling pack for chain-member-margin-call-to-porting, alongside that chain's own auto-compiled pack-chain-member-margin-call-to-porting. The source chain's gate (unmet-SLA -> porting check) is a run-time routing decision inside art-531's own kernel output, not a manifest-level gate node, so this sibling's manifest carries the same two-node linear shape as the auto-compiled pack.",
+      "manifest": {
+        "manifest_version": "1",
+        "workflow_id": "pack-treasury-clearing-margin-call-porting",
+        "trigger": { "type": "manual" },
+        "nodes": [
+          {
+            "node_id": "n1",
+            "kernel_id": "art-531-member-margin-call-lifecycle",
+            "kernel_digest": "sha256:89fcc33e4e1a9e74da13cd69954a8b4d1717cf652e2159dd4c358b0ee59b436b"
+          },
+          {
+            "node_id": "n2",
+            "kernel_id": "art-532-client-porting-check",
+            "kernel_digest": "sha256:6b3fddf02c09856bc6c1a58454eed2257d8a93d2e0a66af5721811ba315ba5f9"
+          }
+        ],
+        "connectors": [],
+        "gates": [],
+        "actions": []
+      }
     }
   ]
 }
