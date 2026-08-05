@@ -1,0 +1,49 @@
+{
+  "workflow_id": "pack-settlement-discipline-penalty-v2",
+  "name": "CSDR Penalty Recompute (Reference-Price Reachable)",
+  "outcome": "CSDR cash-penalty recompute using a caller-supplied reference price (ART-543) -> settlement-efficiency / penalty-cost aggregation (ART-84) -> audit receipt (cry-05). Fixes the reachability defect in the original settlement-discipline-penalty chain, whose ART-78 stage has no path for a caller to supply a reference price differing from notional. Decision-support draft.",
+  "spec_version": "ocg-control-plane@1",
+  "manifest": {
+    "manifest_version": "1",
+    "workflow_id": "pack-settlement-discipline-penalty-v2",
+    "trigger": {
+      "type": "manual"
+    },
+    "nodes": [
+      {
+        "node_id": "n1",
+        "kernel_id": "art-543-csdr-penalty-recompute",
+        "kernel_digest": "sha256:b2b0ccaae79b05facefac2e7c9a2294abd353bd1978a163471dc45d28a8ed371"
+      },
+      {
+        "node_id": "n2",
+        "kernel_id": "art-84-settlement-efficiency-kpi",
+        "kernel_digest": "sha256:6689dbe2c2f23a87ca2ee46102cd5d983d628b2edebd17f51773a2749d6aa9e6"
+      },
+      {
+        "node_id": "n3",
+        "kernel_id": "cry-05-agent-action-audit-trail-aggregator",
+        "kernel_digest": "sha256:5f7f6ab0bb2e2b736805ecde518ca59ba9a83ad38b17545a8c7c133cffa1481f"
+      }
+    ],
+    "connectors": [],
+    "gates": [],
+    "actions": []
+  },
+  "workflow_manifest_digest": "sha256:93862968d2d4253ab56f25eef229e7e658d24d3a6ad596c7a41ac8eb4f2d6f4b",
+  "declared_inputs": [],
+  "steps_meta": [
+    {
+      "node_id": "n1",
+      "data_classification": "compute"
+    },
+    {
+      "node_id": "n2",
+      "data_classification": "compute"
+    },
+    {
+      "node_id": "n3",
+      "data_classification": "compute"
+    }
+  ]
+}

@@ -1,0 +1,40 @@
+{
+  "workflow_id": "pack-chain-ccp-default-waterfall",
+  "name": "CCP Default Waterfall Recompute to Cover-2 Sizing",
+  "outcome": "Recomputes a CCP's sequential default-waterfall loss allocation for a caller-declared defaulting-member loss, then checks whether the recomputed allocation stays within the CCP's Cover-2 default fund sizing or breaches it.",
+  "spec_version": "ocg-control-plane@1",
+  "manifest": {
+    "manifest_version": "1",
+    "workflow_id": "pack-chain-ccp-default-waterfall",
+    "trigger": {
+      "type": "manual"
+    },
+    "nodes": [
+      {
+        "node_id": "n1",
+        "kernel_id": "art-529-ccp-default-waterfall-recompute",
+        "kernel_digest": "sha256:1fa3932e10c166675cb5eaf1c41a165ee448e916df2086e1cf963e95ee4a2f97"
+      },
+      {
+        "node_id": "n2",
+        "kernel_id": "art-530-default-fund-cover2-sizing",
+        "kernel_digest": "sha256:4d53619712ff1da614212e1de80b28da3a815322d590e9fa5f7dd3db647c59b2"
+      }
+    ],
+    "connectors": [],
+    "gates": [],
+    "actions": []
+  },
+  "workflow_manifest_digest": "sha256:08b8889ee376e181461b1306f2a14cf57a0cb28d7c26873a992df61374fe6ce6",
+  "declared_inputs": [],
+  "steps_meta": [
+    {
+      "node_id": "n1",
+      "data_classification": "compute"
+    },
+    {
+      "node_id": "n2",
+      "data_classification": "compute"
+    }
+  ]
+}

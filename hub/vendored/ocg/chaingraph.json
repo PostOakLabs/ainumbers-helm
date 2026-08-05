@@ -1835,7 +1835,7 @@
   "display_name": "Agentic Mandate Sandbox",
   "mcp_name": "simulate_agent_spend_policy",
   "mandate_type": "agent_guardrail_mandate",
-  "wave": "ORPHANNODE-ONBOARD-2",
+  "wave": "A",
   "gpu": false,
   "url": "https://ainumbers.co/chaingraph/art-15-agentic-mandate-sandbox.html",
   "description": "Builds a deterministic Agent Guardrail Mandate skeleton from declared spend caps, MCC allowlist/blocklist, velocity rules, time windows, and approval thresholds. Stage 1 of the Agentic Policy Chain. The browser page additionally runs an interactive randomized synthetic-transaction simulator against the mandate for exploration; that non-deterministic step is a UI feature only and is not part of this server artifact's hashed output. Zero PII, client-side compute in the browser tool, deterministic server compute for MCP callers.",
@@ -1954,7 +1954,7 @@
   "display_name": "Google AP2 Mandate Builder",
   "mcp_name": "draft_ap2_mandate_credential",
   "mandate_type": "payment_policy",
-  "wave": "ORPHANNODE-ONBOARD-2",
+  "wave": "A",
   "gpu": false,
   "url": "https://ainumbers.co/chaingraph/art-16-google-ap2-mandate-builder.html",
   "description": "Builds an illustrative Google AP2 Checkout/Payment Mandate Verifiable Digital Credential (VDC) skeleton from a declared mandate type, stage, agent, subject, merchant, and amount. Stage 2 of the Agentic Policy Chain. This is the EXTERNAL Google AP2 payments protocol shape (ap2-protocol.org), distinct from the AINumbers Policy Mandate export. Field names are illustrative; sign with the agent key and verify against the live spec before real use. Zero PII, deterministic compute.",
@@ -2042,7 +2042,7 @@
   "display_name": "AP2/MCP Policy Validator",
   "mcp_name": "validate_ap2_mandate_credential",
   "mandate_type": "scheme_rule",
-  "wave": "ORPHANNODE-ONBOARD-2",
+  "wave": "A",
   "gpu": false,
   "url": "https://ainumbers.co/chaingraph/art-17-ap2-mcp-policy-validator.html",
   "description": "Validates a caller-supplied payload against the AINumbers Unified Build Contract v1.0 Policy Mandate field set (ap2_version, mandate_id, tool_id, mandate_type, jurisdiction, audit_metadata, and related fields), scoring compliance 0-100 and flagging deprecated fields. Stage 3 of the Agentic Policy Chain. Deterministic, zero PII, no external network calls.",
@@ -2190,7 +2190,7 @@
   "display_name": "MCP Developer Readiness Scorecard",
   "mcp_name": "score_mcp_server_readiness",
   "mandate_type": "compliance_control",
-  "wave": "ORPHANNODE-ONBOARD-2",
+  "wave": "A",
   "gpu": false,
   "url": "https://ainumbers.co/chaingraph/art-18-mcp-developer-readiness-scorecard.html",
   "description": "Rolls up caller-supplied yes/partial/no answers across six MCP ship-readiness sections (tool definitions, server.json/registry, OAuth 2.1, transport security, tool-poisoning hygiene, spec-revision compliance) into an overall 0-100 score and a prioritized gap list. Stage 4 (terminal) of the Agentic Policy Chain. Self-reported rollup; validate each weak section with its own deep-dive tool. Deterministic, zero PII.",
@@ -36498,6 +36498,1947 @@
   "deferred_reason": "New shard; awaiting the async GPU proving queue (S18 steady-state)."
 },
     {
+  "tool_id": "art-527-classify-ledger-consensus-finality",
+  "tool_version": "1.0.0",
+  "display_name": "Ledger Consensus Finality Classifier",
+  "mcp_name": "classify_ledger_consensus_finality",
+  "mandate_type": "compliance_mandate",
+  "wave": 82,
+  "gpu": false,
+  "url": "https://ainumbers.co/chaingraph/art-527-classify-ledger-consensus-finality.html",
+  "description": "Classifies a ledger-consensus position under a deadline-bounded-inclusion model (XRPL) or a federated-BFT model (Stellar SCP), each expressed as terminal outcome branches rather than a monotone tier ladder. Flags an overstated finality claim and a fee-consuming tec final failure, and names the unprovable-absence gap where validated history is not continuous. Caller-supplied signed ledger facts only: no live network fetch, no witness/light-client infrastructure, no embedded validator-list snapshot. Zero PII. Client-side.",
+  "input_schema_ref": "chaingraph/art-527-classify-ledger-consensus-finality.html#manifest",
+  "consumes": [],
+  "feeds": [],
+  "status": "live",
+  "conformance_fixtures": true,
+  "compute_capability": "server",
+  "compute_images": [
+    {
+      "system": "sha256-source",
+      "image_id": "sha256:46901368779de44333c60943c2a52d7458222841e0ac6420898016c6664114dd",
+      "valid_from": "2026-07-10"
+    },
+    {
+      "system": "risc0",
+      "image_id": "sha256:a1a0bc89b5b1febaeda3519f6dbade0fa5ac16beeb143c4e1b01689573567bc6",
+      "valid_from": "2026-08-04"
+    }
+  ],
+  "export_capability": [
+    "json"
+  ],
+  "compute_proof_ready": "ready",
+  "compute_proof": {
+    "type": "ZkVmReceipt",
+    "system": "risc0",
+    "receiptFormat": "groth16-bn254",
+    "imageId": "sha256:a1a0bc89b5b1febaeda3519f6dbade0fa5ac16beeb143c4e1b01689573567bc6",
+    "seal": "DtMcPzY3R5dfTS4wbByse+FWzn8X1gsin0LKJR10XVUFtyDdjQxAAWajF8YpDNSbADC1xsRzacms8x6nxAjJJgjRbQeRQNJPlqgv24QJdb/KN7MY+ki986+3l8NLSekrCUMtAsoLv8oT69rAkCDby2vHNDD7CN1FJqKAlO/2Ikwq/qryDtLsy4Sye3HlANr8H4TOAzRIb2AVDwtB/ms64AFnpg2J6I7wmE4FPPNQuHQfLsD6c6ZtJkn4EdfJlJSUGFjhfIFeFQacR6xl5rsNKvZvti2HD4CO8vbyGP5sRJoTLUQACDihfdnHr8V+uVijeWDOmOaMkjKj9QS6UI5foQ==",
+    "journal": {
+      "chaingraph_version": "0.4.0",
+      "kernel_digest": "sha256:46901368779de44333c60943c2a52d7458222841e0ac6420898016c6664114dd",
+      "output": {
+        "as_of_ts": 1753000000,
+        "chain_label": "XRPL mainnet",
+        "claim_verdict": "claim_supported",
+        "claimed_tier": "final_success",
+        "draft_pinned": false,
+        "finality_tier": "final_success",
+        "highest_validated_ledger": 996,
+        "included_in_ledger": 995,
+        "meets_required_tier": true,
+        "outcome": "final_success",
+        "rationale": [
+          "The transaction is included in a validated ledger with a tes result, so it is a final success."
+        ],
+        "reorg_exposure": "none",
+        "required_tier": "final_success",
+        "result_class": "tes",
+        "settlement_model": "deadline_bounded_inclusion",
+        "submitted_at_ledger": 990,
+        "time_bounds_max": null
+      }
+    }
+  }
+},
+    {
+  "tool_id": "art-528-cross-ccp-pqd-comparator",
+  "tool_version": "1.0.0",
+  "display_name": "Cross-CCP PQD Comparator",
+  "mcp_name": "compare_cross_ccp_pqd_fields",
+  "mandate_type": "regulatory_reporting",
+  "wave": 82,
+  "gpu": false,
+  "url": "https://ainumbers.co/chaingraph/art-528-cross-ccp-pqd-comparator.html",
+  "description": "Compares a caller-selected set of CPMI-IOSCO public quantitative disclosure (PQD) fields across FICC and ICE using a manually-transcribed, source-cited fixture dataset -- backtest coverage and largest margin deficiency per FICC division (GSD, MBSD, NSCC), and default fund requirement, Cover-2 peak stress loss, and total initial margin required per ICE clearing house (ICC, ICEU, ICUS), plus a CCP-level ICE skin-in-the-game total. FICC and ICE do not disclose the same field set; a field one side does not publish is reported unavailable, never interpolated. Flags a caller-declared threshold breach (e.g. Cover-2 peak stress loss exceeding a declared percentage of default fund requirement) per entity. Comparison arithmetic and delta table only -- no ranking, no better/worse scoring language, no forecasting. CME and LCH are named in the spec but not built -- selecting either yields an unknown-CCP rejection, never a fabricated figure. Every fixture figure is public and source-cited to the CCP's own quarterly disclosure PDF, refreshed manually per quarter, never a live feed and never scraped.",
+  "input_schema_ref": "chaingraph/art-528-cross-ccp-pqd-comparator.html#manifest",
+  "deadline": null,
+  "deadline_note": "Compares CCPs against the STANDING CPMI-IOSCO Dec 2015 PQD template each already publishes quarterly -- not the 2026 PQD-transparency consultation amendments, which are consultation-stage with no compliance date.",
+  "consumes": [],
+  "feeds": [],
+  "status": "live",
+  "conformance_fixtures": true,
+  "compute_capability": "server",
+  "compute_images": [
+    {
+      "system": "sha256-source",
+      "image_id": "sha256:fd251101f928b941bade8919f9fc8215154f87e82c9ec9e6953ea483c95b82f1",
+      "valid_from": "2026-07-10"
+    },
+    {
+      "system": "risc0",
+      "image_id": "sha256:a1a0bc89b5b1febaeda3519f6dbade0fa5ac16beeb143c4e1b01689573567bc6",
+      "valid_from": "2026-08-04"
+    }
+  ],
+  "export_capability": [
+    "json"
+  ],
+  "compute_proof_ready": "ready",
+  "compute_proof": {
+    "type": "ZkVmReceipt",
+    "system": "risc0",
+    "receiptFormat": "groth16-bn254",
+    "imageId": "sha256:a1a0bc89b5b1febaeda3519f6dbade0fa5ac16beeb143c4e1b01689573567bc6",
+    "seal": "ITDmOwAK3hBb6dCbQZnNKxcUWwaFynGIt4BzSXxMEvgYDErMSCzxcCn0W7mXoX2QLGV4PUYesdV851ZZf5p/qBgJqrUVMkqji4d5TWITWb6kURE4bIn9hyXf47Q8syODGBlD9IT+SXqQG6I6tN6lUbI/5AzJQ2jAhd4G1mPbeuQHf5dQ5w6rTRVJxIRZjSIa1454Lj/atoFKE9IYgxfmtiqtLX55f1lzTILn3WrrhiL7fXraD6iifECU7hJG7D8pGx4accb/469gVLbcwr4SPT6qg6GHj994TVn7CY0gBw0JGsaPQulFLcMXytMBb2Y3Of4jT48+j9OV4MRJZf4yHg==",
+    "journal": {
+      "chaingraph_version": "0.4.0",
+      "kernel_digest": "sha256:fd251101f928b941bade8919f9fc8215154f87e82c9ec9e6953ea483c95b82f1",
+      "output": {
+        "cross_ccp": false,
+        "entity_a": {
+          "ccp": "FICC",
+          "division": "GSD",
+          "resolved": true
+        },
+        "entity_b": {
+          "ccp": "FICC",
+          "division": "NSCC",
+          "resolved": true
+        },
+        "fields": [
+          {
+            "delta": 0.1,
+            "delta_pct": 0.1003,
+            "entity_a": {
+              "available": true,
+              "scope": "division_level",
+              "value": 99.7
+            },
+            "entity_b": {
+              "available": true,
+              "scope": "division_level",
+              "value": 99.8
+            },
+            "field_id": "backtest_coverage_pct"
+          },
+          {
+            "delta": 124300000,
+            "delta_pct": 255.7613,
+            "entity_a": {
+              "available": true,
+              "scope": "division_level",
+              "value": 48600000
+            },
+            "entity_b": {
+              "available": true,
+              "scope": "division_level",
+              "value": 172900000
+            },
+            "field_id": "largest_deficiency_usd"
+          }
+        ],
+        "fully_available_field_count": 2,
+        "note": "Compares caller-selected CPMI-IOSCO PQD fields across FICC and ICE using a manually-transcribed, source-cited fixture dataset (never a live feed). A field a CCP does not disclose is reported unavailable, never interpolated or defaulted. Comparison arithmetic and threshold flags only -- no ranking, no better/worse scoring language.",
+        "partially_available_field_count": 0,
+        "rationale": [
+          "Comparing FICC GSD against FICC NSCC (same CCP).",
+          "2 field(s) requested: 2 available on both sides, 0 available on one side only, 0 available on neither side.",
+          "All figures are fixture data manually transcribed from each CCP's own published quarterly PDF disclosure -- never a live feed. This is comparison arithmetic only: no ranking and no soundness judgment is expressed."
+        ],
+        "rejected_inputs": [],
+        "source_citations": {
+          "FICC": {
+            "publisher": "DTCC",
+            "source_period": "Q3 2025",
+            "source_url": "https://www.dtcc.com/legal/policy-and-compliance"
+          },
+          "ICE": {
+            "publisher": "ICE",
+            "source_period": "Q4 2025",
+            "source_url": "https://www.ice.com/clearing/quarterly-clearing-disclosures"
+          }
+        },
+        "threshold": null,
+        "unavailable_field_count": 0
+      }
+    }
+  }
+},
+    {
+  "tool_id": "art-529-ccp-default-waterfall-recompute",
+  "tool_version": "1.0.0",
+  "display_name": "CCP Default Waterfall Recomputation",
+  "mcp_name": "recompute_ccp_default_waterfall",
+  "mandate_type": "analytics_mandate",
+  "wave": 83,
+  "gpu": false,
+  "url": "https://ainumbers.co/chaingraph/art-529-ccp-default-waterfall-recompute.html",
+  "description": "Recomputes the sequential loss-allocation order at a CCP defaulting-member event: defaulter's initial margin, then the defaulter's default-fund contribution, then the CCP's own skin-in-the-game, then the surviving members' default-fund pool, then assessment powers -- per a caller-declared waterfall structure and a caller-declared loss amount. The structure is not hardcoded to any one CCP's rulebook; a caller supplies its own stage order and subset per PFMI Principle 4 and its own published rulebook. Carries an OCG Standard §25 ocg-private-input@1 declaration: the defaulter's initial margin, the defaulter's default-fund contribution, and the surviving-members' default-fund pool are member-level figures, committed via sha256-salted@1 in policy_parameters.member_figures_commitment, never disclosed in the clear. The CCP's own skin-in-the-game and any assessment-powers cap are the CCP's own already-published figures and stay public inputs. Emits, stage by stage, how much of the declared loss each stage absorbed and whether a residual remains unallocated -- a breach of the declared structure at that loss amount. Distinct in domain from art-509-recompute-payment-waterfall, a securitisation cashflow waterfall unrelated to CCP default management. It performs no fund-sizing of its own, no stress-scenario modelling, and makes no determination that any CCP's published resources are adequate.",
+  "input_schema_ref": "chaingraph/art-529-ccp-default-waterfall-recompute.html#manifest",
+  "consumes": [],
+  "feeds": [],
+  "status": "live",
+  "conformance_fixtures": true,
+  "compute_capability": "server",
+  "compute_images": [
+    {
+      "system": "sha256-source",
+      "image_id": "sha256:1fa3932e10c166675cb5eaf1c41a165ee448e916df2086e1cf963e95ee4a2f97",
+      "valid_from": "2026-07-10"
+    },
+    {
+      "system": "risc0",
+      "image_id": "sha256:adf39b5c4e8fe19f9dbc25e2b8eb84090f0ee6c9370f14ad10d5039e8e65b0ec",
+      "valid_from": "2026-08-04"
+    }
+  ],
+  "export_capability": [
+    "json"
+  ],
+  "compute_proof_ready": "ready",
+  "compute_proof": {
+    "type": "ZkVmReceipt",
+    "system": "risc0",
+    "receiptFormat": "groth16-bn254",
+    "imageId": "sha256:adf39b5c4e8fe19f9dbc25e2b8eb84090f0ee6c9370f14ad10d5039e8e65b0ec",
+    "seal": "EOHLdLc2X7oSFnQMFdoTTHSO4tSPN2FwDZHCsjlZqpIOAkLYht0soQl43oVRy2b0arHIJ6r7tSAOzL2NlMEsvhLswwHDKnbW9RRDFbiekUrr03oZS3Bc5BvApLKzjfOMAcqU+ITzfHrL7I0qOUJTMHZYVqoVeRaAHe4dCfDJhloA8lG9u3AIZmPiuJ9UfwUNVXglDdGl2CCiQzD2z4qBnSfOHdmZuqwim/p2ZjHIWFczXaCjZp5OESKO2gb7ntM7L0zWzNWNddZd6U6yF0hWLp+zfLrIQ83UYP/BIJOqqfAob+mlJCDG33mObmnHfdf8CmQpL17VfSC2DTyRxo2f4A==",
+    "journal": {
+      "chaingraph_version": "0.4.0",
+      "commitment": "sha256:abb47369cd5665fa19e76b84c34d54a954002bde70b23fb168d1432647abfccd",
+      "commitments": [
+        "sha256:abb47369cd5665fa19e76b84c34d54a954002bde70b23fb168d1432647abfccd"
+      ],
+      "kernel_digest": "sha256:1fa3932e10c166675cb5eaf1c41a165ee448e916df2086e1cf963e95ee4a2f97",
+      "output": {
+        "assessment_powers_cap_declared": true,
+        "assessment_powers_cap_minor_units": 100000000000,
+        "breach": false,
+        "ccp_skin_in_game_display": "300000000.00",
+        "ccp_skin_in_game_minor_units": 30000000000,
+        "currency": "USD",
+        "loss_amount_display": "500000.00",
+        "loss_amount_minor_units": 50000000,
+        "loss_fully_absorbed": true,
+        "note": "Deterministic, single-run recompute of a sequential default-waterfall loss allocation. The defaulter IM, defaulter default-fund contribution, and surviving-member default-fund pool are member-level figures committed via sha256-salted@1 (OCG Standard §25) and never appear in the clear anywhere in this artifact. It forecasts nothing, sizes no fund, and makes no determination that a CCP's published resources are adequate.",
+        "provenance": "PFMI Principle 4 (Credit Risk) -- the standing Cover-2 / waterfall-sequencing requirement -- and the caller-declared waterfall structure, which is not hardcoded to any one CCP rulebook.",
+        "rationale": [
+          "Waterfall structure: defaulter_im -> defaulter_default_fund -> ccp_skin_in_game -> surviving_member_default_fund_pro_rata -> assessment_powers.",
+          "Loss of 500000.00 USD recomputed sequentially across 1 stage(s) reached; the three member-level absorption capacities (defaulter IM, defaulter default-fund contribution, surviving-member default-fund pool) are private witnesses committed under OCG Standard §25 ocg-private-input@1, never disclosed in the clear.",
+          "Loss fully absorbed; residual unallocated is 0.00 USD.",
+          "This is a sequential recompute over a caller-declared waterfall structure and a caller-declared loss amount, per PFMI Principle 4 and each CCP's own published rulebook order. It is not a determination that any CCP's actual default-fund sizing is adequate, and it performs no stress-scenario modelling of its own."
+        ],
+        "rejected_inputs": [],
+        "residual_display": "0.00",
+        "residual_minor_units": 0,
+        "steps": [
+          {
+            "absorbed_display": "500000.00",
+            "absorbed_minor_units": 50000000,
+            "exhausted_stage_capacity": false,
+            "loss_fully_absorbed_at_this_stage": true,
+            "private_figure": true,
+            "stage": "defaulter_im"
+          }
+        ],
+        "waterfall_structure": [
+          "defaulter_im",
+          "defaulter_default_fund",
+          "ccp_skin_in_game",
+          "surviving_member_default_fund_pro_rata",
+          "assessment_powers"
+        ]
+      }
+    }
+  }
+},
+    {
+  "tool_id": "art-530-default-fund-cover2-sizing",
+  "tool_version": "1.0.0",
+  "display_name": "CCP Default Fund Cover-2 Sizing",
+  "mcp_name": "size_ccp_default_fund_cover2",
+  "mandate_type": "risk_parameter",
+  "wave": 81,
+  "gpu": false,
+  "url": "https://ainumbers.co/chaingraph/art-530-default-fund-cover2-sizing.html",
+  "description": "Sizes a CCP default fund under the PFMI Principle 4 \"Cover 2\" standard: fund size must be at least the largest plus second-largest clearing-member stress loss across caller-declared stress scenarios. Applies each caller-declared scenario loss rate (in basis points, shaped from qfa-03-stress-test-engine's scenario_losses output as a chained input) to every caller-declared member exposure, ranks members per scenario, takes the two largest, and checks a caller-declared fund size against the worst scenario across the declared set. Not a stress-loss engine itself -- qfa-03 already computes multi-scenario portfolio stress losses; this node consumes that shape read-only and never reimplements it. Region-portable: no CCP, currency, or jurisdiction is hardcoded. Arithmetic sizing check only, no fund-size recommendation.",
+  "input_schema_ref": "chaingraph/art-530-default-fund-cover2-sizing.html#manifest",
+  "consumes": [
+    "qfa-03-stress-test-engine"
+  ],
+  "feeds": [],
+  "status": "live",
+  "conformance_fixtures": true,
+  "compute_capability": "server",
+  "compute_images": [
+    {
+      "system": "sha256-source",
+      "image_id": "sha256:4d53619712ff1da614212e1de80b28da3a815322d590e9fa5f7dd3db647c59b2",
+      "valid_from": "2026-07-10"
+    },
+    {
+      "system": "risc0",
+      "image_id": "sha256:a1a0bc89b5b1febaeda3519f6dbade0fa5ac16beeb143c4e1b01689573567bc6",
+      "valid_from": "2026-08-04"
+    }
+  ],
+  "export_capability": [
+    "json"
+  ],
+  "compute_proof_ready": "ready",
+  "compute_proof": {
+    "type": "ZkVmReceipt",
+    "system": "risc0",
+    "receiptFormat": "groth16-bn254",
+    "imageId": "sha256:a1a0bc89b5b1febaeda3519f6dbade0fa5ac16beeb143c4e1b01689573567bc6",
+    "seal": "B7LhrChMFh8OY1PdbzHD+K8hJATg+Zhm6joL+3ASGM4E6uZzYhU2NrdXwXC5jGjIfhBywuRPSBHl7JMLBvaN5w8zjuZKusTGUEcUwNAzoiFKJARueQ5vK7AlRXedBpZ4LAkvZ234yKtStMpRHMTmKqoBQK7xHR/0rUdPRxdFWJsCm0S4kReFySNThpoeVS0iYFeOSWbu5NDEpR4vvBK8OCOlGv/lk5wP0CLuGbub9APxhDJTyglZX8VAyg8z4TWtBiA8RIfT3IESY+f8OTbt0lHIqm02bT8WB3tVuSZJQc4i2xmnG3H4zc6yN+hayst2/+kqxD2X9rXB16MMUUrwEQ==",
+    "journal": {
+      "chaingraph_version": "0.4.0",
+      "kernel_digest": "sha256:4d53619712ff1da614212e1de80b28da3a815322d590e9fa5f7dd3db647c59b2",
+      "output": {
+        "as_of": "2026-08-01",
+        "fund_adequate": true,
+        "fund_size_display": "2000000.00",
+        "fund_size_minor_units": 200000000,
+        "member_count": 3,
+        "note": "Deterministic Cover-2 default fund sizing over caller-declared clearing members, member exposures, stress-scenario loss rates (shaped from a stress-test-engine chain input as basis points), and a declared fund size. Per PFMI Principle 4, the fund must cover the default of the two members creating the largest combined stress loss under the worst declared scenario. No CCP, currency, or jurisdiction is named. It performs no stress-scenario computation of its own -- that shape is a chained input -- and it recommends no fund-size change.",
+        "per_scenario": [
+          {
+            "cover2_requirement_display": "1617000.00",
+            "cover2_requirement_minor_units": 161700000,
+            "largest": {
+              "member_id": "member-alpha",
+              "stress_loss_minor_units": 92400000
+            },
+            "loss_bps": 4620,
+            "member_losses": [
+              {
+                "member_id": "member-alpha",
+                "stress_loss_minor_units": 92400000
+              },
+              {
+                "member_id": "member-beta",
+                "stress_loss_minor_units": 69300000
+              },
+              {
+                "member_id": "member-gamma",
+                "stress_loss_minor_units": 27720000
+              }
+            ],
+            "scenario_id": "gfc_2008",
+            "second_largest": {
+              "member_id": "member-beta",
+              "stress_loss_minor_units": 69300000
+            }
+          },
+          {
+            "cover2_requirement_display": "1134000.00",
+            "cover2_requirement_minor_units": 113400000,
+            "largest": {
+              "member_id": "member-alpha",
+              "stress_loss_minor_units": 64800000
+            },
+            "loss_bps": 3240,
+            "member_losses": [
+              {
+                "member_id": "member-alpha",
+                "stress_loss_minor_units": 64800000
+              },
+              {
+                "member_id": "member-beta",
+                "stress_loss_minor_units": 48600000
+              },
+              {
+                "member_id": "member-gamma",
+                "stress_loss_minor_units": 19440000
+              }
+            ],
+            "scenario_id": "covid_2020",
+            "second_largest": {
+              "member_id": "member-beta",
+              "stress_loss_minor_units": 48600000
+            }
+          }
+        ],
+        "rationale": [
+          "3 declared clearing members evaluated across 2 declared stress scenarios.",
+          "Worst-case scenario \"gfc_2008\" at 4620 bps: largest member loss 924000.00 (member-alpha), second-largest 693000.00 (member-beta); Cover-2 requirement 1617000.00.",
+          "Declared default fund size 2000000.00 is adequate against the worst-case Cover-2 requirement of 1617000.00.",
+          "This is an arithmetic sizing check over declared member exposures, declared stress-scenario loss rates, and a declared fund size. It proves nothing about whether those declarations match any external position or margin system, and it recommends no fund-size change."
+        ],
+        "rejected_inputs": [],
+        "scenario_count": 2,
+        "shortfall_display": "0.00",
+        "shortfall_minor_units": 0,
+        "worst_case_cover2_requirement_display": "1617000.00",
+        "worst_case_cover2_requirement_minor_units": 161700000,
+        "worst_case_scenario_id": "gfc_2008"
+      }
+    }
+  }
+},
+    {
+  "tool_id": "art-531-member-margin-call-lifecycle",
+  "tool_version": "1.0.0",
+  "display_name": "Member Margin Call Lifecycle",
+  "mcp_name": "attest_margin_call_lifecycle",
+  "mandate_type": "attestation_mandate",
+  "wave": 83,
+  "gpu": false,
+  "url": "https://ainumbers.co/chaingraph/art-531-member-margin-call-lifecycle.html",
+  "description": "Tracks a clearing member's margin call through its declared lifecycle states -- issued, confirmed, funded, or disputed and escalated as a contingency path -- against a caller-declared SLA window, and attests whether the call was funded within the CCP's own published timing rule. Checks that the declared state timestamps are chronologically consistent and, for a still-open call, whether it has already run past its SLA as of a caller-declared evaluation point. Emits an informational suggested gate route (end, escalate, or hold) without itself implementing any escalation workflow. Region-portable: currency and the SLA window are caller-declared inputs, with no CCP or jurisdiction hardcoded. Deterministic arithmetic only. Zero network, zero PII -- the member reference is an opaque caller-supplied string, never a raw identity.",
+  "input_schema_ref": "chaingraph/art-531-member-margin-call-lifecycle.html#manifest",
+  "consumes": [],
+  "feeds": [],
+  "status": "live",
+  "conformance_fixtures": true,
+  "compute_capability": "server",
+  "compute_images": [
+    {
+      "system": "sha256-source",
+      "image_id": "sha256:89fcc33e4e1a9e74da13cd69954a8b4d1717cf652e2159dd4c358b0ee59b436b",
+      "valid_from": "2026-07-10"
+    },
+    {
+      "system": "risc0",
+      "image_id": "sha256:a1a0bc89b5b1febaeda3519f6dbade0fa5ac16beeb143c4e1b01689573567bc6",
+      "valid_from": "2026-08-04"
+    }
+  ],
+  "export_capability": [
+    "json"
+  ],
+  "compute_proof_ready": "ready",
+  "compute_proof": {
+    "type": "ZkVmReceipt",
+    "system": "risc0",
+    "receiptFormat": "groth16-bn254",
+    "imageId": "sha256:a1a0bc89b5b1febaeda3519f6dbade0fa5ac16beeb143c4e1b01689573567bc6",
+    "seal": "AnRO68hFqu5KOK47Zv9JhUd7OkOV7wKpBX4HBBC5qH4IHM2MUe1OKEgftDXAgOmp5gQhIAYoWCqTN1V5UIZpdgHPPLTqDlOvhAKy6bKpivNJSuchF1aXqzuOcpjoNlc7CPbshVKI81OG85NN+8wwb+Lh9b/mzYhJ2ei0t3QZSN4mDCCT4wEk9LeHiKlzb4egeWhQ8pt3r3Bau1nmQrOLnyWr6hXqzhQRYmbTYhWF0K/haoZ7/ed715RabtPkF1qELSp4M6hCsqboxv4PqwygrBAK5ITSa3qBNyu33cAy0iwJVARXW26sMXI935mM0RY91OdSPzSHyPMm7YZo02WsLw==",
+    "journal": {
+      "chaingraph_version": "0.4.0",
+      "kernel_digest": "sha256:89fcc33e4e1a9e74da13cd69954a8b4d1717cf652e2159dd4c358b0ee59b436b",
+      "output": {
+        "amount_display": "2500000.00",
+        "amount_minor_units": 250000000,
+        "as_of": "2026-07-31T15:30:00Z",
+        "attested": true,
+        "call_id": "MC-0001",
+        "confirmed_at": "2026-07-31T14:10:00Z",
+        "currency": "USD",
+        "current_state": "funded",
+        "dispute_reason": null,
+        "disputed_at": null,
+        "elapsed_to_asof_minutes": 90,
+        "elapsed_to_funded_minutes": 45,
+        "escalated_at": null,
+        "funded_at": "2026-07-31T14:45:00Z",
+        "issued_at": "2026-07-31T14:00:00Z",
+        "member_ref": "MEMBER-REF-1042",
+        "met_within_sla": true,
+        "note": "Deterministic margin-call lifecycle attestation over caller-declared state timestamps and a caller-declared SLA window. It attests whether the call was funded within the CCP's own published timing rule -- issued -> confirmed -> funded, or issued -> disputed -> escalated -- rather than implementing any margin-call workflow itself.",
+        "overdue": false,
+        "rationale": [
+          "Call MC-0001 issued 2026-07-31T14:00:00Z, currently funded, declared SLA 60 minute(s).",
+          "Funded 45 minute(s) after issuance, within the 60-minute SLA.",
+          "This is a state/attestation fact over the timestamps supplied for this call. It does not itself implement any escalation workflow and the suggested gate route is informational only."
+        ],
+        "rejected_inputs": [],
+        "sequence_errors": [],
+        "sequence_valid": true,
+        "sla_minutes": 60,
+        "suggested_gate_route": "end"
+      }
+    }
+  }
+},
+    {
+  "tool_id": "art-532-client-porting-check",
+  "tool_version": "1.0.0",
+  "display_name": "Client Porting Check",
+  "mcp_name": "check_client_porting",
+  "mandate_type": "attestation_mandate",
+  "wave": 83,
+  "gpu": false,
+  "url": "https://ainumbers.co/chaingraph/art-532-client-porting-check.html",
+  "description": "Checks whether a client's cleared positions and collateral are portable to a backup clearing member under a caller-declared porting window, given caller-declared position/collateral completeness and backup-member consent status. Evaluates one caller-supplied snapshot: an empty position set, a missed porting window, and a not-yet-consented backup member each resolve to a distinct, defined not-portable outcome rather than a generic failure. A portable verdict is an evaluation of the supplied snapshot, never a guarantee that porting will in fact occur, and this tool does not itself move any position or collateral. Clause: PFMI Principle 14 (Segregation and Portability), 17 CFR 240.15c3-3a where a broker-dealer customer-protection structure is in view.",
+  "input_schema_ref": "chaingraph/art-532-client-porting-check.html#manifest",
+  "consumes": [],
+  "feeds": [],
+  "status": "live",
+  "conformance_fixtures": true,
+  "compute_capability": "server",
+  "compute_images": [
+    {
+      "system": "sha256-source",
+      "image_id": "sha256:6b3fddf02c09856bc6c1a58454eed2257d8a93d2e0a66af5721811ba315ba5f9",
+      "valid_from": "2026-07-10"
+    },
+    {
+      "system": "risc0",
+      "image_id": "sha256:a1a0bc89b5b1febaeda3519f6dbade0fa5ac16beeb143c4e1b01689573567bc6",
+      "valid_from": "2026-08-04"
+    }
+  ],
+  "export_capability": [
+    "json"
+  ],
+  "compute_proof_ready": "ready",
+  "compute_proof": {
+    "type": "ZkVmReceipt",
+    "system": "risc0",
+    "receiptFormat": "groth16-bn254",
+    "imageId": "sha256:a1a0bc89b5b1febaeda3519f6dbade0fa5ac16beeb143c4e1b01689573567bc6",
+    "seal": "Abzc4vzJSaqE1gNxpie8KRE8cMr4hMPSgi2o4YPKJOYLOj9B6gd0qRioIpKL4T59UWRv0nRQf5yADxrietqKFgC2b7JCtgGwgGnA8zUAmt55IBu0kNcXeDulHiE2/uFHCbCp9QNYMEDXOK7XC/9MJT6rpyF4aeBJsyKebbxXhicNgEYQYAnkjwIcDW3NC3Vl709bbDDe6+gDRNe4j182HRyDUb+SiLPVDs7DiXWllOh0Oq+GnZS0DX8ot2mVd0qZKGsiLB8SIMK3QDgKVP4v2O2uqhZXY0dUy4YzW7OJdpMUf1zVytTI7gk0bUojPL96zJKnnrrE0fKgr53EC2rsGA==",
+    "journal": {
+      "chaingraph_version": "0.4.0",
+      "kernel_digest": "sha256:6b3fddf02c09856bc6c1a58454eed2257d8a93d2e0a66af5721811ba315ba5f9",
+      "output": {
+        "backup_member_consent_status": "consented",
+        "backup_member_id": "BACKUP-MEMBER-77",
+        "citations": {
+          "customer_protection_segregation": {
+            "id": "17 CFR 240.15c3-3a",
+            "in_force_from": "1972-11-03",
+            "mapped_at": "2026-08-04",
+            "mapped_by": "AINumbers CCP-CORE-K-1",
+            "scheme": "cfr",
+            "uri": "https://www.ecfr.gov/current/title-17/chapter-II/part-240/subject-group-ECFR6c1b03927685662/section-240.15c3-3a"
+          },
+          "segregation_and_portability": {
+            "id": "PFMI Principle 14",
+            "in_force_from": "2012-04-16",
+            "mapped_at": "2026-08-04",
+            "mapped_by": "AINumbers CCP-CORE-K-1",
+            "scheme": "other",
+            "uri": "https://www.bis.org/cpmi/publ/d101a.pdf"
+          }
+        },
+        "client_ref": "CLIENT-A1",
+        "collateral": [
+          {
+            "amount_display": "6000000.00",
+            "amount_minor_units": 600000000,
+            "asset_type": "ust_bill",
+            "collateral_id": "COLL-1",
+            "complete": true,
+            "currency": "USD"
+          }
+        ],
+        "collateral_complete": true,
+        "collateral_count": 1,
+        "default_event_at": "2026-08-04T09:00:00Z",
+        "elapsed_minutes": 360,
+        "evaluated_at": "2026-08-04T15:00:00Z",
+        "note": "Deterministic client-porting check over a caller-declared snapshot of positions, collateral, backup-member consent status, and porting window. Single-run and stateless: this tool holds no records, runs on no schedule, and retains nothing. The verdict evaluates the supplied snapshot; it is not a guarantee of a porting outcome and it does not itself move any position or collateral.",
+        "porting_window_hours": 48,
+        "position_count": 2,
+        "positions": [
+          {
+            "complete": true,
+            "currency": "USD",
+            "notional_display": "50000000.00",
+            "notional_minor_units": 5000000000,
+            "position_id": "POS-1",
+            "product_type": "interest_rate_swap"
+          },
+          {
+            "complete": true,
+            "currency": "USD",
+            "notional_display": "12000000.00",
+            "notional_minor_units": 1200000000,
+            "position_id": "POS-2",
+            "product_type": "repo"
+          }
+        ],
+        "positions_complete": true,
+        "rationale": [
+          "Client reference CLIENT-A1; backup clearing member BACKUP-MEMBER-77, consent status consented (PFMI Principle 14).",
+          "2 position(s) declared totalling 62000000.00 notional, 0 not yet declared complete.",
+          "1 collateral component(s) declared totalling 6000000.00, 0 not yet declared complete.",
+          "Elapsed time since the default event is 360 minute(s) against a declared porting window of 2880 minute(s) (48 hour(s)).",
+          "On these figures the client's positions and collateral are complete, the backup member has consented, and the declared porting window has not elapsed (17 CFR 240.15c3-3a where a broker-dealer customer-protection structure is in view). This is an evaluation of the supplied snapshot, not a guarantee that porting will in fact occur."
+        ],
+        "rejected_inputs": [],
+        "total_collateral_display": "6000000.00",
+        "total_collateral_minor_units": 600000000,
+        "total_notional_display": "62000000.00",
+        "total_notional_minor_units": 6200000000,
+        "verdict": "portable",
+        "window_minutes": 2880,
+        "window_missed": false
+      }
+    }
+  }
+},
+    {
+  "tool_id": "art-533-mra-remediation-closure-register",
+  "tool_version": "1.0.0",
+  "display_name": "Consent-Order / MRA Remediation Closure Register",
+  "mcp_name": "register_mra_remediation_closure",
+  "mandate_type": "attestation_mandate",
+  "wave": 84,
+  "gpu": false,
+  "url": "https://ainumbers.co/chaingraph/art-533-mra-remediation-closure-register.html",
+  "description": "Registers a firm's consent-order Articles / MRA findings against its own remediation records: per-issue milestone completeness (closed with evidence attached), evidence validity (delivered evidence type matches what each milestone declares it calls for), and overdue/on-track timing against each issue's own committed date, reusing art-491-ro-remediation-closure's cutoff-vs-evaluated arithmetic unchanged. Emits SPEC.md section 27.4's closed decision enum at the per-issue and rollup level (auto_pass / review_required / escalate / hold) -- never itself judges that remediation was appropriate, timely, or sustainable; that determination is a named human's section 27 approval record. Not FATCA/CRS notification-closure -- see art-491 for that, unrelated regime.",
+  "input_schema_ref": "chaingraph/art-533-mra-remediation-closure-register.html#manifest",
+  "consumes": [],
+  "feeds": [],
+  "status": "live",
+  "conformance_fixtures": true,
+  "compute_capability": "server",
+  "compute_images": [
+    {
+      "system": "sha256-source",
+      "image_id": "sha256:ccad868f81e724e7e30de59a9c955f7ba8c69d690fe04fbc6b3984f0e9352f5a",
+      "valid_from": "2026-07-10"
+    },
+    {
+      "system": "risc0",
+      "image_id": "sha256:a1a0bc89b5b1febaeda3519f6dbade0fa5ac16beeb143c4e1b01689573567bc6",
+      "valid_from": "2026-08-04"
+    }
+  ],
+  "compute_proof_ready": "ready",
+  "deferred_reason": "New shard; awaiting the async GPU proving queue (S18 steady-state).",
+  "export_capability": [
+    "json"
+  ],
+  "compute_proof": {
+    "type": "ZkVmReceipt",
+    "system": "risc0",
+    "receiptFormat": "groth16-bn254",
+    "imageId": "sha256:a1a0bc89b5b1febaeda3519f6dbade0fa5ac16beeb143c4e1b01689573567bc6",
+    "seal": "D1+6vvaQ7CSvZRI6u12L3s5SbkY9K9ZpoAoKsQQIKLYpGWWDcob2tKrWGtM0557f/r/H83pnSYDIxaKFMtm1ryeWWSendaVgMn3KjyikbNKefsXD7mV7H5C5uUjMNaymJS8sim8Q96XRk34Vf9i1bnsFno/UkhWYRv0cp0kxsDMhe9ihy9PvJijUYKFTlg6HUC+RNFqrpwwGvm6Wc26nFyVOJOtFx7ESPnVNFZdL1aax8W+CeLXAQVsVTUXvt8ApEau3TdDNLtsy1wfdzqARtZBq8GS7ugF1B2BvflVO16gU76e+nE6e2Kdm3nZvjMdp5xQHnfk851APSi96xI8Cnw==",
+    "journal": {
+      "chaingraph_version": "0.4.0",
+      "kernel_digest": "sha256:ccad868f81e724e7e30de59a9c955f7ba8c69d690fe04fbc6b3984f0e9352f5a",
+      "output": {
+        "closed_count": 1,
+        "decision": {
+          "execution_state": "ran",
+          "gate_policy": "auto_pass",
+          "reason": null
+        },
+        "determinations": [
+          {
+            "closure_status": "closed",
+            "commitment_text": "Remediate model-risk validation backlog per MRA Article 3.",
+            "committed_date": "2026-06-01T00:00:00.000Z",
+            "decision": "auto_pass",
+            "ha_note": "Not yet an approval record. A human reviewer/approver MAY later create a separate, signed approval record over this artifact's execution_hash + this issue_id; this kernel does not fabricate or reserve a mutable slot for that record inside its own hashed output.",
+            "issue_id": "sha256:6afb36ec72484939831daff6370395f9f4fe87bb0891ebe1dd644488acf8d738",
+            "milestones": [
+              {
+                "closed_at": "2026-04-01T00:00:00.000Z",
+                "description": "Independent validation of the top-10 models complete",
+                "evidence": [
+                  {
+                    "evidence_id": "EVID-001",
+                    "evidence_type": "validation_report"
+                  }
+                ],
+                "milestone_id": "MS-1",
+                "milestone_status": "closed_valid_evidence",
+                "required_evidence_type": "validation_report"
+              },
+              {
+                "closed_at": "2026-04-15T00:00:00.000Z",
+                "description": "Remediation plan approved by model risk committee",
+                "evidence": [
+                  {
+                    "evidence_id": "EVID-002",
+                    "evidence_type": "committee_minutes"
+                  }
+                ],
+                "milestone_id": "MS-2",
+                "milestone_status": "closed_valid_evidence",
+                "required_evidence_type": "committee_minutes"
+              }
+            ],
+            "milestones_total": 2,
+            "milestones_valid_count": 2,
+            "overdue_days": 0,
+            "root_cause_identified": true
+          }
+        ],
+        "evaluated_at": "2026-05-01T00:00:00.000Z",
+        "issue_count": 1,
+        "note": "Deterministic consent-order/MRA remediation-closure register over a caller-declared issue/commitment set, milestone list, and remediation-status feed, evaluated against each issue's own committed_date. Reuses the art-491-ro-remediation-closure cutoff-vs-evaluated arithmetic unchanged, retargeted from a certification-period cut-off to a per-issue committed_date. This tool tracks closure and computes a routing decision only; it never itself determines that remediation was appropriate, timely, or sustainable -- that judgment is a named human's §27 approval record.",
+        "open_count": 0,
+        "overdue_count": 0,
+        "overdue_grace_days": 30,
+        "register_id": "DEMO-MRA-2026Q2",
+        "rejected_inputs": []
+      }
+    }
+  }
+},
+    {
+  "tool_id": "art-534-aml-lookback-disposition-rollup",
+  "tool_version": "1.0.0",
+  "display_name": "AML Lookback Disposition Rollup",
+  "mcp_name": "roll_up_aml_lookback_disposition",
+  "mandate_type": "compliance_control",
+  "wave": 83,
+  "gpu": false,
+  "url": "https://ainumbers.co/chaingraph/art-534-aml-lookback-disposition-rollup.html",
+  "description": "Closes the loop art-470 (lookback-completeness-reconciler) and art-471 (disposition-sampling-frame) leave open. Art-470 reconciles that the RE-SCREENING extract was complete; art-471 builds a deterministic sample of the resulting dispositions for independent review; neither checks that a disposition was actually recorded for every sampled item, that a filed or no-SAR determination carries a rationale, or that the sample frame's declared population size still reconciles to the completeness population. This node rolls those three axes up: disposition-coverage against the sample frame's own declared size, disposition-rationale-presence on every filed/no-SAR determination, and a population-to-sample tie-out between art-470's and art-471's declared population sizes. Emits a closed §27.4 gate-policy value: full coverage with rationale present on every filed/no-SAR item yields auto_pass; any missing disposition evaluated as of a caller-declared date on or after the lookback's declared close date yields escalate; a population tie-out failure or an explicit caller-declared sampling-frame discrepancy yields hold; a disposition present without its required rationale yields review_required. Customer id and alert id cross this kernel already salted -- callers supply a sha256-salted@1 commitment string, never the plaintext identifier -- and the kernel never sees, requests, or computes over the plaintext. Deterministic rollup arithmetic only. Zero network, zero PII.",
+  "input_schema_ref": "chaingraph/art-534-aml-lookback-disposition-rollup.html#manifest",
+  "consumes": [],
+  "feeds": [],
+  "status": "live",
+  "conformance_fixtures": true,
+  "compute_capability": "server",
+  "compute_images": [
+    {
+      "system": "sha256-source",
+      "image_id": "sha256:2263d143a5cbc54da93c78d3d8fb7d028dd161856f55cf8007414c81efad7778",
+      "valid_from": "2026-08-04"
+    },
+    {
+      "system": "risc0",
+      "image_id": "sha256:a1a0bc89b5b1febaeda3519f6dbade0fa5ac16beeb143c4e1b01689573567bc6",
+      "valid_from": "2026-08-04"
+    }
+  ],
+  "compute_proof_ready": "ready",
+  "deferred_reason": "New shard; awaiting the async GPU proving queue (S18 steady-state).",
+  "export_capability": [
+    "json"
+  ],
+  "compute_proof": {
+    "type": "ZkVmReceipt",
+    "system": "risc0",
+    "receiptFormat": "groth16-bn254",
+    "imageId": "sha256:a1a0bc89b5b1febaeda3519f6dbade0fa5ac16beeb143c4e1b01689573567bc6",
+    "seal": "MBXLHXUpyxhonmwnPcpAcLLi7kKmEdFUhkzNCkxzi58OO4bgvGhMhbJdKslyW1UNiKzhXQXqTRx9agsSirLR0QC7F4jLXiSRimKK9XhHYOddoIvrd9wUM0IMGEd2ts4WBVVVCpYTv02+7KYIQr4DwXlIcWaNbMs9sViaX2VQsBIpPk1XDmtNmF/pbWp3S1RfGU1Jg8EsECJfEvcchDiuXhaNTIFVjKcqGudPyFkUyg+Lf8du3C7F1QJ/ShCVKgpHBOUmRs0N5m2TKoOghLDgMZ1ogXJVLP1+3e9KVjI+YvgsNdJXEVWEZFU+bkDgAaUU3Ggagxhl/enOOtmEsKqkcQ==",
+    "journal": {
+      "chaingraph_version": "0.4.0",
+      "kernel_digest": "sha256:2263d143a5cbc54da93c78d3d8fb7d028dd161856f55cf8007414c81efad7778",
+      "output": {
+        "as_of": "2026-07-15",
+        "decision": {
+          "execution_state": "ran",
+          "gate_policy": "auto_pass",
+          "reason": null
+        },
+        "disposition_coverage_pct": 100,
+        "items": [
+          {
+            "disposition": "no_sar",
+            "has_rationale_reference": true,
+            "identity_ok": true,
+            "index": 0,
+            "rationale_ok": true,
+            "rationale_required": true
+          },
+          {
+            "disposition": "sar_filed",
+            "has_rationale_reference": true,
+            "identity_ok": true,
+            "index": 1,
+            "rationale_ok": true,
+            "rationale_required": true
+          }
+        ],
+        "items_missing_rationale": [],
+        "lookback_close_date": "2026-06-30",
+        "lookback_id": "LB-2026-CONSENT-ORDER-7",
+        "missing_disposition_count": 0,
+        "population_size": 500,
+        "population_tie_out_holds": true,
+        "rationale_presence_pct": 100,
+        "rejected_inputs": [],
+        "sample_frame_population_size": 500,
+        "sample_frame_size": 2,
+        "sampled_item_count": 2,
+        "sampling_frame_discrepancy_flag": false
+      }
+    }
+  }
+},
+    {
+  "tool_id": "art-535-fdic370-output-file-validator",
+  "tool_version": "1.0.0",
+  "display_name": "FDIC Part 370 Output-File Validator",
+  "mcp_name": "validate_fdic370_output_file",
+  "mandate_type": "compliance_control",
+  "wave": 84,
+  "gpu": false,
+  "url": "https://ainumbers.co/chaingraph/art-535-fdic370-output-file-validator.html",
+  "description": "Validates the shape of the institution's own 12 CFR part 370 deposit-insurance-coverage output file (the section 370.10 coverage summary report structure) against its published record layout -- required field presence, malformed count/amount values, and a repeated ownership right and capacity code -- and ties the file's declared totals to a supplied art-507-determine-deposit-insurance-coverage recompute. A file-shape defect and a totals mismatch are two separate, never-merged findings: a shape problem is checked first and routes to review_required regardless of how the totals compare, and only a clean-shaped file with a totals disagreement routes to escalate. Ownership right and capacity codes stay opaque strings, exactly as in art-507; no table of part 330 ownership categories is held here. Without a supplied art-507 result there is nothing to reconcile against, so the node reports did_not_run naming that precondition rather than assuming a tie-out. Emits a section 27.4 gate-policy value plus a sibling execution_state at a predictable output_payload pointer. Not a filing and not deposit insurance advice.",
+  "input_schema_ref": "chaingraph/art-535-fdic370-output-file-validator.html#manifest",
+  "consumes": [],
+  "feeds": [],
+  "status": "live",
+  "conformance_fixtures": true,
+  "compute_capability": "server",
+  "compute_images": [
+    {
+      "system": "sha256-source",
+      "image_id": "sha256:10cb82f1a665d074500af23e512217234c39f79ad7f298e6f12a74eab4e2eeae",
+      "valid_from": "2026-07-10"
+    },
+    {
+      "system": "risc0",
+      "image_id": "sha256:a1a0bc89b5b1febaeda3519f6dbade0fa5ac16beeb143c4e1b01689573567bc6",
+      "valid_from": "2026-08-04"
+    }
+  ],
+  "compute_proof_ready": "ready",
+  "deferred_reason": "New shard; awaiting the async GPU proving queue (S18 steady-state).",
+  "export_capability": [
+    "json"
+  ],
+  "compute_proof": {
+    "type": "ZkVmReceipt",
+    "system": "risc0",
+    "receiptFormat": "groth16-bn254",
+    "imageId": "sha256:a1a0bc89b5b1febaeda3519f6dbade0fa5ac16beeb143c4e1b01689573567bc6",
+    "seal": "H0Nol5gOt/9bOw6acFYE4c7Y20DcpHmANJUmTZ1eB/MhHK7qvugiSFIs88OlfOZ6lvAlze68alvTivsxFaxdOycuWQphkyP+jeL2lfzGzgsb1er8EyWqGfBp/2cs3ZLTLre0O1M+tPoSlAdJ3K32/rR2x6J2dBaT7zPs5kqTV4kmSOSyEdfaRR2s+Y2HwBz9mA4zu55Lau5EdWScWl/jnwNRGr+9VszSC55PsfuoXRXsUniTQWURcYatgP0OtCtlDmQxSSlxQMvUeltzCLDv7+XvP9zhHcMAVO+oZgXoIhcpg5hQ5ubDaKJZsKzAD3khvB806xZmoogEikPB57OziQ==",
+    "journal": {
+      "chaingraph_version": "0.4.0",
+      "kernel_digest": "sha256:10cb82f1a665d074500af23e512217234c39f79ad7f298e6f12a74eab4e2eeae",
+      "output": {
+        "art507_result": {
+          "accounts_with_uninsured_deposits_count": 2,
+          "fully_insured_account_count": 2,
+          "insured_minor_units": 46500000,
+          "uninsured_minor_units": 10000000
+        },
+        "art507_supplied": true,
+        "as_of_date": "2026-06-30",
+        "boundary": "This validates the shape of a supplied 12 CFR part 370 output file against the section 370.10 record layout and ties the file's declared totals to a supplied art-507-determine-deposit-insurance-coverage recompute. It is not a filing, it does not produce the section 370.10 submission format, it carries no claim that the FDIC would accept the file, and it offers no deposit insurance advice. Whether coverage is correct for any particular depositor is decided under 12 CFR part 330 by the institution and its counsel, never here.",
+        "conforming_row_count": 2,
+        "decision": {
+          "execution_state": "ran",
+          "gate_policy": "auto_pass",
+          "reason": null
+        },
+        "file_structure_errors": [],
+        "file_totals": {
+          "accounts_with_uninsured_deposits_count": 2,
+          "deposit_account_count": 4,
+          "distinct_account_holder_count": 3,
+          "fully_insured_account_count": 2,
+          "insured_minor_units": 46500000,
+          "uninsured_minor_units": 10000000
+        },
+        "institution_ref": "IDI-SYNTH-0001",
+        "mismatches": [],
+        "note": "Deterministic 12 CFR part 370 output-file shape validator and totals reconciler. Single-run and stateless: it holds no records, runs on no schedule, and retains nothing. It validates the file's own declared rows against the section 370.10 record layout and ties the file's totals to a supplied art-507 recompute, reporting a shape defect and a totals mismatch as two separate, never-merged findings. It holds no part 330 rule table and is not a filing.",
+        "ownership_code_handling": "Ownership right and capacity codes on each file row are opaque strings, used only to detect a code repeated across rows. Nothing in this computation branches on the text of a code, and no table of part 330 ownership categories or allowance rules is held here.",
+        "rationale": [
+          "Part 370 output file validation for institution reference IDI-SYNTH-0001 as of 2026-06-30, over 2 supplied file rows.",
+          "Every supplied row conforms to the section 370.10 coverage summary report layout: 2 rows carried every required field and no ownership right and capacity code repeated.",
+          "The file's totals tie out exactly against the supplied art-507 recompute across every tied field.",
+          "Ownership right and capacity codes on each file row are opaque strings, used only to detect a code repeated across rows. Nothing in this computation branches on the text of a code, and no table of part 330 ownership categories or allowance rules is held here.",
+          "Small-buyer caveat carried forward from art-507: the population this reconciliation currently covers is zero institutions in the revenue-kanban sense. This validator is specified and shipped anyway because it is cheap and completes art-507 into the certification evidence pack.",
+          "This validates the shape of a supplied 12 CFR part 370 output file against the section 370.10 record layout and ties the file's declared totals to a supplied art-507-determine-deposit-insurance-coverage recompute. It is not a filing, it does not produce the section 370.10 submission format, it carries no claim that the FDIC would accept the file, and it offers no deposit insurance advice. Whether coverage is correct for any particular depositor is decided under 12 CFR part 330 by the institution and its counsel, never here."
+        ],
+        "small_buyer_caveat": "Small-buyer caveat carried forward from art-507: the population this reconciliation currently covers is zero institutions in the revenue-kanban sense. This validator is specified and shipped anyway because it is cheap and completes art-507 into the certification evidence pack.",
+        "supplied_row_count": 2,
+        "totals_mismatch": false
+      }
+    }
+  }
+},
+    {
+  "tool_id": "art-536-reg-w-affiliate-transaction-tester",
+  "tool_version": "1.0.0",
+  "display_name": "Reg W Affiliate Transaction Tester",
+  "mcp_name": "test_reg_w_affiliate_transactions",
+  "mandate_type": "compliance_control",
+  "wave": 82,
+  "gpu": false,
+  "url": "https://ainumbers.co/chaingraph/art-536-reg-w-affiliate-transaction-tester.html",
+  "description": "Tests each caller-declared covered transaction with an affiliate against the Regulation W (12 CFR 223) quantitative limits: the 10% single-affiliate and 20% aggregate-affiliate capital limits, and a collateral-coverage percentage requirement on covered credit transactions. Capital base, both limit percentages, and the collateral-coverage percentage all arrive as caller-declared policy_parameters, cited with a required policy_vintage -- never hardcoded, since 12 CFR 223 figures version on their own schedule. A market-terms flag (the qualitative 12 CFR 223.51 'on terms substantially the same' test) is a caller-declared boolean the node records for the artifact only; it is never a judgment this node makes. Either quantitative limit breached escalates; a collateral shortfall with no capital breach routes to review_required; both limits satisfied and full collateral coverage auto-passes. No policy_parameters or no declared transactions yields a did-not-run execution state rather than a guessed decision.",
+  "input_schema_ref": "chaingraph/art-536-reg-w-affiliate-transaction-tester.html#manifest",
+  "consumes": [],
+  "feeds": [],
+  "status": "live",
+  "conformance_fixtures": true,
+  "compute_capability": "server",
+  "compute_images": [
+    {
+      "system": "sha256-source",
+      "image_id": "sha256:97f5aa7c56c8afd1021f3e175b556a66dfbbf632cee7c0f9f88cf0752eae17a4",
+      "valid_from": "2026-07-10"
+    },
+    {
+      "system": "risc0",
+      "image_id": "sha256:a1a0bc89b5b1febaeda3519f6dbade0fa5ac16beeb143c4e1b01689573567bc6",
+      "valid_from": "2026-08-04"
+    }
+  ],
+  "compute_proof_ready": "ready",
+  "deferred_reason": "New shard; awaiting the async GPU proving queue (S18 steady-state).",
+  "export_capability": [
+    "json"
+  ],
+  "compute_proof": {
+    "type": "ZkVmReceipt",
+    "system": "risc0",
+    "receiptFormat": "groth16-bn254",
+    "imageId": "sha256:a1a0bc89b5b1febaeda3519f6dbade0fa5ac16beeb143c4e1b01689573567bc6",
+    "seal": "B2QNcaq8DVYzQKpn72t45SHcZCiqlJNIfmu0KvtWTP8OoGJPFt8LhpguvLCfO+hJX0E7YWjSx6/8Wo4JvSCCFQMriTCDEtR1P/eEQGa3DVnxgfXbYcn+nE0bWSzPvNTqETf885yELufcqBHAvQWn8BmX0QkZEl7FFBP3HlhxN9YCTpSJ3NfB5mjkle745ukyKC+NfbZcyfdFbc+0f1lNXgiIbi8H1kduvmU8vsLEN16q9Az5WuR2hBTEfv+Xl92oDSfKwWPLAE8uIJFd79Z49c5Nm/h/Om89mmGURgjZAdcfCGLMB+fcYhYQX3MtYVkXzynDLChhAa2SJEr+42fCMw==",
+    "journal": {
+      "chaingraph_version": "0.4.0",
+      "kernel_digest": "sha256:97f5aa7c56c8afd1021f3e175b556a66dfbbf632cee7c0f9f88cf0752eae17a4",
+      "output": {
+        "aggregate_test": {
+          "breach": false,
+          "exposure": 500000,
+          "limit_amount": 2000000
+        },
+        "collateral_tests": [
+          {
+            "affiliate_id": "affiliate-alpha-holdings",
+            "amount": 300000,
+            "collateral_value": 400000,
+            "required_collateral": 390000,
+            "required_collateral_pct": 130,
+            "shortfall": false,
+            "transaction_id": "txn-0001"
+          }
+        ],
+        "decision": "auto_pass",
+        "execution_state": "ran",
+        "market_terms_declarations": [
+          {
+            "affiliate_id": "affiliate-alpha-holdings",
+            "market_terms_substantially_same": true,
+            "transaction_id": "txn-0001"
+          },
+          {
+            "affiliate_id": "affiliate-alpha-holdings",
+            "market_terms_substantially_same": true,
+            "transaction_id": "txn-0002"
+          }
+        ],
+        "policy_vintage": "12 CFR 223, eCFR as of 2026-01-01",
+        "reason": null,
+        "single_affiliate_tests": [
+          {
+            "affiliate_id": "affiliate-alpha-holdings",
+            "breach": false,
+            "exposure": 500000,
+            "limit_amount": 1000000
+          }
+        ]
+      }
+    }
+  }
+},
+    {
+  "tool_id": "art-537-qfc-recordkeeping-file-validator",
+  "tool_version": "1.0.0",
+  "display_name": "QFC Part 371 Recordkeeping File Validator",
+  "mcp_name": "validate_qfc_recordkeeping_file",
+  "mandate_type": "compliance_control",
+  "wave": 84,
+  "gpu": false,
+  "url": "https://ainumbers.co/chaingraph/art-537-qfc-recordkeeping-file-validator.html",
+  "description": "Validates the shape of the institution's own 12 CFR part 371 qualified-financial-contract recordkeeping file -- the position, counterparty, and collateral record set the appendix to part 371 requires -- against its published record layout, and ties the file's declared totals to a supplied control-total summary. A file-shape defect and a totals mismatch are two separate, never-merged findings: a shape problem is checked first and routes to review_required regardless of how the totals compare, and only a clean-shaped file with a totals disagreement routes to escalate. Position identifier and counterparty identifier are enumerable low-entropy identifiers salted before this node ever sees them; QFC type and currency code stay opaque strings, with no table of contract-type or currency codes held here. Without a supplied control-total summary there is nothing to reconcile against, so the node reports did_not_run naming that precondition rather than assuming a tie-out. Emits a section 27.4 gate-policy value plus a sibling execution_state at a predictable output_payload pointer. Not a filing and not recordkeeping-adequacy advice.",
+  "input_schema_ref": "chaingraph/art-537-qfc-recordkeeping-file-validator.html#manifest",
+  "consumes": [],
+  "feeds": [],
+  "status": "live",
+  "conformance_fixtures": true,
+  "compute_capability": "server",
+  "compute_images": [
+    {
+      "system": "sha256-source",
+      "image_id": "sha256:c7d0608caf559ede9bf75c63cee44bcc4cda97cc043ea6c689707e0e956709b9",
+      "valid_from": "2026-07-10"
+    },
+    {
+      "system": "risc0",
+      "image_id": "sha256:a1a0bc89b5b1febaeda3519f6dbade0fa5ac16beeb143c4e1b01689573567bc6",
+      "valid_from": "2026-08-04"
+    }
+  ],
+  "compute_proof_ready": "ready",
+  "deferred_reason": "New shard; awaiting the async GPU proving queue (S18 steady-state).",
+  "export_capability": [
+    "json"
+  ],
+  "compute_proof": {
+    "type": "ZkVmReceipt",
+    "system": "risc0",
+    "receiptFormat": "groth16-bn254",
+    "imageId": "sha256:a1a0bc89b5b1febaeda3519f6dbade0fa5ac16beeb143c4e1b01689573567bc6",
+    "seal": "ALwv8daTwiz9Q+yChPGf9JUpseJ2CXSlnZHNkiURzoQHYIXH2s+1cnqwAqKLDxjbc+oyieLxngOek8qsPXa3GifnGOnoQNwxHtgK6Dv71cGp0evotTVw+vfYDfxEUkuSFRfnB0GbJnGXYHzVVMKq0viwnDU8sq9KP0UOZ0GSL0Qpj/cV/2hyae79B8+QHzi5Y+fuWKbibj+RXoky6g8oSQMMv6BwwVWpOWbaRQlHfMbEX4CjQBLMrXwaOmcpjY6BKpQl+U7dOrhuyEGH1W6Vn9YZKTmb6kFk+itGxBN7a64oB4tK/eOaURHKyN8SCtngAD47BBoNrQxgSLFihCjPqA==",
+    "journal": {
+      "chaingraph_version": "0.4.0",
+      "kernel_digest": "sha256:c7d0608caf559ede9bf75c63cee44bcc4cda97cc043ea6c689707e0e956709b9",
+      "output": {
+        "as_of_date": "2026-06-30",
+        "boundary": "This validates the shape of a supplied 12 CFR part 371 qualified-financial-contract recordkeeping file against the appendix's published record layout and ties the file's declared totals to a supplied control-total summary. It is not a filing, it does not produce the part 371 appendix submission format, it carries no claim that the FDIC or the institution's primary regulator would accept the file, and it offers no advice on whether a particular contract is a covered QFC. That determination is made under 12 CFR part 371 by the institution and its counsel, never here.",
+        "conforming_row_count": 2,
+        "control_totals": {
+          "collateral_minor_units": 46000000,
+          "distinct_counterparty_count": 2,
+          "notional_minor_units": 700000000,
+          "position_count": 2
+        },
+        "control_totals_supplied": true,
+        "decision": {
+          "execution_state": "ran",
+          "gate_policy": "auto_pass",
+          "reason": null
+        },
+        "file_structure_errors": [],
+        "file_totals": {
+          "collateral_minor_units": 46000000,
+          "distinct_counterparty_count": 2,
+          "notional_minor_units": 700000000,
+          "position_count": 2
+        },
+        "identifier_salting": "Position identifier and counterparty identifier are enumerable low-entropy identifiers within the meaning of SPEC.md section 25.1. Both arrive at this kernel already salted (sha256-salted@1); the kernel uses each only to detect a repeated position or count distinct counterparties, and no raw identifier or salt ever enters this computation.",
+        "institution_ref": "IDI-SYNTH-0001",
+        "mismatches": [],
+        "note": "Deterministic 12 CFR part 371 recordkeeping-file shape validator and totals reconciler. Single-run and stateless: it holds no records, runs on no schedule, and retains nothing. It validates the file's own declared rows against the part 371 appendix record layout and ties the file's totals to a supplied control-total summary, reporting a shape defect and a totals mismatch as two separate, never-merged findings. It holds no QFC-type or currency-code rule table and is not a filing.",
+        "qfc_code_handling": "QFC type and currency code on each file row are opaque strings. Nothing in this computation branches on the text of either, and no table of part 371 QFC contract-type codes or currency codes is held here.",
+        "rationale": [
+          "Part 371 recordkeeping file validation for institution reference IDI-SYNTH-0001 as of 2026-06-30, over 2 supplied file rows.",
+          "Every supplied row conforms to the part 371 appendix record layout: 2 rows carried every required field and no position identifier repeated.",
+          "The file's totals tie out exactly against the supplied control-total summary across every tied field.",
+          "QFC type and currency code on each file row are opaque strings. Nothing in this computation branches on the text of either, and no table of part 371 QFC contract-type codes or currency codes is held here.",
+          "Position identifier and counterparty identifier are enumerable low-entropy identifiers within the meaning of SPEC.md section 25.1. Both arrive at this kernel already salted (sha256-salted@1); the kernel uses each only to detect a repeated position or count distinct counterparties, and no raw identifier or salt ever enters this computation.",
+          "This validates the shape of a supplied 12 CFR part 371 qualified-financial-contract recordkeeping file against the appendix's published record layout and ties the file's declared totals to a supplied control-total summary. It is not a filing, it does not produce the part 371 appendix submission format, it carries no claim that the FDIC or the institution's primary regulator would accept the file, and it offers no advice on whether a particular contract is a covered QFC. That determination is made under 12 CFR part 371 by the institution and its counsel, never here."
+        ],
+        "supplied_row_count": 2,
+        "totals_mismatch": false
+      }
+    }
+  }
+},
+    {
+  "tool_id": "art-538-custody-segregation-ratio",
+  "tool_version": "1.0.0",
+  "display_name": "Custody Segregation Ratio",
+  "mcp_name": "compute_custody_segregation_ratio",
+  "mandate_type": "compliance_control",
+  "wave": 84,
+  "gpu": false,
+  "url": "https://ainumbers.co/chaingraph/art-538-custody-segregation-ratio.html",
+  "description": "Generic, jurisdiction-neutral custody-segregation check: segregated_custody_assets_musd / customer_claims_musd, per asset class and rolled up. FULLY_SEGREGATED at or above 1.0, UNDER_SEGREGATED below it, OVER_SEGREGATED above an optional configurable ceiling. A zero-claims line resolves segregation_ratio null and status NO_CLAIMS_OUTSTANDING -- never a division artifact. Aggregate totals only (no per-customer or per-wallet line item). SEC Rule 15c3-3 possession-or-control (17 CFR 240.15c3-3(b)) is named as one crosswalk-annex instance among possibly several -- the arithmetic does not depend on that citation, and the SEC 15c3-3 Exhibit A reserve formula stays a distinct, unedited node (art-396).",
+  "input_schema_ref": "chaingraph/art-538-custody-segregation-ratio.html#manifest",
+  "consumes": [],
+  "feeds": [],
+  "status": "live",
+  "conformance_fixtures": true,
+  "compute_capability": "server",
+  "compute_images": [
+    {
+      "system": "sha256-source",
+      "image_id": "sha256:8791e2f24a2de92cbb8f32606cebc9fae0e42650fa20eecd57129ecd6c2fd8a8",
+      "valid_from": "2026-07-10"
+    },
+    {
+      "system": "risc0",
+      "image_id": "sha256:a1a0bc89b5b1febaeda3519f6dbade0fa5ac16beeb143c4e1b01689573567bc6",
+      "valid_from": "2026-08-04"
+    }
+  ],
+  "compute_proof_ready": "ready",
+  "deferred_reason": "New shard; awaiting the async GPU proving queue (S18 steady-state).",
+  "export_capability": [
+    "json"
+  ],
+  "compute_proof": {
+    "type": "ZkVmReceipt",
+    "system": "risc0",
+    "receiptFormat": "groth16-bn254",
+    "imageId": "sha256:a1a0bc89b5b1febaeda3519f6dbade0fa5ac16beeb143c4e1b01689573567bc6",
+    "seal": "Gm0C/o7WGaYLe6H/o1VTTingSrmwNY9KgZa/Vy0bl6wk9lEi743VanUTyyZ91AlcJhJsLtxLeQTfRV7x1GUhAxwjAP+DMUmbXcAOZAVmT06TqBSAuFedCZq+kaTb7nkoIDuRnsizAUf5laYFzWxq9O/wm+WzEfQFOYIirvWiAq8RY6QEtksRRujG+1IfkYFtzIsYuZVdQxrLPknlQKrI/xS8GXyHMLkPgNkFnlJK0d1ffaifocsZe5BQBLjnY5doKZch+gKUmwsEQFjrs0jIUphwHVPbbbsDKW10sKWIzPUkBANCPt5c9omwIYCDGaMBfhWSlZmNIvuEVjPAAj5RqA==",
+    "journal": {
+      "chaingraph_version": "0.4.0",
+      "kernel_digest": "sha256:8791e2f24a2de92cbb8f32606cebc9fae0e42650fa20eecd57129ecd6c2fd8a8",
+      "output": {
+        "custody_location_breakdown": {
+          "cold_storage_multisig": 25,
+          "qualified_custodian_bank": 90
+        },
+        "formula": "segregation_ratio = segregated_custody_assets_musd / customer_claims_musd",
+        "line_items": [
+          {
+            "asset_class": "BTC",
+            "customer_claims_musd": 20,
+            "segregated_custody_assets_musd": 25,
+            "segregation_ratio": 1.25,
+            "status": "FULLY_SEGREGATED"
+          },
+          {
+            "asset_class": "cash",
+            "customer_claims_musd": 50,
+            "segregated_custody_assets_musd": 60,
+            "segregation_ratio": 1.2,
+            "status": "FULLY_SEGREGATED"
+          },
+          {
+            "asset_class": "securities",
+            "customer_claims_musd": 30,
+            "segregated_custody_assets_musd": 30,
+            "segregation_ratio": 1,
+            "status": "FULLY_SEGREGATED"
+          }
+        ],
+        "note": "Generic, jurisdiction-neutral segregation check over caller-supplied aggregate totals only (no per-customer or per-wallet line item). Attests the computation over the inputs supplied, not an audit of their source or a determination of regulatory compliance.",
+        "over_segregation_ceiling": null,
+        "segregation_ratio": 1.15,
+        "status": "FULLY_SEGREGATED",
+        "total_claims_musd": 100,
+        "total_segregated_musd": 115
+      }
+    }
+  }
+},
+    {
+  "tool_id": "art-539-asset-liability-coverage",
+  "tool_version": "1.0.0",
+  "display_name": "Asset/Liability Coverage",
+  "mcp_name": "compute_asset_liability_coverage",
+  "mandate_type": "compliance_control",
+  "wave": 84,
+  "gpu": false,
+  "url": "https://ainumbers.co/chaingraph/art-539-asset-liability-coverage.html",
+  "description": "General, jurisdiction-neutral solvency check: total_assets_musd / total_liabilities_musd, plus surplus_shortfall_musd = total_assets_musd - total_liabilities_musd, per asset-class and liability-class breakdown, rolled up. COVERED at or above 1.0, SHORTFALL below it. A zero-liabilities line resolves coverage_ratio null and status NO_LIABILITIES_OUTSTANDING -- never a division artifact. Aggregate totals only (no per-customer or per-wallet line item). No single normative anchor exists for exchange-level asset/liability coverage (unlike bank capital-adequacy ratios elsewhere in the suite) -- stated explicitly rather than inventing a crosswalk citation.",
+  "input_schema_ref": "chaingraph/art-539-asset-liability-coverage.html#manifest",
+  "consumes": [],
+  "feeds": [],
+  "status": "live",
+  "conformance_fixtures": true,
+  "compute_capability": "server",
+  "compute_images": [
+    {
+      "system": "sha256-source",
+      "image_id": "sha256:a80285b47c468275f244648e19b225f0e740ed20c7f8925e658514529f807919",
+      "valid_from": "2026-07-10"
+    },
+    {
+      "system": "risc0",
+      "image_id": "sha256:a1a0bc89b5b1febaeda3519f6dbade0fa5ac16beeb143c4e1b01689573567bc6",
+      "valid_from": "2026-08-04"
+    }
+  ],
+  "compute_proof_ready": "ready",
+  "deferred_reason": "New shard; awaiting the async GPU proving queue (S18 steady-state).",
+  "export_capability": [
+    "json"
+  ],
+  "compute_proof": {
+    "type": "ZkVmReceipt",
+    "system": "risc0",
+    "receiptFormat": "groth16-bn254",
+    "imageId": "sha256:a1a0bc89b5b1febaeda3519f6dbade0fa5ac16beeb143c4e1b01689573567bc6",
+    "seal": "DP/ZcwIfZhayCSPjQ8DtJtjksLUBbELvQYI1gwIFPYIl95xZm5Gx+3awqo3AcHIXRhY152kx3IH1jmvjyv4uKQUZDruC+ASWk1uzwNtNzNwr86Up/UVo6O+/bccTtFzRGkevu34GKju60YV7GmRVLzVmTSBozh8q/PF+WeXGCXYXCJRh6CWY56aFpVxaX1lFhpH7gSomb3JrQppd0t409wapofjtuTjBnl86TcsSJTXNSgxLsfg4aqs1E1BAQlXQHwTcX9Ue/M/lFwRjEUyrGN4wfrlWvTyhO1hBGwxwH3AIrewzsS+5TlN3tFlU/pRcGKsYno3qeNlyieCLE+Sj0Q==",
+    "journal": {
+      "chaingraph_version": "0.4.0",
+      "kernel_digest": "sha256:a80285b47c468275f244648e19b225f0e740ed20c7f8925e658514529f807919",
+      "output": {
+        "asset_breakdown": [
+          {
+            "amount_musd": 60,
+            "asset_class": "cash"
+          },
+          {
+            "amount_musd": 25,
+            "asset_class": "digital_assets"
+          },
+          {
+            "amount_musd": 30,
+            "asset_class": "securities"
+          }
+        ],
+        "coverage_ratio": 1.9167,
+        "formula": "coverage_ratio = total_assets_musd / total_liabilities_musd; surplus_shortfall_musd = total_assets_musd - total_liabilities_musd",
+        "liability_breakdown": [
+          {
+            "amount_musd": 20,
+            "liability_class": "accrued_liabilities"
+          },
+          {
+            "amount_musd": 40,
+            "liability_class": "payables"
+          }
+        ],
+        "note": "General solvency-shape computation over caller-supplied aggregate totals only (no per-customer or per-wallet line item, no single normative regime anchor). Attests the computation over the inputs supplied, not an audit of their source or a determination of regulatory compliance.",
+        "status": "COVERED",
+        "surplus_shortfall_musd": 55,
+        "total_assets_musd": 115,
+        "total_liabilities_musd": 60
+      }
+    }
+  }
+},
+    {
+  "tool_id": "art-540-por-liabilities-composer",
+  "tool_version": "1.0.0",
+  "display_name": "PoR Liabilities Composer",
+  "mcp_name": "compute_por_liabilities_composite",
+  "mandate_type": "compliance_mandate",
+  "wave": 84,
+  "gpu": false,
+  "url": "https://ainumbers.co/chaingraph/art-540-por-liabilities-composer.html",
+  "description": "Composes a caller-restated art-280-reserve-proof-verifier inclusion result (soft-dep: inclusion_verified, computed_root.sum) with a caller-supplied aggregate reported_total_liabilities_musd figure. Computes reserve_to_liability_ratio and a composite_determination in {INCLUSION_AND_LIABILITIES_CONSISTENT, INCLUSION_FAILED, LIABILITIES_UNDERCOVERED, LIABILITIES_INPUT_MISSING}. Carries forward art-280's not_proven list plus its own: the liabilities figure is caller-asserted, not independently audited -- this node verifies internal consistency, it does not audit the liabilities source. Composes only; does not edit art-280's own kernel.",
+  "input_schema_ref": "chaingraph/art-540-por-liabilities-composer.html#manifest",
+  "consumes": [
+    "art-280-reserve-proof-verifier"
+  ],
+  "feeds": [],
+  "status": "live",
+  "conformance_fixtures": true,
+  "compute_capability": "server",
+  "compute_images": [
+    {
+      "system": "sha256-source",
+      "image_id": "sha256:563cc673f35c6b1c66e152e11a07460a4cfa55b51028b1dcea2c42733e1b10c5",
+      "valid_from": "2026-08-04"
+    },
+    {
+      "system": "risc0",
+      "image_id": "sha256:a1a0bc89b5b1febaeda3519f6dbade0fa5ac16beeb143c4e1b01689573567bc6",
+      "valid_from": "2026-08-04"
+    }
+  ],
+  "compute_proof_ready": "ready",
+  "deferred_reason": "New shard; awaiting the async GPU proving queue (S18 steady-state).",
+  "export_capability": [
+    "json"
+  ],
+  "compute_proof": {
+    "type": "ZkVmReceipt",
+    "system": "risc0",
+    "receiptFormat": "groth16-bn254",
+    "imageId": "sha256:a1a0bc89b5b1febaeda3519f6dbade0fa5ac16beeb143c4e1b01689573567bc6",
+    "seal": "EnrKZ33EgGDHZgWzIich24QeGBcN7NTpKrwwZJV7KEwbwyJMnphhxjAWqPDGkDGwEFqdRqsrQo6+K7USxYqyzhM/7YXKeFsH7a5lxWmIahXHagTJux6rYhfAXhto94cvCqR/qhLPMDOMOnHsoOqXVqZ8Upd6RgMD6/QUj4PlgrUCu+whFHJSe6o6SV+OCVF6JjYaeZc1O9Oqh22TVevIMwCqtlwCWNi81PG0jzK3pGJURDoEPGiSzIMXBBZvpW1yGxp2yejGmN37LO4M23rtu7GQ5TBEum7uUDIrsVRBWO8ahAnFlUuiwXyANGmpuSMnoxwz4q2EWGmWCb3a8C+WxQ==",
+    "journal": {
+      "chaingraph_version": "0.4.0",
+      "kernel_digest": "sha256:563cc673f35c6b1c66e152e11a07460a4cfa55b51028b1dcea2c42733e1b10c5",
+      "output": {
+        "composite_determination": "INCLUSION_AND_LIABILITIES_CONSISTENT",
+        "computed_root": {
+          "sum": 120
+        },
+        "formula": "reserve_to_liability_ratio = computed_root.sum / reported_total_liabilities_musd",
+        "inclusion_verified": true,
+        "liabilities_attestation_source": "issuer_attested_balance_sheet",
+        "not_proven": [
+          {
+            "detail": "Only the audited customer set is provable from a single-leaf inclusion proof. An issuer could omit accounts from the tree entirely and this proof cannot detect the omission.",
+            "item": "Total liabilities completeness"
+          },
+          {
+            "detail": "Pledges, rehypothecation, or liens against reserve assets are not visible in a Merkle-sum inclusion proof.",
+            "item": "Off-balance-sheet encumbrances"
+          },
+          {
+            "detail": "This is a point-in-time snapshot at attestation time, not a continuous or real-time solvency guarantee.",
+            "item": "Continuous solvency"
+          },
+          {
+            "detail": "This tool performs no audit and carries no PCAOB or other audit-firm opinion; it is a cryptographic inclusion check only.",
+            "item": "PCAOB audit opinion"
+          },
+          {
+            "detail": "reported_total_liabilities_musd is caller-asserted, not independently audited -- this node verifies internal consistency between a PoR inclusion result and a claimed liabilities total, it does not audit the liabilities source.",
+            "item": "Liabilities figure provenance"
+          }
+        ],
+        "note": "Composes with art-280-reserve-proof-verifier (soft-dep, not_proven carried forward unchanged plus its own). Verifies internal consistency between a PoR inclusion result and a claimed liabilities total; does not audit the liabilities source. Voluntary industry practice (Summa-report-structure lineage), not a codified regime requirement as of this writing.",
+        "por_input_supplied": true,
+        "regulatory_framework": "Voluntary proof-of-reserves-plus-liabilities attestation practice; not a codified regime requirement as of this writing.",
+        "reported_total_liabilities_musd": 100,
+        "reserve_to_liability_ratio": 1.2
+      }
+    }
+  }
+},
+    {
+  "tool_id": "art-541-best-execution-recompute",
+  "tool_version": "1.0.0",
+  "display_name": "Best-Execution NBBO Recompute",
+  "mcp_name": "recompute_best_execution",
+  "mandate_type": "analytics_mandate",
+  "wave": 84,
+  "gpu": false,
+  "url": "https://ainumbers.co/chaingraph/art-541-best-execution-recompute.html",
+  "description": "Recomputes, per supplied fill, price improvement in basis points against the NBBO at time of execution -- price_improvement_bps = (nbbo_ask - execution_price) / nbbo_ask * 10000 for buys, (execution_price - nbbo_bid) / nbbo_bid * 10000 for sells -- and whether each fill cleared at-or-better than the NBBO. Aggregates pct_at_or_better, avg_price_improvement_bps, and fill_count over a bounded fill set (capped at 5,000 fills). No customer/order identifiers accepted. Reg NMS best-execution obligations and FINRA Rule 5310 are the US crosswalk entry; the core recompute is the generic shape any best-execution regime ultimately checks. Attests the computation over caller-supplied inputs only, not an audit of those inputs or a determination of regulatory compliance.",
+  "input_schema_ref": "chaingraph/art-541-best-execution-recompute.html#manifest",
+  "consumes": [],
+  "feeds": [],
+  "status": "live",
+  "conformance_fixtures": true,
+  "compute_capability": "server",
+  "compute_images": [
+    {
+      "system": "sha256-source",
+      "image_id": "sha256:3fe3f8f91aee95249b6c690837eac8476621b70688946d1417dda593e4c1915c",
+      "valid_from": "2026-08-04"
+    },
+    {
+      "system": "risc0",
+      "image_id": "sha256:a1a0bc89b5b1febaeda3519f6dbade0fa5ac16beeb143c4e1b01689573567bc6",
+      "valid_from": "2026-08-04"
+    }
+  ],
+  "export_capability": [
+    "json"
+  ],
+  "compute_proof_ready": "ready",
+  "deferred_reason": "New shard; awaiting the async GPU proving queue (S18 steady-state).",
+  "compute_proof": {
+    "type": "ZkVmReceipt",
+    "system": "risc0",
+    "receiptFormat": "groth16-bn254",
+    "imageId": "sha256:a1a0bc89b5b1febaeda3519f6dbade0fa5ac16beeb143c4e1b01689573567bc6",
+    "seal": "G3An5dhfWQm/bvjGa3LfApDUt09IZTiH+my5nAxTypotZZeJ+GQYZ+3b70X13UhqJxJH28HF39XmwElOS0nBSyiqSUQq98xuJb8bmyJe5SIy2UtKj8JPpjJM8LCaevKmHRPkuIM+ThZuMUPxa9fiTxJAMUUzvgBq27FEJ+95IiEFhtQIj8bpLKsE5Occu3Bqh6cu9ZHo6fX7BD5037TXrCYpoTshiv1WvhDw+Wsfz89aUb7QMJbaepFbk6vG5kqaJJF2YrBhFuEOa89qftP++7+92cYkEqh8uEg14DmdWMwYIjZd3/Sh1yHoagIWbPBrgpwcQM0QEf6jISh/oWpA/g==",
+    "journal": {
+      "chaingraph_version": "0.4.0",
+      "kernel_digest": "sha256:3fe3f8f91aee95249b6c690837eac8476621b70688946d1417dda593e4c1915c",
+      "output": {
+        "avg_price_improvement_bps": 29.93,
+        "fill_count": 2,
+        "fill_set_ceiling": 5000,
+        "fill_set_truncated": false,
+        "fills": [
+          {
+            "at_or_better": true,
+            "execution_price": 10.02,
+            "index": 0,
+            "nbbo_ask": 10.05,
+            "nbbo_bid": 10,
+            "price_improvement_bps": 29.85,
+            "quantity": 100,
+            "rejection_reason": null,
+            "side": "buy"
+          },
+          {
+            "at_or_better": true,
+            "execution_price": 10.03,
+            "index": 1,
+            "nbbo_ask": 10.05,
+            "nbbo_bid": 10,
+            "price_improvement_bps": 30,
+            "quantity": 200,
+            "rejection_reason": null,
+            "side": "sell"
+          }
+        ],
+        "note": "Deterministic per-fill recompute of price improvement against the caller-supplied NBBO at execution time. Does not verify the source of the execution-price or NBBO figures, does not fetch live market data, and is not a determination of regulatory compliance.",
+        "pct_at_or_better": 100,
+        "regulatory_basis": "Reg NMS best-execution obligations (17 CFR 242) and FINRA Rule 5310; the price-improvement-vs-NBBO recompute is the generic shape any best-execution regime ultimately checks.",
+        "rejected_count": 0,
+        "rules_version": "best-execution-nbbo-recompute-2026.1",
+        "scored_count": 2
+      }
+    }
+  }
+},
+    {
+  "tool_id": "art-543-csdr-penalty-recompute",
+  "tool_version": "1.0.0",
+  "display_name": "CSDR Penalty Recompute (Caller Reference Price)",
+  "mcp_name": "recompute_csdr_penalty",
+  "mandate_type": "compliance_mandate",
+  "wave": 85,
+  "gpu": false,
+  "url": "https://ainumbers.co/chaingraph/art-543-csdr-penalty-recompute.html",
+  "description": "Per-ISIN/day CSDR cash-penalty recompute over a caller-declared open-fails set: selects the RTS asset-class/penalty-type daily rate (CSDR-RTS-2025-10, ESMA Final Report 13 Oct 2025), applies fail duration to a caller-supplied reference_price and quantity, credits partial settlement proportionally, and sums forward penalty exposure across the fails set. Fixes art-78-csdr-penalty-calculator's reachability defect -- art-78 priced off notional with no shipped pack able to feed it a differing reference_price; this node's schema instead requires a caller-supplied reference_price per fail. art-78 keeps its own identity and chain wiring unchanged. Supports an optional OCG Standard section 25 ocg-private-input@1 declaration (sha256-salted@1) for the ISIN and counterparty_id per fail, since a small ISIN/counterparty universe is enumerable by table lookup.",
+  "input_schema_ref": "chaingraph/art-543-csdr-penalty-recompute.html#manifest",
+  "consumes": [],
+  "feeds": [],
+  "status": "live",
+  "conformance_fixtures": true,
+  "compute_capability": "server",
+  "compute_images": [
+    {
+      "system": "sha256-source",
+      "image_id": "sha256:b2b0ccaae79b05facefac2e7c9a2294abd353bd1978a163471dc45d28a8ed371",
+      "valid_from": "2026-07-10"
+    },
+    {
+      "system": "risc0",
+      "image_id": "sha256:a1a0bc89b5b1febaeda3519f6dbade0fa5ac16beeb143c4e1b01689573567bc6",
+      "valid_from": "2026-08-04"
+    }
+  ],
+  "compute_proof_ready": "ready",
+  "deferred_reason": "New shard; awaiting the async GPU proving queue (S18 steady-state).",
+  "export_capability": [
+    "json",
+    "xlsx",
+    "pdf"
+  ],
+  "compute_proof": {
+    "type": "ZkVmReceipt",
+    "system": "risc0",
+    "receiptFormat": "groth16-bn254",
+    "imageId": "sha256:a1a0bc89b5b1febaeda3519f6dbade0fa5ac16beeb143c4e1b01689573567bc6",
+    "seal": "BP/Zc2UnWB1zmksW4WN3GlbdBlfIlbr/5Fe5YZeyFoYkxeEFa77nWWaNLNBGEG99PLZMQGuA0RrMQOGgvt6wJiZV23sLwjbR282JwGaNNY3Z0w5GIP7ghumgHQYRdjheDED3t3TIp2YNnYwFYalesLpAcF0mN3f5CMz+3MN5xlQtn4Kr3ZKI/ereg+pXdxFsEPSGlzdoB+C4uXVRaznCWBGvEXnOGZ6coFhn0vAYoEktiJQR3lQ+XeDctUlEfCzIHBaLFWeCfSMiosZDbU6/Q/eh0WNbqC96qvAVfEO9EvsoA1xIPKkTvqmURedITMu4rfgbjc+cNJKOLNPlGnev7w==",
+    "journal": {
+      "chaingraph_version": "0.4.0",
+      "kernel_digest": "sha256:b2b0ccaae79b05facefac2e7c9a2294abd353bd1978a163471dc45d28a8ed371",
+      "output": {
+        "decision": {
+          "execution_state": "ran",
+          "reason": null
+        },
+        "determinations": [
+          {
+            "asset_class": "equity",
+            "counterparty_id": null,
+            "daily_rate_bps": 1,
+            "fail_days": 3,
+            "fail_id": "FAIL-1",
+            "gross_penalty": 30,
+            "isin": "DE000TEST001",
+            "isin_private": false,
+            "partial_credit": 0,
+            "partial_settled_pct": 0,
+            "penalty_amount": 30,
+            "penalty_type": "sefp",
+            "quantity": 1000,
+            "reference_price": 100
+          }
+        ],
+        "fail_count": 1,
+        "note": "DECISION-SUPPORT DRAFT -- not a regulatory penalty notice. Deterministic per-ISIN/day cash-penalty recompute against a versioned RTS rate schedule; verify against current CSDR Delegated Reg. (RTS) (EU) 2018/1229 as amended and ESMA RTS (Final Report 13 Oct 2025). Partial-settlement credit applies proportionally. reference_price is caller-supplied per fail -- never derived from notional (fixes art-78-csdr-penalty-calculator's reachability defect; art-78 itself is unchanged).",
+        "rate_table_version": "CSDR-RTS-2025-10",
+        "recompute_id": "DEMO-CSDR-2026Q3",
+        "rejected_inputs": [],
+        "total_penalty_exposure": 30
+      }
+    }
+  }
+},
+    {
+  "tool_id": "art-544-slate-report-validator",
+  "tool_version": "1.0.0",
+  "display_name": "SLATE Securities-Loan Report Field Validator",
+  "mcp_name": "validate_slate_report_fields",
+  "mandate_type": "compliance_mandate",
+  "wave": 85,
+  "gpu": false,
+  "url": "https://ainumbers.co/chaingraph/art-544-slate-report-validator.html",
+  "description": "Field-level structural validator for a covered-securities-loan report record against the FINRA Rule 6500-series field spec (loan terms, rate, collateral type, counterparty) that FINRA Rule 6540 -- FINRA's implementation of SEC Rule 10c-1a securities-lending transparency reporting (SLATE) -- requires. Honestly scoped in the art-397 pattern: this schema-validates structurally (required fields present, enum membership, numeric/date parseability) and is explicitly NOT a full SLATE conformance engine -- no cross-record consistency check, no regulatory-timeliness check. Validate-never-transmit: never calls fetch, never calls an RNSA, never simulates submission -- readiness is not submission. Reporting compliance date is 2028-09-28 per the SEC's 2025-12-03 exemptive order (post-remand of NAPFM v. SEC, 5th Cir., 2025-08-25) -- re-verify against a then-current SEC.gov release before treating that date as load-bearing.",
+  "input_schema_ref": "chaingraph/art-544-slate-report-validator.html#manifest",
+  "consumes": [],
+  "feeds": [],
+  "status": "live",
+  "conformance_fixtures": true,
+  "compute_capability": "server",
+  "compute_images": [
+    {
+      "system": "sha256-source",
+      "image_id": "sha256:f3131b76454e25a6937e8ccf56a7df819601565117e2e365621eef97e5aa1d9b",
+      "valid_from": "2026-07-10"
+    },
+    {
+      "system": "risc0",
+      "image_id": "sha256:a1a0bc89b5b1febaeda3519f6dbade0fa5ac16beeb143c4e1b01689573567bc6",
+      "valid_from": "2026-08-04"
+    }
+  ],
+  "compute_proof_ready": "ready",
+  "deferred_reason": "New shard; awaiting the async GPU proving queue (S18 steady-state).",
+  "export_capability": [
+    "json"
+  ],
+  "compute_proof": {
+    "type": "ZkVmReceipt",
+    "system": "risc0",
+    "receiptFormat": "groth16-bn254",
+    "imageId": "sha256:a1a0bc89b5b1febaeda3519f6dbade0fa5ac16beeb143c4e1b01689573567bc6",
+    "seal": "F4KAlTMmqjexSIPvVYVQQ9yZZT8ZqHUvWU8yoLafVu4sNMjfzno0p+g+SZKkTkicWfKNfkAvDFf3res3VaqSwg1HZro3UvFnuzJA5BnvjQzZutClTrr/1ymF1PiGmY0/GhvM43qxURTB7YrT1jRs6GR9EQvqVJm+8Av+56Ipyn4dr0E0u3GCaNSk9711ydh5OljZYu6i3p+oPZaKFFVoziUu4yTmvhu/srzE333C0gaXfltWsl5YlkK985js2c/6AXgrwlNBYl/sjTFL8tnUzdpImi97JF3CWG9+WA853Mkr2/KBqToh4jemJE+Rad622hqJLPMOv9yhwMTMcaExZw==",
+    "journal": {
+      "chaingraph_version": "0.4.0",
+      "kernel_digest": "sha256:f3131b76454e25a6937e8ccf56a7df819601565117e2e365621eef97e5aa1d9b",
+      "output": {
+        "compliance_date_note": "SEC exemptive order (2025-12-03), issued after the Fifth Circuit remand-without-vacatur in NAPFM v. SEC (2025-08-25), sets the Rule 10c-1a reporting compliance date at 2028-09-28 -- verify against a then-current SEC.gov release before treating this date as load-bearing.",
+        "field_spec_version": "finra-rule-6540-6500-series-field-spec-2026.1",
+        "regulatory_basis": "FINRA Rule 6540 (Securities Lending and Transparency Engine reporting, implementing SEC Rule 10c-1a); Rule 6500-series field definitions (loan terms, rate, collateral type, counterparty).",
+        "reports_checked": 1,
+        "reports_valid": 1,
+        "scope_note": "Field-level structural validator only -- schema-validates report records against the FINRA Rule 6500-series field spec. This is explicitly NOT a full SLATE conformance engine: no cross-record consistency check, no regulatory-timeliness check. Validate-never-transmit: this tool never calls fetch, never calls an RNSA, and never simulates submission -- readiness is not submission.",
+        "violations": []
+      }
+    }
+  }
+},
+    {
+  "tool_id": "art-545-slate-readiness-diagnostic",
+  "tool_version": "1.0.0",
+  "display_name": "SLATE Reporting Readiness Diagnostic",
+  "mcp_name": "run_slate_reporting_fit",
+  "mandate_type": "compliance_mandate",
+  "wave": 85,
+  "gpu": false,
+  "url": "https://ainumbers.co/chaingraph/art-545-slate-readiness-diagnostic.html",
+  "description": "Score a caller-declared covered-securities-loan reporting pipeline against the FINRA Rule 6540 obligation checklist (SEC 10c-1a implementation, SLATE reporting) across five dimensions: reporting-agent registration, same-day capture of new/modified/terminated loans, Rule 6500-series field-spec mapping, a unique loan-identifier scheme, and recordkeeping retention. Returns an A-F grade and a gap list. Honestly scoped in the art-397 pattern: a declared-state checklist diagnostic, not a conformance engine, and not a substitute for art-544-slate-report-validator's field-level structural validation of an actual report record. Validate-never-transmit: never calls fetch, never calls an RNSA, never simulates submission -- readiness is not submission. Second stage of the slate-reporting-readiness chain, receiving from art-544.",
+  "input_schema_ref": "chaingraph/art-545-slate-readiness-diagnostic.html#manifest",
+  "consumes": [
+    "art-544-slate-report-validator"
+  ],
+  "feeds": [],
+  "status": "live",
+  "conformance_fixtures": true,
+  "compute_capability": "server",
+  "compute_images": [
+    {
+      "system": "sha256-source",
+      "image_id": "sha256:438a35717911f7a15663987b2b41c45d5b90062da799f02954b3d5f959981c95",
+      "valid_from": "2026-07-10"
+    },
+    {
+      "system": "risc0",
+      "image_id": "sha256:a1a0bc89b5b1febaeda3519f6dbade0fa5ac16beeb143c4e1b01689573567bc6",
+      "valid_from": "2026-08-04"
+    }
+  ],
+  "compute_proof_ready": "ready",
+  "deferred_reason": "New shard; awaiting the async GPU proving queue (S18 steady-state).",
+  "export_capability": [
+    "json",
+    "pdf",
+    "vc"
+  ],
+  "compute_proof": {
+    "type": "ZkVmReceipt",
+    "system": "risc0",
+    "receiptFormat": "groth16-bn254",
+    "imageId": "sha256:a1a0bc89b5b1febaeda3519f6dbade0fa5ac16beeb143c4e1b01689573567bc6",
+    "seal": "Auwp6GPaIKfu/EYpFS5cQz+9KOhkOwNkgS0bxvcaSP4byAJHXg5up4avfHHOJ6U3ut4anKH2ygC5DaAuX7iGBChmRXw4gU68W5LB5XbhpN5bmjVu3lH2dGm73EYj7W7wE68L1XlSNqEwlRvl2SAHuHhFWSXtxif+zRMAtzdlqbQGEN3MJSo8bny2w9cfBPTMtdtgH+fU9PImEgHtRyoswhzLktC12nKx0ahzBVP4ignw5x8sxXG/u6s0wC84bh1aIT8b3x6LO9RCKNtaDfJr/U2yONYagKdRrREPhObMDLUtvz0wqAMV5HTFSdNwWg/xeB3ZieeBTl4r85Qp48Syng==",
+    "journal": {
+      "chaingraph_version": "0.4.0",
+      "kernel_digest": "sha256:438a35717911f7a15663987b2b41c45d5b90062da799f02954b3d5f959981c95",
+      "output": {
+        "compliance_date_note": "SEC exemptive order (2025-12-03), issued after the Fifth Circuit remand-without-vacatur in NAPFM v. SEC (2025-08-25), sets the Rule 10c-1a reporting compliance date at 2028-09-28 -- verify against a then-current SEC.gov release before treating this date as load-bearing.",
+        "dimensions_passed": 5,
+        "gaps": [],
+        "grade": "A",
+        "obligation_checklist_version": "finra-rule-6540-obligation-checklist-2026.1",
+        "ready": true,
+        "regulatory_basis": "FINRA Rule 6540 (Securities Lending and Transparency Engine reporting, implementing SEC Rule 10c-1a) obligation checklist.",
+        "scope_note": "Declared-state readiness diagnostic only -- scores a caller-declared reporting pipeline against the Rule 6540 obligation checklist. This is explicitly NOT a full SLATE conformance engine and does not replace art-544-slate-report-validator field-level structural validation of an actual report record. Validate-never-transmit: this tool never calls fetch, never calls an RNSA, and never simulates submission -- readiness is not submission."
+      }
+    }
+  }
+},
+    {
+  "tool_id": "art-546-dtcc-ca-iso20022-validator",
+  "tool_version": "1.0.0",
+  "display_name": "DTC Corporate Actions ISO 20022 Message Validator",
+  "mcp_name": "validate_dtcc_ca_iso20022_message",
+  "mandate_type": "compliance_mandate",
+  "wave": 84,
+  "gpu": false,
+  "url": "https://ainumbers.co/chaingraph/art-546-dtcc-ca-iso20022-validator.html",
+  "description": "Validates the structural message-shape of a single DTC corporate-action event message (notification / election / allocation) against the ISO 20022 field set migrated under DTCC Important Notice 23890-26 (legacy corporate-actions message format decommission -- a DTCC operator mandate, not a regulatory deadline: PSE testing 2026-01, Test Facility 2026-03, PROD testing 2026-07, legacy decommission Q3 2027). Checks required-field presence per message function, ISO 20022 CAEV event-type code, CUSIP format, DTC participant number, and date formats. Message-shape validation only -- does NOT compute entitlement, dividend, rights, or split amounts; that half is corporate-action entitlement recompute (art-547), which chains from this node's output.",
+  "input_schema_ref": "chaingraph/art-546-dtcc-ca-iso20022-validator.html#manifest",
+  "consumes": [],
+  "feeds": [
+    "art-547-corporate-action-entitlement-recompute"
+  ],
+  "status": "live",
+  "conformance_fixtures": true,
+  "compute_capability": "server",
+  "compute_images": [
+    {
+      "system": "sha256-source",
+      "image_id": "sha256:d75e8ba52e5757fe63fdf1f096b7135b083a72c97193a57fd6f9a3593a36e432",
+      "valid_from": "2026-07-10"
+    },
+    {
+      "system": "risc0",
+      "image_id": "sha256:a1a0bc89b5b1febaeda3519f6dbade0fa5ac16beeb143c4e1b01689573567bc6",
+      "valid_from": "2026-08-04"
+    }
+  ],
+  "compute_proof_ready": "ready",
+  "deferred_reason": "New shard; awaiting the async GPU proving queue (S18 steady-state).",
+  "export_capability": [
+    "json"
+  ],
+  "compute_proof": {
+    "type": "ZkVmReceipt",
+    "system": "risc0",
+    "receiptFormat": "groth16-bn254",
+    "imageId": "sha256:a1a0bc89b5b1febaeda3519f6dbade0fa5ac16beeb143c4e1b01689573567bc6",
+    "seal": "EeWNTQEGBxe5nWVczj8t/N6F0/TvoB70VnEGoRxcHBIZ/O5h+1xPribZszRXcgM7lPiSOWbsEuR+rjQnGHWFWycdwPDCM8dk++pATO/b8++odXGP3bXSsZiAk+/jVjIeInkR6C/aHnRQjACEZ3iaHY77cO+C5z+YTcXvS0loqCYZ2odXMVFueeZyfF7lRy+YOcu/x1jg4FBQZ669UKWKbi5kLcDNGDV0Ms7a/vDeTSTJ2bndGqci89paPrVZTVbDElrbNtieSvyxwFkgCYJd9AyLckmL3Gi3HtnGFMZYbSkTsok+kI/Pty05AN0PHZaDAHq8PMby0gspCvZkMiuXzQ==",
+    "journal": {
+      "chaingraph_version": "0.4.0",
+      "kernel_digest": "sha256:d75e8ba52e5757fe63fdf1f096b7135b083a72c97193a57fd6f9a3593a36e432",
+      "output": {
+        "disambiguation": "validate_dtcc_ca_iso20022_message checks structural message-shape validity (required fields, CAEV code, CUSIP/date formats) of a single DTC corporate-action event message (notification / election / allocation). It does NOT compute entitlement, dividend, rights, or split amounts -- for deterministic entitlement math per record date use corporate-action entitlement recompute (art-547), which chains from this node's output.",
+        "dtcc_operator_mandate_basis": "DTCC Important Notice 23890-26 -- legacy corporate-actions message format decommission (DTCC operator mandate: PSE testing 2026-01, Test Facility 2026-03, PROD testing 2026-07, legacy decommission Q3 2027). This is a market-infrastructure migration deadline set by DTCC as CSD operator, NOT a regulatory or statutory deadline.",
+        "error_count": 0,
+        "event_type": "DVCA",
+        "message_function": "NOTIFICATION",
+        "not_legal_advice": "Not legal, tax, or accounting advice. Message-shape validation output requires review by qualified operations staff before use in production DTC CA processing.",
+        "pii_note": "ZERO PII: CUSIP, DTC participant number, event codes, and dates only. No beneficial-owner name, account, or personal identifier enters this kernel -- use synthetic reference IDs.",
+        "readiness_pct": 100,
+        "reference_id": "CA-OPAQUE-2027-0001",
+        "structure_valid": true,
+        "table_source": "DTCC Important Notice 23890-26 (legacy corporate-actions message format decommission -- DTCC operator mandate); ISO 20022 seev.031/seev.033/seev.035 corporate-action message family field set",
+        "table_version": "DTC-CA-ISO20022-FIELDSET-23890-26-V1",
+        "violations": []
+      }
+    }
+  }
+},
+    {
+  "tool_id": "art-547-corporate-action-entitlement-recompute",
+  "tool_version": "1.0.0",
+  "display_name": "Corporate Action Entitlement Recompute",
+  "mcp_name": "recompute_corporate_action_entitlement",
+  "mandate_type": "compliance_mandate",
+  "wave": 84,
+  "gpu": false,
+  "url": "https://ainumbers.co/chaingraph/art-547-corporate-action-entitlement-recompute.html",
+  "description": "Deterministic dividend/rights/split entitlement math per record date for a single position, under the ISO 20022 corporate-action event field set migrated by DTCC Important Notice 23890-26 (legacy corporate-actions message format decommission -- a DTCC operator mandate, not a regulatory deadline: PSE testing 2026-01, Test Facility 2026-03, PROD testing 2026-07, legacy decommission Q3 2027). entitlement = position_qty x ratio_or_rate, with rounding/proration rules per corporate-action type -- all caller-supplied, no security-master lookup, no market-data fetch. Entitlement math only -- does NOT validate DTC ISO 20022 message shape; that half is the message-shape validator (art-546), which chains into this node's input.",
+  "input_schema_ref": "chaingraph/art-547-corporate-action-entitlement-recompute.html#manifest",
+  "consumes": [
+    "art-546-dtcc-ca-iso20022-validator"
+  ],
+  "feeds": [],
+  "status": "live",
+  "conformance_fixtures": true,
+  "compute_capability": "server",
+  "compute_images": [
+    {
+      "system": "sha256-source",
+      "image_id": "sha256:426290aa93af154925c8418526e40ce47f1ccab54eb19febae4774c50041c1b3",
+      "valid_from": "2026-07-10"
+    },
+    {
+      "system": "risc0",
+      "image_id": "sha256:a1a0bc89b5b1febaeda3519f6dbade0fa5ac16beeb143c4e1b01689573567bc6",
+      "valid_from": "2026-08-04"
+    }
+  ],
+  "compute_proof_ready": "ready",
+  "deferred_reason": "New shard; awaiting the async GPU proving queue (S18 steady-state).",
+  "export_capability": [
+    "json"
+  ],
+  "compute_proof": {
+    "type": "ZkVmReceipt",
+    "system": "risc0",
+    "receiptFormat": "groth16-bn254",
+    "imageId": "sha256:a1a0bc89b5b1febaeda3519f6dbade0fa5ac16beeb143c4e1b01689573567bc6",
+    "seal": "FBkX+HmnjOVqP1i5qM4St+daF4HqbLKHOl9jahdczxUUthzGbIURm/xcxifBJHkHs7snSOBaQm6Op7KNUuNxFhMlZfZ1p+xPqdRjxVk3+slx56cGkAJtyjsTT1wVV4k3Bz2M8N7zforVioXTPuwfhIWdGh26De2F1NYInE6G6coQ7Z+rCe0aUsBsMtib8PhDszA5e/bUcShypbQ7W3exEiXbZJEvIaJY7UWdtnOVk5s0+0W8S6WIThIR0DUWPuiTCMv87qMN/zOWH5gkinKeXRLJ4XETgocu1oWgMFY8nvwdRXWLFtNyNFNf9xlgeFDLwKQlV21isNurFra6i8WAZg==",
+    "journal": {
+      "chaingraph_version": "0.4.0",
+      "kernel_digest": "sha256:426290aa93af154925c8418526e40ce47f1ccab54eb19febae4774c50041c1b3",
+      "output": {
+        "cash_entitlement": 504,
+        "corporate_action_type": "DVCA",
+        "disambiguation": "recompute_corporate_action_entitlement computes deterministic dividend/rights/split entitlement (entitlement = position_qty x ratio_or_rate, with per-type rounding/proration) for a single position at a record date. It does NOT validate DTC ISO 20022 message shape -- for structural message-shape validation use the DTC CA ISO 20022 message validator (art-546), which chains into this node's input. Fractional-share residue is FLAGGED, never priced -- this kernel fetches no market data and performs no security-master lookup.",
+        "dtcc_operator_mandate_basis": "DTCC Important Notice 23890-26 -- legacy corporate-actions message format decommission (DTCC operator mandate: PSE testing 2026-01, Test Facility 2026-03, PROD testing 2026-07, legacy decommission Q3 2027). This is a market-infrastructure migration deadline set by DTCC as CSD operator, NOT a regulatory or statutory deadline.",
+        "entitlement_computed": true,
+        "entitlement_mode": "CASH",
+        "error_count": 0,
+        "fractional_shares": null,
+        "fractional_shares_present": false,
+        "not_legal_advice": "Not legal, tax, or accounting advice. Entitlement recompute output requires review by qualified operations staff before use in production DTC CA processing.",
+        "pii_note": "ZERO PII: position quantity, rate/ratio, corporate-action type, and record date only. No beneficial-owner name, account, or personal identifier enters this kernel -- use synthetic reference IDs.",
+        "reference_id": "CA-OPAQUE-2027-0001",
+        "table_source": "DTCC Important Notice 23890-26 (legacy corporate-actions message format decommission -- DTCC operator mandate); ISO 20022 seev.031/seev.033/seev.035 corporate-action message family field set",
+        "table_version": "DTC-CA-ISO20022-FIELDSET-23890-26-V1",
+        "violations": [],
+        "whole_shares": null
+      }
+    }
+  }
+},
+    {
+  "tool_id": "art-548-vop-readiness-diagnostic",
+  "tool_version": "1.0.0",
+  "display_name": "VoP Readiness Diagnostic",
+  "mcp_name": "run_vop_readiness_diagnostic",
+  "mandate_type": "vop_readiness_attestation",
+  "wave": 52,
+  "gpu": false,
+  "url": "https://ainumbers.co/chaingraph/art-548-vop-readiness-diagnostic.html",
+  "description": "EU Instant Payments Regulation Verification-of-Payee (VoP) readiness/consistency diagnostic. Deterministically classifies a caller-declared match_score against caller-declared thresholds into match, close_match, no_match, or not_verifiable, then cross-checks that classification against the caller-declared psp_vop_response_code -- flagging, never silently correcting, a mismatch. Outcome-attestation shape, not recompute-the-match: this node does not implement the EPC VoP fuzzy name-matching algorithm and makes no live IBAN/account-holder-name directory call. Carries an OCG Standard §25 ocg-private-input@1 declaration: the IBAN, payee name, and account-holder identifier (if collected) are committed via sha256-salted@1, never in the clear. Distinct from simulate_vop_matching (art-11, a batch aggregate match-rate analyser using its own similarity math), score_payee_name_match (art-376, computes a name-match score from a name pair), and build_vop_session_receipt (art-377, builds the downstream session receipt); use this node for the upstream threshold/response-code consistency check. ZERO plaintext PII disclosed.",
+  "input_schema_ref": "chaingraph/art-548-vop-readiness-diagnostic.html#manifest",
+  "consumes": [],
+  "feeds": [],
+  "status": "live",
+  "conformance_fixtures": true,
+  "compute_capability": "server",
+  "compute_images": [
+    {
+      "system": "sha256-source",
+      "image_id": "sha256:9d9df2ce31e5a6665cd88ed8ad73de1b8f1ca8cb79273dab000d5ea53ef8fa76",
+      "valid_from": "2026-07-10"
+    },
+    {
+      "system": "risc0",
+      "image_id": "sha256:adf39b5c4e8fe19f9dbc25e2b8eb84090f0ee6c9370f14ad10d5039e8e65b0ec",
+      "valid_from": "2026-08-04"
+    }
+  ],
+  "compute_proof_ready": "ready",
+  "export_capability": [
+    "json"
+  ],
+  "compute_proof": {
+    "type": "ZkVmReceipt",
+    "system": "risc0",
+    "receiptFormat": "groth16-bn254",
+    "imageId": "sha256:adf39b5c4e8fe19f9dbc25e2b8eb84090f0ee6c9370f14ad10d5039e8e65b0ec",
+    "seal": "GtamGW8nRm4DMcBBILUgOKxBa59e9LOeTfWQH1dNTvMwTll+tqzSw7FwReRd6s8UAeShoxo8T/bEB+J+FUIFKh+cpslrpmGIEQA/Gsyl02pmQi3FTcvMp/7/uQnkjnfFIT1fQE3u8wBwsS44DgtJRnxJ5OdNMXX6esaWwBFznmMK3aSdPHh2V5Su+Rpi6A48PAaafZL1isAwdE8TbCRmWCfoeOOQgkMn0n56hkbbDeSjcPNpToYGNllU+7K7d0S8G71dgJlrKI1S1dteJcGdBvt1D7HPwsKg20YGnZ4mMpAvBkotBiOkls15A2y/mdAZfXttlcxpHuy4JR7+XWW13Q==",
+    "journal": {
+      "chaingraph_version": "0.4.0",
+      "commitment": "sha256:d0261b5555a4df1d5fbed786c9a8977e8196c81c8859cfcf683fadfea157ea91",
+      "commitments": [
+        "sha256:d0261b5555a4df1d5fbed786c9a8977e8196c81c8859cfcf683fadfea157ea91",
+        "sha256:47048eda633d4509b69fc56390c9240f0e33d759b98493d3cc7385bd672b8815"
+      ],
+      "kernel_digest": "sha256:9d9df2ce31e5a6665cd88ed8ad73de1b8f1ca8cb79273dab000d5ea53ef8fa76",
+      "output": {
+        "classification": "match",
+        "consistent": true,
+        "match_score_provided": true,
+        "not_legal_advice": "Not legal advice. A Verification-of-Payee readiness determination requires review by a qualified payments-compliance officer against the applicable PSP VoP Rulebook implementation.",
+        "pii_note": "ZERO plaintext PII disclosed: the IBAN, payee name, and account-holder identifier (if collected) are private witnesses, committed via sha256-salted@1 (OCG Standard §25 ocg-private-input@1) and never present in policy_parameters or output_payload in the clear. Only the threshold classification and consistency verdict are public.",
+        "psp_declared_maps_to": "match",
+        "psp_vop_response_code": "MTCH",
+        "regulatory_basis": "EU Instant Payments Regulation (Regulation (EU) 2024/886), Verification-of-Payee obligation — in force 2025-10-09 for euro-area PSPs, 2027-07-09 for non-euro-area PSPs. The EPC VoP Rulebook leaves the fuzzy name-matching algorithm to vendor-selected engines with EBA-suggested, not mandated, thresholds; this diagnostic only recomputes the deterministic threshold classification and cross-checks it against the PSP-declared response code.",
+        "scope_note": "This is a readiness/consistency diagnostic over caller-declared inputs, not a claim that this node performed IBAN or payee-name verification. It does not query any IBAN or account-holder directory and does not implement the EPC VoP fuzzy name-matching algorithm."
+      }
+    }
+  }
+},
+    {
+  "tool_id": "art-549-g20-corridor-cost-gap",
+  "tool_version": "1.0.0",
+  "display_name": "G20/FSB Corridor Cost-Gap Calculator",
+  "mcp_name": "check_g20_corridor_cost_gap",
+  "mandate_type": "risk_parameter",
+  "wave": 90,
+  "gpu": false,
+  "url": "https://ainumbers.co/chaingraph/art-549-g20-corridor-cost-gap.html",
+  "description": "Recomputes a caller-declared cross-border payment corridor's cost gap against the hardcoded G20/FSB roadmap targets: retail cross-border payments end-2027 (no more than 1% global average, no more than 3% any corridor) and remittances 2030 (no more than 3% global average, no more than 5% any corridor). The caller supplies the corridor's observed total-cost percentage (as integer basis points), sourced from World Bank Remittance Prices Worldwide (RPW, methodology Q325) or elsewhere; this kernel never vendors RPW's own corridor cost table, only the published target arithmetic. Zero live FX/rate calls. These are transparency and benchmarking targets, not an enforceable deadline against any single firm -- not a compliance-gate. Not the US Reg E remittance disclosure recompute (see art-reg-e-remittance-disclosure-check for that).",
+  "input_schema_ref": "chaingraph/art-549-g20-corridor-cost-gap.html#manifest",
+  "consumes": [],
+  "feeds": [],
+  "status": "live",
+  "conformance_fixtures": true,
+  "compute_capability": "server",
+  "compute_images": [
+    {
+      "system": "sha256-source",
+      "image_id": "sha256:466123f62f6e6d1ee5414ed2b8d39004b3677e2cac5a9934c3c146bb1568975d",
+      "valid_from": "2026-07-10"
+    },
+    {
+      "system": "risc0",
+      "image_id": "sha256:a1a0bc89b5b1febaeda3519f6dbade0fa5ac16beeb143c4e1b01689573567bc6",
+      "valid_from": "2026-08-04"
+    }
+  ],
+  "compute_proof_ready": "ready",
+  "deferred_reason": "New shard; awaiting the async GPU proving queue (S18 steady-state).",
+  "export_capability": [
+    "json"
+  ],
+  "compute_proof": {
+    "type": "ZkVmReceipt",
+    "system": "risc0",
+    "receiptFormat": "groth16-bn254",
+    "imageId": "sha256:a1a0bc89b5b1febaeda3519f6dbade0fa5ac16beeb143c4e1b01689573567bc6",
+    "seal": "LKN04sn+e8RIBaiPLvtkWYB5qDAzEUTK4TPMfZWYEZ0la1QIYFDxN+XK/+RAZ0jWf6+N0D78IkQKIByvZ3/o0gsQiNExC8KLH7+2d+ZmFJU77KSwy21bfBvnsWlg097KDixaVFuuAyeWCxNQXzPgXmk6IQVz8K/K79+h+PK6iHYSjiOErdU5rgiuBI3YMySy9Xv4+aXsSZVxyV1VvnqRexzBDGCkc84EPdzAHzLenCCuxezUVorWJIGySlpZs51YLRs1PhYdc0XgeVHNcyxzIwFIeOICWH2q4yzEmzYGd9QrONtBZtD91XDyYNOH43pT1WKERh0xzRtIbYtKDcVEeQ==",
+    "journal": {
+      "chaingraph_version": "0.4.0",
+      "kernel_digest": "sha256:466123f62f6e6d1ee5414ed2b8d39004b3677e2cac5a9934c3c146bb1568975d",
+      "output": {
+        "as_of": "2026-08-01",
+        "corridor_pair": {
+          "receive_country": "MX",
+          "send_country": "US"
+        },
+        "gap_bps": -50,
+        "gap_pct_display": "-0.50%",
+        "meets_target": true,
+        "note": "Deterministic recompute of a caller-declared corridor's cost gap against the hardcoded G20/FSB roadmap target for the declared year. Zero live FX/rate calls; the caller supplies the observed cost, sourced from World Bank RPW or elsewhere, and this kernel never embeds or vendors RPW's own corridor cost table. Targets are transparency/benchmarking figures, not an enforceable deadline against any single firm.",
+        "observed_cost_bps": 250,
+        "observed_cost_display": "2.50%",
+        "rationale": [
+          "Corridor US→MX, observed cost 2.50% on the USD 200 RPW basket, checked against the 2027 target (\"G20/FSB 2027 retail target: ≤1% global avg / ≤3% any corridor\").",
+          "gap_pct = observed 2.50% - target 3.00% (any-corridor ceiling) = -0.50%. Corridor meets the target.",
+          "Global-average target for this year (1.00%) is reported for context only -- it describes the overall market average, not this single corridor, and is not itself checkable from one corridor's observed cost.",
+          "These are G20/FSB roadmap targets, not an enforceable deadline against any single firm. This is a transparency/benchmarking recompute, not a compliance-gate verdict.",
+          "Corridor cost table sourced by the caller from World Bank Remittance Prices Worldwide (RPW) (methodology Q325, https://remittanceprices.worldbank.org/methodology) or elsewhere; this kernel does not embed or vendor RPW's own corridor cost data."
+        ],
+        "rejected_inputs": [],
+        "rpw_methodology": {
+          "name": "World Bank Remittance Prices Worldwide (RPW)",
+          "url": "https://remittanceprices.worldbank.org/methodology",
+          "version": "Q325"
+        },
+        "send_amount_basis": "USD_200",
+        "target_any_corridor_bps": 300,
+        "target_any_corridor_display": "3.00%",
+        "target_basis": "G20/FSB 2027 retail target: ≤1% global avg / ≤3% any corridor",
+        "target_global_avg_bps": 100,
+        "target_global_avg_display": "1.00%",
+        "target_scope": "retail cross-border payments",
+        "target_year": 2027
+      }
+    }
+  }
+},
+    {
+  "tool_id": "art-550-reg-e-remittance-disclosure-check",
+  "tool_version": "1.0.0",
+  "display_name": "Reg E Remittance Disclosure Consistency Check",
+  "mcp_name": "check_reg_e_remittance_disclosure",
+  "mandate_type": "compliance_mandate",
+  "wave": 91,
+  "gpu": false,
+  "url": "https://ainumbers.co/chaingraph/art-550-reg-e-remittance-disclosure-check.html",
+  "description": "Deterministic recompute of the Reg E Subpart B (12 CFR 1005.31, implementing Dodd-Frank section 1073) remittance disclosure arithmetic identity: amount_received = (send_amount - total_fees) x exchange_rate. The caller supplies a provider's already-disclosed send amount, total fees, exchange rate, and recipient amount (all as integer cents / a rate scaled by 1,000,000, no floats); this kernel recomputes the identity and reports amount_recipient_recomputed, disclosure_consistent, and the exact discrepancy amount if any. Never fetches a live rate and never generates a fresh disclosure of its own -- it verifies that numbers a provider already disclosed are internally consistent. Distinct from art-248-compute-remittance-disclosure, which computes a disclosure from scratch rather than checking one against a caller-declared recipient figure.",
+  "input_schema_ref": "chaingraph/art-550-reg-e-remittance-disclosure-check.html#manifest",
+  "consumes": [],
+  "feeds": [],
+  "status": "live",
+  "conformance_fixtures": true,
+  "compute_capability": "server",
+  "compute_images": [
+    {
+      "system": "sha256-source",
+      "image_id": "sha256:8824902adca9694e5a610a35b14e2eea59ae7f67ef1a98985dea146a6ac144b9",
+      "valid_from": "2026-07-10"
+    },
+    {
+      "system": "risc0",
+      "image_id": "sha256:a1a0bc89b5b1febaeda3519f6dbade0fa5ac16beeb143c4e1b01689573567bc6",
+      "valid_from": "2026-08-04"
+    }
+  ],
+  "compute_proof_ready": "ready",
+  "deferred_reason": "New shard; awaiting the async GPU proving queue (S18 steady-state).",
+  "export_capability": [
+    "json"
+  ],
+  "compute_proof": {
+    "type": "ZkVmReceipt",
+    "system": "risc0",
+    "receiptFormat": "groth16-bn254",
+    "imageId": "sha256:a1a0bc89b5b1febaeda3519f6dbade0fa5ac16beeb143c4e1b01689573567bc6",
+    "seal": "HF4CnmUsWa316oob+adx2I+9Xfx4amVWw1PHh7orVnoX0tzULAC65Z5F1x4A6aAcj0PwaSZwshMTADWvNCKurwZBgTYlgN07KX09qvM9H9dRwM91UPiJx9fiYOA0nJ9cIraXU3kwGsJKmTCzJ8pKmP4bf3J1kcUFzvbe1vQcKWIgIfDXPF+/jDU3Xlh+zHIZ9iWyHmPwpznuCv1Tm6qZTARgmVRcEy5lv9/mU1CRFq855JA2yPAMnbu++9byvsB1CplYZDBeY7VJTOmBoROtsEh0BMmnyonXH6bo/zeMhasqquvsL5CDeUASihNXVVelj66htxsRoGzwY5c/U3lWzQ==",
+    "journal": {
+      "chaingraph_version": "0.4.0",
+      "kernel_digest": "sha256:8824902adca9694e5a610a35b14e2eea59ae7f67ef1a98985dea146a6ac144b9",
+      "output": {
+        "amount_recipient_disclosed_cents": 41225,
+        "amount_recipient_recomputed_cents": 41225,
+        "amount_recipient_recomputed_display": "412.25",
+        "as_of": "2026-08-01",
+        "disclosure_consistent": true,
+        "discrepancy_amount_cents": 0,
+        "discrepancy_amount_display": "0.00",
+        "exchange_rate_disclosed_display": "0.850000",
+        "exchange_rate_disclosed_e6": 850000,
+        "note": "Deterministic recompute of the Reg E Subpart B (12 CFR 1005.31) disclosure arithmetic identity amount_received = (send_amount - total_fees) x exchange_rate against a caller-disclosed recipient amount. Zero live rate calls; verifies internal consistency of numbers already disclosed, never generates a fresh disclosure.",
+        "rationale": [
+          "Disclosed: send 500.00, total fees 15.00, exchange rate 0.850000, recipient amount 412.25.",
+          "amount_received_recomputed = (send 500.00 - fees 15.00) x rate 0.850000 = 412.25.",
+          "Disclosed recipient amount matches the recomputed identity exactly. disclosure_consistent = true.",
+          "This is a deterministic recompute of the disclosed arithmetic identity, never a live rate lookup and never a fresh disclosure generator (see art-248-compute-remittance-disclosure for that). It issues no verdict on whether the provider must re-disclose -- only whether the numbers already disclosed are internally consistent.",
+          "12 CFR §1005.31 (Reg E Subpart B, implementing Dodd-Frank §1073), disclosure arithmetic identity: amount_received = (send_amount - total_fees) x exchange_rate"
+        ],
+        "regulatory_basis": "12 CFR §1005.31 (Reg E Subpart B, implementing Dodd-Frank §1073), disclosure arithmetic identity: amount_received = (send_amount - total_fees) x exchange_rate",
+        "rejected_inputs": [],
+        "send_amount_cents": 50000,
+        "total_fees_disclosed_cents": 1500
+      }
+    }
+  }
+},
+    {
+  "tool_id": "art-551-mt101-coexistence-readiness-diff",
+  "tool_version": "1.0.0",
+  "display_name": "Swift MT101 Coexistence Readiness Diff",
+  "mcp_name": "check_mt101_coexistence_readiness",
+  "mandate_type": "compliance_mandate",
+  "wave": 84,
+  "gpu": false,
+  "url": "https://ainumbers.co/tools/577-mt101-coexistence-readiness-diff.html",
+  "description": "Evaluates Swift CBPR+ MT101 message-type retirement readiness ahead of the 2026-11-14 coexistence deadline, when FI-to-FI bulk/multiple payment initiation drops MT101 (FIN) in favor of pain.001v9 (ISO 20022 MX). Caller declares the message format currently in production (MT101 or pain.001v9) and a structural self-declared readiness checklist -- does the sender's system already emit pain.001v9 for bulk FI-to-FI, is a fallback path staged, has the correspondent confirmed it can receive pain.001v9. The kernel deterministically recomputes `ready` and `days_to_deadline` from the fixed deadline constant and a caller-supplied `as_of_date`. Distinct from art-548 (Fedwire/CHIPS structured-address remediation, deadline 2026-11-16, a different sub-mandate one day apart).",
+  "input_schema_ref": "tools/577-mt101-coexistence-readiness-diff.html#manifest",
+  "consumes": [],
+  "feeds": [],
+  "status": "live",
+  "conformance_fixtures": true,
+  "compute_capability": "server",
+  "compute_images": [
+    {
+      "system": "sha256-source",
+      "image_id": "sha256:3c1274fc147ac5bb67216765094aaf175766d6505785a4e2a5d45f7f9fd4983d",
+      "valid_from": "2026-07-10"
+    },
+    {
+      "system": "risc0",
+      "image_id": "sha256:a1a0bc89b5b1febaeda3519f6dbade0fa5ac16beeb143c4e1b01689573567bc6",
+      "valid_from": "2026-08-04"
+    }
+  ],
+  "compute_proof_ready": "ready",
+  "deferred_reason": "New shard; awaiting the async GPU proving queue (S18 steady-state).",
+  "export_capability": [
+    "json"
+  ],
+  "compute_proof": {
+    "type": "ZkVmReceipt",
+    "system": "risc0",
+    "receiptFormat": "groth16-bn254",
+    "imageId": "sha256:a1a0bc89b5b1febaeda3519f6dbade0fa5ac16beeb143c4e1b01689573567bc6",
+    "seal": "IxWjUW9C4twIAqysPHrpUGc1kJZQVA/+S+l+4IQFs4ojz1RgFT/4jtXkRJ4Q0tRSYmkjW1HbeDNXLOtNCQvZvxz4/z4mIeQ8YoIRrV3J7llaHvFR84krAzTCnae4/OQKCWXokdjbf/ymRiRJ+veFjdUXDEISDOdGvjt6n91FwKAX5uqKZ5VCujEQAGKnTB/P+dz/POD2zpqGug9glKQUQSqz4O1CcMTi6wpr8FdkDD3wsTfPoX9v0gvIEihcw3H9B+gycDJMfXcCTpgKs0dfOhQzVylJt95suYnfA8oYpwwDB/MyoKRmSUV5rTKeq/k7a6BXA4WwbAZZZvajr1rTTg==",
+    "journal": {
+      "chaingraph_version": "0.4.0",
+      "kernel_digest": "sha256:3c1274fc147ac5bb67216765094aaf175766d6505785a4e2a5d45f7f9fd4983d",
+      "output": {
+        "as_of_date": "2026-09-01",
+        "checklist": {
+          "correspondent_confirmed_receipt": false,
+          "emits_pain001v9_bulk": true,
+          "fallback_path_staged": false
+        },
+        "current_message_format": "PAIN.001V9",
+        "days_to_deadline": 74,
+        "disambiguation": "check_mt101_coexistence_readiness evaluates Swift CBPR+ MT101 message-type retirement readiness (deadline 2026-11-14) from a caller-declared current message format and a structural self-declared checklist. It is distinct from fedwire_remediation_diff_receipt (art-548), which diffs Fedwire/CHIPS structured-address remediation (deadline 2026-11-16) -- a different sub-mandate, one day apart.",
+        "mt101_coexistence_deadline": "2026-11-14",
+        "past_deadline": false,
+        "pii_note": "All fields are structural/operational declarations about a payment-system configuration. No party PII enters this kernel.",
+        "readiness_gaps": [],
+        "ready": true,
+        "regulatory_basis": "Swift CBPR+ / ISO 20022 programme: FIN MT101 to pain.001v9 migration, FI-to-FI bulk/multiple payment initiation coexistence window closes 2026-11-14.",
+        "structural_issues": [],
+        "table_source": "Swift CBPR+ MT101 to pain.001 migration guidance -- FI-to-FI bulk/multiple payment initiation coexistence window closes 2026-11-14, after which only ISO 20022 pain.001v9 is accepted for this message type (swift.com/standards/iso-20022/iso-20022-programme).",
+        "table_version": "SWIFT-CBPR-MT101-COEXISTENCE-2026-V1"
+      }
+    }
+  }
+},
+    {
       "tool_id": "cry-01-zk-compliance-proof-generator",
       "tool_version": "1.0.0",
       "display_name": "ZK Compliance Proof Generator",
@@ -38485,6 +40426,30 @@
       ]
     },
     {
+  "name": "agentic-payment-mandate-lint",
+  "domain": "Agent Economy",
+  "title": "Agentic Payment Mandate Lint",
+  "description": "A2A agent card validation > x402 extension mandate validation > AP2 mandate credential build: a verify-then-build lint chain for agentic payment mandates supplied by the caller. Checks the calling agent's card, checks its x402 payment-extension mandate, then builds the AP2 verifiable credential representation. Read-only linting only; no payment execution, no wallet or custody action, no live network call.",
+  "composer_url": "https://ainumbers.co/chaingraph/chains/agentic-payment-mandate-lint.html",
+  "regulatory_basis_status": "not_assessed",
+  "regulatory_basis_decided_by": "AGENTPAY-LINT-CHAIN-1",
+  "regulatory_basis_decided_at": "2026-08-03",
+  "steps": [
+    {
+      "tool_id": "art-25-a2a-agent-card-validator",
+      "handoff": "verdict, score, and has_ap2_extension establish whether the calling agent's card is well-formed and AP2-capable before its payment mandate is checked."
+    },
+    {
+      "tool_id": "art-31-a2a-x402-extension-mandate-validator",
+      "handoff": "verdict, pass_count, and fail_count record whether the caller-supplied x402 payment-extension mandate checks out before the AP2 credential is built from it."
+    },
+    {
+      "tool_id": "art-16-google-ap2-mandate-builder",
+      "handoff": "vdc and vdc_stage are the chain output — the AP2 W3C verifiable-credential mandate built from the caller's own inputs, gated behind the two prior lint passes."
+    }
+  ]
+},
+    {
       "name": "agentic-payment-protocol-audit",
       "domain": "AI & Agent Governance",
       "title": "Agentic Payment Protocol Audit",
@@ -38924,6 +40889,43 @@
         {
           "tool_id": "art-515-build-allocation-decision-receipt",
           "handoff": "Re-derives the chosen allocation against the declared objective over the eligibility schedule and haircut snapshots from steps 1-2. Reproducibility verdict, delta, and binding constraint are the chain output. Terminal stage."
+        }
+      ]
+    },
+    {
+      "name": "aml-lookback-closure-cycle",
+      "domain": "Financial Crime & KYC",
+      "title": "AML Lookback Closure Cycle",
+      "description": "Three-step closure cycle over a BSA/AML consent-order or self-identified lookback: the re-screened population, the resulting disposition sampling frame, and the caller's own per-sampled-item disposition records (filed/no-SAR/escalated, with rationale). Step 1 reconciles the re-screening extract's completeness against the declared population, excluding any period with no preserved list snapshot as unverifiable rather than screening it against today's list. Step 2 builds a deterministic disposition sampling frame and reviewer workload allocation over the verifiable population. Step 3 rolls up disposition-coverage against the sample frame's declared size, disposition-rationale-presence on every filed/no-SAR item, and a population-to-sample tie-out between steps 1 and 2's declared population sizes, into a closed §27.4 gate value. A hold or escalate outcome routes the cycle to the BSA Officer as reviewer before the lookback is treated as settled; a completed lookback, including an auto_pass rollup, still requires a separate §27 approval record naming the BSA Officer or designated compliance role as approver; automation never substitutes for that named sign-off. Customer id, alert id, and transaction reference are §25-salted throughout (sha256-salted@1 commitment strings only; no plaintext identifier ever enters the chain). This bundle is the institution's own evidence of its lookback closure basis, not a supervisory determination.",
+      "composer_url": "https://ainumbers.co/chaingraph/chains/aml-lookback-closure-cycle.html",
+      "regulatory_refs": [
+        "31 CFR 1020.210(b)(4) (BSA compliance program independent testing requirement)",
+        "FFIEC BSA/AML Examination Manual (Independent Testing)"
+      ],
+      "steps": [
+        {
+          "tool_id": "art-470-lookback-completeness-reconciler",
+          "handoff": "verifiable_source_count, verifiable_extract_count, and unverifiable_periods (excluded from re-screen scope) feed the disposition sampling frame's population definition; population size also feeds the rollup's population-to-sample tie-out"
+        },
+        {
+          "tool_id": "art-471-disposition-sampling-frame",
+          "handoff": "reviewer_workload allocation and the sample frame's declared population size feed the disposition rollup kernel, alongside the caller's per-sampled-item disposition records"
+        },
+        {
+          "tool_id": "art-534-aml-lookback-disposition-rollup",
+          "handoff": "Disposition-coverage, disposition-rationale-presence, and population-to-sample tie-out roll up into a closed §27.4 gate_policy value that closes the lookback's evidence bundle. Final stage.",
+          "gate": {
+            "input": "/decision/gate_policy",
+            "rules": [
+              {
+                "op": "neq",
+                "value": "auto_pass",
+                "next": "end"
+              }
+            ],
+            "default": "end",
+            "gate_policy": "hold"
+          }
         }
       ]
     },
@@ -40249,6 +42251,20 @@
       ]
     },
     {
+      "name": "ccp-margin-monitor",
+      "domain": "Treasury Clearing",
+      "title": "CCP Margin Monitor",
+      "description": "Quarterly public benchmark chain for the CCP Margin Monitor series: presents the cross-CCP public quantitative disclosure (PQD) field comparison - financial resources, default fund size, Cover-2 stress loss, initial margin required, skin-in-the-game - across FICC and ICE for the benchmark's published issues. Presentation and receipt wiring over the already-proven comparator node - no new derive step.",
+      "composer_url": "https://ainumbers.co/chaingraph/chains/ccp-margin-monitor.html",
+      "export_capability": ["pdf"],
+      "steps": [
+        {
+          "tool_id": "art-528-cross-ccp-pqd-comparator",
+          "handoff": "comparison arithmetic and delta table are the terminal output; the Monitor's presentation layer selects and labels fields for quarterly publication, no downstream derive stage"
+        }
+      ]
+    },
+    {
       "name": "cecl-allowance-quarterly",
       "domain": "Bank Capital & Credit Risk",
       "title": "CECL Allowance Calculation & Rollforward (Quarterly)",
@@ -40279,6 +42295,65 @@
         {
           "tool_id": "167-cfpb-1033-tppp-mapper",
           "handoff": "tppp_authorisation_map and compliance_gaps — final CFPB 1033 mandate"
+        }
+      ]
+    },
+    {
+      "name": "chain-ccp-default-waterfall",
+      "domain": "Treasury Clearing",
+      "title": "CCP Default Waterfall Recompute to Cover-2 Sizing",
+      "description": "Recomputes a CCP's sequential default-waterfall loss allocation for a caller-declared defaulting-member loss, then checks whether the recomputed allocation stays within the CCP's Cover-2 default fund sizing or breaches it.",
+      "composer_url": "https://ainumbers.co/chaingraph/chains/chain-ccp-default-waterfall.html",
+      "steps": [
+        {
+          "tool_id": "art-529-ccp-default-waterfall-recompute",
+          "handoff": "stage-by-stage loss absorption and any unallocated residual feed Stage 2's fund-size adequacy check against the same declared loss amount"
+        },
+        {
+          "tool_id": "art-530-default-fund-cover2-sizing",
+          "handoff": "checks the declared default fund size against the worst-case Cover-2 stress scenario; terminal check"
+        }
+      ]
+    },
+    {
+      "name": "chain-ccp-pqd-benchmark",
+      "domain": "Treasury Clearing",
+      "title": "Cross-CCP PQD Benchmark",
+      "description": "Single-node cross-CCP public quantitative disclosure (PQD) benchmark: compares a caller-selected set of CPMI-IOSCO PQD fields across FICC and ICE using a source-cited fixture dataset, flagging any caller-declared threshold breach per entity.",
+      "composer_url": "https://ainumbers.co/chaingraph/chains/chain-ccp-pqd-benchmark.html",
+      "steps": [
+        {
+          "tool_id": "art-528-cross-ccp-pqd-comparator",
+          "handoff": "comparison arithmetic and delta table are the terminal output; no downstream stage"
+        }
+      ]
+    },
+    {
+      "name": "chain-member-margin-call-to-porting",
+      "domain": "Treasury Clearing",
+      "title": "Member Margin Call Lifecycle to Client Porting Check",
+      "description": "Attests a clearing member's margin call lifecycle against its SLA window; an unmet-SLA call (disputed, escalated, or still-open past the SLA) routes to the client porting check as a contingency path, while a funded within-SLA call ends.",
+      "composer_url": "https://ainumbers.co/chaingraph/chains/chain-member-margin-call-to-porting.html",
+      "steps": [
+        {
+          "tool_id": "art-531-member-margin-call-lifecycle",
+          "handoff": "suggested_gate_route of end closes the chain; escalate or hold routes to Stage 2's client porting check as a contingency path",
+          "gate": {
+            "input": "/suggested_gate_route",
+            "rules": [
+              {
+                "op": "eq",
+                "value": "end",
+                "next": "end"
+              }
+            ],
+            "default": "art-532-client-porting-check",
+            "gate_policy": "escalate"
+          }
+        },
+        {
+          "tool_id": "art-532-client-porting-check",
+          "handoff": "checks whether the member's client positions and collateral are portable to a backup clearing member given the unmet-SLA margin call; terminal check"
         }
       ]
     },
@@ -40476,6 +42551,23 @@
         }
       ]
     },
+    {
+  "name": "corporate-action-entitlement",
+  "domain": "Securities Settlement",
+  "title": "Corporate Action Entitlement",
+  "description": "DTC CA ISO 20022 message validator > corporate action entitlement recompute: message-shape validation feeding deterministic dividend/rights/split entitlement math per record date, under the DTCC Important Notice 23890-26 operator mandate field set.",
+  "composer_url": "https://ainumbers.co/chaingraph/chains/corporate-action-entitlement.html",
+  "steps": [
+    {
+      "tool_id": "art-546-dtcc-ca-iso20022-validator",
+      "handoff": "structure_valid and event_type feed Stage 2 corporate action entitlement recompute"
+    },
+    {
+      "tool_id": "art-547-corporate-action-entitlement-recompute",
+      "handoff": "entitlement_computed, cash_entitlement/whole_shares -- final DTC corporate-action entitlement mandate"
+    }
+  ]
+},
     {
       "name": "corporate-treasury-statement-reconciliation",
       "domain": "Corporate Treasury & FX",
@@ -41579,6 +43671,34 @@
         {
           "tool_id": "cry-04-merkle-batch-verifier",
           "handoff": "Exports composite EuGB conformance artifact with Merkle-root execution_hash (H3) -- final stage"
+        }
+      ]
+    },
+    {
+      "name": "exchange-assurance-pack",
+      "domain": "Digital-Asset Rails",
+      "title": "Exchange Assurance Pack",
+      "description": "Custody segregation ratio > asset/liability coverage > PoR liabilities composer > best-execution recompute: composite exchange-assurance mandate.",
+      "composer_url": "https://ainumbers.co/chaingraph/chains/exchange-assurance-pack.html",
+      "regulatory_basis_status": "not_assessed",
+      "regulatory_basis_decided_by": "sonnet",
+      "regulatory_basis_decided_at": "2026-08-04",
+      "steps": [
+        {
+          "tool_id": "art-538-custody-segregation-ratio",
+          "handoff": "segregation_ratio and status feed Stage 2 asset/liability coverage as the custody-side input to the exchange's solvency picture"
+        },
+        {
+          "tool_id": "art-539-asset-liability-coverage",
+          "handoff": "coverage_ratio and surplus_shortfall_musd feed Stage 3 PoR-liabilities composer as balance-sheet context for the reported liabilities figure"
+        },
+        {
+          "tool_id": "art-540-por-liabilities-composer",
+          "handoff": "composite_determination and reserve_to_liability_ratio feed Stage 4 best-execution recompute, completing the reserves side of the assurance pack"
+        },
+        {
+          "tool_id": "art-541-best-execution-recompute",
+          "handoff": "pct_at_or_better and avg_price_improvement_bps complete the pack — composite exchange-assurance mandate"
         }
       ]
     },
@@ -43488,6 +45608,37 @@
       ]
     },
     {
+      "name": "mra-consent-order-closure-cycle",
+      "domain": "Audit & Assurance",
+      "title": "Consent-Order / MRA Remediation Closure Cycle",
+      "description": "Single-stage register cycle over an institution's own consent-order Articles or MRA findings and its own remediation-status records. The register computes, per issue, milestone completeness (every committed milestone closed with evidence attached), evidence validity (delivered evidence type matches what the milestone itself declares it calls for), and overdue or on-track timing against each issue's own committed date, reusing the RO remediation-closure cycle's cutoff arithmetic unchanged. The rollup emits the closed human-accountability decision enum: auto_pass, review_required, escalate, or hold. hold and escalate route the register to an exception step naming the issue owner as reviewer; review_required routes to the compliance officer; and a fully closed register that reaches auto_pass still requires a named-human approval record rather than an automatic pass, because whether remediation was appropriate, timely, and sustainable is exactly the judgment the approval record exists to evidence, not to automate. The approver is bound to the institution's own MRA or consent-order response-owner role, named exactly as the order itself names it. The bundle evidences the institution's own basis for asserting closure; it does not itself satisfy a supervisor's own closure determination.",
+      "composer_url": "https://ainumbers.co/chaingraph/chains/mra-consent-order-closure-cycle.html",
+      "regulatory_refs": [
+        "Interagency MRA / MRIA remediation-tracking practice (OCC, FRB, FDIC supervisory letters)",
+        "Consent order / written agreement remediation-closure representations to the supervisor",
+        "GAO-25-107721 sec. 10.18 (remediation completeness, validity and timeliness dimensions)"
+      ],
+      "steps": [
+        {
+          "tool_id": "art-533-mra-remediation-closure-register",
+          "handoff": "Per-issue milestone completeness, evidence validity and overdue/on-track determinations, plus the rollup closed decision enum, close the closure-evidence bundle. Single stage.",
+          "gate": {
+            "input": "/decision/gate_policy",
+            "rules": [
+              {
+                "op": "in",
+                "value": ["auto_pass", "review_required", "escalate", "hold"],
+                "next": "end"
+              }
+            ],
+            "default": "end",
+            "gate_policy": "dual_control",
+            "gate_threshold": { "role": "approver", "threshold": 1 }
+          }
+        }
+      ]
+    },
+    {
       "name": "multilateral-netting-settlement",
       "domain": "Corporate Treasury & FX",
       "title": "Multilateral Netting Settlement",
@@ -44184,6 +46335,35 @@
       ]
     },
     {
+      "name": "qfc-recordkeeping-cycle",
+      "domain": "Audit & Assurance",
+      "title": "QFC Part 371 Recordkeeping Cycle",
+      "description": "Single-stage cycle over an institution's own 12 CFR part 371 qualified-financial-contract position, counterparty, and collateral file. The validator checks the file's shape against the appendix's published record layout and ties the file's declared totals to a supplied control-total summary, reporting a shape defect and a totals mismatch as two separate, never-merged findings. The rollup emits the closed decision enum: auto_pass, review_required, or escalate (did_not_run when no control-total summary is supplied). A file nonconformance routes the finding to internal audit as reviewer; the daily-capability recordkeeping check closes with a preparer/reviewer pair rather than a named external approver, since this is an internal standing test rather than a supervisor-facing filing -- an approver role binding stays available where the institution runs this co-sourced. The bundle evidences the institution's own basis for asserting part 371 recordkeeping conformance; it is not a filing and offers no advice on whether a contract is in fact a covered QFC.",
+      "composer_url": "https://ainumbers.co/chaingraph/chains/qfc-recordkeeping-cycle.html",
+      "regulatory_refs": [
+        "12 CFR part 371 (Qualified Financial Contract Recordkeeping) and its appendix record layouts",
+        "GAO-25-107721 sec. 10.18 (recordkeeping completeness, validity and timeliness dimensions)"
+      ],
+      "steps": [
+        {
+          "tool_id": "art-537-qfc-recordkeeping-file-validator",
+          "handoff": "File-shape validation against the part 371 appendix record layout plus a control-total tie-out, and the rollup closed decision enum, close the recordkeeping-conformance evidence pack. Single stage.",
+          "gate": {
+            "input": "/decision/gate_policy",
+            "rules": [
+              {
+                "op": "in",
+                "value": ["auto_pass", "review_required", "escalate", "did_not_run"],
+                "next": "end"
+              }
+            ],
+            "default": "end",
+            "gate_policy": "review_required"
+          }
+        }
+      ]
+    },
+    {
       "name": "rdarr-attestation-cycle",
       "domain": "Bank Capital & Credit Risk",
       "title": "RDARR Management-Body Attestation Cycle",
@@ -44228,6 +46408,34 @@
               "role": "approver",
               "threshold": 2
             }
+          }
+        }
+      ]
+    },
+    {
+      "name": "reg-w-23a-23b-testing-cycle",
+      "domain": "Audit & Assurance",
+      "title": "Reg W 23A/23B Affiliate-Transaction Testing Cycle",
+      "description": "Single-stage standing internal-audit test cycle over an institution's own caller-declared population of covered transactions with an affiliate. Per transaction, tests the Regulation W (12 CFR 223, eCFR 2026 codification) 10% single-affiliate and 20% aggregate-affiliate capital limits and the collateral-coverage percentage requirement on covered credit transactions; the qualitative 12 CFR 223.51 market-terms test is a caller-declared boolean the tester records for the artifact only, never a judgment it makes. Capital base, both limit percentages, and the collateral-coverage percentage all arrive as caller-declared policy_parameters cited with a required policy_vintage, never hardcoded. Either quantitative limit breached routes the standing test to internal audit as reviewer (escalate); a collateral shortfall with no capital breach flags review_required; both limits satisfied and full collateral coverage closes auto_pass. The standing internal-audit test-evidence pack closes with a preparer/reviewer pair rather than necessarily a named external approver, since these are internal standing tests, distinct from an externally-facing sign-off; where the institution runs this co-sourced an approver role binding is still available. This tool tracks and evidences the quantitative test only; it never itself determines that a transaction was conducted on market terms.",
+      "composer_url": "https://ainumbers.co/chaingraph/chains/reg-w-23a-23b-testing-cycle.html",
+      "regulatory_refs": [
+        "12 CFR 223 (Regulation W), eCFR 2026 codification: 10%/20% affiliate capital limits (223.11/223.12), collateral-coverage requirement on covered credit transactions (223.14), market-terms test (223.51)"
+      ],
+      "steps": [
+        {
+          "tool_id": "art-536-reg-w-affiliate-transaction-tester",
+          "handoff": "Per-affiliate and aggregate capital-limit test results, collateral-coverage test results, and the caller-declared market-terms declarations, plus the rollup closed decision enum, close the internal-audit test-evidence pack. Single stage.",
+          "gate": {
+            "input": "/decision",
+            "rules": [
+              {
+                "op": "eq",
+                "value": "escalate",
+                "next": "end"
+              }
+            ],
+            "default": "end",
+            "gate_policy": "review_required"
           }
         }
       ]
@@ -44956,6 +47164,27 @@
       ]
     },
     {
+  "name": "settlement-discipline-penalty-v2",
+  "domain": "Settlement Discipline",
+  "title": "CSDR Penalty Recompute (Reference-Price Reachable)",
+  "description": "CSDR cash-penalty recompute using a caller-supplied reference price (ART-543) -> settlement-efficiency / penalty-cost aggregation (ART-84) -> audit receipt (cry-05). Fixes the reachability defect in the original settlement-discipline-penalty chain, whose ART-78 stage has no path for a caller to supply a reference price differing from notional. Decision-support draft.",
+  "composer_url": "https://ainumbers.co/chaingraph/chains/settlement-discipline-penalty-v2.html",
+  "steps": [
+    {
+      "tool_id": "art-543-csdr-penalty-recompute",
+      "handoff": "per-fail penalty and forward exposure (H1), priced off a caller-supplied reference_price, feeds the KPI engine"
+    },
+    {
+      "tool_id": "art-84-settlement-efficiency-kpi",
+      "handoff": "penalty-cost rollup + efficiency score (H2) feeds the aggregator"
+    },
+    {
+      "tool_id": "cry-05-agent-action-audit-trail-aggregator",
+      "handoff": "Exports composite penalty-exposure artifact with execution_hash (H3) -- final stage"
+    }
+  ]
+},
+    {
       "name": "settlement-discipline-ssi-hygiene",
       "domain": "Settlement Discipline",
       "title": "SSI Hygiene & Match-Rate",
@@ -44969,6 +47198,24 @@
         {
           "tool_id": "cry-05-agent-action-audit-trail-aggregator",
           "handoff": "Exports composite SSI-hygiene artifact with execution_hash (H2) -- final stage"
+        }
+      ]
+    },
+    {
+      "id": "slate-reporting-readiness",
+      "name": "slate-reporting-readiness",
+      "domain": "Securities Settlement",
+      "title": "SLATE Reporting Readiness",
+      "description": "Field-level structural validation of a covered-securities-loan report record against the FINRA Rule 6500-series field spec (art-544) feeds a readiness diagnostic scoring the caller's declared reporting pipeline against the FINRA Rule 6540 obligation checklist across five dimensions: reporting-agent registration, same-day capture, field-spec mapping, unique loan-identifier scheme, and recordkeeping retention (art-545). Returns an A-F grade and a gap list. Validate-never-transmit throughout: neither node calls fetch, calls an RNSA, or simulates submission.",
+      "composer_url": "https://ainumbers.co/chaingraph/chains/slate-reporting-readiness.html",
+      "steps": [
+        {
+          "tool_id": "art-544-slate-report-validator",
+          "handoff": "Field-level structural validation feeds the readiness diagnostic"
+        },
+        {
+          "tool_id": "art-545-slate-readiness-diagnostic",
+          "handoff": "Scores declared reporting-pipeline readiness against the Rule 6540 obligation checklist -- final stage"
         }
       ]
     },
@@ -45210,6 +47457,24 @@
         {
           "tool_id": "66-rwa-tokenization-cost-model",
           "handoff": "Exports stablecoin reserve Policy Mandate -- final stage"
+        }
+      ]
+    },
+    {
+      "name": "stablecoin-reserve-scorecard",
+      "domain": "Digital-Asset Rails",
+      "title": "Stablecoin Reserve Scorecard",
+      "description": "Merkle-sum Proof-of-Reserves verification feeding a MiCA reserve disclosure check, presented as one dated scorecard over an issuer's published attestation.",
+      "composer_url": "https://ainumbers.co/chaingraph/chains/stablecoin-reserve-scorecard.html",
+      "export_capability": ["pdf"],
+      "steps": [
+        {
+          "tool_id": "art-280-reserve-proof-verifier",
+          "handoff": "reserve_proof_determination and not_proven feed the disclosure-level coverage, composition, segregation and cadence check as corroborating cryptographic evidence of the same reserve; each check keeps its own not_proven scope, never merged into a single verdict"
+        },
+        {
+          "tool_id": "art-512-check-mica-reserve-disclosure",
+          "handoff": "coverage, composition, segregation and cadence findings, plus the caller-declared rule set they were checked against, feed the scorecard's export; terminal stage"
         }
       ]
     },
@@ -46769,6 +49034,33 @@
       "shipped_complete": "2026-06-13",
       "hardest_deadline": "2026-08-02",
       "hardest_deadline_tool": "ml-02-credit-default-risk-scorer"
+    },
+    "wave_A": {
+      "nodes_live": 14,
+      "live": [
+        "art-15-agentic-mandate-sandbox",
+        "art-16-google-ap2-mandate-builder",
+        "art-17-ap2-mcp-policy-validator",
+        "art-18-mcp-developer-readiness-scorecard",
+        "art-19-agentic-checkout-protocol-selector",
+        "art-20-acp-ucp-product-feed-conformance-auditor",
+        "art-21-agent-traffic-acceptance-policy-builder",
+        "art-22-agentic-payments-protocol-comparator",
+        "art-23-visa-trusted-agent-protocol-inspector",
+        "art-24-mastercard-agentic-token-builder",
+        "art-25-a2a-agent-card-validator",
+        "art-26-x402-payload-decoder-flow-simulator",
+        "art-27-agentic-readiness-diagnostic",
+        "art-28-mcp-server-deployability-diagnostic"
+      ],
+      "chains_live": 3,
+      "chains": [
+        "agentic-checkout",
+        "agentic-policy",
+        "agentic-rail-standards"
+      ],
+      "shipped_first": "2026-06-13",
+      "status": "Wave A complete — 14 nodes covering agentic mandate drafting, AP2 checkout/payment mandates, and MCP developer readiness scoring; 3 chains shipped"
     },
     "wave_B": {
       "nodes_live": 1,

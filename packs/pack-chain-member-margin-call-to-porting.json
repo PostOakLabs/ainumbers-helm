@@ -1,0 +1,40 @@
+{
+  "workflow_id": "pack-chain-member-margin-call-to-porting",
+  "name": "Member Margin Call Lifecycle to Client Porting Check",
+  "outcome": "Attests a clearing member's margin call lifecycle against its SLA window; an unmet-SLA call (disputed, escalated, or still-open past the SLA) routes to the client porting check as a contingency path, while a funded within-SLA call ends.",
+  "spec_version": "ocg-control-plane@1",
+  "manifest": {
+    "manifest_version": "1",
+    "workflow_id": "pack-chain-member-margin-call-to-porting",
+    "trigger": {
+      "type": "manual"
+    },
+    "nodes": [
+      {
+        "node_id": "n1",
+        "kernel_id": "art-531-member-margin-call-lifecycle",
+        "kernel_digest": "sha256:89fcc33e4e1a9e74da13cd69954a8b4d1717cf652e2159dd4c358b0ee59b436b"
+      },
+      {
+        "node_id": "n2",
+        "kernel_id": "art-532-client-porting-check",
+        "kernel_digest": "sha256:6b3fddf02c09856bc6c1a58454eed2257d8a93d2e0a66af5721811ba315ba5f9"
+      }
+    ],
+    "connectors": [],
+    "gates": [],
+    "actions": []
+  },
+  "workflow_manifest_digest": "sha256:1105b8047dda39eb5acb3198783e45bcabba0e488f399f3b54dcceb18bd9ffba",
+  "declared_inputs": [],
+  "steps_meta": [
+    {
+      "node_id": "n1",
+      "data_classification": "compute"
+    },
+    {
+      "node_id": "n2",
+      "data_classification": "compute"
+    }
+  ]
+}

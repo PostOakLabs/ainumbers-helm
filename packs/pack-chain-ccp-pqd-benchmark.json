@@ -1,0 +1,31 @@
+{
+  "workflow_id": "pack-chain-ccp-pqd-benchmark",
+  "name": "Cross-CCP PQD Benchmark",
+  "outcome": "Single-node cross-CCP public quantitative disclosure (PQD) benchmark: compares a caller-selected set of CPMI-IOSCO PQD fields across FICC and ICE using a source-cited fixture dataset, flagging any caller-declared threshold breach per entity.",
+  "spec_version": "ocg-control-plane@1",
+  "manifest": {
+    "manifest_version": "1",
+    "workflow_id": "pack-chain-ccp-pqd-benchmark",
+    "trigger": {
+      "type": "manual"
+    },
+    "nodes": [
+      {
+        "node_id": "n1",
+        "kernel_id": "art-528-cross-ccp-pqd-comparator",
+        "kernel_digest": "sha256:fd251101f928b941bade8919f9fc8215154f87e82c9ec9e6953ea483c95b82f1"
+      }
+    ],
+    "connectors": [],
+    "gates": [],
+    "actions": []
+  },
+  "workflow_manifest_digest": "sha256:09af5470bd47399133370a4da550b6a7edee87dc3f6983620122a0e09e5b848d",
+  "declared_inputs": [],
+  "steps_meta": [
+    {
+      "node_id": "n1",
+      "data_classification": "compute"
+    }
+  ]
+}

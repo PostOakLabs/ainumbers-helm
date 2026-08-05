@@ -1,0 +1,31 @@
+{
+  "workflow_id": "pack-qfc-recordkeeping-cycle",
+  "name": "QFC Part 371 Recordkeeping Cycle",
+  "outcome": "Single-stage cycle over an institution's own 12 CFR part 371 qualified-financial-contract position, counterparty, and collateral file. The validator checks the file's shape against the appendix's published record layout and ties the file's declared totals to a supplied control-total summary, reporting a shape defect and a totals mismatch as two separate, never-merged findings. The rollup emits the closed decision enum: auto_pass, review_required, or escalate (did_not_run when no control-total summary is supplied). A file nonconformance routes the finding to internal audit as reviewer; the daily-capability recordkeeping check closes with a preparer/reviewer pair rather than a named external approver, since this is an internal standing test rather than a supervisor-facing filing -- an approver role binding stays available where the institution runs this co-sourced. The bundle evidences the institution's own basis for asserting part 371 recordkeeping conformance; it is not a filing and offers no advice on whether a contract is in fact a covered QFC.",
+  "spec_version": "ocg-control-plane@1",
+  "manifest": {
+    "manifest_version": "1",
+    "workflow_id": "pack-qfc-recordkeeping-cycle",
+    "trigger": {
+      "type": "manual"
+    },
+    "nodes": [
+      {
+        "node_id": "n1",
+        "kernel_id": "art-537-qfc-recordkeeping-file-validator",
+        "kernel_digest": "sha256:c7d0608caf559ede9bf75c63cee44bcc4cda97cc043ea6c689707e0e956709b9"
+      }
+    ],
+    "connectors": [],
+    "gates": [],
+    "actions": []
+  },
+  "workflow_manifest_digest": "sha256:f9b369ffeeb1fa2f1cbc4fe3cb8c5da96a70a379099cd5a1f63adcf21fb47fba",
+  "declared_inputs": [],
+  "steps_meta": [
+    {
+      "node_id": "n1",
+      "data_classification": "compute"
+    }
+  ]
+}

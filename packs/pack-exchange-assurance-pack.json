@@ -1,0 +1,58 @@
+{
+  "workflow_id": "pack-exchange-assurance-pack",
+  "name": "Exchange Assurance Pack",
+  "outcome": "Custody segregation ratio > asset/liability coverage > PoR liabilities composer > best-execution recompute: composite exchange-assurance mandate.",
+  "spec_version": "ocg-control-plane@1",
+  "manifest": {
+    "manifest_version": "1",
+    "workflow_id": "pack-exchange-assurance-pack",
+    "trigger": {
+      "type": "manual"
+    },
+    "nodes": [
+      {
+        "node_id": "n1",
+        "kernel_id": "art-538-custody-segregation-ratio",
+        "kernel_digest": "sha256:8791e2f24a2de92cbb8f32606cebc9fae0e42650fa20eecd57129ecd6c2fd8a8"
+      },
+      {
+        "node_id": "n2",
+        "kernel_id": "art-539-asset-liability-coverage",
+        "kernel_digest": "sha256:a80285b47c468275f244648e19b225f0e740ed20c7f8925e658514529f807919"
+      },
+      {
+        "node_id": "n3",
+        "kernel_id": "art-540-por-liabilities-composer",
+        "kernel_digest": "sha256:563cc673f35c6b1c66e152e11a07460a4cfa55b51028b1dcea2c42733e1b10c5"
+      },
+      {
+        "node_id": "n4",
+        "kernel_id": "art-541-best-execution-recompute",
+        "kernel_digest": "sha256:3fe3f8f91aee95249b6c690837eac8476621b70688946d1417dda593e4c1915c"
+      }
+    ],
+    "connectors": [],
+    "gates": [],
+    "actions": []
+  },
+  "workflow_manifest_digest": "sha256:4bd77f8da3f1a28094e5252fbf646b7e2b8736e0f897508eb32cb2da4bad6b59",
+  "declared_inputs": [],
+  "steps_meta": [
+    {
+      "node_id": "n1",
+      "data_classification": "compute"
+    },
+    {
+      "node_id": "n2",
+      "data_classification": "compute"
+    },
+    {
+      "node_id": "n3",
+      "data_classification": "compute"
+    },
+    {
+      "node_id": "n4",
+      "data_classification": "compute"
+    }
+  ]
+}
