@@ -465,9 +465,33 @@ import * as art523    from './art-523-identity-proofing-assurance-level.kernel.m
 import * as art524    from './art-524-source-arrival-freshness-register.kernel.mjs';
 import * as art525    from './art-525-nway-balance-closure-check.kernel.mjs';
 import * as art526    from './art-526-report-gl-reconciliation.kernel.mjs';
+import * as art527    from './art-527-classify-ledger-consensus-finality.kernel.mjs';
+import * as art528    from './art-528-cross-ccp-pqd-comparator.kernel.mjs';
+import * as art529    from './art-529-ccp-default-waterfall-recompute.kernel.mjs';
 import * as art53     from './art-53-mletr-ebl-conformance-validator.kernel.mjs';
+import * as art530    from './art-530-default-fund-cover2-sizing.kernel.mjs';
+import * as art531    from './art-531-member-margin-call-lifecycle.kernel.mjs';
+import * as art532    from './art-532-client-porting-check.kernel.mjs';
+import * as art533    from './art-533-mra-remediation-closure-register.kernel.mjs';
+import * as art534    from './art-534-aml-lookback-disposition-rollup.kernel.mjs';
+import * as art535    from './art-535-fdic370-output-file-validator.kernel.mjs';
+import * as art536    from './art-536-reg-w-affiliate-transaction-tester.kernel.mjs';
+import * as art537    from './art-537-qfc-recordkeeping-file-validator.kernel.mjs';
+import * as art538    from './art-538-custody-segregation-ratio.kernel.mjs';
+import * as art539    from './art-539-asset-liability-coverage.kernel.mjs';
 import * as art54     from './art-54-digital-trade-rules-checker.kernel.mjs';
+import * as art540    from './art-540-por-liabilities-composer.kernel.mjs';
+import * as art541    from './art-541-best-execution-recompute.kernel.mjs';
+import * as art543    from './art-543-csdr-penalty-recompute.kernel.mjs';
+import * as art544    from './art-544-slate-report-validator.kernel.mjs';
+import * as art545    from './art-545-slate-readiness-diagnostic.kernel.mjs';
+import * as art546    from './art-546-dtcc-ca-iso20022-validator.kernel.mjs';
+import * as art547    from './art-547-corporate-action-entitlement-recompute.kernel.mjs';
+import * as art548    from './art-548-vop-readiness-diagnostic.kernel.mjs';
+import * as art549    from './art-549-g20-corridor-cost-gap.kernel.mjs';
 import * as art55     from './art-55-trade-document-provenance-verifier.kernel.mjs';
+import * as art550    from './art-550-reg-e-remittance-disclosure-check.kernel.mjs';
+import * as art551    from './art-551-mt101-coexistence-readiness-diff.kernel.mjs';
 import * as art56     from './art-56-tokenized-settlement-fit-diagnostic.kernel.mjs';
 import * as art57     from './art-57-deposit-token-compliance-validator.kernel.mjs';
 import * as art58     from './art-58-cross-network-settlement-validator.kernel.mjs';
@@ -993,9 +1017,33 @@ export const KERNELS = {
   'art-524-source-arrival-freshness-register':                art524,
   'art-525-nway-balance-closure-check':                       art525,
   'art-526-report-gl-reconciliation':                         art526,
+  'art-527-classify-ledger-consensus-finality':               art527,
+  'art-528-cross-ccp-pqd-comparator':                         art528,
+  'art-529-ccp-default-waterfall-recompute':                  art529,
   'art-53-mletr-ebl-conformance-validator':                   art53,
+  'art-530-default-fund-cover2-sizing':                       art530,
+  'art-531-member-margin-call-lifecycle':                     art531,
+  'art-532-client-porting-check':                             art532,
+  'art-533-mra-remediation-closure-register':                 art533,
+  'art-534-aml-lookback-disposition-rollup':                  art534,
+  'art-535-fdic370-output-file-validator':                    art535,
+  'art-536-reg-w-affiliate-transaction-tester':               art536,
+  'art-537-qfc-recordkeeping-file-validator':                 art537,
+  'art-538-custody-segregation-ratio':                        art538,
+  'art-539-asset-liability-coverage':                         art539,
   'art-54-digital-trade-rules-checker':                       art54,
+  'art-540-por-liabilities-composer':                         art540,
+  'art-541-best-execution-recompute':                         art541,
+  'art-543-csdr-penalty-recompute':                           art543,
+  'art-544-slate-report-validator':                           art544,
+  'art-545-slate-readiness-diagnostic':                       art545,
+  'art-546-dtcc-ca-iso20022-validator':                       art546,
+  'art-547-corporate-action-entitlement-recompute':           art547,
+  'art-548-vop-readiness-diagnostic':                         art548,
+  'art-549-g20-corridor-cost-gap':                            art549,
   'art-55-trade-document-provenance-verifier':                art55,
+  'art-550-reg-e-remittance-disclosure-check':                art550,
+  'art-551-mt101-coexistence-readiness-diff':                 art551,
   'art-56-tokenized-settlement-fit-diagnostic':               art56,
   'art-57-deposit-token-compliance-validator':                art57,
   'art-58-cross-network-settlement-validator':                art58,

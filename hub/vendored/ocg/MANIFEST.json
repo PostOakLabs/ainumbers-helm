@@ -1,18 +1,22 @@
 {
   "sourceRepo": "https://github.com/PostOakLabs/ainumbers.git",
   "license": "MIT License, Copyright (c) 2026 PostOakLabs (same license/holder as this repo; see this repo's own LICENSE for full terms; no third-party code in this vendored subtree)",
-  "pinnedSha": "84dbe4d9bab3b2ef992f7df39846d8ea4f44f7f9",
+  "pinnedSha": "6a32728a8096b14b78fdb4f3f65f471036247fcf",
   "vendoredPaths": [
     "chaingraph/kernels",
     "chaingraph/standard/SPEC.md",
     "chaingraph/standard/openchain-graph-v0.4.schema.json",
     "chaingraph/chaingraph.json"
   ],
-  "fileCount": 1434,
+  "fileCount": 1488,
   "files": [
     {
       "path": "chaingraph.json",
-      "sha256": "d5eaf302a57305361b410df821e9459dbcc45d4f317a112e697ed378ae0c7e87"
+      "sha256": "47adc7a3f1a11e20608de744664416d69f9eba04aeec0b35910b2b1c53c55826"
+    },
+    {
+      "path": "kernels/_ancestry.mjs",
+      "sha256": "d31ffa06a81f259d7837d97b35c51b325e5a971659fd2b23e5e96224778ab241"
     },
     {
       "path": "kernels/_anchor-testutil.mjs",
@@ -1951,16 +1955,112 @@
       "sha256": "ac0706aea54457a53cc1f56d8642d7b5f4bf09c4377b8bc7d1e52562a9d59e12"
     },
     {
+      "path": "kernels/art-527-classify-ledger-consensus-finality.kernel.mjs",
+      "sha256": "46901368779de44333c60943c2a52d7458222841e0ac6420898016c6664114dd"
+    },
+    {
+      "path": "kernels/art-528-cross-ccp-pqd-comparator.kernel.mjs",
+      "sha256": "fd251101f928b941bade8919f9fc8215154f87e82c9ec9e6953ea483c95b82f1"
+    },
+    {
+      "path": "kernels/art-529-ccp-default-waterfall-recompute.kernel.mjs",
+      "sha256": "1fa3932e10c166675cb5eaf1c41a165ee448e916df2086e1cf963e95ee4a2f97"
+    },
+    {
       "path": "kernels/art-53-mletr-ebl-conformance-validator.kernel.mjs",
       "sha256": "0f260f878472634095d299ddde16662204d6432e1b458c6afddc094d2bac7dd8"
+    },
+    {
+      "path": "kernels/art-530-default-fund-cover2-sizing.kernel.mjs",
+      "sha256": "4d53619712ff1da614212e1de80b28da3a815322d590e9fa5f7dd3db647c59b2"
+    },
+    {
+      "path": "kernels/art-531-member-margin-call-lifecycle.kernel.mjs",
+      "sha256": "89fcc33e4e1a9e74da13cd69954a8b4d1717cf652e2159dd4c358b0ee59b436b"
+    },
+    {
+      "path": "kernels/art-532-client-porting-check.kernel.mjs",
+      "sha256": "6b3fddf02c09856bc6c1a58454eed2257d8a93d2e0a66af5721811ba315ba5f9"
+    },
+    {
+      "path": "kernels/art-533-mra-remediation-closure-register.kernel.mjs",
+      "sha256": "ccad868f81e724e7e30de59a9c955f7ba8c69d690fe04fbc6b3984f0e9352f5a"
+    },
+    {
+      "path": "kernels/art-534-aml-lookback-disposition-rollup.kernel.mjs",
+      "sha256": "2263d143a5cbc54da93c78d3d8fb7d028dd161856f55cf8007414c81efad7778"
+    },
+    {
+      "path": "kernels/art-535-fdic370-output-file-validator.kernel.mjs",
+      "sha256": "10cb82f1a665d074500af23e512217234c39f79ad7f298e6f12a74eab4e2eeae"
+    },
+    {
+      "path": "kernels/art-536-reg-w-affiliate-transaction-tester.kernel.mjs",
+      "sha256": "97f5aa7c56c8afd1021f3e175b556a66dfbbf632cee7c0f9f88cf0752eae17a4"
+    },
+    {
+      "path": "kernels/art-537-qfc-recordkeeping-file-validator.kernel.mjs",
+      "sha256": "c7d0608caf559ede9bf75c63cee44bcc4cda97cc043ea6c689707e0e956709b9"
+    },
+    {
+      "path": "kernels/art-538-custody-segregation-ratio.kernel.mjs",
+      "sha256": "8791e2f24a2de92cbb8f32606cebc9fae0e42650fa20eecd57129ecd6c2fd8a8"
+    },
+    {
+      "path": "kernels/art-539-asset-liability-coverage.kernel.mjs",
+      "sha256": "a80285b47c468275f244648e19b225f0e740ed20c7f8925e658514529f807919"
     },
     {
       "path": "kernels/art-54-digital-trade-rules-checker.kernel.mjs",
       "sha256": "a7e25b5ced7deecbe2bfaf3ff54f75fec09c0b0058aaa4f1308c175e4f477344"
     },
     {
+      "path": "kernels/art-540-por-liabilities-composer.kernel.mjs",
+      "sha256": "563cc673f35c6b1c66e152e11a07460a4cfa55b51028b1dcea2c42733e1b10c5"
+    },
+    {
+      "path": "kernels/art-541-best-execution-recompute.kernel.mjs",
+      "sha256": "3fe3f8f91aee95249b6c690837eac8476621b70688946d1417dda593e4c1915c"
+    },
+    {
+      "path": "kernels/art-543-csdr-penalty-recompute.kernel.mjs",
+      "sha256": "b2b0ccaae79b05facefac2e7c9a2294abd353bd1978a163471dc45d28a8ed371"
+    },
+    {
+      "path": "kernels/art-544-slate-report-validator.kernel.mjs",
+      "sha256": "f3131b76454e25a6937e8ccf56a7df819601565117e2e365621eef97e5aa1d9b"
+    },
+    {
+      "path": "kernels/art-545-slate-readiness-diagnostic.kernel.mjs",
+      "sha256": "438a35717911f7a15663987b2b41c45d5b90062da799f02954b3d5f959981c95"
+    },
+    {
+      "path": "kernels/art-546-dtcc-ca-iso20022-validator.kernel.mjs",
+      "sha256": "d75e8ba52e5757fe63fdf1f096b7135b083a72c97193a57fd6f9a3593a36e432"
+    },
+    {
+      "path": "kernels/art-547-corporate-action-entitlement-recompute.kernel.mjs",
+      "sha256": "426290aa93af154925c8418526e40ce47f1ccab54eb19febae4774c50041c1b3"
+    },
+    {
+      "path": "kernels/art-548-vop-readiness-diagnostic.kernel.mjs",
+      "sha256": "9d9df2ce31e5a6665cd88ed8ad73de1b8f1ca8cb79273dab000d5ea53ef8fa76"
+    },
+    {
+      "path": "kernels/art-549-g20-corridor-cost-gap.kernel.mjs",
+      "sha256": "466123f62f6e6d1ee5414ed2b8d39004b3677e2cac5a9934c3c146bb1568975d"
+    },
+    {
       "path": "kernels/art-55-trade-document-provenance-verifier.kernel.mjs",
       "sha256": "1328cfacdcf71d0f8ba4acb5a20ac1da41eccca4e7b940bea943d4de82db2193"
+    },
+    {
+      "path": "kernels/art-550-reg-e-remittance-disclosure-check.kernel.mjs",
+      "sha256": "8824902adca9694e5a610a35b14e2eea59ae7f67ef1a98985dea146a6ac144b9"
+    },
+    {
+      "path": "kernels/art-551-mt101-coexistence-readiness-diff.kernel.mjs",
+      "sha256": "3c1274fc147ac5bb67216765094aaf175766d6505785a4e2a5d45f7f9fd4983d"
     },
     {
       "path": "kernels/art-56-tokenized-settlement-fit-diagnostic.kernel.mjs",
@@ -2241,6 +2341,18 @@
     {
       "path": "kernels/fixtures/aiuc1-catalog-2026-q1.json",
       "sha256": "1d721895c39fba576b6236645e69eb79c48cf7fa9daa04cbde98021839953e52"
+    },
+    {
+      "path": "kernels/fixtures/ancestry-digest-child.fixture.json",
+      "sha256": "13ed79053a8bc7d8b7d24a14c1c887c25e55501db0a771612e400e0ae40876a0"
+    },
+    {
+      "path": "kernels/fixtures/ancestry-digest-root.fixture.json",
+      "sha256": "79a3357ffa5a61a96444fa2d3e72943d13f6827adb0b643f54a690ed8da4ae32"
+    },
+    {
+      "path": "kernels/fixtures/ancestry-digest-without.fixture.json",
+      "sha256": "8e5a6f9fbfb08c8fc2142464b3ec713253f337db0a073e8de34057fb3915f687"
     },
     {
       "path": "kernels/fixtures/anchor-binding.fixture.json",
@@ -4075,16 +4187,120 @@
       "sha256": "80225fa85a791e298f409313c68718f541e3d982c46ca18670cc7af898aff44b"
     },
     {
+      "path": "kernels/fixtures/art-527-classify-ledger-consensus-finality.fixtures.json",
+      "sha256": "f5b39b37787af248aa5ef285f360d8571f3eb178d33341f465441a88d6a49886"
+    },
+    {
+      "path": "kernels/fixtures/art-528-cross-ccp-pqd-comparator.fixtures.json",
+      "sha256": "2fd1c9056a53544f2a9223f6d4ff64a510fa19776c0484603d2eff4e5d03f2ec"
+    },
+    {
+      "path": "kernels/fixtures/art-529-ccp-default-waterfall-recompute.disclosure.json",
+      "sha256": "09a01642b310a1aadc18906d6212e653d234e574951bb14a93d688fb10787954"
+    },
+    {
+      "path": "kernels/fixtures/art-529-ccp-default-waterfall-recompute.fixtures.json",
+      "sha256": "8ed2928d5df695a4d3f94098b8cbab92633ce9afae385c55224adf6f1775f792"
+    },
+    {
       "path": "kernels/fixtures/art-53-mletr-ebl-conformance-validator.fixtures.json",
       "sha256": "fe3dfdddfefa65696043ff212a3114b5cae41e98e51e6eeb53952620462c6be6"
+    },
+    {
+      "path": "kernels/fixtures/art-530-default-fund-cover2-sizing.fixtures.json",
+      "sha256": "4d398118deaba3ce7ddfc2ea6e07149ed076815774d90516d8a5b2f9c7683adc"
+    },
+    {
+      "path": "kernels/fixtures/art-531-member-margin-call-lifecycle.fixtures.json",
+      "sha256": "c8fadcf2aef9ad4e930f09f8cf2752ddebfc58c740cdad47ca4ba91b40d0ffee"
+    },
+    {
+      "path": "kernels/fixtures/art-532-client-porting-check.fixtures.json",
+      "sha256": "04ec907feb45d7be47f7a5a2fda13e384e077c06b36f5205a335d6710a7620ce"
+    },
+    {
+      "path": "kernels/fixtures/art-533-mra-remediation-closure-register.fixtures.json",
+      "sha256": "32794c3bde156ef3b807473e00de52e3f4b958912fd199036ecf62add836e095"
+    },
+    {
+      "path": "kernels/fixtures/art-534-aml-lookback-disposition-rollup.fixtures.json",
+      "sha256": "10223a1399eaecab8e82c0b3147130d45bdb0f78f0fa6b95a0be174ef6976575"
+    },
+    {
+      "path": "kernels/fixtures/art-535-fdic370-output-file-validator.fixtures.json",
+      "sha256": "1d27f8137aa0e36b78cc58f90819b8d44655a54b7fc23bae902ddead805363d7"
+    },
+    {
+      "path": "kernels/fixtures/art-536-reg-w-affiliate-transaction-tester.fixtures.json",
+      "sha256": "a3e92d49754cfe50e6c1ae0819af25bc47656dc8d7c0992ee723f06621b33730"
+    },
+    {
+      "path": "kernels/fixtures/art-537-qfc-recordkeeping-file-validator.fixtures.json",
+      "sha256": "c77bf77bcd608ce4b102096ea0d5989623d02d505c3e05d815bd15f4c41f1341"
+    },
+    {
+      "path": "kernels/fixtures/art-538-custody-segregation-ratio.fixtures.json",
+      "sha256": "08b7e8c30be48e290e18ce649e109d5a402e47ee946f4fec5c3d41d4faf3cdcb"
+    },
+    {
+      "path": "kernels/fixtures/art-539-asset-liability-coverage.fixtures.json",
+      "sha256": "70a94e71ec51a7142633208d8c68eb8c24d00d13224a40264cd219964b8c8d29"
     },
     {
       "path": "kernels/fixtures/art-54-digital-trade-rules-checker.fixtures.json",
       "sha256": "c1bf07a8e5e4a39f2f622534961b721a773965c88aaeec40d14696c7d4767a61"
     },
     {
+      "path": "kernels/fixtures/art-540-por-liabilities-composer.fixtures.json",
+      "sha256": "a4d0583c3fc87ca31848094c3962c1119c83a33fc7dcff03fc50e86f90538ac8"
+    },
+    {
+      "path": "kernels/fixtures/art-541-best-execution-recompute.fixtures.json",
+      "sha256": "d967550173a25364a2039d392b23fe3610f1176d37aa7f7fdb5d527e4c2bc37e"
+    },
+    {
+      "path": "kernels/fixtures/art-543-csdr-penalty-recompute.fixtures.json",
+      "sha256": "c62ab8b3480c2f332e98ccbaca91c5c171cd0be94262786c6fa09ebca20c4725"
+    },
+    {
+      "path": "kernels/fixtures/art-544-slate-report-validator.fixtures.json",
+      "sha256": "8dc35ce955d8737095cbd00e5db45aefc4be06cfb8ce992e2695c1b52bcde97f"
+    },
+    {
+      "path": "kernels/fixtures/art-545-slate-readiness-diagnostic.fixtures.json",
+      "sha256": "6e0d74256cf64bedef14a19901c41b3c9335860659dfd92e4f9f9826a85aac60"
+    },
+    {
+      "path": "kernels/fixtures/art-546-dtcc-ca-iso20022-validator.fixtures.json",
+      "sha256": "35bc6d98bd735dbea1289388618a3730105cf0ac6301042af368d2655b899487"
+    },
+    {
+      "path": "kernels/fixtures/art-547-corporate-action-entitlement-recompute.fixtures.json",
+      "sha256": "e1526ea359b56e9206a54478498004061bb301fe75edc940987a20ad27a2ce25"
+    },
+    {
+      "path": "kernels/fixtures/art-548-vop-readiness-diagnostic.disclosure.json",
+      "sha256": "777042d4f758f4c8fa9e85e1deabae84e13cee4aa791062cf29b341d64fb0990"
+    },
+    {
+      "path": "kernels/fixtures/art-548-vop-readiness-diagnostic.fixtures.json",
+      "sha256": "7bb4d727f0cdcdfaa8ee7c3500644b7c468597357d2a111de0c3a7c5302d0ad1"
+    },
+    {
+      "path": "kernels/fixtures/art-549-g20-corridor-cost-gap.fixtures.json",
+      "sha256": "ad112f23c4457ffc24e5f3ca895b92e663742db622e230de462d68ea36d69b9e"
+    },
+    {
       "path": "kernels/fixtures/art-55-trade-document-provenance-verifier.fixtures.json",
       "sha256": "77d99c366c1dc218606725aa67db45ad122f7ac6a1a37e4095b37c47689ef93e"
+    },
+    {
+      "path": "kernels/fixtures/art-550-reg-e-remittance-disclosure-check.fixtures.json",
+      "sha256": "0120bd8b8ddcf54a44144b8358983f79bc19736235f1b643848de496af846509"
+    },
+    {
+      "path": "kernels/fixtures/art-551-mt101-coexistence-readiness-diff.fixtures.json",
+      "sha256": "37e62f851d83bb8d4e304eabf91f20a0cb450d3fd2d491b404cc89a5e3009535"
     },
     {
       "path": "kernels/fixtures/art-56-tokenized-settlement-fit-diagnostic.fixtures.json",
@@ -5608,7 +5824,7 @@
     },
     {
       "path": "kernels/index.mjs",
-      "sha256": "5e22a071ed32a1f2e040beeb424420266f95f1820e1d282b32959cba05d0d9d2"
+      "sha256": "fab5e04e2e126076e729740c0bb7b7bdea7cc23688f8927868ca8d590d454877"
     },
     {
       "path": "kernels/inline-hash-equality.test.mjs",
@@ -5740,11 +5956,11 @@
     },
     {
       "path": "openchain-graph-v0.4.schema.json",
-      "sha256": "c9c1708d89183f9a93f871842f645b31189dd7c5be5346e9417f22eb05ce023c"
+      "sha256": "8d90b2b03974deff9b1e0844694c6c245ca37a5bb2000fdfd4d18b9a3b4a77fe"
     },
     {
       "path": "SPEC.md",
-      "sha256": "de6def3fc54859e657c6b4e829e75c1e25bdb503f369f7aabe89da8961f7152c"
+      "sha256": "f554ea0e6e25ed1d90ffe06d8914837415df728bb87a461e464a5470a48bfaa0"
     }
   ]
 }

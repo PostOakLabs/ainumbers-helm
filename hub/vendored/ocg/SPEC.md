@@ -852,6 +852,94 @@ Attribution: **C2SP** (`https://github.com/C2SP/C2SP`) — tlog-checkpoint + sig
 cosignature format, pinned to `tlog-checkpoint/v1.0.0`, `signed-note/v1.0.0`, `tlog-cosignature/v1.0.1`.
 Sigsum and Armored Witness are cited as conformant independent-witness mechanisms (named, not depended on).
 
+### §20.3 Retention & pruning profile (NORMATIVE, OPTIONAL — new in v0.8.18)
+§20-§20.2 anchor an artifact's `execution_hash` and close root equivocation on a batch anchor; this section
+states, for the first time, when the artifact BODY behind an anchored leaf MAY be discarded while its
+evidentiary value survives — a "prune behind an exchanged commitment" pattern generalized to OCG's existing
+primitives. This section defines a doctrine, a NEW top-level artifact-level field, and a verifier report
+tier. It imposes no MUST-emit and changes no `execution_hash` preimage — the field lives outside the §4
+preimage exactly like `anchor_bindings` and `supersedes` — clearing all three §0.4-FREEZE conditions.
+
+**§20.3.0 `retention_class` — a NEW top-level artifact member, distinct from §23.4's field of the same name
+(NORMATIVE).** An artifact MAY carry an OPTIONAL top-level `retention_class` member, a string drawn from the
+closed enum below, stating the ARTIFACT'S OWN pruning eligibility under §20.3.1. This is a **different field
+from** §23.4's `input_attestations[].freshness.retention_class` (SPEC.md §23.4) — that field is a per-input
+declarative retention statement about one attested EXTERNAL VALUE, scoped inside an attestation entry that
+may not exist at all on an artifact with zero `input_attestations`. The artifact-level field defined here
+governs whether the artifact's OWN execution body — `policy_parameters` + `output_payload` — may be
+discarded behind a checkpoint. The two fields share only their enum vocabulary (extended here with
+`fixture`, §20.3.4) and are independently present or absent; setting one never implies or sets the other.
+Like `anchor_bindings`/`supersedes`, `retention_class` sits at the artifact's top level, outside the §4
+preimage (`chain` is a sibling, not the anchor point — this is not a `chain` member; ancestry commitment
+§21.6 concerns lineage integrity, retention concerns storage lifecycle, and the two are unrelated axes).
+
+```json
+"retention_class": "transient|case-file|regulatory-N-years|fixture"
+```
+
+**§20.3.1 Prune-behind-cosigned-checkpoint (NORMATIVE, OPTIONAL).** An artifact body MAY be pruned ONLY IF
+its `execution_hash` is a leaf under a RETAINED §20.1 `merkle_inclusion` batch anchor whose root carries
+§20.2 `witness_cosignatures` meeting the verifier's own k-of-n policy. Retaining forever, and never pruning,
+the checkpoint itself — the anchor entry (`anchored_hash`, `proof`, `merkle_inclusion`,
+`witness_cosignatures`) — is the precondition, not an option: a pruned body behind a discarded checkpoint
+leaves nothing. Checkpoints SHOULD be periodically re-anchored under a fresh TSA/OTS binding (the §20
+PQ-resilience note above) — cheap standing practice, requires no body, compatible with pruned bodies.
+
+**§20.3.2 Verifier report tier — hash-only survivor (NORMATIVE).** A verifier that cannot obtain a pruned
+artifact's body but holds the retained checkpoint MUST NOT report `verified` or `failed` for that artifact's
+§4 hash — both presuppose the body. It MUST instead report `body-absent: anchored-hash-only`: the leaf hash
+was included in a witness-cosigned root at a point in time; the artifact's internal computation (§4
+re-execution), authorship (§16), kernel identity (§17), or ancestry (§21.6) can no longer be independently
+checked, because none of those verifications can run without the body. This is a THIRD tier, alongside
+`verified`/`failed`, mirroring the §23.2 `structural`/`verifiable` split — never a silent pass, never
+conflated with a body-present verification.
+
+**§20.3.3 Red flags (NORMATIVE — state plainly):**
+- **Hash-tree renewal foreclosure.** RFC 4998's *timestamp* renewal needs only the old timestamp (§20.3.1
+  covers it); RFC 4998's *hash-tree* renewal — required when the underlying hash algorithm itself weakens —
+  needs ALL archived bodies re-hashed and re-timestamped. A pruned body can NEVER be migrated to a
+  post-SHA-256 hash. This is a permanent, structural limit of §20.3.1, not a corner case.
+- **SEC 17a-4 does not treat a hash as sufficient.** The 2022 audit-trail alternative to WORM requires the
+  record be re-creatable if altered, overwritten, or erased — a checkpoint proves INTEGRITY (the hash didn't
+  change), never AVAILABILITY (the record still exists). §20.3 MUST NOT be presented as satisfying a
+  re-creation requirement.
+- **Regulatory floors are prune-forbidden windows, not suggestions.** SEC 17a-4 (3y default / 6y
+  blotters-ledgers-customer-files), MiFID II Art 16(6)/(7) (5y, extendable to 7 at NCA request), BSA 31 CFR
+  1010.430 (5y flat) — an artifact whose `retention_class` (§20.3.0) is `regulatory-N-years` MUST NOT be
+  pruned until N elapses from `generated_at`; best-effort pruning applies only AFTER the floor.
+- **§21 composites embed step bodies.** §21.2's `composite_output` carries each ran step's full
+  `output_payload` — pruning a step body does not remove it from an already-emitted composite, and pruning a
+  composite discards every embedded step at once. Pruning under this profile is DAG-aware: a deployer MUST
+  prune the composite and its steps as one decision, or accept that the step survives inside the composite
+  regardless of the step artifact's own `retention_class`.
+- **A self-signed checkpoint is not a cosigned one.** §20.3.1's precondition is INDEPENDENT k-of-n
+  cosignature (§20.2) — a checkpoint signed only by its own producer does not close equivocation and does
+  not satisfy this section, whatever it is called internally.
+
+**§20.3.4 Retention-class table (NORMATIVE).** §20.3.0's `retention_class` enum and its prune-eligibility
+binding:
+
+| `retention_class` | Prune bodies under §20.3.1? | Basis |
+|---|---|---|
+| `transient` | Anytime, once behind a cosigned checkpoint | short-lived evidence, no ongoing regulatory or case-file interest |
+| `case-file` | After case closure + a stated grace period | firm policy, out of profile |
+| `regulatory-N-years` | **FORBIDDEN until N years elapse from `generated_at`** (17a-4 6y / MiFID 5-7y / BSA 5y per class), best-effort after | §20.3.3 regulatory-floor red flag |
+| `fixture` **(NEW enum value)** | **NEVER** | the §15 gate suite recomputes golden vectors from fixture bodies on every run — a pruned fixture silently disables the gates that depend on it |
+
+An artifact carrying NO `retention_class` (§20.3.0's top-level field absent) is treated as `case-file` for
+§20.3 purposes — the most conservative non-regulatory class — never as `transient`.
+
+**§20.3.5 Non-goal.** This profile does not make OCG, `anchor.ainumbers.co`, or any AINumbers surface a
+retention SERVICE or an archive of record. The holder of an artifact is the retention principal; §20.3
+states what a holder MAY safely discard and what a verifier reports when they did, nothing more.
+
+Gate (NEW): `retention-profile.test.mjs` — a verifier presented a hash-only survivor (leaf + inclusion proof
++ cosigned checkpoint, no body) reports `body-absent: anchored-hash-only`, never `verified`/`failed`; a
+`regulatory-N-years` fixture pruned before N elapses MUST fail a conformance check; `fixture`-class
+artifacts are NEVER eligible regardless of checkpoint state; `retention_class` (§20.3.0) is hash-excluded
+(byte-identical `execution_hash` with and without the member, both halves asserted); the tier is additive —
+an artifact/verifier that never encounters a pruned body behaves exactly as before v0.8.18.
+
 ## §21 Chain Execution (NORMATIVE — new in v0.8)
 Until v0.8 chain execution (`run_chain` / `composite_execution_hash`) was implementation-defined. §21
 makes the **existing linear contract** normative (§21.1–§21.3, descriptive of shipped behavior) and adds
@@ -952,6 +1040,71 @@ The §21.5 field definition above stays normative and OPTIONAL; only its gate is
 
 Attribution: **FrankenSim** (J. Emanuel) — the evidence-color / weakest-link design, IDEAS ONLY. Its license
 carries an unvetted "AI rider"; no text or code is copied. Cited as convergent prior art.
+
+### §21.6 Ancestry commitment (NORMATIVE, OPTIONAL — new in v0.8.17)
+An artifact's `chain` block MAY carry an OPTIONAL member `ancestry_digest`, a `#/$defs/sha256ref` value
+that transitively commits the artifact's **entire ancestry sub-DAG — order, membership, and topology** —
+closing a gap that `parent_hashes` alone leaves open: §4 fixes the preimage as exactly
+`{policy_parameters, output_payload}`, and `chain` is a hash-excluded sibling, so `parent_hashes` can be
+rewritten to omit or reorder an ancestor without moving any per-node `execution_hash`.
+
+**§21.6.1 Definition (MUST, where present).** `ancestry_digest = SHA-256` over the RFC 8785 / JCS-canonical
+JSON of exactly `{ execution_hash, parent_ancestry_digests }`, where `parent_ancestry_digests` is the array
+of each cited parent's OWN `ancestry_digest`, **in `parent_hashes` order**, produced by the same single
+shared canonicalizer `kernels/_hash.mjs` (`cgCanon`) that §4 and §PPH-1 use — no second canonicalization
+path. A root artifact (`parent_hashes: []`) uses `parent_ancestry_digests: []`, so its `ancestry_digest` is
+a pure function of its own `execution_hash`. Every §4 FORBIDDEN construction (array-replacer sort,
+`simpleHash`/djb2/FNV, a string mislabeled `sha256:`, hashing a reduced object) is forbidden here
+identically, for the same reason.
+
+**§21.6.2 Value form (MUST).** Bare 64-character lowercase hex, OPTIONALLY `sha256:`-prefixed — the
+`#/$defs/sha256ref` form `parent_hashes[]` and `execution_hash` already carry (§PPH-1.1a precedent:
+producers SHOULD emit bare, verifiers MUST accept either form).
+
+**§21.6.3 Hash exclusion (MUST).** `ancestry_digest` sits inside `chain`, which is OUTSIDE the §4 preimage
+(unchanged since §1). Adding, omitting, or recomputing it MUST NOT move the artifact's own `execution_hash`.
+An artifact without it is byte-identical to one predating v0.8.17 and remains fully conformant — no
+MUST-emit anywhere in this standard.
+
+**§21.6.4 What it proves, and what it does NOT (NORMATIVE honesty, §17.2-style).** A verifier holding a
+COMPLETE presented bundle (the terminal artifact plus every cited ancestor, recursively) can recompute
+`ancestry_digest` bottom-up and detect: an omitted ancestor, a reordered `parent_hashes` entry, a
+substituted ancestor, or a topology change anywhere in the sub-DAG — any of these changes the terminal
+digest. **It does NOT prove the bundle it was given is complete relative to the WORLD** — a producer who
+never cites an artifact in the first place (never puts it in `parent_hashes`) produces a self-consistent
+digest over a smaller, honestly-committed lineage; detecting *that* omission requires an independent signal
+outside this artifact (a §16 signature over a DIFFERENT, wider-citing artifact; a §20 anchor timestamping
+when the wider artifact existed; or a third party's own record of having produced the omitted node). This
+mirrors §20's "anchor evidence proves EXISTENCE and INCLUSION, never completeness of a set" and is stated
+for the identical reason: an overclaim here is a compliance liability, not a compliment.
+
+**§21.6.5 Composability.** A §16 whole-artifact signature transitively secures `ancestry_digest` (it is
+inside `chain`, inside the secured document — §16.1). A §20 anchor over the terminal artifact's
+`execution_hash` timestamps the digest's existence at that time; §20.2 witness cosignatures close
+equivocation on the anchored root the same way they do for any other anchored value. §21.5 `claim_strength`
+is UNCHANGED by this section — ancestry commitment is a lineage-integrity claim, not an execution-evidence
+claim, and is not folded into the `min`-of-evidence-classes computation.
+
+**§21.6.6 Verifier behavior — present vs absent (NORMATIVE).** Absence is NEVER an error and NEVER
+downgrades a verdict: a verifier that does not recognize `ancestry_digest`, or that receives an artifact
+without one, verifies §4 exactly as before. When present, a verifier that CHOOSES to check it MUST: walk
+the presented ancestor bundle depth-first from the terminal artifact, recompute each node's
+`ancestry_digest` per §21.6.1 bottom-up (leaves first), and compare the terminal recomputed value to the
+stored one — a mismatch anywhere in the walk FAILS the terminal artifact's ancestry verdict (reported
+ALONGSIDE, never folded into, the §4 `execution_hash` verdict). A verifier missing any cited ancestor from
+the bundle reports `ancestry: "incomplete-bundle"` (not a failure — an honest "cannot check" tier, distinct
+from `verified`/`failed`). Recursion depth is bounded by `chain_depth`; a cyclic `parent_hashes` graph is
+already excluded by construction (each artifact commits only to STRICTLY PRIOR `execution_hash` values it
+received before it ran).
+
+**§21.6.7 Relation to §21 array chains.** §21 `run_chain`/`runChain` execution (§21.1-§21.5) stays an ARRAY
+(forward-only, no parallel branches — §21.4) and is UNCHANGED by this section. `ancestry_digest` is the
+general DAG-shaped mechanism for artifact-level `parent_hashes` citation (§1, which already permits
+multi-parent `chain_depth = max(parent depths)+1` — joins/fan-in the §21 array model cannot express). The
+two are independent, composable claims: a `run_chain`-executed linear chain's steps MAY each also carry
+`ancestry_digest`, and the composite artifact (§21.3) MAY carry its own.
+
+Gate: `ancestry-digest.test.mjs` (§15).
 
 ## §22 Work Mandates (NORMATIVE — new in v0.8.1)
 A **Work Mandate** is a signed OpenChainGraph artifact that delegates bounded authority: a principal
@@ -2078,6 +2231,85 @@ it uses a hash-chaining convention that includes the signature — differing fro
 is attached after hashing and is excluded from the preimage. Re-verify this observation against the
 project's current public material before relying on any row of it.
 
+## §STPFWD-1 Forward decision-outcome mandate (NORMATIVE — additive, new in v0.8.19)
+A §27.4 gate-policy value and a §27.10 run-state value are already normative vocabulary, but nothing has ever
+said where a caller finds them **inside a node's own output**. Today an agent or chain author who wants a
+single node's self-reported outcome has to learn that node's bespoke `output_payload` shape first — the same
+gap §21.4 gates already closed for chain-level branching. §STPFWD-1 closes it going forward, for nodes that
+do not exist yet, without touching a single artifact this standard has already sealed.
+
+**§STPFWD-1.0 Scope and additivity (NORMATIVE — the defining constraint).** This section binds a node **first
+published as `status:"live"`, `"gpu":false` after this section lands in SPEC.md** — its kernel, shard, and
+Graph Index node object committed for the first time. It is silent about every node published before that
+point. It adds no schema property (`output_payload` is already an unconstrained object, §1), no `required[]`
+entry, and no new closed-enum value: `$defs/haGatePolicy` (§27.4) and `$defs/haRunState` (§27.10) are used
+exactly as already defined, unchanged. Measured against the three-condition freeze test this standard applies
+to every additive section (no existing `execution_hash` moves, no `required[]` change, no MUST-emit on an
+existing artifact): a node live before this section landed is untouched by it in all three respects — its
+`execution_hash`, its `required[]` membership, and its conformance status stay exactly as they were, and
+nothing here reaches backward to demand anything of it. **Existing nodes are unaffected until an operator
+deliberately sweeps one forward**, which is a hash-moving `output_payload` edit subject to the same re-prove
+discipline as any other change to that member (§4, §18).
+
+**§STPFWD-1.1 The mandate (NORMATIVE).** A node meeting §STPFWD-1.0's scope **MUST** emit, at the RFC 6901
+pointer `/output_payload/decision/gate_policy`, a `$defs/haGatePolicy` (§27.4) value describing that
+execution's own outcome, and **MUST** emit, at the sibling pointer `/output_payload/decision/execution_state`,
+a value drawn from the closed `$defs/haRunState` vocabulary (§27.10 — `ran` | `did_not_run` | `ran_stale`)
+describing whether the node executed to a verdict, executed against input already known stale, or did not
+execute at all. Both pointers resolve inside the SAME `output_payload` object every node already emits (§4) —
+no new top-level artifact member, no sidecar object, no second hash. Because `output_payload` sits inside the
+§4 hash preimage, both values are genuinely hash-bound: covered by any §16/§18 proof already attached to the
+node, exactly as every other `output_payload` member is, which is the property that makes this stronger than a
+hash-excluded advisory field would have been.
+
+**§STPFWD-1.2 Why this pointer (informative basis for a normative choice).** Nodes published before this
+section coexist under at least four different shapes for a self-reported outcome — flat
+`output_payload.decision` + `output_payload.execution_state`; nested
+`output_payload.decision.{gate_policy,execution_state}`; flat `output_payload.gate_status` alone; and
+`output_payload.roles.partner.gate_status` (measured distribution and per-shape hash-impact recompute:
+`research/PTRSCOPE-DECISION-1-2026-08-02.md`). That measurement found the nested
+`decision.{gate_policy,execution_state}` shape is the only one of the four that loses no information for any
+node already carrying it, and recommended it as the shape a future canonical choice should use, additively,
+if normalization is ever undertaken. §STPFWD-1.1 adopts that shape for new nodes on that basis. **This section
+does NOT normalize, rename, or alias any of the four existing shapes** — that remains open and separately
+adjudicated (§STPFWD-1.0's grandfather clause) — and a caller reading an EXISTING node still needs that node's
+own documented shape until a future sweep, if any, moves it.
+
+**§STPFWD-1.3 Field-name distinction from §27.10 (NORMATIVE clarification).** §27.10's naming duty binds a
+`$defs/humanAccountabilityRecord`'s OWN sibling field, `subject_run_state`, used when a §27 accountability
+record reports the run-state of a subject OTHER than itself. `/output_payload/decision/execution_state` is a
+different carrier: a node reporting its OWN run-state, inside its OWN artifact, never inside a §27 record
+about a separate artifact. §STPFWD-1 reuses `$defs/haRunState`'s three-value closed vocabulary, unchanged,
+under this section's own field name — it does not extend, alias, or rename `subject_run_state`. A future §27
+approval record MAY still separately copy-forward `subject_run_state` per §27.10's own new-artifacts-only
+rule over the SAME node; the two fields answer different questions (who accepted responsibility for what,
+versus what this node's own execution did) and MAY coexist on one artifact without conflict.
+
+**§STPFWD-1.4 Routing posture (NORMATIVE — restates §21.4/§27.4, no new rule).** A `gate_policy` value emitted
+under this mandate carries no routing weight of its own: `review_required` and every other §27.4 value ROUTES
+a §21.4 chain to an exception-handling step when a chain author's own gate targets it, and holds nothing that
+no gate targets. `did_not_run` and `ran_stale` are reporting-only, exactly as §27.10 states for
+`subject_run_state` — they move no `execution_hash`, invalidate no existing verdict, and are not themselves a
+gate predicate unless a chain author's own gate targets the pointer.
+
+**§STPFWD-1.5 Enforcement (NORMATIVE — no new gate).** This section wires no new script. Every node in its
+scope is, by construction, a brand-new `gpu:false`, `status:"live"` node, and every such node is already
+subject to the §18 compute-integrity ratchet (`scripts/check-compute-proof-coverage.mjs`, cited §18): the
+S18-BASELINE-GUARD-1 provenance discriminator already distinguishes a legitimate new-node ceiling raise from a
+proof regression, so a new node cannot silently enter the proven/deferred count without that distinction being
+asserted in writing at land time. §STPFWD-1.1's MUST is a build-time authorship requirement, checked at the
+same review point every other new-node kernel requirement is checked — before that node's fixtures are
+golden-pinned and its proof minted — and deliberately does not duplicate that check inside a second automated
+gate.
+
+**§STPFWD-1.6 Freeze statement (NORMATIVE clarification, recorded per this section's drafting instruction).**
+Confirmed explicitly: a requirement binding only nodes newly published from this section forward moves no
+existing `execution_hash` (no already-published node's `output_payload` is touched by this text), changes no
+`required[]` entry (`output_payload` stays an unconstrained object; `$defs/artifact.required` is unchanged),
+and imposes no MUST-emit on any existing artifact (the MUST in §STPFWD-1.1 is scoped to §STPFWD-1.0's
+new-node definition and nothing else). §STPFWD-1 is purely additive under the same three-condition test every
+other additive section in this standard has been measured against.
+
 ## §27 Human Accountability (NORMATIVE, OPTIONAL — new in v0.8.12)
 The §4 hash proves *what computed*; §16/§18 prove *that it computed correctly*; §22 proves *who was
 authorized to run it*. None of them records **which named human took responsibility for the result** —
@@ -2509,7 +2741,20 @@ the same artifact with `clause_bindings` stripped produce byte-identical `execut
 finding.
 
 ## §14 Changelog
-See `standard/CHANGELOG.md`. **v0.8.16 (2026-08-02 — SPEC-TEXT PASS settling what a §27.4 gate evaluator must
+See `standard/CHANGELOG.md`. **v0.8.19 (2026-08-04 — SPEC-TEXT PASS drafting the STP forward decision-outcome
+mandate carved out by `STP-BRANCHABILITY-BUILD-SPEC.md` §3; the record `spec_version` stays at whatever
+`chaingraph.json` carries until the next coordinated K landing bumps it, exactly as the v0.8.18/v0.8.17/v0.8.16
+text passes were separated from their record bumps):** §STPFWD-1 requires a node first published
+`status:"live"`, `gpu:false` after this section lands to emit the already-normative `$defs/haGatePolicy`
+(§27.4) at `/output_payload/decision/gate_policy` and the already-normative `$defs/haRunState` (§27.10) at the
+sibling `/output_payload/decision/execution_state` — no new enum, no new schema property, no `required[]`
+change, silent about every already-published node. The nested `decision.{gate_policy,execution_state}` shape
+is adopted on the measured, non-lossy finding of `research/PTRSCOPE-DECISION-1-2026-08-02.md`; the four
+pre-existing pointer shapes across 8 live nodes are explicitly NOT normalized by this section. Enforced at
+build/review time via the existing §18 `check-compute-proof-coverage.mjs` proven-or-deferred ratchet
+(S18-BASELINE-GUARD-1 discriminator already in place) — no second gate built. Purely additive under the same
+three-condition freeze test (no existing `execution_hash` moves, no `required[]` change, no MUST-emit on an
+existing artifact). **v0.8.16 (2026-08-02 — SPEC-TEXT PASS settling what a §27.4 gate evaluator must
 SAY when it never verified the signature bytes; the record `spec_version` stays at whatever `chaingraph.json`
 carries until the next coordinated K landing bumps it, exactly as the v0.8.15/v0.8.14 text passes were
 separated from their record bumps):** §27.11 splits the two facts a §27 gate evaluation carries — the §27.3
@@ -2683,6 +2928,8 @@ A v0.4 implementation MUST pass all of the following. **No normative rule above 
 here** — a rule with no wired gate is not part of the standard (the institutional fix for the
 hash-remediation incident, where canonical `execution_hash` had no end-to-end gate that ran it live).
 
+A free, client-side, no-account checker (`chaingraph/conformance-gate.html`) runs the applicable subset of this gate suite against a submitted artifact entirely in the browser and reports a point-in-time PASS/FAIL verdict per gate; it is not a substitute for running the full CI suite below.
+
 | Rule | Gate | When |
 |---|---|---|
 | §4 canonical execution_hash | `kernel-hash-integrity.mjs`, `lint-forbidden-hash.mjs`, `golden-parity.test.mjs`, `determinism-replay.test.mjs` (N=3 idempotency + JCS key-order stability) | validate |
@@ -2730,6 +2977,9 @@ hash-remediation incident, where canonical `execution_hash` had no end-to-end ga
 | §24.6.2 `seeded-stochastic` replay: a kernel declaring the class re-runs at its own declared seed to a byte-identical `execution_hash`; the SAME kernel re-run at a tampered seed MUST produce a DIFFERENT hash (the seed is load-bearing, not decorative); `prng_algorithm` + integer `seed` + `draw_count` all present; the replay and tamper-detect paths are exercised unconditionally against a committed reference vector, so they stay proven in an estate with zero `seeded-stochastic` kernels; no envelope change, no new hash, `chaingraph_version` 0.4.0 UNCHANGED | `seed-replay.test.mjs` | validate |
 | §27 human-accountability records: `$defs/humanAccountabilityRecord` shape (closed `record_type`/`role`/`haGatePolicy` enums, `subject_hash` a valid `sha256ref`); ADDITIVITY — an approval record referencing a subject leaves that subject's `execution_hash` byte-identical and a subject with zero HA records is byte-identical to a plain v0.8.11 artifact (`$defs/artifact.required` + `chaingraph_version` 0.4.0 UNCHANGED); THRESHOLD DISTINCTNESS — `dual_control(N)` counts DISTINCT `identity.id`, so a repeated identity satisfies only N=1 and two distinct identities satisfy N=2; OVERRIDE EXPIRY — an expired `emergency_override` reverts the gate policy, never a silent permanent pass; SIGNED-NAMED-HUMAN — an unsigned approval record is rejected (§16 pairing check stays with `proof-binding.test.mjs`); defaults OFF, absence conformant | `validate-ha-records.test.mjs`, `schema-validate.mjs` | validate |
 | §28 clause binding profile `ocg-clause-binding@1`: hash-excluded top-level `clause_bindings[]` (zero-entry artifact hash-identical + fully conformant); each entry's RFC 6901 `pointer` MUST root at `/policy_parameters` or `/output_payload` — a pointer rooted elsewhere is RED (§28.3); each resolved §28.1 citation object carries the five REQUIRED members (`scheme`, `id`, `in_force_from`, `mapped_by`, `mapped_at`), ISO-date fields validated, `interpretation_ref` when present is a `sha256:` content hash, no unknown members on the closed pinned form; a legacy bare-string citation is valid but classified UNPINNED and MUST NOT be declared in `clause_bindings`; unresolved pointer / malformed citation / off-preimage pointer MUST fail; `$defs/artifact.required` + `chaingraph_version` 0.4.0 UNCHANGED; defaults OFF, absence conformant, new-artifacts-only (no migration path) | `clause-binding.test.mjs`, `schema-validate.mjs` | validate |
+| §21.6 ancestry_digest: bottom-up recompute over `{execution_hash, parent_ancestry_digests}` via the one `cgCanon` path, root uses `[]`, mutation-sensitive (an omitted/reordered/substituted ancestor MUST change the terminal digest — the exact `cgCanon`-object-not-string trap §PPH-1 already guards against, tested identically here), hash-EXCLUDED (byte-identical `execution_hash` with and without the member, both halves asserted), absence conformant + reported as no-claim, incomplete bundle reported as a distinct `incomplete-bundle` tier never conflated with `failed` | `ancestry-digest.test.mjs` (unit) + `schema-validate.mjs` (shape) | validate |
+| §20.3 retention profile: a verifier presented a hash-only survivor (leaf + inclusion proof + cosigned checkpoint, no body) reports `body-absent: anchored-hash-only`, never `verified`/`failed`; a `regulatory-N-years` fixture pruned before N elapses MUST fail a conformance check; `fixture`-class artifacts are NEVER eligible regardless of checkpoint state; top-level `retention_class` (§20.3.0, distinct from §23.4's per-attestation field of the same name) is hash-EXCLUDED (byte-identical `execution_hash` with and without the member); the tier is additive — an artifact/verifier that never encounters a pruned body behaves exactly as before v0.8.18 | `retention-profile.test.mjs` | validate |
+| §STPFWD-1 forward decision-outcome mandate: a NEW gpu:false live node emits `haGatePolicy` (§27.4) at `/output_payload/decision/gate_policy` and `haRunState` (§27.10) at `/output_payload/decision/execution_state`, both closed enums unchanged and both inside the §4 preimage; silent about every node published before this section; no schema property, no `required[]` entry, no MUST-emit on an existing artifact — enforced at build time (repo scripts/check-compute-proof-coverage.mjs ratchet, cited §18) rather than by a second §15 gate, since every in-scope node is already required to be proven-or-explicitly-deferred before it can ship | `kernel-coverage.mjs --strict`, `compute-proof.test.mjs` | validate |
 | every rule above has a gate (meta) | `spec-gate-coverage.mjs` | validate |
 
 **Meta-rule:** a PR that adds a normative MUST to this file without a referenced gate in this table
