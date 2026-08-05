@@ -1835,7 +1835,7 @@
   "display_name": "Agentic Mandate Sandbox",
   "mcp_name": "simulate_agent_spend_policy",
   "mandate_type": "agent_guardrail_mandate",
-  "wave": "ORPHANNODE-ONBOARD-2",
+  "wave": "A",
   "gpu": false,
   "url": "https://ainumbers.co/chaingraph/art-15-agentic-mandate-sandbox.html",
   "description": "Builds a deterministic Agent Guardrail Mandate skeleton from declared spend caps, MCC allowlist/blocklist, velocity rules, time windows, and approval thresholds. Stage 1 of the Agentic Policy Chain. The browser page additionally runs an interactive randomized synthetic-transaction simulator against the mandate for exploration; that non-deterministic step is a UI feature only and is not part of this server artifact's hashed output. Zero PII, client-side compute in the browser tool, deterministic server compute for MCP callers.",
@@ -1954,7 +1954,7 @@
   "display_name": "Google AP2 Mandate Builder",
   "mcp_name": "draft_ap2_mandate_credential",
   "mandate_type": "payment_policy",
-  "wave": "ORPHANNODE-ONBOARD-2",
+  "wave": "A",
   "gpu": false,
   "url": "https://ainumbers.co/chaingraph/art-16-google-ap2-mandate-builder.html",
   "description": "Builds an illustrative Google AP2 Checkout/Payment Mandate Verifiable Digital Credential (VDC) skeleton from a declared mandate type, stage, agent, subject, merchant, and amount. Stage 2 of the Agentic Policy Chain. This is the EXTERNAL Google AP2 payments protocol shape (ap2-protocol.org), distinct from the AINumbers Policy Mandate export. Field names are illustrative; sign with the agent key and verify against the live spec before real use. Zero PII, deterministic compute.",
@@ -2042,7 +2042,7 @@
   "display_name": "AP2/MCP Policy Validator",
   "mcp_name": "validate_ap2_mandate_credential",
   "mandate_type": "scheme_rule",
-  "wave": "ORPHANNODE-ONBOARD-2",
+  "wave": "A",
   "gpu": false,
   "url": "https://ainumbers.co/chaingraph/art-17-ap2-mcp-policy-validator.html",
   "description": "Validates a caller-supplied payload against the AINumbers Unified Build Contract v1.0 Policy Mandate field set (ap2_version, mandate_id, tool_id, mandate_type, jurisdiction, audit_metadata, and related fields), scoring compliance 0-100 and flagging deprecated fields. Stage 3 of the Agentic Policy Chain. Deterministic, zero PII, no external network calls.",
@@ -2190,7 +2190,7 @@
   "display_name": "MCP Developer Readiness Scorecard",
   "mcp_name": "score_mcp_server_readiness",
   "mandate_type": "compliance_control",
-  "wave": "ORPHANNODE-ONBOARD-2",
+  "wave": "A",
   "gpu": false,
   "url": "https://ainumbers.co/chaingraph/art-18-mcp-developer-readiness-scorecard.html",
   "description": "Rolls up caller-supplied yes/partial/no answers across six MCP ship-readiness sections (tool definitions, server.json/registry, OAuth 2.1, transport security, tool-poisoning hygiene, spec-revision compliance) into an overall 0-100 score and a prioritized gap list. Stage 4 (terminal) of the Agentic Policy Chain. Self-reported rollup; validate each weak section with its own deep-dive tool. Deterministic, zero PII.",
@@ -36692,12 +36692,76 @@
   "status": "live",
   "conformance_fixtures": true,
   "compute_capability": "server",
-  "compute_images": [{"system":"sha256-source","image_id":"sha256:1fa3932e10c166675cb5eaf1c41a165ee448e916df2086e1cf963e95ee4a2f97","valid_from":"2026-07-10"}],
+  "compute_images": [
+    {
+      "system": "sha256-source",
+      "image_id": "sha256:1fa3932e10c166675cb5eaf1c41a165ee448e916df2086e1cf963e95ee4a2f97",
+      "valid_from": "2026-07-10"
+    },
+    {
+      "system": "risc0",
+      "image_id": "sha256:adf39b5c4e8fe19f9dbc25e2b8eb84090f0ee6c9370f14ad10d5039e8e65b0ec",
+      "valid_from": "2026-08-04"
+    }
+  ],
   "export_capability": [
     "json"
   ],
-  "compute_proof_ready": "deferred",
-  "deferred_reason": "New shard; awaiting the async GPU proving queue (S18 steady-state)."
+  "compute_proof_ready": "ready",
+  "compute_proof": {
+    "type": "ZkVmReceipt",
+    "system": "risc0",
+    "receiptFormat": "groth16-bn254",
+    "imageId": "sha256:adf39b5c4e8fe19f9dbc25e2b8eb84090f0ee6c9370f14ad10d5039e8e65b0ec",
+    "seal": "EOHLdLc2X7oSFnQMFdoTTHSO4tSPN2FwDZHCsjlZqpIOAkLYht0soQl43oVRy2b0arHIJ6r7tSAOzL2NlMEsvhLswwHDKnbW9RRDFbiekUrr03oZS3Bc5BvApLKzjfOMAcqU+ITzfHrL7I0qOUJTMHZYVqoVeRaAHe4dCfDJhloA8lG9u3AIZmPiuJ9UfwUNVXglDdGl2CCiQzD2z4qBnSfOHdmZuqwim/p2ZjHIWFczXaCjZp5OESKO2gb7ntM7L0zWzNWNddZd6U6yF0hWLp+zfLrIQ83UYP/BIJOqqfAob+mlJCDG33mObmnHfdf8CmQpL17VfSC2DTyRxo2f4A==",
+    "journal": {
+      "chaingraph_version": "0.4.0",
+      "commitment": "sha256:abb47369cd5665fa19e76b84c34d54a954002bde70b23fb168d1432647abfccd",
+      "commitments": [
+        "sha256:abb47369cd5665fa19e76b84c34d54a954002bde70b23fb168d1432647abfccd"
+      ],
+      "kernel_digest": "sha256:1fa3932e10c166675cb5eaf1c41a165ee448e916df2086e1cf963e95ee4a2f97",
+      "output": {
+        "assessment_powers_cap_declared": true,
+        "assessment_powers_cap_minor_units": 100000000000,
+        "breach": false,
+        "ccp_skin_in_game_display": "300000000.00",
+        "ccp_skin_in_game_minor_units": 30000000000,
+        "currency": "USD",
+        "loss_amount_display": "500000.00",
+        "loss_amount_minor_units": 50000000,
+        "loss_fully_absorbed": true,
+        "note": "Deterministic, single-run recompute of a sequential default-waterfall loss allocation. The defaulter IM, defaulter default-fund contribution, and surviving-member default-fund pool are member-level figures committed via sha256-salted@1 (OCG Standard §25) and never appear in the clear anywhere in this artifact. It forecasts nothing, sizes no fund, and makes no determination that a CCP's published resources are adequate.",
+        "provenance": "PFMI Principle 4 (Credit Risk) -- the standing Cover-2 / waterfall-sequencing requirement -- and the caller-declared waterfall structure, which is not hardcoded to any one CCP rulebook.",
+        "rationale": [
+          "Waterfall structure: defaulter_im -> defaulter_default_fund -> ccp_skin_in_game -> surviving_member_default_fund_pro_rata -> assessment_powers.",
+          "Loss of 500000.00 USD recomputed sequentially across 1 stage(s) reached; the three member-level absorption capacities (defaulter IM, defaulter default-fund contribution, surviving-member default-fund pool) are private witnesses committed under OCG Standard §25 ocg-private-input@1, never disclosed in the clear.",
+          "Loss fully absorbed; residual unallocated is 0.00 USD.",
+          "This is a sequential recompute over a caller-declared waterfall structure and a caller-declared loss amount, per PFMI Principle 4 and each CCP's own published rulebook order. It is not a determination that any CCP's actual default-fund sizing is adequate, and it performs no stress-scenario modelling of its own."
+        ],
+        "rejected_inputs": [],
+        "residual_display": "0.00",
+        "residual_minor_units": 0,
+        "steps": [
+          {
+            "absorbed_display": "500000.00",
+            "absorbed_minor_units": 50000000,
+            "exhausted_stage_capacity": false,
+            "loss_fully_absorbed_at_this_stage": true,
+            "private_figure": true,
+            "stage": "defaulter_im"
+          }
+        ],
+        "waterfall_structure": [
+          "defaulter_im",
+          "defaulter_default_fund",
+          "ccp_skin_in_game",
+          "surviving_member_default_fund_pro_rata",
+          "assessment_powers"
+        ]
+      }
+    }
+  }
 },
     {
   "tool_id": "art-530-default-fund-cover2-sizing",
@@ -38118,12 +38182,49 @@
   "status": "live",
   "conformance_fixtures": true,
   "compute_capability": "server",
-  "compute_images": [{"system":"sha256-source","image_id":"sha256:9d9df2ce31e5a6665cd88ed8ad73de1b8f1ca8cb79273dab000d5ea53ef8fa76","valid_from":"2026-07-10"}],
-  "compute_proof_ready": "deferred",
-  "deferred_reason": "New shard; awaiting the async GPU proving queue (S18 steady-state).",
+  "compute_images": [
+    {
+      "system": "sha256-source",
+      "image_id": "sha256:9d9df2ce31e5a6665cd88ed8ad73de1b8f1ca8cb79273dab000d5ea53ef8fa76",
+      "valid_from": "2026-07-10"
+    },
+    {
+      "system": "risc0",
+      "image_id": "sha256:adf39b5c4e8fe19f9dbc25e2b8eb84090f0ee6c9370f14ad10d5039e8e65b0ec",
+      "valid_from": "2026-08-04"
+    }
+  ],
+  "compute_proof_ready": "ready",
   "export_capability": [
     "json"
-  ]
+  ],
+  "compute_proof": {
+    "type": "ZkVmReceipt",
+    "system": "risc0",
+    "receiptFormat": "groth16-bn254",
+    "imageId": "sha256:adf39b5c4e8fe19f9dbc25e2b8eb84090f0ee6c9370f14ad10d5039e8e65b0ec",
+    "seal": "GtamGW8nRm4DMcBBILUgOKxBa59e9LOeTfWQH1dNTvMwTll+tqzSw7FwReRd6s8UAeShoxo8T/bEB+J+FUIFKh+cpslrpmGIEQA/Gsyl02pmQi3FTcvMp/7/uQnkjnfFIT1fQE3u8wBwsS44DgtJRnxJ5OdNMXX6esaWwBFznmMK3aSdPHh2V5Su+Rpi6A48PAaafZL1isAwdE8TbCRmWCfoeOOQgkMn0n56hkbbDeSjcPNpToYGNllU+7K7d0S8G71dgJlrKI1S1dteJcGdBvt1D7HPwsKg20YGnZ4mMpAvBkotBiOkls15A2y/mdAZfXttlcxpHuy4JR7+XWW13Q==",
+    "journal": {
+      "chaingraph_version": "0.4.0",
+      "commitment": "sha256:d0261b5555a4df1d5fbed786c9a8977e8196c81c8859cfcf683fadfea157ea91",
+      "commitments": [
+        "sha256:d0261b5555a4df1d5fbed786c9a8977e8196c81c8859cfcf683fadfea157ea91",
+        "sha256:47048eda633d4509b69fc56390c9240f0e33d759b98493d3cc7385bd672b8815"
+      ],
+      "kernel_digest": "sha256:9d9df2ce31e5a6665cd88ed8ad73de1b8f1ca8cb79273dab000d5ea53ef8fa76",
+      "output": {
+        "classification": "match",
+        "consistent": true,
+        "match_score_provided": true,
+        "not_legal_advice": "Not legal advice. A Verification-of-Payee readiness determination requires review by a qualified payments-compliance officer against the applicable PSP VoP Rulebook implementation.",
+        "pii_note": "ZERO plaintext PII disclosed: the IBAN, payee name, and account-holder identifier (if collected) are private witnesses, committed via sha256-salted@1 (OCG Standard §25 ocg-private-input@1) and never present in policy_parameters or output_payload in the clear. Only the threshold classification and consistency verdict are public.",
+        "psp_declared_maps_to": "match",
+        "psp_vop_response_code": "MTCH",
+        "regulatory_basis": "EU Instant Payments Regulation (Regulation (EU) 2024/886), Verification-of-Payee obligation — in force 2025-10-09 for euro-area PSPs, 2027-07-09 for non-euro-area PSPs. The EPC VoP Rulebook leaves the fuzzy name-matching algorithm to vendor-selected engines with EBA-suggested, not mandated, thresholds; this diagnostic only recomputes the deterministic threshold classification and cross-checks it against the PSP-declared response code.",
+        "scope_note": "This is a readiness/consistency diagnostic over caller-declared inputs, not a claim that this node performed IBAN or payee-name verification. It does not query any IBAN or account-holder directory and does not implement the EPC VoP fuzzy name-matching algorithm."
+      }
+    }
+  }
 },
     {
   "tool_id": "art-549-g20-corridor-cost-gap",
@@ -42155,6 +42256,7 @@
       "title": "CCP Margin Monitor",
       "description": "Quarterly public benchmark chain for the CCP Margin Monitor series: presents the cross-CCP public quantitative disclosure (PQD) field comparison - financial resources, default fund size, Cover-2 stress loss, initial margin required, skin-in-the-game - across FICC and ICE for the benchmark's published issues. Presentation and receipt wiring over the already-proven comparator node - no new derive step.",
       "composer_url": "https://ainumbers.co/chaingraph/chains/ccp-margin-monitor.html",
+      "export_capability": ["pdf"],
       "steps": [
         {
           "tool_id": "art-528-cross-ccp-pqd-comparator",
@@ -47364,6 +47466,7 @@
       "title": "Stablecoin Reserve Scorecard",
       "description": "Merkle-sum Proof-of-Reserves verification feeding a MiCA reserve disclosure check, presented as one dated scorecard over an issuer's published attestation.",
       "composer_url": "https://ainumbers.co/chaingraph/chains/stablecoin-reserve-scorecard.html",
+      "export_capability": ["pdf"],
       "steps": [
         {
           "tool_id": "art-280-reserve-proof-verifier",
@@ -48931,6 +49034,33 @@
       "shipped_complete": "2026-06-13",
       "hardest_deadline": "2026-08-02",
       "hardest_deadline_tool": "ml-02-credit-default-risk-scorer"
+    },
+    "wave_A": {
+      "nodes_live": 14,
+      "live": [
+        "art-15-agentic-mandate-sandbox",
+        "art-16-google-ap2-mandate-builder",
+        "art-17-ap2-mcp-policy-validator",
+        "art-18-mcp-developer-readiness-scorecard",
+        "art-19-agentic-checkout-protocol-selector",
+        "art-20-acp-ucp-product-feed-conformance-auditor",
+        "art-21-agent-traffic-acceptance-policy-builder",
+        "art-22-agentic-payments-protocol-comparator",
+        "art-23-visa-trusted-agent-protocol-inspector",
+        "art-24-mastercard-agentic-token-builder",
+        "art-25-a2a-agent-card-validator",
+        "art-26-x402-payload-decoder-flow-simulator",
+        "art-27-agentic-readiness-diagnostic",
+        "art-28-mcp-server-deployability-diagnostic"
+      ],
+      "chains_live": 3,
+      "chains": [
+        "agentic-checkout",
+        "agentic-policy",
+        "agentic-rail-standards"
+      ],
+      "shipped_first": "2026-06-13",
+      "status": "Wave A complete — 14 nodes covering agentic mandate drafting, AP2 checkout/payment mandates, and MCP developer readiness scoring; 3 chains shipped"
     },
     "wave_B": {
       "nodes_live": 1,

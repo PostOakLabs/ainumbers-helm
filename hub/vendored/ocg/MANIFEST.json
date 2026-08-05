@@ -1,7 +1,7 @@
 {
   "sourceRepo": "https://github.com/PostOakLabs/ainumbers.git",
   "license": "MIT License, Copyright (c) 2026 PostOakLabs (same license/holder as this repo; see this repo's own LICENSE for full terms; no third-party code in this vendored subtree)",
-  "pinnedSha": "6a32728a8096b14b78fdb4f3f65f471036247fcf",
+  "pinnedSha": "94871b11896b271aef857158abb222cab9949ddd",
   "vendoredPaths": [
     "chaingraph/kernels",
     "chaingraph/standard/SPEC.md",
@@ -12,7 +12,7 @@
   "files": [
     {
       "path": "chaingraph.json",
-      "sha256": "47adc7a3f1a11e20608de744664416d69f9eba04aeec0b35910b2b1c53c55826"
+      "sha256": "775c777d0e40aa855ba7c232ab93509b23955a5fb4725027c1f0bad34631c2d6"
     },
     {
       "path": "kernels/_ancestry.mjs",
