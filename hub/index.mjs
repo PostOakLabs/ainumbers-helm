@@ -20,6 +20,7 @@ import { statePath, stateDir } from "./state-dir.mjs";
 import { openJournal, replayVerify, replayVerifyFrom, recordFullVerification, streamHeads } from "./journal.mjs";
 import { quarantineStateDir } from "./recovery.mjs";
 import { buildAnchoredCheckpoint, saveCheckpoint, latestCheckpoint, verifyCheckpointSignature } from "./checkpoint.mjs";
+import { initStateSnapshotTables, emitStateSnapshot } from "./state-snapshot.mjs";
 import { publicKeysOf } from "./keys.mjs";
 // HELM-AUTOSTART-1: install* is deliberately NOT imported here any more —
 // nothing on the daemon's start path may write a persistence entry. The only
@@ -118,6 +119,7 @@ async function cmdStart({ open = false, _recoveredFrom = null, _isFirstRun = nul
   // the H4 run engine (HELM-P2-U4) needs the same handle.
   const journalPath = statePath("journal.db");
   const db = openJournal(journalPath);
+  initStateSnapshotTables(db);
   const publicKeys = publicKeysOf(identityKeys);
   const checkpoint = latestCheckpoint(db);
   let sig = checkpoint ? verifyCheckpointSignature(checkpoint, publicKeys) : null;
@@ -244,6 +246,20 @@ async function cmdStart({ open = false, _recoveredFrom = null, _isFirstRun = nul
           error: String(err?.message || err),
         });
       });
+  }
+
+  // PROV-SNAP-HELM-1: helmd's own dogfood of SPEC.md §SNAP-1/§HEAD-1 — one
+  // state_snapshot artifact + one advanced §HEAD-1 head per boot, same
+  // fire-and-forget discipline as the checkpoint block above (never awaited,
+  // a failure here logs and never blocks a boot that's already serving).
+  // Gated the same way as the checkpoint advance: nothing to snapshot yet on
+  // a truly empty journal.
+  if (heads.length > 0) {
+    emitStateSnapshot(db, { haIdentity, toolVersion: DAEMON_VERSION }).catch((err) => {
+      log.error("state-snapshot emission failed unexpectedly (snapshot/head not advanced this boot)", {
+        error: String(err?.message || err),
+      });
+    });
   }
 
   createCliChannel({

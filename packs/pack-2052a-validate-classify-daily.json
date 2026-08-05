@@ -1,0 +1,40 @@
+{
+  "workflow_id": "pack-2052a-validate-classify-daily",
+  "name": "FR 2052a Validate then Classify Daily",
+  "outcome": "Linear two-step chain for FR 2052a daily liquidity reporting. Step 1 runs the Appendix II-a/II-b/II-c/II-d edit-check rule set against caller-supplied rows, producing a gate_status and a named list of failing edit_ids. Step 2 buckets inflows/outflows by product/maturity against a caller-supplied Appendix IV-style boundary table. Both steps always run; the edit-check result is advisory context for the classification, not a routing gate.",
+  "spec_version": "ocg-control-plane@1",
+  "manifest": {
+    "manifest_version": "1",
+    "workflow_id": "pack-2052a-validate-classify-daily",
+    "trigger": {
+      "type": "manual"
+    },
+    "nodes": [
+      {
+        "node_id": "n1",
+        "kernel_id": "art-484-regrpt-editcheck-runner",
+        "kernel_digest": "sha256:ccd3d4cba38af7145df90e543cf9b928f90949437da3a54ad4eb4e812bffcab4"
+      },
+      {
+        "node_id": "n2",
+        "kernel_id": "art-437-fr2052a-inflow-outflow-classifier",
+        "kernel_digest": "sha256:e6b15395a2f44a43b2968b7f10f6d7ef12137cd68b1a0ff292e5031b775f4f97"
+      }
+    ],
+    "connectors": [],
+    "gates": [],
+    "actions": []
+  },
+  "workflow_manifest_digest": "sha256:25b1461aecc3f08792443aacc44a845ca94e238467d8153a687a24678f0eddb9",
+  "declared_inputs": [],
+  "steps_meta": [
+    {
+      "node_id": "n1",
+      "data_classification": "compute"
+    },
+    {
+      "node_id": "n2",
+      "data_classification": "compute"
+    }
+  ]
+}

@@ -13,7 +13,7 @@
       {
         "node_id": "n1",
         "kernel_id": "art-484-regrpt-editcheck-runner",
-        "kernel_digest": "sha256:df972fbe752ce9681f083d26e59d2620a3b3675aea04b2d046537d4d5861154a"
+        "kernel_digest": "sha256:ccd3d4cba38af7145df90e543cf9b928f90949437da3a54ad4eb4e812bffcab4"
       },
       {
         "node_id": "n2",
@@ -25,7 +25,7 @@
     "gates": [],
     "actions": []
   },
-  "workflow_manifest_digest": "sha256:5d1b22d8b7a83e9459e0068397621e0a853d3955d21efab13eb21ec241cabf05",
+  "workflow_manifest_digest": "sha256:fbbfb00bcf53b86a7674342da854de8b4d3c6acf3e150c9cec94c273ee9c2924",
   "declared_inputs": [],
   "steps_meta": [
     {

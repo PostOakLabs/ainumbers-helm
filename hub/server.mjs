@@ -24,6 +24,7 @@ import { startWorkflowRun, getRunsInFlightCount as getActionsRunsInFlightCount }
 import { createConnectorStepDispatcher } from "./connectors/dispatch.mjs";
 import { handleMcp, handleMcpMethodNotAllowed } from "./mcp.mjs";
 import { haGateCheckFor, findHeldGate, recordReplay, submitHaRecord } from "./ha-gate.mjs";
+import { provenanceStatus } from "./state-snapshot.mjs";
 import { recordsForSubject, getSlot } from "./ha-store.mjs";
 import { buildKernelCard, buildEucEntry } from "./euc-register.mjs";
 import { renderKernelCardHtml, renderEucEntryHtml } from "../ui/lib/euc-html.mjs";
@@ -835,6 +836,22 @@ function handleHaSlot(req, res, params, db) {
   sendJson(res, 200, { slot: getSlot(db, subjectHash) });
 }
 
+// GET /provenance/head (PROV-SNAP-HELM-1) — the daemon's own SPEC.md
+// §SNAP-1/§HEAD-1 chain-verify status: whether a state-snapshot chain exists
+// yet, its latest snapshot/head seq, and whether the stored head-commit
+// chain still verifies (structural laws + each head's own eddsa-jcs-2022
+// proof) RIGHT NOW — not merely that one was once signed. Read-only, no
+// side effects, matching every other route here.
+function handleProvenanceHead(req, res, params, db) {
+  if (!db) return deny(res, 503, "engine_unavailable");
+  provenanceStatus(db)
+    .then((status) => sendJson(res, 200, status))
+    .catch((err) => {
+      log.error("provenance: status check failed", { error: String(err?.message || err) });
+      deny(res, 500, "provenance_status_failed");
+    });
+}
+
 // GET /run/timeline?run_id=... — execution_state transitions straight off
 // the journal's run:<id> stream (already the durable, replay-verified
 // record — no separate projection table to keep in sync).
@@ -971,6 +988,7 @@ export const ROUTES = {
   "GET /ha/records": handleHaRecords,
   "GET /ha/slot": handleHaSlot,
   "POST /ha/records": handleHaRecordSubmit,
+  "GET /provenance/head": handleProvenanceHead,
   // HELM-H9: MCP v2 JSON-RPC endpoint, same Host+Origin+Bearer gate as every
   // other route here (row: "same bearer-token auth as REST"). GET/DELETE are
   // registered too, deliberately — SEP-2567 (final, no delta) removed the
