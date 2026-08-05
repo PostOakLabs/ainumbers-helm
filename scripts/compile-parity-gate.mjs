@@ -26,6 +26,7 @@ import { runKernelNode } from "../hub/kernel-runner.mjs";
 import { runAttestedArtifact } from "../hub/attested-artifact-runner.mjs";
 import { executeRun } from "../hub/run.mjs";
 import { openJournal } from "../hub/journal.mjs";
+import { sourcePrivateWitness } from "./private-input-witness.mjs";
 
 const HERE = dirname(fileURLToPath(import.meta.url));
 const ROOT = join(HERE, "..");
@@ -34,11 +35,20 @@ const FIXTURES_DIR = join(ROOT, "hub", "vendored", "ocg", "kernels", "fixtures")
 const NOW = "2026-01-01T00:00:00.000Z";
 const STRICT = process.argv.includes("--strict");
 
-function sampleInputFor(kernelId) {
+// PACKPARITY-WITNESS-1: a §25 ocg-private-input@1 kernel's fixture policy_parameters carries
+// ONLY the sha256-salted@1 commitment (never the private figures buildArtifact() actually
+// takes as its first argument), so this node's sample input must be reconstructed from the
+// matching OUT-OF-BAND *.disclosure.json fixture instead of read verbatim — see
+// private-input-witness.mjs, which also self-verifies the reconstruction against the
+// declared commitment before returning it.
+async function sampleInputFor(kernelId, kernel) {
   const fpath = join(FIXTURES_DIR, `${kernelId}.fixtures.json`);
   const doc = JSON.parse(readFileSync(fpath, "utf8"));
   const vector = doc.vectors?.[0];
   if (!vector) throw new Error(`compile-parity-gate: ${kernelId} has a fixtures file but no vectors — cannot sample an input`);
+  if (kernel?.meta?.private_input_profile) {
+    return sourcePrivateWitness(kernelId, kernel, vector, FIXTURES_DIR);
+  }
   return vector.policy_parameters;
 }
 
@@ -77,10 +87,17 @@ export async function runParityGate({ packsDir = PACKS_DIR, db } = {}) {
     }
     checkedPacks++;
 
-    const manifest = {
-      ...pack.manifest,
-      nodes: kernelNodes.map((n) => ({ ...n, policy_parameters: sampleInputFor(n.kernel_id) })),
-    };
+    let manifest;
+    try {
+      manifest = {
+        ...pack.manifest,
+        nodes: await Promise.all(kernelNodes.map(async (n) => ({ ...n, policy_parameters: await sampleInputFor(n.kernel_id, KERNELS[n.kernel_id]) }))),
+      };
+    } catch (e) {
+      console.error(`✗ ${pack.workflow_id}: could not sample/source input for a node — ${e.message}`);
+      hardErrors++;
+      continue;
+    }
     // HELM-BIND-4: this gate proves per-node kernel fidelity (compiled
     // kernel_id/kernel_digest/argument order vs the canonical direct call)
     // against a synthetic fixture vector — it has never invoked a live
