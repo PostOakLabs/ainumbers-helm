@@ -1,0 +1,40 @@
+{
+  "workflow_id": "pack-corporate-action-entitlement",
+  "name": "Corporate Action Entitlement",
+  "outcome": "DTC CA ISO 20022 message validator > corporate action entitlement recompute: message-shape validation feeding deterministic dividend/rights/split entitlement math per record date, under the DTCC Important Notice 23890-26 operator mandate field set.",
+  "spec_version": "ocg-control-plane@1",
+  "manifest": {
+    "manifest_version": "1",
+    "workflow_id": "pack-corporate-action-entitlement",
+    "trigger": {
+      "type": "manual"
+    },
+    "nodes": [
+      {
+        "node_id": "n1",
+        "kernel_id": "art-546-dtcc-ca-iso20022-validator",
+        "kernel_digest": "sha256:d75e8ba52e5757fe63fdf1f096b7135b083a72c97193a57fd6f9a3593a36e432"
+      },
+      {
+        "node_id": "n2",
+        "kernel_id": "art-547-corporate-action-entitlement-recompute",
+        "kernel_digest": "sha256:426290aa93af154925c8418526e40ce47f1ccab54eb19febae4774c50041c1b3"
+      }
+    ],
+    "connectors": [],
+    "gates": [],
+    "actions": []
+  },
+  "workflow_manifest_digest": "sha256:02ba3cc153de8ba16fd23a6902dd8bdf05f570ed83d0d2d3641fa7679be2d1f3",
+  "declared_inputs": [],
+  "steps_meta": [
+    {
+      "node_id": "n1",
+      "data_classification": "compute"
+    },
+    {
+      "node_id": "n2",
+      "data_classification": "compute"
+    }
+  ]
+}

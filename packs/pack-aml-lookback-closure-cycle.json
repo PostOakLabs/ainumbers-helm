@@ -1,0 +1,49 @@
+{
+  "workflow_id": "pack-aml-lookback-closure-cycle",
+  "name": "AML Lookback Closure Cycle",
+  "outcome": "Three-step closure cycle over a BSA/AML consent-order or self-identified lookback: the re-screened population, the resulting disposition sampling frame, and the caller's own per-sampled-item disposition records (filed/no-SAR/escalated, with rationale). Step 1 reconciles the re-screening extract's completeness against the declared population, excluding any period with no preserved list snapshot as unverifiable rather than screening it against today's list. Step 2 builds a deterministic disposition sampling frame and reviewer workload allocation over the verifiable population. Step 3 rolls up disposition-coverage against the sample frame's declared size, disposition-rationale-presence on every filed/no-SAR item, and a population-to-sample tie-out between steps 1 and 2's declared population sizes, into a closed §27.4 gate value. A hold or escalate outcome routes the cycle to the BSA Officer as reviewer before the lookback is treated as settled; a completed lookback, including an auto_pass rollup, still requires a separate §27 approval record naming the BSA Officer or designated compliance role as approver; automation never substitutes for that named sign-off. Customer id, alert id, and transaction reference are §25-salted throughout (sha256-salted@1 commitment strings only; no plaintext identifier ever enters the chain). This bundle is the institution's own evidence of its lookback closure basis, not a supervisory determination.",
+  "spec_version": "ocg-control-plane@1",
+  "manifest": {
+    "manifest_version": "1",
+    "workflow_id": "pack-aml-lookback-closure-cycle",
+    "trigger": {
+      "type": "manual"
+    },
+    "nodes": [
+      {
+        "node_id": "n1",
+        "kernel_id": "art-470-lookback-completeness-reconciler",
+        "kernel_digest": "sha256:88f0b073173f8eafac3e96acaa0200f936815a627d4985738cbf8e79217632ca"
+      },
+      {
+        "node_id": "n2",
+        "kernel_id": "art-471-disposition-sampling-frame",
+        "kernel_digest": "sha256:33d8dd00530f61c28fc39625801011c67b5ebb1694d5abe4bc9af6c882daa66c"
+      },
+      {
+        "node_id": "n3",
+        "kernel_id": "art-534-aml-lookback-disposition-rollup",
+        "kernel_digest": "sha256:2263d143a5cbc54da93c78d3d8fb7d028dd161856f55cf8007414c81efad7778"
+      }
+    ],
+    "connectors": [],
+    "gates": [],
+    "actions": []
+  },
+  "workflow_manifest_digest": "sha256:4538c87dc2e5d76dd5bc48cb7cdf669fcdc59b93b1c21bf7ffb58f8a5807b9ae",
+  "declared_inputs": [],
+  "steps_meta": [
+    {
+      "node_id": "n1",
+      "data_classification": "compute"
+    },
+    {
+      "node_id": "n2",
+      "data_classification": "compute"
+    },
+    {
+      "node_id": "n3",
+      "data_classification": "compute"
+    }
+  ]
+}

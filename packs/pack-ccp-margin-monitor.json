@@ -1,0 +1,31 @@
+{
+  "workflow_id": "pack-ccp-margin-monitor",
+  "name": "CCP Margin Monitor",
+  "outcome": "Quarterly public benchmark chain for the CCP Margin Monitor series: presents the cross-CCP public quantitative disclosure (PQD) field comparison - financial resources, default fund size, Cover-2 stress loss, initial margin required, skin-in-the-game - across FICC and ICE for the benchmark's published issues. Presentation and receipt wiring over the already-proven comparator node - no new derive step.",
+  "spec_version": "ocg-control-plane@1",
+  "manifest": {
+    "manifest_version": "1",
+    "workflow_id": "pack-ccp-margin-monitor",
+    "trigger": {
+      "type": "manual"
+    },
+    "nodes": [
+      {
+        "node_id": "n1",
+        "kernel_id": "art-528-cross-ccp-pqd-comparator",
+        "kernel_digest": "sha256:fd251101f928b941bade8919f9fc8215154f87e82c9ec9e6953ea483c95b82f1"
+      }
+    ],
+    "connectors": [],
+    "gates": [],
+    "actions": []
+  },
+  "workflow_manifest_digest": "sha256:c1928095ce8310062e74bd16e8df4bb7ffefc11b6747b3a6644bbc4a1a579f26",
+  "declared_inputs": [],
+  "steps_meta": [
+    {
+      "node_id": "n1",
+      "data_classification": "compute"
+    }
+  ]
+}

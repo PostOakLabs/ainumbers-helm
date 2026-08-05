@@ -1,0 +1,31 @@
+{
+  "workflow_id": "pack-reg-w-23a-23b-testing-cycle",
+  "name": "Reg W 23A/23B Affiliate-Transaction Testing Cycle",
+  "outcome": "Single-stage standing internal-audit test cycle over an institution's own caller-declared population of covered transactions with an affiliate. Per transaction, tests the Regulation W (12 CFR 223, eCFR 2026 codification) 10% single-affiliate and 20% aggregate-affiliate capital limits and the collateral-coverage percentage requirement on covered credit transactions; the qualitative 12 CFR 223.51 market-terms test is a caller-declared boolean the tester records for the artifact only, never a judgment it makes. Capital base, both limit percentages, and the collateral-coverage percentage all arrive as caller-declared policy_parameters cited with a required policy_vintage, never hardcoded. Either quantitative limit breached routes the standing test to internal audit as reviewer (escalate); a collateral shortfall with no capital breach flags review_required; both limits satisfied and full collateral coverage closes auto_pass. The standing internal-audit test-evidence pack closes with a preparer/reviewer pair rather than necessarily a named external approver, since these are internal standing tests, distinct from an externally-facing sign-off; where the institution runs this co-sourced an approver role binding is still available. This tool tracks and evidences the quantitative test only; it never itself determines that a transaction was conducted on market terms.",
+  "spec_version": "ocg-control-plane@1",
+  "manifest": {
+    "manifest_version": "1",
+    "workflow_id": "pack-reg-w-23a-23b-testing-cycle",
+    "trigger": {
+      "type": "manual"
+    },
+    "nodes": [
+      {
+        "node_id": "n1",
+        "kernel_id": "art-536-reg-w-affiliate-transaction-tester",
+        "kernel_digest": "sha256:97f5aa7c56c8afd1021f3e175b556a66dfbbf632cee7c0f9f88cf0752eae17a4"
+      }
+    ],
+    "connectors": [],
+    "gates": [],
+    "actions": []
+  },
+  "workflow_manifest_digest": "sha256:d9733ed863b9a0aeb17d56c98ca50c6221cac7777695af27c3fb32e400b79029",
+  "declared_inputs": [],
+  "steps_meta": [
+    {
+      "node_id": "n1",
+      "data_classification": "compute"
+    }
+  ]
+}

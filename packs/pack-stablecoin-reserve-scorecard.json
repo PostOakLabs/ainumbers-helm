@@ -1,0 +1,40 @@
+{
+  "workflow_id": "pack-stablecoin-reserve-scorecard",
+  "name": "Stablecoin Reserve Scorecard",
+  "outcome": "Merkle-sum Proof-of-Reserves verification feeding a MiCA reserve disclosure check, presented as one dated scorecard over an issuer's published attestation.",
+  "spec_version": "ocg-control-plane@1",
+  "manifest": {
+    "manifest_version": "1",
+    "workflow_id": "pack-stablecoin-reserve-scorecard",
+    "trigger": {
+      "type": "manual"
+    },
+    "nodes": [
+      {
+        "node_id": "n1",
+        "kernel_id": "art-280-reserve-proof-verifier",
+        "kernel_digest": "sha256:309081fd66892352af23884e11bc1173c96b88fc3bbebe8ffce1db60bb235dba"
+      },
+      {
+        "node_id": "n2",
+        "kernel_id": "art-512-check-mica-reserve-disclosure",
+        "kernel_digest": "sha256:3123cd816d8e2879a6ea052f973621b149340b5cd6072232bf2666e1bbe9c333"
+      }
+    ],
+    "connectors": [],
+    "gates": [],
+    "actions": []
+  },
+  "workflow_manifest_digest": "sha256:e218474f88482c95f07e7e4fa87ddc8c339b4f7cff96e54da566e17bb552f750",
+  "declared_inputs": [],
+  "steps_meta": [
+    {
+      "node_id": "n1",
+      "data_classification": "compute"
+    },
+    {
+      "node_id": "n2",
+      "data_classification": "compute"
+    }
+  ]
+}

@@ -1,0 +1,54 @@
+{
+  "workflow_id": "pack-agentic-payment-mandate-lint",
+  "name": "Agentic Payment Mandate Lint",
+  "outcome": "A2A agent card validation > x402 extension mandate validation > AP2 mandate credential build: a verify-then-build lint chain for agentic payment mandates supplied by the caller. Checks the calling agent's card, checks its x402 payment-extension mandate, then builds the AP2 verifiable credential representation. Read-only linting only; no payment execution, no wallet or custody action, no live network call.",
+  "spec_version": "ocg-control-plane@1",
+  "manifest": {
+    "manifest_version": "1",
+    "workflow_id": "pack-agentic-payment-mandate-lint",
+    "trigger": {
+      "type": "manual"
+    },
+    "nodes": [
+      {
+        "node_id": "n1",
+        "kernel_id": "art-25-a2a-agent-card-validator",
+        "kernel_digest": "sha256:31f05f94d1769d1602bf8a182a0c58acbc94caa2292ed294d99233f5ba0d3e1b"
+      },
+      {
+        "node_id": "n2",
+        "kernel_id": "art-31-a2a-x402-extension-mandate-validator",
+        "kernel_digest": "sha256:8136ed46e50029be28e18bd1ec82e60c057b1b12a749df5dc4f847a012b5dddf"
+      },
+      {
+        "node_id": "n3",
+        "kernel_id": "art-16-google-ap2-mandate-builder",
+        "kernel_digest": "sha256:f16c71bd2744673ca2bd40dc97c04c0a360c89ebb528bcef913f7243adfc6c29"
+      }
+    ],
+    "connectors": [],
+    "gates": [],
+    "actions": []
+  },
+  "workflow_manifest_digest": "sha256:d037aa3b984ddacb261843279cd4b22a4d15b5ce37c1362c0c689a0eab2bb8db",
+  "declared_inputs": [
+    {
+      "from": "art-22-agentic-payments-protocol-comparator",
+      "kind": "external"
+    }
+  ],
+  "steps_meta": [
+    {
+      "node_id": "n1",
+      "data_classification": "compute"
+    },
+    {
+      "node_id": "n2",
+      "data_classification": "compute"
+    },
+    {
+      "node_id": "n3",
+      "data_classification": "compute"
+    }
+  ]
+}

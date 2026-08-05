@@ -1,0 +1,40 @@
+{
+  "workflow_id": "pack-slate-reporting-readiness",
+  "name": "SLATE Reporting Readiness",
+  "outcome": "Field-level structural validation of a covered-securities-loan report record against the FINRA Rule 6500-series field spec (art-544) feeds a readiness diagnostic scoring the caller's declared reporting pipeline against the FINRA Rule 6540 obligation checklist across five dimensions: reporting-agent registration, same-day capture, field-spec mapping, unique loan-identifier scheme, and recordkeeping retention (art-545). Returns an A-F grade and a gap list. Validate-never-transmit throughout: neither node calls fetch, calls an RNSA, or simulates submission.",
+  "spec_version": "ocg-control-plane@1",
+  "manifest": {
+    "manifest_version": "1",
+    "workflow_id": "pack-slate-reporting-readiness",
+    "trigger": {
+      "type": "manual"
+    },
+    "nodes": [
+      {
+        "node_id": "n1",
+        "kernel_id": "art-544-slate-report-validator",
+        "kernel_digest": "sha256:f3131b76454e25a6937e8ccf56a7df819601565117e2e365621eef97e5aa1d9b"
+      },
+      {
+        "node_id": "n2",
+        "kernel_id": "art-545-slate-readiness-diagnostic",
+        "kernel_digest": "sha256:438a35717911f7a15663987b2b41c45d5b90062da799f02954b3d5f959981c95"
+      }
+    ],
+    "connectors": [],
+    "gates": [],
+    "actions": []
+  },
+  "workflow_manifest_digest": "sha256:b0b49e1203aa01964cb5f7605edb8174a6fb49212a20289b41e99f57e22fe923",
+  "declared_inputs": [],
+  "steps_meta": [
+    {
+      "node_id": "n1",
+      "data_classification": "compute"
+    },
+    {
+      "node_id": "n2",
+      "data_classification": "compute"
+    }
+  ]
+}

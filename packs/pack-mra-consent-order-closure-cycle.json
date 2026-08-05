@@ -1,0 +1,31 @@
+{
+  "workflow_id": "pack-mra-consent-order-closure-cycle",
+  "name": "Consent-Order / MRA Remediation Closure Cycle",
+  "outcome": "Single-stage register cycle over an institution's own consent-order Articles or MRA findings and its own remediation-status records. The register computes, per issue, milestone completeness (every committed milestone closed with evidence attached), evidence validity (delivered evidence type matches what the milestone itself declares it calls for), and overdue or on-track timing against each issue's own committed date, reusing the RO remediation-closure cycle's cutoff arithmetic unchanged. The rollup emits the closed human-accountability decision enum: auto_pass, review_required, escalate, or hold. hold and escalate route the register to an exception step naming the issue owner as reviewer; review_required routes to the compliance officer; and a fully closed register that reaches auto_pass still requires a named-human approval record rather than an automatic pass, because whether remediation was appropriate, timely, and sustainable is exactly the judgment the approval record exists to evidence, not to automate. The approver is bound to the institution's own MRA or consent-order response-owner role, named exactly as the order itself names it. The bundle evidences the institution's own basis for asserting closure; it does not itself satisfy a supervisor's own closure determination.",
+  "spec_version": "ocg-control-plane@1",
+  "manifest": {
+    "manifest_version": "1",
+    "workflow_id": "pack-mra-consent-order-closure-cycle",
+    "trigger": {
+      "type": "manual"
+    },
+    "nodes": [
+      {
+        "node_id": "n1",
+        "kernel_id": "art-533-mra-remediation-closure-register",
+        "kernel_digest": "sha256:ccad868f81e724e7e30de59a9c955f7ba8c69d690fe04fbc6b3984f0e9352f5a"
+      }
+    ],
+    "connectors": [],
+    "gates": [],
+    "actions": []
+  },
+  "workflow_manifest_digest": "sha256:7c26ea9a60c4a7fb3b57cc009cc452ef6ce78345145c6b5312379c27a61ad36c",
+  "declared_inputs": [],
+  "steps_meta": [
+    {
+      "node_id": "n1",
+      "data_classification": "compute"
+    }
+  ]
+}
