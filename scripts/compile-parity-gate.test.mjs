@@ -7,6 +7,7 @@ import { fileURLToPath } from "node:url";
 import { runParityGate } from "./compile-parity-gate.mjs";
 import { openJournal } from "../hub/journal.mjs";
 import { KERNELS } from "../hub/vendored/ocg/kernels/index.mjs";
+import { hasWitnessAssembler } from "./private-input-witness.mjs";
 
 const HERE = dirname(fileURLToPath(import.meta.url));
 const ROOT = join(HERE, "..");
@@ -96,21 +97,25 @@ test("compile-parity-gate: a §25 kernel_id with no registered witness assembler
   const { db, tmpDir } = freshDb();
   const stagedDir = mkdtempSync(join(tmpdir(), "helm-compile-parity-privin-noassm-"));
   try {
-    // art-415 IS vendored (has a kernel + fixtures + disclosure file) but its checked-in
-    // disclosure fixture does not currently reproduce its own declared commitment (a
-    // pre-existing repo/ fixture defect, out of this WU's fence — see check-off). Splicing
-    // it in proves the self-verify catches a stale/wrong witness rather than passing on
-    // file-existence alone.
-    assert.ok(KERNELS["art-415-check-capital-adequacy-private"], "art-415 must be vendored for this test to be meaningful");
+    // art-548-vop-readiness-diagnostic IS vendored (has a kernel + fixtures + disclosure
+    // file, private_input_profile set) but genuinely has NO entry in private-input-witness.mjs's
+    // ASSEMBLERS map — unlike art-413/414/415/529, nobody has written its witness-assembly
+    // function yet. sourcePrivateWitness() must hard-error on the missing-assembler branch
+    // before ever touching the disclosure fixture, matching this test's title exactly.
+    assert.ok(KERNELS["art-548-vop-readiness-diagnostic"], "art-548 must be vendored for this test to be meaningful");
+    assert.ok(
+      !hasWitnessAssembler("art-548-vop-readiness-diagnostic"),
+      "art-548 must have no registered assembler for this test to be meaningful"
+    );
 
     const packFiles = readdirSync(PACKS_DIR).filter((f) => f !== "INDEX.json");
     const victimFile = packFiles[0];
     const victim = JSON.parse(readFileSync(join(PACKS_DIR, victimFile), "utf8"));
     victim.manifest.nodes[0] = {
       ...victim.manifest.nodes[0],
-      node_id: "test_privin_art415",
-      kernel_id: "art-415-check-capital-adequacy-private",
-      kernel_digest: "sha256:2ea7eb0372ecebf09f65212f7005ce7e5e31c1e0b784b1a8e55b057cc5f98846",
+      node_id: "test_privin_art548",
+      kernel_id: "art-548-vop-readiness-diagnostic",
+      kernel_digest: "sha256:" + "0".repeat(64),
       verified: true,
     };
 
@@ -118,7 +123,7 @@ test("compile-parity-gate: a §25 kernel_id with no registered witness assembler
     writeFileSync(join(stagedDir, victimFile), JSON.stringify(victim, null, 2) + "\n");
 
     const result = await runParityGate({ packsDir: stagedDir, db });
-    assert.ok(result.hardErrors > 0, "expected the stale disclosure witness to hard-error, not pass silently");
+    assert.ok(result.hardErrors > 0, "expected the missing witness assembler to hard-error, not pass silently");
   } finally {
     db.close();
     rmSync(tmpDir, { recursive: true, force: true });

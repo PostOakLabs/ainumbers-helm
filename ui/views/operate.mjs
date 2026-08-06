@@ -41,6 +41,24 @@ function journalCard(data) {
     </dl>`;
 }
 
+// PROV-SNAP-HELM-1: the "helm UI shows chain-verify status" half of the
+// row — data.verified reflects provenanceStatus()'s LIVE re-verification of
+// the stored §HEAD-1 head chain (structural laws + each head's own
+// eddsa-jcs-2022 proof), never a cached "it was signed once" claim.
+function provenanceCard(data) {
+  if (!data.has_chain) {
+    return `<p class="empty-state">No state-snapshot chain yet — helmd emits the first one on its next boot.</p>`;
+  }
+  const status = data.verified ? "verified" : "FAILED";
+  return `
+    <dl>
+      <div class="field-row"><dt>Chain-verify</dt><dd data-verified="${!!data.verified}">${status}</dd></div>
+      <div class="field-row"><dt>Snapshot seq</dt><dd>${data.snapshot_seq}</dd></div>
+      <div class="field-row"><dt>Head seq</dt><dd>${data.head_seq}</dd></div>
+      ${data.errors?.length ? `<div class="field-row"><dt>Errors</dt><dd>${data.errors.join("; ")}</dd></div>` : ""}
+    </dl>`;
+}
+
 function anchorCard(data) {
   const anchors = data.anchors ?? [];
   if (anchors.length === 0) return `<p class="empty-state">No anchors recorded yet.</p>`;
@@ -215,15 +233,16 @@ function dormantHome(kind, port) {
 export async function renderOperate(root, { port, token }) {
   root.innerHTML = `<p aria-live="polite">Checking helmd…</p>`;
 
-  const [health, journal, anchors] = await Promise.all([
+  const [health, journal, anchors, provenance] = await Promise.all([
     fetchWithFallback("/health", { port, token }),
     fetchWithFallback("/journal/head", { port, token }),
     fetchWithFallback("/anchor/status", { port, token }),
+    fetchWithFallback("/provenance/head", { port, token }),
   ]);
 
-  const allBlocked = [health, journal, anchors].every((r) => classifyBlockedState(r));
+  const allBlocked = [health, journal, anchors, provenance].every((r) => classifyBlockedState(r));
   if (allBlocked) {
-    const kind = classifyBlockedState(health) ?? classifyBlockedState(journal) ?? classifyBlockedState(anchors);
+    const kind = classifyBlockedState(health) ?? classifyBlockedState(journal) ?? classifyBlockedState(anchors) ?? classifyBlockedState(provenance);
     root.innerHTML = dormantHome(kind, port);
     wirePairForm(root, () => renderOperate(root, { port, token }));
     return;
@@ -242,6 +261,10 @@ export async function renderOperate(root, { port, token }) {
       <section class="card" aria-labelledby="op-anchor">
         <h3 id="op-anchor">Anchor status</h3>
         ${stateLine(anchors, anchorCard)}
+      </section>
+      <section class="card" aria-labelledby="op-provenance">
+        <h3 id="op-provenance">State-snapshot chain</h3>
+        ${stateLine(provenance, provenanceCard)}
       </section>
       <section class="card" aria-labelledby="op-backup">
         <h3 id="op-backup">Backup</h3>

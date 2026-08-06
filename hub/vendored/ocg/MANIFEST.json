@@ -1,18 +1,18 @@
 {
   "sourceRepo": "https://github.com/PostOakLabs/ainumbers.git",
   "license": "MIT License, Copyright (c) 2026 PostOakLabs (same license/holder as this repo; see this repo's own LICENSE for full terms; no third-party code in this vendored subtree)",
-  "pinnedSha": "94871b11896b271aef857158abb222cab9949ddd",
+  "pinnedSha": "0e3729bd50783fa5e48a8e5dcf5dc8d87747eedd",
   "vendoredPaths": [
     "chaingraph/kernels",
     "chaingraph/standard/SPEC.md",
     "chaingraph/standard/openchain-graph-v0.4.schema.json",
     "chaingraph/chaingraph.json"
   ],
-  "fileCount": 1488,
+  "fileCount": 1493,
   "files": [
     {
       "path": "chaingraph.json",
-      "sha256": "775c777d0e40aa855ba7c232ab93509b23955a5fb4725027c1f0bad34631c2d6"
+      "sha256": "684f3631561389a4a258d6066bb8ad43e80c7ce4b39633a4338e59e843b13951"
     },
     {
       "path": "kernels/_ancestry.mjs",
@@ -31,8 +31,12 @@
       "sha256": "d368444ff9c3066fb9676c73b0f399ea102c456c6e7f9ba1c45dce33f4b12757"
     },
     {
+      "path": "kernels/_cid.mjs",
+      "sha256": "e0738e84e700a2be60d254990b19e3a29f3a82d031ab7b8913d56b7a7506dfc9"
+    },
+    {
       "path": "kernels/_clausebinding.mjs",
-      "sha256": "18380638adc16099aa610ef5640886d5ec34a693026a8c2d8b0b5e54ec7399e4"
+      "sha256": "fd1edae88069a2f9f98915a6789f7032bd55f45e982fdc2e8098f2a27ba0cb6c"
     },
     {
       "path": "kernels/_computeproof.mjs",
@@ -61,6 +65,10 @@
     {
       "path": "kernels/_hash.mjs",
       "sha256": "618b580b0baab8752c6398598f37bad8b59c817d19d793cbb8b4dd0734e27662"
+    },
+    {
+      "path": "kernels/_head.mjs",
+      "sha256": "13d521666b2e00322d01cd78b5fb4dcf3cf1d4278cb7918d7a05f2f45c9f2d18"
     },
     {
       "path": "kernels/_noble-bn254.bundle.mjs",
@@ -1776,7 +1784,7 @@
     },
     {
       "path": "kernels/art-484-regrpt-editcheck-runner.kernel.mjs",
-      "sha256": "df972fbe752ce9681f083d26e59d2620a3b3675aea04b2d046537d4d5861154a"
+      "sha256": "ccd3d4cba38af7145df90e543cf9b928f90949437da3a54ad4eb4e812bffcab4"
     },
     {
       "path": "kernels/art-485-regrpt-variance-explainer.kernel.mjs",
@@ -2248,7 +2256,7 @@
     },
     {
       "path": "kernels/clause-binding.test.mjs",
-      "sha256": "1a26c41e9a884bccc4889e78bb0e34657bb3b0deff0550b37f5083342fc45b4e"
+      "sha256": "c28148ef7ac7de1aeda6aa81c0a42b989e3c34afb1cc9eb9dd90e000ecf1bc63"
     },
     {
       "path": "kernels/compute-proof.test.mjs",
@@ -3744,7 +3752,7 @@
     },
     {
       "path": "kernels/fixtures/art-414-compute-rbc-action-level-private.fixtures.json",
-      "sha256": "1a2c2388d1e7b8a71faf7ced27073c054fb89a82710bb9b452f09400dc3012c5"
+      "sha256": "dce450dd8180a3768b2d0941ca895857a325a52afd126fd6b6f0a71905268e3b"
     },
     {
       "path": "kernels/fixtures/art-415-check-capital-adequacy-private.disclosure.json",
@@ -3752,7 +3760,7 @@
     },
     {
       "path": "kernels/fixtures/art-415-check-capital-adequacy-private.fixtures.json",
-      "sha256": "3109cbd6c54d260f1168cab0138b673f0a323a1bef4a2ae49cbcab5f5db452b5"
+      "sha256": "d548e815826cdd188356b026542fb56c54f1b8ab3c709cc8833bedd96983f108"
     },
     {
       "path": "kernels/fixtures/art-418-idv-verification-failure-incident-composer.fixtures.json",
@@ -4008,7 +4016,7 @@
     },
     {
       "path": "kernels/fixtures/art-484-regrpt-editcheck-runner.fixtures.json",
-      "sha256": "b2fa7063eee16baa2a12c4ae2f5be33c387b430130ab031ce0d444f055dd44f2"
+      "sha256": "f37341835aef94d6a7b33b91a73b8d7ec951d4bad435df4fd7248565c64bd10d"
     },
     {
       "path": "kernels/fixtures/art-485-regrpt-variance-explainer.fixtures.json",
@@ -4280,11 +4288,11 @@
     },
     {
       "path": "kernels/fixtures/art-548-vop-readiness-diagnostic.disclosure.json",
-      "sha256": "777042d4f758f4c8fa9e85e1deabae84e13cee4aa791062cf29b341d64fb0990"
+      "sha256": "300818f88a5282476250fd6d29d5d530fb6a4cacd30379bf882b2dd53904587c"
     },
     {
       "path": "kernels/fixtures/art-548-vop-readiness-diagnostic.fixtures.json",
-      "sha256": "7bb4d727f0cdcdfaa8ee7c3500644b7c468597357d2a111de0c3a7c5302d0ad1"
+      "sha256": "3ab484179b7d596170d63d45c31519fd9089e3823cd4c3d3a9b55237afe85245"
     },
     {
       "path": "kernels/fixtures/art-549-g20-corridor-cost-gap.fixtures.json",
@@ -5803,6 +5811,18 @@
       "sha256": "5c3ec4a69db25be3acfff3bf74725686458d807b3f9d965250dbf6fc9b16b920"
     },
     {
+      "path": "kernels/fixtures/snap-1-state-snapshot-genesis.fixture.json",
+      "sha256": "4590b88a981768892c1e2914e8b5fef16bfaf808bb8e74662b6543cbd17e8e72"
+    },
+    {
+      "path": "kernels/fixtures/snap-1-state-snapshot-successor.fixture.json",
+      "sha256": "483674d97aa502afbbf8f302689affd5e8f55688cc8221515f0c80a410bd4659"
+    },
+    {
+      "path": "kernels/fixtures/snap-1-state-snapshot.fixtures.json",
+      "sha256": "6f42a08fcb9e99d55c919af23e8ca8ddda98e8a33a1060907df032099bef2201"
+    },
+    {
       "path": "kernels/fixtures/zg1_gen_model.py",
       "sha256": "ad3913618db7f89643b5b907eff5c8b82565d3dda280fe76a9e914cb57409d3a"
     },
@@ -5960,7 +5980,7 @@
     },
     {
       "path": "SPEC.md",
-      "sha256": "f554ea0e6e25ed1d90ffe06d8914837415df728bb87a461e464a5470a48bfaa0"
+      "sha256": "1a72d1dbb02f25d3befd1d38fe37203295558f424a5381a744d7636c199dfc61"
     }
   ]
 }
