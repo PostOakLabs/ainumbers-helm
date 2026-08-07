@@ -10,8 +10,8 @@ import { randomUUID, createHash } from "node:crypto";
 import { readFileSync } from "node:fs";
 import { join, dirname } from "node:path";
 import { fileURLToPath } from "node:url";
-import { tokenMatches, redeemPairingNonce, createStreamTicket, redeemStreamTicket, createExportTicket } from "./token.mjs";
-import { signChallenge } from "./challenge.mjs";
+import { tokenMatches, redeemPairingNonce, createStreamTicket, redeemStreamTicket, createExportTicket, pairingUrl, createPairingNonce } from "./token.mjs";
+import { signChallenge, fingerprintPublicKeyDer } from "./challenge.mjs";
 import { log } from "./log.mjs";
 import { startFlow, getFlowStatus, listConnections, revokeConnection, isSecureEndpoint } from "./oauth-pkce.mjs";
 import { serveStatic } from "./static.mjs";
@@ -258,6 +258,31 @@ async function handlePairRedeem(req, res) {
   if (!body.nonce) return deny(res, 400, "missing_nonce");
   if (!redeemPairingNonce(body.nonce)) return deny(res, 401, "pairing_expired_or_used");
   sendJson(res, 200, { ok: true });
+}
+
+// POST /pair/relink (HELM-REPAIR-LINK-1): mints a fresh #token= pairing URL
+// for a browser that is ALREADY paired but about to lose (or has no other
+// route back to) its sessionStorage token — the diagnosed dead end in
+// HELM-PAIR-DIAG-1 (closed tab / browser restart / no in-app re-pair link,
+// and 2026.8.4 stopped auto-opening a tab on ordinary restarts). Requires
+// the SAME Host+Origin+Bearer gate as every other mutating route below —
+// there is no separate check here, and there must not be one: this mints a
+// working credential, so an unauthenticated path to it would be a full auth
+// bypass. The durable bearer token itself is NEVER rotated (pairingUrl
+// reuses the caller's own `token`, same as every boot-time mint in
+// index.mjs) — only the pairing NONCE is fresh, single-use, and
+// short-TTL via createPairingNonce/redeemPairingNonce (P3-D9), matching the
+// existing pairing-link discipline exactly. Rotating the durable token would
+// invalidate any other tab's live EventSource/health polling mid-connection
+// (token.mjs's own reasoning for why the nonce, not the token, is what's
+// disposable). The response body is JSON, never a redirect or a query
+// string on this route's own URL, and callers (operate.mjs) must never
+// console.log or otherwise persist it outside the clipboard.
+function handlePairRelink(req, res, params, db, port, token, identityKeys) {
+  const fingerprint = identityKeys
+    ? fingerprintPublicKeyDer(identityKeys.ed25519.publicKey.export({ format: "der", type: "spki" }).toString("base64"))
+    : undefined;
+  sendJson(res, 200, { url: pairingUrl(token, port, createPairingNonce(), fingerprint) });
 }
 
 function checkDetectionOrigin(req, allowedOrigin) {
@@ -980,6 +1005,7 @@ export const ROUTES = {
   "POST /run/resume": handleRunResume,
   "GET /run/timeline": handleRunTimeline,
   "POST /pair/redeem": handlePairRedeem,
+  "POST /pair/relink": handlePairRelink,
   "POST /migration/import": handleMigrationImport,
   "POST /workflows/import": handleWorkflowImport,
   "GET /autostart": handleAutostartStatus,
@@ -1041,6 +1067,7 @@ export function createHelmServer({
     "GET /version-check": (req, res) => handleVersionCheck(req, res, versionCheckUrl),
     "POST /ha/replay": (req, res, params, reqDb) => handleHaReplay(req, res, params, reqDb, haIdentity),
     "POST /shutdown": (req, res, params, reqDb) => handleShutdown(req, res, params, reqDb, exitFn),
+    "POST /pair/relink": (req, res, params, reqDb) => handlePairRelink(req, res, params, reqDb, port, token, identityKeys),
     "GET /autostart": (req, res, params, reqDb) => handleAutostartStatus(req, res, params, reqDb, autostartOps),
     "POST /autostart": (req, res, params, reqDb) => handleAutostartSet(req, res, params, reqDb, autostartOps),
     "GET /connectors": (req, res, params, reqDb) => handleListConnectors(req, res, params, reqDb, inboundWebhookContractPath),
@@ -1102,7 +1129,18 @@ export function createHelmServer({
       if (ticket && redeemStreamTicket(ticket)) presented = token;
     }
     if (!tokenMatches(token, presented)) {
-      log.warn("rejected: bad or missing token", { path: pathname });
+      // HELM-REPAIR-LINK-1 (HELM-PAIR-DIAG-1 proposal 3): a browser tab
+      // auto-GETs /favicon.ico on every load and can never attach a custom
+      // Authorization header to it (no favicon entry in UI_ASSETS), so this
+      // 401 fires on EVERY page load — paired or not, healthy or not — with
+      // zero diagnostic signal, drowning real 401s during triage (measured
+      // directly in HELM-PAIR-DIAG-1: ~1/sec). log.mjs has no level below
+      // "warn" to demote it to, so this skips the log line entirely for this
+      // one well-understood, zero-signal path rather than adding a new log
+      // level for a single caller — every OTHER rejected path still warns.
+      if (pathname !== "/favicon.ico") {
+        log.warn("rejected: bad or missing token", { path: pathname });
+      }
       return deny(res, 401, "unauthorized");
     }
     onAuthenticated();

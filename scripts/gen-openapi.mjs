@@ -39,6 +39,7 @@ const ROUTE_DOCS = {
   "POST /run/resume": { summary: "Resume a run currently held at a §27.4 accountability gate.", tags: ["Runs"] },
   "GET /run/timeline": { summary: "Fetch a run's step-by-step timeline.", tags: ["Runs"] },
   "POST /pair/redeem": { summary: "Redeem a single-use pairing nonce.", tags: ["Pairing"] },
+  "POST /pair/relink": { summary: "Mint a fresh #token= pairing URL for an already-paired session (HELM-REPAIR-LINK-1).", tags: ["Pairing"] },
   "POST /migration/import": { summary: "Import a migration bundle from another daemon.", tags: ["Migration"] },
   "POST /workflows/import": { summary: "Import a workflow export bundle.", tags: ["Workflows"] },
   "GET /kernels/{id}/card": { summary: "Fetch a kernel's read-only decision-table card.", tags: ["Kernels"] },

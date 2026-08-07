@@ -23,6 +23,7 @@ const { vaultSet } = await import("./vault.mjs");
 const { __setHostResolverForTest } = await import("./connector.mjs");
 const { __setManifestOverrideForTest } = await import("./run-actions.mjs");
 const { subscribeRunEvents } = await import("./event-bus.mjs");
+const { log } = await import("./log.mjs");
 
 const config = loadConfig();
 const token = loadOrCreateToken();
@@ -137,6 +138,31 @@ test("negative: a rejected /events request never logs the token", async () => {
   assert.ok(logged.includes("rejected:"), "expected the rejections to be logged at all");
   assert.ok(!logged.includes(token), "bearer token leaked into log output");
   assert.ok(logged.includes("/events"), "expected the path itself to still be logged");
+});
+
+// HELM-REPAIR-LINK-1 (HELM-PAIR-DIAG-1 proposal 3): a bare browser GET of
+// /favicon.ico can never carry a bearer token, so it 401s on every page
+// load regardless of pairing state — quieted to stop drowning real 401s
+// during triage, but ONLY for that one path; every other rejected path
+// must still warn (regression cover for accidentally silencing the gate).
+test("GET /favicon.ico: 401s same as any unauthenticated route, but is not logged", async () => {
+  // Spies on log.warn itself, not process.stdout.write — the test runner's
+  // own reporter also writes to stdout mid-test (its progress line for
+  // THIS test's title contains the literal substring "/favicon.ico"),
+  // which false-failed a stdout-capture version of this assertion.
+  const calls = [];
+  const realWarn = log.warn;
+  log.warn = (msg, fields) => calls.push({ msg, fields });
+  let res;
+  try {
+    res = await get("/favicon.ico", { Host: `127.0.0.1:${PORT}`, Origin: ORIGIN });
+    await get("/health", { Host: `127.0.0.1:${PORT}`, Origin: ORIGIN }); // no Authorization — still must log
+  } finally {
+    log.warn = realWarn;
+  }
+  assert.equal(res.status, 401);
+  assert.ok(!calls.some((c) => c.fields?.path === "/favicon.ico"), "favicon rejection should not be logged");
+  assert.ok(calls.some((c) => c.fields?.path === "/health"), "a genuine unauthenticated rejection on another path must still be logged");
 });
 
 test("GET /vault/connections is authenticated and starts empty", async () => {
@@ -661,6 +687,34 @@ test("POST /pair/redeem: an expired nonce (short TTL, injected clock) is rejecte
   const nonce = createPairingNonce(Date.now() - 10 * 60 * 1000); // minted "10 minutes ago"
   const res = await post("/pair/redeem", { nonce }, headers());
   assert.equal(res.status, 401);
+});
+
+test("POST /pair/relink: unauthenticated request rejected (mints nothing without the existing bearer)", async () => {
+  const h = headers();
+  delete h.Authorization;
+  const res = await post("/pair/relink", {}, h);
+  assert.equal(res.status, 401);
+});
+
+test("POST /pair/relink: mints a fresh pairing URL carrying the SAME durable token, a NEW single-use nonce, and the daemon's fingerprint", async () => {
+  const res = await post("/pair/relink", {}, headers());
+  assert.equal(res.status, 200);
+  const { url } = JSON.parse(res.body);
+  assert.match(url, new RegExp(`^http://127\\.0\\.0\\.1:${PORT}/#token=${token}&pair=[0-9a-f]{32}&fp=sha256:[0-9a-f]{64}$`));
+
+  // The minted nonce is real and single-use through the ordinary /pair/redeem
+  // path — not a decorative value tacked onto the URL.
+  const nonce = /&pair=([0-9a-f]{32})/.exec(url)[1];
+  const redeemed = await post("/pair/redeem", { nonce }, headers());
+  assert.equal(redeemed.status, 200);
+  const replay = await post("/pair/redeem", { nonce }, headers());
+  assert.equal(replay.status, 401);
+});
+
+test("POST /pair/relink: two mints in a row never reuse the same nonce", async () => {
+  const a = JSON.parse((await post("/pair/relink", {}, headers())).body).url;
+  const b = JSON.parse((await post("/pair/relink", {}, headers())).body).url;
+  assert.notEqual(a, b);
 });
 
 test("negative: GET /pair/challenge from an arbitrary third-party origin rejected", async () => {

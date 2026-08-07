@@ -77,6 +77,38 @@ async function runBackup(port, token, resultEl) {
   }
 }
 
+// HELM-REPAIR-LINK-1: the pairing token lives in sessionStorage (P3-D9,
+// api.mjs), so it's lost on tab close/browser restart, and 2026.8.4 stopped
+// auto-opening a fresh tab on ordinary restarts (HELM-PAIR-DIAG-1) — this is
+// the way back in. Mints a fresh #token= link over the ALREADY-authenticated
+// bearer gate (POST /pair/relink), same durable token, a fresh single-use
+// pairing nonce. Never console.log's the URL, never writes it into a log
+// line or any persisted storage — clipboard only, with a manual-copy
+// fallback (readonly input, value set as a DOM property, never interpolated
+// into innerHTML) if clipboard access is blocked.
+async function relink(port, token, root) {
+  const resultEl = root.querySelector("#relink-result");
+  resultEl.textContent = "Minting a fresh link…";
+  const res = await call("/pair/relink", { port, token, method: "POST" });
+  if (!res.ok) {
+    resultEl.textContent =
+      res.status === 404
+        ? "Re-pairing links aren't available in this daemon version yet."
+        : "helmd unreachable — link not minted.";
+    return;
+  }
+  const url = res.data?.url;
+  try {
+    await navigator.clipboard.writeText(url);
+    resultEl.textContent = "Copied to clipboard — keep it as private as a password. Paste it into a new tab if this one closes.";
+  } catch {
+    resultEl.innerHTML = `<label>Clipboard access blocked — select and copy by hand:<br><input type="text" readonly id="relink-url" style="width:100%"></label>`;
+    const field = resultEl.querySelector("#relink-url");
+    field.value = url;
+    field.select();
+  }
+}
+
 // HELM-UX-1 §8: lives here, not the header status pill — Unpair already
 // sits there and two destructive-sounding buttons with very different
 // consequences (Unpair just forgets a browser token; this stops the
@@ -272,6 +304,12 @@ export async function renderOperate(root, { port, token }) {
         <p id="backup-result" role="status" aria-live="polite"></p>
       </section>
       ${startupCardHtml()}
+      <section class="card" aria-labelledby="op-relink">
+        <h3 id="op-relink">Get back in from another tab</h3>
+        <p class="field-row-note">This tab's pairing is remembered only for as long as it stays open. Mint a fresh link now and keep it somewhere safe — anyone who has it can open Helm as you.</p>
+        <button type="button" id="relink-btn">Copy a fresh pairing link</button>
+        <p id="relink-result" role="status" aria-live="polite"></p>
+      </section>
       <section class="card" aria-labelledby="op-quit">
         <h3 id="op-quit">Quit Helm</h3>
         <p class="field-row-note">Stops helmd on this computer. This isn't a permanent uninstall — open Helm again, or turn on the startup option above and it comes back at your next sign-in.</p>
@@ -285,6 +323,9 @@ export async function renderOperate(root, { port, token }) {
   });
   root.querySelector("#quit-btn").addEventListener("click", () => {
     quitDaemon(port, token, root.querySelector("#quit-result"));
+  });
+  root.querySelector("#relink-btn").addEventListener("click", () => {
+    relink(port, token, root);
   });
   await wireStartupCard(root, { port, token });
 }
