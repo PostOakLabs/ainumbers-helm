@@ -77,7 +77,7 @@ build**: no minisign binary was available to produce real test goldens,
 and fabricated goldens were explicitly declined rather than shipped. A
 minisign row is a follow-up, not silently done here.
 
-### Pre-rotation key lifecycle (SIGN-PREROT-1)
+### Pre-rotation key lifecycle
 
 `hub/key-lifecycle.mjs` (daemon-side, `node:crypto`) and its offline mirror
 `ui/lib/verify-key-lineage.mjs` (browser-side, WebCrypto) implement a
