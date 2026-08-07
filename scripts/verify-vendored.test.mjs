@@ -39,6 +39,12 @@ test("verify-vendored: real hub/vendored/anchor-suite tree passes local checks",
   assert.deepEqual(issues, []);
 });
 
+test("verify-vendored: real hub/vendored/ssh-sig tree passes local checks", () => {
+  const config = JSON.parse(readFileSync(join(HERE, "vendor-ssh-sig.config.json"), "utf8"));
+  const issues = collectConfigDrivenIssues(join(ROOT, config.destination), config);
+  assert.deepEqual(issues, []);
+});
+
 test("verify-vendored: real ui/vendored tree passes local checks (every entry licensed + pinned, bytes match)", () => {
   const issues = collectHeterogeneousIssues(join(ROOT, "ui/vendored"), join(ROOT, "ui/vendored/MANIFEST.json"), "ui/vendored");
   assert.deepEqual(issues, []);

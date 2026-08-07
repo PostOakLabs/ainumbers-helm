@@ -183,7 +183,7 @@ export function collectHeterogeneousIssues(destRoot, manifestPath, label) {
 // checks above — a NEW vendored tree added without a manifest must fail loud,
 // not silently skip verification.
 // ---------------------------------------------------------------------------
-const KNOWN_VENDORED_ROOTS = new Set(["hub/vendored/ocg", "hub/vendored/anchor-suite", "ui/vendored"]);
+const KNOWN_VENDORED_ROOTS = new Set(["hub/vendored/ocg", "hub/vendored/anchor-suite", "hub/vendored/ssh-sig", "ui/vendored"]);
 
 export function collectUncoveredTreeIssues(root) {
   const issues = [];
@@ -215,7 +215,15 @@ async function collectUpstreamDriftIssues(destRoot, config, mapRelPath) {
   const tmp = mkdtempSync(join(tmpdir(), "helm-verify-vendor-"));
   try {
     console.log(`Fetching ${config.sourceRepo} @ ${config.pinnedSha} for upstream comparison ...`);
+    // core.autocrlf=false: a machine-global autocrlf=true would rewrite
+    // LF blobs to CRLF on checkout for any upstream repo without its own
+    // .gitattributes forcing LF (ocg/anchor-suite happen to have one; a
+    // third repo need not). That checkout-time rewrite is a LOCAL clone
+    // artifact, not real drift from the pinned blob, and comparing its
+    // bytes against our (blob-identical) vendored copy would misreport
+    // hash mismatches as tampering.
     sh("git", ["init", "-q"], tmp);
+    sh("git", ["config", "core.autocrlf", "false"], tmp);
     sh("git", ["remote", "add", "origin", config.sourceRepo], tmp);
     sh("git", ["fetch", "--depth", "1", "origin", config.pinnedSha], tmp);
     sh("git", ["checkout", "-q", "FETCH_HEAD"], tmp);
@@ -256,12 +264,15 @@ async function runCLI() {
 
   const ocgConfig = JSON.parse(readFileSync(join(HERE, "vendor.config.json"), "utf8"));
   const anchorConfig = JSON.parse(readFileSync(join(HERE, "vendor-anchor.config.json"), "utf8"));
+  const sshSigConfig = JSON.parse(readFileSync(join(HERE, "vendor-ssh-sig.config.json"), "utf8"));
 
   const ocgIssues = collectConfigDrivenIssues(join(ROOT, ocgConfig.destination), ocgConfig);
   const anchorIssues = collectConfigDrivenIssues(join(ROOT, anchorConfig.destination), anchorConfig);
-  issues = issues.concat(ocgIssues, anchorIssues);
+  const sshSigIssues = collectConfigDrivenIssues(join(ROOT, sshSigConfig.destination), sshSigConfig);
+  issues = issues.concat(ocgIssues, anchorIssues, sshSigIssues);
   if (ocgIssues.length === 0) console.log(`${ocgConfig.destination}: local vendored tree OK.`);
   if (anchorIssues.length === 0) console.log(`${anchorConfig.destination}: local vendored tree OK.`);
+  if (sshSigIssues.length === 0) console.log(`${sshSigConfig.destination}: local vendored tree OK.`);
 
   issues = issues.concat(collectHeterogeneousIssues(join(ROOT, "ui/vendored"), join(ROOT, "ui/vendored/MANIFEST.json"), "ui/vendored"));
   issues = issues.concat(collectUncoveredTreeIssues(ROOT));
@@ -282,6 +293,7 @@ async function runCLI() {
     await Promise.all([
       collectUpstreamDriftIssues(join(ROOT, ocgConfig.destination), ocgConfig, (relPath) => relPath.split("/").pop()),
       collectUpstreamDriftIssues(join(ROOT, anchorConfig.destination), anchorConfig, (relPath) => relPath.replace(/^public\//, "")),
+      collectUpstreamDriftIssues(join(ROOT, sshSigConfig.destination), sshSigConfig, (relPath) => (relPath === "LICENSE" ? "LICENSE" : `reference/${relPath}`)),
     ])
   ).flat();
 

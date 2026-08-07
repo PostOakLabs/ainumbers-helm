@@ -1,0 +1,8 @@
+{
+  "sourceRepo": "https://github.com/wiktor-k/ssh-sig",
+  "license": "Apache-2.0 (wiktor-k/ssh-sig; LICENSE in this tree is unmodified upstream text; reference-only citation, not executed by helmd — see hub/vendored/ssh-sig/REFERENCE.md)",
+  "pinnedSha": "cb28ef2c6415b918c6441eb6d19fab0916eeb3f5",
+  "paths": ["LICENSE", "armor.ts", "formats.ts", "reader.ts", "sig.ts", "sig_parser.ts", "verifier.ts", "writer.ts", "index.ts"],
+  "destination": "hub/vendored/ssh-sig",
+  "note": "SIGN-EXTSIG-1: hand-copied at commit pin (not pulled by an automated scripts/vendor-*.mjs script — this repo's TypeScript targets Deno/browser SubtleCrypto and is never executed by helmd; it exists only as a citable, license-clean design reference for hub/extsig.mjs's SSHSIG wire-format parsing, per SIGNING-SURFACES-BUILD-SPEC.md §1 / phil GO-WITH-CONDITIONS). The .ts files land under destination/reference/; LICENSE lands at destination root."
+}
