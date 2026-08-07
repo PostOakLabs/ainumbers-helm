@@ -31,7 +31,7 @@ export async function renderHome(root) {
 
     <section class="card" aria-labelledby="home-startup">
       <h3 id="home-startup">Helm only runs when you open it</h3>
-      <p>Nothing is added to this computer's startup items unless you ask for it. If you want Helm running after you sign in, the switch is on <a href="#/operate">Operate</a>.</p>
+      <p>Nothing is added to this computer's startup items unless you ask for it. If you want Helm running after you sign in, the switch is on <a href="#/operate">Status</a>.</p>
     </section>
 
     <section class="card" aria-labelledby="home-more">

@@ -24,10 +24,14 @@ function renderUnverifiedBanner(unverified) {
   return `
     <section class="canvas-unverified-banner" data-testid="canvas-unverified-banner">
       <h3>Unverified steps in this pack</h3>
-      <p class="empty-state">Not evaluated — browser-tool step(s), run out of band. These step(s) have no kernel proof and no §26.6 trust label:</p>
+      <p class="empty-state">Not evaluated — browser-tool step(s), run out of band:</p>
       <ul>
         ${unverified.map((u) => `<li><code>${escapeHtml(u.toolId)}</code> (${escapeHtml(u.nodeId)})</li>`).join("")}
       </ul>
+      <details class="disclosure">
+        <summary>Why these aren't verified</summary>
+        <p class="field-row-note">These step(s) have no kernel proof and no §26.6 trust label — nothing failed here, they just weren't run through helmd's compute pipeline.</p>
+      </details>
     </section>`;
 }
 

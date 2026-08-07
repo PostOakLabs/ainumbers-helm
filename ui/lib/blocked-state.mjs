@@ -22,7 +22,7 @@ const KIND_COPY = {
   "not-paired": {
     heading: "Reconnect this tab",
     body: "Helm is running, but this browser tab's pairing token is missing, expired, or was rejected.",
-    action: `Open helmd's pairing link again to reconnect this tab. If you don't have the link, use <a href="#/operate">Operate</a>'s advanced pairing form.`,
+    action: `Open helmd's pairing link again to reconnect this tab. If you don't have the link, use <a href="#/operate">Status</a>'s advanced pairing form.`,
   },
   "too-old": {
     heading: "Not in this Helm version yet",

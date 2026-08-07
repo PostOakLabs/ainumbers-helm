@@ -62,7 +62,7 @@ export function agentsContentHtml({ port }) {
         <div class="field-row"><dt>Protocol version</dt><dd>${PROTOCOL_VERSIONS.map(esc).join(" or ")}</dd></div>
         <div class="field-row"><dt>Auth</dt><dd>Bearer token, sent as <code>Authorization: Bearer &lt;token&gt;</code> — the same token this browser tab is paired with.</dd></div>
       </dl>
-      <p class="field-row-note">The token an MCP client needs is the same pairing token this tab already holds. To issue a fresh one for an agent — one that doesn't disturb any other paired tab — open a new pairing link from <a href="#/operate">Operate</a>'s advanced pairing form. There's no copy-to-clipboard button on this page on purpose: paste the token once, into a client you trust, from wherever the pairing link took you.</p>
+      <p class="field-row-note">The token an MCP client needs is the same pairing token this tab already holds. To issue a fresh one for an agent — one that doesn't disturb any other paired tab — open a new pairing link from <a href="#/operate">Status</a>'s advanced pairing form. There's no copy-to-clipboard button on this page on purpose: paste the token once, into a client you trust, from wherever the pairing link took you.</p>
     </section>
     <section aria-labelledby="agents-tools-heading">
       <h2 id="agents-tools-heading">Read and run tools</h2>
