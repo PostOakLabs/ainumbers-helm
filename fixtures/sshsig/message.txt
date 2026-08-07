@@ -1,0 +1,1 @@
+helm countersign golden message — SIGN-EXTSIG-1

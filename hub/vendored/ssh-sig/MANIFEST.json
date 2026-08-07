@@ -1,0 +1,59 @@
+{
+  "sourceRepo": "https://github.com/wiktor-k/ssh-sig",
+  "license": "Apache-2.0 (wiktor-k/ssh-sig; LICENSE in this tree is unmodified upstream text; reference-only citation, not executed by helmd — see REFERENCE.md)",
+  "pinnedSha": "cb28ef2c6415b918c6441eb6d19fab0916eeb3f5",
+  "vendoredPaths": [
+    "LICENSE",
+    "armor.ts",
+    "formats.ts",
+    "reader.ts",
+    "sig.ts",
+    "sig_parser.ts",
+    "verifier.ts",
+    "writer.ts",
+    "index.ts"
+  ],
+  "fileCount": 10,
+  "files": [
+    {
+      "path": "LICENSE",
+      "sha256": "f8b7d786e682e29e1c7d7376e199515c20ce1807f3ca3414e9cbdb0dcd0e19d5"
+    },
+    {
+      "path": "REFERENCE.md",
+      "sha256": "416304ca40b50d01ae1249e45631033770d5ea39c6d6853845df4622428f5ec9"
+    },
+    {
+      "path": "reference/armor.ts",
+      "sha256": "fc9379801a0df70fc217d1b991869504e42f832224ac400abbfeda82ab649dec"
+    },
+    {
+      "path": "reference/formats.ts",
+      "sha256": "1ba8f4b36261746e2df9b02570d8dd59d0196ba8ed2480d579d0da38c69455d0"
+    },
+    {
+      "path": "reference/reader.ts",
+      "sha256": "bb54191a5206de8a5247a8cb05e6a21ce0ca719d371f0778abcce9ac46c65ca4"
+    },
+    {
+      "path": "reference/sig.ts",
+      "sha256": "d11b0bec5d2b559148c308ee0e128aea78bbe5866c06cac60a4f05666df3f90d"
+    },
+    {
+      "path": "reference/sig_parser.ts",
+      "sha256": "4fc0d51eb7d69872226880eb0941f8612f5280bbe7d6b52217f14b69f829e0be"
+    },
+    {
+      "path": "reference/verifier.ts",
+      "sha256": "b8f4f0f76a34360fccc1a659970639dd58726326b36991d6eb0cedc2881de14b"
+    },
+    {
+      "path": "reference/writer.ts",
+      "sha256": "28366bcf3c3d38042cbe576322f35559da439d32bd8b4fa2508e62fcc13c3792"
+    },
+    {
+      "path": "reference/index.ts",
+      "sha256": "909a6ec4134291dba312869931afc12d64bed7ef0b23fee9964e84b4d1ec18a8"
+    }
+  ]
+}

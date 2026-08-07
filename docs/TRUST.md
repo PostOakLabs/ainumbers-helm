@@ -56,6 +56,27 @@ beacon/analytics patterns — none found.)
   `.github/workflows/release.yml` — ordinary CI plumbing, not something
   the shipped daemon does.
 
+### External counter-signature verification (SSHSIG)
+
+`hub/extsig.mjs` verifies OpenSSH SSHSIG (`ssh-keygen -Y`) counter-
+signatures over artifact digests, entirely offline — no network call of
+any kind, same as every other cryptographic operation in this repo.
+Signature math is `node:crypto` (Ed25519) only; the SSHSIG wire-format
+parsing (armor, SSH-string framing, `allowed_signers` roster) is our own
+code, written with the OpenSSH-published wire format and
+`wiktor-k/ssh-sig` (Apache-2.0) as a **design reference only** — that
+reference is vendored unmodified at `hub/vendored/ssh-sig/reference/`
+(pinned commit `cb28ef2c6415b918c6441eb6d19fab0916eeb3f5`, license in
+`hub/vendored/ssh-sig/LICENSE`) for audit purposes but is never executed;
+see `hub/vendored/ssh-sig/REFERENCE.md` for exactly where our verifier
+diverges from it and why (namespace enforcement, sk-key rejection).
+`sk-ssh-ed25519@openssh.com` (FIDO/security-key) signatures are refused
+explicitly rather than attempted — no test vectors proven against real
+`ssh-keygen` FIDO output exist. **minisign is not supported in this
+build** — no minisign binary was available to produce real test goldens,
+and fabricated goldens were explicitly declined rather than shipped; a
+minisign row is a follow-up, not silently done here.
+
 ## 2. Reproducible zero-unlisted-egress recipe (≤10 minutes)
 
 Browser devtools cannot verify this repo's egress claim end to end: helmd's
