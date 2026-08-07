@@ -10,7 +10,8 @@ import { randomUUID, createHash } from "node:crypto";
 import { readFileSync } from "node:fs";
 import { join, dirname } from "node:path";
 import { fileURLToPath } from "node:url";
-import { tokenMatches, redeemPairingNonce, createStreamTicket, redeemStreamTicket, createExportTicket, pairingUrl, createPairingNonce } from "./token.mjs";
+import { tokenMatches, redeemPairingNonce, createStreamTicket, redeemStreamTicket, createExportTicket, pairingUrl, createPairingNonce, createSignerConfigTicket, redeemSignerConfigTicket } from "./token.mjs";
+import { loadSignerConfig, writeSignerConfig } from "./signer-config.mjs";
 import { signChallenge, fingerprintPublicKeyDer } from "./challenge.mjs";
 import { log } from "./log.mjs";
 import { startFlow, getFlowStatus, listConnections, revokeConnection, isSecureEndpoint } from "./oauth-pkce.mjs";
@@ -375,6 +376,52 @@ function handleEventsTicket(req, res) {
 // has no way to reach this route at all (it isn't an MCP tool).
 function handleEvidenceExportTicket(req, res) {
   sendJson(res, 200, { ticket: createExportTicket() });
+}
+
+// GET /signer/config (SIGN-SEAM-1 / SIGNING-SURFACES-BUILD-SPEC.md §3):
+// read-only, no side effects — returns the current external-signer config
+// (or null if unset) for the paired UI to render. Everything in it is
+// non-secret (see signer-config.mjs header), so no ticket is needed to read
+// it — only to CHANGE it (below).
+function handleSignerConfigGet(req, res) {
+  sendJson(res, 200, { config: loadSignerConfig() });
+}
+
+// POST /signer/config/ticket: mints the short-lived, single-use consent
+// ticket phil condition #5 requires before the signer command can be
+// repointed — the signer command IS key access, so this is consent-gated at
+// the same tier as pairing/token changes (createExportTicket above is the
+// precedent this copies). Not registered as an MCP tool (see ROUTES / the
+// MCP tool list in mcp.mjs) and never reachable from an MCP tools/call — an
+// agent holding only the bearer token cannot mint one; only the paired
+// browser UI is meant to call this, and only after it has shown the user
+// what is about to change.
+function handleSignerConfigTicket(req, res) {
+  sendJson(res, 200, { ticket: createSignerConfigTicket() });
+}
+
+// POST /signer/config {ticket, config}: the actual write. Requires a ticket
+// minted by the route above — a POST with no ticket, an expired ticket, or
+// a reused (already-redeemed) ticket is refused with 403 consent_required
+// before validateSignerConfig ever runs, so a bearer-token-only caller (an
+// agent, a compromised page that got past Origin somehow) cannot repoint the
+// signer even if it can reach this route at all.
+async function handleSignerConfigUpdate(req, res) {
+  let body;
+  try {
+    body = await readJsonBody(req);
+  } catch {
+    return deny(res, 400, "invalid_json");
+  }
+  if (typeof body.ticket !== "string" || !redeemSignerConfigTicket(body.ticket)) {
+    return deny(res, 403, "consent_required");
+  }
+  try {
+    const config = writeSignerConfig(body.config);
+    sendJson(res, 200, { config });
+  } catch (err) {
+    deny(res, 400, "invalid_signer_config");
+  }
 }
 
 // POST /shutdown (HELM-UX-1 §8, Operate view Quit button).
@@ -995,6 +1042,9 @@ export const ROUTES = {
   "GET /events": handleEvents,
   "POST /events/ticket": handleEventsTicket,
   "POST /evidence/export/ticket": handleEvidenceExportTicket,
+  "GET /signer/config": handleSignerConfigGet,
+  "POST /signer/config/ticket": handleSignerConfigTicket,
+  "POST /signer/config": handleSignerConfigUpdate,
   "POST /vault/connections/begin": handleBeginConnection,
   "GET /vault/connections": handleListConnections,
   "GET /connectors": (req, res) => handleListConnectors(req, res, null, null, DEFAULT_INBOUND_WEBHOOK_CONTRACT_PATH),

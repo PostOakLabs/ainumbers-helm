@@ -180,6 +180,97 @@
         }
       }
     },
+    "/signer/config": {
+      "get": {
+        "summary": "Read the current external-signer exec-seam config, or null if unset. Everything returned is non-secret (SIGN-SEAM-1).",
+        "tags": [
+          "Signing"
+        ],
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Missing or invalid bearer token."
+          },
+          "403": {
+            "description": "Host or Origin mismatch (D8 loopback hardening)."
+          }
+        }
+      },
+      "post": {
+        "summary": "Repoint the external-signer exec seam. Body {ticket, config}; refused with 403 consent_required without a valid ticket minted from POST /signer/config/ticket.",
+        "tags": [
+          "Signing"
+        ],
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Missing or invalid bearer token."
+          },
+          "403": {
+            "description": "Host or Origin mismatch (D8 loopback hardening)."
+          }
+        }
+      }
+    },
+    "/signer/config/ticket": {
+      "post": {
+        "summary": "Mint the short-lived, single-use consent ticket required before the external-signer command can be changed (SIGN-SEAM-1) — the signer command is key access. Meant to be called by the paired UI only, after showing a consent prompt — not reachable from tools/call.",
+        "tags": [
+          "Signing"
+        ],
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Missing or invalid bearer token."
+          },
+          "403": {
+            "description": "Host or Origin mismatch (D8 loopback hardening)."
+          }
+        }
+      }
+    },
     "/vault/connections/begin": {
       "post": {
         "summary": "Start an OAuth PKCE loopback connection flow.",

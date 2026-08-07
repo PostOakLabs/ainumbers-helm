@@ -216,6 +216,104 @@ async function wireStartupCard(root, { port, token }) {
   root.querySelector("#shortcut-toggle").addEventListener("change", (e) => send("shortcut", e.target));
 }
 
+// SIGN-SEAM-1 / SIGNING-SURFACES-BUILD-SPEC.md §3, phil condition #5: the
+// signer command IS key access, so pointing it at a new binary must go
+// through an explicit human consent step, never a silent form submit. This
+// is a two-click flow — "Review" renders exactly what is about to change
+// (never submits anything), "Confirm and save" mints the consent ticket
+// (POST /signer/config/ticket) and immediately spends it on the write (POST
+// /signer/config) — same shape as the evidence-export consent tier.
+function signerCardHtml() {
+  return `
+    <section class="card" aria-labelledby="op-signer">
+      <h3 id="op-signer">External signer</h3>
+      <p class="field-row-note">A command Helm runs to sign a digest — a PKCS#11 wrapper, a cloud-KMS CLI, a YubiKey tool. Helm never sees the private key; it only verifies what comes back.</p>
+      <p id="signer-current" role="status" aria-live="polite">Checking…</p>
+      <form id="signer-form">
+        <p class="field-row"><label>Command (full path)<br><input type="text" id="signer-command" placeholder="/usr/local/bin/my-signer" required></label></p>
+        <p class="field-row"><label>Arguments (one per line)<br><textarea id="signer-args" rows="2" placeholder="--slot&#10;1"></textarea></label></p>
+        <p class="field-row"><label>Public key (SPKI DER, base64)<br><textarea id="signer-pubkey" rows="2" required></textarea></label></p>
+        <button type="submit" id="signer-review-btn">Review</button>
+      </form>
+      <div id="signer-review" hidden>
+        <p class="field-row-note">This replaces Helm's signing authority with the command below. Anything with access to this machine that can point Helm at a DIFFERENT command would gain the same authority — that is exactly what this confirmation step exists to require a human for.</p>
+        <pre id="signer-review-summary"></pre>
+        <button type="button" id="signer-confirm-btn">Confirm and save</button>
+        <button type="button" id="signer-cancel-btn" class="secondary">Cancel</button>
+      </div>
+      <p id="signer-result" role="status" aria-live="polite"></p>
+    </section>`;
+}
+
+function signerArgsFromTextarea(text) {
+  return text.split("\n").map((l) => l.trim()).filter((l) => l.length > 0);
+}
+
+async function wireSignerCard(root, { port, token }) {
+  const currentEl = root.querySelector("#signer-current");
+  const form = root.querySelector("#signer-form");
+  const reviewEl = root.querySelector("#signer-review");
+  const summaryEl = root.querySelector("#signer-review-summary");
+  const resultEl = root.querySelector("#signer-result");
+
+  const refreshCurrent = async () => {
+    const res = await call("/signer/config", { port, token });
+    if (!res.ok) {
+      currentEl.textContent = res.status === 404 ? "External signers aren't available in this daemon version yet." : "helmd didn't answer.";
+      return;
+    }
+    currentEl.textContent = res.data.config
+      ? `Configured: ${res.data.config.command} (updated ${res.data.config.updatedAt})`
+      : "Not configured — signing stays with Helm's own keys until you set one.";
+  };
+  await refreshCurrent();
+
+  let pendingConfig = null;
+
+  form.addEventListener("submit", (e) => {
+    e.preventDefault();
+    pendingConfig = {
+      command: root.querySelector("#signer-command").value.trim(),
+      args: signerArgsFromTextarea(root.querySelector("#signer-args").value),
+      algo: "ed25519",
+      publicKeyDerBase64: root.querySelector("#signer-pubkey").value.trim(),
+    };
+    summaryEl.textContent = JSON.stringify(pendingConfig, null, 2);
+    reviewEl.hidden = false;
+    resultEl.textContent = "";
+  });
+
+  root.querySelector("#signer-cancel-btn").addEventListener("click", () => {
+    pendingConfig = null;
+    reviewEl.hidden = true;
+  });
+
+  root.querySelector("#signer-confirm-btn").addEventListener("click", async () => {
+    if (!pendingConfig) return;
+    resultEl.textContent = "Saving…";
+    const ticketRes = await call("/signer/config/ticket", { port, token, method: "POST" });
+    if (!ticketRes.ok) {
+      resultEl.textContent = "helmd didn't answer — nothing was changed.";
+      return;
+    }
+    const writeRes = await call("/signer/config", {
+      port,
+      token,
+      method: "POST",
+      body: { ticket: ticketRes.data.ticket, config: pendingConfig },
+    });
+    if (!writeRes.ok) {
+      resultEl.textContent = "That didn't take effect — nothing was changed.";
+      return;
+    }
+    reviewEl.hidden = true;
+    pendingConfig = null;
+    form.reset();
+    resultEl.textContent = "Saved.";
+    await refreshCurrent();
+  });
+}
+
 // Persona starter presets (LANDING §3.1 borrow) — curated preview of what
 // Operate shows once helmd is running, so the dormant state has a home
 // screen instead of a wall of empty cards.
@@ -304,6 +402,7 @@ export async function renderOperate(root, { port, token }) {
         <p id="backup-result" role="status" aria-live="polite"></p>
       </section>
       ${startupCardHtml()}
+      ${signerCardHtml()}
       <section class="card" aria-labelledby="op-relink">
         <h3 id="op-relink">Get back in from another tab</h3>
         <p class="field-row-note">This tab's pairing is remembered only for as long as it stays open. Mint a fresh link now and keep it somewhere safe — anyone who has it can open Helm as you.</p>
@@ -328,4 +427,5 @@ export async function renderOperate(root, { port, token }) {
     relink(port, token, root);
   });
   await wireStartupCard(root, { port, token });
+  await wireSignerCard(root, { port, token });
 }

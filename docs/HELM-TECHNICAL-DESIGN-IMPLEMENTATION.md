@@ -11,7 +11,7 @@ Every claim below was read off the code in this repository at commit `8cddd4a`, 
 
 `helmd` is a local-first control plane. It is one process (`hub/index.mjs`) that:
 
-- opens an HTTP server bound to `127.0.0.1` only (`hub/server.mjs:1120`),
+- opens an HTTP server bound to `127.0.0.1` only (`hub/server.mjs:1170`),
 - serves its own browser UI from that loopback socket (`hub/static.mjs`, `hub/ui-manifest.mjs`),
 - runs deterministic OpenChainGraph (OCG) kernels vendored into this repository (`hub/kernel-runner.mjs`),
 - records everything into an append-only, hash-chained journal on the local disk (`hub/journal.mjs`),
@@ -23,7 +23,7 @@ What it is not:
 
 - **Not a hosted service.** There is one instance per installation. Nothing is centrally hosted.
 - **Not a cloud agent.** The core loop (start, run a workflow, journal it, export evidence) makes no outbound request. Anchoring is the one optional network step, and it is off by default (`hub/config.mjs:50`, `anchorOnCheckpoint: false`). A second opt-in network surface, the Helios light-client sidecar (`heliosSidecar`), is wired the same way: `enabled: false` by default, both RPC URLs empty (`hub/config.mjs:53-58`, `104-109`), and as of this writing there is no code path that spawns the sidecar process or dials either RPC even when the flag is set.
-- **Not multi-tenant, and not a server you expose.** The socket is loopback and the Host header is checked against `127.0.0.1:<port>` before anything else runs (`hub/server.mjs:73-75`, `1049-1052`).
+- **Not multi-tenant, and not a server you expose.** The socket is loopback and the Host header is checked against `127.0.0.1:<port>` before anything else runs (`hub/server.mjs:74-76`, `1099-1102`).
 
 Default port is `4173` (`hub/config.mjs:9`). Default allowed browser origin is derived from the port rather than hardcoded, `http://127.0.0.1:<port>` (`hub/config.mjs:27-33`).
 
@@ -38,7 +38,7 @@ Default port is `4173` (`hub/config.mjs:9`). Default allowed browser origin is d
 1. Load config, load or create the bearer token, load or create the Ed25519 + ML-DSA-44 identity keys, load or create the HA identity (`hub/index.mjs:94-102`).
 2. Open the journal database and verify its hash chain before serving anything (§4 below, `hub/index.mjs:120-164`).
 3. Build the idle timer (`hub/index.mjs:189-199`).
-4. Create the HTTP server and bind it. A port already in use is a clean refusal, never a silent fallback to another port (`hub/server.mjs:1124-1141`, called at `hub/index.mjs:216-220`).
+4. Create the HTTP server and bind it. A port already in use is a clean refusal, never a silent fallback to another port (`hub/server.mjs:1174-1191`, called at `hub/index.mjs:216-220`).
 5. Only after the socket is listening, fire the checkpoint build, deliberately not awaited, so readiness never depends on a timestamp authority round trip (`hub/index.mjs:222-249`).
 6. Open the CLI channel, a named pipe on Windows and a unix domain socket elsewhere, carrying `pair`, `stop`, and `status` (`hub/index.mjs:265-311`, `hub/cli-channel.mjs`).
 7. Print the pairing URL, then open a browser tab only on a genuine first run (no token on disk yet) or an explicit `--open`, not on every start. Opening on every start used to spam a tab per restart when autostart or a crash loop re-fired `helmd start` unattended (`hub/index.mjs:320-351`).
@@ -48,7 +48,7 @@ Default port is `4173` (`hub/config.mjs:9`). Default allowed browser origin is d
 
 ### Idle shutdown
 
-`helmd` stops itself after `idleTimeoutMs`, default 120000 ms (`hub/idle-timer.mjs:8`, `hub/config.mjs:44`). "Idle" is deliberately wider than "no request arrived": an open server-sent-events connection, a run in flight, a live pairing window, or a backup in progress each hold the daemon open (`hub/index.mjs:191`). The timeout is announced on `GET /health`, in `helmd status`, and in the boot banner rather than only enforced (`hub/index.mjs:329`, `hub/server.mjs:172-174`).
+`helmd` stops itself after `idleTimeoutMs`, default 120000 ms (`hub/idle-timer.mjs:8`, `hub/config.mjs:44`). "Idle" is deliberately wider than "no request arrived": an open server-sent-events connection, a run in flight, a live pairing window, or a backup in progress each hold the daemon open (`hub/index.mjs:191`). The timeout is announced on `GET /health`, in `helmd status`, and in the boot banner rather than only enforced (`hub/index.mjs:329`, `hub/server.mjs:173-175`).
 
 ### Serving the shell
 
@@ -83,15 +83,15 @@ The pairing URL is `http://127.0.0.1:<port>/#token=<token>&pair=<nonce>&fp=<fing
 
 Re-pairing goes over the CLI channel (`helmd open`), never over HTTP (`hub/index.mjs:267-276`).
 
-For server-sent events specifically, the durable token is not put in the query string. `POST /events/ticket` mints a 15 second single-use ticket over an already-authenticated call, and `/events` accepts that ticket instead (`hub/token.mjs:88-104`, `hub/server.mjs:336-343`, `1095-1103`).
+For server-sent events specifically, the durable token is not put in the query string. `POST /events/ticket` mints a 15 second single-use ticket over an already-authenticated call, and `/events` accepts that ticket instead (`hub/token.mjs:88-104`, `hub/server.mjs:337-344`, `1145-1153`).
 
 ### The gate
 
-Every request passes three checks, in this order (`hub/server.mjs:3-7` and the dispatcher at `1048-1119`):
+Every request passes three checks, in this order (`hub/server.mjs:3-7` and the dispatcher at `1098-1169`):
 
-1. **Host** must equal `127.0.0.1:<port>` exactly (`hub/server.mjs:73-75`, checked at `1049`).
-2. **Origin** must equal the configured origin exactly, never a wildcard (`hub/server.mjs:107-109`, checked at `1080`).
-3. **`Authorization: Bearer <token>`** must match, compared with `timingSafeEqual` after a length check (`hub/server.mjs:1093-1107`, `hub/token.mjs:41-47`).
+1. **Host** must equal `127.0.0.1:<port>` exactly (`hub/server.mjs:74-76`, checked at `1099`).
+2. **Origin** must equal the configured origin exactly, never a wildcard (`hub/server.mjs:108-110`, checked at `1130`).
+3. **`Authorization: Bearer <token>`** must match, compared with `timingSafeEqual` after a length check (`hub/server.mjs:1143-1157`, `hub/token.mjs:41-47`).
 
 All three are needed because each defeats a different attacker, and none of them subsumes another:
 
@@ -102,18 +102,18 @@ All three are needed because each defeats a different attacker, and none of them
 Three deliberate exceptions exist and each is narrower than the general rule:
 
 - **The static shell** is pre-Origin and pre-auth, for the reason in §2. Host still applies.
-- **The detection surface**, exactly `GET /version` and `GET /pair/challenge`, accepts either the loopback origin or the fixed hosted origin `https://ainumbers.co`, and requires no token. It is an exact origin match, never a wildcard, and it never touches vault, journal, or run data (`hub/server.mjs:59-60`, `273-293`, dispatched at `1060-1067`).
-- **`POST /connectors/inbound-webhook`** is pre-Origin and pre-bearer, because the caller is a local orchestrator with neither a browser Origin nor the pairing token. Its authentication is an HMAC over the raw request body, computed before any JSON parsing so the signature covers the exact bytes sent (`hub/server.mjs:62-68`, dispatched at `1069-1078`, HMAC checked at `646-652`, `hub/webhook-guard.mjs`). Host still applies.
+- **The detection surface**, exactly `GET /version` and `GET /pair/challenge`, accepts either the loopback origin or the fixed hosted origin `https://ainumbers.co`, and requires no token. It is an exact origin match, never a wildcard, and it never touches vault, journal, or run data (`hub/server.mjs:60-61`, `274-294`, dispatched at `1110-1117`).
+- **`POST /connectors/inbound-webhook`** is pre-Origin and pre-bearer, because the caller is a local orchestrator with neither a browser Origin nor the pairing token. Its authentication is an HMAC over the raw request body, computed before any JSON parsing so the signature covers the exact bytes sent (`hub/server.mjs:63-69`, dispatched at `1119-1128`, HMAC checked at `693-699`, `hub/webhook-guard.mjs`). Host still applies.
 
-Requests are logged by pathname only, never by `req.url`. The reason is written in the code: the bearer used to ride in the `/events` query string, so logging a rejected request verbatim would write a working credential to stdout, which a macOS LaunchAgent can capture to a file (`hub/server.mjs:77-86`).
+Requests are logged by pathname only, never by `req.url`. The reason is written in the code: the bearer used to ride in the `/events` query string, so logging a rejected request verbatim would write a working credential to stdout, which a macOS LaunchAgent can capture to a file (`hub/server.mjs:78-87`).
 
 ### Autostart
 
 Autostart and the Start Menu shortcut are **opt-in and default off on every platform**. Nothing on the daemon's start path writes a persistence entry; `hub/index.mjs` does not import an installer at all (`hub/index.mjs:25-28`, and the explanation at `353-369`). The two diverge on one thing: the autostart command (Run key / LaunchAgent) never carries `--open`, since a login has no user watching, while the Start Menu shortcut always does, since a double-click on it IS the explicit user action (`hub/autostart.mjs:37-52`, `hub/shortcut.mjs:80-88`).
 
-The only way either gets installed is a person ticking the box in the Helm tab, which issues `POST /autostart`. That route is POST and never GET, because a GET that installs persistence is reachable from an `<img src=...>` or a prefetch, paths where a page's script never runs and the Origin check is the only obstacle. Both `/autostart` routes sit in the ordinary route table behind the full Host, Origin, and bearer gate, not in the static allowlist and not in the detection paths (`hub/server.mjs:376-457`, registered at `985-986`).
+The only way either gets installed is a person ticking the box in the Helm tab, which issues `POST /autostart`. That route is POST and never GET, because a GET that installs persistence is reachable from an `<img src=...>` or a prefetch, paths where a page's script never runs and the Origin check is the only obstacle. Both `/autostart` routes sit in the ordinary route table behind the full Host, Origin, and bearer gate, not in the static allowlist and not in the detection paths (`hub/server.mjs:448-527`, registered at `1061-1062`).
 
-The status route reports what is actually on the machine rather than what was requested: on an unsupported platform the installer returns `{supported:false}` and writes nothing, so the response echoes re-read state (`hub/server.mjs:454-457`). Status distinguishes `ok`, `not_installed`, `unsupported`, `target_missing`, `unreadable`, and `command_mismatch`, and `target_missing` surfaces as a `BROKEN` state in `helmd status` and in `helmd doctor` rather than reporting healthy forever (`hub/autostart.mjs:213-281`, `hub/index.mjs:476-480`).
+The status route reports what is actually on the machine rather than what was requested: on an unsupported platform the installer returns `{supported:false}` and writes nothing, so the response echoes re-read state (`hub/server.mjs:526-527`). Status distinguishes `ok`, `not_installed`, `unsupported`, `target_missing`, `unreadable`, and `command_mismatch`, and `target_missing` surfaces as a `BROKEN` state in `helmd status` and in `helmd doctor` rather than reporting healthy forever (`hub/autostart.mjs:213-281`, `hub/index.mjs:476-480`).
 
 ---
 
