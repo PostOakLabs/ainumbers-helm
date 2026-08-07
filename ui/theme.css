@@ -74,6 +74,22 @@ header.shell-header {
   text-decoration: underline;
 }
 
+/* HELM-BETA-LABEL-1: persistent, visible on every tab (part of the shared
+   shell header, not a per-view element) — never a "coming soon"/roadmap
+   claim, just the current state. */
+.beta-badge {
+  font-size: 0.65rem;
+  font-weight: 600;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  color: var(--warning);
+  border: 1px solid var(--warning);
+  border-radius: var(--radius);
+  padding: 0.1rem 0.4rem;
+  line-height: 1.4;
+  cursor: default;
+}
+
 nav.shell-nav {
   display: flex;
   align-items: center;
