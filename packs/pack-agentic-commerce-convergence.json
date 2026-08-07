@@ -1,0 +1,49 @@
+{
+  "workflow_id": "pack-agentic-commerce-convergence",
+  "name": "Agentic Commerce Convergence",
+  "outcome": "Binds one agent-run transaction across three independent agentic-commerce layers into a single hash-anchored composite: UCP cart/checkout discovery, ACP checkout conformance, and the AP2 payment mandate. UCP composes with AP2 rather than competing with it; this chain evidences that composition as one dated receipt.",
+  "spec_version": "ocg-control-plane@1",
+  "manifest": {
+    "manifest_version": "1",
+    "workflow_id": "pack-agentic-commerce-convergence",
+    "trigger": {
+      "type": "manual"
+    },
+    "nodes": [
+      {
+        "node_id": "n1",
+        "kernel_id": "art-564-ucp-checkout-payload-lint",
+        "kernel_digest": "sha256:828c4890e7f551a049a00ccacf21c33350300f9b10d047e2d05904d0f97e5c62"
+      },
+      {
+        "node_id": "n2",
+        "kernel_id": "art-12-acp-checkout-conformance-validator",
+        "kernel_digest": "sha256:4ee210e9f360aea1ea09609253ca4e223bc00065d42aa2a672f4ffb5a866afc2"
+      },
+      {
+        "node_id": "n3",
+        "kernel_id": "art-01-ap2-mandate-chain-validator",
+        "kernel_digest": "sha256:623495f9378cb65cb88c889831f43c2c82c8844af29dfaa32e3a5d1e6cfa5337"
+      }
+    ],
+    "connectors": [],
+    "gates": [],
+    "actions": []
+  },
+  "workflow_manifest_digest": "sha256:9cfc2adb11b69ab3978a9a5fc5f69a5d93c744d7d051fa840435c1403f6f0dbf",
+  "declared_inputs": [],
+  "steps_meta": [
+    {
+      "node_id": "n1",
+      "data_classification": "compute"
+    },
+    {
+      "node_id": "n2",
+      "data_classification": "compute"
+    },
+    {
+      "node_id": "n3",
+      "data_classification": "compute"
+    }
+  ]
+}
