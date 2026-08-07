@@ -1,18 +1,18 @@
 {
   "sourceRepo": "https://github.com/PostOakLabs/ainumbers.git",
   "license": "MIT License, Copyright (c) 2026 PostOakLabs (same license/holder as this repo; see this repo's own LICENSE for full terms; no third-party code in this vendored subtree)",
-  "pinnedSha": "0e3729bd50783fa5e48a8e5dcf5dc8d87747eedd",
+  "pinnedSha": "361240dc485a8c2070867e2b63302b2ff826b18c",
   "vendoredPaths": [
     "chaingraph/kernels",
     "chaingraph/standard/SPEC.md",
     "chaingraph/standard/openchain-graph-v0.4.schema.json",
     "chaingraph/chaingraph.json"
   ],
-  "fileCount": 1493,
+  "fileCount": 1552,
   "files": [
     {
       "path": "chaingraph.json",
-      "sha256": "684f3631561389a4a258d6066bb8ad43e80c7ce4b39633a4338e59e843b13951"
+      "sha256": "535c937405bbae371c47e8327767d90243822a67fbbf8922910efd597f2efd98"
     },
     {
       "path": "kernels/_ancestry.mjs",
@@ -25,6 +25,10 @@
     {
       "path": "kernels/_buildid.mjs",
       "sha256": "53ea5113433c72a4ced239c23d3478371b8d8bcd9fcf7753b7eb889ef72154cf"
+    },
+    {
+      "path": "kernels/_car.mjs",
+      "sha256": "a667c13e3ddb287d238dcf168cb23e9d9f279ef2320448a7001f04ff800358fc"
     },
     {
       "path": "kernels/_checklist.mjs",
@@ -2071,16 +2075,120 @@
       "sha256": "3c1274fc147ac5bb67216765094aaf175766d6505785a4e2a5d45f7f9fd4983d"
     },
     {
+      "path": "kernels/art-557-record-index-constituents.kernel.mjs",
+      "sha256": "9fa0ed744db004c384a593d82dbf01220683bac4c5daef6601790bfb5ffbd175"
+    },
+    {
+      "path": "kernels/art-558-record-fund-positions.kernel.mjs",
+      "sha256": "131eac7aaf5e372e1965aa999e673311441ba0a4febdaab6db2acae582e9496f"
+    },
+    {
+      "path": "kernels/art-559-attest-calc-agent-independence.kernel.mjs",
+      "sha256": "68c476b24ca693447d4153a954653832e6a9a62a35f2e0da3ac578eb163f74b0"
+    },
+    {
       "path": "kernels/art-56-tokenized-settlement-fit-diagnostic.kernel.mjs",
       "sha256": "b52a79f937c901786a32dcae3e275f3e2a4bb308cb0fb844998c5cf1268da1ff"
+    },
+    {
+      "path": "kernels/art-563-mt9xx-camt-statement-migration-mapper.kernel.mjs",
+      "sha256": "79089ccf4a9ef55d91ff82ddba35cc5faa5878ec105312739ff7a2518a33f0f5"
+    },
+    {
+      "path": "kernels/art-564-ucp-checkout-payload-lint.kernel.mjs",
+      "sha256": "828c4890e7f551a049a00ccacf21c33350300f9b10d047e2d05904d0f97e5c62"
+    },
+    {
+      "path": "kernels/art-565-kya-x402-scope-verifier.kernel.mjs",
+      "sha256": "f6c593e542fe2fbd5e4226a231dff7ce88a280d8fa68cc757c9fe6602afe29f3"
+    },
+    {
+      "path": "kernels/art-566-iolta-three-way-reconciliation.kernel.mjs",
+      "sha256": "891bee3fc15ad70e6efb5440b1b794536e846e9bb77b5a4a9ea06df0153f772a"
+    },
+    {
+      "path": "kernels/art-567-pe-waterfall-lp-recompute.kernel.mjs",
+      "sha256": "df13afbe5e611661922ccea2123194de8f703a3efa283154ec7af8b7876881e9"
+    },
+    {
+      "path": "kernels/art-568-securitization-trustee-report-recompute.kernel.mjs",
+      "sha256": "d055891899f36887772e5e5edccb200703d03fa965edd3ea178f6c6933e98578"
+    },
+    {
+      "path": "kernels/art-569-muni-arbitrage-spending-exception-checker.kernel.mjs",
+      "sha256": "51f687ecec3fb71291c2dad098f4e0e98618a92218f75eaf7610890d75034ed3"
     },
     {
       "path": "kernels/art-57-deposit-token-compliance-validator.kernel.mjs",
       "sha256": "2fd5b0a6674a558949495837e3105a855ebde50c43c0441c61008f9a10204f44"
     },
     {
+      "path": "kernels/art-570-ucp600-document-examination-assembler.kernel.mjs",
+      "sha256": "b120516d58cfb7d8628e27b1cef81b01dbf298a4724dff8548143c422eb588c3"
+    },
+    {
+      "path": "kernels/art-571-lease-schedule-recompute-asc842-ifrs16.kernel.mjs",
+      "sha256": "1a566e2d4a8d4a189f06af50533cfa35d5b37c69090587830c7dbffe07c1d9ed"
+    },
+    {
+      "path": "kernels/art-572-multi-garnishment-stacking-recompute.kernel.mjs",
+      "sha256": "40566c4874e0229d5ecd0a9656e3643dfaabfb3bfdc79ddc78a332d900bec3bf"
+    },
+    {
+      "path": "kernels/art-573-section16b-short-swing-profit-recompute.kernel.mjs",
+      "sha256": "2bf576ae353041e722a9e64447d9484503c9d7208b320a9338562368f15e41d2"
+    },
+    {
+      "path": "kernels/art-574-certified-payroll-prevailing-wage-recompute.kernel.mjs",
+      "sha256": "4da565b656d200c214becb712b820a097894e9edeae66b4275e34854847911c7"
+    },
+    {
+      "path": "kernels/art-575-tmpg-fails-charge-recompute.kernel.mjs",
+      "sha256": "14e3887cf72bab31d7ba429fce3f50695fd92a5bf06a7db441520862bfd55efc"
+    },
+    {
+      "path": "kernels/art-576-emir3-active-account-representativeness-classifier.kernel.mjs",
+      "sha256": "61ccaaf1ba92ae118685760e5c4c2d2196095b159dd005a1e79d115d31e544c6"
+    },
+    {
+      "path": "kernels/art-577-exchange-fee-tier-recompute.kernel.mjs",
+      "sha256": "caed451dceca161ee2dd898a0aee48ceeaee497d39ac0eab2963ebad4437f5d8"
+    },
+    {
+      "path": "kernels/art-578-etf-pcf-basket-verification.kernel.mjs",
+      "sha256": "8490d544bbc1bcf3f211e1b3e65eb5f0d9d5e83522bb6baba6486139e802d40d"
+    },
+    {
+      "path": "kernels/art-579-stock-loan-rebate-recompute.kernel.mjs",
+      "sha256": "76e2d848ba285ccf040cc4dbbef50f1caf5a2a24922ef89765eaf246faa5abc1"
+    },
+    {
       "path": "kernels/art-58-cross-network-settlement-validator.kernel.mjs",
       "sha256": "3bd0c00f1525794b85021aa94d28caed825ccbf0bae6d32f38092cb2ec96bc8b"
+    },
+    {
+      "path": "kernels/art-580-15c3-3a-note-h-margin-debit.kernel.mjs",
+      "sha256": "3bdfd9647ff94c830fe925048617e9528272a1bd33da7bc0a2a640e70563eea2"
+    },
+    {
+      "path": "kernels/art-581-emir3-simm-approval-scope-classifier.kernel.mjs",
+      "sha256": "05b8c0c228321335e7ba3d1133c961b3ba2aebcd9e92f1735833b892d78170ce"
+    },
+    {
+      "path": "kernels/art-582-genius-reserve-disclosure-conformance-monitor.kernel.mjs",
+      "sha256": "938dff18fe631418b8fc865198f0e4cb4ca4d6a9ee87967ccf818d5f2189edf9"
+    },
+    {
+      "path": "kernels/art-583-beacon-seeded-fair-sampling-deriver.kernel.mjs",
+      "sha256": "00bf25e2ac76c12d2bc9de448a1c9d767c67581310b599637d193d2f949b708a"
+    },
+    {
+      "path": "kernels/art-584-proof-of-reserves-verifier.kernel.mjs",
+      "sha256": "852795237d7839b503e955db5db49f8d87ff6dc9edeb5a31687fca2e6f660b66"
+    },
+    {
+      "path": "kernels/art-585-sanctions-screening-evidence-pack.kernel.mjs",
+      "sha256": "c686a99d6d05d28e3feba866c69df7eb43ba13b49c2ce7c8e260be818d13c8a6"
     },
     {
       "path": "kernels/art-59-settlement-asset-finality-classifier.kernel.mjs",
@@ -4311,16 +4419,120 @@
       "sha256": "37e62f851d83bb8d4e304eabf91f20a0cb450d3fd2d491b404cc89a5e3009535"
     },
     {
+      "path": "kernels/fixtures/art-557-record-index-constituents.fixtures.json",
+      "sha256": "06ba286cbd9ec832acec20ad4f4434948ce0965fd401e7fddca20644623fc48e"
+    },
+    {
+      "path": "kernels/fixtures/art-558-record-fund-positions.fixtures.json",
+      "sha256": "6deee2a9a47f10ede414a623a3a222afedddaf1b57c8db37bbc5b849fcb59275"
+    },
+    {
+      "path": "kernels/fixtures/art-559-attest-calc-agent-independence.fixtures.json",
+      "sha256": "e5d8206924eed489544fdf0f00db71265dc6ab72a2761f187438d7934cf88eb7"
+    },
+    {
       "path": "kernels/fixtures/art-56-tokenized-settlement-fit-diagnostic.fixtures.json",
       "sha256": "bf013b9d4b4cc096a1378c45df0537860052112850cf28893eb97374ce8d5cb8"
+    },
+    {
+      "path": "kernels/fixtures/art-563-mt9xx-camt-statement-migration-mapper.fixtures.json",
+      "sha256": "234afb31da4c54f5cc4c31fa4cc4e8a6d74f63129db034675c84ab54d2b36ec2"
+    },
+    {
+      "path": "kernels/fixtures/art-564-ucp-checkout-payload-lint.fixtures.json",
+      "sha256": "a51be21008329efae4f6259ab3e71e1b0476728dc362f803e44e439367e06194"
+    },
+    {
+      "path": "kernels/fixtures/art-565-kya-x402-scope-verifier.fixtures.json",
+      "sha256": "ff383dbbd9d99e874ae6fc819486c9d8640aaacf09950c95844d794e9022c3b7"
+    },
+    {
+      "path": "kernels/fixtures/art-566-iolta-three-way-reconciliation.fixtures.json",
+      "sha256": "6df17ed3ce236205d3c0001e3a96292068a568d0362607665aeedc83f7be206f"
+    },
+    {
+      "path": "kernels/fixtures/art-567-pe-waterfall-lp-recompute.fixtures.json",
+      "sha256": "aa29f5ea4e10ca2ec145b0e96f830c06b5f63bfab288b6f1fed00aa1878d5736"
+    },
+    {
+      "path": "kernels/fixtures/art-568-securitization-trustee-report-recompute.fixtures.json",
+      "sha256": "d86d1f7aff9d450b1cbb95ed1ac8dd4aec5ede2fd6990b851948a644cefbb346"
+    },
+    {
+      "path": "kernels/fixtures/art-569-muni-arbitrage-spending-exception-checker.fixtures.json",
+      "sha256": "d70f4290201ded8cff7512ab4c863870fb0421d654f0b16f70d29dab281fe6a5"
     },
     {
       "path": "kernels/fixtures/art-57-deposit-token-compliance-validator.fixtures.json",
       "sha256": "e423e56312be439b31b9280472f697b693137f9dbcf86d78dc3bc18d196ff3cd"
     },
     {
+      "path": "kernels/fixtures/art-570-ucp600-document-examination-assembler.fixtures.json",
+      "sha256": "e8088a4e98c4b870df3926bad164d4ba907651ee6d05178d99c13da76a54f040"
+    },
+    {
+      "path": "kernels/fixtures/art-571-lease-schedule-recompute-asc842-ifrs16.fixtures.json",
+      "sha256": "5df02f4f2978e33483f6897e3002519d5dd1b78c1f73fbf4f38006baf2fadbe6"
+    },
+    {
+      "path": "kernels/fixtures/art-572-multi-garnishment-stacking-recompute.fixtures.json",
+      "sha256": "5fc67c39f0fe35a0ca66b14a914477936c062cf880d4150261d763863a7619b7"
+    },
+    {
+      "path": "kernels/fixtures/art-573-section16b-short-swing-profit-recompute.fixtures.json",
+      "sha256": "b134835443b5f5e2a2518d606d199f889c1c3e32ff77f5685a3ac5b5a9a0011b"
+    },
+    {
+      "path": "kernels/fixtures/art-574-certified-payroll-prevailing-wage-recompute.fixtures.json",
+      "sha256": "9fba8821b54e7c3bdf034850b93a105272c9553bb773c7800d9168e4d5edd2b7"
+    },
+    {
+      "path": "kernels/fixtures/art-575-tmpg-fails-charge-recompute.fixtures.json",
+      "sha256": "beba3f191e31bc7c5af157929997ff62af1ac101542e61aed151744f8927c70a"
+    },
+    {
+      "path": "kernels/fixtures/art-576-emir3-active-account-representativeness-classifier.fixtures.json",
+      "sha256": "eebff5953522c25eeb2e3ad4eebabe452d00f11118bcaa42e47f97182d06ff6f"
+    },
+    {
+      "path": "kernels/fixtures/art-577-exchange-fee-tier-recompute.fixtures.json",
+      "sha256": "9458efbae75b9424eb5bb1331f4303b1c1f2e7e58ca686b8dcca52015147e0aa"
+    },
+    {
+      "path": "kernels/fixtures/art-578-etf-pcf-basket-verification.fixtures.json",
+      "sha256": "f1261c586c8f552ed50962069e83c1b3f6d0bf0982c1f4474da09168a87f871c"
+    },
+    {
+      "path": "kernels/fixtures/art-579-stock-loan-rebate-recompute.fixtures.json",
+      "sha256": "96c4de6a8149f8a21299aa018dcd8b024a9f73ede18a10642658796535757a93"
+    },
+    {
       "path": "kernels/fixtures/art-58-cross-network-settlement-validator.fixtures.json",
       "sha256": "96d6fe18f5242d089363a91cfea025c056373b503c253d976227ed3d8455da7d"
+    },
+    {
+      "path": "kernels/fixtures/art-580-15c3-3a-note-h-margin-debit.fixtures.json",
+      "sha256": "b31782de4d20d12bc1776c6c3521a66757d9a5e5f4378806bde18156efabe3d7"
+    },
+    {
+      "path": "kernels/fixtures/art-581-emir3-simm-approval-scope-classifier.fixtures.json",
+      "sha256": "b90579d39b074fa896cbb2a8434de5076fe76e06d2912bf65975eea173668f0d"
+    },
+    {
+      "path": "kernels/fixtures/art-582-genius-reserve-disclosure-conformance-monitor.fixtures.json",
+      "sha256": "5fd2f09c80934fc46773b89e42d098efb08116abdf5034a3c539827539b1e942"
+    },
+    {
+      "path": "kernels/fixtures/art-583-beacon-seeded-fair-sampling-deriver.fixtures.json",
+      "sha256": "cbd3cc3657982a0e1a3120e034865b6a55f6be4ede4924154f83855880dcad55"
+    },
+    {
+      "path": "kernels/fixtures/art-584-proof-of-reserves-verifier.fixtures.json",
+      "sha256": "e7fe98829910e6532830837cde1e3fd866fe81120c0e88a857d3603b6ea01b41"
+    },
+    {
+      "path": "kernels/fixtures/art-585-sanctions-screening-evidence-pack.fixtures.json",
+      "sha256": "c7f5b7584f93ded47273c1d75f1d82ca2c42e57f36da6008b2257e781d8e17cd"
     },
     {
       "path": "kernels/fixtures/art-59-settlement-asset-finality-classifier.fixtures.json",
@@ -5844,7 +6056,7 @@
     },
     {
       "path": "kernels/index.mjs",
-      "sha256": "fab5e04e2e126076e729740c0bb7b7bdea7cc23688f8927868ca8d590d454877"
+      "sha256": "c7b1947cc045382fc8eedd666a76edccfcdf8c463b293335ef719b75f70c4671"
     },
     {
       "path": "kernels/inline-hash-equality.test.mjs",
@@ -5967,6 +6179,30 @@
       "sha256": "e92fd57832807cd9a71fbeae07f35cb00ecfc5c55ad8bf6ec7a74f2e6a3609b7"
     },
     {
+      "path": "kernels/vendor/chainlink-protos-cre/decoder.mjs",
+      "sha256": "ced69ae29ae20715dc94a02bb0911ce9a52240602ab0553d94253ba5e1f5463d"
+    },
+    {
+      "path": "kernels/vendor/chainlink-protos-cre/LICENSE",
+      "sha256": "9beff5badac29a5d9770a76496fe899c6acfc27de13a6c30d9cb8ca3e89a6cec"
+    },
+    {
+      "path": "kernels/vendor/chainlink-protos-cre/PROVENANCE.md",
+      "sha256": "709e40340b231d2c1c62881a2e1d6cdbec9495e7236c9431fe159a095ca3a376"
+    },
+    {
+      "path": "kernels/vendor/chainlink-protos-cre/report-response-decode.test.mjs",
+      "sha256": "f16fa2be9eb2d4b426250839ea82424ecfb014768cffdd55eefd54161498b168"
+    },
+    {
+      "path": "kernels/vendor/chainlink-protos-cre/report-response.fixture.json",
+      "sha256": "a0d28cf70450baaa45d9da93d2d46c2a79121aa26d8edab0675d536267369a23"
+    },
+    {
+      "path": "kernels/vendor/chainlink-protos-cre/sdk.proto",
+      "sha256": "c46b0bee749f7d63d43dee9a82856f16175d6c9e0f8caee57712db4a3ae560bb"
+    },
+    {
       "path": "kernels/vm-parity-gate.mjs",
       "sha256": "a80f90438b6c44842cb546064c3481b7ed29ccd1fa93669c5d4b8bad40cfeda9"
     },
@@ -5980,7 +6216,7 @@
     },
     {
       "path": "SPEC.md",
-      "sha256": "1a72d1dbb02f25d3befd1d38fe37203295558f424a5381a744d7636c199dfc61"
+      "sha256": "66f65e28617f5862607f11702a3e3f5c01039b59ebad6f0593e27bbe61ba7523"
     }
   ]
 }
