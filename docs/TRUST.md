@@ -82,18 +82,18 @@ minisign row is a follow-up, not silently done here.
 `hub/key-lifecycle.mjs` (daemon-side, `node:crypto`) and its offline mirror
 `ui/lib/verify-key-lineage.mjs` (browser-side, WebCrypto) implement a
 KERI-borrowed pre-rotation scheme, entirely offline (no network call of any
-kind): a key's inception event self-signs and commits `SHA-256(next public
-key)`; a rotation event reveals that pre-committed key, is signed BY it, and
+kind). A key's inception event self-signs and commits `SHA-256(next public
+key)`. A rotation event reveals that pre-committed key, is signed BY it, and
 commits `SHA-256(the key after that)`. Continuity from any earlier state to
 the current key is verified by walking this chain and checking, at each
 link, that the revealed key hashes to the prior event's commitment and
-validly signs the rotation — no witnesses, no consensus, no live daemon
-required. **A fork — two rotations both claiming the same prior
-commitment — is DETECTED and reported, never adjudicated**: this repo does
-not run an ordering service, so fork resolution is explicitly out of scope
-by design, not a gap. SHA-256 and Ed25519 only, both existing `node:crypto`/
-WebCrypto paths — no new cryptographic primitive was added for this
-capability (schema: `schema/key_lifecycle_event.schema.json`).
+validly signs the rotation, with no witnesses, no consensus, and no live
+daemon required. A fork (two rotations both claiming the same prior
+commitment) is detected and reported, never adjudicated, because this repo
+does not run an ordering service; fork resolution is explicitly out of
+scope by design, not a gap. SHA-256 and Ed25519 only, both existing
+`node:crypto`/WebCrypto paths, so no new cryptographic primitive was added
+for this capability (schema: `schema/key_lifecycle_event.schema.json`).
 
 ## 2. Reproducible zero-unlisted-egress recipe (≤10 minutes)
 
