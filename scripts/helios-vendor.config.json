@@ -1,0 +1,41 @@
+{
+  "sourceRepo": "https://github.com/a16z/helios",
+  "license": "MIT OR Apache-2.0 (a16z/helios dual-license; see upstream LICENSE-MIT / LICENSE-APACHE — no code from this project is copied into this repo, only a pinned binary release reference)",
+  "pinnedTag": "0.11.1",
+  "pinnedTagPublishedAt": "2026-02-27T21:24:53Z",
+  "checkedAt": "2026-08-07T00:00:00Z",
+  "note": "Helios ships NO upstream SHA256SUMS file (confirmed against the GitHub Releases API asset listing for this tag) and its heliosup installer fetches unpinned `master` with zero checksum/signature verification (research/HELIOS-SCOPE-2026-08-06.md §2) — do not use heliosup. The hashes below were computed here, from bytes downloaded directly off the pinned tag's release-asset URLs, not copied from any upstream-published value. This config is a pin+checksum record only: it does not vendor (copy/commit) the binary into this repo. The sidecar install step that actually fetches+verifies against this pin is out of scope for this row (HELIOS-VENDOR-1) — see HELIOS-CONFIG-1.",
+  "killTrigger": "a16z/helios is single-org-maintained (a16z crypto), no second maintainer of record found (research §4). Ethereum hard forks (e.g. the Fusaka line, already precedented in the 0.9.x release notes) can change header/consensus format; a light client that hasn't re-synced its fork schedule fails closed (safe) or worse, silently trusts an unvalidated format. If a16z stops shipping releases across a hard-fork boundary, the sidecar feature dies — we do not fork or maintain the Rust client ourselves (that would mean linking/building the crate, which the sidecar design explicitly avoids). This is a standing precondition on the whole Helios sidecar, not a footnote.",
+  "bitcoinSupport": "NONE — a16z/helios covers Ethereum, OP Stack (op-mainnet, base), and Linea only (research §6). Never extrapolate Bitcoin capability onto this pin.",
+  "assets": [
+    {
+      "platform": "darwin-amd64",
+      "filename": "helios_darwin_amd64.tar.gz",
+      "url": "https://github.com/a16z/helios/releases/download/0.11.1/helios_darwin_amd64.tar.gz",
+      "sizeBytes": 5256129,
+      "sha256": "825ba2e16b82fa0b2f38d56717692e1828bbe852067954286ec673faee104651"
+    },
+    {
+      "platform": "darwin-arm64",
+      "filename": "helios_darwin_arm64.tar.gz",
+      "url": "https://github.com/a16z/helios/releases/download/0.11.1/helios_darwin_arm64.tar.gz",
+      "sizeBytes": 5104338,
+      "sha256": "fc88981c7fe12e1010115b7bfe61909cfae36f65177325562c57daa0eb30ae8c"
+    },
+    {
+      "platform": "linux-amd64",
+      "filename": "helios_linux_amd64.tar.gz",
+      "url": "https://github.com/a16z/helios/releases/download/0.11.1/helios_linux_amd64.tar.gz",
+      "sizeBytes": 7771616,
+      "sha256": "339bf4ce73073c53790e41e3217b6d91f0e5d8571132b9e88689997613162ddb"
+    },
+    {
+      "platform": "linux-arm64",
+      "filename": "helios_linux_arm64.tar.gz",
+      "url": "https://github.com/a16z/helios/releases/download/0.11.1/helios_linux_arm64.tar.gz",
+      "sizeBytes": 8434082,
+      "sha256": "20132e1f772af246eac3885bcba3b54c21a98ac24027a5853eca2fb0edc5dab6"
+    }
+  ],
+  "platformsNotPinned": "windows: a16z/helios ships no Windows binary asset for this tag (only darwin amd64/arm64 and linux amd64/arm64/armv7/riscv64gc exist) — the Helios sidecar has no Windows-host path today; unpinned. linux-armv7 / linux-riscv64gc: not a helmd build target (helm/scripts/build-sea.mjs only targets windows/macos/linux-x64/arm64-class hosts); left unpinned rather than pinning assets nothing consumes."
+}
