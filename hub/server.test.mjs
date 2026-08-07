@@ -4,6 +4,7 @@ import { mkdtempSync, rmSync, writeFileSync } from "node:fs";
 import { tmpdir } from "node:os";
 import { join } from "node:path";
 import { request, createServer } from "node:http";
+import { generateKeyPairSync } from "node:crypto";
 
 const TMP = mkdtempSync(join(tmpdir(), "helm-test-"));
 process.env.HELM_HOME = TMP;
@@ -1068,5 +1069,83 @@ test("HELM-BIND-WIRE-1 NEGATIVE: POST /mcp tools/call workflow.run (the MCP/agen
     assert.equal(row, undefined, "the actions:a1 step must never have run — no memoized output at all");
     // quoted proof for the check-off:
     console.log("HELM-BIND-WIRE-1 MCP request:", JSON.stringify(rpcBody), "-> response:", res.body, "-> terminal event:", JSON.stringify(event));
+  });
+});
+
+// SIGN-SEAM-1 / SIGNING-SURFACES-BUILD-SPEC.md §3, phil condition #5: the
+// signer-command config change is consent-gated at the same tier as
+// pairing/token changes — a ticket must be minted by a dedicated route
+// (mirroring POST /evidence/export/ticket) before POST /signer/config will
+// accept a write. These tests exercise the HTTP contract only; the deeper
+// hardening (argv-array spawn, empty env, verify-after-sign, etc.) is
+// covered by hub/signer-exec.test.mjs.
+function signerConfigBody() {
+  const { publicKey } = generateKeyPairSync("ed25519");
+  return {
+    command: "/usr/local/bin/my-signer",
+    args: ["--slot", "1"],
+    algo: "ed25519",
+    publicKeyDerBase64: publicKey.export({ format: "der", type: "spki" }).toString("base64"),
+  };
+}
+
+test("GET /signer/config returns null before anything is configured", async () => {
+  const res = await get("/signer/config", headers());
+  assert.equal(res.status, 200);
+  assert.deepEqual(JSON.parse(res.body), { config: null });
+});
+
+test("POST /signer/config without a ticket is refused — consent_required", async () => {
+  const res = await post("/signer/config", { config: signerConfigBody() }, headers());
+  assert.equal(res.status, 403);
+  assert.equal(JSON.parse(res.body).error, "consent_required");
+});
+
+test("POST /signer/config with a bogus ticket is refused", async () => {
+  const res = await post("/signer/config", { ticket: "not-a-real-ticket", config: signerConfigBody() }, headers());
+  assert.equal(res.status, 403);
+  assert.equal(JSON.parse(res.body).error, "consent_required");
+});
+
+test("POST /signer/config succeeds with a ticket minted via POST /signer/config/ticket, and the ticket is single-use", async () => {
+  const ticketRes = await post("/signer/config/ticket", {}, headers());
+  assert.equal(ticketRes.status, 200);
+  const { ticket } = JSON.parse(ticketRes.body);
+  assert.ok(ticket && ticket.length > 0);
+
+  const body = signerConfigBody();
+  const writeRes = await post("/signer/config", { ticket, config: body }, headers());
+  assert.equal(writeRes.status, 200);
+  const written = JSON.parse(writeRes.body).config;
+  assert.equal(written.command, "/usr/local/bin/my-signer");
+
+  const getRes = await get("/signer/config", headers());
+  assert.equal(JSON.parse(getRes.body).config.command, "/usr/local/bin/my-signer");
+
+  // Single-use — the SAME ticket must not work a second time (P3-D9 shape,
+  // same discipline as pairing nonces / stream / export tickets).
+  const replay = await post("/signer/config", { ticket, config: body }, headers());
+  assert.equal(replay.status, 403);
+  assert.equal(JSON.parse(replay.body).error, "consent_required");
+});
+
+test("POST /signer/config rejects a malformed config even with a valid ticket", async () => {
+  const ticketRes = await post("/signer/config/ticket", {}, headers());
+  const { ticket } = JSON.parse(ticketRes.body);
+  const badBody = signerConfigBody();
+  badBody.args = "--slot 1"; // string, not argv array — must be rejected
+  const res = await post("/signer/config", { ticket, config: badBody }, headers());
+  assert.equal(res.status, 400);
+  assert.equal(JSON.parse(res.body).error, "invalid_signer_config");
+});
+
+test("POST /signer/config/ticket is not registered as an MCP tool — an MCP tools/call cannot mint a consent ticket", async () => {
+  await withRunEngineServer(async ({ call, headers: headers6 }) => {
+    const rpcBody = { jsonrpc: "2.0", id: 1, method: "tools/list", params: {} };
+    const res = await call({ method: "POST", path: "/mcp", headers: headers6(), body: rpcBody });
+    assert.equal(res.status, 200);
+    const names = JSON.parse(res.body).result.tools.map((t) => t.name);
+    assert.ok(!names.includes("signer.config"), "no signer.config MCP tool should exist — the consent ticket route is UI-only");
+    assert.ok(!names.some((n) => n.startsWith("signer.")), "no signer.* MCP tool should exist at all");
   });
 });

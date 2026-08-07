@@ -57,6 +57,9 @@ const ROUTE_DOCS = {
   "GET /mcp": { summary: "405 — SEP-2567 removed the session/GET stream from the MCP transport.", tags: ["MCP"] },
   "DELETE /mcp": { summary: "405 — SEP-2567 removed the session/GET stream from the MCP transport.", tags: ["MCP"] },
   "POST /evidence/export/ticket": { summary: "Mint the short-lived, single-use consent ticket the MCP evidence.export tool requires. Meant to be called by the paired UI only, after showing a consent prompt — not reachable from tools/call.", tags: ["MCP"] },
+  "GET /signer/config": { summary: "Read the current external-signer exec-seam config, or null if unset. Everything returned is non-secret (SIGN-SEAM-1).", tags: ["Signing"] },
+  "POST /signer/config/ticket": { summary: "Mint the short-lived, single-use consent ticket required before the external-signer command can be changed (SIGN-SEAM-1) — the signer command is key access. Meant to be called by the paired UI only, after showing a consent prompt — not reachable from tools/call.", tags: ["Signing"] },
+  "POST /signer/config": { summary: "Repoint the external-signer exec seam. Body {ticket, config}; refused with 403 consent_required without a valid ticket minted from POST /signer/config/ticket.", tags: ["Signing"] },
 };
 
 function toOperation(method, path) {

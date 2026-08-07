@@ -130,3 +130,27 @@ export function redeemExportTicket(ticket, now = Date.now()) {
   if (!expiresAt) return false;
   return now <= expiresAt;
 }
+
+// SIGN-SEAM-1 / SIGNING-SURFACES-BUILD-SPEC.md §3, phil condition #5: a
+// signer-command config change is consent-gated at this same tier — the
+// signer command IS key access, so repointing it is equivalent to handing a
+// new binary signing authority. Same single-use, short-TTL ticket shape as
+// exportTickets above: POST /signer/config/ticket is meant to be called ONLY
+// from the paired browser UI after it shows the user a consent prompt, and
+// (like /evidence/export/ticket) it is not registered as an MCP tool, so an
+// agent holding only the bearer token cannot mint one on its own.
+const SIGNER_CONFIG_TICKET_TTL_MS = 5 * 60 * 1000;
+const signerConfigTickets = new Map(); // ticket -> expiresAtMs
+
+export function createSignerConfigTicket(now = Date.now()) {
+  const ticket = randomBytes(16).toString("hex");
+  signerConfigTickets.set(ticket, now + SIGNER_CONFIG_TICKET_TTL_MS);
+  return ticket;
+}
+
+export function redeemSignerConfigTicket(ticket, now = Date.now()) {
+  const expiresAt = signerConfigTickets.get(ticket);
+  signerConfigTickets.delete(ticket);
+  if (!expiresAt) return false;
+  return now <= expiresAt;
+}
