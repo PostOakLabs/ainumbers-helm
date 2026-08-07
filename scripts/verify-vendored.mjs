@@ -215,7 +215,15 @@ async function collectUpstreamDriftIssues(destRoot, config, mapRelPath) {
   const tmp = mkdtempSync(join(tmpdir(), "helm-verify-vendor-"));
   try {
     console.log(`Fetching ${config.sourceRepo} @ ${config.pinnedSha} for upstream comparison ...`);
+    // core.autocrlf=false: a machine-global autocrlf=true would rewrite
+    // LF blobs to CRLF on checkout for any upstream repo without its own
+    // .gitattributes forcing LF (ocg/anchor-suite happen to have one; a
+    // third repo need not). That checkout-time rewrite is a LOCAL clone
+    // artifact, not real drift from the pinned blob, and comparing its
+    // bytes against our (blob-identical) vendored copy would misreport
+    // hash mismatches as tampering.
     sh("git", ["init", "-q"], tmp);
+    sh("git", ["config", "core.autocrlf", "false"], tmp);
     sh("git", ["remote", "add", "origin", config.sourceRepo], tmp);
     sh("git", ["fetch", "--depth", "1", "origin", config.pinnedSha], tmp);
     sh("git", ["checkout", "-q", "FETCH_HEAD"], tmp);
