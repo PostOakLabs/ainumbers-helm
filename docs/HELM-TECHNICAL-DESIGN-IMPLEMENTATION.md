@@ -22,10 +22,10 @@ State lives in `~/.helm`, created mode `0700`, overridable with `HELM_HOME` (`hu
 What it is not:
 
 - **Not a hosted service.** There is one instance per installation. Nothing is centrally hosted.
-- **Not a cloud agent.** The core loop (start, run a workflow, journal it, export evidence) makes no outbound request. Anchoring is the one optional network step, and it is off by default (`hub/config.mjs:44`, `anchorOnCheckpoint: false`).
+- **Not a cloud agent.** The core loop (start, run a workflow, journal it, export evidence) makes no outbound request. Anchoring is the one optional network step, and it is off by default (`hub/config.mjs:50`, `anchorOnCheckpoint: false`). A second opt-in network surface, the Helios light-client sidecar (`heliosSidecar`), is wired the same way: `enabled: false` by default, both RPC URLs empty (`hub/config.mjs:53-58`, `104-109`), and as of this writing there is no code path that spawns the sidecar process or dials either RPC even when the flag is set.
 - **Not multi-tenant, and not a server you expose.** The socket is loopback and the Host header is checked against `127.0.0.1:<port>` before anything else runs (`hub/server.mjs:73-75`, `1049-1052`).
 
-Default port is `4173` (`hub/config.mjs:9`). Default allowed browser origin is derived from the port rather than hardcoded, `http://127.0.0.1:<port>` (`hub/config.mjs:22-26`).
+Default port is `4173` (`hub/config.mjs:9`). Default allowed browser origin is derived from the port rather than hardcoded, `http://127.0.0.1:<port>` (`hub/config.mjs:27-33`).
 
 ---
 
@@ -48,7 +48,7 @@ Default port is `4173` (`hub/config.mjs:9`). Default allowed browser origin is d
 
 ### Idle shutdown
 
-`helmd` stops itself after `idleTimeoutMs`, default 120000 ms (`hub/idle-timer.mjs:8`, `hub/config.mjs:38`). "Idle" is deliberately wider than "no request arrived": an open server-sent-events connection, a run in flight, a live pairing window, or a backup in progress each hold the daemon open (`hub/index.mjs:191`). The timeout is announced on `GET /health`, in `helmd status`, and in the boot banner rather than only enforced (`hub/index.mjs:329`, `hub/server.mjs:172-174`).
+`helmd` stops itself after `idleTimeoutMs`, default 120000 ms (`hub/idle-timer.mjs:8`, `hub/config.mjs:44`). "Idle" is deliberately wider than "no request arrived": an open server-sent-events connection, a run in flight, a live pairing window, or a backup in progress each hold the daemon open (`hub/index.mjs:191`). The timeout is announced on `GET /health`, in `helmd status`, and in the boot banner rather than only enforced (`hub/index.mjs:329`, `hub/server.mjs:172-174`).
 
 ### Serving the shell
 
@@ -270,7 +270,7 @@ Anchoring submits only the `journal_root_digest` to an external timestamp author
 
 The RFC 3161 path reuses the shipped Anchor Suite relay at `anchor.ainumbers.co` and its vendored TimeStampReq builder, the same code the browser-side anchor and verify pages run, rather than reimplementing DER encoding (`hub/anchor-client.mjs:7-10`, `22`). The OpenTimestamps path posts the raw digest to public calendars and stores the returned pending attestation as-is; upgrading that to a full Merkle-to-block-header proof is **not built** (`hub/anchor-client.mjs:12-17`).
 
-Anchoring is off by default (`hub/config.mjs:44`) and is logged once per boot when disabled, with the exact config key to change (`hub/index.mjs:228-235`). A checkpoint that could not be anchored is still a valid, verifiable signed object; a relay failure produces a schema-valid queued or skipped marker rather than an exception (`hub/checkpoint.mjs:20-22`, `50-55`).
+Anchoring is off by default (`hub/config.mjs:50`) and is logged once per boot when disabled, with the exact config key to change (`hub/index.mjs:228-235`). A checkpoint that could not be anchored is still a valid, verifiable signed object; a relay failure produces a schema-valid queued or skipped marker rather than an exception (`hub/checkpoint.mjs:20-22`, `50-55`).
 
 ---
 
