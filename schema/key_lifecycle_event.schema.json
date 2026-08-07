@@ -1,0 +1,65 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://ainumbers.co/helm/schema/key_lifecycle_event.schema.json",
+  "title": "Pre-rotation key lifecycle event (SIGN-PREROT-1)",
+  "description": "One signed event in an identity's key-history chain, as produced by hub/key-lifecycle.mjs. 'inception' is self-signed by the genesis key and commits SHA-256(next public key). 'rotation' reveals the pre-committed key, is signed BY that revealed key, commits SHA-256(the NEW next key), and links to the prior event by prev_event_digest. Continuity from any earlier event to the current key is verified by walking this chain (hub/key-lifecycle.mjs verifyKeyLineage / ui/lib/verify-key-lineage.mjs offline mirror) and checking, at each link, that the revealed key hashes to the prior event's commitment and validly signs the rotation. SHA-256 + Ed25519 only — no digest or signature-algorithm agility (phil GO, SIGNING-SURFACES-BUILD-SPEC.md §2).",
+  "$defs": {
+    "sha256ref": { "type": "string", "pattern": "^sha256:[0-9a-f]{64}$" },
+    "b64": { "type": "string", "pattern": "^[A-Za-z0-9+/]+={0,2}$" },
+    "timestamp": { "type": "string", "pattern": "^\\d{4}-\\d{2}-\\d{2}T\\d{2}:\\d{2}:\\d{2}(\\.\\d+)?Z$" },
+    "signature": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["label", "alg", "sig"],
+      "properties": {
+        "label": { "type": "string", "enum": ["self", "revealed", "outgoing"] },
+        "alg": { "type": "string", "const": "EdDSA" },
+        "sig": { "$ref": "#/$defs/b64" }
+      }
+    },
+    "inceptionPayload": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["key_event", "identity_id", "identity_seq", "public_key", "next_key_commitment", "created_at"],
+      "properties": {
+        "key_event": { "const": "inception" },
+        "identity_id": { "type": "string", "minLength": 1 },
+        "identity_seq": { "const": 0 },
+        "public_key": { "$ref": "#/$defs/b64" },
+        "next_key_commitment": { "$ref": "#/$defs/sha256ref" },
+        "created_at": { "$ref": "#/$defs/timestamp" }
+      }
+    },
+    "rotationPayload": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["key_event", "identity_id", "identity_seq", "prev_event_digest", "revealed_public_key", "next_key_commitment", "created_at"],
+      "properties": {
+        "key_event": { "const": "rotation" },
+        "identity_id": { "type": "string", "minLength": 1 },
+        "identity_seq": { "type": "integer", "minimum": 1 },
+        "prev_event_digest": { "$ref": "#/$defs/sha256ref" },
+        "revealed_public_key": { "$ref": "#/$defs/b64" },
+        "next_key_commitment": { "$ref": "#/$defs/sha256ref" },
+        "created_at": { "$ref": "#/$defs/timestamp" }
+      }
+    }
+  },
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["payloadType", "payload", "signatures"],
+  "properties": {
+    "payloadType": { "const": "application/vnd.helm.key-event+json" },
+    "payload": {
+      "$ref": "#/$defs/b64",
+      "description": "base64 of the JCS-canonicalized event object (see $defs/inceptionPayload, $defs/rotationPayload) — decode-then-validate against the matching $def by key_event."
+    },
+    "signatures": {
+      "type": "array",
+      "minItems": 1,
+      "maxItems": 2,
+      "items": { "$ref": "#/$defs/signature" },
+      "description": "inception: exactly one entry, label \"self\". rotation: one entry label \"revealed\" (MUST, the whole continuity proof) plus an OPTIONAL second entry label \"outgoing\" (the retiring key co-signing while still valid)."
+    }
+  }
+}
