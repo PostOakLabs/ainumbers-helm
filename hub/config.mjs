@@ -17,6 +17,12 @@ const DEFAULT_CA = "freetsa";
 // D10: passive notice only, never an auto-updater. Empty string disables
 // the check entirely (airgapped installs).
 const DEFAULT_VERSION_CHECK_URL = "https://ainumbers.co/helm/version.json";
+// HELIOS-CONFIG-1: mirrors anchorOnCheckpoint's opt-out shape (research
+// HELIOS-SCOPE-2026-08-06.md §3/§7.2) — the sidecar dials two outbound RPCs
+// helmd doesn't operate, so it stays off until the operator supplies both
+// URLs and flips the flag. "mainnet" is a label default only; it takes
+// effect solely once enabled + both RPC URLs are set.
+const DEFAULT_HELIOS_NETWORK = "mainnet";
 
 // helmd serves the UI itself (HELM-U4, Syncthing pattern) — the page's real
 // Origin is http://127.0.0.1:<port>, so that's what gets exact-matched
@@ -44,6 +50,12 @@ export function loadConfig() {
       anchorOnCheckpoint: false,
       relayBase: DEFAULT_RELAY_BASE,
       ca: DEFAULT_CA,
+      heliosSidecar: {
+        enabled: false,
+        executionRpcUrl: "",
+        consensusRpcUrl: "",
+        network: DEFAULT_HELIOS_NETWORK,
+      },
       path,
     };
   }
@@ -84,6 +96,17 @@ export function loadConfig() {
     // this just exposes them. Default relay/CA unchanged.
     relayBase: parsed.relayBase ?? DEFAULT_RELAY_BASE,
     ca: parsed.ca ?? DEFAULT_CA,
+    // HELIOS-CONFIG-1: opt-in sidecar config, same posture as
+    // anchorOnCheckpoint above — enabled defaults false, and helmd must
+    // never spawn the Helios subprocess or open either RPC connection
+    // unless the operator has explicitly flipped this on. See research
+    // HELIOS-SCOPE-2026-08-06.md §3 for the egress-posture rationale.
+    heliosSidecar: {
+      enabled: parsed.heliosSidecar?.enabled ?? false,
+      executionRpcUrl: parsed.heliosSidecar?.executionRpcUrl ?? "",
+      consensusRpcUrl: parsed.heliosSidecar?.consensusRpcUrl ?? "",
+      network: parsed.heliosSidecar?.network ?? DEFAULT_HELIOS_NETWORK,
+    },
     path,
   };
 }
