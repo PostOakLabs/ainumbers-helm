@@ -11,7 +11,7 @@ Every claim below was read off the code in this repository at commit `8cddd4a`, 
 
 `helmd` is a local-first control plane. It is one process (`hub/index.mjs`) that:
 
-- opens an HTTP server bound to `127.0.0.1` only (`hub/server.mjs:1170`),
+- opens an HTTP server bound to `127.0.0.1` only (`hub/server.mjs:1208`),
 - serves its own browser UI from that loopback socket (`hub/static.mjs`, `hub/ui-manifest.mjs`),
 - runs deterministic OpenChainGraph (OCG) kernels vendored into this repository (`hub/kernel-runner.mjs`),
 - records everything into an append-only, hash-chained journal on the local disk (`hub/journal.mjs`),
@@ -23,7 +23,7 @@ What it is not:
 
 - **Not a hosted service.** There is one instance per installation. Nothing is centrally hosted.
 - **Not a cloud agent.** The core loop (start, run a workflow, journal it, export evidence) makes no outbound request. Anchoring is the one optional network step, and it is off by default (`hub/config.mjs:50`, `anchorOnCheckpoint: false`). A second opt-in network surface, the Helios light-client sidecar (`heliosSidecar`), is wired the same way: `enabled: false` by default, both RPC URLs empty (`hub/config.mjs:53-58`, `104-109`), and as of this writing there is no code path that spawns the sidecar process or dials either RPC even when the flag is set.
-- **Not multi-tenant, and not a server you expose.** The socket is loopback and the Host header is checked against `127.0.0.1:<port>` before anything else runs (`hub/server.mjs:74-76`, `1099-1102`).
+- **Not multi-tenant, and not a server you expose.** The socket is loopback and the Host header is checked against `127.0.0.1:<port>` before anything else runs (`hub/server.mjs:74-76`, `1126-1129`).
 
 Default port is `4173` (`hub/config.mjs:9`). Default allowed browser origin is derived from the port rather than hardcoded, `http://127.0.0.1:<port>` (`hub/config.mjs:27-33`).
 
@@ -38,7 +38,7 @@ Default port is `4173` (`hub/config.mjs:9`). Default allowed browser origin is d
 1. Load config, load or create the bearer token, load or create the Ed25519 + ML-DSA-44 identity keys, load or create the HA identity (`hub/index.mjs:94-102`).
 2. Open the journal database and verify its hash chain before serving anything (§4 below, `hub/index.mjs:120-164`).
 3. Build the idle timer (`hub/index.mjs:189-199`).
-4. Create the HTTP server and bind it. A port already in use is a clean refusal, never a silent fallback to another port (`hub/server.mjs:1174-1191`, called at `hub/index.mjs:216-220`).
+4. Create the HTTP server and bind it. A port already in use is a clean refusal, never a silent fallback to another port (`hub/server.mjs:1208-1229`, called at `hub/index.mjs:216-220`).
 5. Only after the socket is listening, fire the checkpoint build, deliberately not awaited, so readiness never depends on a timestamp authority round trip (`hub/index.mjs:222-249`).
 6. Open the CLI channel, a named pipe on Windows and a unix domain socket elsewhere, carrying `pair`, `stop`, and `status` (`hub/index.mjs:265-311`, `hub/cli-channel.mjs`).
 7. Print the pairing URL, then open a browser tab only on a genuine first run (no token on disk yet) or an explicit `--open`, not on every start. Opening on every start used to spam a tab per restart when autostart or a crash loop re-fired `helmd start` unattended (`hub/index.mjs:320-351`).
@@ -83,15 +83,15 @@ The pairing URL is `http://127.0.0.1:<port>/#token=<token>&pair=<nonce>&fp=<fing
 
 Re-pairing goes over the CLI channel (`helmd open`), never over HTTP (`hub/index.mjs:267-276`).
 
-For server-sent events specifically, the durable token is not put in the query string. `POST /events/ticket` mints a 15 second single-use ticket over an already-authenticated call, and `/events` accepts that ticket instead (`hub/token.mjs:88-104`, `hub/server.mjs:337-344`, `1145-1153`).
+For server-sent events specifically, the durable token is not put in the query string. `POST /events/ticket` mints a 15 second single-use ticket over an already-authenticated call, and `/events` accepts that ticket instead (`hub/token.mjs:88-104`, `hub/server.mjs:362-368`, `1170-1180`).
 
 ### The gate
 
-Every request passes three checks, in this order (`hub/server.mjs:3-7` and the dispatcher at `1098-1169`):
+Every request passes three checks, in this order (`hub/server.mjs:3-7` and the dispatcher at `1125-1199`):
 
-1. **Host** must equal `127.0.0.1:<port>` exactly (`hub/server.mjs:74-76`, checked at `1099`).
-2. **Origin** must equal the configured origin exactly, never a wildcard (`hub/server.mjs:108-110`, checked at `1130`).
-3. **`Authorization: Bearer <token>`** must match, compared with `timingSafeEqual` after a length check (`hub/server.mjs:1143-1157`, `hub/token.mjs:41-47`).
+1. **Host** must equal `127.0.0.1:<port>` exactly (`hub/server.mjs:74-76`, checked at `1126`).
+2. **Origin** must equal the configured origin exactly, never a wildcard (`hub/server.mjs:108-110`, checked at `1157`).
+3. **`Authorization: Bearer <token>`** must match, compared with `timingSafeEqual` after a length check (`hub/server.mjs:1170-1194`, `hub/token.mjs:41-47`).
 
 All three are needed because each defeats a different attacker, and none of them subsumes another:
 
@@ -102,8 +102,8 @@ All three are needed because each defeats a different attacker, and none of them
 Three deliberate exceptions exist and each is narrower than the general rule:
 
 - **The static shell** is pre-Origin and pre-auth, for the reason in §2. Host still applies.
-- **The detection surface**, exactly `GET /version` and `GET /pair/challenge`, accepts either the loopback origin or the fixed hosted origin `https://ainumbers.co`, and requires no token. It is an exact origin match, never a wildcard, and it never touches vault, journal, or run data (`hub/server.mjs:60-61`, `274-294`, dispatched at `1110-1117`).
-- **`POST /connectors/inbound-webhook`** is pre-Origin and pre-bearer, because the caller is a local orchestrator with neither a browser Origin nor the pairing token. Its authentication is an HMAC over the raw request body, computed before any JSON parsing so the signature covers the exact bytes sent (`hub/server.mjs:63-69`, dispatched at `1119-1128`, HMAC checked at `693-699`, `hub/webhook-guard.mjs`). Host still applies.
+- **The detection surface**, exactly `GET /version` and `GET /pair/challenge`, accepts either the loopback origin or the fixed hosted origin `https://ainumbers.co`, and requires no token. It is an exact origin match, never a wildcard, and it never touches vault, journal, or run data (`hub/server.mjs:60-61`, `289-315`, dispatched at `1140-1144`).
+- **`POST /connectors/inbound-webhook`** is pre-Origin and pre-bearer, because the caller is a local orchestrator with neither a browser Origin nor the pairing token. Its authentication is an HMAC over the raw request body, computed before any JSON parsing so the signature covers the exact bytes sent (`hub/server.mjs:63-69`, dispatched at `1146-1155`, HMAC checked at `718-733`, `hub/webhook-guard.mjs`). Host still applies.
 
 Requests are logged by pathname only, never by `req.url`. The reason is written in the code: the bearer used to ride in the `/events` query string, so logging a rejected request verbatim would write a working credential to stdout, which a macOS LaunchAgent can capture to a file (`hub/server.mjs:78-87`).
 
@@ -113,7 +113,7 @@ Autostart and the Start Menu shortcut are **opt-in and default off on every plat
 
 The only way either gets installed is a person ticking the box in the Helm tab, which issues `POST /autostart`. That route is POST and never GET, because a GET that installs persistence is reachable from an `<img src=...>` or a prefetch, paths where a page's script never runs and the Origin check is the only obstacle. Both `/autostart` routes sit in the ordinary route table behind the full Host, Origin, and bearer gate, not in the static allowlist and not in the detection paths (`hub/server.mjs:448-527`, registered at `1061-1062`).
 
-The status route reports what is actually on the machine rather than what was requested: on an unsupported platform the installer returns `{supported:false}` and writes nothing, so the response echoes re-read state (`hub/server.mjs:526-527`). Status distinguishes `ok`, `not_installed`, `unsupported`, `target_missing`, `unreadable`, and `command_mismatch`, and `target_missing` surfaces as a `BROKEN` state in `helmd status` and in `helmd doctor` rather than reporting healthy forever (`hub/autostart.mjs:213-281`, `hub/index.mjs:476-480`).
+The status route reports what is actually on the machine rather than what was requested: on an unsupported platform the installer returns `{supported:false}` and writes nothing, so the response echoes re-read state (`hub/server.mjs:526-527`). Status distinguishes `ok`, `not_installed`, `unsupported`, `target_missing`, `unreadable`, and `command_mismatch`, and `target_missing` surfaces as a `BROKEN` state in `helmd status` and in `helmd doctor` rather than reporting healthy forever (`hub/autostart.mjs:213-281`, `hub/index.mjs:454-467`).
 
 ---
 
@@ -144,7 +144,7 @@ Every entry must carry the EU AI Act Article 12(2) and 12(3) field groups, `peri
 
 `rh_0 = SHA-256(stream_id)` has no salt and no nonce. **This is a design decision, not an open issue.** It was re-examined in a read-only design review on 2026-07-26, which re-derived the construction from this file and concluded it is correct as built. The reasoning is reproduced below so it does not have to be re-found.
 
-The reasoning, in short: `stream_id` is not, and was never intended to be, confidential. It is a plaintext column in the local schema (`hub/journal.mjs:57`), it sits in plaintext inside the same predicate object as `rh` in every checkpoint (`hub/checkpoint.mjs:24-27`), and that predicate travels verbatim inside every exported evidence bundle (`hub/bundle.mjs:113-158`). An offline verifier is *handed* `stream_id`; it never has to guess it. So the "attacker must recover a hash preimage" premise does not apply, whatever the entropy of a given stream identifier.
+The reasoning, in short: `stream_id` is not, and was never intended to be, confidential. It is a plaintext column in the local schema (`hub/journal.mjs:57`), it sits in plaintext inside the same predicate object as `rh` in every checkpoint (`hub/checkpoint.mjs:24-27`), and that predicate travels verbatim inside every exported evidence bundle (`hub/bundle.mjs:113-151`). An offline verifier is *handed* `stream_id`; it never has to guess it. So the "attacker must recover a hash preimage" premise does not apply, whatever the entropy of a given stream identifier.
 
 The offline-verification consequence is the decisive half. A salt would have to either travel in the checkpoint, making it exactly as public as `stream_id` and therefore useless, or be withheld, which would make `journal_root_digest` unrecomputable and fail every legitimate verifier. Neither helps, and the second contradicts the offline verifiability the whole product rests on (§9).
 
@@ -187,11 +187,11 @@ Every step result is memoized by `(run_id, step_id, input_digest)`, where `input
 
 The lifecycle is a state machine with an explicit transition table, and an illegal transition throws (`hub/run.mjs:25-41`, `336-338`). Every transition is journaled as an `execution_state` entry on the `run:<run_id>` stream, and the engine predicts the journal sequence it is about to be assigned and throws if the prediction drifts, which turns any violation of the single-writer invariant into an immediate failure (`hub/run.mjs:340-358`).
 
-The final `execution_hash` is SHA-256 over the JCS-canonical `{run_id, workflow_manifest_digest, steps[]}` (`hub/run.mjs:454`). `replayExecutionHash` recomputes it from persisted state alone, with no manifest re-fetch and no step execution, which is the deterministic-replay gate (`hub/run.mjs:462-487`).
+The final `execution_hash` is SHA-256 over the JCS-canonical `{run_id, workflow_manifest_digest, steps[]}` (`hub/run.mjs:455`). `replayExecutionHash` recomputes it from persisted state alone, with no manifest re-fetch and no step execution, which is the deterministic-replay gate (`hub/run.mjs:462-487`).
 
 ### Kernel steps
 
-A `nodes` step invokes a vendored OCG kernel. Before it runs, the manifest's `kernel_digest` is checked against the vendored file's own digest from `hub/vendored/ocg/MANIFEST.json`. A stale or tampered pin fails loudly rather than silently invoking a different kernel version than the manifest recorded (`hub/kernel-runner.mjs:3-8`, `19-47`).
+A `nodes` step invokes a vendored OCG kernel. Before it runs, the manifest's `kernel_digest` is checked against the vendored file's own digest from `hub/vendored/ocg/MANIFEST.json`. A stale or tampered pin fails loudly rather than silently invoking a different kernel version than the manifest recorded (`hub/kernel-runner.mjs:3-8`, `76-81`).
 
 A node carrying `verified: false` (the PACK-MARKER pilot's schema-level marker for a browser-tool step no kernel exists for yet) is handled before any of the above. `runKernelNode` skips it outright, never resolving its sentinel `kernel_digest` and never invoking a kernel, and returns `execution_state: "skipped_by_design"` with no `trust_label`, so it can never be mistaken for a `kernel_verified` result in `step_results` (`hub/kernel-runner.mjs:55-70`).
 
@@ -207,7 +207,7 @@ Consent is a hold, not a prompt. A step whose pack item declares a gate policy b
 - A held attempt is never memoized, so re-polling costs nothing and re-reads fresh approval state every time.
 - What a human approves is the OCG artifact's own execution hash, which is why the gate check is handed the full prior step output rather than only the internal memo digest (`hub/run.mjs:418-421`).
 
-Resuming is `POST /run/resume`, the same idempotent path crash recovery already uses. A run that is not actually held returns 404 or 409, never a silent 200 (`hub/server.mjs:560-571`).
+Resuming is `POST /run/resume`, the same idempotent path crash recovery already uses. A run that is not actually held returns 404 or 409, never a silent 200 (`hub/server.mjs:626-643`).
 
 ### Connectors and egress
 
@@ -250,7 +250,7 @@ The DSSE pre-authentication encoding binds `payloadType` into the signed bytes, 
 
 ### Bundles
 
-`assembleBundle` (`hub/bundle.mjs:113-158`) seals each object, builds a manifest predicate listing every entry's kind, digest, and trust label plus checkpoint and anchor references, schema-validates it, and signs the manifest.
+`assembleBundle` (`hub/bundle.mjs:113-151`) seals each object, builds a manifest predicate listing every entry's kind, digest, and trust label plus checkpoint and anchor references, schema-validates it, and signs the manifest.
 
 Redaction is a structural backstop, not a hope. Objects entering a bundle are expected to already be digest-only summaries, and a set of known-dangerous field names (`access_token`, `refresh_token`, `id_token`, `secret`, `secretKey`, `privateKey`, `password`, `api_key`, `raw_payload`, `payload_bytes`, `payload_body`) is refused outright, recursively, so an upstream mistake cannot leak through silently (`hub/bundle.mjs:60-76`).
 
@@ -258,7 +258,7 @@ Each object carries exactly one trust label, defaulted by kind, and labels are n
 
 ### Verifying offline
 
-`verifyBundle` (`hub/bundle.mjs:160-205`) takes a bundle and a set of public keys and does zero network work. It checks the manifest envelope and schema, that the signed predicate matches the carried one, and then for every entry: the object exists, its kind matches, its trust label matches, its envelope verifies, its **recomputed** digest matches the manifest entry, and its predicate still passes the redaction check. Checkpoint envelopes are verified and cross-referenced. It returns `{valid, reasons[]}` and never throws on a bad bundle, which is what a deliberately tampered fixture asserts against.
+`verifyBundle` (`hub/bundle.mjs:160-201`) takes a bundle and a set of public keys and does zero network work. It checks the manifest envelope and schema, that the signed predicate matches the carried one, and then for every entry: the object exists, its kind matches, its trust label matches, its envelope verifies, its **recomputed** digest matches the manifest entry, and its predicate still passes the redaction check. Checkpoint envelopes are verified and cross-referenced. It returns `{valid, reasons[]}` and never throws on a bad bundle, which is what a deliberately tampered fixture asserts against.
 
 `exportBundleZip` (`hub/bundle.mjs:221-261`) produces the shareable artifact: `bundle.json` (the evidence itself), `verify.html` (a standalone verifier that runs in any browser with no network), `auditor.html` (a printable human-readable record), and a README. The export runs the same WebCrypto verify chain the embedded `verify.html` will run, against the real code path rather than a simulation, so a bundle that would not verify is caught before it ships.
 
@@ -283,7 +283,7 @@ Anchoring is off by default (`hub/config.mjs:50`) and is logged once per boot wh
 | ML-DSA-44 implementation | Reached through `hub/vendored/ocg/kernels/_proof.mjs` | Follows the OCG vendored tree above | Same reason as the kernels. One implementation, one canonical form. |
 | Helm itself: `hub/`, `ui/`, `scripts/`, `schema/` | Written here | Apache-2.0 (`LICENSE`, `package.json`, SPDX header on every source file) | Phase 4 decision. The repository is public under Apache-2.0. |
 
-**The vendoring invariant, stated plainly because a reader will otherwise get it wrong:** vendored code is **never edited in `helm/`**. A defect in a kernel is fixed upstream in the site repository and then re-vendored (`npm run vendor`, `scripts/vendor.mjs`). A local edit would break the digest pin that `hub/kernel-runner.mjs:19-47` enforces, which means the very next run would fail rather than silently diverge. The invariant is enforced by the code, not only by convention.
+**The vendoring invariant, stated plainly because a reader will otherwise get it wrong:** vendored code is **never edited in `helm/`**. A defect in a kernel is fixed upstream in the site repository and then re-vendored (`npm run vendor`, `scripts/vendor.mjs`). A local edit would break the digest pin that `hub/kernel-runner.mjs:76-81` enforces, which means the very next run would fail rather than silently diverge. The invariant is enforced by the code, not only by convention.
 
 **Vendor manifests record the pinned commit.** `hub/vendored/ocg/MANIFEST.json` carries `sourceRepo`, `pinnedSha`, `vendoredPaths`, a file count, and a SHA-256 per file. The same shape covers the Anchor Suite vendor.
 
@@ -351,7 +351,7 @@ Published deliberately. A reader finding these is worse than a reader being told
 
 4. **The OpenTimestamps anchor is stored as a pending attestation only.** Upgrading it to a full Merkle-to-block-header proof, the step a complete OTS client performs later, is not built (`hub/anchor-client.mjs:12-17`).
 
-5. **Manifests have one kind of edge, not a general DAG.** This limitation used to read "manifests have no edges". A manifest may now declare `connector_inputs[]`, and each binding orders a connector fetch ahead of the node it feeds, resolved by a stable topological sort that throws on a cycle (`schema/workflow-manifest.schema.json:153`, `hub/run.mjs:237-283`). That is the only edge vocabulary there is: every edge runs connector to node. Conditional execution, fan-out, and fan-in are still not implemented, so a workflow that needs real branching cannot be expressed.
+5. **Manifests have one kind of edge, not a general DAG.** This limitation used to read "manifests have no edges". A manifest may now declare `connector_inputs[]`, and each binding orders a connector fetch ahead of the node it feeds, resolved by a stable topological sort that throws on a cycle (`schema/workflow-manifest.schema.json:154`, `hub/run.mjs:237-283`). That is the only edge vocabulary there is: every edge runs connector to node. Conditional execution, fan-out, and fan-in are still not implemented, so a workflow that needs real branching cannot be expressed.
 
 6. **Review states are not in this engine.** The run lifecycle here is a Phase 1 subset; review states are named in the spec and not reachable through this executor (`hub/run.mjs:23-28`).
 
