@@ -112,7 +112,7 @@ function wireActions(root, port, token, rerender) {
 export async function renderReview(root, { port, token } = {}) {
   if (!port || !token) {
     root.innerHTML = `
-      <p class="empty-state">helmd isn't paired yet. Pair a browser tab (see Operate) to see runs held at a §27 accountability gate.</p>`;
+      <p class="empty-state">helmd isn't paired yet. Pair a browser tab (see Status) to see runs held at a §27 accountability gate.</p>`;
     return;
   }
 

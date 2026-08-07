@@ -386,14 +386,17 @@ export async function renderOperate(root, { port, token }) {
       </section>
       <section class="card" aria-labelledby="op-journal">
         <h3 id="op-journal">Journal head</h3>
+        <p class="field-row-note">The running log of everything Helm has recorded on this computer.</p>
         ${stateLine(journal, journalCard)}
       </section>
       <section class="card" aria-labelledby="op-anchor">
         <h3 id="op-anchor">Anchor status</h3>
+        <p class="field-row-note">Whether the journal's history has been timestamped against an outside source, so it can't be quietly rewritten later.</p>
         ${stateLine(anchors, anchorCard)}
       </section>
       <section class="card" aria-labelledby="op-provenance">
         <h3 id="op-provenance">State-snapshot chain</h3>
+        <p class="field-row-note">A tamper-check: each saved snapshot links to the one before it, so "Chain-verify: verified" means nothing in between was altered.</p>
         ${stateLine(provenance, provenanceCard)}
       </section>
       <section class="card" aria-labelledby="op-backup">

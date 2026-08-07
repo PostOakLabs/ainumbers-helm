@@ -48,7 +48,7 @@ export async function renderLearn(root) {
     <section class="card" aria-labelledby="learn-pairing">
       <h3 id="learn-pairing">Pairing / troubleshooting</h3>
       <p>"Not paired" means this browser tab has no token for talking to helmd — pairing tokens are per-tab and don't survive a closed tab or a restart, by design.</p>
-      <p>Opening Helm gets you a freshly paired tab — reopen it from your Start menu or applications folder if you lost it, or use <a href="#/operate">Operate</a>'s advanced pairing form to reconnect this tab by hand. Helm doesn't run at sign-in unless you turned that on yourself, on <a href="#/operate">Operate</a>.</p>
+      <p>Opening Helm gets you a freshly paired tab — reopen it from your Start menu or applications folder if you lost it, or use <a href="#/operate">Status</a>'s advanced pairing form to reconnect this tab by hand. Helm doesn't run at sign-in unless you turned that on yourself, on <a href="#/operate">Status</a>.</p>
       <details class="disclosure">
         <summary>Advanced: start Helm from a command line</summary>
         <p>If Helm isn't set to start automatically, or you're on a machine without it installed yet:</p>
