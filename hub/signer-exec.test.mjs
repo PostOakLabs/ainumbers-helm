@@ -104,10 +104,20 @@ test("empty env: default env:{} gives the child no inherited variables", async (
     const WINDOWS_FORCED_ENV_KEYS = new Set([
       "HOMEDRIVE", "HOMEPATH", "LOGONSERVER", "PATH", "SYSTEMDRIVE", "SYSTEMROOT", "TEMP", "USERDOMAIN", "USERNAME", "USERPROFILE", "WINDIR",
     ]);
+    // macOS injects __CF_USER_TEXT_ENCODING into every posix_spawn'd child —
+    // CoreFoundation/libSystem baseline, not parent-env inheritance (it is
+    // synthesized by the OS, not copied from our env:{} call). Measured on
+    // ci-macos run 31217971987: the child received exactly this one key with
+    // env:{FIXTURE_OUT} passed in, nothing else. Same category as the
+    // Windows baseline above — an OS-forced minimum, not a leak.
+    const MACOS_FORCED_ENV_KEYS = new Set(["__CF_USER_TEXT_ENCODING"]);
     const unexpected = Object.keys(gotEnv).filter(
-      (k) => k !== "FIXTURE_OUT" && !(process.platform === "win32" && WINDOWS_FORCED_ENV_KEYS.has(k))
+      (k) =>
+        k !== "FIXTURE_OUT" &&
+        !(process.platform === "win32" && WINDOWS_FORCED_ENV_KEYS.has(k)) &&
+        !(process.platform === "darwin" && MACOS_FORCED_ENV_KEYS.has(k))
     );
-    assert.deepEqual(unexpected, [], "no env vars beyond our explicit allowlist (+ Windows' unavoidable CreateProcess baseline) may reach the child");
+    assert.deepEqual(unexpected, [], "no env vars beyond our explicit allowlist (+ platform's unavoidable spawn baseline) may reach the child");
   });
 });
 
