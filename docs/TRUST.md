@@ -99,45 +99,45 @@ for this capability (schema: `schema/key_lifecycle_event.schema.json`).
 
 `hub/signer-exec.mjs` lets an operator configure an external command
 (a PKCS#11 wrapper, a cloud-KMS CLI, a YubiKey tool, threshold-signing
-tooling — anything) to sign a pre-hashed digest on Helm's behalf, so
+tooling, anything) to sign a pre-hashed digest on Helm's behalf, so
 the private key never has to enter this process at all. This is the
-"keys never leave our HSM" answer: **helmd runs a command the user
-chose, and does not vouch for that binary.** No SBOM entry, license
-review, or audit covers the external tool — that responsibility is the
-operator's, the same way it is when `git` is configured with a custom
-`gpg.program`.
+"keys never leave our HSM" answer: helmd runs a command the user
+chose, and does not vouch for that binary. No SBOM entry, license
+review, or audit covers the external tool; that responsibility stays
+with the operator, the same way it does when `git` is configured with
+a custom `gpg.program`.
 
 What this seam does guarantee, and how:
 
-- **No shell, ever.** The configured command and its arguments are
+- No shell, ever. The configured command and its arguments are
   passed to `node:child_process.spawn` as a literal argv array
-  (`shell:false`, the default) — never concatenated into a shell
+  (`shell:false`, the default), never concatenated into a shell
   string. A signer path or argument containing `;`, `$()`, backticks,
-  or a space is passed through byte-for-byte; nothing interprets it.
-- **Digest only.** The seam's only stdin write is the pre-hashed digest
+  or a space is passed through byte-for-byte, unmodified.
+- Digest only. The seam's only stdin write is the pre-hashed digest
   Helm is signing. Document content is never sent to the external
   process.
-- **Empty child environment**, aside from anything the operator
+- Empty child environment, aside from anything the operator
   explicitly allowlists in the signer's own config entry. On Windows,
   `CreateProcess` forces a small fixed OS baseline (`PATH`,
   `SYSTEMROOT`, `USERPROFILE`, and similar) onto every child regardless
-  of what is passed — that is the operating system, not this seam, and
+  of what is passed; that is the operating system, not this seam, and
   carries no secret.
-- **Bounded execution.** A hard timeout and a byte cap on stdout both
+- Bounded execution. A hard timeout and a byte cap on stdout both
   fail closed: a signer that hangs, floods output, or exits nonzero
   never produces an accepted signature.
-- **Verify-after-sign.** Every signature the external command returns
+- Verify-after-sign. Every signature the external command returns
   is independently checked against the declared public key with
   `node:crypto`, offline, before Helm accepts it. A broken or lying
   signer tool is detected, not trusted.
-- **Consent-gated reconfiguration.** Pointing the seam at a different
-  command is, functionally, handing that command signing authority —
-  changing it requires a short-lived, single-use consent ticket minted
-  by `POST /signer/config/ticket`, exactly like the pairing-token and
-  evidence-export flows. That route is not registered as an MCP tool,
-  so an agent holding only the daemon's bearer token cannot repoint the
-  signer on its own; only the paired browser UI, after showing the
-  operator what is about to change, can mint one.
+- Consent-gated reconfiguration. Pointing the seam at a different
+  command is, functionally, handing that command signing authority.
+  Changing it requires a short-lived, single-use consent ticket minted
+  by `POST /signer/config/ticket`, the same way the pairing-token and
+  evidence-export flows work. That route is not registered as an MCP
+  tool, so an agent holding only the daemon's bearer token cannot
+  repoint the signer on its own; only the paired browser UI, after
+  showing the operator what is about to change, can mint one.
 
 ## 2. Reproducible zero-unlisted-egress recipe (≤10 minutes)
 
