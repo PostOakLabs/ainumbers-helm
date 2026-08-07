@@ -1,0 +1,11 @@
+{
+  "payloadType": "application/vnd.helm.key-event+json",
+  "payload": "eyJjcmVhdGVkX2F0IjoiMjAyNi0wOC0wN1QwMDowMDowMC4wMDBaIiwiaWRlbnRpdHlfaWQiOiJoZWxtLWRhZW1vbi1pZGVudGl0eSIsImlkZW50aXR5X3NlcSI6MCwia2V5X2V2ZW50IjoiaW5jZXB0aW9uIiwibmV4dF9rZXlfY29tbWl0bWVudCI6InNoYTI1Njo1N2M3MDY1OTQ1YjQ1OTkyOTdmMWYyMzkwYmJmYjcwYzY5NTIxZDIyMTNhNjc3MzAzODQ1NzZiOTczMjA0ODE2IiwicHVibGljX2tleSI6Ik1Db3dCUVlESzJWd0F5RUFtU3BId0VtUURtWjNpa0FRRElVMUdvbU5ZUUlJWTBKc2N0a09GMEdwMFZNPSJ9",
+  "signatures": [
+    {
+      "label": "self",
+      "alg": "EdDSA",
+      "sig": ""
+    }
+  ]
+}
