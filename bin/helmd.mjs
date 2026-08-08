@@ -32,6 +32,7 @@ const EXPORT_BPMN_ENTRY = join(ROOT, "scripts", "export-bpmn.mjs");
 const LIST_SCENARIOS_ENTRY = join(ROOT, "scripts", "list-scenarios.mjs");
 const RUN_TEMPLATE_ENTRY = join(ROOT, "scripts", "run-template.mjs");
 const CHECK_ENTRY = join(ROOT, "scripts", "check.mjs");
+const VERIFY_ENTRY = join(ROOT, "scripts", "verify.mjs");
 
 // Read straight off hub/index.mjs's own dispatch, not a hand-copied guess —
 // see the row's warning: "read the dispatcher, do not grep a guessed list."
@@ -60,6 +61,10 @@ Commands:
                       it against an asserted value — no daemon, no upload. Exit codes: 0
                       match, 1 differs, 2 no asserted value (recompute-only), 3 insufficient
                       input, 4 usage error, 5 scope disagreement.
+  verify <bundle.json> --keys <publicKeys.json> [--json] [--anchor-full]
+                      verify an evidence bundle offline against a caller-supplied public-key
+                      file — no daemon, no network. Exit codes: 0 valid, 1 invalid, 2 usage
+                      error (verification never attempted).
 
 Options:
   -h, --help          show this help and exit 0
@@ -70,9 +75,9 @@ unchanged (check has its own six-way exit contract, see above); an unknown
 command is a usage error and exits 2.
 
 Stability: start/stop/status/doctor/open/uninstall/export-bpmn/list-scenarios/
-run-template/check and their plain-text output/exit codes are STABLE. --json
-output shapes are PROVISIONAL and may change without notice until this line
-is removed.`);
+run-template/check/verify and their plain-text output/exit codes are STABLE.
+--json output shapes are PROVISIONAL and may change without notice until this
+line is removed.`);
 }
 
 function printVersion() {
@@ -124,8 +129,11 @@ if (PASSTHROUGH_COMMANDS.has(cmd)) {
 } else if (cmd === "check") {
   const result = spawnSync(process.execPath, [CHECK_ENTRY, ...rest], { stdio: "inherit" });
   process.exit(result.status ?? 1);
+} else if (cmd === "verify") {
+  const result = spawnSync(process.execPath, [VERIFY_ENTRY, ...rest], { stdio: "inherit" });
+  process.exit(result.status ?? 1);
 } else {
-  console.error(`helmd: unknown command "${cmd}" (expected: start | stop | status | doctor | open | uninstall | export-bpmn | list-scenarios | run-template | check)`);
+  console.error(`helmd: unknown command "${cmd}" (expected: start | stop | status | doctor | open | uninstall | export-bpmn | list-scenarios | run-template | check | verify)`);
   console.error("Run 'helmd --help' for usage.");
   process.exit(2);
 }
