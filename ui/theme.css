@@ -694,6 +694,57 @@ button.secondary {
   color: var(--danger);
 }
 
+/* HELM-MATTER-U1: a matter binding's subject_kind badge. external_reference
+   is the only kind Helm never verifies (§2/§26.6 trust-label discipline) —
+   data-kind="external" gets a visibly different color from the four
+   locally-resolving kinds (data-kind="local") so the two are never mistaken
+   for the same claim at a glance, not just in the title text. */
+.binding-kind-badge {
+  display: inline-block;
+  font-size: 0.75rem;
+  font-family: ui-monospace, monospace;
+  border: 1px solid var(--accent);
+  color: var(--accent);
+  border-radius: var(--radius);
+  padding: 0 var(--space-1);
+}
+.binding-kind-badge[data-kind="external"] {
+  border-color: var(--warning);
+  color: var(--warning);
+}
+.binding-kind-badge[data-kind="unknown"] {
+  border-color: var(--danger);
+  color: var(--danger);
+}
+
+.matter-status-badge {
+  display: inline-block;
+  font-size: 0.7rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.02em;
+  border: 1px solid var(--text-muted);
+  color: var(--text-muted);
+  border-radius: var(--radius);
+  padding: 0 var(--space-1);
+  vertical-align: middle;
+}
+.matter-status-badge[data-status="working"] {
+  border-color: var(--accent);
+  color: var(--accent);
+}
+.matter-status-badge[data-status="closed"] {
+  border-color: var(--ok);
+  color: var(--ok);
+}
+
+/* Deadlines stay in the list once done (§2: append-only, never deleted) —
+   muted, not hidden, so an open one still reads as the one that needs
+   attention. */
+.deadline-row[data-done="true"] {
+  color: var(--text-muted);
+}
+
 .verify-status {
   display: inline-block;
   font-weight: 600;
