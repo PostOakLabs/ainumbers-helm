@@ -266,6 +266,24 @@ test("GET /workflows/:id/export 404s for an unknown workflow", async () => {
   assert.equal(res.status, 404);
 });
 
+// HELM-BPMN-WIRE-1: exportBpmn (hub/bpmn-export.mjs) was CLI-only
+// (scripts/export-bpmn.mjs) with no daemon route reaching it. This wires it
+// onto the existing GET /workflows/:id/export surface via ?format=bpmn,
+// same read-tier auth as the .helm.json export above (no consent ticket —
+// it's a diagram of a workflow the user already has, no secret material).
+test("GET /workflows/:id/export?format=bpmn returns BPMN 2.0 XML (HELM-BPMN-WIRE-1)", async () => {
+  const res = await get("/workflows/pack-aca-226j-response-composer/export?format=bpmn", headers());
+  assert.equal(res.status, 200);
+  assert.match(res.body, /^<\?xml version="1\.0"/);
+  assert.match(res.body, /<bpmn:definitions/);
+  assert.match(res.body, /<bpmn:process/);
+});
+
+test("GET /workflows/:id/export?format=bpmn 404s for an unknown workflow (HELM-BPMN-WIRE-1)", async () => {
+  const res = await get("/workflows/does-not-exist/export?format=bpmn", headers());
+  assert.equal(res.status, 404);
+});
+
 test("POST /workflows/import round-trips a freshly exported workflow (HELM-P3-W11)", async () => {
   const exportRes = await get("/workflows/pack-aca-226j-response-composer/export", headers());
   const exported = JSON.parse(exportRes.body);

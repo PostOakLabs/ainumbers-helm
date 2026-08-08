@@ -32,6 +32,7 @@ import { renderKernelCardHtml, renderEucEntryHtml } from "../ui/lib/euc-html.mjs
 import { renderKernelDecisionTableHtml, buildKernelDecisionTableDmn } from "../ui/lib/decision-table.mjs";
 import { importMigrationBundle } from "./migration-import.mjs";
 import { buildWorkflowExport, parseWorkflowExport } from "./workflow-export.mjs";
+import { exportBpmn } from "./bpmn-export.mjs";
 import { checkVersion, DEFAULT_VERSION_CHECK_URL } from "./version-check.mjs";
 import { DEFAULT_IDLE_TIMEOUT_MS } from "./idle-timer.mjs";
 import { loadContract, recordEgress } from "./connector.mjs";
@@ -980,10 +981,23 @@ function handleEucEntry(req, res, params) {
   sendJson(res, 200, entry);
 }
 
-// GET /workflows/:id/export (HELM-P3-W11) — the versioned, secrets-stripped,
-// kernel-hash-pinned `.helm.json` file. Read-only re-shape of an already
-// compiled pack, same immutable-catalog discipline as handleEucEntry above.
+// GET /workflows/:id/export[?format=bpmn] (HELM-P3-W11; bpmn format added
+// HELM-BPMN-WIRE-1) — the versioned, secrets-stripped, kernel-hash-pinned
+// `.helm.json` file by default, or the pack's BPMN 2.0 XML diagram
+// (hub/bpmn-export.mjs, previously CLI-only via scripts/export-bpmn.mjs)
+// with ?format=bpmn. Both are read-only re-shapes of an already compiled
+// pack, same immutable-catalog discipline as handleEucEntry above — no
+// consent ticket, since this exports only a diagram/shape of a workflow the
+// caller already holds (no secret material, no vault/connector access; read
+// tier per the standard bearer-token gate in createHelmServer, same as the
+// .helm.json export it shares a route with).
 function handleWorkflowExportRoute(req, res, params) {
+  const format = new URL(req.url, "http://x").searchParams.get("format");
+  if (format === "bpmn") {
+    const pack = getPack(params.id);
+    if (!pack) return deny(res, 404, "workflow_not_found");
+    return sendXml(res, 200, exportBpmn(pack.manifest));
+  }
   let doc;
   try {
     doc = buildWorkflowExport(params.id);
