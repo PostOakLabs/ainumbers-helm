@@ -46,9 +46,15 @@ export async function renderLearn(root) {
     </section>
 
     <section class="card" aria-labelledby="learn-pairing">
-      <h3 id="learn-pairing">Pairing / troubleshooting</h3>
-      <p>"Not paired" means this browser tab has no token for talking to helmd — pairing tokens are per-tab and don't survive a closed tab or a restart, by design.</p>
-      <p>Opening Helm gets you a freshly paired tab — reopen it from your Start menu or applications folder if you lost it, or use <a href="#/operate">Status</a>'s advanced pairing form to reconnect this tab by hand. Helm doesn't run at sign-in unless you turned that on yourself, on <a href="#/operate">Status</a>.</p>
+      <h3 id="learn-pairing">Get back in when a tab says it isn't connected</h3>
+      <p>Helm's connection to a browser tab only lasts as long as that tab does — closing it, restarting your browser, or opening an old bookmark all lose it. That's expected, by design, not a bug: nothing you did wrong, and none of your data or evidence is affected.</p>
+      <ol class="steps">
+        <li><strong>Check whether Helm is even open.</strong> Look in your login items, Start menu, dock, or taskbar. If it isn't there, open it — a connected browser tab opens on its own.</li>
+        <li><strong>Still have a Helm tab open somewhere else?</strong> Switch back to that tab — a connection only works in the tab it started in, so a different or older tab won't pick it up.</li>
+        <li><strong>Helm is running, but every tab is gone?</strong> Reopen Helm from wherever you launched it before (login items, Start menu, applications folder) — that opens a fresh, already-connected tab rather than resuming an old one.</li>
+        <li><strong>Still stuck?</strong> Use <a href="#/operate">Status</a>'s "Advanced: pair by hand" form, or the same form on the connection screen itself, with a fresh pairing link from Helm.</li>
+      </ol>
+      <p>Helm doesn't run at sign-in unless you turned that on yourself, on <a href="#/operate">Status</a>.</p>
       <details class="disclosure">
         <summary>Advanced: start Helm from a command line</summary>
         <p>If Helm isn't set to start automatically, or you're on a machine without it installed yet:</p>

@@ -204,18 +204,67 @@ function ensureActivityStream(port, token, dot, label) {
 // default now, so on most machines nothing is going to bring the daemon back
 // on its own and telling the user "no action needed" would strand them on a
 // page that never reconnects.
-function mountTokenForm(root, onPaired) {
+//
+// HELM-PAIR-UX-1: the screen above USED TO just say "waiting" and never
+// actually checked anything — no probe, no poll, so it stayed "waiting" even
+// after Helm started, or stayed "waiting" forever if Helm was never running
+// at all. Root cause (HELM-PAIR-DIAG-1): the pairing token lives in
+// sessionStorage (P3-D9, tab-lifetime only), so this screen is normal and
+// expected the moment a paired tab is closed — the fix is telling the user
+// WHICH of the two different situations they're in, not guessing. This now
+// probes GET /health (no token — a plain reachability check, never the
+// pairing check itself) to tell "Helm isn't running at all" apart from
+// "Helm is running, this tab just isn't the paired one," and re-probes every
+// few seconds so the page catches up on its own instead of sitting on stale
+// copy. Plain language only in the two headline states — "token",
+// "loopback", "origin" stay out of them; the pair-by-hand form below keeps
+// the technical field names it always had, since that's the disclosed
+// Advanced section.
+const CONNECT_PROBE_MS = 3000;
+let connectProbeTimer = null;
+
+async function probeHelmdReachable(port) {
+  const res = await call("/health", { port, token: null, timeoutMs: 2000 });
+  // status 0 = the fetch itself failed (refused/timed out) — nothing is
+  // listening. Any other status, including a 401 this unauthenticated probe
+  // is expected to get, means something answered on that port.
+  return res.status !== 0;
+}
+
+function connectDiagnosisHtml(state) {
+  if (state === "checking") {
+    return `<p class="welcome-title">Checking for Helm&hellip;</p>
+      <p class="empty-state">Looking for Helm on this computer.</p>`;
+  }
+  if (state === "unreachable") {
+    return `<p class="welcome-title">Helm isn't running</p>
+      <p class="empty-state">This computer isn't running Helm right now. This page keeps checking on its own — no need to reload it.</p>
+      <p class="empty-state">Open the Helm app (check your login items or Start menu), or reinstall from <a href="https://ainumbers.co/helm" rel="noopener">ainumbers.co/helm</a> if it isn't there.</p>`;
+  }
+  return `<p class="welcome-title">Helm is running, but this browser tab isn't connected to it</p>
+    <p class="empty-state">A Helm connection only works in the browser tab it started in. If you connected Helm before, switch back to that tab.</p>
+    <p class="empty-state">Otherwise, open the Helm app again (login items or Start menu) — it opens a fresh, already-connected tab.</p>`;
+}
+
+function mountTokenForm(root, onPaired, port) {
   root.innerHTML = `
     <div class="welcome-state" aria-live="polite">
-      <p class="welcome-title">Waiting for Helm on this computer&hellip;</p>
-      <p class="empty-state">This tab isn't paired with helmd yet. If Helm is running, this page reconnects on its own.</p>
-      <p class="empty-state">Still waiting after a minute? Open the Helm app (check your login items or Start menu), or reinstall from <a href="https://ainumbers.co/helm" rel="noopener">ainumbers.co/helm</a> if it isn't there.</p>
+      <div id="connect-diagnosis">${connectDiagnosisHtml("checking")}</div>
+      <p class="empty-state">New to Helm? See the <a href="#/learn">step-by-step connection guide</a>.</p>
       <details class="disclosure">
         <summary>Advanced: pair by hand</summary>
         ${pairFormHtml()}
       </details>
     </div>`;
   wirePairForm(root, onPaired);
+
+  const tick = async () => {
+    const reachable = await probeHelmdReachable(port);
+    const slot = root.querySelector("#connect-diagnosis");
+    if (slot) slot.innerHTML = connectDiagnosisHtml(reachable ? "not-paired" : "unreachable");
+  };
+  tick();
+  connectProbeTimer = setInterval(tick, CONNECT_PROBE_MS);
 }
 
 // §12.3: the shell owns the page title. Views delete their own <h2> and
@@ -226,6 +275,10 @@ function renderViewHeader(app, view) {
 }
 
 async function render(app) {
+  if (connectProbeTimer) {
+    clearInterval(connectProbeTimer);
+    connectProbeTimer = null;
+  }
   const port = loadPort();
   const token = loadToken();
   const { view, params } = currentRoute();
@@ -243,7 +296,7 @@ async function render(app) {
     if (!requiresPairing) {
       await VIEWS[view](app.viewContent, { port, token, params, activityStream: null });
     } else {
-      mountTokenForm(app.viewContent, () => render(app));
+      mountTokenForm(app.viewContent, () => render(app), port);
     }
     setStatus(app.statusDot, app.statusLabel, "dormant", "not paired");
     return;
