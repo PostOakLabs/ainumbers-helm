@@ -27,6 +27,7 @@ import { handleMcp, handleMcpMethodNotAllowed } from "./mcp.mjs";
 import { haGateCheckFor, findHeldGate, recordReplay, submitHaRecord } from "./ha-gate.mjs";
 import { provenanceStatus } from "./state-snapshot.mjs";
 import { recordsForSubject, getSlot } from "./ha-store.mjs";
+import { createMatter, getMatter, listMatters, updateMatter, deleteMatter } from "./matter-store.mjs";
 import { buildKernelCard, buildEucEntry } from "./euc-register.mjs";
 import { renderKernelCardHtml, renderEucEntryHtml } from "../ui/lib/euc-html.mjs";
 import { renderKernelDecisionTableHtml, buildKernelDecisionTableDmn } from "../ui/lib/decision-table.mjs";
@@ -1047,6 +1048,74 @@ async function handleMigrationImport(req, res, params, db) {
   sendJson(res, 200, result);
 }
 
+// GET /matters[?status=intake|working|closed] (HELM-MATTER-H1): list matters,
+// newest-created last, optionally filtered by status.
+function handleMattersList(req, res, params, db) {
+  if (!db) return deny(res, 503, "engine_unavailable");
+  const status = new URL(req.url, "http://x").searchParams.get("status");
+  sendJson(res, 200, { matters: listMatters(db, status ? { status } : {}) });
+}
+
+// POST /matters {status?, entity, parties?, deadlines?, bindings?, narrative?}
+// (HELM-MATTER-H1): create a matter. matter_id/created_at/updated_at/
+// manifest_digest are always server-assigned. Refused (422) if the resulting
+// manifest fails the frozen §2 schema or any non-external_reference binding
+// doesn't resolve to a known local artifact (§3) — matter-store.mjs owns
+// both checks and never partially writes.
+async function handleMattersCreate(req, res, params, db) {
+  if (!db) return deny(res, 503, "engine_unavailable");
+  let body;
+  try {
+    body = await readJsonBody(req);
+  } catch {
+    return deny(res, 400, "invalid_json");
+  }
+  try {
+    sendJson(res, 200, { ok: true, matter: createMatter(db, body) });
+  } catch (err) {
+    sendJson(res, 422, { ok: false, error: String(err?.message || err) });
+  }
+}
+
+// GET /matters/{id} (HELM-MATTER-H1).
+function handleMatterGet(req, res, params, db) {
+  if (!db) return deny(res, 503, "engine_unavailable");
+  const matter = getMatter(db, params.id);
+  if (!matter) return deny(res, 404, "matter_not_found");
+  sendJson(res, 200, { matter });
+}
+
+// POST /matters/{id}/update {status?, entity?, parties?, deadlines?,
+// bindings?, narrative?} (HELM-MATTER-H1): a present field replaces the
+// existing member wholesale; an omitted field carries forward unchanged.
+// Same §2/§3 refusal discipline as create, plus matter-store.mjs's own
+// append-only guard on already-done deadlines.
+async function handleMatterUpdate(req, res, params, db) {
+  if (!db) return deny(res, 503, "engine_unavailable");
+  let body;
+  try {
+    body = await readJsonBody(req);
+  } catch {
+    return deny(res, 400, "invalid_json");
+  }
+  try {
+    sendJson(res, 200, { ok: true, matter: updateMatter(db, params.id, body) });
+  } catch (err) {
+    const status = /unknown matter_id/.test(String(err?.message)) ? 404 : 422;
+    sendJson(res, status, { ok: false, error: String(err?.message || err) });
+  }
+}
+
+// POST /matters/{id}/delete (HELM-MATTER-H1): removes the matter's local
+// INDEX row only — a matter never holds primary evidence (bindings are
+// hash references, never payload copies), so this cannot lose or alter any
+// run/evidence-bundle/approval-record a deleted matter pointed at.
+function handleMatterDelete(req, res, params, db) {
+  if (!db) return deny(res, 503, "engine_unavailable");
+  if (!deleteMatter(db, params.id)) return deny(res, 404, "matter_not_found");
+  sendJson(res, 200, { ok: true });
+}
+
 // Exported (not just used internally) so scripts/gen-openapi.mjs (HELM-P4-B2)
 // can derive the OpenAPI doc from the SAME route table the server actually
 // dispatches on, instead of a hand-copied list that can silently drift.
@@ -1079,6 +1148,8 @@ export const ROUTES = {
   "GET /ha/slot": handleHaSlot,
   "POST /ha/records": handleHaRecordSubmit,
   "GET /provenance/head": handleProvenanceHead,
+  "GET /matters": handleMattersList,
+  "POST /matters": handleMattersCreate,
   // HELM-H9: MCP v2 JSON-RPC endpoint, same Host+Origin+Bearer gate as every
   // other route here (row: "same bearer-token auth as REST"). GET/DELETE are
   // registered too, deliberately — SEP-2567 (final, no delta) removed the
@@ -1099,6 +1170,9 @@ export const DYNAMIC_ROUTES = [
   { method: "GET", pattern: /^\/workflows\/(?<id>[^/]+)\/euc-entry$/, docPath: "/workflows/{id}/euc-entry", handler: handleEucEntry },
   { method: "GET", pattern: /^\/workflows\/(?<id>[^/]+)\/export$/, docPath: "/workflows/{id}/export", handler: handleWorkflowExportRoute },
   { method: "GET", pattern: /^\/templates\/(?<slug>[^/]+)$/, docPath: "/templates/{slug}", handler: handleTemplateDetail },
+  { method: "GET", pattern: /^\/matters\/(?<id>[^/]+)$/, docPath: "/matters/{id}", handler: handleMatterGet },
+  { method: "POST", pattern: /^\/matters\/(?<id>[^/]+)\/update$/, docPath: "/matters/{id}/update", handler: handleMatterUpdate },
+  { method: "POST", pattern: /^\/matters\/(?<id>[^/]+)\/delete$/, docPath: "/matters/{id}/delete", handler: handleMatterDelete },
 ];
 
 export function createHelmServer({
