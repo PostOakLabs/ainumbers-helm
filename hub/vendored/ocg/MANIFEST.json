@@ -1,18 +1,18 @@
 {
   "sourceRepo": "https://github.com/PostOakLabs/ainumbers.git",
   "license": "MIT License, Copyright (c) 2026 PostOakLabs (same license/holder as this repo; see this repo's own LICENSE for full terms; no third-party code in this vendored subtree)",
-  "pinnedSha": "977b4bc20627eb512ed12b13e3c299019170a745",
+  "pinnedSha": "2b8c57bbdb946264b8c919ee7bcf3906db909e65",
   "vendoredPaths": [
     "chaingraph/kernels",
     "chaingraph/standard/SPEC.md",
     "chaingraph/standard/openchain-graph-v0.4.schema.json",
     "chaingraph/chaingraph.json"
   ],
-  "fileCount": 1560,
+  "fileCount": 1566,
   "files": [
     {
       "path": "chaingraph.json",
-      "sha256": "25c8abe6cdb8f0dd44ff26c150c1dc2425cc57c232c185eaa5ea42502a26a657"
+      "sha256": "22c3f44beda1a2465739b7f21bef4fcce31c2e11c41ce96029e5baf823fc0209"
     },
     {
       "path": "kernels/_ancestry.mjs",
@@ -2099,6 +2099,14 @@
       "sha256": "b52a79f937c901786a32dcae3e275f3e2a4bb308cb0fb844998c5cf1268da1ff"
     },
     {
+      "path": "kernels/art-560-oracle-price-aggregation.kernel.mjs",
+      "sha256": "ba126694afd24428319b321cbc06447608573deb30aaa75f5905a25146b3b91f"
+    },
+    {
+      "path": "kernels/art-561-currency-basket-index.kernel.mjs",
+      "sha256": "84f9b197e0b2e11acc54f7bb0ac50a30db1e80f22e33238395093d9ac9887921"
+    },
+    {
       "path": "kernels/art-562-compile-model-risk-lineage-pack.kernel.mjs",
       "sha256": "3bd0f1a3cd02576428db7940732f9d87c09d2632dafbcd72eb4f5f9ee96cb040"
     },
@@ -2205,6 +2213,10 @@
     {
       "path": "kernels/art-587-finp2p-ledger-proof-verifier.kernel.mjs",
       "sha256": "3c844292a3af41f9d432ae70b2573143e1de22d82b2ddda19f531d233ec06d5f"
+    },
+    {
+      "path": "kernels/art-588-docket-deadline-sweep.kernel.mjs",
+      "sha256": "54ec1d5b6fe7faac635820bc4b60de9ea75ea643abec9d1f312b6f54de3125fa"
     },
     {
       "path": "kernels/art-589-redline-round-classifier.kernel.mjs",
@@ -4455,6 +4467,14 @@
       "sha256": "bf013b9d4b4cc096a1378c45df0537860052112850cf28893eb97374ce8d5cb8"
     },
     {
+      "path": "kernels/fixtures/art-560-oracle-price-aggregation.fixtures.json",
+      "sha256": "f81097dc0e6fd84e1992b0fa5442602d0ec32bdbc7feded93847498cb5fce611"
+    },
+    {
+      "path": "kernels/fixtures/art-561-currency-basket-index.fixtures.json",
+      "sha256": "f2c1815470ac3ec89cf18889380a40f7ab7c6af1cd45cee4165db7980d965508"
+    },
+    {
       "path": "kernels/fixtures/art-562-compile-model-risk-lineage-pack.fixtures.json",
       "sha256": "719c70764f72f22e06046f38b2a793c419f3da6b114a41b00ede6c421b273e45"
     },
@@ -4561,6 +4581,10 @@
     {
       "path": "kernels/fixtures/art-587-finp2p-ledger-proof-verifier.fixtures.json",
       "sha256": "b35235475ac2c0e5f90671fb0e0b819250bb24f84b06f279f9c6ee620c92cebf"
+    },
+    {
+      "path": "kernels/fixtures/art-588-docket-deadline-sweep.fixtures.json",
+      "sha256": "8fcb525ead515c2449b0b03e99ced2ddd0661be8970a231e9149353b844f8683"
     },
     {
       "path": "kernels/fixtures/art-589-redline-round-classifier.fixtures.json",
@@ -6088,7 +6112,7 @@
     },
     {
       "path": "kernels/index.mjs",
-      "sha256": "08e67dbab352baf9cf1379e367c67f1c7b07813acb9aef49cf2bc232655590cf"
+      "sha256": "884d6da6d08a6049661a580342c0e80515294e9279bc6d6d252202269e719b9f"
     },
     {
       "path": "kernels/inline-hash-equality.test.mjs",
