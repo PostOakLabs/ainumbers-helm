@@ -44,7 +44,24 @@ beacon/analytics patterns — none found.)
 - The Google Drive connector (row 4) is likewise only instantiated in
   its own test file — no runtime registry constructs it yet. The generic
   `performEgress` mechanism (row 3) is live for any connector that *is*
-  installed.
+  installed. **Re-measured 2026-08-08, still true.**
+  `hub/connectors/dispatch.mjs`'s `REGISTRY` (the only object that actually
+  constructs a connector for a running workflow step) still lists only
+  `http.send`. `hub/server.mjs`'s `/connectors` catalog and
+  `ui/lib/custom-connectors.mjs`'s allow-list both surface this connector's
+  contract without ever dispatching it. **Blocker is structural, not the
+  security stack.** Every schema-legal "connectors"/"actions" step item is
+  `{connector_id, contract_digest}` or `{action_id, type, target_host}`,
+  and no member exists anywhere in `schema/workflow-manifest.schema.json`
+  to carry the `fileId` this connector's `send()` requires, so a REGISTRY
+  entry for it could only ever throw. Smallest unblocking design: add an
+  optional `file_id` member to the schema's `connectorRef`
+  (additive; `additionalProperties: false` already scopes it), give
+  `dispatch.mjs` a `google-drive.fetch` entry whose `buildPayload` reads
+  `item.file_id` (same missing-param-throws pattern as `http.send`'s
+  `target_host` check), and have `compile-packs.mjs` populate it. That is
+  a schema, compiler, and dispatcher change spanning three files, not a
+  same-file fix.
 
 **`exportBpmn` (`hub/bpmn-export.mjs`) no longer belongs on this list.**
 Previously CLI-only (`helmd export-bpmn`,
