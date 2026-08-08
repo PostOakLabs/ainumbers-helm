@@ -61,6 +61,15 @@ Commands:
                       it against an asserted value — no daemon, no upload. Exit codes: 0
                       match, 1 differs, 2 no asserted value (recompute-only), 3 insufficient
                       input, 4 usage error, 5 scope disagreement.
+  check <pack_id> --glob "<pattern>" [--out-dir <dir>] [--no-anchor] [--json]
+  check <pack_id> <file1> <file2> ... [--out-dir <dir>] [--no-anchor] [--json]
+                      batch mode (triggered by --glob or more than one input file): runs
+                      each file through the same check unattended, never anchors per file
+                      regardless of --no-anchor/--anchor state, continues past a per-file
+                      failure and names every failure in the summary, and exits nonzero if
+                      ANY file failed to run (0 if every file ran, whatever its comparison
+                      result). --out-dir and --glob matches are rejected if they resolve
+                      outside the current working directory.
   verify <bundle.json> --keys <publicKeys.json> [--json] [--anchor-full]
                       verify an evidence bundle offline against a caller-supplied public-key
                       file — no daemon, no network. Exit codes: 0 valid, 1 invalid, 2 usage
