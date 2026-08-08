@@ -5,7 +5,7 @@
 // the exact code path the Verify view runs in-browser.
 import { test } from "node:test";
 import assert from "node:assert/strict";
-import { verifyBundle, verifyCheckpointOffline, verifyAnchorBinding, verifyAnchorFull } from "./verify-bundle.mjs";
+import { verifyBundle, verifyCheckpointOffline, verifyAnchorBinding, verifyAnchorFull, assertRedacted } from "./verify-bundle.mjs";
 import { DEMO_PUBLIC_KEYS, DEMO_GOLDEN_BUNDLE, DEMO_TAMPERED_BUNDLE } from "../fixtures/verify-demo.mjs";
 import { FREETSA_TOKEN_B64, EXPECTED_HASH_HEX } from "../fixtures/rfc3161-verify-fixtures.mjs";
 
@@ -91,4 +91,47 @@ test("verifyAnchorFull: non-rfc3161 anchor delegates to the structural check (no
   const result = await verifyAnchorFull({ type: "queued", reason: "relay unreachable" }, "a".repeat(64));
   assert.equal(result.neutral, true);
   assert.equal(result.status, "queued");
+});
+
+// HELM-VERIFY-CLI-1 §1.4 condition 1 — RED-BEFORE-GREEN for assertRedacted's
+// depth guard. Confirmed by reading the pre-patch source: assertRedacted had
+// NO depth guard before this WU (phil's carried-forward open item, answered
+// against the real code). RED below reproduces that unbounded recursion;
+// GREEN proves the new maxDepth param fails closed instead.
+test("RED: assertRedacted with no maxDepth (the pre-existing 2-arg call shape) recurses until it overflows the stack on pathological input", () => {
+  let root = {};
+  let cur = root;
+  for (let i = 0; i < 200000; i++) {
+    cur.a = {};
+    cur = cur.a;
+  }
+  assert.throws(() => assertRedacted(root), RangeError);
+});
+
+test("GREEN: assertRedacted(obj, \"$\", 0, maxDepth) fails closed with a reason string instead of recursing unbounded", () => {
+  let root = {};
+  let cur = root;
+  for (let i = 0; i < 200000; i++) {
+    cur.a = {};
+    cur = cur.a;
+  }
+  assert.throws(() => assertRedacted(root, "$", 0, 500), /exceeded max depth 500/);
+});
+
+test("GREEN: assertRedacted's default (no maxDepth) behavior is unchanged for well-formed input — additive, not breaking", () => {
+  assert.doesNotThrow(() => assertRedacted({ a: { b: { c: 1 } } }));
+});
+
+test("verifyBundle's additive maxDepth option rejects a pathologically nested entry predicate via entry_redaction_violated, without changing the 2-arg call shape", async () => {
+  const bundle = structuredClone(DEMO_GOLDEN_BUNDLE);
+  // Sanity: the unmodified golden bundle still verifies with an explicit cap
+  // that's well above its real (shallow) nesting depth.
+  const capped = await verifyBundle(bundle, DEMO_PUBLIC_KEYS, { maxDepth: 500 });
+  assert.equal(capped.valid, true);
+  // A cap of 0 must fail closed on the SAME golden bundle's entry predicates
+  // (which nest at least one level) — proving the option is actually wired
+  // through, not merely accepted and ignored.
+  const overCapped = await verifyBundle(bundle, DEMO_PUBLIC_KEYS, { maxDepth: 0 });
+  assert.equal(overCapped.valid, false);
+  assert.ok(overCapped.reasons.some((r) => r.startsWith("entry_redaction_violated")));
 });

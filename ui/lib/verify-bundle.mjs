@@ -19,9 +19,17 @@ const FORBIDDEN_FIELD_NAMES = new Set([
   "password", "api_key", "raw_payload", "payload_bytes", "payload_body",
 ]);
 
-function assertRedacted(obj, path = "$") {
+// HELM-VERIFY-CLI-1: additive maxDepth param (default Infinity preserves the
+// prior unbounded-recursion behavior for existing 2-arg callers, e.g. the
+// browser Verify view). Confirmed by reading this function pre-patch: no
+// depth guard existed here before this WU (phil's carried-forward open item,
+// answered against the real code, not assumed).
+function assertRedacted(obj, path = "$", depth = 0, maxDepth = Infinity) {
+  if (depth > maxDepth) {
+    throw new Error(`redaction check exceeded max depth ${maxDepth} at "${path}"`);
+  }
   if (Array.isArray(obj)) {
-    obj.forEach((v, i) => assertRedacted(v, `${path}[${i}]`));
+    obj.forEach((v, i) => assertRedacted(v, `${path}[${i}]`, depth + 1, maxDepth));
     return;
   }
   if (obj && typeof obj === "object") {
@@ -29,7 +37,7 @@ function assertRedacted(obj, path = "$") {
       if (FORBIDDEN_FIELD_NAMES.has(k)) {
         throw new Error(`"${path}.${k}" looks like a secret/raw payload and must not be exported`);
       }
-      assertRedacted(v, `${path}.${k}`);
+      assertRedacted(v, `${path}.${k}`, depth + 1, maxDepth);
     }
   }
 }
@@ -131,7 +139,8 @@ export async function verifyAnchorFull(anchor, expectedHashHex) {
 // publicKeys: { ed25519SpkiB64, mldsa44B64 }
 // Returns { valid, reasons[], detail } — never throws on a bad bundle (a
 // tampered bundle is expected to come back { valid: false, reasons: [...] }).
-export async function verifyBundle(bundle, publicKeys) {
+export async function verifyBundle(bundle, publicKeys, opts = {}) {
+  const { maxDepth = Infinity } = opts;
   const reasons = [];
   const detail = { manifest: null, entries: [], checkpoints: [] };
 
@@ -163,7 +172,7 @@ export async function verifyBundle(bundle, publicKeys) {
     if (!objResult.valid) { reasons.push(`entry_envelope_invalid:${entry.digest}`); detail.entries.push(row); continue; }
     if ((await envelopeDigest(obj.envelope)) !== entry.digest) { reasons.push(`entry_digest_mismatch:${entry.digest}`); detail.entries.push(row); continue; }
     try {
-      assertRedacted(objResult.statement.predicate);
+      assertRedacted(objResult.statement.predicate, "$", 0, maxDepth);
     } catch {
       reasons.push(`entry_redaction_violated:${entry.digest}`);
       detail.entries.push(row);
