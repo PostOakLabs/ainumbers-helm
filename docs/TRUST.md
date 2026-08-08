@@ -46,7 +46,7 @@ beacon/analytics patterns — none found.)
   `performEgress` mechanism (row 3) is live for any connector that *is*
   installed.
 
-**`exportBpmn` (`hub/bpmn-export.mjs`) — no longer belongs on this list.**
+**`exportBpmn` (`hub/bpmn-export.mjs`) no longer belongs on this list.**
 Previously CLI-only (`helmd export-bpmn`,
 `scripts/export-bpmn.mjs`), it is now also reachable via `GET
 /workflows/:id/export?format=bpmn` and an "Export BPMN diagram" button on
@@ -54,7 +54,7 @@ the canvas view. It was never egress-capable and still isn't: the BPMN 2.0
 XML is built purely from a compiled pack's manifest, already resident in
 the daemon's memory, with no `fetch`/`http(s).request` call anywhere in
 `hub/bpmn-export.mjs`. Read-tier, same as the `.helm.json` export it
-shares a route with — no consent ticket, since it exports only a diagram
+shares a route with, no consent ticket, since it exports only a diagram
 of a workflow the caller already holds.
 
 ### Build/release-time only (CI runners, never shipped in the binary)
