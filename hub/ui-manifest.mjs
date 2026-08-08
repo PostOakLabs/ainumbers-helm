@@ -85,6 +85,7 @@ const FILES = [
   "views/deadlines.mjs",
   "views/home.mjs",
   "views/learn.mjs",
+  "views/matters.mjs",
   "views/operate.mjs",
   "views/register.mjs",
   "views/review.mjs",

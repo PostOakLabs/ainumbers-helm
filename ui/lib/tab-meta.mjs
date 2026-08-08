@@ -20,6 +20,9 @@
 // tabs from the TABS/VIEWS parity check — that exclusion has no live user
 // today but is covered by a fixture-based test so it doesn't silently rot
 // before the next reserved slot needs it.
+// HELM-MATTER-U1: "matters" joins Status, after Deadlines — the §12.6 IA
+// line above records the 2026-08-07 naming ruling and isn't re-stated for
+// every later addition; see this tab's own row for its history.
 export const TABS = [
   { id: "home", label: "Home", group: "Home", intro: "What Helm is, and what to do first.", requiresPairing: false },
   { id: "choose", label: "Choose", group: "Build", intro: "Pick the workflow you want to run, from ready-made templates or your own packs.", requiresPairing: true },
@@ -31,6 +34,7 @@ export const TABS = [
   { id: "operate", label: "Status", group: "Status", intro: "Check how Helm is running on this computer, and take a backup.", requiresPairing: true },
   { id: "register", label: "Register", group: "Status", intro: "Produce the governance/EUC/change-control register entry and validation cards for a workflow — each kernel is one calculation step in the workflow.", requiresPairing: true },
   { id: "deadlines", label: "Deadlines", group: "Status", intro: "Regulatory dates that matter, and which of your workflows cover them.", requiresPairing: false },
+  { id: "matters", label: "Matters", group: "Status", intro: "The exams, filings, and disputes you're tracking, with their deadlines and the evidence bound to each.", requiresPairing: true },
   { id: "learn", label: "Learn", group: "Status", intro: "How Helm works, how to fix a connection, and where the standard is written down.", requiresPairing: false },
   { id: "agents", label: "AI agents", group: "AI agents", intro: "Connect your own agent or MCP client to Helm.", requiresPairing: true },
 ];

@@ -1,7 +1,7 @@
 {
   "_comment": "Anti-drift stamp for HELM-TECHNICAL-DESIGN-IMPLEMENTATION.md. Each entry is a file the doc cites, digested as of the last time a human re-read the doc's claims against that code. Enforced by scripts/check-techdoc-citations.mjs. Re-stamp with scripts/stamp-techdoc-citations.mjs, by hand, in the same pull request that re-verifies the prose. Never automatically.",
   "doc": "docs/HELM-TECHNICAL-DESIGN-IMPLEMENTATION.md",
-  "stampedAtSha": "78f1b5dff725d41dcb6732672b3c4626afcf260b",
+  "stampedAtSha": "67feb7bc8ce8d465995325191d74e6f457c95702",
   "files": [
     {
       "path": "bin/helmd.mjs",
@@ -141,7 +141,7 @@
     },
     {
       "path": "hub/ui-manifest.mjs",
-      "sha256": "f67eb699e46667ebaabafa3c8e93cf74fd03c4f92577de9410e25996730aa298"
+      "sha256": "eec34b418a895045f2a7757a79636ca60eb96583c678b985c70b5efa4fe15aa4"
     },
     {
       "path": "hub/vault.mjs",
