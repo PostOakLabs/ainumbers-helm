@@ -278,7 +278,7 @@ Anchoring is off by default (`hub/config.mjs:50`) and is logged once per boot wh
 
 | Component | Where it came from | License | Why |
 |---|---|---|---|
-| OCG kernels, `_hash.mjs`, `_computeproof.mjs`, `_proof.mjs`, `_rfc3161.mjs`, SPEC.md, v0.4 schema, `chaingraph.json` | `github.com/PostOakLabs/ainumbers`, pinned at `0e3729b` | MIT (site repository `LICENSE`) | The kernels are the deterministic compute. Reimplementing them here would create a second canonical hash path, which is exactly the failure the pin exists to prevent. |
+| OCG kernels, `_hash.mjs`, `_computeproof.mjs`, `_proof.mjs`, `_rfc3161.mjs`, SPEC.md, v0.4 schema, `chaingraph.json` | `github.com/PostOakLabs/ainumbers`, pinned at `167db23b` | MIT (site repository `LICENSE`) | The kernels are the deterministic compute. Reimplementing them here would create a second canonical hash path, which is exactly the failure the pin exists to prevent. |
 | Anchor Suite `tsq.mjs` (RFC 3161 TimeStampReq builder) and its PKI.js bundle | `github.com/PostOakLabs/anchor-suite`, pinned at `1aa6d22` | MIT, with third-party BSD-3-Clause and MIT code preserved in-file inside the PKI.js bundle; see NOTICE (`hub/vendored/anchor-suite/MANIFEST.json`) | DER encoding for timestamp requests is exacting and already shipped and exercised in the browser. Vendoring the shipped code beats a second implementation. |
 | ML-DSA-44 implementation | Reached through `hub/vendored/ocg/kernels/_proof.mjs` | Follows the OCG vendored tree above | Same reason as the kernels. One implementation, one canonical form. |
 | Helm itself: `hub/`, `ui/`, `scripts/`, `schema/` | Written here | Apache-2.0 (`LICENSE`, `package.json`, SPDX header on every source file) | Phase 4 decision. The repository is public under Apache-2.0. |

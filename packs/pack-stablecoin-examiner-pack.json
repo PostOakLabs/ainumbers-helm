@@ -1,0 +1,49 @@
+{
+  "workflow_id": "pack-stablecoin-examiner-pack",
+  "name": "Stablecoin Examiner Pack",
+  "outcome": "Examiner-facing composition over three landed nodes: a GENIUS-shaped reserve disclosure conformance check (art-582), an independent Proof-of-Reserves recompute (art-584), and a sanctions-screening decision pinned to the exact versioned dataset it ran against (art-585). On-chain circulating supply enters as a DECLARED caller input, compared numerically against the issuer's reported outstanding-token count; it is informational, reaches no requirement verdict, and involves no network read. Reading that figure directly from a light client is a named follow-on, not part of this pack. Produces the evidence a stablecoin examination asks for; it is not a compliance certification and takes no position on solvency.",
+  "spec_version": "ocg-control-plane@1",
+  "manifest": {
+    "manifest_version": "1",
+    "workflow_id": "pack-stablecoin-examiner-pack",
+    "trigger": {
+      "type": "manual"
+    },
+    "nodes": [
+      {
+        "node_id": "n1",
+        "kernel_id": "art-582-genius-reserve-disclosure-conformance-monitor",
+        "kernel_digest": "sha256:938dff18fe631418b8fc865198f0e4cb4ca4d6a9ee87967ccf818d5f2189edf9"
+      },
+      {
+        "node_id": "n2",
+        "kernel_id": "art-584-proof-of-reserves-verifier",
+        "kernel_digest": "sha256:852795237d7839b503e955db5db49f8d87ff6dc9edeb5a31687fca2e6f660b66"
+      },
+      {
+        "node_id": "n3",
+        "kernel_id": "art-585-sanctions-screening-evidence-pack",
+        "kernel_digest": "sha256:c686a99d6d05d28e3feba866c69df7eb43ba13b49c2ce7c8e260be818d13c8a6"
+      }
+    ],
+    "connectors": [],
+    "gates": [],
+    "actions": []
+  },
+  "workflow_manifest_digest": "sha256:92484a9a82621f040b53a3cac5de40b77895e018e512bb16a622b82bc9267e2d",
+  "declared_inputs": [],
+  "steps_meta": [
+    {
+      "node_id": "n1",
+      "data_classification": "compute"
+    },
+    {
+      "node_id": "n2",
+      "data_classification": "compute"
+    },
+    {
+      "node_id": "n3",
+      "data_classification": "compute"
+    }
+  ]
+}

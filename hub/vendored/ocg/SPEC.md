@@ -1335,7 +1335,7 @@ escalation_record = {
   opened_at       // ISO 8601 instant the record was opened — WALL-CLOCK, hash-EXCLUDED
 }
 ```
-DETERMINISM (the load-bearing rule). `opened_at` is wall-clock and MUST NOT enter any hash preimage —
+DETERMINISM (the rule everything else here depends on). `opened_at` is wall-clock and MUST NOT enter any hash preimage —
 neither the composite/step `execution_hash` (§21.2 RAN-steps-only already excludes it) NOR the
 escalation-record hash. The **escalation-record hash** is the §4 canonical hash (`kernels/_hash.mjs`, the ONE
 canonicalizer, RFC 8785 / JCS `cgCanon` — never a hand-built preimage) over exactly the DETERMINISTIC
@@ -1435,7 +1435,7 @@ byte-identical and fully conformant.
 The record MAY carry a machine-readable descriptor `exception_detail: { type, code, message }`, where `type`
 restates `exception_class`, `code` is a stable machine token, and `message` is human-readable. An
 `application`-class record MAY carry `retry: { attempt, max }`; an item reaching `attempt == max` MUST become
-a §22.8 `escalation_record` rather than silently drop. The distinction is load-bearing precisely because the
+a §22.8 `escalation_record` rather than silently drop. The distinction matters precisely because the
 two classes have opposite correct responses: retrying a `business` exception cannot succeed and only hides
 the item, while routing an `application` exception to a human wastes the one resource that cannot scale.
 
@@ -1755,7 +1755,7 @@ its claim (replay determinism) is not what the §4 parity/finite gates already m
 (§15) does three things: (a) it re-runs every kernel declaring `seeded-stochastic` at its own declared seed and
 fails the kernel unless both runs' `execution_hash` values are byte-identical; (b) it re-runs the same kernel at
 a **tampered seed** drawn from the committed negative fixture and fails if the hash does NOT change, which is
-what proves the seed is genuinely load-bearing rather than a decorative field; and (c) it exercises (a) and (b)
+what proves the seed genuinely changes the hash rather than being a decorative field; and (c) it exercises (a) and (b)
 unconditionally against a committed reference vector (`fixtures/seed-replay.fixtures.json`), so the replay and
 tamper-detect paths stay proven even in an estate with zero `seeded-stochastic` kernels. The declared class,
 `prng_algorithm`, `seed`, and `draw_count` are ordinary receipt content; this section adds no envelope change,
@@ -2108,6 +2108,35 @@ types, all scoped to a `head_hash`:
 - **`ocg-head-contract@1`** — RESERVED: type string and field shape only, NO on-chain deployment.
   Which chain, if any, is unchosen; Post Oak Labs never holds keys or funds on a user's behalf, and
   deployment of an actual contract is its own future Tim-gated work, not part of this section.
+- **`ocg-head-bilateral-cosign@1`** — a counterparty-cosigned `head_hash`, built directly on the
+  EXISTING §20.2 witness-cosignature construction (C2SP tlog-checkpoint + signed-note format) applied
+  to a **named-role** relationship instead of an anonymous witness pool: the counterparty(ies) named in
+  the head's own trust relationship cosign this specific `head_hash`, rather than an anonymous k-of-n
+  witness set cosigning a Merkle batch root. Ships now; reuses §20.2's note-text format byte-for-byte
+  (pinned `signed-note/v1.0.0`, `tlog-cosignature/v1.0.1`) — no second serialization is invented.
+  ```json
+  {
+    "type": "ocg-head-bilateral-cosign@1",
+    "anchored_hash": "sha256:<the head's head_hash, per §HEAD-1.1>",
+    "log_origin": "<origin string identifying this bilateral relationship>",
+    "proof": "<C2SP signed-note text: origin line + head_hash + one cosignature line per counterparty>",
+    "cosigner_keys": ["did:key:<ed25519 of counterparty B>", "did:key:<ed25519 of counterparty C>", "..."]
+  }
+  ```
+  `anchored_hash` is the `head_hash` of the specific head being cosigned — bilateral cosigning is
+  per-head by default; a deployment MAY ALSO batch via §20.1/§20.2 for its own log, a separate,
+  already-specified path. `cosigner_keys` is new relative to §20.2: a bilateral relationship has no
+  shared witness-key registry (§HEAD-1 defines none — see the no-registry note below), so the specific
+  counterparty keys an issuing org has agreed to be cosigned by travel WITH the binding; a verifier
+  checks `proof`'s cosignature lines against `cosigner_keys`, not against a verifier-local pinned set.
+  Threshold is explicit per binding: absent a stated `k`, ALL of `cosigner_keys` MUST have a valid
+  cosignature line (n-of-n); a binding MAY carry an OPTIONAL `threshold: k` member for k-of-n, mirroring
+  §20.2's k-of-n language. **No registry.** This standard defines no directory, discovery service, or
+  registry mapping org identity to cosigner keys — key exchange is left to whatever out-of-band channel
+  already establishes the counterparties' trust relationship, the same non-claim §HEAD-1.0's `stream`
+  field already makes about locating the next head. **Liveness duty:** the format defines bytes on the
+  wire only — no party of ours signs, cosigns, witnesses, or operates anything in this construction; see
+  the equivocation corollary below for the accompanying evidentiary-scope limit.
 
 **§HEAD-1.4 Honesty and equivocation (NORMATIVE).** A bare `ocg-head-file@1` head proves only "the
 signer claimed this tip" — it does NOT by itself prove the signer did not ALSO claim a different tip
@@ -2119,6 +2148,27 @@ design lineage; the BrowserChain network itself stays paused). The `ocg-head-tlo
 equivocation structurally harder to hide (a witness-cosigned log is a natural place to notice two
 heads at one seq) but §HEAD-1 does not require tlog backing — a verifier presented only head files
 still runs the comparison whenever it has more than one candidate for a `(stream, seq)`.
+
+**Equivocation corollary for `ocg-head-bilateral-cosign@1` (NORMATIVE).** Bilateral cosigning does not
+change `detectEquivocation()` at all — it is a pure function over heads a verifier already holds,
+regardless of how they arrived. What it ADDS is evidentiary weight: a cosigned head is harder to have
+equivocated undetected, because producing it required a counterparty's cooperation, and that
+counterparty is a second witness who can independently confirm whether it cosigned. Given two
+conflicting cosigned heads at the same `(stream, seq)`, a verifier can prove OFFLINE: (1) each head's
+own cosignature(s) verify against its own `cosigner_keys`; (2) the two heads conflict (different
+`head_hash` at the same `seq` — the existing, unmodified `detectEquivocation()` check); (3) if the SAME
+counterparty key cosigned BOTH conflicting heads, that counterparty has independently corroborated the
+signer's misbehavior — portable evidence handable to a third party without anyone running anything. A
+verifier MUST NOT go further. **A cosigned head-commit ATTESTS — it is evidence two parties agreed a
+tip existed at a point in time — it never FINALIZES.** Deciding which of two conflicting heads is "the"
+tip, "accepted," or "final," or arbitrating, sequencing, or picking a winner between them on a
+counterparty's behalf, is explicitly OUT OF SCOPE and MUST NOT be built on top of this profile: **the
+words "accept" and "finality" are BANNED from any conformant description of `ocg-head-bilateral-cosign@1`
+behavior**, in this standard and in any product copy built from it. That resolution is either made by
+the counterparties themselves, off-spec, through whatever business process governs their relationship,
+or left as a standing, evidenced disagreement — both are legitimate outcomes this profile is silent on
+by design; building the "pick a winner" function is an ordering-service function, which §HEAD-1 does not
+specify in any form, including a spec-only one.
 
 ## §APROV-1 Agent Provenance Profile — `ocg-agent-provenance@1` (NORMATIVE, OPTIONAL, profile-scoped — additive, lands at the coordinated record bump)
 *OCG is the lineage layer that emits SCITT/RFC 3161-anchorable receipts — existing per-domain standards
@@ -2433,14 +2483,14 @@ project's public material as of the observation date; the remaining members of e
 mapped** and are deliberately left blank rather than guessed. A blank is an unmapped field, never an
 asserted absence.
 
-| OCG member | Microsoft AGT receipts (draft) | agent-receipts (VC 2.0 `AgentReceipt`) | Attested Intelligence AGA | SCITT (RFC 9943 architecture + RFC 9942 COSE Receipts) |
-|---|---|---|---|---|
-| `policy_parameters_hash` | `covenantHash` (bound covenant/input digest) | `credentialSubject.action.parameters_hash` | `arguments_hash` | — (unmapped; a SCITT Signed Statement's payload is issuer-chosen claims, not a fixed input-hash field — this exporter carries `execution_hash` there instead, see format notes) |
-| `chain.parent_hashes[]` | `previousReceiptHash` | `credentialSubject.chain.previous_receipt_hash` | previous-hash chain member | — (unmapped; SCITT is a registration/transparency-log model, not a peer-to-peer hash chain — see format notes) |
-| party identity (§9 `did:key` keyid / LEI) | `agentDid` | credential `issuer` / `credentialSubject.principal` | — (unmapped) | COSE protected header `cwt-claims` (label 15, RFC 9597) `iss` (claim 1) |
-| §16 proof (`eddsa-jcs-2022`) | Ed25519 over JCS, bilateral pre/post-execution seals | `Ed25519Signature2020` proof | "Ed25519-SHA256-JCS" | COSE_Sign1 (RFC 9052) over the protected header + payload; ES256 or EdDSA |
-| §20.1 Merkle inclusion | — (unmapped) | — (unmapped) | Merkle-rooted evidence bundles | COSE Receipt (RFC 9942) — transparency-service inclusion proof, RFC 9162 Merkle combine/audit-path algorithm |
-| §15 gate suite | — (unmapped) | — (unmapped) | pinned conformance corpus | — (unmapped) |
+| OCG member | Microsoft AGT receipts (draft) | agent-receipts (VC 2.0 `AgentReceipt`) | Attested Intelligence AGA | SCITT (RFC 9943 architecture + RFC 9942 COSE Receipts) | ToIP ACDC (v1.1, ratified 2026-01-21) |
+|---|---|---|---|---|---|
+| `policy_parameters_hash` | `covenantHash` (bound covenant/input digest) | `credentialSubject.action.parameters_hash` | `arguments_hash` | — (unmapped; a SCITT Signed Statement's payload is issuer-chosen claims, not a fixed input-hash field — this exporter carries `execution_hash` there instead, see format notes) | — (unmapped; an ACDC's own `d` field is a SAID — a self-addressing digest of the WHOLE container, issuer + schema + attributes + edges together — not a parameters-only hash isolable the way this member is; see format notes) |
+| `chain.parent_hashes[]` | `previousReceiptHash` | `credentialSubject.chain.previous_receipt_hash` | previous-hash chain member | — (unmapped; SCITT is a registration/transparency-log model, not a peer-to-peer hash chain — see format notes) | `e` (edges) block — SAID-keyed digest links from one ACDC to the prior ACDCs it derives from or attests over; the closest true isomorphism in this row |
+| party identity (§9 `did:key` keyid / LEI) | `agentDid` | credential `issuer` / `credentialSubject.principal` | — (unmapped) | COSE protected header `cwt-claims` (label 15, RFC 9597) `iss` (claim 1) | issuer AID (Autonomic Identifier, KERI-controlled) in the `i` field |
+| §16 proof (`eddsa-jcs-2022`) | Ed25519 over JCS, bilateral pre/post-execution seals | `Ed25519Signature2020` proof | "Ed25519-SHA256-JCS" | COSE_Sign1 (RFC 9052) over the protected header + payload; ES256 or EdDSA | CESR-Proof signature anchored to a KERI key-event log; cipher-suite-agnostic (commonly Ed25519, but not pinned to it the way `eddsa-jcs-2022` is) |
+| §20.1 Merkle inclusion | — (unmapped) | — (unmapped) | Merkle-rooted evidence bundles | COSE Receipt (RFC 9942) — transparency-service inclusion proof, RFC 9162 Merkle combine/audit-path algorithm | — (unmapped; a KERI key-event log is a hash-chained log with witness receipts, not a Merkle transparency-service proof) |
+| §15 gate suite | — (unmapped) | — (unmapped) | pinned conformance corpus | — (unmapped) | — (unmapped) |
 
 **Format notes.** *SCITT* is architecturally different from the other three: it is a **registration/transparency-log
 model** — an issuer submits a COSE_Sign1 Signed Statement to a transparency service, which returns a COSE Receipt
@@ -2470,6 +2520,37 @@ posture is unclear. Its receipt is a 15-field structure of which the rows above 
 it uses a hash-chaining convention that includes the signature — differing from OCG's, where the §16 proof
 is attached after hashing and is excluded from the preimage. Re-verify this observation against the
 project's current public material before relying on any row of it.
+
+**ToIP ACDC (informative, dated 2026-08-07).** Trust Over IP's Technical Stack Working Group published Authentic
+Chained Data Containers (ACDC) v1.1 — alongside companion specifications KERI (Key Event Receipt Infrastructure)
+and CESR (Composable Event Streaming Representation), also v1.1 — on 2026-01-21, each carrying a Zenodo DOI
+(verified against `trustoverip.org/our-work/deliverables/` and the ACDC specification's own header,
+`trustoverip.github.io/kswg-acdc-specification`, 2026-08-07). ACDC independently converged on the same
+building blocks this standard's §XMAP-1 rows already track: JCS-adjacent canonical form, SHA-256-family digests
+(SAIDs), signature-based proof, and hash-chained linkage between records — which is why "chained data
+container," a phrase this standard's own writing has used informally, now names a ratified external
+specification and is cited here rather than left unacknowledged. **Two isomorphisms are direct** (see table):
+the `e` (edges) block is ACDC's peer-linked hash-chaining primitive, playing the same role `chain.parent_hashes[]`
+plays here; the issuer AID is ACDC's party-identity anchor, playing the same role a §9 `did:key`/LEI identity
+plays here. **The remaining rows do not map cleanly**, and are recorded unmapped rather than forced: ACDC's SAID
+digests the entire container rather than isolating an input-parameters hash the way `policy_parameters_hash`
+does; its proof layer (CESR-Proof over a KERI key-event log) is cipher-suite-agnostic where §16 pins
+`eddsa-jcs-2022`; and neither a Merkle transparency-inclusion proof nor a pinned conformance-gate suite has an
+ACDC counterpart in the material reviewed.
+
+**Divergence, stated as plainly as the isomorphism above.** ACDC is a **data-attestation / credential
+container** — a chain of custody over asserted attribute data, built as an IETF-track variant of the W3C
+Verifiable Credential model — not a **compute receipt**. It defines no member analogous to this standard's
+`{policy_parameters, output_payload}` preimage binding a specific computation's inputs to its outputs, no §16
+whole-artifact hash-then-sign proof over that binding, and no §18-style zero-knowledge proof-of-correct-execution
+layer: ACDC's privacy primitive is selective/graduated disclosure over asserted attributes (blinding/redaction
+within an already-issued container), which answers a different question than a zk proof that a computation ran
+correctly answers. An implementer holding an ACDC should not read this row as ACDC gaining compute-receipt or
+zk-proof semantics, and an implementer holding an OCG artifact should not read it as gaining ACDC's credential
+chain-of-custody semantics — the two formats solve adjacent but distinct problems, and this annex maps the
+vocabulary where it genuinely overlaps without implying it overlaps everywhere. As with the AGT, agent-receipts,
+and SCITT rows above, this is descriptive cross-reference only: no ACDC field name becomes OCG vocabulary, no
+export profile targets ACDC, and this is not a claim of ToIP endorsement or conformance.
 
 **in-toto predicateType (informative, added by §APROV-1).** `https://ainumbers.co/chaingraph/predicates/ocg-artifact/v1`
 is reserved as the in-toto Attestation Framework v1 `predicateType` an in-toto Statement would carry when
@@ -2584,8 +2665,10 @@ limit).
 **§27.1 Roles (NORMATIVE).** §27 defines a closed set of accountability roles: `preparer` (assembles the
 reporting artifact), `reviewer` (checks it), `approver`/`attestor` (accepts responsibility — the
 legally-effective sign-off), `submitter` (transmits it), and the OPTIONAL `model_owner` (owns a model whose
-output fed the artifact), `compliance_officer`, and `examiner` (READ-ONLY — an examiner role binding grants
-inspection, never approval authority). A **role binding** is a signed record that ties one §9 identity
+output fed the artifact), `compliance_officer`, `examiner` (READ-ONLY — an examiner role binding grants
+inspection, never approval authority), and `checker` (§27.12, v0.8.20 — attests independent cross-org
+verification of someone else's already-sealed artifact, never organizational sign-off; distinct from
+`reviewer`/`approver` for that reason). A **role binding** is a signed record that ties one §9 identity
 (`did:key` or LEI) to one role for one subject; the binding's §16 `eddsa-jcs-2022` proof MUST verify against
 that identity. Roles are the vocabulary the gate policy (§27.4) and thresholds (§27.3) count over. An
 identity MAY hold more than one role, but §27.3 distinctness is by identity, so one human cannot satisfy a
@@ -2594,7 +2677,8 @@ dual-control threshold alone by wearing two role hats.
 **§27.2 Approval records (NORMATIVE — SCITT-style statements about statements).** An **approval record** is
 a conformant OCG artifact whose `mandate_type` is the accepted envelope value `"human_accountability_record"`
 and whose `output_payload` matches `$defs/humanAccountabilityRecord`. Its authority payload carries:
-`record_type` (`role_binding` | `approval` | `rejection` | `override` | `annotation`), `role` (§27.1),
+`record_type` (`role_binding` | `approval` | `rejection` | `override` | `annotation` | `counter_signed_receipt`
+— the last, §27.12, v0.8.20), `role` (§27.1),
 `subject_hash` (the `sha256:`-prefixed `execution_hash` of the artifact being acted upon — the SCITT
 reference), the acting `identity: { id }` (§9), a `decision` where applicable, a `reason_code`, and a
 `timestamp`. The approval record is **itself a first-class artifact**: it has its own §4 `execution_hash`
@@ -2870,6 +2954,76 @@ content; design pattern only). The integer `threshold` follows **in-toto** (the 
 concept only). The statement-about-statement framing follows **IETF SCITT** (a receipt about a receipt).
 **ZCAP-LD** is cited as the anti-pattern the scope discipline (§27.0) deliberately avoids. No text or code
 is copied from any of them.
+
+**§27.12 Counter-signed receipts — cross-org peer verification (NORMATIVE, OPTIONAL — new in v0.8.20).**
+§27.1–§27.11 model accountability WITHIN one organization: preparer, reviewer, approver, submitter act on
+one org's own filing. A **counter-signed receipt** is a different fact — a counterparty attests its own
+independent re-verification of someone else's already-sealed artifact, peer-to-peer, with no shared
+organization, registry, or relay. §27.12 adds the closed-enum members and the OPTIONAL field this needs,
+reusing every existing §27.2 mechanic unchanged.
+
+**The record.** `record_type` gains a sixth closed member, **`counter_signed_receipt`** (joining
+`role_binding | approval | rejection | override | annotation`, §27.2): a §27.2 approval-record artifact
+whose `record_type` is this value asserts exactly one fact — **the checker independently recomputed the
+subject and signed a receipt of that recomputation at the recorded `timestamp`.** `role` gains a sixth
+closed member, **`checker`** (joining §27.1's set): a checker attests independent verification, never
+organizational sign-off, and is distinct from `reviewer`/`approver` for that reason — an identity holding
+`checker` for one subject grants no approval authority over it. `subject_hash` (§27.2, unchanged) is the
+SCITT reference to the artifact being counter-signed — a §4 `execution_hash` for a §12 node subject, or the
+non-node three-member preimage ("Non-node gate subjects", above) for a chainless one; `identity` (§9,
+unchanged) and `timestamp` (unchanged) carry the checker's identity and the "at time T" fact — no new field
+is needed for either.
+
+**⛔ Vocabulary ban (binding, NORMATIVE).** The one permitted claim is the one stated above. Neither this
+artifact, nor any schema description, gate-policy prose, or product copy describing it, may use "accept",
+"acceptance", "settled", "final", or "finality" (or a synonym implying legal or economic settlement) to
+describe a `counter_signed_receipt`. A counter-signed receipt is **evidence that both parties independently
+recomputed and signed the same result** — never a claim that either party is bound, that the underlying
+transition is accepted, or that a dispute is foreclosed. (Corda tripwires, checked: the record attests, it
+does not finalise; it is a liveness duty on the checker to run its own verification, never operatorship of
+the subject; no ordering service is implied, spec-only or otherwise.)
+
+**`kernel_pin` — the new OPTIONAL sibling field.** `$defs/humanAccountabilityRecord` gains one new OPTIONAL
+member, `kernel_pin` (`$defs/haKernelPin`), a sibling of `record_type` exactly as §27.10's
+`subject_run_state` is — not a `record_type` member, not in `required[]`, and outside every `execution_hash`
+preimage. It pins **which** kernel or tool the checker verified `subject_hash` against: `kernel_digest`
+(§17) for a §12 node subject, or `tool_ref` — the identical `{tool_id, tool_version, entry,
+manifest_digest}` shape the non-node clause already defines — for a chainless attested-artifact subject.
+Its absence is exactly as conformant as its presence; what it prevents, when present, is a wrong-kernel
+counter-sign passing silently: a verifier holding both the receipt and the kernel/tool source can confirm
+`kernel_pin` names the SAME producer the subject was actually produced against, a check the field's shape
+makes possible without asserting it was performed (matching §27.11's separation between "structurally
+present" and "cryptographically or referentially checked").
+
+**`replay_verified` — the second OPTIONAL sibling field (v0.8.21).** `$defs/humanAccountabilityRecord` gains
+a second new OPTIONAL member, `replay_verified` (boolean), a sibling of `record_type` exactly as
+`kernel_pin` and §27.10's `subject_run_state` are — not a `record_type` member, not in `required[]`, and
+outside every `execution_hash` preimage. It states one fact about the checker's own conduct: `true` iff the
+checker independently re-ran the subject's computation deterministically and got a matching `subject_hash`
+before signing this record — never a rubber-stamp approval. It is governed by the omit-not-false discipline
+§27.4 already established for this exact term ("Non-node gate subjects", above): where no replay was
+attempted, the field MUST be omitted, never set `false` — `false` would read as a replay that was attempted
+and disagreed. `replay_verified` and `kernel_pin` answer different questions and neither subsumes the
+other: `kernel_pin` names WHICH kernel or tool the checker verified against, without asserting a replay was
+performed; `replay_verified` states WHETHER the checker actually re-ran it. A checker MAY populate one,
+both, or neither.
+
+**Additivity (demonstrated).** §27.12 adds two closed-enum members and two OPTIONAL schema fields
+(`kernel_pin`, `replay_verified`), all under the EXISTING `$defs/humanAccountabilityRecord` shape §27.2
+already defines. It introduces no new artifact type, no new `$defs/artifact.required` member, and no
+`execution_hash` preimage change: minting, revising, or discarding a `counter_signed_receipt` record — with
+or without `kernel_pin` or `replay_verified` — leaves the subject artifact's `execution_hash` byte-identical,
+exactly as §27.0 requires of every §27 construct. A verifier that has never heard of `counter_signed_receipt`,
+`checker`, `kernel_pin`, or `replay_verified` continues to validate every existing artifact and every
+existing §27 record unchanged; only a NEW record populating these members carries its own new §4 hash,
+computed the one canonical way. `chaingraph_version` stays `"0.4.0"`, and no existing hash, gate, or golden
+vector moves.
+
+**Scope note.** §27.12 specifies the SHAPE of a counter-signed receipt only. The exchange format, the
+identity-resolution minimum (a bare `did:key` is sufficient; §9), the offline dispute story, and the four
+flagship instances (TMPG fails-charge claims, PE waterfall true-ups, trustee-report recomputes, UCP 600
+document exams) are specified in `BILAT-CSR-BUILD-SPEC.md` and are NOT restated here; conformance-vector
+coverage (`validate-ha-records.test.mjs`) is a separate WU's scope, not this subsection's.
 
 ## §28 Clause Binding Profile — `ocg-clause-binding@1` (NORMATIVE, OPTIONAL, profile-scoped — new in v0.8.14)
 A citation like `"MiCA"` or `"17 CFR 240.15c3-3"` sitting in a tool's `regulatory_frameworks` /
@@ -3224,7 +3378,7 @@ A free, client-side, no-account checker (`chaingraph/conformance-gate.html`) run
 | §APROV-1 `ocg-agent-provenance@1` evidence bundle: CARv1 write→read round-trip byte-identity; every block's content re-hashes to the digest encoded in its own CID key; a tampered block (content mutated post-write) MUST fail the per-block digest check; an artifact block's CID digest matches an independently-computed §4 `execution_hash` over the same `{policy_parameters, output_payload}` (not a self-referential check); a malformed/truncated CAR file is rejected rather than silently partially parsed; no new artifact field, no envelope change, `chaingraph_version` stays 0.4.0 | `car-roundtrip.test.mjs` | validate |
 | §REVOKE-1 revocation reference: OPTIONAL W3C BitstringStatusList `credentialStatus` object under `audit_signature` (tolerated added property), hash-excluded — a receipt without it is byte-identical and fully conformant; `chaingraph_version` 0.4.0 UNCHANGED; frozen v0.4 root schema still validates | `schema-validate.mjs` | validate |
 | §SIDECAR.2 resource-narrowing invariant (reserved): a future delegated mandate's resource set MUST be a subset of its parent's — stated now, unenforced until multi-hop mandates ship; §22 single-hop mandate gates UNCHANGED | `mandate-binding.test.mjs` | validate |
-| §24.6.2 `seeded-stochastic` replay: a kernel declaring the class re-runs at its own declared seed to a byte-identical `execution_hash`; the SAME kernel re-run at a tampered seed MUST produce a DIFFERENT hash (the seed is load-bearing, not decorative); `prng_algorithm` + integer `seed` + `draw_count` all present; the replay and tamper-detect paths are exercised unconditionally against a committed reference vector, so they stay proven in an estate with zero `seeded-stochastic` kernels; no envelope change, no new hash, `chaingraph_version` 0.4.0 UNCHANGED | `seed-replay.test.mjs` | validate |
+| §24.6.2 `seeded-stochastic` replay: a kernel declaring the class re-runs at its own declared seed to a byte-identical `execution_hash`; the SAME kernel re-run at a tampered seed MUST produce a DIFFERENT hash (the seed actually changes the hash, it is not decorative); `prng_algorithm` + integer `seed` + `draw_count` all present; the replay and tamper-detect paths are exercised unconditionally against a committed reference vector, so they stay proven in an estate with zero `seeded-stochastic` kernels; no envelope change, no new hash, `chaingraph_version` 0.4.0 UNCHANGED | `seed-replay.test.mjs` | validate |
 | §27 human-accountability records: `$defs/humanAccountabilityRecord` shape (closed `record_type`/`role`/`haGatePolicy` enums, `subject_hash` a valid `sha256ref`); ADDITIVITY — an approval record referencing a subject leaves that subject's `execution_hash` byte-identical and a subject with zero HA records is byte-identical to a plain v0.8.11 artifact (`$defs/artifact.required` + `chaingraph_version` 0.4.0 UNCHANGED); THRESHOLD DISTINCTNESS — `dual_control(N)` counts DISTINCT `identity.id`, so a repeated identity satisfies only N=1 and two distinct identities satisfy N=2; OVERRIDE EXPIRY — an expired `emergency_override` reverts the gate policy, never a silent permanent pass; SIGNED-NAMED-HUMAN — an unsigned approval record is rejected (§16 pairing check stays with `proof-binding.test.mjs`); defaults OFF, absence conformant | `validate-ha-records.test.mjs`, `schema-validate.mjs` | validate |
 | §28 clause binding profile `ocg-clause-binding@1`: hash-excluded top-level `clause_bindings[]` (zero-entry artifact hash-identical + fully conformant); each entry's RFC 6901 `pointer` MUST root at `/policy_parameters` or `/output_payload` — a pointer rooted elsewhere is RED (§28.3); each resolved §28.1 citation object carries the five REQUIRED members (`scheme`, `id`, `in_force_from`, `mapped_by`, `mapped_at`), ISO-date fields validated, `interpretation_ref` when present is a `sha256:` content hash, no unknown members on the closed pinned form; a legacy bare-string citation is valid but classified UNPINNED and MUST NOT be declared in `clause_bindings`; unresolved pointer / malformed citation / off-preimage pointer MUST fail; `$defs/artifact.required` + `chaingraph_version` 0.4.0 UNCHANGED; defaults OFF, absence conformant, new-artifacts-only (no migration path) | `clause-binding.test.mjs`, `schema-validate.mjs` | validate |
 | §21.6 ancestry_digest: bottom-up recompute over `{execution_hash, parent_ancestry_digests}` via the one `cgCanon` path, root uses `[]`, mutation-sensitive (an omitted/reordered/substituted ancestor MUST change the terminal digest — the exact `cgCanon`-object-not-string trap §PPH-1 already guards against, tested identically here), hash-EXCLUDED (byte-identical `execution_hash` with and without the member, both halves asserted), absence conformant + reported as no-claim, incomplete bundle reported as a distinct `incomplete-bundle` tier never conflated with `failed` | `ancestry-digest.test.mjs` (unit) + `schema-validate.mjs` (shape) | validate |

@@ -1,0 +1,49 @@
+{
+  "workflow_id": "pack-camt053-parallel-run-recon-pack",
+  "name": "camt.053 Parallel-Run Recon Pack",
+  "outcome": "Evidence pack for a bank-statement parallel run, where a treasury receives the same period twice: once as a Swift MT9xx statement it maps itself, and once as the bank's native camt.053. Stage 1 maps the MT leg to a camt-shaped object with a fidelity report and the 60F + sum(61) = 62F balance check. Stage 2 classifies the native camt.053 leg by BkTxCd and checks the OPBD + sum(movements) = CLBD balance equation. Stage 3 takes declared record counts and control totals for both legs and checks count completeness, value completeness against a declared tolerance, and aggregate-versus-partition consistency. Both legs are DECLARED inputs: the pack reads no bank connection and fetches no statement, so it evidences whether the two legs agree, never that either leg is correct. A run that cannot establish agreement reports that as its own state rather than defaulting to a pass.",
+  "spec_version": "ocg-control-plane@1",
+  "manifest": {
+    "manifest_version": "1",
+    "workflow_id": "pack-camt053-parallel-run-recon-pack",
+    "trigger": {
+      "type": "manual"
+    },
+    "nodes": [
+      {
+        "node_id": "n1",
+        "kernel_id": "art-563-mt9xx-camt-statement-migration-mapper",
+        "kernel_digest": "sha256:79089ccf4a9ef55d91ff82ddba35cc5faa5878ec105312739ff7a2518a33f0f5"
+      },
+      {
+        "node_id": "n2",
+        "kernel_id": "art-258-parse-camt053-reconciliation",
+        "kernel_digest": "sha256:483a887df68aeec8656fdaced42c4550167da3ee49bfb2273f2076c6fcaf1dd4"
+      },
+      {
+        "node_id": "n3",
+        "kernel_id": "art-519-payment-data-migration-completeness",
+        "kernel_digest": "sha256:d9e4f0984fd3d85463ece41f052a47bf3b98fed2df72e38ab131273cacd5d587"
+      }
+    ],
+    "connectors": [],
+    "gates": [],
+    "actions": []
+  },
+  "workflow_manifest_digest": "sha256:c6d26a1806c75e3a03fdd8b1606ae63e2549b372cd0b390d23b6499a077f0adf",
+  "declared_inputs": [],
+  "steps_meta": [
+    {
+      "node_id": "n1",
+      "data_classification": "compute"
+    },
+    {
+      "node_id": "n2",
+      "data_classification": "compute"
+    },
+    {
+      "node_id": "n3",
+      "data_classification": "compute"
+    }
+  ]
+}
