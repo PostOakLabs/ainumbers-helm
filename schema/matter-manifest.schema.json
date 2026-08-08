@@ -1,0 +1,98 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://ainumbers.co/helm/schema/matter-manifest.schema.json",
+  "title": "Matter manifest (HELM-MATTER-BUILD-SPEC.md §2)",
+  "description": "Helm-local container binding one engagement (exam/filing/dispute/onboarding) — NOT an OCG chaingraph artifact, not submitted to SPEC.md. Lives in helmd's SQLite store, exported as JSON. Binds EXISTING helmd runs/evidence-bundles/approval-records by hash, never a payload copy (§3). manifest_digest is a JCS (cgCanon) digest of the manifest with manifest_digest itself omitted from the preimage, computed via the vendored hub/vendored/ocg/kernels/_hash.mjs canon path (HELM-PHASE1-BUILD-SPEC D3 kernel-parity vendoring) — not a second hashing scheme.",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["matter_id", "status", "entity", "parties", "deadlines", "bindings", "created_at", "updated_at", "manifest_digest"],
+  "properties": {
+    "matter_id": {
+      "type": "string",
+      "pattern": "^[0-9A-HJKMNP-TV-Z]{26}$",
+      "description": "Helm-local opaque ULID. Never derived from or colliding with any execution_hash."
+    },
+    "status": {
+      "enum": ["intake", "working", "closed"],
+      "description": "Closed additionally triggers §5 bundle emission."
+    },
+    "entity": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["id"],
+      "description": "The reporting entity this matter concerns — reuses the §9 identity shape already normative for OCG identities (openchain-graph-v0.4.schema.json $defs.humanAccountabilityRecord.properties.identity). No new identity vocabulary.",
+      "properties": {
+        "id": { "type": "string", "minLength": 1, "description": "did:key or LEI." },
+        "lei": { "type": "string", "pattern": "^[0-9A-Z]{20}$", "description": "OPTIONAL ISO 17442 Legal Entity Identifier." }
+      }
+    },
+    "parties": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": ["identity", "role"],
+        "properties": {
+          "identity": {
+            "type": "object",
+            "additionalProperties": false,
+            "required": ["id"],
+            "properties": { "id": { "type": "string", "minLength": 1 } }
+          },
+          "role": {
+            "type": "string",
+            "minLength": 1,
+            "description": "OPEN free text (\"examiner\", \"counsel\", \"client contact\") — NOT the §27.1 closed accountability-role vocabulary. Where a party is also a §27 preparer/reviewer/approver on a bound artifact, that role binding lives on the §27 record itself, referenced via bindings[], never duplicated here."
+          }
+        }
+      }
+    },
+    "deadlines": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": ["date", "action", "type", "source", "done"],
+        "properties": {
+          "date": { "type": "string", "pattern": "^\\d{4}-\\d{2}-\\d{2}$" },
+          "action": { "type": "string", "minLength": 1 },
+          "type": { "type": "string", "minLength": 1, "description": "OPEN free text deadline category." },
+          "source": { "type": "string", "minLength": 1 },
+          "done": { "type": "boolean" },
+          "done_at": { "type": "string", "pattern": "^\\d{4}-\\d{2}-\\d{2}T\\d{2}:\\d{2}:\\d{2}(\\.\\d+)?Z$", "description": "OPTIONAL. done:true records are append-only — never delete, never flip back to false." }
+        }
+      }
+    },
+    "bindings": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": ["subject_hash", "subject_kind"],
+        "properties": {
+          "subject_hash": {
+            "type": "string",
+            "pattern": "^sha256:[0-9a-f]{64}$",
+            "description": "References an EXISTING artifact only — never a payload copy. Same discipline as §27.2 subject_hash."
+          },
+          "subject_kind": {
+            "enum": ["run", "evidence_bundle", "approval_record", "attested_artifact", "external_reference"],
+            "description": "external_reference is the ONLY kind that may point at content Helm never verified; every rendering MUST label it distinctly, never collapsed into \"verified\" (§26.6 trust-label discipline)."
+          },
+          "note": { "type": "string", "description": "OPTIONAL." }
+        }
+      }
+    },
+    "narrative": {
+      "type": "string",
+      "description": "OPTIONAL free text for matter-level context not belonging to any one bound artifact. NOT a place to restate findings/decisions already existing as §27 records — those stay referenced via bindings[]."
+    },
+    "created_at": { "type": "string", "pattern": "^\\d{4}-\\d{2}-\\d{2}T\\d{2}:\\d{2}:\\d{2}(\\.\\d+)?Z$" },
+    "updated_at": { "type": "string", "pattern": "^\\d{4}-\\d{2}-\\d{2}T\\d{2}:\\d{2}:\\d{2}(\\.\\d+)?Z$" },
+    "manifest_digest": {
+      "type": "string",
+      "pattern": "^sha256:[0-9a-f]{64}$",
+      "description": "JCS digest (cgCanon, vendored _hash.mjs) of this manifest's own content with manifest_digest itself excluded from the preimage. NOT a hash-preimage member of any OCG execution_hash."
+    }
+  }
+}

@@ -1,0 +1,66 @@
+{
+  "matter_id": "01J8Z3K9N4R7T2VXWQHF6C8D5M",
+  "status": "working",
+  "entity": {
+    "id": "did:key:z6MkhaXgBZDvotDkL5257faiztiGiC2QtKLGpbnnEGta2doK",
+    "lei": "5493001KJTIIGC8Y1R12"
+  },
+  "parties": [
+    {
+      "identity": {
+        "id": "did:key:z6MkhaXgBZDvotDkL5257faiztiGiC2QtKLGpbnnEGta2doK"
+      },
+      "role": "examiner"
+    },
+    {
+      "identity": {
+        "id": "did:key:z6MkpTHR8VNsBxYAAWHut2Geadd9jSwuBV8xRoAnwWsdvktH"
+      },
+      "role": "counsel"
+    }
+  ],
+  "deadlines": [
+    {
+      "date": "2026-09-15",
+      "action": "Respond to examiner request #3",
+      "type": "regulatory-response",
+      "source": "OCC exam letter 2026-08-01",
+      "done": false
+    },
+    {
+      "date": "2026-08-01",
+      "action": "Produce Q2 reconciliation evidence",
+      "type": "document-production",
+      "source": "OCC exam letter 2026-08-01",
+      "done": true,
+      "done_at": "2026-07-30T14:22:00Z"
+    }
+  ],
+  "bindings": [
+    {
+      "subject_hash": "sha256:2f8c1e4a9b6d3c7f0e5a8b1c4d7e0f3a6b9c2d5e8f1a4b7c0d3e6f9a2b5c8d1e",
+      "subject_kind": "evidence_bundle"
+    },
+    {
+      "subject_hash": "sha256:7a1d4f8b2e5c9a3d6f0b4e8c1a5d9f3b7e0a4c8d2f6b9e3a7c1d5f8b2e6a0c4d",
+      "subject_kind": "run"
+    },
+    {
+      "subject_hash": "sha256:9e3b6d0a4f8c2e5b9d1a7c3f6b0e4a8d2c5f9b3e7a1d4c8f0b6e2a9d3c7f1b5e",
+      "subject_kind": "approval_record"
+    },
+    {
+      "subject_hash": "sha256:4c9a2e5f8b1d6c3a0f7e4b9d2a5c8f1e6b0d3a7c9f2b5e8a1d4c7f0b3e6a9d2c",
+      "subject_kind": "attested_artifact"
+    },
+    {
+      "subject_hash": "sha256:1b5e8c2f9a3d6b0e4c7f1a5d8b2e6c9f3a7d0b4e8c1f5a9d3b6e0c4f7a2d5b8e",
+      "subject_kind": "external_reference",
+      "note": "PDF received from examiner via SecureShare, hashed but never reproduced here."
+    }
+  ],
+  "narrative": "OCC examination follow-up on Q2 2026 reconciliation controls.",
+  "created_at": "2026-08-01T09:00:00Z",
+  "updated_at": "2026-08-08T11:30:00Z",
+  "manifest_digest": "sha256:d81d67d35aebc6ce68ec2d39b56a2f1fdc843e90c7ec616d72d8a58f3e8debc1"
+}
