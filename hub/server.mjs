@@ -27,7 +27,7 @@ import { handleMcp, handleMcpMethodNotAllowed } from "./mcp.mjs";
 import { haGateCheckFor, findHeldGate, recordReplay, submitHaRecord } from "./ha-gate.mjs";
 import { provenanceStatus } from "./state-snapshot.mjs";
 import { recordsForSubject, getSlot } from "./ha-store.mjs";
-import { createMatter, getMatter, listMatters, updateMatter, deleteMatter } from "./matter-store.mjs";
+import { createMatter, getMatter, listMatters, updateMatter, deleteMatter, closeMatter, getMatterExport } from "./matter-store.mjs";
 import { buildKernelCard, buildEucEntry } from "./euc-register.mjs";
 import { renderKernelCardHtml, renderEucEntryHtml } from "../ui/lib/euc-html.mjs";
 import { renderKernelDecisionTableHtml, buildKernelDecisionTableDmn } from "../ui/lib/decision-table.mjs";
@@ -1090,7 +1090,16 @@ function handleMatterGet(req, res, params, db) {
 // existing member wholesale; an omitted field carries forward unchanged.
 // Same §2/§3 refusal discipline as create, plus matter-store.mjs's own
 // append-only guard on already-done deadlines.
-async function handleMatterUpdate(req, res, params, db) {
+//
+// HELM-MATTER-H2: routes through closeMatter() rather than updateMatter()
+// directly — additive wrapper, same update semantics/errors, that also
+// emits+persists the signed closeout export automatically the ONE time this
+// call is what actually transitions status into "closed" (never on a later
+// edit to an already-closed matter). `keys` (server's identityKeys) is
+// threaded in by createHelmServer's route override below; without it the
+// status change still applies in full, simply with no export (closeMatter's
+// own doc comment).
+async function handleMatterUpdate(req, res, params, db, keys) {
   if (!db) return deny(res, 503, "engine_unavailable");
   let body;
   try {
@@ -1099,11 +1108,24 @@ async function handleMatterUpdate(req, res, params, db) {
     return deny(res, 400, "invalid_json");
   }
   try {
-    sendJson(res, 200, { ok: true, matter: updateMatter(db, params.id, body) });
+    const { matter, export: exported } = closeMatter(db, params.id, body, keys);
+    sendJson(res, 200, { ok: true, matter, ...(exported ? { export: exported } : {}) });
   } catch (err) {
     const status = /unknown matter_id/.test(String(err?.message)) ? 404 : 422;
     sendJson(res, status, { ok: false, error: String(err?.message || err) });
   }
+}
+
+// GET /matters/{id}/export (HELM-MATTER-H2): reads back the signed
+// bundle-of-bundles export already emitted when the matter closed (via the
+// route above) — pure read, never assembles or signs anything itself. 404 if
+// the matter was never closed with signing keys available (never closed at
+// all, or closed by a caller that omitted keys).
+function handleMatterExportGet(req, res, params, db) {
+  if (!db) return deny(res, 503, "engine_unavailable");
+  const exported = getMatterExport(db, params.id);
+  if (!exported) return deny(res, 404, "matter_export_not_found");
+  sendJson(res, 200, { export: exported });
 }
 
 // POST /matters/{id}/delete (HELM-MATTER-H1): removes the matter's local
@@ -1173,6 +1195,7 @@ export const DYNAMIC_ROUTES = [
   { method: "GET", pattern: /^\/matters\/(?<id>[^/]+)$/, docPath: "/matters/{id}", handler: handleMatterGet },
   { method: "POST", pattern: /^\/matters\/(?<id>[^/]+)\/update$/, docPath: "/matters/{id}/update", handler: handleMatterUpdate },
   { method: "POST", pattern: /^\/matters\/(?<id>[^/]+)\/delete$/, docPath: "/matters/{id}/delete", handler: handleMatterDelete },
+  { method: "GET", pattern: /^\/matters\/(?<id>[^/]+)\/export$/, docPath: "/matters/{id}/export", handler: handleMatterExportGet },
 ];
 
 export function createHelmServer({
@@ -1210,6 +1233,16 @@ export function createHelmServer({
     "POST /autostart": (req, res, params, reqDb) => handleAutostartSet(req, res, params, reqDb, autostartOps),
     "GET /connectors": (req, res, params, reqDb) => handleListConnectors(req, res, params, reqDb, inboundWebhookContractPath),
   };
+  // HELM-MATTER-H2: DYNAMIC_ROUTES entries have no per-instance override
+  // mechanism of their own (unlike `routes` above) — this mirrors that
+  // pattern for the one dynamic handler that needs a closure value
+  // (identityKeys, to sign the closeout export). Every other dynamic route
+  // passes through unchanged.
+  const dynamicRoutes = DYNAMIC_ROUTES.map((route) =>
+    route.handler === handleMatterUpdate
+      ? { ...route, handler: (req, res, params, reqDb) => handleMatterUpdate(req, res, params, reqDb, identityKeys) }
+      : route
+  );
   const server = createServer((req, res) => {
     if (!checkHost(req, port)) {
       log.warn("rejected: host mismatch", { host: req.headers.host, path: logPath(req) });
@@ -1286,7 +1319,7 @@ export function createHelmServer({
     const handler = routes[`${req.method} ${pathname}`];
     if (handler) return handler(req, res, {}, db);
 
-    for (const route of DYNAMIC_ROUTES) {
+    for (const route of dynamicRoutes) {
       if (route.method !== req.method) continue;
       const match = pathname.match(route.pattern);
       if (match) return route.handler(req, res, match.groups || {}, db);

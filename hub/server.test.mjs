@@ -1015,6 +1015,27 @@ async function withRunEngineServer(fn) {
   }
 }
 
+// HELM-MATTER-H2: matter routes need a real `db` (matter-store.mjs's tables)
+// AND `identityKeys` (to sign the closeout export) — neither the top-level
+// `server` fixture (no db) nor withRunEngineServer (no identityKeys, and
+// pulls in connector/run-engine wiring this test doesn't need) supply both.
+async function withMatterServer(fn) {
+  const port = asPortSeq++;
+  const origin = `http://127.0.0.1:${port}`;
+  const dbDir = mkdtempSync(join(tmpdir(), "helm-matter-http-test-"));
+  const db = openJournal(join(dbDir, "journal.db"));
+  const server7 = createHelmServer({ port, allowedOrigin: origin, token, db, identityKeys });
+  const call7 = (opts) => asRequest(port, opts);
+  const headers7 = (overrides = {}) => ({ Host: `127.0.0.1:${port}`, Origin: origin, Authorization: `Bearer ${token}`, ...overrides });
+  try {
+    await fn({ call: call7, headers: headers7, db });
+  } finally {
+    await new Promise((resolve) => server7.close(resolve));
+    db.close();
+    rmSync(dbDir, { recursive: true, force: true });
+  }
+}
+
 // Polls the in-process event bus (which replays the last event to a late
 // subscriber — event-bus.mjs's lastEventByRun) for a terminal state, up to
 // ~1s. Works for both outcomes here: a "completed" run has one, and so does
@@ -1165,5 +1186,54 @@ test("POST /signer/config/ticket is not registered as an MCP tool — an MCP too
     const names = JSON.parse(res.body).result.tools.map((t) => t.name);
     assert.ok(!names.includes("signer.config"), "no signer.config MCP tool should exist — the consent ticket route is UI-only");
     assert.ok(!names.some((n) => n.startsWith("signer.")), "no signer.* MCP tool should exist at all");
+  });
+});
+
+// HELM-MATTER-H2: the §5 closeout hook at the real HTTP surface — the same
+// route the paired UI (and matter-close CLI) actually call.
+test("POST /matters/{id}/update closing status:closed emits a signed export in the SAME response, and GET /matters/{id}/export reads it back", async () => {
+  await withMatterServer(async ({ call, headers: h }) => {
+    const createRes = await call({
+      method: "POST",
+      path: "/matters",
+      headers: h(),
+      body: { entity: { id: "did:key:z6MkhaXgBZDvotDkL5257faiztiGiC2QtKLGpbnnEGta2doK" } },
+    });
+    assert.equal(createRes.status, 200);
+    const matterId = JSON.parse(createRes.body).matter.matter_id;
+
+    const closeRes = await call({ method: "POST", path: `/matters/${matterId}/update`, headers: h(), body: { status: "closed" } });
+    assert.equal(closeRes.status, 200);
+    const closeBody = JSON.parse(closeRes.body);
+    assert.equal(closeBody.ok, true);
+    assert.equal(closeBody.matter.status, "closed");
+    assert.ok(closeBody.export, "closing a matter must emit its export in the SAME response, no separate step");
+    assert.match(closeBody.export.envelope_digest, /^sha256:[0-9a-f]{64}$/);
+
+    const getRes = await call({ method: "GET", path: `/matters/${matterId}/export`, headers: h() });
+    assert.equal(getRes.status, 200);
+    assert.equal(JSON.parse(getRes.body).export.envelope_digest, closeBody.export.envelope_digest);
+
+    // A later edit to the already-closed matter does not re-emit.
+    const editRes = await call({ method: "POST", path: `/matters/${matterId}/update`, headers: h(), body: { narrative: "wrapped up" } });
+    const editBody = JSON.parse(editRes.body);
+    assert.equal(editBody.ok, true);
+    assert.equal(editBody.export, undefined);
+  });
+});
+
+test("GET /matters/{id}/export 404s for a matter that was never closed", async () => {
+  await withMatterServer(async ({ call, headers: h }) => {
+    const createRes = await call({
+      method: "POST",
+      path: "/matters",
+      headers: h(),
+      body: { entity: { id: "did:key:z6MkhaXgBZDvotDkL5257faiztiGiC2QtKLGpbnnEGta2doK" } },
+    });
+    const matterId = JSON.parse(createRes.body).matter.matter_id;
+
+    const res = await call({ method: "GET", path: `/matters/${matterId}/export`, headers: h() });
+    assert.equal(res.status, 404);
+    assert.equal(JSON.parse(res.body).error, "matter_export_not_found");
   });
 });

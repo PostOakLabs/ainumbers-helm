@@ -33,6 +33,7 @@ const LIST_SCENARIOS_ENTRY = join(ROOT, "scripts", "list-scenarios.mjs");
 const RUN_TEMPLATE_ENTRY = join(ROOT, "scripts", "run-template.mjs");
 const CHECK_ENTRY = join(ROOT, "scripts", "check.mjs");
 const VERIFY_ENTRY = join(ROOT, "scripts", "verify.mjs");
+const MATTER_CLOSE_ENTRY = join(ROOT, "scripts", "matter-close.mjs");
 
 // Read straight off hub/index.mjs's own dispatch, not a hand-copied guess —
 // see the row's warning: "read the dispatcher, do not grep a guessed list."
@@ -74,6 +75,12 @@ Commands:
                       verify an evidence bundle offline against a caller-supplied public-key
                       file — no daemon, no network. Exit codes: 0 valid, 1 invalid, 2 usage
                       error (verification never attempted).
+  matter-close <matter_id> [--out <export.json>] [--json]
+                      close a matter and trigger its signed closeout export — requires
+                      helmd to be running (this is a thin authenticated client of the
+                      already-running daemon, not a standalone command). Exists so an
+                      external tool's own closeout event (e.g. a git post-commit hook) can
+                      call Helm's export without touching helmd's HTTP API directly.
 
 Options:
   -h, --help          show this help and exit 0
@@ -84,9 +91,9 @@ unchanged (check has its own six-way exit contract, see above); an unknown
 command is a usage error and exits 2.
 
 Stability: start/stop/status/doctor/open/uninstall/export-bpmn/list-scenarios/
-run-template/check/verify and their plain-text output/exit codes are STABLE.
---json output shapes are PROVISIONAL and may change without notice until this
-line is removed.`);
+run-template/check/verify/matter-close and their plain-text output/exit codes
+are STABLE. --json output shapes are PROVISIONAL and may change without
+notice until this line is removed.`);
 }
 
 function printVersion() {
@@ -141,8 +148,11 @@ if (PASSTHROUGH_COMMANDS.has(cmd)) {
 } else if (cmd === "verify") {
   const result = spawnSync(process.execPath, [VERIFY_ENTRY, ...rest], { stdio: "inherit" });
   process.exit(result.status ?? 1);
+} else if (cmd === "matter-close") {
+  const result = spawnSync(process.execPath, [MATTER_CLOSE_ENTRY, ...rest], { stdio: "inherit" });
+  process.exit(result.status ?? 1);
 } else {
-  console.error(`helmd: unknown command "${cmd}" (expected: start | stop | status | doctor | open | uninstall | export-bpmn | list-scenarios | run-template | check | verify)`);
+  console.error(`helmd: unknown command "${cmd}" (expected: start | stop | status | doctor | open | uninstall | export-bpmn | list-scenarios | run-template | check | verify | matter-close)`);
   console.error("Run 'helmd --help' for usage.");
   process.exit(2);
 }

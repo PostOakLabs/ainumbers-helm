@@ -19,9 +19,10 @@
 // handler and token.mjs's createExportTicket/redeemExportTicket doc comment.
 import { getPack, listPacks } from "./packs.mjs";
 import { listTemplates, getTemplate, buildTemplateManifest } from "./templates.mjs";
-import { manifestDigest, replayExecutionHash } from "./run.mjs";
+import { manifestDigest, replayExecutionHash, buildRunEvidenceExportPayload } from "./run.mjs";
 import { startWorkflowRun, resolveRunManifest } from "./run-actions.mjs";
 import { redeemExportTicket } from "./token.mjs";
+import { getMatterExport } from "./matter-store.mjs";
 import { log } from "./log.mjs";
 
 export const MCP_PROTOCOL_VERSION = "2026-07-28";
@@ -128,8 +129,8 @@ const TOOLS = [
   { name: "artifact.verify", description: "Recompute a completed run's execution_hash from persisted state and compare to the recorded value (deterministic replay).", inputSchema: { type: "object", properties: { run_id: { type: "string" } }, required: ["run_id"] } },
   {
     name: "evidence.export",
-    description: "Export a run's digest-level evidence record. Requires a one-time consent ticket minted by the paired UI (POST /evidence/export/ticket) — NOT reachable from tools/call alone. Phase-1 scope: digest-level record (hash_verified), not yet the full signed §26.6 bundle.zip.",
-    inputSchema: { type: "object", properties: { run_id: { type: "string" }, ticket: { type: "string" } }, required: ["run_id", "ticket"] },
+    description: "Export a run's digest-level evidence record (run_id), or a closed matter's already-emitted signed bundle-of-bundles export (matter_id, HELM-MATTER-H2) — pass exactly one of the two. Requires a one-time consent ticket minted by the paired UI (POST /evidence/export/ticket) — NOT reachable from tools/call alone. Phase-1 scope for a run: digest-level record (hash_verified), not yet the full signed §26.6 bundle.zip. A matter export is read-only here — it was already signed and persisted at the moment the matter's status transitioned to closed (POST /matters/{id}/update); this tool never triggers that transition.",
+    inputSchema: { type: "object", properties: { run_id: { type: "string" }, matter_id: { type: "string" }, ticket: { type: "string" } }, required: ["ticket"] },
   },
 ];
 
@@ -227,23 +228,23 @@ function callTool(db, name, args = {}) {
       return { resultType: "complete", payload: { valid: recomputed === row.execution_hash, execution_hash: row.execution_hash, recomputed } };
     }
     case "evidence.export": {
-      if (!args.run_id) throw { code: -32602, message: "missing_run_id" };
       if (!args.ticket || !redeemExportTicket(args.ticket)) {
         throw { code: -32602, message: "consent_required — mint a ticket via POST /evidence/export/ticket from the paired UI first" };
       }
-      const row = runRow(db, args.run_id);
-      if (!row) throw { code: -32602, message: "run_not_found" };
-      return {
-        resultType: "complete",
-        payload: {
-          trust_label: "hash_verified",
-          run_id: row.run_id,
-          state: row.state,
-          execution_hash: row.execution_hash,
-          workflow_manifest_digest: row.workflow_manifest_digest,
-          steps: stepDigestsFor(db, row.run_id),
-        },
-      };
+      // matter_id mode (HELM-MATTER-H2): reads back the signed bundle-of-
+      // bundles ALREADY emitted when the matter's status transitioned to
+      // closed — this tool never assembles or signs one itself, it only
+      // discloses an artifact that already exists, same "digest-level
+      // record, ticket-gated" posture as the run_id path below.
+      if (args.matter_id) {
+        const exported = getMatterExport(db, args.matter_id);
+        if (!exported) throw { code: -32602, message: "matter_export_not_found — matter is not closed, or was closed with no signing keys available" };
+        return { resultType: "complete", payload: exported };
+      }
+      if (!args.run_id) throw { code: -32602, message: "missing_run_id_or_matter_id" };
+      const payload = buildRunEvidenceExportPayload(db, args.run_id);
+      if (!payload) throw { code: -32602, message: "run_not_found" };
+      return { resultType: "complete", payload };
     }
     default:
       throw { code: -32602, message: `unknown_tool:${name}` };

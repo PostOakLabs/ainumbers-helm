@@ -56,6 +56,7 @@ const ROUTE_DOCS = {
   "GET /matters/{id}": { summary: "Fetch one matter by matter_id.", tags: ["Matters"] },
   "POST /matters/{id}/update": { summary: "Update a matter. Same §2/§3 refusal discipline as create, plus an append-only guard on already-done deadlines.", tags: ["Matters"] },
   "POST /matters/{id}/delete": { summary: "Delete a matter's local index row. Bindings are hash references, never payload copies, so this cannot lose or alter any artifact the matter pointed at.", tags: ["Matters"] },
+  "GET /matters/{id}/export": { summary: "Fetch the signed bundle-of-bundles export emitted when this matter's status transitioned to closed (HELM-MATTER-H2, §5). 404 if the matter was never closed with signing keys available.", tags: ["Matters"] },
   "GET /autostart": { summary: "Report whether the start-at-sign-in entry and desktop shortcut are installed, and whether the recorded entry still points at a Helm that exists.", tags: ["Daemon"] },
   "POST /autostart": { summary: "Install or remove the start-at-sign-in entry and/or the shortcut. Body {autostart?: boolean, shortcut?: boolean}. The only code path that writes either — helmd never installs them on its own.", tags: ["Daemon"] },
   "POST /mcp": { summary: "MCP v2 JSON-RPC endpoint (HELM-H9): catalog.search, workflow.describe/manifest_get/dry_run/run, artifact.get/verify, evidence.export. Same bearer-token auth as every REST route.", tags: ["MCP"] },
