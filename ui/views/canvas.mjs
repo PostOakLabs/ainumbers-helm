@@ -149,6 +149,7 @@ export async function renderCanvas(root, { port, token, params }) {
       <p class="empty-state">Export an email-able, versioned workflow file — secrets stripped, kernels pinned by hash. Importing checks version, integrity, and kernel pins before accepting anything; any mismatch is a plain-language refusal, never a silent partial import (HELM-P3-W11).</p>
       <p class="field-row">
         <button type="button" id="export-helm-json" class="secondary">Export .helm.json</button>
+        <button type="button" id="export-bpmn" class="secondary">Export BPMN diagram</button>
         <span id="export-status" class="field-row-note" role="status"></span>
       </p>
       <p class="field-row">
@@ -205,6 +206,28 @@ export async function renderCanvas(root, { port, token, params }) {
     const a = document.createElement("a");
     a.href = url;
     a.download = `${workflowId}.helm.json`;
+    document.body.appendChild(a);
+    a.click();
+    a.remove();
+    URL.revokeObjectURL(url);
+    exportStatus.textContent = "Downloaded.";
+  });
+
+  // HELM-BPMN-WIRE-1: exportBpmn (hub/bpmn-export.mjs) was CLI-only before
+  // this — same GET /workflows/:id/export surface, ?format=bpmn, same
+  // read-tier auth as the .helm.json export above.
+  root.querySelector("#export-bpmn").addEventListener("click", async () => {
+    exportStatus.textContent = "Exporting…";
+    const res = await callText(`/workflows/${encodeURIComponent(workflowId)}/export?format=bpmn`, { port, token });
+    if (!res.ok) {
+      exportStatus.textContent = `Failed: ${typeof res.error === "string" ? res.error : res.status}`;
+      return;
+    }
+    const blob = new Blob([res.text], { type: "application/xml" });
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement("a");
+    a.href = url;
+    a.download = `${workflowId}.bpmn`;
     document.body.appendChild(a);
     a.click();
     a.remove();
