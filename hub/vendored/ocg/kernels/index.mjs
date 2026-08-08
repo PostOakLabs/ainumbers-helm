@@ -496,6 +496,7 @@ import * as art557    from './art-557-record-index-constituents.kernel.mjs';
 import * as art558    from './art-558-record-fund-positions.kernel.mjs';
 import * as art559    from './art-559-attest-calc-agent-independence.kernel.mjs';
 import * as art56     from './art-56-tokenized-settlement-fit-diagnostic.kernel.mjs';
+import * as art562    from './art-562-compile-model-risk-lineage-pack.kernel.mjs';
 import * as art563    from './art-563-mt9xx-camt-statement-migration-mapper.kernel.mjs';
 import * as art564    from './art-564-ucp-checkout-payload-lint.kernel.mjs';
 import * as art565    from './art-565-kya-x402-scope-verifier.kernel.mjs';
@@ -521,6 +522,7 @@ import * as art582    from './art-582-genius-reserve-disclosure-conformance-moni
 import * as art583    from './art-583-beacon-seeded-fair-sampling-deriver.kernel.mjs';
 import * as art584    from './art-584-proof-of-reserves-verifier.kernel.mjs';
 import * as art585    from './art-585-sanctions-screening-evidence-pack.kernel.mjs';
+import * as art587    from './art-587-finp2p-ledger-proof-verifier.kernel.mjs';
 import * as art59     from './art-59-settlement-asset-finality-classifier.kernel.mjs';
 import * as art60     from './art-60-agent-economy-runtime-fit-diagnostic.kernel.mjs';
 import * as art61     from './art-61-x402-batch-settlement-reconciler.kernel.mjs';
@@ -1074,6 +1076,7 @@ export const KERNELS = {
   'art-558-record-fund-positions':                              art558,
   'art-559-attest-calc-agent-independence':                     art559,
   'art-56-tokenized-settlement-fit-diagnostic':                 art56,
+  'art-562-compile-model-risk-lineage-pack':                    art562,
   'art-563-mt9xx-camt-statement-migration-mapper':              art563,
   'art-564-ucp-checkout-payload-lint':                          art564,
   'art-565-kya-x402-scope-verifier':                            art565,
@@ -1099,6 +1102,7 @@ export const KERNELS = {
   'art-583-beacon-seeded-fair-sampling-deriver':                art583,
   'art-584-proof-of-reserves-verifier':                         art584,
   'art-585-sanctions-screening-evidence-pack':                  art585,
+  'art-587-finp2p-ledger-proof-verifier':                       art587,
   'art-59-settlement-asset-finality-classifier':                art59,
   'art-60-agent-economy-runtime-fit-diagnostic':                art60,
   'art-61-x402-batch-settlement-reconciler':                    art61,

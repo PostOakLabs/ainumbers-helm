@@ -1,0 +1,52 @@
+{
+  "workflow_id": "pack-model-risk-lineage-pack",
+  "name": "Model Risk Lineage Pack",
+  "outcome": "Single-node citation bundle that compiles a model's current model-passport-lifecycle (art-450 inventory tier, art-451 outcome analysis, art-453 validation status) and model-validation-cycle (art-488 replication diff, art-489 test battery) artifacts into one BCBS 239 SS II / RDARR-shaped document, cited by execution_hash and never recomputed. No new gate logic: the two source chains already carry their own gates, and this pack is a read-after-the-fact bundler, not a re-router. Each of the five stages is optional individually; zero-stages-cited is a legitimate empty state, never an error.",
+  "spec_version": "ocg-control-plane@1",
+  "manifest": {
+    "manifest_version": "1",
+    "workflow_id": "pack-model-risk-lineage-pack",
+    "trigger": {
+      "type": "manual"
+    },
+    "nodes": [
+      {
+        "node_id": "n1",
+        "kernel_id": "art-562-compile-model-risk-lineage-pack",
+        "kernel_digest": "sha256:3bd0f1a3cd02576428db7940732f9d87c09d2632dafbcd72eb4f5f9ee96cb040"
+      }
+    ],
+    "connectors": [],
+    "gates": [],
+    "actions": []
+  },
+  "workflow_manifest_digest": "sha256:25a447d8f15faf33e959e4b42a50ec9b59b02aed2864b03118ab7eb5a465d3df",
+  "declared_inputs": [
+    {
+      "from": "art-450-model-inventory-entry",
+      "kind": "external"
+    },
+    {
+      "from": "art-451-model-outcome-analysis",
+      "kind": "external"
+    },
+    {
+      "from": "art-453-model-validation-status",
+      "kind": "external"
+    },
+    {
+      "from": "art-488-model-replication-diff",
+      "kind": "external"
+    },
+    {
+      "from": "art-489-model-test-battery",
+      "kind": "external"
+    }
+  ],
+  "steps_meta": [
+    {
+      "node_id": "n1",
+      "data_classification": "compute"
+    }
+  ]
+}

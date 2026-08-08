@@ -1,18 +1,18 @@
 {
   "sourceRepo": "https://github.com/PostOakLabs/ainumbers.git",
   "license": "MIT License, Copyright (c) 2026 PostOakLabs (same license/holder as this repo; see this repo's own LICENSE for full terms; no third-party code in this vendored subtree)",
-  "pinnedSha": "361240dc485a8c2070867e2b63302b2ff826b18c",
+  "pinnedSha": "167db23bee3cb9b681b03203e97d1429294f4036",
   "vendoredPaths": [
     "chaingraph/kernels",
     "chaingraph/standard/SPEC.md",
     "chaingraph/standard/openchain-graph-v0.4.schema.json",
     "chaingraph/chaingraph.json"
   ],
-  "fileCount": 1552,
+  "fileCount": 1558,
   "files": [
     {
       "path": "chaingraph.json",
-      "sha256": "535c937405bbae371c47e8327767d90243822a67fbbf8922910efd597f2efd98"
+      "sha256": "637174648aa9c4a00aaa17b3ad8f6e87996118ecdb56bbfd1e63198444867a0f"
     },
     {
       "path": "kernels/_ancestry.mjs",
@@ -21,6 +21,10 @@
     {
       "path": "kernels/_anchor-testutil.mjs",
       "sha256": "7676ab0d9a0d23841bd646735bf7812f83f72204072eb835597a01f4f3a2519c"
+    },
+    {
+      "path": "kernels/_bilateral-cosign.mjs",
+      "sha256": "7b72270847ac8a8e092efb031505fd529bc5212da58b635218f0e057d75b8014"
     },
     {
       "path": "kernels/_buildid.mjs",
@@ -77,6 +81,10 @@
     {
       "path": "kernels/_noble-bn254.bundle.mjs",
       "sha256": "d389cfa8eb9081831b29c2c187ab4ebde9609be7afd8fd910359b65d13a65f8c"
+    },
+    {
+      "path": "kernels/_noble-secp256k1.bundle.mjs",
+      "sha256": "d78eaa899c994f51dfad7ab474aae1202326c490765f24245b17b53e0a9ddaeb"
     },
     {
       "path": "kernels/_proof.inline.min.js",
@@ -2091,6 +2099,10 @@
       "sha256": "b52a79f937c901786a32dcae3e275f3e2a4bb308cb0fb844998c5cf1268da1ff"
     },
     {
+      "path": "kernels/art-562-compile-model-risk-lineage-pack.kernel.mjs",
+      "sha256": "3bd0f1a3cd02576428db7940732f9d87c09d2632dafbcd72eb4f5f9ee96cb040"
+    },
+    {
       "path": "kernels/art-563-mt9xx-camt-statement-migration-mapper.kernel.mjs",
       "sha256": "79089ccf4a9ef55d91ff82ddba35cc5faa5878ec105312739ff7a2518a33f0f5"
     },
@@ -2189,6 +2201,10 @@
     {
       "path": "kernels/art-585-sanctions-screening-evidence-pack.kernel.mjs",
       "sha256": "c686a99d6d05d28e3feba866c69df7eb43ba13b49c2ce7c8e260be818d13c8a6"
+    },
+    {
+      "path": "kernels/art-587-finp2p-ledger-proof-verifier.kernel.mjs",
+      "sha256": "3c844292a3af41f9d432ae70b2573143e1de22d82b2ddda19f531d233ec06d5f"
     },
     {
       "path": "kernels/art-59-settlement-asset-finality-classifier.kernel.mjs",
@@ -4435,6 +4451,10 @@
       "sha256": "bf013b9d4b4cc096a1378c45df0537860052112850cf28893eb97374ce8d5cb8"
     },
     {
+      "path": "kernels/fixtures/art-562-compile-model-risk-lineage-pack.fixtures.json",
+      "sha256": "719c70764f72f22e06046f38b2a793c419f3da6b114a41b00ede6c421b273e45"
+    },
+    {
       "path": "kernels/fixtures/art-563-mt9xx-camt-statement-migration-mapper.fixtures.json",
       "sha256": "234afb31da4c54f5cc4c31fa4cc4e8a6d74f63129db034675c84ab54d2b36ec2"
     },
@@ -4533,6 +4553,10 @@
     {
       "path": "kernels/fixtures/art-585-sanctions-screening-evidence-pack.fixtures.json",
       "sha256": "c7f5b7584f93ded47273c1d75f1d82ca2c42e57f36da6008b2257e781d8e17cd"
+    },
+    {
+      "path": "kernels/fixtures/art-587-finp2p-ledger-proof-verifier.fixtures.json",
+      "sha256": "b35235475ac2c0e5f90671fb0e0b819250bb24f84b06f279f9c6ee620c92cebf"
     },
     {
       "path": "kernels/fixtures/art-59-settlement-asset-finality-classifier.fixtures.json",
@@ -5944,7 +5968,7 @@
     },
     {
       "path": "kernels/fixtures/ha-records.fixtures.json",
-      "sha256": "a6a311e1c16f4fae1e98c8c4c1042e4fa097a20a7c8dd26f4ef16c82a0c878c1"
+      "sha256": "0a3baf9fe978757722576e8ae3fa0a3d6498ff0b0bb4beb9461018f8cf599e20"
     },
     {
       "path": "kernels/fixtures/input-attestation-freshness.fixture.json",
@@ -6056,7 +6080,7 @@
     },
     {
       "path": "kernels/index.mjs",
-      "sha256": "c7b1947cc045382fc8eedd666a76edccfcdf8c463b293335ef719b75f70c4671"
+      "sha256": "452491bbfe0434390a5bdec8bfaf799085f2f4a80dd7bdc498122eafe310d624"
     },
     {
       "path": "kernels/inline-hash-equality.test.mjs",
@@ -6176,7 +6200,7 @@
     },
     {
       "path": "kernels/validate-ha-records.test.mjs",
-      "sha256": "e92fd57832807cd9a71fbeae07f35cb00ecfc5c55ad8bf6ec7a74f2e6a3609b7"
+      "sha256": "8e7f618413c2f11bdab1f2a00f0a2f432057d19c9339123dfa55395050c12108"
     },
     {
       "path": "kernels/vendor/chainlink-protos-cre/decoder.mjs",
@@ -6212,11 +6236,11 @@
     },
     {
       "path": "openchain-graph-v0.4.schema.json",
-      "sha256": "8d90b2b03974deff9b1e0844694c6c245ca37a5bb2000fdfd4d18b9a3b4a77fe"
+      "sha256": "3e3cd61a09273799a6475155bc112c48ee3c8a29b914cf04156b62e6d3e5eac3"
     },
     {
       "path": "SPEC.md",
-      "sha256": "66f65e28617f5862607f11702a3e3f5c01039b59ebad6f0593e27bbe61ba7523"
+      "sha256": "4db527ad00e2165d7263df6f58cdc300425e3d748ef09c3de1da8f92205319d3"
     }
   ]
 }

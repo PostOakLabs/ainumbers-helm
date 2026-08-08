@@ -1,0 +1,49 @@
+{
+  "workflow_id": "pack-beacon-sampled-audit-testing",
+  "name": "Beacon-Sampled Audit Testing",
+  "outcome": "The audit-sampling ceremony as one hash-anchored composite: an item manifest is hashed and committed BEFORE a public randomness beacon pulse exists, the pulse then seeds a deterministic HMAC-DRBG selection (art-583), and the selected population is recomputed by the recompute node configured for the regime under test. The ordering is the whole point -- a manifest committed before the pulse round cannot be reshaped to steer which items get drawn, and a pulse nobody controlled cannot be shopped for a friendlier sample. One generic chain, configured per regime: stage 2 is the prevailing-wage certified-payroll recompute (art-574) as the first instance, and stage 3 the multi-garnishment stacking recompute (art-572) as a second configuration of the identical ceremony. GATED (OCG Standard v0.8 §21.4): gate 1 on art-583's own /verdict, so a sample that did not derive stops the automated path rather than sending an unusable selection downstream; gate 2 on art-574's own /verdict, so a run whose declared population is not a certified payroll falls through to the garnishment configuration instead of ending on an empty prevailing-wage stage. Regime instances are configurations of these steps, not new nodes. The beacon pulse and its round are caller-declared throughout: no step fetches a pulse or checks a beacon signature.",
+  "spec_version": "ocg-control-plane@1",
+  "manifest": {
+    "manifest_version": "1",
+    "workflow_id": "pack-beacon-sampled-audit-testing",
+    "trigger": {
+      "type": "manual"
+    },
+    "nodes": [
+      {
+        "node_id": "n1",
+        "kernel_id": "art-583-beacon-seeded-fair-sampling-deriver",
+        "kernel_digest": "sha256:00bf25e2ac76c12d2bc9de448a1c9d767c67581310b599637d193d2f949b708a"
+      },
+      {
+        "node_id": "n2",
+        "kernel_id": "art-574-certified-payroll-prevailing-wage-recompute",
+        "kernel_digest": "sha256:4da565b656d200c214becb712b820a097894e9edeae66b4275e34854847911c7"
+      },
+      {
+        "node_id": "n3",
+        "kernel_id": "art-572-multi-garnishment-stacking-recompute",
+        "kernel_digest": "sha256:40566c4874e0229d5ecd0a9656e3643dfaabfb3bfdc79ddc78a332d900bec3bf"
+      }
+    ],
+    "connectors": [],
+    "gates": [],
+    "actions": []
+  },
+  "workflow_manifest_digest": "sha256:b7493083f7a22b7cc2f8440bed83b88a3c1d3d7f9d6bdf0ddfce7d7822ee7020",
+  "declared_inputs": [],
+  "steps_meta": [
+    {
+      "node_id": "n1",
+      "data_classification": "compute"
+    },
+    {
+      "node_id": "n2",
+      "data_classification": "compute"
+    },
+    {
+      "node_id": "n3",
+      "data_classification": "compute"
+    }
+  ]
+}
