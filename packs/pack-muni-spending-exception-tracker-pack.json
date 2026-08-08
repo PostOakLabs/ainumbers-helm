@@ -1,0 +1,40 @@
+{
+  "workflow_id": "pack-muni-spending-exception-tracker-pack",
+  "name": "Muni Spending-Exception Tracker Pack",
+  "outcome": "Evidence pack for a tax-exempt bond issue tracking its arbitrage-rebate spending exception under Treas. Reg. section 1.148-7. Stage 1 tests the declared expenditure schedule against the milestone dates of the elected exception, the 6-month, 18-month, or 24-month construction schedule including their reasonable-retainage variants, and gives each milestone exactly one verdict: MET, FAILED, or PENDING relative to a caller-declared evaluation date. Stage 2 assembles a shareable evidence bundle around that receipt and stamps the SPEC.md SIDECAR.1 tier label the caller's declared gate results qualify it for, minting no new trust claim. Every input is declared by the caller: the pack reads no trustee statement and no fund ledger, so it evidences whether the declared schedule satisfies the elected exception's milestones, never that the declared spending occurred. It does not compute the future-value arbitrage rebate itself, which is a separate tool, and it is not tax advice.",
+  "spec_version": "ocg-control-plane@1",
+  "manifest": {
+    "manifest_version": "1",
+    "workflow_id": "pack-muni-spending-exception-tracker-pack",
+    "trigger": {
+      "type": "manual"
+    },
+    "nodes": [
+      {
+        "node_id": "n1",
+        "kernel_id": "art-569-muni-arbitrage-spending-exception-checker",
+        "kernel_digest": "sha256:51f687ecec3fb71291c2dad098f4e0e98618a92218f75eaf7610890d75034ed3"
+      },
+      {
+        "node_id": "n2",
+        "kernel_id": "art-408-evidence-bundle-tier-labeler",
+        "kernel_digest": "sha256:4bffde8c450663ed6c3f2e2d7f8671638c0277be7be5f9e9717598f5911b88f8"
+      }
+    ],
+    "connectors": [],
+    "gates": [],
+    "actions": []
+  },
+  "workflow_manifest_digest": "sha256:ca2d74bbbb8d8d117b521c66494fdbcb0da4549b924b5a30b9349ae52648d0ac",
+  "declared_inputs": [],
+  "steps_meta": [
+    {
+      "node_id": "n1",
+      "data_classification": "compute"
+    },
+    {
+      "node_id": "n2",
+      "data_classification": "compute"
+    }
+  ]
+}
