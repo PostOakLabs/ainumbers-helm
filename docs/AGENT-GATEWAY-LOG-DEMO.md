@@ -1,6 +1,6 @@
 # Agent-gateway action log → Helm evidence bundle (demo)
 
-**Board row:** `GWLOG-DEMO-1`. **Status:** worked example, not a shipped product feature — a standalone converter script + fixture proving a specific claim, for use in partner conversations.
+**Status:** worked example, not a shipped product feature — a standalone converter script + fixture proving a specific claim, for use in partner conversations.
 
 ## What this demonstrates
 
