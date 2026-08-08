@@ -96,6 +96,18 @@ export function recordsForSubject(db, subjectHash) {
     .map((row) => JSON.parse(row.record_json));
 }
 
+// Fetches one record by its own record_id (the table's primary key — the
+// record's own JCS digest, per the module header). Distinct from
+// recordsForSubject above (which answers "what targets this subject_hash"):
+// HELM-MATTER-H2's matter closeout export needs "the approval record itself"
+// for an approval_record binding, whose subject_hash IS a record_id
+// (matter-store.mjs's resolvesAsApprovalRecord resolves the same way).
+export function getRecordById(db, recordId) {
+  initHaTables(db);
+  const row = db.prepare("SELECT record_json FROM ha_records WHERE record_id = ?").get(recordId);
+  return row ? JSON.parse(row.record_json) : null;
+}
+
 export function allHaRecords(db) {
   initHaTables(db);
   return db.prepare("SELECT record_json FROM ha_records ORDER BY created_at ASC").all().map((row) => JSON.parse(row.record_json));

@@ -491,3 +491,26 @@ export function replayExecutionHash(db, runId) {
 // same tamper-checked memo lookup the run engine itself uses, not a second
 // hand-rolled query against step_results.
 export { PHASE1_STATES, getMemoizedStep, stepInputDigest };
+
+// A run's own digest-level evidence record — HELM-H9's MCP evidence.export
+// tool shape (Phase-1 scope: hash_verified digest record, not yet the full
+// DSSE-signed §26.6 bundle.zip — see mcp.mjs's evidence.export tool doc
+// comment) — moved here so it has exactly ONE definition, reused by mcp.mjs
+// AND by HELM-MATTER-H2's matter closeout export for a `run`-kind binding,
+// rather than a second hand-copied shape drifting between the two callers.
+export function buildRunEvidenceExportPayload(db, runId) {
+  initRunTables(db);
+  const row = db.prepare("SELECT * FROM runs WHERE run_id = ?").get(runId);
+  if (!row) return null;
+  const steps = db
+    .prepare("SELECT step_id, output_digest, completed_at FROM step_results WHERE run_id = ? ORDER BY completed_at ASC")
+    .all(row.run_id);
+  return {
+    trust_label: "hash_verified",
+    run_id: row.run_id,
+    state: row.state,
+    execution_hash: row.execution_hash,
+    workflow_manifest_digest: row.workflow_manifest_digest,
+    steps,
+  };
+}

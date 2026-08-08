@@ -15,6 +15,8 @@ const { openJournal } = await import("./journal.mjs");
 const { executeRun } = await import("./run.mjs");
 const { runAttestedArtifact } = await import("./attested-artifact-runner.mjs");
 const { initHaTables } = await import("./ha-store.mjs");
+const { loadOrCreateKeys, publicKeysOf } = await import("./keys.mjs");
+const { verifyEnvelope } = await import("./envelope.mjs");
 const {
   generateUlid,
   computeManifestDigest,
@@ -25,7 +27,13 @@ const {
   deleteMatter,
   unresolvedBindings,
   registerEvidenceBundle,
+  assembleMatterExport,
+  closeMatter,
+  getMatterExport,
 } = await import("./matter-store.mjs");
+
+const keys = loadOrCreateKeys();
+const publicKeys = publicKeysOf(keys);
 
 function dbAt(name) {
   return openJournal(join(TMP, name));
@@ -279,5 +287,125 @@ test("matter-store: update refuses to remove or un-done a done:true deadline (ap
     ],
   });
   assert.equal(updated.deadlines.length, 2);
+  db.close();
+});
+
+// ---------------------------------------------------------------------------
+// HELM-MATTER-H2: §5 closeout export.
+
+test("closeMatter: transitioning to closed with keys emits a signed export covering every resolving binding kind", async () => {
+  const db = dbAt("close-full.db");
+  const runResult = await completeSimpleRun(db, "run-close-1");
+  const attestedHash = await completeAttestedArtifactRun(db, "run-close-attested-1", "aa-close-1");
+  const recordId = `sha256:${createHash("sha256").update("close-fixture-record").digest("hex")}`;
+  const haSubjectHash = randomSha256Ref();
+  insertHaRecordDirect(db, { recordId, subjectHash: haSubjectHash });
+  const bundleDigest = randomSha256Ref();
+  registerEvidenceBundle(db, bundleDigest, { runId: runResult.runId });
+  const externalHash = randomSha256Ref();
+
+  const matter = createMatter(db, entityInput({
+    status: "working",
+    bindings: [
+      { subject_hash: runResult.executionHash, subject_kind: "run" },
+      { subject_hash: attestedHash, subject_kind: "attested_artifact" },
+      { subject_hash: recordId, subject_kind: "approval_record" },
+      { subject_hash: bundleDigest, subject_kind: "evidence_bundle" },
+      { subject_hash: externalHash, subject_kind: "external_reference", note: "received PDF" },
+    ],
+  }));
+
+  const { matter: closed, export: exported } = closeMatter(db, matter.matter_id, { status: "closed" }, keys);
+  assert.equal(closed.status, "closed");
+  assert.ok(exported);
+  assert.match(exported.envelope_digest, /^sha256:[0-9a-f]{64}$/);
+
+  // The envelope is a REAL, independently-verifiable DSSE signature — not
+  // merely a digest label — over the exact predicate this test inspects
+  // below (verifyEnvelope re-derives `statement` from the envelope itself).
+  const verified = verifyEnvelope(exported.envelope, publicKeys);
+  assert.equal(verified.valid, true);
+  assert.equal(verified.statement.predicate.matter_id, matter.matter_id);
+  assert.equal(verified.statement.predicate.matter_manifest_digest, closed.manifest_digest);
+
+  const byHash = Object.fromEntries(exported.predicate.bindings_export.map((b) => [b.subject_hash, b]));
+
+  assert.equal(byHash[runResult.executionHash].exported, true);
+  assert.equal(byHash[runResult.executionHash].artifact.trust_label, "hash_verified");
+  assert.equal(byHash[runResult.executionHash].artifact.run_id, runResult.runId);
+
+  assert.equal(byHash[attestedHash].exported, true);
+  assert.equal(byHash[attestedHash].artifact.artifact_id, "aa-close-1");
+
+  assert.equal(byHash[recordId].exported, true);
+  assert.equal(byHash[recordId].artifact.subject_hash, haSubjectHash);
+
+  assert.equal(byHash[bundleDigest].exported, true);
+  assert.equal(byHash[bundleDigest].artifact.run_id, runResult.runId);
+  assert.equal(byHash[bundleDigest].artifact.run_evidence.run_id, runResult.runId);
+
+  assert.equal(byHash[externalHash].exported, false);
+  assert.match(byHash[externalHash].reason, /external_reference/);
+  assert.equal(byHash[externalHash].note, "received PDF");
+
+  // Persisted — a fresh read returns the SAME export, not a recomputation.
+  const reread = getMatterExport(db, matter.matter_id);
+  assert.equal(reread.envelope_digest, exported.envelope_digest);
+  assert.deepEqual(reread.envelope, exported.envelope);
+  db.close();
+});
+
+test("closeMatter: without keys, the status change applies but no export is emitted or persisted", () => {
+  const db = dbAt("close-no-keys.db");
+  const matter = createMatter(db, entityInput({ status: "working" }));
+
+  const { matter: closed, export: exported } = closeMatter(db, matter.matter_id, { status: "closed" }, undefined);
+  assert.equal(closed.status, "closed");
+  assert.equal(exported, undefined);
+  assert.equal(getMatterExport(db, matter.matter_id), null);
+  db.close();
+});
+
+test("closeMatter: an already-closed matter never re-emits on a later edit (signed exactly once per closure)", () => {
+  const db = dbAt("close-once.db");
+  const matter = createMatter(db, entityInput({ status: "working" }));
+
+  const first = closeMatter(db, matter.matter_id, { status: "closed" }, keys);
+  assert.ok(first.export);
+
+  const second = closeMatter(db, matter.matter_id, { narrative: "post-closure note" }, keys);
+  assert.equal(second.matter.status, "closed");
+  assert.equal(second.export, undefined);
+
+  // The persisted export is untouched — same digest as the original closure.
+  const stillOriginal = getMatterExport(db, matter.matter_id);
+  assert.equal(stillOriginal.envelope_digest, first.export.envelope_digest);
+  db.close();
+});
+
+test("assembleMatterExport: refuses on a matter that is not closed", () => {
+  const db = dbAt("assemble-not-closed.db");
+  const matter = createMatter(db, entityInput({ status: "working" }));
+  assert.throws(() => assembleMatterExport(db, matter.matter_id, { keys }), /is not closed/);
+  db.close();
+});
+
+test("assembleMatterExport: refuses without signing keys", () => {
+  const db = dbAt("assemble-no-keys.db");
+  const matter = createMatter(db, entityInput({ status: "closed" }));
+  assert.throws(() => assembleMatterExport(db, matter.matter_id), /requires signing keys/);
+  db.close();
+});
+
+test("assembleMatterExport: refuses on an unknown matter_id", () => {
+  const db = dbAt("assemble-unknown.db");
+  assert.throws(() => assembleMatterExport(db, "01UNKNOWNMATTERIDXXXXXXXX", { keys }), /unknown matter_id/);
+  db.close();
+});
+
+test("getMatterExport: returns null for a matter that was never closed", () => {
+  const db = dbAt("export-null.db");
+  const matter = createMatter(db, entityInput());
+  assert.equal(getMatterExport(db, matter.matter_id), null);
   db.close();
 });

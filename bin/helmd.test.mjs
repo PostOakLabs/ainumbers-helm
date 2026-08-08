@@ -8,10 +8,11 @@
 // not re-run the daemon lifecycle, only the wrapper's own dispatch.
 import { test } from "node:test";
 import assert from "node:assert/strict";
-import { execFileSync } from "node:child_process";
-import { readFileSync } from "node:fs";
+import { execFileSync, spawnSync } from "node:child_process";
+import { readFileSync, mkdtempSync, writeFileSync, rmSync } from "node:fs";
 import { join, dirname } from "node:path";
 import { fileURLToPath } from "node:url";
+import { tmpdir } from "node:os";
 
 const HERE = dirname(fileURLToPath(import.meta.url));
 const ENTRY = join(HERE, "helmd.mjs");
@@ -113,4 +114,37 @@ test("run-template --dry-run --json reports completed with no side effects, dryR
   const parsed = JSON.parse(r.stdout);
   assert.equal(parsed.state, "completed");
   assert.equal(parsed.dryRun, true);
+});
+
+// matter-close (HELM-MATTER-H2): a thin authenticated HTTP client against an
+// ALREADY-RUNNING daemon — unlike every sibling command above, it has no
+// standalone/no-daemon mode by design (see scripts/matter-close.mjs's header
+// comment), so its own end-to-end "actually closes a matter" behavior is
+// covered where a real daemon is already stood up: hub/server.test.mjs. This
+// file only covers the wrapper's own dispatch: usage errors and the
+// no-daemon-running failure path, mirroring how the OTHER passthrough
+// commands are covered by hub/cli-verbs.test.mjs rather than re-run here.
+test("matter-close with no matter_id fails with a usage message on stderr, distinct exit from a refusal", () => {
+  const r = run("matter-close");
+  assert.notEqual(r.code, 0);
+  assert.match(r.stderr, /usage: helmd matter-close <matter_id>/);
+});
+
+test("matter-close against a daemon that isn't running fails with a clear connection message, not a raw stack trace", () => {
+  // Isolated HELM_HOME so this reads a config.json naming a port nothing is
+  // bound to (never the real default 4173, which could legitimately be a
+  // live daemon on this machine) — deterministic connection-refused, not a
+  // race against whatever else is running locally.
+  const isolatedHome = mkdtempSync(join(tmpdir(), "helmd-matter-close-test-"));
+  writeFileSync(join(isolatedHome, "config.json"), JSON.stringify({ port: 41777, allowedOrigin: "http://127.0.0.1:41777" }));
+  try {
+    const result = spawnSync(process.execPath, [ENTRY, "matter-close", "01SOMEMATTERIDXXXXXXXXXXX"], {
+      encoding: "utf8",
+      env: { ...process.env, HELM_HOME: isolatedHome },
+    });
+    assert.notEqual(result.status, 0);
+    assert.match(result.stderr, /could not reach helmd on 127\.0\.0\.1:41777/);
+  } finally {
+    rmSync(isolatedHome, { recursive: true, force: true });
+  }
 });

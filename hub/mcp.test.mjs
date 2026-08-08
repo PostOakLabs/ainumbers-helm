@@ -24,6 +24,8 @@ const { loadOrCreateToken } = await import("./token.mjs");
 const { openJournal } = await import("./journal.mjs");
 const { createHelmServer } = await import("./server.mjs");
 const { resolveRunManifest } = await import("./run-actions.mjs");
+const { loadOrCreateKeys } = await import("./keys.mjs");
+const { createMatter, closeMatter, getMatterExport } = await import("./matter-store.mjs");
 
 const config = loadConfig();
 const token = loadOrCreateToken();
@@ -363,6 +365,40 @@ test("evidence.export refuses without a ticket, succeeds with one minted via POS
   // single-use: the same ticket cannot be redeemed twice
   const secondUse = await rpc("tools/call", { name: "evidence.export", arguments: { run_id: taskId, ticket } });
   assert.equal(secondUse.body.error.code, -32602);
+});
+
+test("evidence.export (matter_id mode, HELM-MATTER-H2): reads back an already-emitted matter closeout export, never assembles or signs one itself", async () => {
+  // The daemon under test here has no identityKeys (this file's `before()`
+  // never passes one), matching real closeMatter() behavior with no keys:
+  // the status change applies, no export is emitted. So the closure export
+  // this test reads is produced directly against the SAME db the running
+  // server uses — exercising ONLY the MCP tool's read path, which is exactly
+  // what this test is for (the emission path itself is matter-store.test.mjs
+  // and server.test.mjs's job).
+  const keys = loadOrCreateKeys();
+  const matter = createMatter(db, { entity: { id: "did:key:z6MkhaXgBZDvotDkL5257faiztiGiC2QtKLGpbnnEGta2doK" } });
+  const { export: emitted } = closeMatter(db, matter.matter_id, { status: "closed" }, keys);
+  assert.ok(emitted);
+
+  const ticketRes = await rawRequest("POST", "/evidence/export/ticket", {}, baseHeaders());
+  const ticket = ticketRes.body.ticket;
+
+  const noTicket = await rpc("tools/call", { name: "evidence.export", arguments: { matter_id: matter.matter_id, ticket: "bogus" } });
+  assert.equal(noTicket.body.error.code, -32602);
+
+  const exportRes = await rpc("tools/call", { name: "evidence.export", arguments: { matter_id: matter.matter_id, ticket } });
+  assert.equal(exportRes.body.result.structuredContent.envelope_digest, emitted.envelope_digest);
+  assert.deepEqual(exportRes.body.result.structuredContent, getMatterExport(db, matter.matter_id));
+});
+
+test("evidence.export (matter_id mode): an unclosed/unexported matter_id refuses with matter_export_not_found", async () => {
+  const matter = createMatter(db, { entity: { id: "did:key:z6MkhaXgBZDvotDkL5257faiztiGiC2QtKLGpbnnEGta2doK" } });
+  const ticketRes = await rawRequest("POST", "/evidence/export/ticket", {}, baseHeaders());
+  const ticket = ticketRes.body.ticket;
+
+  const res = await rpc("tools/call", { name: "evidence.export", arguments: { matter_id: matter.matter_id, ticket } });
+  assert.equal(res.body.error.code, -32602);
+  assert.match(res.body.error.message, /matter_export_not_found/);
 });
 
 test("AGENT-PARITY (spec §5 gate 6): MCP workflow.run and REST /run/start resolve the identical manifest for the same workflow_id via the shared run-actions.mjs core", async () => {
