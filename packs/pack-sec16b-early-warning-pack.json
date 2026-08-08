@@ -1,0 +1,40 @@
+{
+  "workflow_id": "pack-sec16b-early-warning-pack",
+  "name": "Section 16(b) Early-Warning Pack",
+  "outcome": "Evidence pack for the recipient side of a Section 16(b) short-swing demand letter, built for an issuer's general counsel or an insider's own counsel. Stage 1 recomputes the matchable-pair short-swing profit figure from a declared list of the insider's own transactions in the issuer's equity security, using the lowest-in/highest-out construction, and compares the recomputed figure against a number the demand letter claims where one is supplied. Stage 2 wraps that receipt in a shareable evidence bundle stamped with the SPEC.md SIDECAR.1 tier label the caller's declared gate results qualify it for. Every transaction is declared by the caller: the pack reads no Form 4/5 filing and no brokerage record, so it evidences whether the declared transaction list produces the claimed figure, never that the declared transactions are complete or accurate. It does not compute a Rule 144 volume-limitation check, which is a named follow-on tool, and it is not legal advice.",
+  "spec_version": "ocg-control-plane@1",
+  "manifest": {
+    "manifest_version": "1",
+    "workflow_id": "pack-sec16b-early-warning-pack",
+    "trigger": {
+      "type": "manual"
+    },
+    "nodes": [
+      {
+        "node_id": "n1",
+        "kernel_id": "art-573-section16b-short-swing-profit-recompute",
+        "kernel_digest": "sha256:2bf576ae353041e722a9e64447d9484503c9d7208b320a9338562368f15e41d2"
+      },
+      {
+        "node_id": "n2",
+        "kernel_id": "art-408-evidence-bundle-tier-labeler",
+        "kernel_digest": "sha256:4bffde8c450663ed6c3f2e2d7f8671638c0277be7be5f9e9717598f5911b88f8"
+      }
+    ],
+    "connectors": [],
+    "gates": [],
+    "actions": []
+  },
+  "workflow_manifest_digest": "sha256:c16fd8fdf7fd0d77be96112775af9deff1f6564d81f1c0730b89ed796c9121f9",
+  "declared_inputs": [],
+  "steps_meta": [
+    {
+      "node_id": "n1",
+      "data_classification": "compute"
+    },
+    {
+      "node_id": "n2",
+      "data_classification": "compute"
+    }
+  ]
+}

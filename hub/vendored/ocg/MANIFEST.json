@@ -1,18 +1,18 @@
 {
   "sourceRepo": "https://github.com/PostOakLabs/ainumbers.git",
   "license": "MIT License, Copyright (c) 2026 PostOakLabs (same license/holder as this repo; see this repo's own LICENSE for full terms; no third-party code in this vendored subtree)",
-  "pinnedSha": "167db23bee3cb9b681b03203e97d1429294f4036",
+  "pinnedSha": "977b4bc20627eb512ed12b13e3c299019170a745",
   "vendoredPaths": [
     "chaingraph/kernels",
     "chaingraph/standard/SPEC.md",
     "chaingraph/standard/openchain-graph-v0.4.schema.json",
     "chaingraph/chaingraph.json"
   ],
-  "fileCount": 1558,
+  "fileCount": 1560,
   "files": [
     {
       "path": "chaingraph.json",
-      "sha256": "637174648aa9c4a00aaa17b3ad8f6e87996118ecdb56bbfd1e63198444867a0f"
+      "sha256": "25c8abe6cdb8f0dd44ff26c150c1dc2425cc57c232c185eaa5ea42502a26a657"
     },
     {
       "path": "kernels/_ancestry.mjs",
@@ -2205,6 +2205,10 @@
     {
       "path": "kernels/art-587-finp2p-ledger-proof-verifier.kernel.mjs",
       "sha256": "3c844292a3af41f9d432ae70b2573143e1de22d82b2ddda19f531d233ec06d5f"
+    },
+    {
+      "path": "kernels/art-589-redline-round-classifier.kernel.mjs",
+      "sha256": "5af85fdf37a3ae3ab73a616adad96621f2fc811520c30cafb6404da7d71393c6"
     },
     {
       "path": "kernels/art-59-settlement-asset-finality-classifier.kernel.mjs",
@@ -4559,6 +4563,10 @@
       "sha256": "b35235475ac2c0e5f90671fb0e0b819250bb24f84b06f279f9c6ee620c92cebf"
     },
     {
+      "path": "kernels/fixtures/art-589-redline-round-classifier.fixtures.json",
+      "sha256": "5d05ba440fa1b25ee098a78496c1da550befbf9153b5112319c272e96877faeb"
+    },
+    {
       "path": "kernels/fixtures/art-59-settlement-asset-finality-classifier.fixtures.json",
       "sha256": "63f9a2fcbd3b03f61a2d3f4e471b6071b129e99c92b1bbd8a7ed206646fdfa00"
     },
@@ -6080,7 +6088,7 @@
     },
     {
       "path": "kernels/index.mjs",
-      "sha256": "452491bbfe0434390a5bdec8bfaf799085f2f4a80dd7bdc498122eafe310d624"
+      "sha256": "08e67dbab352baf9cf1379e367c67f1c7b07813acb9aef49cf2bc232655590cf"
     },
     {
       "path": "kernels/inline-hash-equality.test.mjs",
