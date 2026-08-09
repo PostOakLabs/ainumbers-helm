@@ -1,7 +1,7 @@
 {
   "sourceRepo": "https://github.com/PostOakLabs/ainumbers.git",
   "license": "MIT License, Copyright (c) 2026 PostOakLabs (same license/holder as this repo; see this repo's own LICENSE for full terms; no third-party code in this vendored subtree)",
-  "pinnedSha": "7cdd1606aea0e45c946554ab22ea541a13f9a1eb",
+  "pinnedSha": "8a1e86418ec956dcf0c1de4b60a1bf1599fd87be",
   "vendoredPaths": [
     "chaingraph/kernels",
     "chaingraph/standard/SPEC.md",
@@ -12,7 +12,7 @@
   "files": [
     {
       "path": "chaingraph.json",
-      "sha256": "47a9dc27decf5bd30577e9697d298ec0e4d22403117ced0d6954f3584a6b53d5"
+      "sha256": "34b2539b4459a4c6cbfbb3afd6e235eee742148f5ee6e74530179cf86d7d9849"
     },
     {
       "path": "kernels/_ancestry.mjs",
@@ -716,7 +716,7 @@
     },
     {
       "path": "kernels/art-215-reg-z-appendix-j-apr.kernel.mjs",
-      "sha256": "429bfe0fa27879e429bbd5129f57243ebc99b4e6dc016f0ffebacd35acdd9219"
+      "sha256": "23d06ce0530f333676cee2d8435ec0f6622170fc8040d471151cd64a01025225"
     },
     {
       "path": "kernels/art-216-trid-tolerance-cure.kernel.mjs",
@@ -3052,7 +3052,7 @@
     },
     {
       "path": "kernels/fixtures/art-215-reg-z-appendix-j-apr.fixtures.json",
-      "sha256": "df5ae208f93643be9fda848d284e24c2a0c97b6f13fe494066487969ddbb8a90"
+      "sha256": "180548973620d6f4e8c7cc97b6a24ccd4b24401061c4da6d1193836ffb2247c9"
     },
     {
       "path": "kernels/fixtures/art-216-trid-tolerance-cure.fixtures.json",
@@ -5268,7 +5268,7 @@
     },
     {
       "path": "kernels/fixtures/compute-proof/art-215-reg-z-appendix-j-apr.receipt.json",
-      "sha256": "8f963df2e548836be61339f3d51fd384fcc5a1be95c71c671dda422133675ce1"
+      "sha256": "101f8fbcf9dbcef08209cbbf2a3c293573686435cb049cdfb27bfa7e013e59a8"
     },
     {
       "path": "kernels/fixtures/compute-proof/art-216-trid-tolerance-cure.receipt.json",
