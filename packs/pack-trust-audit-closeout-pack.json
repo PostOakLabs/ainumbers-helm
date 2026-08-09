@@ -1,0 +1,49 @@
+{
+  "workflow_id": "pack-trust-audit-closeout-pack",
+  "name": "Trust-Audit Closeout Pack",
+  "outcome": "Evidence pack for a law practice closing out a client-trust review period. Stage 1 recomputes a three-way trust reconciliation from a declared bank balance, trust-ledger balance, and per-client ledger total, and gives the period exactly one verdict: RECONCILED, DISCREPANT, or INCOMPLETE. Stage 2 sweeps the declared docket records against caller-declared roll rules and labels each record OVERDUE, DUE_SOON, SCHEDULED, DONE, or INDETERMINATE, so a period that reconciles cleanly but leaves dated obligations open is visible rather than implied. Stage 3 assembles a shareable evidence bundle around the receipt trail and stamps the SPEC.md SIDECAR.1 tier label the caller's declared gate results qualify it for, minting no new trust claim. Every input is declared by the caller: the pack reads no bank feed, no accounting system, and no court docket, so it evidences whether the declared figures reconcile and whether the declared deadlines are met, never that the declared balances or filings are real. It is not legal advice, it is not a calendaring system, and it does not issue reminders. California Business and Professions Code section 6091.3 and the State Bar Client Trust Account Protection Program are cited as the reporting duties this evidence is usually gathered for, not as a standard the pack certifies against.",
+  "spec_version": "ocg-control-plane@1",
+  "manifest": {
+    "manifest_version": "1",
+    "workflow_id": "pack-trust-audit-closeout-pack",
+    "trigger": {
+      "type": "manual"
+    },
+    "nodes": [
+      {
+        "node_id": "n1",
+        "kernel_id": "art-566-iolta-three-way-reconciliation",
+        "kernel_digest": "sha256:891bee3fc15ad70e6efb5440b1b794536e846e9bb77b5a4a9ea06df0153f772a"
+      },
+      {
+        "node_id": "n2",
+        "kernel_id": "art-588-docket-deadline-sweep",
+        "kernel_digest": "sha256:54ec1d5b6fe7faac635820bc4b60de9ea75ea643abec9d1f312b6f54de3125fa"
+      },
+      {
+        "node_id": "n3",
+        "kernel_id": "art-408-evidence-bundle-tier-labeler",
+        "kernel_digest": "sha256:4bffde8c450663ed6c3f2e2d7f8671638c0277be7be5f9e9717598f5911b88f8"
+      }
+    ],
+    "connectors": [],
+    "gates": [],
+    "actions": []
+  },
+  "workflow_manifest_digest": "sha256:52ad7e1fc9822d541a6ed1eb1dc827fc788e66a7454a8a6c6ac816de5cc7b421",
+  "declared_inputs": [],
+  "steps_meta": [
+    {
+      "node_id": "n1",
+      "data_classification": "compute"
+    },
+    {
+      "node_id": "n2",
+      "data_classification": "compute"
+    },
+    {
+      "node_id": "n3",
+      "data_classification": "compute"
+    }
+  ]
+}

@@ -1,0 +1,31 @@
+{
+  "workflow_id": "pack-pe-waterfall-true-up-pack",
+  "name": "PE Waterfall True-Up Pack",
+  "outcome": "Evidence pack for a private equity fund distribution true-up between a general partner and its limited partners. The pack has one computational stage: a batch recompute of a standard four-tier distribution waterfall, return of capital, preferred return, GP catch-up, and residual carry split, run over caller-declared dated contribution and distribution cashflows and a caller-declared waterfall parameterization, then diffed tier by tier against a caller-supplied GP-reported allocation, with an overall verdict of MATCHES, DIVERGES, or INDETERMINATE and a matching verdict for every individual tier. The pack's evidence value comes from running that one stage twice: the GP's own distribution notice reports an allocation, and the LP side recomputes it independently over the identical declared cashflows and waterfall terms. Because the kernel is deterministic and every tier comparison is exact fixed-point arithmetic with no declared tolerance, two honest recomputations over the same inputs reach the identical execution hash, and each side can countersign a receipt of that recomputation under SPEC.md section 27.12, kernel-pinned and dated, with no relay and no shared registry between the fund and its investor. The receipt is evidence that both parties independently recomputed and signed the same result. It does not state or imply that the LP has approved the distribution, that the true-up is closed, or that a dispute over the underlying waterfall's terms is foreclosed. Every input, the cashflows and their dates and amounts, the preferred return rate and compounding basis, the GP catch-up and carry percentages, the tier structure, and the GP-reported allocation, is declared by the caller: the pack reads no fund administrator ledger and no capital account statement. ILPA's own reporting-template guidance is cited as dated gap evidence that GP-side reporting tooling was not designed for LP-side verification, not as a standard the pack certifies against.",
+  "spec_version": "ocg-control-plane@1",
+  "manifest": {
+    "manifest_version": "1",
+    "workflow_id": "pack-pe-waterfall-true-up-pack",
+    "trigger": {
+      "type": "manual"
+    },
+    "nodes": [
+      {
+        "node_id": "n1",
+        "kernel_id": "art-567-pe-waterfall-lp-recompute",
+        "kernel_digest": "sha256:df13afbe5e611661922ccea2123194de8f703a3efa283154ec7af8b7876881e9"
+      }
+    ],
+    "connectors": [],
+    "gates": [],
+    "actions": []
+  },
+  "workflow_manifest_digest": "sha256:1d67fda07a0faf016c7251c1ba2f11a7f70db48f0fd479aa320bcae2a456d741",
+  "declared_inputs": [],
+  "steps_meta": [
+    {
+      "node_id": "n1",
+      "data_classification": "compute"
+    }
+  ]
+}
