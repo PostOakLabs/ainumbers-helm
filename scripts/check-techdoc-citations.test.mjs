@@ -12,7 +12,7 @@ import assert from "node:assert/strict";
 import { mkdtempSync, rmSync, mkdirSync, writeFileSync, readFileSync } from "node:fs";
 import { join, dirname } from "node:path";
 import { tmpdir } from "node:os";
-import { extractCitations, collectIssues, sha256File, ROOT, DOC_REL, MANIFEST_REL } from "./check-techdoc-citations.mjs";
+import { extractCitations, collectIssues, checkNoLiteralPin, sha256File, ROOT, DOC_REL, MANIFEST_REL } from "./check-techdoc-citations.mjs";
 
 function scratch() {
   const dir = mkdtempSync(join(tmpdir(), "helm-techdoc-cite-"));
@@ -121,4 +121,23 @@ test("the real manifest covers exactly the real doc's citations", () => {
   const cited = new Set(extractCitations(docText).keys());
   const stamped = new Set(manifest.files.map((f) => f.path));
   assert.deepEqual([...cited].sort(), [...stamped].sort());
+});
+
+// HELM-TECHDOC-PIN-DERIVE-1: a vendored pin restated as a literal sha goes
+// stale on every re-vendor (HELM-VENDOR-REFRESH-9 and -10 both had to
+// hand-correct it). The doc now points at the config file instead; this
+// backstop keeps a literal from quietly creeping back in.
+test("green when the doc points at the vendor config instead of restating the sha", () => {
+  assert.deepEqual(checkNoLiteralPin("pinned at the `pinnedSha` in `vendor.config.json`\n"), []);
+});
+
+test("RED when the doc restates a vendor pin as a literal sha", () => {
+  const issues = checkNoLiteralPin("... pinned at `7cdd1606` ...\n");
+  assert.equal(issues.length, 1);
+  assert.match(issues[0], /restates a vendor pin as a literal/);
+});
+
+test("the real doc contains no literal vendor pin", () => {
+  const docText = readFileSync(join(ROOT, DOC_REL), "utf8");
+  assert.deepEqual(checkNoLiteralPin(docText), []);
 });
