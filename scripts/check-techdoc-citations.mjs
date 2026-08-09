@@ -112,6 +112,27 @@ function lineCount(text) {
   return text.split(/\r?\n/).length;
 }
 
+// A vendored pin (OCG's `pinnedSha` in vendor.config.json, Anchor Suite's in
+// vendor-anchor.config.json) is a mechanical restatement of a value, not a
+// claim about behavior — the file:line citation machinery above is the wrong
+// tool for it (whole-file hashing would force a re-stamp on every re-vendor,
+// exactly the drift this line used to suffer by hand). So the doc points at
+// the config file instead of restating the sha as a literal. This check is
+// the backstop: it fails if a hex-looking sha literal ever reappears next to
+// "pinned at" in the doc, so the fix (HELM-TECHDOC-PIN-DERIVE-1) can't quietly
+// regress back to a hand-maintained literal.
+export function checkNoLiteralPin(docText) {
+  const issues = [];
+  const re = /pinned at `([0-9a-f]{6,40})`/gi;
+  for (const m of docText.matchAll(re)) {
+    issues.push(
+      `doc restates a vendor pin as a literal ("pinned at \`${m[1]}\`") — point at the config file's ` +
+        `pinnedSha instead (see HELM-TECHDOC-PIN-DERIVE-1); a literal here goes stale on every re-vendor.`
+    );
+  }
+  return issues;
+}
+
 /**
  * Pure checker: returns a list of human-readable failures (empty === green).
  * Split out from the CLI so check-techdoc-citations.test.mjs can drive it
@@ -152,6 +173,8 @@ export function collectIssues(root, docText, manifest) {
       issues.push(`${path}: in the citation manifest but the doc no longer cites it — re-stamp to drop the stale entry.`);
     }
   }
+
+  issues.push(...checkNoLiteralPin(docText));
 
   return issues;
 }
