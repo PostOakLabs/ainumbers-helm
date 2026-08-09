@@ -1,6 +1,6 @@
 {
   "name": "ainumbers-helm",
-  "version": "2026.8.8",
+  "version": "2026.8.9",
   "private": true,
   "license": "Apache-2.0",
   "description": "Local-first control plane: helmd hub daemon + app.html UI",
