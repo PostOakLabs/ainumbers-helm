@@ -1,0 +1,8 @@
+{
+  "version": "helm-h2h-envelope@99",
+  "sender_org_id": "did:key:z6MkhaXgBZDvotDkL5257faiztiGiC2QtKLGpbnnEGta2doK",
+  "payload_type": "smuggled_run_input",
+  "payload": {
+    "note": "unrecognized version + unrecognized payload_type — must fail schema validation (const/enum mismatch) exactly as a real receiving Helm fails closed at import time"
+  }
+}

@@ -1,0 +1,10 @@
+{
+  "version": "helm-h2h-envelope@1",
+  "sender_org_id": "did:key:z6MkhaXgBZDvotDkL5257faiztiGiC2QtKLGpbnnEGta2doK",
+  "payload_type": "counter_signed_receipt",
+  "payload": {
+    "record_type": "counter_signed_receipt",
+    "kernel_pin": "art-575",
+    "note": "shape example only — the cited artifact's own schema (SPEC.md §27.12) governs its internal fields; this fixture exercises the envelope wrapper, not the payload contract."
+  }
+}

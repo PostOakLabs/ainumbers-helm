@@ -1,0 +1,33 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://ainumbers.co/helm/schema/h2h_envelope.schema.json",
+  "title": "Helm-to-Helm bilateral exchange envelope (BILAT-H2H-BUILD-SPEC.md §2.1)",
+  "description": "Validates the H2H envelope PREDICATE shape (the object carried inside a dual-signed DSSE envelope's statement.predicate, predicateType #h2h_envelope_v1 — see hub/h2h-envelope.mjs, built on hub/envelope.mjs's existing Ed25519+ML-DSA-44 emitter/verifier). Layer 0 only (BILAT-H2H-BUILD-SPEC.md §2): a file/bundle exchange contract, no listener, no AINumbers-operated network component. `payload` carries an already OCG-conformant artifact produced independently of this exchange (evidence/matter bundle, counter-signed receipt, or cosigned checkpoint head) — this schema wraps it for transport, it does not restate the payload's own shape (cite, don't restate, per spec §2.1).",
+  "$defs": {
+    "sha256ref": { "type": "string", "pattern": "^sha256:[0-9a-f]{64}$" }
+  },
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["version", "sender_org_id", "payload_type", "payload"],
+  "properties": {
+    "version": {
+      "type": "string",
+      "const": "helm-h2h-envelope@1",
+      "description": "The WIRE-PROFILE version, distinct from the OCG SPEC.md version the payload conforms to (spec §5). A receiving Helm that does not recognize this value fails closed — see importH2HEnvelope in hub/h2h-envelope.mjs."
+    },
+    "sender_org_id": {
+      "type": "string",
+      "minLength": 1,
+      "description": "The sending org's identity (did:key or LEI, per OCG identity conventions) — verification-side only, no registry of ours resolves it. The receiving Helm is expected to already hold this peer's public keys locally (out of band, per spec §2.2 — any transport the two orgs already trust)."
+    },
+    "payload_type": {
+      "type": "string",
+      "enum": ["matter_bundle", "counter_signed_receipt", "cosigned_checkpoint_head"],
+      "description": "Which of the three cited artifact shapes `payload` carries (spec §2.1): matter_bundle = HELM-MATTER's evidence/matter bundle shape; counter_signed_receipt = BILAT-CSR's SPEC.md §27.12 humanAccountabilityRecord shape; cosigned_checkpoint_head = BILAT-COSIGN's SPEC.md §HEAD-1 checkpoint object carrying the ocg-head-bilateral-cosign@1 backing type. A receiving Helm that does not recognize this value fails closed."
+    },
+    "payload": {
+      "type": "object",
+      "description": "The cited artifact itself, verbatim — the same object the sending org already produced and holds in its own local state. Never a run input, never a request to execute anything (spec §4 run-input asymmetry). This schema does not constrain payload's internal shape; that is the cited artifact schema's job."
+    }
+  }
+}
