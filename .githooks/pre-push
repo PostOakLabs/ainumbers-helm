@@ -32,6 +32,12 @@ node scripts/validate-schemas.mjs
 echo "pre-push: verify vendored OCG integrity ..."
 node scripts/verify-vendored.mjs
 
+echo "pre-push: credits registry coverage ..."
+node scripts/check-credits-coverage.mjs helm
+
+echo "pre-push: credits notices freshness ..."
+node scripts/gen-credits.mjs helm --check
+
 echo "pre-push: compile parity gate ..."
 node scripts/compile-parity-gate.mjs
 
