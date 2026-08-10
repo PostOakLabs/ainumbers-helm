@@ -17,7 +17,7 @@ import { readFileSync, writeFileSync, existsSync } from "node:fs";
 import { execFileSync } from "node:child_process";
 import { join } from "node:path";
 import { pathToFileURL } from "node:url";
-import { extractCitations, sha256File, ROOT, DOC_REL, MANIFEST_REL } from "./check-techdoc-citations.mjs";
+import { extractCitations, citationDigest, ROOT, DOC_REL, MANIFEST_REL } from "./check-techdoc-citations.mjs";
 
 function headSha() {
   try {
@@ -45,7 +45,7 @@ function main() {
       missing.push(path);
       continue;
     }
-    files.push({ path, sha256: sha256File(abs) });
+    files.push({ path, sha256: citationDigest(path, abs) });
   }
 
   if (missing.length) {

@@ -60,6 +60,25 @@ export function sha256File(path) {
   return createHash("sha256").update(readFileSync(path)).digest("hex");
 }
 
+// package.json's `version` field is written mechanically by
+// auto-tag-release.yml every day the repo ships — a value the doc never
+// cites (it cites package.json for the Apache-2.0 license declaration and
+// the empty `dependencies` object, docs/HELM-TECHNICAL-DESIGN-IMPLEMENTATION.md
+// lines 284 and 310). Whole-file hashing package.json therefore reddens this
+// gate on every release, on a field with no doc claim resting on it. This is
+// NOT the banned "ignore-list of cosmetic files" (that bans guessing which
+// files don't matter); it is a single named field, in a single named file,
+// proven by grep to carry zero citations, excluded by exact key rather than
+// by suspicion.
+export function citationDigest(path, abs) {
+  if (path === "package.json") {
+    const pkg = JSON.parse(readFileSync(abs, "utf8"));
+    delete pkg.version;
+    return createHash("sha256").update(JSON.stringify(pkg)).digest("hex");
+  }
+  return sha256File(abs);
+}
+
 function isCitablePath(p) {
   if (!CITABLE_DIRS.test(p) && !CITABLE_ROOT_FILES.test(p)) return false;
   return /\.[A-Za-z0-9]+$/.test(p); // must carry a file extension
@@ -155,7 +174,7 @@ export function collectIssues(root, docText, manifest) {
       continue;
     }
 
-    const actual = sha256File(abs);
+    const actual = citationDigest(path, abs);
     if (actual !== stamped.get(path)) {
       issues.push(`${path}: CHANGED since the doc's claims were last verified (stamped ${stamped.get(path).slice(0, 12)}…, on disk ${actual.slice(0, 12)}…).`);
     }

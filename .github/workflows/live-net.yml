@@ -26,6 +26,19 @@ jobs:
       - uses: actions/setup-node@249970729cb0ef3589644e2896645e5dc5ba9c38 # v6.5.0
         with:
           node-version: "22"
+      # Matches ci.yml: without a real Secret Service the linux-secret-tool
+      # vault tier is unreachable, doctor's signing_key_vault_tier check
+      # degrades to file-fallback, and doctor.test.mjs's two tier-aware
+      # assertions (hub/doctor.test.mjs:95, :134) fail deterministically on
+      # every scheduled run — not a third-party flake, a missing daemon.
+      - name: install Secret Service (libsecret + gnome-keyring) for real linux-secret-tool coverage
+        run: sudo apt-get update -qq && sudo apt-get install -y -qq gnome-keyring libsecret-tools dbus-x11
+      - name: start + unlock a Secret Service session (dbus + gnome-keyring)
+        run: |
+          eval "$(dbus-launch --sh-syntax)"
+          echo "DBUS_SESSION_BUS_ADDRESS=$DBUS_SESSION_BUS_ADDRESS" >> "$GITHUB_ENV"
+          eval "$(printf '\n' | gnome-keyring-daemon --unlock --components=secrets)"
+          echo "GNOME_KEYRING_CONTROL=$GNOME_KEYRING_CONTROL" >> "$GITHUB_ENV"
       - name: test (live network)
         env:
           HELM_LIVE_NET: "1"
