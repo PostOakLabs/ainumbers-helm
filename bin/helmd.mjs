@@ -34,6 +34,9 @@ const RUN_TEMPLATE_ENTRY = join(ROOT, "scripts", "run-template.mjs");
 const CHECK_ENTRY = join(ROOT, "scripts", "check.mjs");
 const VERIFY_ENTRY = join(ROOT, "scripts", "verify.mjs");
 const MATTER_CLOSE_ENTRY = join(ROOT, "scripts", "matter-close.mjs");
+const BILAT_PUBKEY_ENTRY = join(ROOT, "scripts", "bilat-pubkey.mjs");
+const BILAT_EXPORT_ENTRY = join(ROOT, "scripts", "bilat-export.mjs");
+const BILAT_IMPORT_ENTRY = join(ROOT, "scripts", "bilat-import.mjs");
 
 // Read straight off hub/index.mjs's own dispatch, not a hand-copied guess —
 // see the row's warning: "read the dispatcher, do not grep a guessed list."
@@ -81,6 +84,21 @@ Commands:
                       already-running daemon, not a standalone command). Exists so an
                       external tool's own closeout event (e.g. a git post-commit hook) can
                       call Helm's export without touching helmd's HTTP API directly.
+  bilat-pubkey [--json]
+                      print this Helm's own public keys in the shareable format a
+                      counterparty needs for bilat-import --peer-keys. No daemon required.
+  bilat-export --org-id <id> --payload-type <type> --payload-file <payload.json>
+               --out <envelope.json> [--json]
+                      wrap an already-produced local artifact (matter bundle / BILAT-CSR
+                      receipt / BILAT-COSIGN head) in a signed Helm-to-Helm exchange
+                      envelope, written to a file. File/bundle exchange only — no listener,
+                      no network call, no daemon required (BILAT-H2H-BUILD-SPEC.md §2).
+  bilat-import <envelope.json> --peer-keys <peerPublicKeys.json> [--out <payload.json>]
+               [--strict] [--json]
+                      verify a received envelope against a counterparty's public keys and,
+                      on success, write the recovered payload. Fails closed (exit 1) on bad
+                      signature, unrecognized version, or unrecognized payload_type — never
+                      a partial write. No daemon required.
 
 Options:
   -h, --help          show this help and exit 0
@@ -91,9 +109,9 @@ unchanged (check has its own six-way exit contract, see above); an unknown
 command is a usage error and exits 2.
 
 Stability: start/stop/status/doctor/open/uninstall/export-bpmn/list-scenarios/
-run-template/check/verify/matter-close and their plain-text output/exit codes
-are STABLE. --json output shapes are PROVISIONAL and may change without
-notice until this line is removed.`);
+run-template/check/verify/matter-close/bilat-pubkey/bilat-export/bilat-import
+and their plain-text output/exit codes are STABLE. --json output shapes are
+PROVISIONAL and may change without notice until this line is removed.`);
 }
 
 function printVersion() {
@@ -151,8 +169,17 @@ if (PASSTHROUGH_COMMANDS.has(cmd)) {
 } else if (cmd === "matter-close") {
   const result = spawnSync(process.execPath, [MATTER_CLOSE_ENTRY, ...rest], { stdio: "inherit" });
   process.exit(result.status ?? 1);
+} else if (cmd === "bilat-pubkey") {
+  const result = spawnSync(process.execPath, [BILAT_PUBKEY_ENTRY, ...rest], { stdio: "inherit" });
+  process.exit(result.status ?? 1);
+} else if (cmd === "bilat-export") {
+  const result = spawnSync(process.execPath, [BILAT_EXPORT_ENTRY, ...rest], { stdio: "inherit" });
+  process.exit(result.status ?? 1);
+} else if (cmd === "bilat-import") {
+  const result = spawnSync(process.execPath, [BILAT_IMPORT_ENTRY, ...rest], { stdio: "inherit" });
+  process.exit(result.status ?? 1);
 } else {
-  console.error(`helmd: unknown command "${cmd}" (expected: start | stop | status | doctor | open | uninstall | export-bpmn | list-scenarios | run-template | check | verify | matter-close)`);
+  console.error(`helmd: unknown command "${cmd}" (expected: start | stop | status | doctor | open | uninstall | export-bpmn | list-scenarios | run-template | check | verify | matter-close | bilat-pubkey | bilat-export | bilat-import)`);
   console.error("Run 'helmd --help' for usage.");
   process.exit(2);
 }
