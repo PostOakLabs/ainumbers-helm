@@ -47,6 +47,10 @@ jobs:
         run: node scripts/validate-schemas.mjs
       - name: verify vendored OCG integrity
         run: node scripts/verify-vendored.mjs
+      - name: credits registry coverage (vendored-code license gate)
+        run: node scripts/check-credits-coverage.mjs helm
+      - name: credits notices freshness (generated from registry)
+        run: node scripts/gen-credits.mjs helm --check
       - name: compile parity gate (HELM-P2-C2)
         run: node scripts/compile-parity-gate.mjs
       # Fails when a file the technical design doc cites has changed, gone
