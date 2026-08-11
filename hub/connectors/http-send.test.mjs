@@ -14,6 +14,7 @@ const { openJournal } = await import("../journal.mjs");
 const { loadContract, __setHostResolverForTest } = await import("../connector.mjs");
 const { vaultSet } = await import("../vault.mjs");
 const { createHttpConnector, CONNECTOR_ID } = await import("./http-send.mjs");
+const { verifyWebhookSignature } = await import("../webhook-signing.mjs");
 
 __setHostResolverForTest(async (hostname) => {
   if (hostname === "api.example.com") return ["93.184.216.34"];
@@ -81,6 +82,42 @@ test("http.send: a host outside the contract's allowlist is blocked + transcript
   assert.equal(rows.length, 1);
   assert.equal(JSON.parse(rows[0].entry_json).decision, "blocked");
 
+  globalThis.fetch = originalFetch;
+  db.close();
+});
+
+test("http.send: signingSecret adds a verifiable Helm-Signature header, unsigned sends are unaffected", async () => {
+  const db = openJournal(join(TMP, "http-signed.db"));
+  const { contract, contractDigest } = loadContract(join(HERE, "http-send.contract.json"));
+
+  let capturedHeaders;
+  const originalFetch = globalThis.fetch;
+  globalThis.fetch = async (url, opts) => {
+    capturedHeaders = opts.headers;
+    return new Response(Buffer.from('{"ok":true}'), { status: 200 });
+  };
+
+  const connector = createHttpConnector({ db, contract, contractDigest });
+  await connector.init({});
+
+  const body = JSON.stringify({ event: "run.completed" });
+  await connector.send({
+    url: "https://api.example.com/hook", method: "POST", body,
+    runId: "run-1", workflowManifestDigest: "sha256:" + "a".repeat(64),
+    signingSecret: "whsec_test",
+  });
+
+  assert.ok(capturedHeaders["Helm-Signature"], "signed send must carry the Helm-Signature header");
+  const verified = verifyWebhookSignature("whsec_test", capturedHeaders["Helm-Signature"], body);
+  assert.equal(verified.ok, true);
+
+  await connector.send({
+    url: "https://api.example.com/hook", method: "POST", body,
+    runId: "run-2", workflowManifestDigest: "sha256:" + "a".repeat(64),
+  });
+  assert.equal(capturedHeaders["Helm-Signature"], undefined, "omitting signingSecret must send unsigned, as before this row");
+
+  await connector.dispose();
   globalThis.fetch = originalFetch;
   db.close();
 });

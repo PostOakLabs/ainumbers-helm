@@ -12,6 +12,7 @@
 // egress journal — so http.send gets the H9a hardening for free.
 import { performEgress, buildConnectorAttestation } from "../connector.mjs";
 import { credentialExists } from "../credential-provider.mjs";
+import { signWebhookPayload } from "../webhook-signing.mjs";
 
 export const CONNECTOR_ID = "http.send";
 export const CONNECTOR_VERSION = "1.0.0";
@@ -32,19 +33,26 @@ export function createHttpConnector({ db, contract, contractDigest }) {
     },
 
     // payload: { url, method, headers?, body?, credentialScheme?, runId,
-    //   workflowManifestDigest, operation?, classification? }
+    //   workflowManifestDigest, operation?, classification?, signingSecret? }
     // credentialScheme: "bearer" (default) | "basic" | "api-key-header" —
     // see credential-provider.mjs; ignored if no credentialRef is configured.
-    async send({ url, method, headers = {}, body = null, credentialScheme = "bearer", runId, workflowManifestDigest, operation = "http.send", classification }) {
+    // signingSecret (HELM-PUSH-HMAC-1): when set, the delivery is signed
+    // Stripe-webhook-shape and the signature rides in the Helm-Signature
+    // header — "t=<unix_ts>,v1=<hmac_sha256(secret, ts + '.' + body)>".
+    // Opt-in: omit to send unsigned, unchanged from before this row.
+    async send({ url, method, headers = {}, body = null, credentialScheme = "bearer", runId, workflowManifestDigest, operation = "http.send", classification, signingSecret }) {
       if (!vaultSlice) throw new Error("http.send: connector not initialized");
       const credential = vaultSlice.credentialRef ? { ref: vaultSlice.credentialRef, scheme: credentialScheme } : null;
+      const sentHeaders = signingSecret && body != null
+        ? { ...headers, "Helm-Signature": signWebhookPayload(signingSecret, body) }
+        : headers;
 
       const result = await performEgress(db, {
         contract,
         connectorId: CONNECTOR_ID,
         url,
         method,
-        headers,
+        headers: sentHeaders,
         body,
         credential,
       });
