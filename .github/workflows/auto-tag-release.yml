@@ -159,9 +159,21 @@ jobs:
       # own freshness gate) and this is the one place that updates it.
       - name: bump version, regen openapi, commit, tag, push
         if: steps.gate.outputs.skip != 'true'
+        env:
+          # Via env, never `${{ }}` inside the run: body. GitHub expands a
+          # template into the SCRIPT TEXT before any shell parses it, so an
+          # expansion is code, not data. Both values here are derived from
+          # `inputs.tag_override` on the workflow_dispatch path — the -rc check
+          # in the gate step is a glob (`*-rc*`), which a payload like
+          # `-rc$(...)` satisfies — so the chain from a dispatch input to
+          # executed shell was real. It was NOT fork-reachable (schedule and
+          # workflow_dispatch only, both requiring repo write), so this is
+          # hygiene rather than an exposed vulnerability; that is exactly why
+          # the same expansion is worth removing while it is still cheap.
+          TAG: ${{ steps.gate.outputs.tag }}
+          BUMP: ${{ steps.gate.outputs.bump }}
         run: |
           set -e
-          TAG="${{ steps.gate.outputs.tag }}"
 
           git config user.name "helm-release-bot"
           git config user.email "noreply@postoaklabs.com"
@@ -169,11 +181,14 @@ jobs:
           # An -rc verification tag bumps nothing: release.yml reads the
           # release version off the tag ref, so moving main's version for a
           # throwaway tag would be a lie in package.json's four consumers.
-          if [ "${{ steps.gate.outputs.bump }}" = "true" ]; then
+          if [ "$BUMP" = "true" ]; then
+            # $TAG is read from the environment inside node, never spliced into
+            # the JS source text: a shell-quoted '$TAG' in a `node -e` string is
+            # a second injection sink of the same shape, one layer down.
             node --input-type=module -e "
               import { readFileSync, writeFileSync } from 'node:fs';
               const pkg = JSON.parse(readFileSync('package.json', 'utf8'));
-              pkg.version = '$TAG';
+              pkg.version = process.env.TAG;
               writeFileSync('package.json', JSON.stringify(pkg, null, 2) + '\n');
             "
             node scripts/gen-openapi.mjs
