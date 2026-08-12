@@ -154,3 +154,55 @@ test("dry-run canDispatch parity, one level deeper (HELM-DRYRUN-PARITY-1): calle
     __setManifestOverrideForTest(null);
   }
 });
+
+// HELM-CONNECTOR-PARAMS-2 / phil ruling 3: applyInputs (above, this file)
+// clones the manifest and maps ONLY over clone.nodes — it never iterates or
+// references clone.connector_inputs. This test proves that structurally: a
+// caller-supplied `inputs` payload targeting a node whose value the
+// connector_inputs binding feeds does NOT alter the binding's curated
+// `params` in the manifest actually stored for the run, even though the
+// SAME inputs object legitimately overwrites that node's policy_parameters
+// (a request-time value can win the node's input, it can never reach
+// connector_inputs[].params — those are separate fields by construction).
+const CONNECTOR_PARAMS_WORKFLOW_ID = "helm-connector-params-2-provenance-fixture";
+function connectorParamsManifest() {
+  return {
+    manifest_version: "1",
+    workflow_id: CONNECTOR_PARAMS_WORKFLOW_ID,
+    trigger: { type: "manual" },
+    connectors: [{ connector_id: "google-drive.fetch" }],
+    nodes: [{ node_id: "n1", kernel_id: "art-437-fr2052a-inflow-outflow-classifier" }],
+    gates: [],
+    actions: [],
+    connector_inputs: [{
+      step_id: "bind-n1-rows",
+      connector_id: "google-drive.fetch",
+      feeds_node_id: "n1",
+      feeds_param: "rows",
+      params: { fileId: "curated-value-must-not-move" },
+    }],
+  };
+}
+
+test("HELM-CONNECTOR-PARAMS-2 / ruling 3: a caller-supplied inputs object cannot alter connector_inputs[].params, even when it legitimately overwrites the node it feeds", async () => {
+  __setManifestOverrideForTest((workflowId) => (workflowId === CONNECTOR_PARAMS_WORKFLOW_ID ? connectorParamsManifest() : null));
+  try {
+    const callerRows = [{ row_id: "caller-0", flow_type: "inflow", amount_musd: 1, maturity_days: 1, is_intercompany: false }];
+    const { run_id: runId } = startWorkflowRun(db, {
+      workflowId: CONNECTOR_PARAMS_WORKFLOW_ID,
+      dryRun: true,
+      callerOrigin: "ui",
+      inputs: { n1: { rows: callerRows } },
+    });
+    await waitForRunEvent(runId);
+    const row = db.prepare("SELECT manifest_json FROM runs WHERE run_id = ?").get(runId);
+    const storedManifest = JSON.parse(row.manifest_json);
+    // The caller's value DID win the node it targeted...
+    assert.deepEqual(storedManifest.nodes[0].policy_parameters, { rows: callerRows });
+    // ...and connector_inputs[].params is untouched — no code path let the
+    // caller's `inputs` object reach it.
+    assert.deepEqual(storedManifest.connector_inputs[0].params, { fileId: "curated-value-must-not-move" });
+  } finally {
+    __setManifestOverrideForTest(null);
+  }
+});

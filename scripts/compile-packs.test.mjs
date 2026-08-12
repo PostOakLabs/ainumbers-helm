@@ -7,7 +7,7 @@ import { join, dirname } from "node:path";
 import { fileURLToPath } from "node:url";
 import { validate } from "./lib/schema-validator.mjs";
 import { loadContract } from "../hub/connector.mjs";
-import { executeRun } from "../hub/run.mjs";
+import { executeRun, planSteps } from "../hub/run.mjs";
 import { runKernelNode } from "../hub/kernel-runner.mjs";
 import { openJournal } from "../hub/journal.mjs";
 import { KERNELS } from "../hub/vendored/ocg/kernels/index.mjs";
@@ -161,6 +161,25 @@ test("compile-packs: end-to-end — a connector-fetched value reaches buildArtif
   assert.equal(artifactA.execution_hash, canonicalA.execution_hash);
   // Different connector-fetched data changes execution_hash.
   assert.notEqual(artifactA.execution_hash, artifactB.execution_hash);
+});
+
+test("HELM-CONNECTOR-PARAMS-2: pack-2052a-classify-daily's curated drive_file_id reaches the connectors step buildPayload draws from", () => {
+  run([]);
+  const binding = CONNECTOR_BINDINGS["pack-2052a-classify-daily"];
+  assert.ok(binding.params?.fileId, "connector-bindings.json must carry a curated params.fileId for this binding");
+
+  const pack = JSON.parse(readFileSync(join(PACKS_DIR, "pack-2052a-classify-daily.json"), "utf8"));
+  assert.deepEqual(validate(SCHEMA, pack.manifest), []);
+  assert.equal(pack.manifest.connector_inputs[0].params.fileId, binding.params.fileId);
+
+  const steps = planSteps(pack.manifest);
+  const connectorStep = steps.find((s) => s.kind === "connectors" && s.item.connector_id === "google-drive.fetch");
+  assert.ok(connectorStep, "compiled manifest must produce a connectors step for google-drive.fetch");
+  // The evidence: the exact curated value from connector-bindings.json is
+  // what dispatch.mjs's buildPayload({ params }) will see as params.fileId —
+  // planSteps is the wiring under test, buildPayload just reads step.params.
+  assert.equal(connectorStep.params.fileId, binding.params.fileId);
+  assert.deepEqual(connectorStep.item, { connector_id: "google-drive.fetch", contract_digest: pack.manifest.connectors[0].contract_digest });
 });
 
 // PACK-MARKER-COMPILE-1 (PACK-MARKER-BUILD-SPEC.md §4, §6, §9 row 2);

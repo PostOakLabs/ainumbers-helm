@@ -254,6 +254,36 @@ export function planSteps(manifest) {
       from_step_id: CONNECTOR_STEP(b.connector_id),
     }));
   }
+
+  // HELM-CONNECTOR-PARAMS-2: carries a binding's curated `params` (schema:
+  // $defs.connectorInputStep.params) onto the `connectors`-kind step for the
+  // SAME connector_id — this is the only wiring that gets a config value
+  // (fileId / from,to,subject,text) INTO the fetch/send itself; the
+  // node-binding loop above carries a connector's OUTPUT forward, a distinct
+  // and older concern (HELM-BIND-2). `item` (the plain connectorRef) is left
+  // untouched — params is step-local metadata, never written onto
+  // connectorRef, matching phil ruling 2 ("NOT on connectorRef"). Multiple
+  // bindings naming the same connector_id with DIFFERENT params is a manifest
+  // authoring error, rejected here (before planSteps returns) rather than
+  // silently picking one — no-silent-fallback, same doctrine HELM-BIND-2 used
+  // for unresolved bindings.
+  const paramsByConnector = new Map();
+  for (const b of bindings) {
+    if (b.params === undefined) continue;
+    const existing = paramsByConnector.get(b.connector_id);
+    if (existing !== undefined && JSON.stringify(existing) !== JSON.stringify(b.params)) {
+      throw new Error(
+        `run engine: manifest binding invalid — connector_inputs declares conflicting params for connector_id "${b.connector_id}"`
+      );
+    }
+    paramsByConnector.set(b.connector_id, b.params);
+  }
+  for (const step of steps) {
+    if (step.kind === "connectors" && paramsByConnector.has(step.item.connector_id)) {
+      step.params = paramsByConnector.get(step.item.connector_id);
+    }
+  }
+
   const edges = bindings.map((b) => ({ from: CONNECTOR_STEP(b.connector_id), to: NODE_STEP(b.feeds_node_id) }));
   return orderStepsByEdges(steps, edges);
 }

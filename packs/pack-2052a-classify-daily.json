@@ -29,7 +29,10 @@
         "step_id": "bind-n1-rows",
         "connector_id": "google-drive.fetch",
         "feeds_node_id": "n1",
-        "feeds_param": "rows"
+        "feeds_param": "rows",
+        "params": {
+          "fileId": "PLACEHOLDER-SET-BY-OPERATOR-pack-2052a-classify-daily"
+        }
       }
     ],
     "required_inputs": [
@@ -41,7 +44,7 @@
       }
     ]
   },
-  "workflow_manifest_digest": "sha256:d7399c1642b36f2fcb446587aa9ac7d969f1d0d00e04772bf437e7efface03c6",
+  "workflow_manifest_digest": "sha256:83c13a2515481b698aad062b9902936056da31089cbf94db705fcac6ca34018a",
   "declared_inputs": [],
   "steps_meta": [
     {

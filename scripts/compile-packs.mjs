@@ -277,6 +277,12 @@ function compileChain(chain, kernelDigests, nodesById) {
             connector_id: binding.connector_id,
             feeds_node_id: binding.feeds_node_id,
             feeds_param: binding.feeds_param,
+            // HELM-CONNECTOR-PARAMS-2: curated config carried INTO the
+            // connector fetch/send (run.mjs planSteps attaches this to the
+            // matching `connectors` step). Optional — a binding with no
+            // `params` in connector-bindings.json compiles a manifest whose
+            // connectors step has none, same as before this WU.
+            ...(binding.params !== undefined ? { params: binding.params } : {}),
           }],
           required_inputs: [binding.required_input],
         }

@@ -183,4 +183,91 @@ test("smtp.send: a host outside the contract's allowlist is blocked + transcript
   db.close();
 });
 
+// HELM-SMTP-SENDGATE-1: send()-level CR/LF reject — the last-mile gate,
+// independent of dispatch.mjs's buildPayload check, so it holds even for a
+// caller that reaches send() directly. No socket may open on a rejected call.
+test("smtp.send: rejects a \\r\\n in `from` before any socket opens", async () => {
+  const db = openJournal(join(TMP, "smtp-crlf-from.db"));
+  const { contract, contractDigest } = loadContract(join(HERE, "smtp-send.contract.json"));
+  const connector = createSmtpConnector({ db, contract, contractDigest });
+  await connector.init({});
+  __setSocketConnectForTest(() => { throw new Error("socket must not open on a rejected send"); });
+  try {
+    await assert.rejects(
+      () => connector.send({
+        host: "mock-smtp.test", port: 25, secure: "none",
+        from: "a@example.com\r\nBcc: evil@example.com", to: ["b@example.com"], subject: "x", text: "x",
+        runId: "run-1", workflowManifestDigest: "sha256:" + "a".repeat(64),
+      }),
+      (err) => /CR\/LF/.test(err.message) && !err.message.includes("evil@example.com")
+    );
+  } finally {
+    __setSocketConnectForTest(null);
+    db.close();
+  }
+});
+
+test("smtp.send: rejects a bare \\r in a `to` recipient", async () => {
+  const db = openJournal(join(TMP, "smtp-crlf-to-cr.db"));
+  const { contract, contractDigest } = loadContract(join(HERE, "smtp-send.contract.json"));
+  const connector = createSmtpConnector({ db, contract, contractDigest });
+  await connector.init({});
+  __setSocketConnectForTest(() => { throw new Error("socket must not open on a rejected send"); });
+  try {
+    await assert.rejects(
+      () => connector.send({
+        host: "mock-smtp.test", port: 25, secure: "none",
+        from: "a@example.com", to: ["b@example.com\rRCPT TO:<evil@example.com>"], subject: "x", text: "x",
+        runId: "run-1", workflowManifestDigest: "sha256:" + "a".repeat(64),
+      }),
+      /CR\/LF/
+    );
+  } finally {
+    __setSocketConnectForTest(null);
+    db.close();
+  }
+});
+
+test("smtp.send: rejects a bare \\n in `subject`", async () => {
+  const db = openJournal(join(TMP, "smtp-crlf-subject-lf.db"));
+  const { contract, contractDigest } = loadContract(join(HERE, "smtp-send.contract.json"));
+  const connector = createSmtpConnector({ db, contract, contractDigest });
+  await connector.init({});
+  __setSocketConnectForTest(() => { throw new Error("socket must not open on a rejected send"); });
+  try {
+    await assert.rejects(
+      () => connector.send({
+        host: "mock-smtp.test", port: 25, secure: "none",
+        from: "a@example.com", to: ["b@example.com"], subject: "x\nX-Injected: evil", text: "x",
+        runId: "run-1", workflowManifestDigest: "sha256:" + "a".repeat(64),
+      }),
+      /CR\/LF/
+    );
+  } finally {
+    __setSocketConnectForTest(null);
+    db.close();
+  }
+});
+
+test("smtp.send: rejects a second `to` recipient carrying CR/LF, not just the first", async () => {
+  const db = openJournal(join(TMP, "smtp-crlf-to-second.db"));
+  const { contract, contractDigest } = loadContract(join(HERE, "smtp-send.contract.json"));
+  const connector = createSmtpConnector({ db, contract, contractDigest });
+  await connector.init({});
+  __setSocketConnectForTest(() => { throw new Error("socket must not open on a rejected send"); });
+  try {
+    await assert.rejects(
+      () => connector.send({
+        host: "mock-smtp.test", port: 25, secure: "none",
+        from: "a@example.com", to: ["ok@example.com", "b@example.com\r\nRCPT TO:<evil@example.com>"], subject: "x", text: "x",
+        runId: "run-1", workflowManifestDigest: "sha256:" + "a".repeat(64),
+      }),
+      /CR\/LF/
+    );
+  } finally {
+    __setSocketConnectForTest(null);
+    db.close();
+  }
+});
+
 process.on("exit", () => rmSync(TMP, { recursive: true, force: true }));

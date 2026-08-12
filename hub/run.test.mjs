@@ -167,6 +167,50 @@ test("planSteps: manifest layer order is the DAG (Phase 1, no edges field)", () 
   assert.equal(steps[1].seq, 1);
 });
 
+test("planSteps: HELM-CONNECTOR-PARAMS-2 — a connector_inputs binding's `params` attaches to the matching connectors step, connectorRef (item) stays untouched", () => {
+  const m = {
+    manifest_version: "1", workflow_id: "wf-params-test", trigger: { type: "manual" },
+    connectors: [{ connector_id: "google-drive.fetch" }],
+    nodes: [{ node_id: "n1" }], gates: [], actions: [],
+    connector_inputs: [{
+      step_id: "bind-n1-rows", connector_id: "google-drive.fetch", feeds_node_id: "n1", feeds_param: "rows",
+      params: { fileId: "abc" },
+    }],
+  };
+  const steps = planSteps(m);
+  const connStep = steps.find((s) => s.kind === "connectors");
+  assert.deepEqual(connStep.item, { connector_id: "google-drive.fetch" });
+  assert.deepEqual(connStep.params, { fileId: "abc" });
+});
+
+test("planSteps: a connector_inputs binding with no `params` leaves the connectors step without step.params (unchanged shape)", () => {
+  const m = {
+    manifest_version: "1", workflow_id: "wf-params-absent-test", trigger: { type: "manual" },
+    connectors: [{ connector_id: "google-drive.fetch" }],
+    nodes: [{ node_id: "n1" }], gates: [], actions: [],
+    connector_inputs: [{ step_id: "bind-n1-rows", connector_id: "google-drive.fetch", feeds_node_id: "n1", feeds_param: "rows" }],
+  };
+  const [connStep] = planSteps(m);
+  assert.equal(connStep.kind, "connectors");
+  assert.equal("params" in connStep, false);
+});
+
+test("planSteps: two connector_inputs bindings naming the same connector_id with DIFFERENT params is rejected, named — no silent pick-one", () => {
+  const m = {
+    manifest_version: "1", workflow_id: "wf-params-conflict-test", trigger: { type: "manual" },
+    connectors: [{ connector_id: "google-drive.fetch" }],
+    nodes: [{ node_id: "n1" }, { node_id: "n2" }], gates: [], actions: [],
+    connector_inputs: [
+      { step_id: "bind-n1-rows", connector_id: "google-drive.fetch", feeds_node_id: "n1", feeds_param: "rows", params: { fileId: "one" } },
+      { step_id: "bind-n2-rows", connector_id: "google-drive.fetch", feeds_node_id: "n2", feeds_param: "rows", params: { fileId: "two" } },
+    ],
+  };
+  assert.throws(
+    () => planSteps(m),
+    /run engine: manifest binding invalid — connector_inputs declares conflicting params for connector_id "google-drive\.fetch"/
+  );
+});
+
 test("manifestDigest: stable sha256ref for identical manifests", () => {
   assert.equal(manifestDigest(manifest()), manifestDigest(manifest()));
 });

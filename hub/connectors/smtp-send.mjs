@@ -31,6 +31,20 @@ export const CONNECTOR_VERSION = "1.0.0";
 
 const SMTP_TIMEOUT_MS = 15 * 1000; // HELM-SEC-5 doctrine: a hung relay must not stall the runtime forever
 
+// HELM-SMTP-SENDGATE-1: last-mile, structurally-unbypassable CR/LF reject.
+// dispatch.mjs's buildPayload already rejects CR/LF on the connector_inputs
+// path (HELM-CONNECTOR-PARAMS-2); this is the SECOND, independent gate phil
+// ruling 1 called for — it holds even if a future caller reaches send()
+// without going through buildPayload. Reject, never sanitise (silently
+// stripping would change the caller's data and hide the attempt), and the
+// offending value is never echoed into the error.
+const CRLF = /[\r\n]/;
+function assertNoHeaderInjection(value, field) {
+  if (CRLF.test(value)) {
+    throw new Error(`smtp.send: refusing to send — "${field}" contains CR/LF (header/command injection)`);
+  }
+}
+
 function sha256ref(buf) {
   return `sha256:${createHash("sha256").update(buf).digest("hex")}`;
 }
@@ -205,6 +219,10 @@ export function createSmtpConnector({ db, contract, contractDigest }) {
     // payload: { host, port, secure? ("starttls" default | "tls" | "none"),
     //   from, to: [...], subject, text, runId, workflowManifestDigest, classification? }
     async send({ host, port, secure = "starttls", from, to, subject, text, runId, workflowManifestDigest, classification }) {
+      assertNoHeaderInjection(from, "from");
+      for (const rcpt of to) assertNoHeaderInjection(rcpt, "to");
+      assertNoHeaderInjection(subject, "subject");
+
       const hostPort = `${host}:${port}`;
       const requestDigest = sha256ref(Buffer.from(JSON.stringify({ host: hostPort, from, to, subject }), "utf8"));
 
