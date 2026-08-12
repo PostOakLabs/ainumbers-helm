@@ -40,10 +40,10 @@ function manifestWith({ connectors = [], actions = [] } = {}) {
   };
 }
 
-test("isKnownConnector: true for http.send, false for smtp.send/google-drive.fetch/inbound-webhook/junk (none of the others has a manifest member to draw params from)", () => {
+test("isKnownConnector: true for http.send/google-drive.fetch/smtp.send (HELM-CONNECTOR-PARAMS-2 gave the latter two a manifest member — connector_inputs[].params — to draw params from), false for inbound-webhook/junk", () => {
   assert.equal(isKnownConnector(HTTP_SEND_ID), true);
-  assert.equal(isKnownConnector("smtp.send"), false);
-  assert.equal(isKnownConnector("google-drive.fetch"), false);
+  assert.equal(isKnownConnector("google-drive.fetch"), true);
+  assert.equal(isKnownConnector("smtp.send"), true);
   assert.equal(isKnownConnector("inbound-webhook"), false);
   assert.equal(isKnownConnector("not-a-connector"), false);
 });
@@ -124,6 +124,79 @@ test("HELM-DRYRUN-PARITY-1 (one level deeper): dry-run predicts a throw for an u
   assert.equal(sendCalled, false);
 
   globalThis.fetch = originalFetch;
+  db.close();
+});
+
+// HELM-CONNECTOR-PARAMS-2: manifestWith() above never sets connector_inputs
+// (STEP_LAYERS order alone), so these use their own manifest literal to
+// carry a connectorInputStep binding with `params`.
+function manifestWithBinding({ connectorId, feedsParam = "rows", params }) {
+  return {
+    manifest_version: "1", workflow_id: "wf-connector-params-test", trigger: { type: "manual" },
+    connectors: [{ connector_id: connectorId }],
+    nodes: [{ node_id: "n1" }], gates: [], actions: [],
+    connector_inputs: [{
+      step_id: `bind-n1-${feedsParam}`, connector_id: connectorId, feeds_node_id: "n1", feeds_param: feedsParam,
+      ...(params !== undefined ? { params } : {}),
+    }],
+  };
+}
+
+function connectorsStepFor(manifest, connectorId) {
+  return planSteps(manifest).find((s) => s.kind === "connectors" && s.item.connector_id === connectorId);
+}
+
+test("dispatch: google-drive.fetch buildPayload throws named when params.fileId is missing", async () => {
+  const db = openJournal(join(TMP, "dispatch-drive-missing-param.db"));
+  const dispatch = createConnectorStepDispatcher({ db, workflowManifestDigest: "sha256:" + "0".repeat(64) });
+  const step = connectorsStepFor(manifestWithBinding({ connectorId: "google-drive.fetch" }), "google-drive.fetch");
+  assert.equal(step.params, undefined, "no params on the binding -> no params on the step");
+
+  await assert.rejects(
+    () => dispatch(step, { runId: "run-drive-missing" }),
+    /connector dispatch: step "connectors:google-drive\.fetch" is missing required google-drive\.fetch param "fileId"/
+  );
+  db.close();
+});
+
+test("dispatch: google-drive.fetch params.fileId reaches buildPayload (planSteps wiring, not the schema alone)", () => {
+  const step = connectorsStepFor(
+    manifestWithBinding({ connectorId: "google-drive.fetch", params: { fileId: "drive-file-xyz" } }),
+    "google-drive.fetch"
+  );
+  assert.deepEqual(step.item, { connector_id: "google-drive.fetch" }, "connectorRef itself is untouched — ruling 2");
+  assert.equal(step.params.fileId, "drive-file-xyz");
+});
+
+test("dispatch: smtp.send buildPayload throws named when a required param is missing", async () => {
+  const db = openJournal(join(TMP, "dispatch-smtp-missing-param.db"));
+  const dispatch = createConnectorStepDispatcher({ db, workflowManifestDigest: "sha256:" + "1".repeat(64) });
+  const step = connectorsStepFor(
+    manifestWithBinding({ connectorId: "smtp.send", feedsParam: "body", params: { from: "a@example.com", to: ["b@example.com"], subject: "hi" } }),
+    "smtp.send"
+  );
+
+  await assert.rejects(
+    () => dispatch(step, { runId: "run-smtp-missing" }),
+    /connector dispatch: step "connectors:smtp\.send" is missing required smtp\.send param "text"/
+  );
+  db.close();
+});
+
+test("dispatch: smtp.send rejects CR/LF in from/to/subject before send() ever sees it (phil ruling 1, header/command injection)", async () => {
+  const db = openJournal(join(TMP, "dispatch-smtp-crlf.db"));
+  const dispatch = createConnectorStepDispatcher({ db, workflowManifestDigest: "sha256:" + "2".repeat(64) });
+
+  const injectedSubject = manifestWithBinding({
+    connectorId: "smtp.send", feedsParam: "body",
+    params: { from: "a@example.com", to: ["b@example.com"], subject: "hi\r\nBcc: attacker@evil.example", text: "body" },
+  });
+  const step = connectorsStepFor(injectedSubject, "smtp.send");
+
+  await assert.rejects(
+    () => dispatch(step, { runId: "run-smtp-crlf" }),
+    /connector dispatch: step "connectors:smtp\.send" smtp\.send param contains CR\/LF — rejected \(header\/command injection\)/
+  );
   db.close();
 });
 

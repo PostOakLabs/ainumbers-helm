@@ -124,7 +124,19 @@
         "step_id": { "type": "string", "minLength": 1 },
         "connector_id": { "type": "string", "minLength": 1, "description": "MUST match a connector_id present in this manifest's connectors[]." },
         "feeds_node_id": { "type": "string", "minLength": 1 },
-        "feeds_param": { "type": "string", "minLength": 1 }
+        "feeds_param": { "type": "string", "minLength": 1 },
+        "params": {
+          "type": "object",
+          "additionalProperties": false,
+          "description": "HELM-CONNECTOR-PARAMS-2: curated, compile-time-only config carried INTO the connector fetch/send named by connector_id — never a live workflow.run caller value (run.mjs planSteps attaches this to the matching `connectors` step; applyInputs's node-only traversal in run-actions.mjs has no code path onto it). Explicit per-connector key allowlist (phil ruling 2), not an open bag. String members forbid CR/LF (phil ruling 1) except `text`, which is a message body and legitimately contains it.",
+          "properties": {
+            "fileId": { "type": "string", "minLength": 1, "pattern": "^[^\\r\\n]*$", "description": "google-drive.fetch: Drive file id to fetch." },
+            "from": { "type": "string", "minLength": 1, "pattern": "^[^\\r\\n]*$", "description": "smtp.send: envelope/header From address." },
+            "to": { "type": "array", "minItems": 1, "items": { "type": "string", "minLength": 1, "pattern": "^[^\\r\\n]*$" }, "description": "smtp.send: envelope/header To recipients." },
+            "subject": { "type": "string", "minLength": 1, "pattern": "^[^\\r\\n]*$", "description": "smtp.send: header Subject." },
+            "text": { "type": "string", "description": "smtp.send: message body — exempt from the CR/LF pattern (it is written after the DATA header block, never a command line or header value)." }
+          }
+        }
       }
     }
   },

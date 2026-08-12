@@ -10,6 +10,10 @@
       "description": "Google Drive file id of the daily FR 2052a inflow/outflow rows export to fetch via the google-drive.fetch connector.",
       "target_node_id": "n1",
       "target_param": "rows"
+    },
+    "_params_comment": "HELM-CONNECTOR-PARAMS-2: params.fileId is the curated, compile-time-only Drive file id buildPayload reads (never a live workflow.run caller value, phil ruling 3 — see run.mjs planSteps). PLACEHOLDER pending an operator with Drive access setting the real daily-export file id; the daily export overwrites this file's CONTENT, not its id, so a fixed id is the correct curated shape once set.",
+    "params": {
+      "fileId": "PLACEHOLDER-SET-BY-OPERATOR-pack-2052a-classify-daily"
     }
   }
 }
