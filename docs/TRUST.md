@@ -20,7 +20,7 @@ call under `hub/` and `ui/` (excluding tests, node_modules, generated
 | 1 | `POST https://anchor.ainumbers.co/relay/<ca>` | **On by default.** Fired by helmd itself, in the background, right after each checkpoint it takes (every boot with journal activity since the last one — `hub/checkpoint.mjs` `buildAnchoredCheckpoint`, called from `hub/index.mjs`'s `cmdStart`). Never blocks daemon startup — the call happens after the server is already listening, and a relay failure/timeout/unreachable host never aborts or delays checkpoint creation, it just yields a `queued`/`skipped` marker instead of a real anchor. **Disable:** set `"anchorOnCheckpoint": false` in `~/.helm/config.json` (`hub/config.mjs`) — the daemon then skips even attempting the relay call and every checkpoint is saved with a `skipped`/`egress_blocked` marker. | Raw TSQ DER built from the checkpoint's SHA-256 hash only — no document content |
 | 2 | `POST https://{a,b}.pool.opentimestamps.org`, `https://alice.btc.calendar.opentimestamps.org/digest` | OpenTimestamps anchoring (`anchorOpenTimestamps`) — present in code, not called by anything at runtime (see below) | Raw SHA-256 digest bytes only |
 | 3 | Connector-defined host (via `performEgress`, DNS-rebind checked, `redirect: manual`) | Any installed, signed connector contract | Whatever that connector's `send()` builds — scoped to its own allowlisted host |
-| 4 | `GET https://www.googleapis.com/drive/v3/files/{fileId}?alt=media` | Google Drive fetch connector — `fileId` is curated, compile-time-only config from `scripts/connector-bindings.json` (`connector_inputs[].params.fileId`), never a live `workflow.run` caller value | OAuth bearer token (header, from vault) out; file bytes back, kept in-process |
+| 4 | `GET https://www.googleapis.com/drive/v3/files/{fileId}?alt=media` | Google Drive fetch connector: `fileId` is curated, compile-time-only config from `scripts/connector-bindings.json` (`connector_inputs[].params.fileId`), never a live `workflow.run` caller value | OAuth bearer token (header, from vault) out; file bytes back, kept in-process |
 | 5 | `POST {tokenEndpoint}` (RFC 8252 loopback PKCE); shipped preset `https://github.com/login/oauth/access_token` | User clicks "Connect" in the UI | Authorization code + PKCE verifier + client_id + redirect_uri — no client secret |
 | 6 | `POST {revocationEndpoint}` (RFC 7009) | User clicks "Disconnect" | Token revocation only |
 | 7 | Browser navigation to `https://github.com/login/oauth/authorize` | User clicks "Connect" | Standard OAuth authorize redirect — not a server-side call |
@@ -41,12 +41,12 @@ beacon/analytics patterns — none found.)
   wires anchoring into checkpoint creation, see the row above this list)
   only ever calls `anchorRfc3161`, never this one. Listed anyway because
   the code exists and is capable of making the call.
-- **UPDATED 2026-08-12 — the structural blocker below is closed;
+- **UPDATED 2026-08-12: the structural blocker below is closed;
   `hub/connectors/dispatch.mjs`'s `REGISTRY` now lists `http.send`,
   `google-drive.fetch`, and `smtp.send`.** The schema's
   `$defs.connectorInputStep` gained an optional `params` member (an
   explicit per-connector key allowlist, `additionalProperties: false`,
-  CR/LF-patterned string members) — deliberately not a `file_id` field on
+  CR/LF-patterned string members), deliberately not a `file_id` field on
   the shared `connectorRef`, which every other connector schema (including
   `http.send`) would then inherit. `hub/run.mjs`'s `planSteps()` attaches a
   binding's curated `params` onto the matching `connectors` step
@@ -56,8 +56,8 @@ beacon/analytics patterns — none found.)
   `from`/`to`/`subject` before `send()` is ever called, closing the raw
   wire-protocol header/command-injection shape those values would otherwise
   reach. **A separate, structurally-unbypassable last-mile CR/LF gate inside
-  `smtp-send.mjs`'s own `send()` — defense-in-depth matching that module's
-  own house style — is a still-open follow-up; this bullet does not claim
+  `smtp-send.mjs`'s own `send()` (defense-in-depth matching that module's
+  own house style) is a still-open follow-up; this bullet does not claim
   that gate exists yet.** Both connectors are wired for
   authenticated-UI-triggered runs and remain unreachable via MCP
   `tools/call` (a separate, still-open conflict: an MCP-triggered run
@@ -65,10 +65,10 @@ beacon/analytics patterns — none found.)
   **`google-drive.fetch`'s live reachability today is further bounded by
   its only curated binding** (`scripts/connector-bindings.json`'s
   `pack-2052a-classify-daily` entry) **carrying a placeholder `fileId`**
-  (`PLACEHOLDER-SET-BY-OPERATOR-…`) pending an operator with Drive access
-  setting the real value — the wiring is real and tested, the one live
+  (`PLACEHOLDER-SET-BY-OPERATOR-…`), pending an operator with Drive access
+  setting the real value. The wiring is real and tested; the one live
   binding's value is not yet a real file id.
-  **`smtp.send` has no curated binding at all** — REGISTRY-known and
+  **`smtp.send` has no curated binding at all**: REGISTRY-known and
   dispatchable in principle, but no compiled pack names it, so it is
   mechanically unreachable today independent of the UI-trigger gate.
 
