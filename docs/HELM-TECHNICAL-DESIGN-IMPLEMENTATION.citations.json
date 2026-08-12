@@ -1,7 +1,7 @@
 {
   "_comment": "Anti-drift stamp for HELM-TECHNICAL-DESIGN-IMPLEMENTATION.md. Each entry is a file the doc cites, digested as of the last time a human re-read the doc's claims against that code. Enforced by scripts/check-techdoc-citations.mjs. Re-stamp with scripts/stamp-techdoc-citations.mjs, by hand, in the same pull request that re-verifies the prose. Never automatically.",
   "doc": "docs/HELM-TECHNICAL-DESIGN-IMPLEMENTATION.md",
-  "stampedAtSha": "6257466a8759173bb08521321730ce289e88df39",
+  "stampedAtSha": "f2b9b198ce12fddddbde22c2ceb3101b628835d8",
   "files": [
     {
       "path": "bin/helmd.mjs",
@@ -57,7 +57,7 @@
     },
     {
       "path": "hub/connectors/dispatch.mjs",
-      "sha256": "ac2649af53f7bc7ec052894cd2cd00cba4858d20504c75aef8bc0f24f36cb3b3"
+      "sha256": "a5a5b1923736b0bd3295f46facdd2bb2607b23e38585ede6e83bf70ca6519347"
     },
     {
       "path": "hub/connectors/google-drive-fetch.mjs",
@@ -117,7 +117,7 @@
     },
     {
       "path": "hub/run.mjs",
-      "sha256": "e29b579d5b8a97f0cfdafc7e971056956c36bc0247001c4d5c174bc1e87a1d9e"
+      "sha256": "7882eab197ca3c895d1a7a023d8376647e429561d0232c78dd545c901875d7fc"
     },
     {
       "path": "hub/server.mjs",
@@ -169,7 +169,7 @@
     },
     {
       "path": "packs/pack-2052a-classify-daily.json",
-      "sha256": "66a6a28a60dd4dd8f355acf67eae48b24f7153984d9b698d82e2fc5f769842d6"
+      "sha256": "57b9677f130fc9b67e06e60034e8a3ca20488bc174c02ccaeecace6c5989dec7"
     },
     {
       "path": "packs/pack-bank-nydfs-annual-certification.json",
@@ -177,7 +177,11 @@
     },
     {
       "path": "schema/workflow-manifest.schema.json",
-      "sha256": "57f039dfaf91a9b9ae0d575570541aef7139c83e8f3153be37516a6b7fa1c808"
+      "sha256": "8c02cc53a32f1c8c2be8ddb9a522d31af330543ef5af8a9f1317c165ef9d3bef"
+    },
+    {
+      "path": "scripts/connector-bindings.json",
+      "sha256": "1a295838d0c9a73ef7f542f9ca80ed90bd485f63c80077ae170841b97f7c765c"
     },
     {
       "path": "scripts/export-bpmn.mjs",
