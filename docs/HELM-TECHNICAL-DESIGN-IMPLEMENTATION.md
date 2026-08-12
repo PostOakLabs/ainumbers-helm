@@ -298,7 +298,7 @@ Verified against the source files that cite them:
 - **in-toto Statement v1**, `https://in-toto.io/Statement/v1` (`hub/envelope.mjs:15`).
 - **Time-Stamp Protocol, RFC 3161** (`hub/anchor-client.mjs:7`).
 - **OAuth 2.0 for Native Apps, RFC 8252**, the loopback redirect flow, with PKCE (RFC 7636) and OAuth 2.0 itself (RFC 6749). Token revocation is RFC 7009 where a provider offers it; GitHub does not, and the code says so rather than pretending (`hub/oauth-pkce.mjs:3`, `24`, `98`, `hub/oauth-providers.mjs:19`).
-- **SMTP, RFC 5321**, including reply-line continuation and dot-stuffing (`hub/connectors/smtp-send.mjs:40`, `175`).
+- **SMTP, RFC 5321**, including reply-line continuation and dot-stuffing (`hub/connectors/smtp-send.mjs:52`, `189`).
 - **ML-DSA-44**, the FIPS 204 parameter set, as the post-quantum co-signature.
 - **BPMN 2.0** for workflow export (`hub/bpmn-export.mjs`) and **DMN** for decision tables (`ui/lib/decision-table.mjs`).
 - **EU AI Act Regulation 2024/1689 Article 12(2) and 12(3)** record-keeping fields, enforced per journal entry (`hub/journal.mjs:13-15`, `103-113`).

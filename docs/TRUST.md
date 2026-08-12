@@ -55,10 +55,12 @@ beacon/analytics patterns — none found.)
   reads `params.{from,to,subject,text}` and additionally rejects CR/LF in
   `from`/`to`/`subject` before `send()` is ever called, closing the raw
   wire-protocol header/command-injection shape those values would otherwise
-  reach. **A separate, structurally-unbypassable last-mile CR/LF gate inside
-  `smtp-send.mjs`'s own `send()` (defense-in-depth matching that module's
-  own house style) is a still-open follow-up; this bullet does not claim
-  that gate exists yet.** Both connectors are wired for
+  reach. **UPDATED: the last-mile gate now exists —
+  `smtp-send.mjs`'s own `send()` independently rejects CR/LF in
+  `from`/`to`/`subject` before any egress check runs, so the guarantee
+  holds even for a caller that reaches `send()` without going through
+  `dispatch.mjs`'s `buildPayload`. Both rejections stay in place
+  (defense-in-depth, not consolidated).** Both connectors are wired for
   authenticated-UI-triggered runs and remain unreachable via MCP
   `tools/call` (a separate, still-open conflict: an MCP-triggered run
   causing a real fetch/send with no human review in the loop).
