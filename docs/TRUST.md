@@ -116,6 +116,60 @@ build**: no minisign binary was available to produce real test goldens,
 and fabricated goldens were explicitly declined rather than shipped. A
 minisign row is a follow-up, not silently done here.
 
+#### CI policy signing key
+
+A second SSHSIG identity exists for automated, unattended signing: a
+dedicated Ed25519 key that **machines** sign with in CI, verified by the
+same `hub/extsig.mjs`, with no new verifier code, only a second namespace
+and a second roster entry.
+
+- **Identity:** `ci-policy-key@ainumbers.co`, Ed25519, generated
+  2026-08-13. **Never** a human reviewer's key; every roster entry and
+  every reference to it is labeled "machine" / "CI policy key".
+- **Namespace:** `fv-policy-sign@ainumbers.co`
+  (`CI_POLICY_SSHSIG_NAMESPACE` in `hub/extsig.mjs`), deliberately
+  distinct from `HELM_SSHSIG_NAMESPACE`
+  (`helm-countersign@ainumbers.co`). A signature made under one namespace
+  is rejected when checked against the other, proven in both directions
+  by `hub/extsig.test.mjs`, the same cross-protocol signature-reuse
+  enforcement documented above for the helm namespace, applied to this
+  second identity, including the case of the CI-policy key itself
+  signing under the wrong namespace, which must still fail.
+- **Private key custody:** generated once, off-repo, and handed directly
+  to the repo owner as a GitHub Actions secret. The private key was
+  never pasted into chat, a board file, or any research document, and is
+  not present anywhere in this repository's history. Secret name:
+  `CI_POLICY_SSHSIG_PRIVATE_KEY` (see
+  [`.github/workflows/ci-policy-signing-smoke.yml`](../.github/workflows/ci-policy-signing-smoke.yml)).
+- **Public key + roster:** [`docs/allowed_signers`](allowed_signers)
+  carries the `ci-policy-key@ainumbers.co` entry with a one-year
+  `valid-after`/`valid-before` window
+  (`20260813000000` to `20270813000000`). `hub/extsig.mjs` does not
+  itself enforce the validity window today (`parseAllowedSigners` reads
+  principals/keytype/key only; `valid-after`/`valid-before` are recorded
+  in the roster file for a future consuming feature to check, the same
+  way OpenSSH's own `ssh-keygen -Y verify` does). This is scaffolding
+  for later work that consumes this key, not a claim that window
+  enforcement is wired end-to-end yet.
+- **Sign helper:** `hub/ci-sign.mjs` wraps the real `ssh-keygen -Y sign`
+  binary (`spawnSync`, literal argv, no shell, the same discipline as
+  `hub/signer-exec.mjs`) and verifies its own output against
+  `hub/extsig.mjs` before returning it, so a signer that produced a
+  non-verifying blob fails loudly rather than being trusted.
+- **Rotation:** when the key needs to rotate (scheduled at the
+  `valid-before` date, or ahead of it for a suspected compromise), (1)
+  generate a new Ed25519 keypair the same way, (2) add its entry to
+  `docs/allowed_signers` with its own `valid-after`/`valid-before`
+  window, (3) install its private half as a new/updated Actions secret,
+  (4) once nothing depends on signatures still inside the old key's
+  validity window, remove the old roster line. Overlapping windows during
+  a rotation are expected and safe: `hub/extsig.mjs`'s roster lookup
+  matches by principal, and two entries for the same principal are legal
+  OpenSSH `AllowedSignersFile` syntax (the parser keeps every line it
+  reads). No consensus, no witness, no live daemon needed; the roster
+  file itself is the whole rotation mechanism, in the same
+  survives-the-maintainer spirit as the rest of this repo's trust model.
+
 ### Pre-rotation key lifecycle
 
 `hub/key-lifecycle.mjs` (daemon-side, `node:crypto`) and its offline mirror

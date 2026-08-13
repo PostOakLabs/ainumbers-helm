@@ -31,6 +31,14 @@ import { createPublicKey, verify as cryptoVerify, createHash } from "node:crypto
 // (gitlab-org/gitlab#386047), where a verifier skipped this check.
 export const HELM_SSHSIG_NAMESPACE = "helm-countersign@ainumbers.co";
 
+// CI policy-signing namespace (FV-SSHSIG-POLICY-KEY-1) — machines sign
+// under this namespace, never `HELM_SSHSIG_NAMESPACE`, so a policy-key
+// signature and a human helm-countersign can never be cross-accepted for
+// each other (same phil condition #1 the helm namespace enforces, applied
+// to the second identity). The CI policy private key lives only in GitHub
+// Actions secrets — see docs/TRUST.md "CI policy signing key".
+export const CI_POLICY_SSHSIG_NAMESPACE = "fv-policy-sign@ainumbers.co";
+
 const SSHSIG_MAGIC = "SSHSIG";
 const SSHSIG_VERSION = 1;
 
@@ -191,13 +199,19 @@ function findRosterKey(rosterEntries, principal, keytype) {
 
 // Verifies an armored SSHSIG signature as a counter-signature over
 // `message` (Buffer), attributed to `principal` per `allowedSignersText`.
+// `namespace` defaults to `HELM_SSHSIG_NAMESPACE` (the original, still
+// hardcoded-by-default helm-countersign identity) — pass
+// `CI_POLICY_SSHSIG_NAMESPACE` explicitly to verify a machine policy
+// signature instead. The check is always exact-match against whichever
+// namespace the caller names; there is no namespace this function accepts
+// implicitly.
 //
 // Returns { ok: true, principal, keyFingerprintSha256 } on success, or
 // { ok: false, reason } — NEVER throws for a well-formed-but-invalid
 // signature; throws only for structurally malformed SSHSIG input (a
 // distinct failure mode a caller should treat as "not an SSHSIG blob at
 // all", not as "signature check failed").
-export function verifySshsig({ armoredText, message, allowedSignersText, principal }) {
+export function verifySshsig({ armoredText, message, allowedSignersText, principal, namespace = HELM_SSHSIG_NAMESPACE }) {
   const sig = parseSshsig(armoredText);
 
   if (sig.publickey.pkAlgo === "sk-ssh-ed25519@openssh.com" || sig.sigAlgo === "sk-ssh-ed25519@openssh.com") {
@@ -212,8 +226,8 @@ export function verifySshsig({ armoredText, message, allowedSignersText, princip
     return { ok: false, reason: `unsupported key/signature algorithm: ${sig.publickey.pkAlgo}/${sig.sigAlgo} (Ed25519 only)` };
   }
 
-  if (sig.namespace !== HELM_SSHSIG_NAMESPACE) {
-    return { ok: false, reason: `wrong namespace: signature declares "${sig.namespace}", helm requires "${HELM_SSHSIG_NAMESPACE}"` };
+  if (sig.namespace !== namespace) {
+    return { ok: false, reason: `wrong namespace: signature declares "${sig.namespace}", verifier requires "${namespace}"` };
   }
 
   const roster = parseAllowedSigners(allowedSignersText);

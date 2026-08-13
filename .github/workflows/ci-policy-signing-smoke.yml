@@ -1,0 +1,34 @@
+name: CI policy signing smoke test
+
+# Manual smoke test for the CI policy signing key. Signs a canary payload
+# under CI_POLICY_SSHSIG_NAMESPACE with the real
+# ci-policy-key@ainumbers.co secret (via hub/ci-sign.mjs, real
+# `ssh-keygen -Y sign`), then verifies it against docs/allowed_signers
+# through hub/extsig.mjs. Manual-only (workflow_dispatch): the every-push
+# regression coverage for the signer/verifier code itself already runs in
+# ci.yml via node scripts/test.mjs (hub/extsig.test.mjs,
+# hub/ci-sign.test.mjs) using throwaway keys, never this secret. This
+# workflow exists to prove the actual production secret round-trips once
+# it is installed, and is never added to the push/PR trigger set, so an
+# unset secret never reds normal CI.
+#
+# A manual diagnostic, not a step in any release or merge path, so it
+# adds no friction to the happy path.
+on:
+  workflow_dispatch: {}
+
+permissions:
+  contents: read
+
+jobs:
+  smoke:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@9c091bb21b7c1c1d1991bb908d89e4e9dddfe3e0 # v7.0.0
+      - uses: actions/setup-node@249970729cb0ef3589644e2896645e5dc5ba9c38 # v6.5.0
+        with:
+          node-version: "22"
+      - name: sign + verify a canary payload with the CI policy key
+        env:
+          CI_POLICY_SSHSIG_PRIVATE_KEY: ${{ secrets.CI_POLICY_SSHSIG_PRIVATE_KEY }}
+        run: node scripts/ci-policy-signing-smoke.mjs
