@@ -5,7 +5,14 @@ import assert from "node:assert/strict";
 import { readFileSync } from "node:fs";
 import { fileURLToPath } from "node:url";
 import { dirname, join } from "node:path";
-import { verifySshsig, verifyMinisig, parseSshsig, parseAllowedSigners, HELM_SSHSIG_NAMESPACE } from "./extsig.mjs";
+import {
+  verifySshsig,
+  verifyMinisig,
+  parseSshsig,
+  parseAllowedSigners,
+  HELM_SSHSIG_NAMESPACE,
+  CI_POLICY_SSHSIG_NAMESPACE,
+} from "./extsig.mjs";
 
 const __dirname = dirname(fileURLToPath(import.meta.url));
 const fixturesDir = join(__dirname, "..", "fixtures", "sshsig");
@@ -139,4 +146,87 @@ test("malformed SSHSIG input throws (structural error, distinct from a failed ve
 
 test("minisign is explicitly unsupported, never a silent no-op", () => {
   assert.throws(() => verifyMinisig(), /minisign verification is not supported/);
+});
+
+// FV-SSHSIG-POLICY-KEY-1 — the CI policy key signs under a namespace
+// distinct from HELM_SSHSIG_NAMESPACE. Fixtures generated with a separate
+// throwaway test key, real `ssh-keygen -Y sign`, cross-checked against
+// real `ssh-keygen -Y verify` at generation time (fixtures/sshsig/README.md).
+const ciPolicyMessage = fixture("ci_policy_message.txt");
+const ciPolicyAllowedSigners = fixture("ci_policy_allowed_signers").toString("utf8");
+
+test("CI_POLICY_SSHSIG_NAMESPACE is distinct from HELM_SSHSIG_NAMESPACE", () => {
+  assert.equal(CI_POLICY_SSHSIG_NAMESPACE, "fv-policy-sign@ainumbers.co");
+  assert.notEqual(CI_POLICY_SSHSIG_NAMESPACE, HELM_SSHSIG_NAMESPACE);
+});
+
+// RED before GREEN, in file order: this test runs first and demonstrates
+// the failure mode the namespace parameter exists to prevent — a valid
+// signature, correct key, correct roster entry, but verified against the
+// WRONG expected namespace (the caller forgot to pass CI_POLICY_SSHSIG_NAMESPACE
+// and got the HELM_SSHSIG_NAMESPACE default instead). Must fail.
+test("[RED] CI-policy signature verified with the default (helm) namespace is rejected", () => {
+  const result = verifySshsig({
+    armoredText: fixture("ci_policy_golden.sig").toString("utf8"),
+    message: ciPolicyMessage,
+    allowedSignersText: ciPolicyAllowedSigners,
+    principal: "ci-policy@helm-test",
+    // namespace omitted -> defaults to HELM_SSHSIG_NAMESPACE, wrong for this sig
+  });
+  assert.equal(result.ok, false);
+  assert.match(result.reason, /wrong namespace/);
+});
+
+// GREEN: the same signature, verified with the namespace it was actually
+// signed under, passes.
+test("[GREEN] CI-policy signature verified with CI_POLICY_SSHSIG_NAMESPACE succeeds", () => {
+  const result = verifySshsig({
+    armoredText: fixture("ci_policy_golden.sig").toString("utf8"),
+    message: ciPolicyMessage,
+    allowedSignersText: ciPolicyAllowedSigners,
+    principal: "ci-policy@helm-test",
+    namespace: CI_POLICY_SSHSIG_NAMESPACE,
+  });
+  assert.equal(result.ok, true);
+  assert.equal(result.principal, "ci-policy@helm-test");
+  assert.match(result.keyFingerprintSha256, /^SHA256:/);
+});
+
+test("CI-policy key signing under the wrong namespace on purpose is rejected", () => {
+  const result = verifySshsig({
+    armoredText: fixture("ci_policy_wrong_namespace.sig").toString("utf8"),
+    message: ciPolicyMessage,
+    allowedSignersText: ciPolicyAllowedSigners,
+    principal: "ci-policy@helm-test",
+    namespace: CI_POLICY_SSHSIG_NAMESPACE,
+  });
+  assert.equal(result.ok, false);
+  assert.match(result.reason, /wrong namespace/);
+});
+
+test("a different key signing under the CI-policy namespace is rejected (not in roster)", () => {
+  const result = verifySshsig({
+    armoredText: fixture("ci_policy_wrong_key.sig").toString("utf8"),
+    message: ciPolicyMessage,
+    allowedSignersText: ciPolicyAllowedSigners,
+    principal: "ci-policy@helm-test",
+    namespace: CI_POLICY_SSHSIG_NAMESPACE,
+  });
+  assert.equal(result.ok, false);
+  assert.match(result.reason, /does not match the roster/);
+});
+
+// A signature signed by the CI-policy key under the HELM namespace must
+// never verify as a CI-policy signature — the two identities' signatures
+// are not fungible even though both come from `ssh-keygen -Y sign`.
+test("CI-policy key's helm-namespace signature does not verify as a CI-policy signature", () => {
+  const result = verifySshsig({
+    armoredText: fixture("ci_policy_signed_wrong_expected_namespace.sig").toString("utf8"),
+    message: ciPolicyMessage,
+    allowedSignersText: ciPolicyAllowedSigners,
+    principal: "ci-policy@helm-test",
+    namespace: CI_POLICY_SSHSIG_NAMESPACE,
+  });
+  assert.equal(result.ok, false);
+  assert.match(result.reason, /wrong namespace/);
 });

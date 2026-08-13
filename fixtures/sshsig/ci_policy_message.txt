@@ -1,0 +1,1 @@
+fv policy sign golden message — FV-SSHSIG-POLICY-KEY-1

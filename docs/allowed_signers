@@ -1,0 +1,10 @@
+# OpenSSH AllowedSignersFile -- CI policy signing roster
+#
+# Consumed by hub/extsig.mjs's parseAllowedSigners/verifySshsig against
+# CI_POLICY_SSHSIG_NAMESPACE ("fv-policy-sign@ainumbers.co"). Rotation:
+# see docs/TRUST.md "CI policy signing key" for how a new entry enters
+# this roster and an expired one is removed. This is a MACHINE identity,
+# never present it as a human reviewer's key.
+#
+# principal                    [options]                                       keytype     base64-key                                                       comment
+ci-policy-key@ainumbers.co     valid-after="20260813000000",valid-before="20270813000000" ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIAfN7e/W6El0RCtHfbHramCov0anFHjH2R1hbKfOp+vA ci-policy-key (CI policy key, machine)
