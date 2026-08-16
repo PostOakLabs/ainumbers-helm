@@ -342,29 +342,38 @@ jobs:
     permissions:
       contents: read
     steps:
-      # Without this secret, actions/checkout below falls
-      # back to no auth token, checks out the (public) site repo fine, and
-      # the eventual `git push` 403s — a real failure, but one buried at
-      # the bottom of the log under a generic auth error. Fail here instead,
-      # first, with a message that names the actual cause: helm.html will
-      # keep serving a stale version until this secret exists.
-      - name: verify SITE_REPO_PUSH_TOKEN is configured
-        env:
-          TOKEN_SET: ${{ secrets.SITE_REPO_PUSH_TOKEN != '' }}
-        run: |
-          if [ "$TOKEN_SET" != "true" ]; then
-            echo "::error::SITE_REPO_PUSH_TOKEN secret is not set — publish-version-feed cannot push helm/version.json to the site repo, so helm.html will keep serving a stale version. This must be added (fine-grained PAT, contents:write, scoped to PostOakLabs/ainumbers only) before this job can succeed."
-            exit 1
-          fi
+      # WHY AN APP TOKEN AND NOT A PAT (measured 2026-08-16): the site repo
+      # `main` is governed by ruleset `main-ci-anchor`, which requires the
+      # `anchor` check on every push. A PAT push acts as the USER who issued
+      # it, and a user can never be a ruleset bypass actor — so this job
+      # failed with `GH013 … Required status check "anchor" is expected` on
+      # 2026.8.12 / .13 / .14 and the CAB feed froze at 2026.8.11. Only an
+      # org-installed GitHub App can be a bypass actor. Same app, same
+      # secrets, same pinned action as auto-tag-release.yml: one bot, one
+      # story. SITE_REPO_PUSH_TOKEN is retired here — no dead PAT path is
+      # left standing beside the live App path.
+      - name: mint release-bot installation token (scoped to the site repo only)
+        id: app-token
+        uses: actions/create-github-app-token@bcd2ba49218906704ab6c1aa796996da409d3eb1 # v3.2.0
+        with:
+          app-id: ${{ secrets.RELEASE_BOT_APP_ID }}
+          private-key: ${{ secrets.RELEASE_BOT_PRIVATE_KEY }}
+          owner: PostOakLabs
+          repositories: ainumbers
+          permission-contents: write
 
       - uses: actions/checkout@9c091bb21b7c1c1d1991bb908d89e4e9dddfe3e0 # v7.0.0
         with:
           path: helm
+      # `persist-credentials: false` keeps the App token out of the checkout's
+      # stored git credential (zizmor `artipacked`); it is supplied explicitly
+      # at push time instead, via env, in the last step.
       - uses: actions/checkout@9c091bb21b7c1c1d1991bb908d89e4e9dddfe3e0 # v7.0.0
         with:
           repository: PostOakLabs/ainumbers
-          token: ${{ secrets.SITE_REPO_PUSH_TOKEN }}
+          token: ${{ steps.app-token.outputs.token }}
           path: site
+          persist-credentials: false
 
       - name: write version.json
         run: |
@@ -400,6 +409,12 @@ jobs:
 
       - name: commit + push (no-op if unchanged)
         working-directory: site
+        env:
+          # Via env, never inlined into the script: an expression interpolated
+          # into `run:` is substituted as literal text before the shell sees
+          # it, which both leaks the credential into the command line and
+          # makes it shell-evaluable.
+          APP_TOKEN: ${{ steps.app-token.outputs.token }}
         run: |
           git config user.name "helm-release-bot"
           git config user.email "noreply@postoaklabs.com"
@@ -409,4 +424,8 @@ jobs:
           fi
           git add helm/version.json helm/guide-freshness.json
           git commit -m "chore(helm): publish version.json for ${GITHUB_REF_NAME}"
+          # The checkout ran with persist-credentials:false, so supply the App
+          # token here, at push time only. App-authored ⇒ the ruleset bypass
+          # actor applies and `anchor` no longer blocks the push.
+          git remote set-url origin "https://x-access-token:${APP_TOKEN}@github.com/PostOakLabs/ainumbers.git"
           git push origin HEAD:main
