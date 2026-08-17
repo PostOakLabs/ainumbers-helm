@@ -63,3 +63,6 @@ Apache License, Version 2.0 — see `LICENSE` and `NOTICE`. The license
 covers the code; it grants no rights to the "Helm" name or logo — see
 `docs/TRADEMARK.md` for what's allowed when redistributing or building on
 Helm.
+
+<!-- automerge-label.yml end-to-end proof, WORKER-VENDOR-LAND-0817-2 addendum, 2026-08-17 -->
+
