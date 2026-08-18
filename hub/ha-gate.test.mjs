@@ -12,7 +12,7 @@ const { openJournal } = await import("./journal.mjs");
 const { executeRun, planSteps } = await import("./run.mjs");
 const { pinnedKernelDigest, runKernelNode } = await import("./kernel-runner.mjs");
 const { appendHaRecord } = await import("./ha-store.mjs");
-const { haGateCheckFor, findHeldGate, recordReplay, signHaRecord, verifyHaRecordSignature, submitHaRecord, getSlot } = await import("./ha-gate.mjs");
+const { haGateCheckFor, findHeldGate, recordReplay, signHaRecord, verifyHaRecordSignature, submitHaRecord, getSlot, verifyBundleDigestSignature, submitMakerSignature, submitCountersignature } = await import("./ha-gate.mjs");
 const { getOrInitSlot, recordsForSubject } = await import("./ha-store.mjs");
 const { sign, rawPubkeyToDidKey } = await import("./vendored/ocg/kernels/_proof.mjs");
 const { validate } = await import("../scripts/lib/schema-validator.mjs");
@@ -279,6 +279,88 @@ test("recordReplay: a matched automated attestation does NOT, by itself, satisfy
 
   const stillHeld = await executeRun(db, { runId: "run-replay-auto", manifest, stepRunner, gateCheck: haGateCheckFor(db) });
   assert.equal(stillHeld.state, "awaiting_data", "MC-2: a daemon-held (automated) countersignature must never satisfy the checker threshold alone");
+  db.close();
+});
+
+// MC-1.2/MC-3/MC-4: the out-of-band signing scheme every real maker/checker
+// browser client uses (ui/lib/ha-crypto.mjs's browser twin) — raw Ed25519
+// over the UTF8 bytes of the subject digest, alg "EdDSA" (matches
+// signBundleDigest in ha-gate.mjs, never the WebCrypto algorithm name).
+async function signDigest(identity, digest) {
+  const sig = await globalThis.crypto.subtle.sign("Ed25519", identity.privateKey, Buffer.from(digest, "utf8"));
+  return { keyid: identity.id, sig: Buffer.from(sig).toString("base64"), alg: "EdDSA" };
+}
+
+test("verifyBundleDigestSignature: a genuine signature over the exact digest verifies true", async () => {
+  const identity = await newIdentity();
+  const digest = `sha256:${"3".repeat(64)}`;
+  const signature = await signDigest(identity, digest);
+  assert.equal(await verifyBundleDigestSignature(digest, signature), true);
+});
+
+test("verifyBundleDigestSignature: a tampered digest fails verification (MC-3)", async () => {
+  const identity = await newIdentity();
+  const digest = `sha256:${"4".repeat(64)}`;
+  const signature = await signDigest(identity, digest);
+  assert.equal(await verifyBundleDigestSignature(`sha256:${"5".repeat(64)}`, signature), false);
+});
+
+test("submitMakerSignature: MC-1.2 — a verified maker signature establishes the slot's maker_signature", async () => {
+  const db = dbAt("submit-maker.db");
+  const digest = `sha256:${"6".repeat(64)}`;
+  const maker = await newIdentity();
+  const signature = await signDigest(maker, digest);
+  const slot = await submitMakerSignature(db, { subjectHash: digest, makerSignature: { ...signature, attester_kind: "human" } });
+  assert.equal(slot.maker_signature.keyid, maker.id);
+  db.close();
+});
+
+test("submitMakerSignature: refuses a signature that does not verify (MC-3)", async () => {
+  const db = dbAt("submit-maker-bad.db");
+  const digest = `sha256:${"7".repeat(64)}`;
+  const maker = await newIdentity();
+  const signature = await signDigest(maker, digest);
+  signature.sig = Buffer.from("tampered").toString("base64");
+  await assert.rejects(
+    submitMakerSignature(db, { subjectHash: digest, makerSignature: { ...signature, attester_kind: "human" } }),
+    /does not verify/
+  );
+  db.close();
+});
+
+test("submitCountersignature: a human checker's own browser-signed countersignature is accepted end to end (MC-4)", async () => {
+  const db = dbAt("submit-counter.db");
+  const digest = `sha256:${"8".repeat(64)}`;
+  const maker = await newIdentity();
+  await submitMakerSignature(db, { subjectHash: digest, makerSignature: { ...(await signDigest(maker, digest)), attester_kind: "human" } });
+
+  const checker = await newIdentity();
+  const signature = await signDigest(checker, digest);
+  const slot = await submitCountersignature(db, {
+    subjectHash: digest,
+    countersignature: { role: "checker", identity: { id: checker.id }, signature, signed_at: "2026-08-17T00:00:00Z", attester_kind: "human" },
+  });
+  assert.equal(slot.countersignatures.length, 1);
+  assert.equal(slot.countersignatures[0].attester_kind, "human");
+  db.close();
+});
+
+test("submitCountersignature: refuses a countersignature whose signature does not verify (MC-3)", async () => {
+  const db = dbAt("submit-counter-bad.db");
+  const digest = `sha256:${"9".repeat(64)}`;
+  const maker = await newIdentity();
+  await submitMakerSignature(db, { subjectHash: digest, makerSignature: { ...(await signDigest(maker, digest)), attester_kind: "human" } });
+
+  const checker = await newIdentity();
+  const forger = await newIdentity();
+  const signature = await signDigest(forger, digest); // signed by a DIFFERENT key than the claimed identity
+  await assert.rejects(
+    submitCountersignature(db, {
+      subjectHash: digest,
+      countersignature: { role: "checker", identity: { id: checker.id }, signature, signed_at: "2026-08-17T00:00:00Z", attester_kind: "human" },
+    }),
+    /does not verify/
+  );
   db.close();
 });
 

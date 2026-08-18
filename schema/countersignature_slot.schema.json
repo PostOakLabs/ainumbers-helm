@@ -1,11 +1,12 @@
 {
   "$schema": "https://json-schema.org/draft/2020-12/schema",
   "$id": "https://ainumbers.co/helm/schema/countersignature_slot.schema.json",
-  "title": "Two-signature bundle slot (maker-checker stretch-ready, NOT wired — HELM-PHASE3-BUILD-SPEC.md §3.7)",
-  "description": "Reserves the shape for serverless maker-checker (Phase-4 candidate, not built in Phase 3): a maker's evidence bundle plus zero or more independent checker countersignatures, each over the SAME bundle_digest the maker signed. No producer in Phase 3 emits countersignatures — the array is expected empty. This schema exists so a Phase-4 checker feature has a stable shape to fill in rather than inventing one under deadline; it does not imply any bundle is unverified without a countersignature (maker_signature alone is a complete, valid bundle per §26.7).",
+  "title": "Two-signature bundle slot (serverless maker-checker — HELM-MAKERCHECKER-BUILD-SPEC.md)",
+  "description": "A maker's evidence bundle plus zero or more independent checker countersignatures, each over the SAME bundle_digest the maker signed. FU-5 (HELM-MAKERCHECKER-BUILD-SPEC.md §6): the maker_signature producer now exists (HELM-MAKERCHECKER-BUILD-1) — this is no longer a reserved, unwired shape. `maker_signature` alone (no countersignatures) remains a complete, valid bundle per §26.7; a `threshold` is only meaningful once at least one countersignature is expected.",
   "$defs": {
     "sha256ref": { "type": "string", "pattern": "^sha256:[0-9a-f]{64}$" },
     "timestamp": { "type": "string", "pattern": "^\\d{4}-\\d{2}-\\d{2}T\\d{2}:\\d{2}:\\d{2}(\\.\\d+)?Z$" },
+    "attesterKind": { "type": "string", "enum": ["human", "automated"], "description": "HELM-MAKERCHECKER-BUILD-SPEC.md MC-2.1: whether the signing key is held by a natural person (human) or by software with no person in the loop at signing time (automated, e.g. helmd's own daemon-held key per MC-2.4). Recorded at signing time by the producer — never inferred by a reader." },
     "signature": {
       "type": "object",
       "additionalProperties": false,
@@ -16,10 +17,22 @@
         "alg": { "type": "string", "enum": ["EdDSA", "ML-DSA-44"] }
       }
     },
+    "makerSignature": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["keyid", "sig", "alg", "attester_kind"],
+      "description": "MC-1.2/MC-2.1: the maker's signature over bundle_digest, from an explicit signing act, carrying its own attester_kind (never inferred from run ownership or the daemon's identity).",
+      "properties": {
+        "keyid": { "type": "string", "minLength": 1 },
+        "sig": { "type": "string", "minLength": 1 },
+        "alg": { "type": "string", "enum": ["EdDSA", "ML-DSA-44"] },
+        "attester_kind": { "$ref": "#/$defs/attesterKind" }
+      }
+    },
     "countersignature": {
       "type": "object",
       "additionalProperties": false,
-      "required": ["role", "identity", "signature", "signed_at"],
+      "required": ["role", "identity", "signature", "signed_at", "attester_kind"],
       "properties": {
         "role": { "const": "checker" },
         "identity": {
@@ -31,7 +44,8 @@
         },
         "signature": { "$ref": "#/$defs/signature" },
         "signed_at": { "$ref": "#/$defs/timestamp" },
-        "replay_verified": { "type": "boolean", "description": "True iff the checker independently re-ran the workflow deterministically and got a matching bundle_digest before countersigning — the flagship differentiator over a rubber-stamp approval." }
+        "replay_verified": { "type": "boolean", "description": "True iff the checker independently re-ran the workflow deterministically and got a matching bundle_digest before countersigning — the flagship differentiator over a rubber-stamp approval. Omitted (not false) for a Tier-B binding-integrity checker, which never re-runs a kernel — see HELM-HA-BUILD-SPEC.md §3.3." },
+        "attester_kind": { "$ref": "#/$defs/attesterKind", "description": "MC-2.2: only a countersignature of kind human counts toward `threshold`. MC-2.3: an automated attestation MUST NOT, by itself, satisfy a threshold." }
       }
     }
   },
@@ -40,8 +54,9 @@
   "required": ["bundle_digest", "maker_signature", "countersignatures"],
   "properties": {
     "bundle_digest": { "$ref": "#/$defs/sha256ref" },
-    "maker_signature": { "$ref": "#/$defs/signature" },
-    "countersignatures": { "type": "array", "items": { "$ref": "#/$defs/countersignature" }, "description": "Empty in Phase 3. A future maker-checker feature appends entries here; nothing in Phase 3 reads or requires them." },
-    "threshold": { "type": "integer", "minimum": 1, "description": "OPTIONAL — mirrors OCG SPEC.md §27.3's in-toto integer threshold: the count of DISTINCT checker identity.id values required among countersignatures before this slot is satisfied (a repeated identity counts once). Absent = maker_signature alone is a complete, valid bundle (§26.7); this field exists so a Phase-4 maker-checker consumer has a stable place to express N without inventing one under deadline." }
+    "maker_signature": { "anyOf": [{ "$ref": "#/$defs/makerSignature" }, { "type": "null" }], "description": "null until the maker's explicit signing act (MC-1.2) establishes it — MC-1.1: a slot with no maker_signature refuses every countersignature, it does not silently admit one." },
+    "countersignatures": { "type": "array", "items": { "$ref": "#/$defs/countersignature" }, "description": "Independent checker countersignatures over the same bundle_digest. MC-7: additive only — a countersignature is never removed or rewritten, even one a later rule would refuse to count." },
+    "threshold": { "type": "integer", "minimum": 1, "description": "E-6: OPTIONAL until satisfaction is determined, then PINNED — the count of DISTINCT `human`-kind checker identity.id values (MC-1.3, MC-2.2) that were required at `as_of`. Mirrors OCG SPEC.md §27.3's in-toto integer threshold. A threshold read from live policy at examination time answers a different question than the one the examiner asked, so once pinned it is not moved." },
+    "as_of": { "$ref": "#/$defs/timestamp", "description": "E-7: when the satisfaction determination recorded by `threshold` was made. A slot is a claim about a moment; without this, \"satisfied\" is undated and silently becomes a claim about now." }
   }
 }

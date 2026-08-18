@@ -170,6 +170,59 @@ test("route wiring: POST /ha/replay re-executes the kernel and returns a real re
   assert.equal(slot.countersignatures[0].replay_verified, true);
 });
 
+async function signDigest(identity, digest) {
+  const sig = await globalThis.crypto.subtle.sign("Ed25519", identity.privateKey, Buffer.from(digest, "utf8"));
+  return { keyid: identity.id, sig: Buffer.from(sig).toString("base64"), alg: "EdDSA" };
+}
+
+test("route wiring: POST /ha/maker-sign establishes a maker, then POST /ha/countersign accepts a human checker (MC-1.2, MC-4)", async () => {
+  const digest = `sha256:${"a".repeat(64)}`;
+  const maker = await newIdentity();
+  const makerSig = await signDigest(maker, digest);
+  const makerRes = await post("/ha/maker-sign", { subject_hash: digest, maker_signature: { ...makerSig, attester_kind: "human" } }, headers());
+  assert.equal(makerRes.status, 200);
+  assert.equal(JSON.parse(makerRes.body).slot.maker_signature.keyid, maker.id);
+
+  const checker = await newIdentity();
+  const checkerSig = await signDigest(checker, digest);
+  const counterRes = await post(
+    "/ha/countersign",
+    { subject_hash: digest, countersignature: { role: "checker", identity: { id: checker.id }, signature: checkerSig, signed_at: "2026-08-17T00:00:00Z", attester_kind: "human" } },
+    headers()
+  );
+  assert.equal(counterRes.status, 200);
+  const { slot } = JSON.parse(counterRes.body);
+  assert.equal(slot.countersignatures.length, 1);
+  assert.equal(slot.countersignatures[0].attester_kind, "human");
+
+  const slotRes = await get(`/ha/slot?subject_hash=${encodeURIComponent(digest)}`, headers());
+  assert.equal(JSON.parse(slotRes.body).slot.countersignatures.length, 1);
+});
+
+test("route wiring: POST /ha/countersign refuses a same-identity checker (MC-1) and a bad signature (422)", async () => {
+  const digest = `sha256:${"b".repeat(64)}`;
+  const maker = await newIdentity();
+  await post("/ha/maker-sign", { subject_hash: digest, maker_signature: { ...(await signDigest(maker, digest)), attester_kind: "human" } }, headers());
+
+  const selfSig = await signDigest(maker, digest);
+  const selfRes = await post(
+    "/ha/countersign",
+    { subject_hash: digest, countersignature: { role: "checker", identity: { id: maker.id }, signature: selfSig, signed_at: "2026-08-17T00:00:00Z", attester_kind: "human" } },
+    headers()
+  );
+  assert.equal(selfRes.status, 422);
+
+  const checker = await newIdentity();
+  const badSig = await signDigest(checker, digest);
+  badSig.sig = Buffer.from("garbage").toString("base64");
+  const badRes = await post(
+    "/ha/countersign",
+    { subject_hash: digest, countersignature: { role: "checker", identity: { id: checker.id }, signature: badSig, signed_at: "2026-08-17T00:00:00Z", attester_kind: "human" } },
+    headers()
+  );
+  assert.equal(badRes.status, 422);
+});
+
 test("route wiring: POST /run/resume 409s a run that isn't actually held", async () => {
   const manifest = gatedManifest();
   const stepRunner = async (step) => runKernelNode(step, {});

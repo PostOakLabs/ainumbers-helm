@@ -856,6 +856,68 @@
         }
       }
     },
+    "/ha/maker-sign": {
+      "post": {
+        "summary": "Submit the maker's explicit, cryptographically verified signature over a subject_hash, establishing a countersignature_slot's maker_signature (HELM-MAKERCHECKER-BUILD-SPEC.md MC-1.2).",
+        "tags": [
+          "Accountability"
+        ],
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Missing or invalid bearer token."
+          },
+          "403": {
+            "description": "Host or Origin mismatch (D8 loopback hardening)."
+          }
+        }
+      }
+    },
+    "/ha/countersign": {
+      "post": {
+        "summary": "Submit a human checker's own browser-signed countersignature over a subject_hash, verified before storage (HELM-MAKERCHECKER-BUILD-SPEC.md MC-3/MC-4).",
+        "tags": [
+          "Accountability"
+        ],
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Missing or invalid bearer token."
+          },
+          "403": {
+            "description": "Host or Origin mismatch (D8 loopback hardening)."
+          }
+        }
+      }
+    },
     "/provenance/head": {
       "get": {
         "summary": "SPEC.md §SNAP-1/§HEAD-1 chain-verify status: latest state-snapshot/head seq and whether the stored head-commit chain still verifies right now.",

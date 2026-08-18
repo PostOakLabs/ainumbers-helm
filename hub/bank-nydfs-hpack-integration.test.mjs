@@ -110,7 +110,7 @@ test("§3.3 Tier B + maker approval: one distinct identity is NOT enough, two re
   getOrInitSlot(db, foundHold.subjectHash, { keyid: makerSlotKey.id, sig: "probe-sig", alg: "EdDSA" });
 
   const checker = await newIdentity();
-  const verification = await recordArtifactBindingVerification(db, { runId, stepId: "attested_artifacts:nydfs-cert-2026", checkerIdentity: checker, nowISO: "2026-07-26T13:00:00Z" });
+  const verification = await recordArtifactBindingVerification(db, { runId, stepId: "attested_artifacts:nydfs-cert-2026", checkerIdentity: checker, attesterKind: "human", nowISO: "2026-07-26T13:00:00Z" });
   assert.equal(verification.matched, true);
   assert.equal(verification.recomputedHash, EXPECTED_EXECUTION_HASH);
   assert.equal(verification.claimedHash, `sha256:${EXPECTED_EXECUTION_HASH}`);

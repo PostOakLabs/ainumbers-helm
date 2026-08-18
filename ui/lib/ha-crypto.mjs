@@ -15,6 +15,8 @@
 // Node's webcrypto + a localStorage polyfill if a suite needs one.
 import { sign, rawPubkeyToDidKey } from "../vendored/proof.mjs";
 
+const textEncoder = new TextEncoder();
+
 const STORAGE_KEY = "helm.ha.identity";
 
 async function generate() {
@@ -55,4 +57,15 @@ export async function signHaRecord({ recordType, role, subjectHash, identityId, 
     timestamp: nowISO,
   };
   return sign(unsigned, { verificationMethod: `${identity.id}#key-1`, created: nowISO, privateKey: identity.privateKey });
+}
+
+// HELM-MAKERCHECKER-BUILD-SPEC.md MC-4/MC-1.2: signs a raw bundle_digest
+// entirely client-side, with no server round-trip — the checker (or maker)
+// never needs helmd reachable to PRODUCE this, only to submit it (MC-5.1).
+// Mirrors hub/ha-gate.mjs's own signBundleDigest exactly (raw Ed25519 over
+// the UTF8 digest bytes, alg "EdDSA" — never the WebCrypto algorithm name,
+// see HELMALG-FIX-1) so the two sides of one signature scheme never drift.
+export async function signBundleDigest(identity, bundleDigest) {
+  const sig = await crypto.subtle.sign("Ed25519", identity.privateKey, textEncoder.encode(bundleDigest));
+  return { keyid: identity.id, sig: btoa(String.fromCharCode(...new Uint8Array(sig))), alg: "EdDSA" };
 }

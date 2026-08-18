@@ -11,7 +11,7 @@ import { createHash } from "node:crypto";
 import { didKeyToPublicKey, sign, verify } from "./vendored/ocg/kernels/_proof.mjs";
 import { evaluateHaGate } from "./vendored/ocg/kernels/_hagate.mjs";
 import { cgCanon, assertIJson } from "./vendored/ocg/kernels/_hash.mjs";
-import { recordsForSubject, appendHaRecord, addCountersignature, getSlot } from "./ha-store.mjs";
+import { recordsForSubject, appendHaRecord, addCountersignature, setMakerSignature, getSlot } from "./ha-store.mjs";
 import { runKernelNode } from "./kernel-runner.mjs";
 import { planSteps, getMemoizedStep, stepInputDigest } from "./run.mjs";
 
@@ -187,7 +187,16 @@ export async function recordReplay(db, { runId, stepId, checkerIdentity, nowISO 
 // SAME execution_hash the maker's step recorded — a binding-integrity
 // check, proof the artifact is the one the maker signed from a pinned tool
 // version, NOT a recomputation of the tool's arithmetic.
-export async function recordArtifactBindingVerification(db, { runId, stepId, checkerIdentity, nowISO }) {
+export async function recordArtifactBindingVerification(db, { runId, stepId, checkerIdentity, attesterKind, nowISO }) {
+  if (attesterKind !== "human" && attesterKind !== "automated") {
+    // MC-2.1: attester_kind is recorded at signing time BY THE PRODUCER and
+    // MUST NOT be inferred by a reader. Unlike recordReplay (always
+    // "automated" per MC-2.4 — the re-execution always runs inside helmd),
+    // this Tier-B path has no fixed custody model, so the caller — who
+    // actually knows whether checkerIdentity's key was used with a person
+    // present — MUST state it explicitly. There is no safe default.
+    throw new Error('ha-gate: recordArtifactBindingVerification requires an explicit attesterKind of "human" or "automated" (MC-2.1) — it is never inferred');
+  }
   const runRow = db.prepare("SELECT manifest_json, dry_run FROM runs WHERE run_id = ?").get(runId);
   if (!runRow) throw new Error(`ha-gate: unknown run_id ${runId}`);
   const manifest = JSON.parse(runRow.manifest_json);
@@ -217,15 +226,7 @@ export async function recordArtifactBindingVerification(db, { runId, stepId, che
     signature,
     signed_at: now,
     // ⛔ replay_verified deliberately OMITTED — see comment above.
-    //
-    // MC-2 scope note: unlike recordReplay, this function has no production
-    // route wiring it to helmd's own identity (grep confirms no server.mjs
-    // caller) — §0.4/§0.5's "100% of production checkers are daemon-signed"
-    // finding is specific to POST /ha/replay, not this Tier-B path. Absent
-    // that evidence, attester_kind is left unasserted here rather than
-    // guessed; MC-2's daemon-only refusal is enforced where it was
-    // actually measured (recordReplay below). Determining this path's real
-    // custody model, if it needs one, is a separate, later decision.
+    attester_kind: attesterKind,
   };
   const slot = addCountersignature(db, claimedHash, countersignature);
 
@@ -252,6 +253,60 @@ export async function recordArtifactBindingVerification(db, { runId, stepId, che
 async function signBundleDigest(identity, bundleDigest) {
   const sig = await globalThis.crypto.subtle.sign("Ed25519", identity.privateKey, Buffer.from(bundleDigest, "utf8"));
   return { keyid: identity.id, sig: Buffer.from(sig).toString("base64"), alg: "EdDSA" };
+}
+
+// MC-3 (SHOULD): verification precedes counting. This is the raw-digest
+// counterpart of verifyHaRecordSignature above — a maker_signature or
+// countersignature here is signBundleDigest's OUTPUT (Ed25519 over the raw
+// UTF8 bundle_digest bytes), not a §16 eddsa-jcs-2022 DataIntegrityProof
+// over a whole record, so it resolves the key the same way (did:key
+// self-certifying, no pairing step) but verifies with the plain WebCrypto
+// primitive rather than _proof.mjs's verify(). Predicate: false on any
+// structural/crypto problem, never throws — matches verifyHaRecordSignature's
+// contract so callers can treat both the same way.
+export async function verifyBundleDigestSignature(bundleDigest, { keyid, sig, alg }) {
+  if (alg !== "EdDSA" || !keyid || !sig) return false;
+  try {
+    const publicKey = await didKeyToPublicKey(keyid);
+    return await globalThis.crypto.subtle.verify("Ed25519", publicKey, Buffer.from(sig, "base64"), Buffer.from(bundleDigest, "utf8"));
+  } catch {
+    return false;
+  }
+}
+
+// The browser-side counterpart to §3's out-of-band MC-4/MC-5 flow: the
+// maker's own explicit act (MC-1.2), submitted here for cryptographic
+// verification (MC-3) BEFORE ha-store.setMakerSignature ever sees it. A bad
+// signature is refused outright — helmd never stores an unverifiable maker
+// claim "pending verification", same discipline as submitHaRecord above.
+export async function submitMakerSignature(db, { subjectHash, makerSignature }) {
+  const ok = await verifyBundleDigestSignature(subjectHash, makerSignature);
+  if (!ok) throw new Error("ha-gate: maker signature does not verify against its own keyid — refused");
+  if (makerSignature.attester_kind !== "human" && makerSignature.attester_kind !== "automated") {
+    throw new Error('ha-gate: maker signature requires an explicit attester_kind of "human" or "automated" (MC-2.1)');
+  }
+  return setMakerSignature(db, subjectHash, makerSignature);
+}
+
+// The browser-side human countersign path — distinct from recordReplay
+// (which is always the daemon re-executing a kernel, MC-2.4's "automated" by
+// definition) and from recordArtifactBindingVerification (Tier B, caller-
+// stated kind). Here the checker signed with their OWN browser-held key
+// (MC-4) over a subject_hash they received out of band (MC-5), so this is
+// the one production path where attester_kind:"human" is actually earned.
+export async function submitCountersignature(db, { subjectHash, countersignature }) {
+  // The signature's own keyid MUST equal the claimed checker identity —
+  // otherwise a party could sign with their OWN key while claiming a
+  // different identity.id, and verifyBundleDigestSignature (which resolves
+  // the public key from signature.keyid) would find that self-consistent
+  // and wrongly pass. Same discipline as verifyHaRecordSignature's
+  // verificationMethod-starts-with-identity.id check above.
+  if (countersignature?.signature?.keyid !== countersignature?.identity?.id) {
+    throw new Error("ha-gate: countersignature does not verify — signature.keyid does not match the claimed identity.id");
+  }
+  const ok = await verifyBundleDigestSignature(subjectHash, countersignature.signature);
+  if (!ok) throw new Error("ha-gate: countersignature does not verify against its own identity — refused");
+  return addCountersignature(db, subjectHash, countersignature);
 }
 
 export { getSlot };

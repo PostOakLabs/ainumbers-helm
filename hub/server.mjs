@@ -24,7 +24,7 @@ import { publishRunEvent, subscribeRunEvents } from "./event-bus.mjs";
 import { startWorkflowRun, getRunsInFlightCount as getActionsRunsInFlightCount } from "./run-actions.mjs";
 import { createConnectorStepDispatcher } from "./connectors/dispatch.mjs";
 import { handleMcp, handleMcpMethodNotAllowed } from "./mcp.mjs";
-import { haGateCheckFor, findHeldGate, recordReplay, submitHaRecord } from "./ha-gate.mjs";
+import { haGateCheckFor, findHeldGate, recordReplay, submitHaRecord, submitMakerSignature, submitCountersignature } from "./ha-gate.mjs";
 import { provenanceStatus } from "./state-snapshot.mjs";
 import { recordsForSubject, getSlot } from "./ha-store.mjs";
 import { createMatter, getMatter, listMatters, updateMatter, deleteMatter, closeMatter, getMatterExport } from "./matter-store.mjs";
@@ -910,6 +910,52 @@ function handleHaSlot(req, res, params, db) {
   sendJson(res, 200, { slot: getSlot(db, subjectHash) });
 }
 
+// POST /ha/maker-sign {subject_hash, maker_signature} (HELM-MAKERCHECKER
+// -BUILD-SPEC.md MC-1.2) — the maker's explicit signing act, produced in the
+// maker's OWN browser (ui/lib/ha-crypto.mjs signBundleDigest; helmd never
+// holds this private key, same discipline as the §27.2 approver identity).
+// Verifies cryptographically (MC-3) before ha-store ever records it — a bad
+// or mismatched signature is refused outright.
+async function handleHaMakerSign(req, res, params, db) {
+  if (!db) return deny(res, 503, "engine_unavailable");
+  let body;
+  try {
+    body = await readJsonBody(req);
+  } catch {
+    return deny(res, 400, "invalid_json");
+  }
+  if (!body.subject_hash || !body.maker_signature) return deny(res, 400, "missing_subject_hash_or_maker_signature");
+  try {
+    const slot = await submitMakerSignature(db, { subjectHash: body.subject_hash, makerSignature: body.maker_signature });
+    sendJson(res, 200, { ok: true, slot });
+  } catch (err) {
+    sendJson(res, 422, { ok: false, error: String(err?.message || err) });
+  }
+}
+
+// POST /ha/countersign {subject_hash, countersignature} — the human checker
+// path (MC-4/MC-5): distinct from POST /ha/replay, which is ALWAYS helmd
+// itself re-executing a kernel (attester_kind:"automated", MC-2.4). This is
+// a countersignature the checker already signed, in their own browser, over
+// a subject_hash they received out of band — helmd only verifies (MC-3) and
+// stores it, never signs on the checker's behalf (MC-4).
+async function handleHaCountersign(req, res, params, db) {
+  if (!db) return deny(res, 503, "engine_unavailable");
+  let body;
+  try {
+    body = await readJsonBody(req);
+  } catch {
+    return deny(res, 400, "invalid_json");
+  }
+  if (!body.subject_hash || !body.countersignature) return deny(res, 400, "missing_subject_hash_or_countersignature");
+  try {
+    const slot = await submitCountersignature(db, { subjectHash: body.subject_hash, countersignature: body.countersignature });
+    sendJson(res, 200, { ok: true, slot });
+  } catch (err) {
+    sendJson(res, 422, { ok: false, error: String(err?.message || err) });
+  }
+}
+
 // GET /provenance/head (PROV-SNAP-HELM-1) — the daemon's own SPEC.md
 // §SNAP-1/§HEAD-1 chain-verify status: whether a state-snapshot chain exists
 // yet, its latest snapshot/head seq, and whether the stored head-commit
@@ -1169,6 +1215,8 @@ export const ROUTES = {
   "GET /ha/records": handleHaRecords,
   "GET /ha/slot": handleHaSlot,
   "POST /ha/records": handleHaRecordSubmit,
+  "POST /ha/maker-sign": handleHaMakerSign,
+  "POST /ha/countersign": handleHaCountersign,
   "GET /provenance/head": handleProvenanceHead,
   "GET /matters": handleMattersList,
   "POST /matters": handleMattersCreate,
