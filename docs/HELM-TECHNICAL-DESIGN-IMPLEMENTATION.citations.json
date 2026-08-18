@@ -1,7 +1,7 @@
 {
   "_comment": "Anti-drift stamp for HELM-TECHNICAL-DESIGN-IMPLEMENTATION.md. Each entry is a file the doc cites, digested as of the last time a human re-read the doc's claims against that code. Enforced by scripts/check-techdoc-citations.mjs. Re-stamp with scripts/stamp-techdoc-citations.mjs, by hand, in the same pull request that re-verifies the prose. Never automatically.",
   "doc": "docs/HELM-TECHNICAL-DESIGN-IMPLEMENTATION.md",
-  "stampedAtSha": "bb0102775a3bcf1772fd4a30f883d4aa6055b5b9",
+  "stampedAtSha": "bacabdc44debb0a56a7ba6457da2492ae5a9c913",
   "files": [
     {
       "path": "bin/helmd.mjs",
@@ -81,7 +81,7 @@
     },
     {
       "path": "hub/ha-gate.mjs",
-      "sha256": "83abb66e5a3975598f1e93197f352dc5834a9f54e34fedb55f11e3f707212114"
+      "sha256": "5a9dbb0bb5b3efd72d812df0c4f42310c2eca4c5f2c6b123d8c818c23fd0b1fa"
     },
     {
       "path": "hub/idle-timer.mjs",
@@ -121,7 +121,7 @@
     },
     {
       "path": "hub/server.mjs",
-      "sha256": "2eea623404d731a2e34c708210cc2cb8b989f9c5a32b8c629c6b28e9a8509410"
+      "sha256": "9b57cddf1120d482599fbdd25633952eb61e3c875e0c83d270434bdf6396b61a"
     },
     {
       "path": "hub/shortcut.mjs",
