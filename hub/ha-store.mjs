@@ -136,6 +136,75 @@ export function getSlot(db, subjectHash) {
   return row ? JSON.parse(row.slot_json) : null;
 }
 
+// HELM-MAKERCHECKER-BUILD-SPEC.md MC-1.2: the explicit maker act. Prior to
+// this, NOTHING in production ever called getOrInitSlot with a real
+// makerSignature — every recordReplay/recordArtifactBindingVerification call
+// therefore hit MC-1.1's fail-closed refusal (§0.6's "genuinely missing"
+// piece). This is that producer: a caller (ha-gate.mjs submitMakerSignature,
+// after cryptographic verification) supplies a signature the maker minted
+// themselves over the subject digest — never inferred from run ownership,
+// the first record filed, or the daemon's identity (MC-1.2's own MUST NOTs).
+//
+// Idempotent for a re-submission of the SAME maker (same keyid): a maker
+// re-signing after a restart is not an error. A DIFFERENT keyid is refused —
+// an examiner reading a slot must never see its maker silently swapped.
+export function setMakerSignature(db, subjectHash, makerSignature) {
+  initHaTables(db);
+  const keyid = makerSignature?.keyid;
+  if (!keyid) throw new Error("ha-store: refused maker signature — no keyid (MC-1.2: an explicit act needs a resolvable identity)");
+  const existing = getOrInitSlot(db, subjectHash, null);
+  if (existing.maker_signature?.keyid && existing.maker_signature.keyid !== keyid) {
+    throw new Error(
+      "ha-store: refused maker signature — slot already has a maker_signature under a different keyid (a maker is never silently swapped)"
+    );
+  }
+  const slot = { ...existing, maker_signature: makerSignature };
+  db.prepare(
+    "UPDATE ha_countersignature_slots SET slot_json = ?, updated_at = ? WHERE subject_hash = ?"
+  ).run(JSON.stringify(slot), new Date().toISOString(), subjectHash);
+  return slot;
+}
+
+// HELM-MAKERCHECKER-BUILD-SPEC.md §2 verdict: ONE shared predicate for
+// distinct-human-checker counting, called from both the store (here, for
+// pinning E-6/E-7) and the gate layer (ha-gate.mjs's evidence read-outs) — no
+// second canon. Would live in the vendored _hagate.mjs beside
+// distinctApprovers per FU-4, but this row's fence forbids a vendored edit;
+// this is the one shared home available inside it.
+//
+// MC-1.3: distinctness is by identity.id alone (two entries from the same
+// identity, any signed_at, count once). MC-2.2: only attester_kind:"human"
+// counts toward a threshold — an "automated" entry stays stored and readable
+// (it is genuine, valuable machine evidence) but never counts.
+export function distinctHumanCheckerIds(countersignatures) {
+  const ids = new Set();
+  for (const c of countersignatures ?? []) {
+    if (c?.attester_kind === "human" && c?.identity?.id) ids.add(c.identity.id);
+  }
+  return ids;
+}
+
+// E-6/E-7: a slot is read as *satisfied*, not merely *populated*, only once
+// the threshold in force and the moment of determination are PINNED onto it
+// — a threshold read from live policy at examination time answers a
+// different question than the one the examiner asked (§4). Pinning is
+// write-once (MC-7's additive-only spirit applied to satisfaction state): a
+// slot already pinned keeps its original threshold/as_of even if a later
+// call passes a different requiredThreshold or more checkers arrive.
+export function pinSlotSatisfaction(db, subjectHash, { requiredThreshold, nowISO }) {
+  initHaTables(db);
+  const slot = getSlot(db, subjectHash);
+  if (!slot) return null;
+  if (slot.threshold != null && slot.as_of) return slot; // already pinned — immutable
+  const distinctCount = distinctHumanCheckerIds(slot.countersignatures).size;
+  if (distinctCount < requiredThreshold) return slot; // not yet satisfied — nothing to pin
+  const pinned = { ...slot, threshold: requiredThreshold, as_of: nowISO };
+  db.prepare(
+    "UPDATE ha_countersignature_slots SET slot_json = ?, updated_at = ? WHERE subject_hash = ?"
+  ).run(JSON.stringify(pinned), new Date().toISOString(), subjectHash);
+  return pinned;
+}
+
 // Appends one countersignature to an existing (or lazily-created, makerless)
 // slot. `countersignature.replay_verified` is trusted here as-given — the
 // caller (ha-gate.mjs recordReplay) is the ONLY code path permitted to set it
@@ -168,6 +237,16 @@ export function addCountersignature(db, subjectHash, countersignature, { makerSi
   if (checkerId && checkerId === makerKeyid.trim()) {
     throw new Error(
       "ha-store: refused countersignature — checker identity equals the slot's maker identity (MC-1: same-identity countersignature forbidden)"
+    );
+  }
+
+  // MC-2.1: every countersignature MUST carry an explicit attester_kind,
+  // recorded at signing time by the producer — never inferred by a reader
+  // from key location, key type, or endpoint. A countersignature with no
+  // stated kind is refused rather than silently treated as either.
+  if (countersignature?.attester_kind !== "human" && countersignature?.attester_kind !== "automated") {
+    throw new Error(
+      "ha-store: refused countersignature — no explicit attester_kind of \"human\" or \"automated\" (MC-2.1)"
     );
   }
 

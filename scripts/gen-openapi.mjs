@@ -50,6 +50,8 @@ const ROUTE_DOCS = {
   "GET /ha/slot": { summary: "Fetch the countersignature_slot (maker + checker signatures) for a subject_hash.", tags: ["Accountability"] },
   "POST /ha/records": { summary: "Submit a signed §27.2 accountability record (approval/rejection/override/annotation/role_binding).", tags: ["Accountability"] },
   "POST /ha/replay": { summary: "helmd re-executes a step's kernel and countersigns with replay_verified reflecting whether the hash matched.", tags: ["Accountability"] },
+  "POST /ha/maker-sign": { summary: "Submit the maker's explicit, cryptographically verified signature over a subject_hash, establishing a countersignature_slot's maker_signature (HELM-MAKERCHECKER-BUILD-SPEC.md MC-1.2).", tags: ["Accountability"] },
+  "POST /ha/countersign": { summary: "Submit a human checker's own browser-signed countersignature over a subject_hash, verified before storage (HELM-MAKERCHECKER-BUILD-SPEC.md MC-3/MC-4).", tags: ["Accountability"] },
   "GET /provenance/head": { summary: "SPEC.md §SNAP-1/§HEAD-1 chain-verify status: latest state-snapshot/head seq and whether the stored head-commit chain still verifies right now.", tags: ["Provenance"] },
   "GET /matters": { summary: "List matters (HELM-MATTER-BUILD-SPEC.md §2), optionally filtered by ?status=.", tags: ["Matters"] },
   "POST /matters": { summary: "Create a matter. Refused if the manifest fails the frozen §2 schema or any non-external_reference binding doesn't resolve to a known local run/evidence-bundle/approval-record/attested-artifact (§3).", tags: ["Matters"] },
