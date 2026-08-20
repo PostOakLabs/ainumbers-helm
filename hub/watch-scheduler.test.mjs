@@ -1,4 +1,4 @@
-import { test } from "node:test";
+﻿import { test } from "node:test";
 import assert from "node:assert/strict";
 import { mkdtempSync, readFileSync } from "node:fs";
 import { tmpdir } from "node:os";
@@ -138,15 +138,43 @@ test("createWatch: refuses a pack whose digest has drifted from what the caller 
   );
 });
 
-test("createWatch: refuses an HA-gated pack (spec §2 phase-1 restriction)", () => {
-  // No shipped pack carries a gate today (fixture search confirmed none in
-  // this fence's test setup) — the negative path is proven by constructing
-  // one directly against createWatch's own pack-digest check: a pack_digest
-  // that happens to match a gate-bearing manifest is unreachable through the
-  // real getPack() catalog, so this asserts the underlying predicate
-  // (packIsHaGateFree) that createWatch calls, not a second implementation.
+test("packIsHaGateFree: predicate is informational only — no longer enforced by createWatch/fireWatch (HELM-WATCH-HAGATE-1)", () => {
   const gated = { ...gateFreePack.manifest, gates: [{ gate_id: "g1" }] };
   assert.equal(packIsHaGateFree(gated), false);
+});
+
+const GATED_WORKFLOW_ID = "pack-ai-vendor-onboarding-packet";
+const gatedPack = getPack(GATED_WORKFLOW_ID);
+assert.ok(gatedPack, `fixture pack "${GATED_WORKFLOW_ID}" must exist in the compiled packs/ catalog for this test`);
+assert.equal(packIsHaGateFree(gatedPack.manifest), false, `fixture pack "${GATED_WORKFLOW_ID}" must actually carry a gate_policy step`);
+
+test("createWatch: accepts an HA-gated pack now that HELM-WATCH-HAGATE-1 has cleared (MC-1/MC-2 shipped)", () => {
+  const watch = createWatch({
+    watch_id: "watch-hagate-accept",
+    pack_ref: { pack_id: GATED_WORKFLOW_ID, pack_digest: manifestDigest(gatedPack.manifest) },
+    cadence: { unit: "hours", interval: 1 },
+    inputs_source: { mode: "sample" },
+    created_by: { id: "did:key:z6MkTestOperator" },
+    consent_ref: "sha256:" + "d".repeat(64),
+  });
+  assert.equal(watch.pack_ref.pack_id, GATED_WORKFLOW_ID);
+});
+
+test("fireWatch: a cadence-triggered run against an HA-gated pack HOLDS at the gate_policy step, same as an on-demand run (Q5)", async () => {
+  const db = dbAt("fire-hagate.db");
+  const watch = createWatch({
+    watch_id: "watch-hagate-fire",
+    pack_ref: { pack_id: GATED_WORKFLOW_ID, pack_digest: manifestDigest(gatedPack.manifest) },
+    cadence: { unit: "hours", interval: 1 },
+    inputs_source: { mode: "sample" },
+    created_by: { id: "did:key:z6MkTestOperator" },
+    consent_ref: "sha256:" + "e".repeat(64),
+  });
+  const result = await fireWatch(db, watch, { nowISO: new Date().toISOString() });
+  assert.equal(result.state, "awaiting_data");
+  const runRow = db.prepare("SELECT state FROM runs WHERE run_id = ?").get(result.runId);
+  assert.equal(runRow.state, "awaiting_data");
+  db.close();
 });
 
 test("createWatch: duplicate watch_id is refused (409)", () => {
@@ -205,18 +233,9 @@ test("fireWatch: an operator_supplied watch overrides the named node's policy_pa
   db.close();
 });
 
-test("fireWatch: refuses to fire against a pack that now carries a gate (defense in depth, re-checked at fire time)", async () => {
-  const db = dbAt("fire-gated.db");
-  const watch = createWatch(baseInput({ watch_id: "watch-fire-gate-check" }));
-  const packsModule = await import("./packs.mjs");
-  const originalGetPack = packsModule.getPack;
-  // No test seam exists on packs.mjs (out of this row's fence) to swap the
-  // catalog, so this proves the SAME refusal path createWatch uses
-  // (packIsHaGateFree) rather than re-mocking module internals.
+test("packIsHaGateFree: predicate still correctly flags a gate-bearing manifest built at test time", () => {
   const gatedManifest = { ...gateFreePack.manifest, gates: [{ gate_id: "g1" }] };
   assert.equal(packIsHaGateFree(gatedManifest), false);
-  assert.equal(originalGetPack(GATE_FREE_WORKFLOW_ID) !== null, true);
-  db.close();
 });
 
 test("createWatchScheduler: a tick fires exactly the watches that are due, leaves the rest untouched", async () => {

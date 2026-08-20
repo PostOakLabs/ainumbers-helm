@@ -1,4 +1,4 @@
-// SPDX-License-Identifier: Apache-2.0
+﻿// SPDX-License-Identifier: Apache-2.0
 // Copyright (c) 2026 Post Oak Labs, Inc.
 // HELM-WATCH-SCHED-1 (HELM-WATCH-BUILD-SPEC.md §1 Q1/Q2/Q4/Q5, §2, §4 row 1).
 // Operator-local cadence loop: fires a compiled pack unattended on a fixed
@@ -11,12 +11,20 @@
 //
 // Phase 1 only (§2): `inputs_source.mode` is "sample" or "operator_supplied";
 // "connector_fed" is refused at creation (HELM-WATCH-CONNECTORFEED-1, not
-// staged). A watch may only be created over a pack with ZERO gate_policy
-// -bearing steps and an empty `gates[]` — HA-gated watches are
-// HELM-WATCH-HAGATE-1's fence, blocked until the maker-checker build ships
-// (SPEC §2). Cadence is a fixed interval, never a wall-clock cron expression
+// staged). Cadence is a fixed interval, never a wall-clock cron expression
 // (Q1) — SO #0's line: the receipt states what happened, this config states
 // a spacing, neither promises a future run.
+//
+// HELM-WATCH-HAGATE-1: the "HA-gate-free packs only" restriction this row
+// originally shipped is REMOVED — `HELM-MAKERCHECKER-BUILD-1` (board/done/)
+// shipped MC-1 (distinct maker/checker identities enforced) and MC-2
+// (attester_kind + distinct-human threshold), closing the one-keypair hole
+// the restriction existed to guard against. A watch may now be created over
+// any pack, gated or not (`packIsHaGateFree` stays exported as a pure
+// predicate — informational only, no longer enforced at createWatch/fireWatch).
+// A cadence-triggered run reaching a `gate_policy` step HOLDs exactly as an
+// on-demand run would (Q5) — `fireWatch` already threads `haGateCheckFor(db)`
+// into `executeRun` below; nothing about that plumbing changes here.
 //
 // 2026 enhancement (binding, staged): a watch definition carries an optional
 // `evidences[]` field, each entry `{framework, control_id}` (CCM vocabulary —
@@ -53,11 +61,10 @@ export function cadenceIntervalMs(cadence) {
   return unitMs * cadence.interval;
 }
 
-// §2 phase-1 gate, stated once so creation and every firing check the same
-// thing: a pack with any gate_policy-bearing step, or a non-empty gates[]
-// (an approval checkpoint IS a gate by definition), is HA-gated and out of
-// scope until HELM-WATCH-HAGATE-1 clears MC-1/MC-2 or carries phil
-// re-clearance (spec §2).
+// Pure predicate, kept for callers/tests that want to know whether a pack
+// carries a gate_policy-bearing step or a non-empty gates[] (an approval
+// checkpoint IS a gate by definition). HELM-WATCH-HAGATE-1 removed this
+// function's use as a creation/firing restriction — see the module header.
 export function packIsHaGateFree(manifest) {
   const hasGatePolicy = (arr) => (arr ?? []).some((item) => item?.gate_policy !== undefined);
   return !hasGatePolicy(manifest.nodes) && !hasGatePolicy(manifest.actions) && (manifest.gates ?? []).length === 0;
@@ -163,9 +170,6 @@ export function createWatch(input) {
   const actualDigest = manifestDigest(pack.manifest);
   if (actualDigest !== input.pack_ref.pack_digest) {
     throw { status: 409, error: "pack_digest_mismatch", detail: `pack "${input.pack_ref.pack_id}" is now ${actualDigest}, watch requested ${input.pack_ref.pack_digest}` };
-  }
-  if (!packIsHaGateFree(pack.manifest)) {
-    throw { status: 422, error: "ha_gated_pack", detail: "phase 1 watches may only target a pack with zero gate_policy-bearing steps and an empty gates[] (spec §2 — see HELM-WATCH-HAGATE-1)" };
   }
   if (input.inputs_source.mode === "operator_supplied") {
     if (typeof input.inputs_source.inputs !== "object" || input.inputs_source.inputs === null || Array.isArray(input.inputs_source.inputs)) {
@@ -291,14 +295,6 @@ export function isWatchDue(db, watch, nowMs) {
 export async function fireWatch(db, watch, { nowISO = new Date().toISOString() } = {}) {
   const pack = getPack(watch.pack_ref.pack_id);
   if (!pack) throw new Error(`watch-scheduler: fire — pack "${watch.pack_ref.pack_id}" no longer resolves for watch ${watch.watch_id}`);
-  if (!packIsHaGateFree(pack.manifest)) {
-    // Defense in depth: the pack a watch was created against may have been
-    // rebuilt since (a new compiled pack under the same workflow_id) and now
-    // carries a gate. Refuse to fire rather than run an unattended HA-gated
-    // step — the same phase-1 restriction createWatch() enforces, re-checked
-    // at the moment that matters most.
-    throw new Error(`watch-scheduler: fire — pack "${watch.pack_ref.pack_id}" now carries a gate_policy step; watch ${watch.watch_id} refused (spec §2)`);
-  }
 
   const manifest = { ...pack.manifest, trigger: { ...pack.manifest.trigger, type: "cadence" } };
   const clone = JSON.parse(JSON.stringify(manifest));
