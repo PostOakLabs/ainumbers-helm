@@ -409,6 +409,218 @@ function exportBindingArtifact(db, binding) {
   throw new Error(`matter-store: export refused — unknown subject_kind "${subject_kind}"`);
 }
 
+// ---------------------------------------------------------------------------
+// §5.1/§5.2 (amendment 2026-08-20): two export flavours derived from the SAME
+// directory-rooted manifest as the evidence-bundle-of-bundles above, emitted
+// from the SAME closeout path (assembleMatterExport below) and signed via the
+// SAME DSSE envelope — zero new signing code (spec §0: "reuses existing
+// bundle signing"). Citations:
+//   §5.1 — research/clause-snapshots/CTJ-general-guidance-electronic-court-
+//          bundles-2021-11-29.citations.md (paragraph numbers cited inline).
+//   §5.2 — research/clause-snapshots/EDRM-production-standards-v2.citations.md.
+// Naming note (spec §0): the row's own naming shorthand calls this anchor
+// "CPR PD 5C" — that is WRONG per the pinned snapshot's own "Note on the
+// anchor label": PD 5C only governs CE-File format, not pagination/bookmark
+// rules. The paragraph numbers cited below are the CTJ General Guidance,
+// never PD 5C.
+
+function pdfEscape(str) {
+  return String(str).replace(/\\/g, "\\\\").replace(/\(/g, "\\(").replace(/\)/g, "\\)").replace(/[\r\n]/g, " ");
+}
+
+// CTJ ¶2: "computer-generated numbering ... start at page 1 ... sequentially
+// to the last page ... pagination matches the pdf numbering."
+function paginationOps(pageNum, totalPages) {
+  return `BT /F1 8 Tf 1 0 0 1 500 30 Tm (Page ${pageNum} of ${totalPages}) Tj ET\n`;
+}
+
+function textOpsForLines(lines, { startY = 740, leading = 16, x = 56, fontSize = 10 } = {}) {
+  let ops = `BT /F1 ${fontSize} Tf ${leading} TL 1 0 0 1 ${x} ${startY} Tm\n`;
+  lines.forEach((line, i) => {
+    if (i > 0) ops += "T*\n";
+    ops += `(${pdfEscape(String(line))}) Tj\n`;
+  });
+  ops += "ET\n";
+  return ops;
+}
+
+function streamObj(content) {
+  return `<< /Length ${Buffer.byteLength(content, "latin1")} >>\nstream\n${content}\nendstream`;
+}
+
+// Serializes an array of already-built PDF object bodies (1-indexed by
+// position) into a complete PDF-1.7 file with a real xref table — no
+// external PDF library (CONTRACT-equivalent zero-dep discipline, mirrored
+// here for the helm repo's own zero-dep package.json).
+function buildPdf(objs, rootObjNum) {
+  let out = "%PDF-1.7\n%\xe2\xe3\xcf\xd3\n";
+  const offsets = [0];
+  objs.forEach((body, idx) => {
+    offsets.push(Buffer.byteLength(out, "latin1"));
+    out += `${idx + 1} 0 obj\n${body}\nendobj\n`;
+  });
+  const xrefStart = Buffer.byteLength(out, "latin1");
+  out += `xref\n0 ${objs.length + 1}\n0000000000 65535 f \n`;
+  for (let i = 1; i <= objs.length; i++) out += `${String(offsets[i]).padStart(10, "0")} 00000 n \n`;
+  out += `trailer\n<< /Size ${objs.length + 1} /Root ${rootObjNum} 0 R >>\nstartxref\n${xrefStart}\n%%EOF`;
+  return Buffer.from(out, "latin1");
+}
+
+// §5.1: a single, paginated, bookmarked PDF index over bindings_export — one
+// bookmarked, hyperlinked-from-index page per binding (CTJ ¶3), plus a cover
+// page surfacing every open deadline unredacted (§1 CounselOS addition, not
+// CTJ-sourced). Native text throughout (never scanned), so it inherently
+// carries a text layer without needing OCR (CTJ ¶4). Default zoom 100% via
+// /OpenAction ... /XYZ null null 1 (CTJ ¶6). No images anywhere, so the ¶9
+// dpi/file-size provisions are satisfied trivially (nothing to compress).
+// This is a navigation aid over already-verified bindings, never itself the
+// thing verified — §4's verify page verifies bindings[]/the DSSE envelope,
+// not this PDF's own bytes.
+export function buildEBundlePdf(matter, bindingsExport) {
+  const N = bindingsExport.length;
+  const totalPages = 1 + N;
+  const objs = [];
+  function addObj(body) {
+    objs.push(body);
+    return objs.length;
+  }
+
+  const catalogNum = addObj("");
+  const pagesNum = addObj("");
+  const fontNum = addObj("<< /Type /Font /Subtype /Type1 /BaseFont /Helvetica /Encoding /WinAnsiEncoding >>");
+
+  const pageNums = [];
+  const contentNums = [];
+  for (let k = 0; k < totalPages; k++) {
+    pageNums.push(addObj(""));
+    contentNums.push(addObj(""));
+  }
+
+  const startY = 740;
+  const leading = 16;
+  const xLeft = 56;
+  const fontSize = 10;
+
+  // Cover/index page — open deadlines surfaced first (§1 CounselOS addition),
+  // then one hyperlinked line per binding (CTJ ¶3).
+  const openDeadlines = (matter.deadlines ?? []).filter((d) => !d.done);
+  const indexLines = [`MATTER E-BUNDLE INDEX — ${matter.matter_id}`, `Entity: ${matter.entity?.id ?? ""}`, ""];
+  if (openDeadlines.length) {
+    indexLines.push(`OPEN DEADLINES (${openDeadlines.length}) — unredacted:`);
+    openDeadlines.forEach((d) => indexLines.push(`  - ${d.date} ${d.action} (${d.type})`));
+  } else {
+    indexLines.push("No open deadlines.");
+  }
+  indexLines.push("", `INDEX (${N} binding${N === 1 ? "" : "s"}):`);
+  const entryStartLine = indexLines.length;
+  bindingsExport.forEach((b, i) => indexLines.push(`  ${i + 1}. ${b.subject_kind} - ${b.subject_hash}  (p.${i + 2})`));
+
+  objs[contentNums[0] - 1] = streamObj(textOpsForLines(indexLines, { startY, leading, x: xLeft, fontSize }) + paginationOps(1, totalPages));
+
+  const annotNums = bindingsExport.map((b, i) => {
+    const y = startY - (entryStartLine + i) * leading;
+    const rect = `${xLeft} ${y - 3} ${xLeft + 500} ${y + 10}`;
+    return addObj(`<< /Type /Annot /Subtype /Link /Rect [${rect}] /Border [0 0 0] /Dest [${pageNums[i + 1]} 0 R /XYZ null null null] >>`);
+  });
+
+  objs[pageNums[0] - 1] =
+    `<< /Type /Page /Parent ${pagesNum} 0 R /MediaBox [0 0 612 792] /Resources << /Font << /F1 ${fontNum} 0 R >> >> ` +
+    `/Contents ${contentNums[0]} 0 R` +
+    (annotNums.length ? ` /Annots [${annotNums.map((n) => `${n} 0 R`).join(" ")}]` : "") +
+    ` >>`;
+
+  // One page per binding.
+  bindingsExport.forEach((b, i) => {
+    const pageIdx = i + 1;
+    const lines = [`BINDING ${i + 1} of ${N}`, `subject_kind: ${b.subject_kind}`, `subject_hash: ${b.subject_hash}`, `exported: ${b.exported ? "yes" : "no"}`];
+    if (b.note) lines.push(`note: ${b.note}`);
+    if (!b.exported && b.reason) lines.push(`reason: ${b.reason}`);
+    objs[contentNums[pageIdx] - 1] = streamObj(textOpsForLines(lines, { startY, leading, x: xLeft, fontSize }) + paginationOps(pageIdx + 1, totalPages));
+    objs[pageNums[pageIdx] - 1] =
+      `<< /Type /Page /Parent ${pagesNum} 0 R /MediaBox [0 0 612 792] /Resources << /Font << /F1 ${fontNum} 0 R >> >> /Contents ${contentNums[pageIdx]} 0 R >>`;
+  });
+
+  // Bookmarks — one per page, text includes the page number (CTJ ¶3).
+  const outlineItemNums = pageNums.map(() => addObj(""));
+  const outlinesRootNum = addObj("");
+  outlineItemNums.forEach((num, k) => {
+    const title = k === 0 ? "Index (p.1)" : `${bindingsExport[k - 1].subject_kind} - ${bindingsExport[k - 1].subject_hash.slice(0, 24)}... (p.${k + 1})`;
+    const prev = k > 0 ? outlineItemNums[k - 1] : null;
+    const next = k < outlineItemNums.length - 1 ? outlineItemNums[k + 1] : null;
+    objs[num - 1] =
+      `<< /Title (${pdfEscape(title)}) /Parent ${outlinesRootNum} 0 R ` +
+      (prev ? `/Prev ${prev} 0 R ` : "") +
+      (next ? `/Next ${next} 0 R ` : "") +
+      `/Dest [${pageNums[k]} 0 R /XYZ null null null] >>`;
+  });
+  objs[outlinesRootNum - 1] = `<< /Type /Outlines /First ${outlineItemNums[0]} 0 R /Last ${outlineItemNums[outlineItemNums.length - 1]} 0 R /Count ${outlineItemNums.length} >>`;
+
+  objs[pagesNum - 1] = `<< /Type /Pages /Kids [${pageNums.map((n) => `${n} 0 R`).join(" ")}] /Count ${pageNums.length} >>`;
+  // CTJ ¶6: default view/zoom 100% — /XYZ null null 1.
+  objs[catalogNum - 1] =
+    `<< /Type /Catalog /Pages ${pagesNum} 0 R /Outlines ${outlinesRootNum} 0 R /PageMode /UseOutlines /OpenAction [${pageNums[0]} 0 R /XYZ null null 1] >>`;
+
+  return buildPdf(objs, catalogNum);
+}
+
+// CTJ "Filename" rule (p.4): case reference + content indicator. `regime`
+// isn't a field the shipped S1 schema carries (spec §2 describes it, S1's
+// actual JSON Schema does not — pre-existing divergence, out of this row's
+// fence to fix), so matter_id is the only case reference available.
+export function eBundlePdfFilename(matter) {
+  return `${matter.matter_id}-e-bundle.pdf`;
+}
+
+// §5.2: EDRM's own 24-field metadata/load-file list (pinned
+// EDRM-production-standards-v2.citations.md, verbatim field order), one row
+// per bindings_export entry. Only fields with a real matter-side source are
+// populated (per the spec's own mapping table); the rest are emitted
+// present-but-empty, never fabricated.
+const EDRM_FIELDS = [
+  "ATTACHMENTIDS", "AUTHORS", "BATES RANGE", "BCC", "CC", "CUSTODIAN", "DATECREATED",
+  "DATERECEIVED", "DATESAVED", "DATESENT", "DOCEXT", "DOCID", "DOCLINK", "FILENAME",
+  "FOLDER", "FROM", "HASH", "PARENTID", "RCRDTYPE", "SUBJECT", "THREAD ID",
+  "TIMERECEIVED", "TIMESENT", "TO",
+];
+// Concordance-style pilcrow/thorn/caret delimiters are documented industry
+// tooling convention, NOT EDRM primary text (pinned citations file, "Note on
+// delimiter characters") — used here as the de facto interchange convention
+// and stated as such, never misattributed to an EDRM paragraph that doesn't
+// exist for the delimiter bytes.
+const DAT_FIELD_SEP = "\u00b6";
+const DAT_TEXT_QUALIFIER = "\u00fe";
+
+function datQuote(value) {
+  return `${DAT_TEXT_QUALIFIER}${String(value ?? "")}${DAT_TEXT_QUALIFIER}`;
+}
+
+export function buildEdrmDat(matter, bindingsExport) {
+  const rows = bindingsExport.map((b, i) => {
+    const artifact = b.artifact;
+    return {
+      ATTACHMENTIDS: "", AUTHORS: "", "BATES RANGE": "", BCC: "", CC: "",
+      CUSTODIAN: matter.entity?.id ?? "",
+      DATECREATED: artifact?.created_at ?? artifact?.recorded_at ?? "",
+      DATERECEIVED: "", DATESAVED: "", DATESENT: "", DOCEXT: "",
+      DOCID: b.subject_hash,
+      DOCLINK: `${matter.matter_id}/bindings/${i}`,
+      FILENAME: `${matter.matter_id}/bindings/${i}`,
+      FOLDER: "", FROM: "",
+      HASH: b.subject_hash,
+      PARENTID: artifact?.parent_subject_hash ?? "",
+      RCRDTYPE: b.subject_kind,
+      SUBJECT: "", "THREAD ID": "", TIMERECEIVED: "", TIMESENT: "", TO: "",
+    };
+  });
+  const header = EDRM_FIELDS.map(datQuote).join(DAT_FIELD_SEP);
+  const lines = rows.map((row) => EDRM_FIELDS.map((f) => datQuote(row[f])).join(DAT_FIELD_SEP));
+  return [header, ...lines].join("\r\n") + "\r\n";
+}
+
+export function edrmDatFilename(matter) {
+  return `${matter.matter_id}.dat`;
+}
+
 // Assembles the signed bundle-of-bundles: the matter manifest plus every
 // non-external_reference binding's own export form, wrapped in ONE DSSE
 // envelope (envelope.mjs's already-shipped emitEnvelope — the same
@@ -418,6 +630,11 @@ function exportBindingArtifact(db, binding) {
 // artifact that already carries a §13.12/§26.6 redaction/trust-label
 // mechanism keeps it untouched; this function only aggregates and signs the
 // aggregate, it does not redact anything itself.
+//
+// §5.1/§5.2 (amendment): both export flavours are built from the SAME
+// bindings_export this function already assembles and folded into the SAME
+// predicate, so they ride the SAME DSSE envelope as the rest of the closeout
+// export — no second signature, no second call site.
 export function assembleMatterExport(db, matterId, { keys } = {}) {
   if (!keys) throw new Error("matter-store: assembleMatterExport requires signing keys");
   const matter = getMatter(db, matterId);
@@ -433,6 +650,10 @@ export function assembleMatterExport(db, matterId, { keys } = {}) {
     matter_manifest_digest: matter.manifest_digest,
     exported_at: new Date().toISOString(),
     bindings_export,
+    e_bundle_pdf_base64: buildEBundlePdf(matter, bindings_export).toString("base64"),
+    e_bundle_pdf_filename: eBundlePdfFilename(matter),
+    edrm_dat_text: buildEdrmDat(matter, bindings_export),
+    edrm_dat_filename: edrmDatFilename(matter),
   };
   const statement = buildStatement({
     subject: [{ name: "matter_manifest", digest: { sha256: matter.manifest_digest.replace(/^sha256:/, "") } }],
