@@ -819,6 +819,31 @@ button.secondary {
   color: var(--ok);
 }
 
+.watch-status-badge {
+  display: inline-block;
+  font-size: 0.7rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.02em;
+  border: 1px solid var(--text-muted);
+  color: var(--text-muted);
+  border-radius: var(--radius);
+  padding: 0 var(--space-1);
+  vertical-align: middle;
+}
+.watch-status-badge[data-status="ran"] {
+  border-color: var(--ok);
+  color: var(--ok);
+}
+.watch-status-badge[data-status="evidence_of_non_run"] {
+  border-color: var(--danger);
+  color: var(--danger);
+}
+.watch-status-badge[data-status="no_evidence_of_run"] {
+  border-color: var(--warning);
+  color: var(--warning);
+}
+
 /* Deadlines stay in the list once done (§2: append-only, never deleted) —
    muted, not hidden, so an open one still reads as the one that needs
    attention. */

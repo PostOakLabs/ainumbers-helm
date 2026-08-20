@@ -1445,6 +1445,47 @@
         ]
       }
     },
+    "/watches/{id}/receipt": {
+      "get": {
+        "summary": "Compute the current freshness receipt for one watch — a dated observation over its journal entries, not a stored history (Q2/Q3).",
+        "tags": [
+          "Watches"
+        ],
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Missing or invalid bearer token."
+          },
+          "403": {
+            "description": "Host or Origin mismatch (D8 loopback hardening)."
+          }
+        },
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ]
+      }
+    },
     "/watches/{id}/revoke": {
       "post": {
         "summary": "Revoke a watch: removes it from the active scheduler set. Additive — every journal entry, receipt, and the consent record it already produced stays intact (Q5).",

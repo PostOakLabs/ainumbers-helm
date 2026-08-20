@@ -18,6 +18,7 @@ import { startFlow, getFlowStatus, listConnections, revokeConnection, isSecureEn
 import { serveStatic } from "./static.mjs";
 import { listPacks, getPack } from "./packs.mjs";
 import { listWatches, getWatch, createWatch, revokeWatch } from "./watch-scheduler.mjs";
+import { computeFreshnessReceipt } from "./receipt.mjs";
 import { listTemplates, getTemplate, buildTemplateManifest } from "./templates.mjs";
 import { executeRun, manifestDigest } from "./run.mjs";
 import { createKernelStepRunner } from "./kernel-runner.mjs";
@@ -1129,6 +1130,19 @@ function handleWatchGet(req, res, params) {
   sendJson(res, 200, { watch });
 }
 
+// GET /watches/{id}/receipt (HELM-WATCH-UI-1, filling a wiring gap
+// HELM-WATCH-RECEIPT-1 left open — that row shipped computeFreshnessReceipt()
+// but no HTTP surface for it, and neither row's fence named one; the UI row's
+// own gate says "needs a real API to read", so this route is added here,
+// mechanically, calling that already-built function with no new computation
+// of its own). Pure read, computed at request time (Q2 — never stored ahead
+// of time).
+function handleWatchReceiptGet(req, res, params, db) {
+  if (!db) return deny(res, 503, "engine_unavailable");
+  if (!getWatch(params.id)) return deny(res, 404, "watch_not_found");
+  sendJson(res, 200, { receipt: computeFreshnessReceipt(db, params.id) });
+}
+
 // POST /watches/{id}/revoke (Q5): additive — removes the watch from the
 // active scheduler set, never rewrites or deletes what it already produced
 // (journal entries, receipts, the consent record itself all stay intact).
@@ -1293,6 +1307,7 @@ export const DYNAMIC_ROUTES = [
   { method: "GET", pattern: /^\/workflows\/(?<id>[^/]+)\/export$/, docPath: "/workflows/{id}/export", handler: handleWorkflowExportRoute },
   { method: "GET", pattern: /^\/templates\/(?<slug>[^/]+)$/, docPath: "/templates/{slug}", handler: handleTemplateDetail },
   { method: "GET", pattern: /^\/watches\/(?<id>[^/]+)$/, docPath: "/watches/{id}", handler: handleWatchGet },
+  { method: "GET", pattern: /^\/watches\/(?<id>[^/]+)\/receipt$/, docPath: "/watches/{id}/receipt", handler: handleWatchReceiptGet },
   { method: "POST", pattern: /^\/watches\/(?<id>[^/]+)\/revoke$/, docPath: "/watches/{id}/revoke", handler: handleWatchRevoke },
   { method: "GET", pattern: /^\/matters\/(?<id>[^/]+)$/, docPath: "/matters/{id}", handler: handleMatterGet },
   { method: "POST", pattern: /^\/matters\/(?<id>[^/]+)\/update$/, docPath: "/matters/{id}/update", handler: handleMatterUpdate },
