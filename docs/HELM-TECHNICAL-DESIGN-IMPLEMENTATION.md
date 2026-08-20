@@ -87,7 +87,7 @@ For server-sent events specifically, the durable token is not put in the query s
 
 ### The gate
 
-Every request passes three checks, in this order (`hub/server.mjs:3-7` and the dispatcher at `1294-1401`; a synchronous handler throw or async rejection never escapes that dispatcher — every route runs through the `runHandlerSafely` catch-all at `1249-1273`, which turns an uncaught storage/programming error into a 500 instead of letting it kill the process):
+Every request passes three checks, in this order (`hub/server.mjs:3-7` and the dispatcher at `1294-1401`; a synchronous handler throw or async rejection never escapes that dispatcher; every route runs through the `runHandlerSafely` catch-all at `1249-1273`, which turns an uncaught storage/programming error into a 500 instead of letting it kill the process):
 
 1. **Host** must equal `127.0.0.1:<port>` exactly (`hub/server.mjs:76-78`, checked at `1320`).
 2. **Origin** must equal the configured origin exactly, never a wildcard (`hub/server.mjs:110-112`, checked at `1351`).
