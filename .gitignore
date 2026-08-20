@@ -3,3 +3,13 @@ dist/
 *.db
 *.log
 .env
+
+# HELM-SIGSTORE-OFFLINE-VERIFY-1: hub/vendored/sigstore/node_modules/@sigstore/*
+# is COMMITTED vendored third-party source (byte-identical npm-tarball copies,
+# hand-placed so bare `require("@sigstore/...")` resolves via Node's normal
+# node_modules walk-up — zero `npm install`, see hub/vendored/sigstore/MANIFEST.json),
+# not an install artifact. The blanket node_modules//dist/ ignores above exist
+# to keep out real `npm install` output; this carve-out un-ignores this one
+# specific pinned tree.
+!hub/vendored/sigstore/node_modules/
+!hub/vendored/sigstore/node_modules/**

@@ -37,6 +37,17 @@ its own license (see the file cited for full terms):
     entry above for full attribution). Copied rather than cross-imported
     because ui/ serves only its own tree; kept in sync by
     ui/lib/pkijs-vendor-reconcile.test.mjs.
+  - @sigstore/core 4.0.1, @sigstore/bundle 5.0.0, @sigstore/protobuf-specs
+    0.5.1, @sigstore/verify 4.1.2 (all Apache License 2.0, Copyright the
+    Sigstore Authors), vendored byte-identical from their published npm
+    tarballs into hub/vendored/sigstore/node_modules/@sigstore/, used for
+    fully offline Sigstore bundle verification (HELM-SIGSTORE-OFFLINE-VERIFY-1).
+    Full per-package tarball provenance (npm registry URL + shasum) is in
+    hub/vendored/sigstore/MANIFEST.json. Also included: a pinned, static
+    snapshot of the Sigstore public-good instance's trust root (Fulcio CA
+    chain, Rekor/CT log keys, TSA roots — public trust-anchor data, not
+    copyrighted software) at hub/vendored/sigstore/trusted-root/, with its
+    full TUF provenance chain documented in that directory's PIN.md.
   - Most other files under ui/vendored/ are hand-ported subsets of this
     repo's own Apache-2.0 code, or this repo's own hand-rolled/captured
     files, not third-party. See ui/vendored/PORT.md for the full
