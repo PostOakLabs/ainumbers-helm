@@ -1,0 +1,652 @@
+{
+  "note": "Byte-identical vendor of 4 npm packages (@sigstore/core, @sigstore/bundle, @sigstore/protobuf-specs, @sigstore/verify), laid out as a hand-placed node_modules/@sigstore/* tree so each package's own bare `require(\"@sigstore/...\")` calls resolve via Node's standard node_modules walk-up — zero `npm install`, zero rewritten import paths (STANDING ORDERS #10). Each package ships already-compiled CommonJS dist/ output from its npm tarball (no build step run here). Every tarball was downloaded directly from registry.npmjs.org and its sha1 checked against the registry's own published `dist.shasum` before being unpacked (see npmTarballShasum per entry). Also covers the pinned Sigstore trust-root data file (see the pinned-trust-data entry) — HELM-SIGSTORE-OFFLINE-VERIFY-1.",
+  "entries": [
+    {
+      "classification": "third-party-vendor",
+      "packageName": "@sigstore/core",
+      "sourceRepo": "https://github.com/sigstore/sigstore-js",
+      "npmTarball": "https://registry.npmjs.org/@sigstore/core/-/core-4.0.1.tgz",
+      "npmTarballShasum": "cb02f4a0947953422fbe755f515793311e972c06",
+      "pinnedSha": "4.0.1",
+      "license": "Apache-2.0",
+      "files": [
+        {
+          "path": "node_modules/@sigstore/core/LICENSE",
+          "sha256": "364a130d2ca340bd56eb1e6d045fc6929bb0f9d0aa018f2c1949b29517e1cdd0"
+        },
+        {
+          "path": "node_modules/@sigstore/core/dist/asn1/error.d.ts",
+          "sha256": "466ef1e585b127a9a171b55f41eec3029e06e8f4eb6ba1f6475605094aa02af1"
+        },
+        {
+          "path": "node_modules/@sigstore/core/dist/asn1/error.js",
+          "sha256": "31d1305e0ab546f5a2fedd81f6f157f4102dae3782220fd6e0e7afb50b1a6b95"
+        },
+        {
+          "path": "node_modules/@sigstore/core/dist/asn1/index.d.ts",
+          "sha256": "03bfb97e5896cf686063d2e91aa997a2908737f6bb6a6b30583280941154e601"
+        },
+        {
+          "path": "node_modules/@sigstore/core/dist/asn1/index.js",
+          "sha256": "07377c8dc320b991517dd832068c540a86d949a40563b233b07191621d7513d6"
+        },
+        {
+          "path": "node_modules/@sigstore/core/dist/asn1/length.d.ts",
+          "sha256": "602644e98b5ea954193aba124ee27b1e6ed27dffff90a76cf85008eb4ff0fbd8"
+        },
+        {
+          "path": "node_modules/@sigstore/core/dist/asn1/length.js",
+          "sha256": "5278552c3ef1c365c7d690c3e0c3d412ffe7c7f1e27b04dca93f973a1cfa7f41"
+        },
+        {
+          "path": "node_modules/@sigstore/core/dist/asn1/obj.d.ts",
+          "sha256": "8b075a1bd8e475fe1cea79e80aded2612b324d1ba4ebe82d681614182b328c8f"
+        },
+        {
+          "path": "node_modules/@sigstore/core/dist/asn1/obj.js",
+          "sha256": "e6b493da367b545c79b5519491d8176699e83bf2f370a1ee321fa8a888cbd749"
+        },
+        {
+          "path": "node_modules/@sigstore/core/dist/asn1/parse.d.ts",
+          "sha256": "dd6b9c9aaf99a852776dc3f2f021aac7c8c116755031aeac52ec8219f8a52234"
+        },
+        {
+          "path": "node_modules/@sigstore/core/dist/asn1/parse.js",
+          "sha256": "3eb3c13d86080bf37cf4194bfe57dd84154b370e7fe592160963849c93980b7f"
+        },
+        {
+          "path": "node_modules/@sigstore/core/dist/asn1/tag.d.ts",
+          "sha256": "0cf05fc52b2978c948c3fbf475b4e7a3ee61628ddbeda154b9d199febb084422"
+        },
+        {
+          "path": "node_modules/@sigstore/core/dist/asn1/tag.js",
+          "sha256": "71333f71304fd8aa4bb7c64a37535c0ab1f9d17178dcbc15ae70d2670c2e7eaf"
+        },
+        {
+          "path": "node_modules/@sigstore/core/dist/crypto.d.ts",
+          "sha256": "2b33c37094f25af5bdd9621985602344362741ac78f86fc2fec9172dec6f2247"
+        },
+        {
+          "path": "node_modules/@sigstore/core/dist/crypto.js",
+          "sha256": "031e2830e1b6d884335ef43366f53e119649c6e97ae931bc59c2e6193ea18713"
+        },
+        {
+          "path": "node_modules/@sigstore/core/dist/dsse.d.ts",
+          "sha256": "4fa7d2d873f3db849f9bba01e32c5225770e33655e4fdd099a00e957463e87c0"
+        },
+        {
+          "path": "node_modules/@sigstore/core/dist/dsse.js",
+          "sha256": "f9ed81710343a411eb1035f0c79e654c87cb932cda42dbb7e6150b8e5303bdb4"
+        },
+        {
+          "path": "node_modules/@sigstore/core/dist/encoding.d.ts",
+          "sha256": "15b9b4ada623de4bdbc4e7e73cec02d317a562790108b820609bb4e5a93198c0"
+        },
+        {
+          "path": "node_modules/@sigstore/core/dist/encoding.js",
+          "sha256": "0cba784e1e688fdb2d03dd89c78fbced64a8542e7210ac19ed6e22586fd8d050"
+        },
+        {
+          "path": "node_modules/@sigstore/core/dist/index.d.ts",
+          "sha256": "323b15f49da7197e7c28e2f761191eb000666df21f7b4f4e64a47087dc7e592f"
+        },
+        {
+          "path": "node_modules/@sigstore/core/dist/index.js",
+          "sha256": "047302239dbe0526fbdb4e98583f6f33e6117bba1eebffea9b0ffcbd46776afa"
+        },
+        {
+          "path": "node_modules/@sigstore/core/dist/json.d.ts",
+          "sha256": "e20413d136f96a2915cbd230797c906bfeeee5ff8913ddcaa6bb22e6d9daf305"
+        },
+        {
+          "path": "node_modules/@sigstore/core/dist/json.js",
+          "sha256": "eba8aef02dd4f005abeb9cef37b06d49a74d9799f922170a397b3a859be5ecbb"
+        },
+        {
+          "path": "node_modules/@sigstore/core/dist/oid.d.ts",
+          "sha256": "34f1480746a39e62a660dd598ea884a42d9b81f75ca53f6be5e89b95226c3ad4"
+        },
+        {
+          "path": "node_modules/@sigstore/core/dist/oid.js",
+          "sha256": "5deddcd10af33d07d1fdf2a14df86f6738331db19900ba72e71d78ead2c9fd3d"
+        },
+        {
+          "path": "node_modules/@sigstore/core/dist/pem.d.ts",
+          "sha256": "eaf0c8a7a660889561a638a75723cf188ab3eaf6439539b24a52e105c85466fa"
+        },
+        {
+          "path": "node_modules/@sigstore/core/dist/pem.js",
+          "sha256": "f520e6b379ec5c763edd7d5bf6a1a1d3991a6c7565ce16dce214790ef7eae0bf"
+        },
+        {
+          "path": "node_modules/@sigstore/core/dist/rfc3161/error.d.ts",
+          "sha256": "f7408b5fbdfefa872d1da9e0211054fba8c0c4dff77a829f3298d78ad1f37330"
+        },
+        {
+          "path": "node_modules/@sigstore/core/dist/rfc3161/error.js",
+          "sha256": "a9dc1ebc92fa89f11c68cb8f77ad144b1dc33151b747f3389483fca34214f8a5"
+        },
+        {
+          "path": "node_modules/@sigstore/core/dist/rfc3161/index.d.ts",
+          "sha256": "62da0d6e1d92216b6254865092654359e1a164313c0d9a9cb7adaef476e36f43"
+        },
+        {
+          "path": "node_modules/@sigstore/core/dist/rfc3161/index.js",
+          "sha256": "97c1ff010c638c997c0b15f218bb908d1b6ecc4161e8f3e112cbe28756e3c709"
+        },
+        {
+          "path": "node_modules/@sigstore/core/dist/rfc3161/timestamp.d.ts",
+          "sha256": "92356dcaefe9b3d94e70f8e7630dd39fd3b1986eb662ff6a5ecb2d95f5aea5fb"
+        },
+        {
+          "path": "node_modules/@sigstore/core/dist/rfc3161/timestamp.js",
+          "sha256": "0c728d7c642969de8424e77424f8e5562c84d424fd2474902afee3d23aa9c0a1"
+        },
+        {
+          "path": "node_modules/@sigstore/core/dist/rfc3161/tstinfo.d.ts",
+          "sha256": "7ae3fd7fe1484d4f0bf19ebe0810ca752d1195276359794607ec1f7dff31566f"
+        },
+        {
+          "path": "node_modules/@sigstore/core/dist/rfc3161/tstinfo.js",
+          "sha256": "edeafa060a2e955dff166b2482b5dfa8e0dec1d083409be0c8ee38b6cc1eb62f"
+        },
+        {
+          "path": "node_modules/@sigstore/core/dist/stream.d.ts",
+          "sha256": "026ca89f3b7c93d4a6930da443c2f35225c4b51d26341ba742f156eb84f7ed00"
+        },
+        {
+          "path": "node_modules/@sigstore/core/dist/stream.js",
+          "sha256": "92bf85aaa2b23e840c0b0cb5c3d3b1ae11576643b09fa7d73d881c04ac6e71d5"
+        },
+        {
+          "path": "node_modules/@sigstore/core/dist/x509/cert.d.ts",
+          "sha256": "486f0f3b82d1e719d3392ec7ddee485fd451d87afd08d48af3a33d638a39f7fd"
+        },
+        {
+          "path": "node_modules/@sigstore/core/dist/x509/cert.js",
+          "sha256": "c2d88613d8e356f77b734caa663002c24b0cfae86fb41e1ebc3da5b564bec538"
+        },
+        {
+          "path": "node_modules/@sigstore/core/dist/x509/ext.d.ts",
+          "sha256": "97b118e08a222dbe48a81e7292056fb68a62c560d586ccfec3b652b6fd2c9572"
+        },
+        {
+          "path": "node_modules/@sigstore/core/dist/x509/ext.js",
+          "sha256": "4799415e915f5f673b341911502c3dcabf2c0e4bf5ff0947d2708a96e3f49378"
+        },
+        {
+          "path": "node_modules/@sigstore/core/dist/x509/index.d.ts",
+          "sha256": "11f2fcfc64237cf265d54364f99bb99ba865e12d1202dba65f0776b46ccd6eb0"
+        },
+        {
+          "path": "node_modules/@sigstore/core/dist/x509/index.js",
+          "sha256": "d44814772e0f843d131d4c0b854a382e110607014edde185262bb058f5845500"
+        },
+        {
+          "path": "node_modules/@sigstore/core/dist/x509/sct.d.ts",
+          "sha256": "483dfdecaf238133ef7c77ab09cb4990424ec140ff3347172f0543af8929646b"
+        },
+        {
+          "path": "node_modules/@sigstore/core/dist/x509/sct.js",
+          "sha256": "cdabc11ef8bc6b00a86a3a0ba0a2338165ff3f6e3407969968ec69beb6ca4ed2"
+        },
+        {
+          "path": "node_modules/@sigstore/core/package.json",
+          "sha256": "55d00d9cfae15f310382659245d3829fc9a5a615953bf8691127bbb80d1bd44a"
+        }
+      ]
+    },
+    {
+      "classification": "third-party-vendor",
+      "packageName": "@sigstore/bundle",
+      "sourceRepo": "https://github.com/sigstore/sigstore-js",
+      "npmTarball": "https://registry.npmjs.org/@sigstore/bundle/-/bundle-5.0.0.tgz",
+      "npmTarballShasum": "b4f63156c60e4007d1d2767a764bca3410d6d952",
+      "pinnedSha": "5.0.0",
+      "license": "Apache-2.0",
+      "files": [
+        {
+          "path": "node_modules/@sigstore/bundle/LICENSE",
+          "sha256": "364a130d2ca340bd56eb1e6d045fc6929bb0f9d0aa018f2c1949b29517e1cdd0"
+        },
+        {
+          "path": "node_modules/@sigstore/bundle/dist/build.d.ts",
+          "sha256": "0b7fab6cb3269c53f5278c91074faf9526ff80b96632cd77980f26f337feca10"
+        },
+        {
+          "path": "node_modules/@sigstore/bundle/dist/build.js",
+          "sha256": "837927ac999d1beb76607f516a7e030388274a8f0eeef77f1604e17d003fa684"
+        },
+        {
+          "path": "node_modules/@sigstore/bundle/dist/bundle.d.ts",
+          "sha256": "b01b8a39bc1412f417b900af2d0d704203d50bde74a1e861d7fac4b90c4dc184"
+        },
+        {
+          "path": "node_modules/@sigstore/bundle/dist/bundle.js",
+          "sha256": "07a67e2910a034bae697b28520584f5e6dae1bfd54dfe85c04f9194bbee28353"
+        },
+        {
+          "path": "node_modules/@sigstore/bundle/dist/error.d.ts",
+          "sha256": "c5c0274cfa320d91de461ccb5baa951d81fb4851c50c2ca3c4b5eb8abdb4e946"
+        },
+        {
+          "path": "node_modules/@sigstore/bundle/dist/error.js",
+          "sha256": "5e4035bda72c285a2d7f6e721036bf71e6d0b4e1eda5a881f85040549ff3c807"
+        },
+        {
+          "path": "node_modules/@sigstore/bundle/dist/index.d.ts",
+          "sha256": "d6eabd1be254e358b14b06a689381c71d0f56ead0517208a0a9ed24fc7ed29c9"
+        },
+        {
+          "path": "node_modules/@sigstore/bundle/dist/index.js",
+          "sha256": "898210069b039c525273a8d15d7aa055c87f18bcc544a6b04af7ab21353ba430"
+        },
+        {
+          "path": "node_modules/@sigstore/bundle/dist/serialized.d.ts",
+          "sha256": "02ce22ee2466df1eb6fcb04572db45b4d345e7652e59fcf96dc94fb1b59afd26"
+        },
+        {
+          "path": "node_modules/@sigstore/bundle/dist/serialized.js",
+          "sha256": "98edf6005530cb390ecdfa2a0cb56206a716077c6c5d4b8346e9c2f0882aa993"
+        },
+        {
+          "path": "node_modules/@sigstore/bundle/dist/utility.d.ts",
+          "sha256": "bfba8317aff39eda19e171598f1ffbf0c8a315a83b901796c427594d3709066c"
+        },
+        {
+          "path": "node_modules/@sigstore/bundle/dist/utility.js",
+          "sha256": "d43aa81f5bc89faa359e0f97c814ba25155591ff078fbb9bfd40f8c7c9683230"
+        },
+        {
+          "path": "node_modules/@sigstore/bundle/dist/validate.d.ts",
+          "sha256": "68c3eb4b2de5b26fe7b9418ad6dc38c816ec1731cf3dd9e3497e1abdd1d06442"
+        },
+        {
+          "path": "node_modules/@sigstore/bundle/dist/validate.js",
+          "sha256": "8510442c81ecd4ef54cd912ee9e45d72ac455edb8cfc64c91d2264a502a84c43"
+        },
+        {
+          "path": "node_modules/@sigstore/bundle/package.json",
+          "sha256": "410d257b34acb53ca90eec9663e626a040de96e1f2e6e069913a32d4287e1e98"
+        }
+      ]
+    },
+    {
+      "classification": "third-party-vendor",
+      "packageName": "@sigstore/protobuf-specs",
+      "sourceRepo": "https://github.com/sigstore/sigstore-js",
+      "npmTarball": "https://registry.npmjs.org/@sigstore/protobuf-specs/-/protobuf-specs-0.5.1.tgz",
+      "npmTarballShasum": "5401e444b6ab0db7d1969c91c43e7954927a52fe",
+      "pinnedSha": "0.5.1",
+      "license": "Apache-2.0",
+      "files": [
+        {
+          "path": "node_modules/@sigstore/protobuf-specs/LICENSE",
+          "sha256": "364a130d2ca340bd56eb1e6d045fc6929bb0f9d0aa018f2c1949b29517e1cdd0"
+        },
+        {
+          "path": "node_modules/@sigstore/protobuf-specs/dist/__generated__/envelope.d.ts",
+          "sha256": "de4532f16c40f4cd4700cac20633fbbe10905bbadc475bad61394fe62c8c2647"
+        },
+        {
+          "path": "node_modules/@sigstore/protobuf-specs/dist/__generated__/envelope.js",
+          "sha256": "19350a27cc61394ece3c9aeb696444afba4526c1bb32b6180a36ca3a3d40515c"
+        },
+        {
+          "path": "node_modules/@sigstore/protobuf-specs/dist/__generated__/events.d.ts",
+          "sha256": "50b613d49745c141d4a1d259d4a3ee8b1b711fb13f475f0e05ac1cbabf47a378"
+        },
+        {
+          "path": "node_modules/@sigstore/protobuf-specs/dist/__generated__/events.js",
+          "sha256": "7cf43e8a6a67bad4044afd007e9c3d85c4a7b4d0a47cac083ed7a5b38c9397d9"
+        },
+        {
+          "path": "node_modules/@sigstore/protobuf-specs/dist/__generated__/google/api/field_behavior.d.ts",
+          "sha256": "a43a52c0dbaabc6a29379681b006fa0048950434b831f5f104727d0dd7354abe"
+        },
+        {
+          "path": "node_modules/@sigstore/protobuf-specs/dist/__generated__/google/api/field_behavior.js",
+          "sha256": "0d4ca1af4cfa23b51e110fb473306ba6411f49c9977408ab0aeed92c131a6498"
+        },
+        {
+          "path": "node_modules/@sigstore/protobuf-specs/dist/__generated__/google/protobuf/any.d.ts",
+          "sha256": "38c17040c636eb7cbba8e02ef96b777a6b7814187fa17742ffb61c37d8e00ba1"
+        },
+        {
+          "path": "node_modules/@sigstore/protobuf-specs/dist/__generated__/google/protobuf/any.js",
+          "sha256": "fbeb62331ed5ccf52b2c0f9f33891c5a06bb278daa3650f70a8530d5671e861e"
+        },
+        {
+          "path": "node_modules/@sigstore/protobuf-specs/dist/__generated__/google/protobuf/descriptor.d.ts",
+          "sha256": "ca446226ea76624556e749c1897daf85835a0a3033ff80f5f968fb2d4fbf1042"
+        },
+        {
+          "path": "node_modules/@sigstore/protobuf-specs/dist/__generated__/google/protobuf/descriptor.js",
+          "sha256": "2511b5222ab6affab38a08e154fea8ad13ee1ecc84281f3bb188fc9e0e4a7c09"
+        },
+        {
+          "path": "node_modules/@sigstore/protobuf-specs/dist/__generated__/google/protobuf/timestamp.d.ts",
+          "sha256": "8ec8580229689ff48f73f9f75d2c5f34b49ea6b3e74c92af6c812855ddc52ecd"
+        },
+        {
+          "path": "node_modules/@sigstore/protobuf-specs/dist/__generated__/google/protobuf/timestamp.js",
+          "sha256": "8171b5dd33c6d3683f1265b843a4ceb9b2c5c4e783790cc7ddb57009e724b06d"
+        },
+        {
+          "path": "node_modules/@sigstore/protobuf-specs/dist/__generated__/rekor/v2/dsse.d.ts",
+          "sha256": "3da33f4613cfb270198cbac8c9048951fa25fed02239838b2a504280bff3e242"
+        },
+        {
+          "path": "node_modules/@sigstore/protobuf-specs/dist/__generated__/rekor/v2/dsse.js",
+          "sha256": "13f85c924c16ff782f4bb411c4049bc252d15097324a1bc3f09436e3a04e5b53"
+        },
+        {
+          "path": "node_modules/@sigstore/protobuf-specs/dist/__generated__/rekor/v2/entry.d.ts",
+          "sha256": "d659f12b846a0aadd224b1ae6e6916528591ebf6325d00442e3bb8180b43087e"
+        },
+        {
+          "path": "node_modules/@sigstore/protobuf-specs/dist/__generated__/rekor/v2/entry.js",
+          "sha256": "40c6e37ba88f1cc9e6a875055de25d30fe628dd24f3d4d8d35c9738d11b01092"
+        },
+        {
+          "path": "node_modules/@sigstore/protobuf-specs/dist/__generated__/rekor/v2/hashedrekord.d.ts",
+          "sha256": "e4d99d9a1846f6c0c24ccb6cb1c438256577210cc074c50cdd5e82df852c2a6e"
+        },
+        {
+          "path": "node_modules/@sigstore/protobuf-specs/dist/__generated__/rekor/v2/hashedrekord.js",
+          "sha256": "290b92f288726f06c2b334413b3a8a63de3eeb20a9a9921901ad118ae44f1017"
+        },
+        {
+          "path": "node_modules/@sigstore/protobuf-specs/dist/__generated__/rekor/v2/verifier.d.ts",
+          "sha256": "fa6372b3b70186d5a7469118d09ec8fe39531517679f034442057799a61855b5"
+        },
+        {
+          "path": "node_modules/@sigstore/protobuf-specs/dist/__generated__/rekor/v2/verifier.js",
+          "sha256": "984c85bb31c28c4a37f7432f55332fd7c0ece6e81383ec882c190ec08e952992"
+        },
+        {
+          "path": "node_modules/@sigstore/protobuf-specs/dist/__generated__/sigstore_bundle.d.ts",
+          "sha256": "46eadcf8e9afe6e10837fcbf9fd88d13d9361e7ef0e4c13b083982ee2c5af3ca"
+        },
+        {
+          "path": "node_modules/@sigstore/protobuf-specs/dist/__generated__/sigstore_bundle.js",
+          "sha256": "6e01875dd2de12c8702f31d2781c53f7bb1ac183e65776128f8af94bb6ce8f7b"
+        },
+        {
+          "path": "node_modules/@sigstore/protobuf-specs/dist/__generated__/sigstore_common.d.ts",
+          "sha256": "81c1de7bd08e2b16437cb8de6de0e72117454101a7ec0eafaec0cde86bb7d149"
+        },
+        {
+          "path": "node_modules/@sigstore/protobuf-specs/dist/__generated__/sigstore_common.js",
+          "sha256": "661ad8e646b40d3c27751a52d35e09ce92fdb0dc4a4a8955e9c5f31f12fec11e"
+        },
+        {
+          "path": "node_modules/@sigstore/protobuf-specs/dist/__generated__/sigstore_rekor.d.ts",
+          "sha256": "b16b0b6af732ce627bdda8ad443c220a6b886a46b009048e99825a60bcfa2d55"
+        },
+        {
+          "path": "node_modules/@sigstore/protobuf-specs/dist/__generated__/sigstore_rekor.js",
+          "sha256": "a17810193799a5341eda2551ceb0e37b3bce4b9ad93cdd7c54ad05ef91b47216"
+        },
+        {
+          "path": "node_modules/@sigstore/protobuf-specs/dist/__generated__/sigstore_trustroot.d.ts",
+          "sha256": "deeab2463db3b5b0568c6f87af8a723a068d406c2ed16dd10e1832c28be80198"
+        },
+        {
+          "path": "node_modules/@sigstore/protobuf-specs/dist/__generated__/sigstore_trustroot.js",
+          "sha256": "4702d860eae80f246a182d67466e64b553bacbc8ba7d162dad995de7eff9aed9"
+        },
+        {
+          "path": "node_modules/@sigstore/protobuf-specs/dist/__generated__/sigstore_verification.d.ts",
+          "sha256": "c142c3354746dc2508c9813bdb9c00ab0c167f2b8179f5cb88b1f28a8dd9d7b1"
+        },
+        {
+          "path": "node_modules/@sigstore/protobuf-specs/dist/__generated__/sigstore_verification.js",
+          "sha256": "6d411c7240134f18868b25480ceab8416b15ed92ce7257439ec08aa61dfc181c"
+        },
+        {
+          "path": "node_modules/@sigstore/protobuf-specs/dist/index.d.ts",
+          "sha256": "1742bdb076b287fb41b4256e604505d143ca0bf062a96d03c1aaa9da612a4fd6"
+        },
+        {
+          "path": "node_modules/@sigstore/protobuf-specs/dist/index.js",
+          "sha256": "3df467c311527639effd4766bfd9e405616549f7d13a43ff0036e9755cc4461a"
+        },
+        {
+          "path": "node_modules/@sigstore/protobuf-specs/dist/rekor/v2/index.d.ts",
+          "sha256": "4faa895ae6d813d6531d0a0a11ca6c0781744e7861fb3c36b44c615c9c946a47"
+        },
+        {
+          "path": "node_modules/@sigstore/protobuf-specs/dist/rekor/v2/index.js",
+          "sha256": "dda741bbe0857c52486eb7929311f677d617bc69b0772467123c03376d3c5d5a"
+        },
+        {
+          "path": "node_modules/@sigstore/protobuf-specs/package.json",
+          "sha256": "a4650a93b61175e9a063745f9449c6f3d1a28a3bdec0528937e16ec7d3f68353"
+        }
+      ]
+    },
+    {
+      "classification": "third-party-vendor",
+      "packageName": "@sigstore/verify",
+      "sourceRepo": "https://github.com/sigstore/sigstore-js",
+      "npmTarball": "https://registry.npmjs.org/@sigstore/verify/-/verify-4.1.2.tgz",
+      "npmTarballShasum": "d4521f0dc31a30cd48534bd3fe8878f59a6f0ae9",
+      "pinnedSha": "4.1.2",
+      "license": "Apache-2.0",
+      "note": "NOTE: this package's published npm tarball does not include a LICENSE file (a sigstore-js monorepo publishing gap, confirmed by direct tarball inspection at pin time) — the Apache-2.0 text vendored at node_modules/@sigstore/verify/LICENSE is byte-identical to @sigstore/core's LICENSE (same monorepo, same declared license in package.json), copied in rather than fabricated.",
+      "files": [
+        {
+          "path": "node_modules/@sigstore/verify/LICENSE",
+          "sha256": "364a130d2ca340bd56eb1e6d045fc6929bb0f9d0aa018f2c1949b29517e1cdd0"
+        },
+        {
+          "path": "node_modules/@sigstore/verify/dist/bundle/dsse.d.ts",
+          "sha256": "b317824709661a4b206d7d12c0584b728b44b2d6457ef8026414e9bf4be94cbf"
+        },
+        {
+          "path": "node_modules/@sigstore/verify/dist/bundle/dsse.js",
+          "sha256": "e7daef1c4e6daa7ed7559082215324e4704e3df15658825d517e95717a342b8a"
+        },
+        {
+          "path": "node_modules/@sigstore/verify/dist/bundle/index.d.ts",
+          "sha256": "3b2f47def3683ae86a31317eb7cee22926d6abdca2a04c51350c6e6bd556dbd7"
+        },
+        {
+          "path": "node_modules/@sigstore/verify/dist/bundle/index.js",
+          "sha256": "125e8124a017db263cbf165d556f43e7316080336fb3756c98eff6af18bc0730"
+        },
+        {
+          "path": "node_modules/@sigstore/verify/dist/bundle/message.d.ts",
+          "sha256": "012543f47122e2a19937f262100c4f6b39f0c44dd91e9202b474b51f3a693ae1"
+        },
+        {
+          "path": "node_modules/@sigstore/verify/dist/bundle/message.js",
+          "sha256": "ffd55fe5cd375c4318fe1a5af7b1a939c3d2ffb4703bbc4fff77e61e32372012"
+        },
+        {
+          "path": "node_modules/@sigstore/verify/dist/error.d.ts",
+          "sha256": "969fbe3680162aede9af3de66944919c549fc3e42a984175538b9d28401e273b"
+        },
+        {
+          "path": "node_modules/@sigstore/verify/dist/error.js",
+          "sha256": "a311acc9849072841c37aa530f85c8e0978c35880b8f64c62e32437502c20adb"
+        },
+        {
+          "path": "node_modules/@sigstore/verify/dist/index.d.ts",
+          "sha256": "4c34a5bf1a69d1e4f9ba1dabb122f28d354a371b6e0f7d7be631bb0afae243dd"
+        },
+        {
+          "path": "node_modules/@sigstore/verify/dist/index.js",
+          "sha256": "1edb0652ccb4bf7490f288a522fc2d9807c7d8780f4a7ff294c37259b0f30f84"
+        },
+        {
+          "path": "node_modules/@sigstore/verify/dist/key/certificate.d.ts",
+          "sha256": "ea4ae6af9924a3ae774fa03e3cdc885b59cd7241319ea48f2707363cdf6a7741"
+        },
+        {
+          "path": "node_modules/@sigstore/verify/dist/key/certificate.js",
+          "sha256": "7b9d95a9fcca243e7a52cf1742e961521590de48d26c1d3fbfd5dbcdd5433a88"
+        },
+        {
+          "path": "node_modules/@sigstore/verify/dist/key/index.d.ts",
+          "sha256": "9b692c576c0485f532355e8c183b2da893026463fde89028a74f67f1c895fecc"
+        },
+        {
+          "path": "node_modules/@sigstore/verify/dist/key/index.js",
+          "sha256": "9298103950bc64ca9986e54b968a84a53424395540999e2da215eb214f61e6f8"
+        },
+        {
+          "path": "node_modules/@sigstore/verify/dist/key/sct.d.ts",
+          "sha256": "938846c916820ea4be83965487db9f672bc6cb4e69d98e261faeaa5fd9ed4459"
+        },
+        {
+          "path": "node_modules/@sigstore/verify/dist/key/sct.js",
+          "sha256": "d45dc2e67ee382746aa6a0442dfca5fd10d74db34c7659e3493632284c1407e4"
+        },
+        {
+          "path": "node_modules/@sigstore/verify/dist/policy.d.ts",
+          "sha256": "50ff5255bbeca72cfa46b601ae0d9f0bf7eb99eeedee2a69268ee3ffb72117f8"
+        },
+        {
+          "path": "node_modules/@sigstore/verify/dist/policy.js",
+          "sha256": "fd846e2e575640e2aec33c02267a4141eb7a2f9418b4dae1b82bbb96a2432c02"
+        },
+        {
+          "path": "node_modules/@sigstore/verify/dist/shared.types.d.ts",
+          "sha256": "d4c97ddd034aa4497bc10909e745e6539622a5b5327ee62efb1f259aaf368d33"
+        },
+        {
+          "path": "node_modules/@sigstore/verify/dist/shared.types.js",
+          "sha256": "d43aa81f5bc89faa359e0f97c814ba25155591ff078fbb9bfd40f8c7c9683230"
+        },
+        {
+          "path": "node_modules/@sigstore/verify/dist/timestamp/index.d.ts",
+          "sha256": "a3a94e67b85b952c5e2730c85e750fb9eb9b4014ad84689c31b0f4bd1fe0db29"
+        },
+        {
+          "path": "node_modules/@sigstore/verify/dist/timestamp/index.js",
+          "sha256": "a92bf7a691101c83e9ed42e4aafe367578ceb20b5329a894ab76753493c9a86f"
+        },
+        {
+          "path": "node_modules/@sigstore/verify/dist/timestamp/tsa.d.ts",
+          "sha256": "8e35f6fcd039aebd8237d71c2dd4d6696dd8435305fd401556b4d8a444b25273"
+        },
+        {
+          "path": "node_modules/@sigstore/verify/dist/timestamp/tsa.js",
+          "sha256": "da992ca078d3ba149cff2e434185ab007c5449ebecb56d3948a10e510960a280"
+        },
+        {
+          "path": "node_modules/@sigstore/verify/dist/tlog/checkpoint.d.ts",
+          "sha256": "0e3f3b2dea0e3a95c6fc723df8c6407d3d40ac3d1e7a5369b83fc6e9b7b2ed3f"
+        },
+        {
+          "path": "node_modules/@sigstore/verify/dist/tlog/checkpoint.js",
+          "sha256": "b4881c6a219c8ac811972b8ff8e33138cded4b84609b48f87d9c90f4dcda7b6d"
+        },
+        {
+          "path": "node_modules/@sigstore/verify/dist/tlog/dsse.d.ts",
+          "sha256": "4bbcbeb923893f3c65baf0d0383ca59a47956cc260f36af3d94b05a1f969144a"
+        },
+        {
+          "path": "node_modules/@sigstore/verify/dist/tlog/dsse.js",
+          "sha256": "5a79efe3de770dc87795d823d447395f5ae6f28dbf6edc0f81421d2f34ac5c5d"
+        },
+        {
+          "path": "node_modules/@sigstore/verify/dist/tlog/hashedrekord.d.ts",
+          "sha256": "fa684aeef911a346b9ad29812120171688c7be1d83571895397e1f3e58ab1462"
+        },
+        {
+          "path": "node_modules/@sigstore/verify/dist/tlog/hashedrekord.js",
+          "sha256": "4bee01cc9cbfc777df01bc41705f6f01989ace50942a0421c8a2ed0ef0ea3148"
+        },
+        {
+          "path": "node_modules/@sigstore/verify/dist/tlog/index.d.ts",
+          "sha256": "eb449963efde7bdd19d35ed9512f42a65d0e321dc2561ebcb912725ef6d694d7"
+        },
+        {
+          "path": "node_modules/@sigstore/verify/dist/tlog/index.js",
+          "sha256": "258ee711f825936cd91b9c8161e03f704b150a3ac4650bd616cc3754a17f7d2e"
+        },
+        {
+          "path": "node_modules/@sigstore/verify/dist/tlog/intoto.d.ts",
+          "sha256": "ceb2fe991aed2f5420f6ff7178d1c6ac51ffaacf28486a78bd9e55940c2b2a03"
+        },
+        {
+          "path": "node_modules/@sigstore/verify/dist/tlog/intoto.js",
+          "sha256": "cb68fbf291a74ad0689355b09332ca7c025a094765766fffc7a733de98a835d4"
+        },
+        {
+          "path": "node_modules/@sigstore/verify/dist/tlog/merkle.d.ts",
+          "sha256": "259e27dabe7a18ab5e3b808cbc637543b47231e4ab5c8191e40cc305b4ed76a6"
+        },
+        {
+          "path": "node_modules/@sigstore/verify/dist/tlog/merkle.js",
+          "sha256": "2874340dc1c9285f8475b44b6b4f8004e781143a4873bfa206057be480c76ff3"
+        },
+        {
+          "path": "node_modules/@sigstore/verify/dist/tlog/set.d.ts",
+          "sha256": "42f471d1652eaa79c10f4831e473ba4fa1b8513f671960d1fdf2f9d160b9df19"
+        },
+        {
+          "path": "node_modules/@sigstore/verify/dist/tlog/set.js",
+          "sha256": "a1927245ae0bb1b8f91fead209d16ae884d076f91700335bbe3bd42d992966c5"
+        },
+        {
+          "path": "node_modules/@sigstore/verify/dist/trust/filter.d.ts",
+          "sha256": "c40b82cde4981f63a7d84f8196f99c8ad87fb7b550d15e56fbce550249138cad"
+        },
+        {
+          "path": "node_modules/@sigstore/verify/dist/trust/filter.js",
+          "sha256": "38b3126be45b639685ceb7e96c489ecb27bee211e32c468798b9a2e7fbf3a6d0"
+        },
+        {
+          "path": "node_modules/@sigstore/verify/dist/trust/index.d.ts",
+          "sha256": "96e5b1a1e6c86043aad8694e8b7d6c9fdf2f53dbeb6e3a717dc65134d2b123e7"
+        },
+        {
+          "path": "node_modules/@sigstore/verify/dist/trust/index.js",
+          "sha256": "6f8874d9bc842fb09162621aabfac9d355e015350518b8d8ab134d797d0b4757"
+        },
+        {
+          "path": "node_modules/@sigstore/verify/dist/trust/trust.types.d.ts",
+          "sha256": "4c3dfd2fe5a063d54d2c43793371fcaad916aac14d7a5710384415bce70489b3"
+        },
+        {
+          "path": "node_modules/@sigstore/verify/dist/trust/trust.types.js",
+          "sha256": "d43aa81f5bc89faa359e0f97c814ba25155591ff078fbb9bfd40f8c7c9683230"
+        },
+        {
+          "path": "node_modules/@sigstore/verify/dist/verifier.d.ts",
+          "sha256": "2f3538e7b8743479c3933bd6096f029d4b4c6ad1154c7e9ce776ab41b8b3ae50"
+        },
+        {
+          "path": "node_modules/@sigstore/verify/dist/verifier.js",
+          "sha256": "7cad6f80cfae8410deb8f34ce1887985b942cf61bfc5d32bd4ded0c58358abe6"
+        },
+        {
+          "path": "node_modules/@sigstore/verify/package.json",
+          "sha256": "69fbaca3493e35b5fb399a4cd0788af0956e20efbb223d2cdbba3d8e2c5c3743"
+        }
+      ]
+    },
+    {
+      "classification": "pinned-trust-data",
+      "packageName": "sigstore-public-good-trusted-root",
+      "sourceRepo": "https://tuf-repo-cdn.sigstore.dev/ (Sigstore public-good instance TUF repository)",
+      "pinnedSha": "targets.json v14 / snapshot.json v165",
+      "license": "n/a — public trust-anchor data (Fulcio CA chain, Rekor/CT log keys, TSA roots), not copyrighted source code",
+      "note": "Full provenance chain (TUF timestamp -> snapshot -> targets -> content-addressed fetch -> independent hash recheck) recorded in trusted-root/PIN.md. Consulted with zero network access at verify time — that is this row's entire point.",
+      "files": [
+        {
+          "path": "trusted-root/trusted_root.json",
+          "sha256": "6494e21ea73fa7ee769f85f57d5a3e6a08725eae1e38c755fc3517c9e6bc0b66"
+        },
+        {
+          "path": "trusted-root/PIN.md",
+          "sha256": "21b7555403377bf5067a88329e7f30608fde003d360eeb57cfa45c1544d9389b"
+        }
+      ]
+    }
+  ]
+}

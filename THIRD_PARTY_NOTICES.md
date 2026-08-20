@@ -33,6 +33,58 @@ Generated from the shared credits registry (`data/credits-registry.json`, source
 - **Path(s) in this repo:**
   - `hub/vendored/ssh-sig/`
 
+## @sigstore/core
+
+- **Version:** 4.0.1
+- **License:** Apache-2.0
+- **Upstream:** https://github.com/sigstore/sigstore-js
+- **Upstream ships a NOTICE file:** no (checked upstream root — no NOTICE file)
+- **Note:** HELM-SIGSTORE-OFFLINE-VERIFY-1: byte-identical npm-tarball vendor (registry.npmjs.org, sha1-checked against the registry's own dist.shasum at pin time), not a git-SHA vendor like the other Apache-2.0 entries here — see hub/vendored/sigstore/MANIFEST.json for per-package tarball provenance.
+- **Path(s) in this repo:**
+  - `hub/vendored/sigstore/node_modules/@sigstore/core/`
+
+## @sigstore/bundle
+
+- **Version:** 5.0.0
+- **License:** Apache-2.0
+- **Upstream:** https://github.com/sigstore/sigstore-js
+- **Upstream ships a NOTICE file:** no (checked upstream root — no NOTICE file)
+- **Note:** HELM-SIGSTORE-OFFLINE-VERIFY-1: see sigstore-core entry's note; same monorepo, same vendor method.
+- **Path(s) in this repo:**
+  - `hub/vendored/sigstore/node_modules/@sigstore/bundle/`
+
+## @sigstore/protobuf-specs
+
+- **Version:** 0.5.1
+- **License:** Apache-2.0
+- **Upstream:** https://github.com/sigstore/sigstore-js
+- **Upstream ships a NOTICE file:** no (checked upstream root — no NOTICE file)
+- **Note:** HELM-SIGSTORE-OFFLINE-VERIFY-1: see sigstore-core entry's note; same monorepo, same vendor method.
+- **Path(s) in this repo:**
+  - `hub/vendored/sigstore/node_modules/@sigstore/protobuf-specs/`
+
+## @sigstore/verify
+
+- **Version:** 4.1.2
+- **License:** Apache-2.0
+- **Upstream:** https://github.com/sigstore/sigstore-js
+- **Upstream ships a NOTICE file:** no (checked upstream root — no NOTICE file)
+- **Note:** HELM-SIGSTORE-OFFLINE-VERIFY-1: see sigstore-core entry's note. This package's own npm tarball ships no LICENSE file (a monorepo publishing gap, confirmed by direct tarball inspection) — the Apache-2.0 text vendored alongside it is byte-identical to @sigstore/core's LICENSE (same monorepo, same package.json-declared license).
+- **Path(s) in this repo:**
+  - `hub/vendored/sigstore/node_modules/@sigstore/verify/`
+
+## Sigstore public-good trusted root (pinned trust data)
+
+- **Version:** targets.json v14
+- **License:** n/a — public trust-anchor data (Fulcio CA chain, Rekor/CT log keys, TSA roots), not copyrighted source code
+- **Upstream:** https://tuf-repo-cdn.sigstore.dev/
+- **Upstream ships a NOTICE file:** unresolved — flag separately
+- **Note:** HELM-SIGSTORE-OFFLINE-VERIFY-1: not third-party code — a pinned snapshot of Sigstore's public trust material plus this tree's own MANIFEST.json, flagged by check-credits-coverage.mjs's vendored/-path heuristic. Full provenance in hub/vendored/sigstore/trusted-root/PIN.md.
+- **Path(s) in this repo:**
+  - `hub/vendored/sigstore/MANIFEST.json`
+  - `hub/vendored/sigstore/trusted-root/trusted_root.json`
+  - `hub/vendored/sigstore/trusted-root/PIN.md`
+
 ## rtoy/fdlibm-js (embedded SunPro fdlibm port)
 
 - **Version:** n/a
