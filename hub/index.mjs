@@ -31,6 +31,7 @@ import { uninstallAutostart, isAutostartInstalled, autostartLocation, autostartS
 import { uninstallShortcut, isShortcutInstalled, shortcutLocation } from "./shortcut.mjs";
 import { createIdleTimer } from "./idle-timer.mjs";
 import { createWatchScheduler } from "./watch-scheduler.mjs";
+import { createUptimeHeartbeat } from "./uptime-record.mjs";
 import { getSseConnectionCount, getRunsInFlightCount } from "./server.mjs";
 import { isPairingWindowOpen } from "./token.mjs";
 import { isBackupInFlight } from "./backup.mjs";
@@ -237,6 +238,17 @@ async function cmdStart({ open = false, _recoveredFrom = null, _isFirstRun = nul
   // interval timer is unref'd (watch-scheduler.mjs), so it never itself
   // keeps the process alive past an idle shutdown.
   createWatchScheduler({ db }).start();
+
+  // HELM-WATCH-UPTIME-1 (spec §1 Q3): journals helmd's own "I was up during
+  // [T1,T2]" record, so HELM-WATCH-RECEIPT-1 can later tell "no evidence
+  // either way" (machine asleep/offline) apart from an actual miss (helmd
+  // was up the whole window and the watch never fired). stop() runs on
+  // every graceful exit path below (idle shutdown, `helmd stop`, a fatal
+  // startup error) via the `exit` event — never on an abrupt kill, which is
+  // exactly the gap the next boot's coverage check must see.
+  const uptimeHeartbeat = createUptimeHeartbeat({ db });
+  uptimeHeartbeat.start();
+  process.on("exit", () => uptimeHeartbeat.stop());
 
   // Fire-and-forget, deliberately not awaited — see the comment above
   // nextCheckpointSeq. Any unexpected failure here (not just a relay
