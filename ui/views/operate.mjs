@@ -186,10 +186,14 @@ async function wireStartupCard(root, { port, token }) {
   const resultEl = root.querySelector("#startup-result");
   const initial = await call("/autostart", { port, token });
   if (!initial.ok) {
+    // HELM-IA-TABS-1 (FINDINGS-HELD 2026-08-20): the bare "helmd didn't
+    // answer" this used to say left two disabled, unexplained checkboxes —
+    // §13.1's "no bare failure sentence" rule applied to itself. Say what's
+    // wrong AND what to do about it, same as the page-level blocked states.
     resultEl.textContent =
       initial.status === 404
         ? "Startup options aren't available in this daemon version yet."
-        : "helmd didn't answer — startup options can't be shown.";
+        : "Couldn't reach Helm just now, so these can't be shown or changed. Check that Helm is still running, then reload this tab.";
     return;
   }
   applyStartupState(root, initial.data);
@@ -259,7 +263,10 @@ async function wireSignerCard(root, { port, token }) {
   const refreshCurrent = async () => {
     const res = await call("/signer/config", { port, token });
     if (!res.ok) {
-      currentEl.textContent = res.status === 404 ? "External signers aren't available in this daemon version yet." : "helmd didn't answer.";
+      currentEl.textContent =
+        res.status === 404
+          ? "External signers aren't available in this daemon version yet."
+          : "Couldn't reach Helm just now, so this can't be shown. Check that Helm is still running, then reload this tab.";
       return;
     }
     currentEl.textContent = res.data.config

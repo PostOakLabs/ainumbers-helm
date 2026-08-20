@@ -23,18 +23,22 @@
 // HELM-MATTER-U1: "matters" joins Status, after Deadlines — the §12.6 IA
 // line above records the 2026-08-07 naming ruling and isn't re-stated for
 // every later addition; see this tab's own row for its history.
+// HELM-IA-TABS-1: `whenToUse` is the header's second line, alongside `intro`
+// — intro says what the tab IS, whenToUse says when you'd reach for it. Same
+// 150-char cap as intro (tab-meta.test.mjs), same reason: this renders above
+// every view's own content, so it stays a pointer, not a manual.
 export const TABS = [
-  { id: "home", label: "Home", group: "Home", intro: "What Helm is, and what to do first.", requiresPairing: false },
-  { id: "choose", label: "Choose", group: "Build", intro: "Pick the workflow you want to run, from ready-made templates or your own packs.", requiresPairing: true },
-  { id: "canvas", label: "Canvas", group: "Build", intro: "See exactly what a workflow will do, step by step, before you run it.", requiresPairing: true },
-  { id: "connect", label: "Connect", group: "Build", intro: "Give a workflow access to the services it needs, one scope at a time.", requiresPairing: true },
-  { id: "run", label: "Run", group: "Execute", intro: "Start a workflow and watch each step as it happens.", requiresPairing: true },
-  { id: "review", label: "Review", group: "Execute", intro: "Sign off on runs that are waiting for a person before they can continue.", requiresPairing: true },
-  { id: "verify", label: "Verify", group: "Execute", intro: "Check an evidence file's signatures and hashes, with no network connection.", requiresPairing: false },
-  { id: "operate", label: "Status", group: "Status", intro: "Check how Helm is running on this computer, and take a backup.", requiresPairing: true },
-  { id: "register", label: "Register", group: "Status", intro: "Produce the governance/EUC/change-control register entry and validation cards for a workflow — each kernel is one calculation step in the workflow.", requiresPairing: true },
-  { id: "deadlines", label: "Deadlines", group: "Status", intro: "Regulatory dates that matter, and which of your workflows cover them.", requiresPairing: false },
-  { id: "matters", label: "Matters", group: "Status", intro: "The exams, filings, and disputes you're tracking, with their deadlines and the evidence bound to each.", requiresPairing: true },
-  { id: "learn", label: "Learn", group: "Status", intro: "How Helm works, how to fix a connection, and where the standard is written down.", requiresPairing: false },
-  { id: "agents", label: "AI agents", group: "AI agents", intro: "Connect your own agent or MCP client to Helm.", requiresPairing: true },
+  { id: "home", label: "Home", group: "Home", intro: "What Helm is, and what to do first.", whenToUse: "Land here anytime — it's the one tab that works before Helm is even running.", requiresPairing: false },
+  { id: "choose", label: "Choose", group: "Build", intro: "Pick the workflow you want to run, from ready-made templates or your own packs.", whenToUse: "Start of every workflow: before Canvas or Run, pick what you're doing here first.", requiresPairing: true },
+  { id: "canvas", label: "Canvas", group: "Build", intro: "See exactly what a workflow will do, step by step, before you run it.", whenToUse: "After Choose, before Run — confirm the steps and the data they touch before anything executes.", requiresPairing: true },
+  { id: "connect", label: "Connect", group: "Build", intro: "Give a workflow access to the services it needs, one scope at a time.", whenToUse: "Once, the first time a workflow needs a service it isn't yet authorized to reach.", requiresPairing: true },
+  { id: "run", label: "Run", group: "Execute", intro: "Start a workflow and watch each step as it happens.", whenToUse: "When Canvas and Connect look right and you're ready to execute for real.", requiresPairing: true },
+  { id: "review", label: "Review", group: "Execute", intro: "Sign off on runs that are waiting for a person before they can continue.", whenToUse: "When a run pauses for a human decision — nothing to do here otherwise.", requiresPairing: true },
+  { id: "verify", label: "Verify", group: "Execute", intro: "Check an evidence file's signatures and hashes, with no network connection.", whenToUse: "Any time you or someone else needs to confirm an evidence file hasn't been altered.", requiresPairing: false },
+  { id: "operate", label: "Status", group: "Status", intro: "Check how Helm is running on this computer, and take a backup.", whenToUse: "To confirm Helm is healthy, trigger a backup, or manage startup/signing settings.", requiresPairing: true },
+  { id: "register", label: "Register", group: "Status", intro: "Produce the governance/EUC/change-control register entry and validation cards for a workflow — each kernel is one calculation step in the workflow.", whenToUse: "When you need a documented, auditable record of a workflow for governance review.", requiresPairing: true },
+  { id: "deadlines", label: "Deadlines", group: "Status", intro: "Regulatory dates that matter, and which of your workflows cover them.", whenToUse: "Planning ahead — see what's due and whether a workflow already covers it.", requiresPairing: false },
+  { id: "matters", label: "Matters", group: "Status", intro: "The exams, filings, and disputes you're tracking, with their deadlines and the evidence bound to each.", whenToUse: "Tracking an ongoing exam, filing, or dispute against the evidence you've built for it.", requiresPairing: true },
+  { id: "learn", label: "Learn", group: "Status", intro: "How Helm works, how to fix a connection, and where the standard is written down.", whenToUse: "First-time setup, a broken connection, or a refresher on how a tab works.", requiresPairing: false },
+  { id: "agents", label: "AI agents", group: "AI agents", intro: "Connect your own agent or MCP client to Helm.", whenToUse: "Wiring an external agent or MCP client to run Helm workflows on your behalf.", requiresPairing: true },
 ];
