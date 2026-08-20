@@ -229,10 +229,17 @@ test("start against a genuinely corrupted journal: quarantines (renames, never d
   await exited;
 
   // Post-stop, on-disk proof: the LIVE journal.db is fresh (re-init, not
-  // repair — zero rows, clean replay) and the OLD corrupted one survives
-  // untouched inside the quarantined copy (never deleted).
+  // repair — clean replay, nothing carried forward from the broken one) and
+  // the OLD corrupted one survives untouched inside the quarantined copy
+  // (never deleted). HELM-WATCH-UPTIME-1: every graceful boot now journals
+  // its own liveness heartbeat on `helmd_uptime`, so "starts fresh" means
+  // "carries nothing but that one heartbeat stream," not "zero rows."
   const freshDb = openJournal(join(TMP, "journal.db"));
-  assert.deepEqual(streamHeads(freshDb), [], "the re-inited journal starts empty");
+  assert.deepEqual(
+    streamHeads(freshDb).map((h) => h.stream_id),
+    ["helmd_uptime"],
+    "the re-inited journal starts with only this boot's own uptime heartbeat, nothing carried forward"
+  );
   assert.equal(replayVerify(freshDb).ok, true);
   freshDb.close();
 
