@@ -819,6 +819,12 @@ button.secondary {
   color: var(--ok);
 }
 
+/* CSP's style-src 'self' (hub/static.mjs) refuses any inline style="" —
+   a toggled field needs a class, never element.style. */
+.field-hidden {
+  display: none;
+}
+
 .watch-status-badge {
   display: inline-block;
   font-size: 0.7rem;

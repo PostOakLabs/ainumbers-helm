@@ -148,7 +148,7 @@ function createFormHtml(packOptionsHtmlStr) {
             <option value="operator_supplied">Supply fixed inputs now (re-used on every firing)</option>
           </select>
         </label>
-        <label id="watch-operator-inputs-label" style="display:none">Inputs (JSON, keyed by node_id)
+        <label id="watch-operator-inputs-label" class="field-hidden">Inputs (JSON, keyed by node_id)
           <textarea name="operator_inputs" rows="4" placeholder='{"node_a": {"param": "value"}}'></textarea>
         </label>
         <fieldset>
@@ -240,7 +240,7 @@ async function renderCreate(root, { port, token }) {
   const inputsModeSelect = form.querySelector('[name="inputs_mode"]');
   const operatorInputsLabel = root.querySelector("#watch-operator-inputs-label");
   inputsModeSelect.addEventListener("change", () => {
-    operatorInputsLabel.style.display = inputsModeSelect.value === "operator_supplied" ? "" : "none";
+    operatorInputsLabel.classList.toggle("field-hidden", inputsModeSelect.value !== "operator_supplied");
   });
 
   form.addEventListener("submit", async (e) => {
