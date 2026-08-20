@@ -222,9 +222,19 @@ function initWatchRunsTable(db) {
     CREATE TABLE IF NOT EXISTS watch_runs (
       watch_id TEXT PRIMARY KEY,
       last_fired_at TEXT NOT NULL,
-      last_run_id TEXT NOT NULL
+      last_run_id TEXT NOT NULL,
+      expected_by TEXT
     );
   `);
+  // Migration for a watch_runs table created before HELM-WATCH-RECEIPT-1
+  // (expected_by is new) — `ALTER TABLE ADD COLUMN` is idempotent-by-catch
+  // here since node:sqlite's DatabaseSync has no
+  // "column already exists"-safe IF NOT EXISTS variant for ADD COLUMN.
+  try {
+    db.exec("ALTER TABLE watch_runs ADD COLUMN expected_by TEXT");
+  } catch {
+    // column already present — expected on every call after the first.
+  }
 }
 
 function lastFiredAt(db, watchId) {
@@ -232,11 +242,29 @@ function lastFiredAt(db, watchId) {
   return row ? row.last_fired_at : null;
 }
 
-function recordFired(db, watchId, { runId, nowISO }) {
+// Exported for HELM-WATCH-RECEIPT-1: the same baseline isWatchDue computes
+// internally (last cadence-triggered firing, or created_at before the first
+// one), read-only, so the receipt row's freshness computation never
+// re-derives this rule a second way.
+export function watchBaseline(db, watchId, watch) {
+  initWatchRunsTable(db);
+  return lastFiredAt(db, watchId) ?? watch.created_at;
+}
+
+// The full watch_runs row (last_fired_at, last_run_id, expected_by) for a
+// watch, or null if it has never fired. HELM-WATCH-RECEIPT-1 reads this
+// directly rather than re-querying the table under a third name.
+export function lastWatchRun(db, watchId) {
+  initWatchRunsTable(db);
+  const row = db.prepare("SELECT last_fired_at, last_run_id, expected_by FROM watch_runs WHERE watch_id = ?").get(watchId);
+  return row ? { lastFiredAt: row.last_fired_at, lastRunId: row.last_run_id, expectedBy: row.expected_by } : null;
+}
+
+function recordFired(db, watchId, { runId, nowISO, expectedBy }) {
   db.prepare(
-    "INSERT INTO watch_runs (watch_id, last_fired_at, last_run_id) VALUES (?, ?, ?) " +
-      "ON CONFLICT(watch_id) DO UPDATE SET last_fired_at = excluded.last_fired_at, last_run_id = excluded.last_run_id"
-  ).run(watchId, nowISO, runId);
+    "INSERT INTO watch_runs (watch_id, last_fired_at, last_run_id, expected_by) VALUES (?, ?, ?, ?) " +
+      "ON CONFLICT(watch_id) DO UPDATE SET last_fired_at = excluded.last_fired_at, last_run_id = excluded.last_run_id, expected_by = excluded.expected_by"
+  ).run(watchId, nowISO, runId, expectedBy);
 }
 
 // A watch is due when now >= baseline + one cadence interval, where baseline
@@ -245,8 +273,7 @@ function recordFired(db, watchId, { runId, nowISO }) {
 // has had a chance to look at what they just configured — one full interval
 // grace period first is a deliberate, documented choice, not an oversight.
 export function isWatchDue(db, watch, nowMs) {
-  initWatchRunsTable(db);
-  const baseline = lastFiredAt(db, watch.watch_id) ?? watch.created_at;
+  const baseline = watchBaseline(db, watch.watch_id, watch);
   return nowMs >= Date.parse(baseline) + cadenceIntervalMs(watch.cadence);
 }
 
@@ -284,6 +311,13 @@ export async function fireWatch(db, watch, { nowISO = new Date().toISOString() }
     });
   }
 
+  // Captured BEFORE recordFired below advances the baseline — this is the
+  // window this firing is satisfying (Q2's expected_by), not the window the
+  // NEXT firing will be due in. HELM-WATCH-RECEIPT-1 reads it back verbatim
+  // from watch_runs rather than recomputing it after the fact, since after
+  // the fact the baseline has already moved to this run's own timestamp.
+  const expectedBy = new Date(Date.parse(watchBaseline(db, watch.watch_id, watch)) + cadenceIntervalMs(watch.cadence)).toISOString();
+
   const runId = randomUUID();
   const kernelStepRunner = createKernelStepRunner();
   const stepRunner = async (step, ctx) => {
@@ -296,8 +330,7 @@ export async function fireWatch(db, watch, { nowISO = new Date().toISOString() }
   const gateCheck = haGateCheckFor(db);
   const result = await executeRun(db, { runId, manifest: clone, dryRun: false, stepRunner, gateCheck });
   publishRunEvent(runId, { run_id: runId, state: result.state, execution_hash: result.executionHash, held: result.held ?? null });
-  initWatchRunsTable(db);
-  recordFired(db, watch.watch_id, { runId, nowISO });
+  recordFired(db, watch.watch_id, { runId, nowISO, expectedBy });
   return { runId, state: result.state };
 }
 

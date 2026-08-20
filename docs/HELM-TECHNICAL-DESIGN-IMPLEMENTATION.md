@@ -146,7 +146,7 @@ Every entry must carry the EU AI Act Article 12(2) and 12(3) field groups, `peri
 
 `rh_0 = SHA-256(stream_id)` has no salt and no nonce. **This is a design decision, not an open issue.** It was re-examined in a read-only design review on 2026-07-26, which re-derived the construction from this file and concluded it is correct as built. The reasoning is reproduced below so it does not have to be re-found.
 
-The reasoning, in short: `stream_id` is not, and was never intended to be, confidential. It is a plaintext column in the local schema (`hub/journal.mjs:57`), it sits in plaintext inside the same predicate object as `rh` in every checkpoint (`hub/checkpoint.mjs:24-27`), and that predicate travels verbatim inside every exported evidence bundle (`hub/bundle.mjs:113-151`). An offline verifier is *handed* `stream_id`; it never has to guess it. So the "attacker must recover a hash preimage" premise does not apply, whatever the entropy of a given stream identifier.
+The reasoning, in short: `stream_id` is not, and was never intended to be, confidential. It is a plaintext column in the local schema (`hub/journal.mjs:57`), it sits in plaintext inside the same predicate object as `rh` in every checkpoint (`hub/checkpoint.mjs:24-27`), and that predicate travels verbatim inside every exported evidence bundle (`hub/bundle.mjs:118-156`). An offline verifier is *handed* `stream_id`; it never has to guess it. So the "attacker must recover a hash preimage" premise does not apply, whatever the entropy of a given stream identifier.
 
 The offline-verification consequence is the decisive half. A salt would have to either travel in the checkpoint, making it exactly as public as `stream_id` and therefore useless, or be withheld, which would make `journal_root_digest` unrecomputable and fail every legitimate verifier. Neither helps, and the second contradicts the offline verifiability the whole product rests on (§9).
 
@@ -252,17 +252,17 @@ The DSSE pre-authentication encoding binds `payloadType` into the signed bytes, 
 
 ### Bundles
 
-`assembleBundle` (`hub/bundle.mjs:113-151`) seals each object, builds a manifest predicate listing every entry's kind, digest, and trust label plus checkpoint and anchor references, schema-validates it, and signs the manifest.
+`assembleBundle` (`hub/bundle.mjs:118-156`) seals each object, builds a manifest predicate listing every entry's kind, digest, and trust label plus checkpoint and anchor references, schema-validates it, and signs the manifest.
 
-Redaction is a structural backstop, not a hope. Objects entering a bundle are expected to already be digest-only summaries, and a set of known-dangerous field names (`access_token`, `refresh_token`, `id_token`, `secret`, `secretKey`, `privateKey`, `password`, `api_key`, `raw_payload`, `payload_bytes`, `payload_body`) is refused outright, recursively, so an upstream mistake cannot leak through silently (`hub/bundle.mjs:60-76`).
+Redaction is a structural backstop, not a hope. Objects entering a bundle are expected to already be digest-only summaries, and a set of known-dangerous field names (`access_token`, `refresh_token`, `id_token`, `secret`, `secretKey`, `privateKey`, `password`, `api_key`, `raw_payload`, `payload_bytes`, `payload_body`) is refused outright, recursively, so an upstream mistake cannot leak through silently (`hub/bundle.mjs:65-80`).
 
-Each object carries exactly one trust label, defaulted by kind, and labels are never collapsed (`hub/bundle.mjs:37-59`).
+Each object carries exactly one trust label, defaulted by kind, and labels are never collapsed (`hub/bundle.mjs:37-58`).
 
 ### Verifying offline
 
-`verifyBundle` (`hub/bundle.mjs:160-201`) takes a bundle and a set of public keys and does zero network work. It checks the manifest envelope and schema, that the signed predicate matches the carried one, and then for every entry: the object exists, its kind matches, its trust label matches, its envelope verifies, its **recomputed** digest matches the manifest entry, and its predicate still passes the redaction check. Checkpoint envelopes are verified and cross-referenced. It returns `{valid, reasons[]}` and never throws on a bad bundle, which is what a deliberately tampered fixture asserts against.
+`verifyBundle` (`hub/bundle.mjs:165-206`) takes a bundle and a set of public keys and does zero network work. It checks the manifest envelope and schema, that the signed predicate matches the carried one, and then for every entry: the object exists, its kind matches, its trust label matches, its envelope verifies, its **recomputed** digest matches the manifest entry, and its predicate still passes the redaction check. Checkpoint envelopes are verified and cross-referenced. It returns `{valid, reasons[]}` and never throws on a bad bundle, which is what a deliberately tampered fixture asserts against.
 
-`exportBundleZip` (`hub/bundle.mjs:221-261`) produces the shareable artifact: `bundle.json` (the evidence itself), `verify.html` (a standalone verifier that runs in any browser with no network), `auditor.html` (a printable human-readable record), and a README. The export runs the same WebCrypto verify chain the embedded `verify.html` will run, against the real code path rather than a simulation, so a bundle that would not verify is caught before it ships.
+`exportBundleZip` (`hub/bundle.mjs:226-265`) produces the shareable artifact: `bundle.json` (the evidence itself), `verify.html` (a standalone verifier that runs in any browser with no network), `auditor.html` (a printable human-readable record), and a README. The export runs the same WebCrypto verify chain the embedded `verify.html` will run, against the real code path rather than a simulation, so a bundle that would not verify is caught before it ships.
 
 Verification does not need `helmd`. It needs the bundle and the public keys, both of which travel inside the zip.
 
