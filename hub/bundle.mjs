@@ -50,6 +50,11 @@ const DEFAULT_TRUST_LABEL = {
   // way step_result is — a direct kernel-runner.mjs invocation that already
   // proved reproduction before returning — so it earns the same label.
   check_result: "kernel_verified",
+  // HELM-WATCH-RECEIPT-1: a freshness receipt is a computed VIEW over
+  // already-journaled entries (Q2 — never a parallel source of truth,
+  // no kernel re-executed to produce it), so it earns hash_verified, not
+  // kernel_verified — the same reasoning policy_decision already gets.
+  freshness_receipt: "hash_verified",
 };
 
 // Structural redaction backstop (§26.7 "no secret values, no raw credential
