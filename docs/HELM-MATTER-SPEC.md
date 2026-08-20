@@ -1,22 +1,22 @@
 # HELM-MATTER-SPEC — Matter Workspace for AINumbers Helm
 
-**Date:** 2026-08-20 · **Status:** DRAFT (spec-only row, no build) · **Supersedes:** workspace-root `HELM-MATTER-BUILD-SPEC.md` (drafted 2026-08-08), which is now historical — this file is the live spec.
-**Authored by:** `HELM-MATTER-SPEC-1` (spec-amendment WU, SONNET), amending the 08-08 draft per Tim's order 2026-08-20 off `research/LEGALOPS-UNBUILT-TRIAGE-2026-08-20.md` (verdict: BUILD — "strongest unbuilt item; pure data-model work with three credibility hooks").
-**Anchors:** the 08-08 draft's own anchors (Tim's ruling 2026-08-06; `DECISION-LEDGER-DISCARDED.md` hosted-dashboard kill row; `HELM-PHASE1-BUILD-SPEC.md` locked D1–D12, not re-litigated; `docs/HELM-TECHNICAL-DESIGN-IMPLEMENTATION.md` §"What gets signed" for the actual DSSE/envelope code this spec reuses) **plus three interop anchors pinned this row** (SO #38): `research/clause-snapshots/SALI-LMSS.citations.md`, `research/clause-snapshots/CTJ-general-guidance-electronic-court-bundles-2021-11-29.citations.md`, `research/clause-snapshots/EDRM-production-standards-v2.citations.md`.
-**Gate:** IPLD SPEC-SERIAL queue drained (08-08). This spec does not touch `repo/chaingraph/standard/SPEC.md`.
+**Date:** 2026-08-20 · **Status:** DRAFT (spec only, no build yet) · **Supersedes:** an earlier internal-workspace draft of the same spec (2026-08-08), now historical — this file is the live spec.
+**Amendment basis:** a fresh review found three real interop anchors the earlier draft predated (a legal-matter tagging ontology, a court e-bundle formatting standard, and an eDiscovery load-file standard), verdict: worth building — pure data-model work with three credibility hooks against real external standards.
+**Anchors:** `docs/HELM-TECHNICAL-DESIGN-IMPLEMENTATION.md` §"What gets signed" for the actual DSSE/envelope code this spec reuses, plus three interop anchors pinned this revision, each with source URL, retrieval date, sha256, and section references: `research/clause-snapshots/SALI-LMSS.citations.md`, `research/clause-snapshots/CTJ-general-guidance-electronic-court-bundles-2021-11-29.citations.md`, `research/clause-snapshots/EDRM-production-standards-v2.citations.md`.
+**Gate:** does not touch `repo/chaingraph/standard/SPEC.md`.
 
 ---
 
 ## §0 What changed in this amendment, and why
 
-The 08-08 draft was right about the shape (Helm-local matter container, bind-by-hash, offline verify) but predated three real interop anchors a fresh search found (`research/LEGALOPS-UNBUILT-TRIAGE-2026-08-20.md`). Per [[project-primary-text-before-build]] (five of five prior rows that retrieved primary text found their spec wrong before this point), this row retrieves and pins that primary text (SO #38) before any build row is staged, and rewrites §2/§5 to bind to it instead of the draft's placeholder design. Everything else in the 08-08 draft (§0 hosted-form kill, §3 binding-by-hash discipline, §4 verify-page shape, §6 non-goals) stood up under the amendment and is carried forward with citations added where it now touches primary text.
+The earlier draft was right about the shape (Helm-local matter container, bind-by-hash, offline verify) but predated three real interop anchors a fresh search found. Every behavioural rule, threshold, and enum value that touches a published external standard should cite the section of that standard it implements, backed by a locally pinned, hash-verified copy of the primary text rather than a paraphrase — the same discipline other standards-implementing specs in this codebase already follow, since a spec built off a stale or wrong reading of a standard costs far more to unwind after code exists than before. This revision retrieves and pins that primary text before any build work starts, and rewrites §2/§5 to bind to it instead of the earlier draft's placeholder design. Everything else in the earlier draft (§0 hosted-form kill, §3 binding-by-hash discipline, §4 verify-page shape, §6 non-goals) stood up under the amendment and is carried forward with citations added where it now touches primary text.
 
 **The three anchors, folded in:**
 - **SALI LMSS** (§2) — matter manifests carry LMSS tag IRIs (`http://lmss.sali.org/R<opaque>`), not invented local codes. Pinned: `SALI-LMSS.citations.md`.
 - **UK e-bundle export shape** (§5) — export includes a paginated, bookmarked, single-PDF index matching the numbered rules of the CTJ "General Guidance on Electronic Court Bundles" (29 Nov 2021). Pinned: `CTJ-general-guidance-electronic-court-bundles-2021-11-29.citations.md`. **Naming correction from the triage doc:** the triage shorthand called this "CPR PD 5C" — PD 5C itself only governs CE-File format/size, not the pagination/bookmark rules; the actual numbered rules a matter export follows are the CTJ guidance, cited by its own paragraph numbers below (see the citations file's "Note on the anchor label" for the full distinction).
 - **EDRM DAT-flavour manifest** (§5) — the eDiscovery-interchange-shaped sibling export uses EDRM's own 24-field metadata list, not an invented field set. Pinned: `EDRM-production-standards-v2.citations.md`.
 
-**Zero new crypto, unchanged from the draft:** every signed matter object reuses Helm's existing DSSE envelope exactly as built — in-toto Statement v1, JCS-canonical payload, Ed25519 mandatory + ML-DSA-44 co-signature (`hub/envelope.mjs`, documented in `docs/HELM-TECHNICAL-DESIGN-IMPLEMENTATION.md` §"What gets signed") — and the existing bundle assembler (`hub/bundle.mjs:assembleBundle`). This spec introduces no signing scheme, no key type, no verification algorithm.
+**Zero new crypto, unchanged from the draft:** every signed matter object reuses Helm's existing DSSE envelope exactly as built — in-toto Statement v1, JCS-canonical payload, Ed25519 mandatory + ML-DSA (FIPS 204, parameter set 44) co-signature (`hub/envelope.mjs`, documented in `docs/HELM-TECHNICAL-DESIGN-IMPLEMENTATION.md` §"What gets signed") — and the existing bundle assembler (`hub/bundle.mjs:assembleBundle`). This spec introduces no signing scheme, no key type, no verification algorithm.
 
 ## §1 Field-coverage checklist (unchanged from the 08-08 draft — CounselOS borrow, practitioner input, not a schema)
 
@@ -25,7 +25,7 @@ The 08-08 draft was right about the shape (Helm-local matter container, bind-by-
 | CounselOS concept | Covered by | Notes |
 |---|---|---|
 | Matter-id + stage enum (`intake\|working\|closed`) | §2 `matter.status` | Closed additionally triggers §5 bundle emission. |
-| Structured deadline records `{date, action, type, source, done}`, `done:true` NEVER-DELETE | §2 `matter.deadlines[]` | Matches SO #0b: no silently-false duty — a satisfied deadline record is never removed, only appended-over. |
+| Structured deadline records `{date, action, type, source, done}`, `done:true` NEVER-DELETE | §2 `matter.deadlines[]` | A satisfied deadline record is never removed, only appended-over — no silently-false duty. |
 | Sections: Parties / Documents / Context / Findings / Decisions / Open-Issues / Next-Action | §2 `matter.parties[]`, `matter.bindings[]`, `matter.narrative` | Findings/Decisions are NOT reproduced as free narrative — they are already first-class OCG artifacts (§27 approval/annotation records) referenced by hash. |
 | Closeout = git-commit | §5 closeout hook | Ours: `status → closed` emits a DSSE-signed evidence bundle instead of a commit. |
 
@@ -64,7 +64,7 @@ A new page in the site's Verify family (`repo/tools/` or `repo/chaingraph/` per 
 - Verifies `manifest_digest`, then walks `bindings[]` and verifies each bound artifact using ALREADY-SHIPPED verification code (§27.6 evidence-bundle verification, §16 whole-artifact proof verification, §20 anchor verification, and the DSSE envelope verification already built in `hub/envelope.mjs` for the export's own signature).
 - Surfaces exactly which bindings verified, which are `external_reference` (never verified, always labeled), and which deadlines are open — never collapsing into a single "matter verified ✓" badge.
 - Works fully offline from an export file, standalone, no Helm daemon reachable — mirrors HELM-U3's Verify view design.
-- Zero accounts, zero server storage, zero recurring duty (SO #0b).
+- Zero accounts, zero server storage, zero recurring manual duty.
 
 ## §5 Export design and the closeout hook — amended this row (LMSS/e-bundle/EDRM anchors bound in)
 
@@ -105,9 +105,9 @@ A sibling flat-file export — one row per `bindings[]` entry — using the fiel
 | `FILENAME` / `DOCLINK` | the export directory's per-binding subdirectory path (§2 "Directory-rooted storage") |
 | all remaining EDRM fields (`AUTHORS`, `BATES RANGE`, `BCC`, `CC`, `DATERECEIVED`, `DATESAVED`, `DATESENT`, `DOCEXT`, `FOLDER`, `FROM`, `SUBJECT`, `THREAD ID`, `TIMERECEIVED`, `TIMESENT`, `TO`, `ATTACHMENTIDS`) | emitted present-but-empty — a matter binding is not email-shaped, these are EDRM's email-oriented fields, kept only so the row count and column set match what a receiving Concordance/EDRM-XML importer expects |
 
-**Delimiter note, cited per SO #38(a)'s "cite a paragraph or say there is none":** the pinned EDRM page documents the field list, not the physical delimiter bytes. Per the pinned citations file's own note, the Concordance-style pilcrow/thorn/caret delimiter convention is documented industry tooling practice, not EDRM primary text — the export format spec here is: field-delimited, one row per binding, header row naming the fields above, delimiter and quoting to be fixed by the schema WU against a real Concordance/Relativity import test (not invented here), and stated honestly as tooling convention rather than misattributed to an EDRM paragraph that does not exist.
+**Delimiter note:** the pinned EDRM page documents the field list, not the physical delimiter bytes. Per the pinned citations file's own note, the Concordance-style pilcrow/thorn/caret delimiter convention is documented industry tooling practice, not EDRM primary text — the export format spec here is: field-delimited, one row per binding, header row naming the fields above, delimiter and quoting to be fixed by the schema WU against a real Concordance/Relativity import test (not invented here), and stated honestly as tooling convention rather than misattributed to an EDRM paragraph that does not exist.
 
-**Closeout hook (unchanged from the draft — the integration prize):** `matter.status → closed` is specified to emit both export flavours (§5.1, §5.2) automatically alongside the existing evidence-bundle export, as one event, not a polling duty (SO #0b: automate over remind). `helmd` emits it locally on the status transition; no external service is contacted. The design leaves a hook point for an external tool's own closeout event to trigger this (the "gateway-log-demo pattern, legal edition") via Helm's local MCP endpoint (HELM-H9, `evidence.export`) or CLI.
+**Closeout hook (unchanged from the draft — the integration prize):** `matter.status → closed` is specified to emit both export flavours (§5.1, §5.2) automatically alongside the existing evidence-bundle export, as one event, not a manual/polling duty. `helmd` emits it locally on the status transition; no external service is contacted. The design leaves a hook point for an external tool's own closeout event to trigger this via Helm's local MCP `evidence.export` endpoint or CLI.
 
 ## §6 Non-goals (explicit, per the row's fence — unchanged, extended for this amendment)
 
@@ -116,9 +116,9 @@ A sibling flat-file export — one row per `bindings[]` entry — using the fiel
 - No new identity, role, or hashing scheme — every reference reuses §9 identity, §27 accountability shapes, the one `_hash.mjs` canon, and the existing `hub/envelope.mjs` DSSE signing.
 - **No new LMSS ontology or local matter-type taxonomy** — `lmss_tags[]` is the only classification vocabulary; a matter with no applicable LMSS tag simply has an empty array, it does not get a locally-invented substitute code.
 - No PDF/CPR-PD-5C-shaped bundling logic beyond §5.1's navigation-aid rendering — the e-bundle PDF is not submitted to any court by Helm itself; a practitioner uses it as a starting bundle and remains responsible for court-specific compliance.
-- No recurring manual duty and no time/SLA promise anywhere in the design (SO #0 hard ban).
+- No recurring manual duty and no time/SLA promise anywhere in the design.
 
-## §7 Work-unit list (for the ORCH) — amended field/dependency detail, same 5-row shape
+## §7 Work-unit list — amended field/dependency detail, same 5-row shape
 
 All rows below are downstream of HELM-PHASE1-BUILD-SPEC's own WUs. Every helm-touching row inherits the standing re-vendor prerequisite (check mirror currency before the row starts, per `feedback-revendor-before-helm-work` doctrine).
 
@@ -128,15 +128,15 @@ All rows below are downstream of HELM-PHASE1-BUILD-SPEC's own WUs. Every helm-to
 | HELM-MATTER-H1 | H | Matter store + CRUD | `helmd` SQLite table for matters (HELM-H4's durability layer, D4), CRUD over the §2 manifest, `bindings[]` resolution against existing run/evidence-bundle/approval-record stores (§3), validation that every non-`external_reference` binding resolves before acceptance, directory-rooted export layout (§2). | HELM-MATTER-S1, HELM-H4, HELM-H7 | Yes. |
 | HELM-MATTER-H2 | H | Closeout export hook + dual-flavour export | `status → closed` emits (a) the evidence-bundle-of-bundles per §5, (b) the §5.1 CTJ-cited PDF index, (c) the §5.2 EDRM-flavour DAT manifest — all DSSE-signed via existing `hub/envelope.mjs`/`hub/bundle.mjs`, no new signing code. Local MCP `evidence.export` extension (HELM-H9 dependency) and CLI trigger path for external-tool closeout integration. | HELM-MATTER-H1, HELM-H9 | Yes. |
 | HELM-MATTER-U1 | U | Matter UI in helm.html | A Matters view (list, open/closed filter, deadline surfacing, binding browser, LMSS tag picker sourced from the pinned LMSS snapshot) inside the existing HELM-U1/U2 shell — dormant-state rendering when daemon absent, ANTI-AI-TELL copy ban applies. | HELM-MATTER-H1, HELM-U1 | Yes. |
-| HELM-MATTER-VERIFY-1 | X | Site matter-verify page | Read-only client-side matter-export verifier per §4, in the site repo's Verify family. Site-repo WU (`PostOakLabs/ainumbers`, `main`), NOT a helm-repo row. Screenshot required at check-off per SO #26. | HELM-MATTER-S1, HELM-H7 | No — site repo only. |
+| HELM-MATTER-VERIFY | X | Site matter-verify page | Read-only client-side matter-export verifier per §4, in the site repo's Verify family. Site-repo work item (`PostOakLabs/ainumbers`, `main`), not a helm-repo change. Screenshot of the rendered page required at check-off. | HELM-MATTER-S1, HELM-H7 | No — site repo only. |
 
 **Sequencing:** S1 → {H1 → H2 (after H9) ∥ U1} → VERIFY-1. Five WUs, none SPEC-SERIAL, none reserving an artifact number.
 
 ## §8 Done criteria for this spec row
 
 - ✓ Matter manifest schema (§2) amended with `lmss_tags[]` (SALI LMSS IRI shape, pinned) and directory-rooted storage naming, binding-by-hash model (§3) unchanged.
-- ✓ Export design (§5) amended: §5.1 UK e-bundle-style PDF index citing CTJ guidance ¶ numbers, §5.2 EDRM-flavour DAT manifest citing the EDRM 24-field list — every behavioural rule in both cites a pinned-snapshot paragraph or explicitly states there is none to cite (SO #38).
+- ✓ Export design (§5) amended: §5.1 UK e-bundle-style PDF index citing CTJ guidance ¶ numbers, §5.2 EDRM-flavour DAT manifest citing the EDRM 24-field list — every behavioural rule in both cites a pinned-snapshot paragraph or explicitly states there is none to cite.
 - ✓ Zero new crypto confirmed against the actual signing code (`hub/envelope.mjs` DSSE, `hub/bundle.mjs`), not just asserted.
 - ✓ Closeout→bundle hook folded in (§5), not left as a separate proposal.
-- ✓ Cycle class: n/a — spec row, no kernel (SO #43 considered, not skipped).
+- ✓ Cycle class: n/a — spec-only revision, no kernel involved.
 - ✓ WU list (§7) — 5 rows, each with class + fence + re-vendor note.
