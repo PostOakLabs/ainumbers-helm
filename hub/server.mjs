@@ -17,6 +17,7 @@ import { log } from "./log.mjs";
 import { startFlow, getFlowStatus, listConnections, revokeConnection, isSecureEndpoint } from "./oauth-pkce.mjs";
 import { serveStatic } from "./static.mjs";
 import { listPacks, getPack } from "./packs.mjs";
+import { listWatches, getWatch, createWatch, revokeWatch } from "./watch-scheduler.mjs";
 import { listTemplates, getTemplate, buildTemplateManifest } from "./templates.mjs";
 import { executeRun, manifestDigest } from "./run.mjs";
 import { createKernelStepRunner } from "./kernel-runner.mjs";
@@ -1094,6 +1095,55 @@ async function handleMigrationImport(req, res, params, db) {
   sendJson(res, 200, result);
 }
 
+// GET /watches (HELM-WATCH-SCHED-1): the operator-local cadence config list
+// (watches.json via watch-scheduler.mjs), read-only — no run/journal data
+// here, that's GET /run/timeline and the receipt row (HELM-WATCH-RECEIPT-1).
+function handleWatchesList(req, res) {
+  sendJson(res, 200, { watches: listWatches() });
+}
+
+// POST /watches {watch_id?, pack_ref, cadence, inputs_source, alert_on?,
+// created_by, consent_ref} — Q1/Q5: consent_ref and created_by are required,
+// never soft-defaulted; refused (422) if the pack is HA-gated (spec §2) or
+// the shape is invalid, refused (409) if pack_digest has drifted from the
+// live pack or the watch_id already exists.
+async function handleWatchesCreate(req, res) {
+  let body;
+  try {
+    body = await readJsonBody(req);
+  } catch {
+    return deny(res, 400, "invalid_json");
+  }
+  try {
+    sendJson(res, 200, { watch: createWatch(body) });
+  } catch (err) {
+    if (err && err.status) return sendJson(res, err.status, { error: err.error, detail: err.detail });
+    throw err;
+  }
+}
+
+// GET /watches/{id} — detail view (Q6's list/create/detail surface).
+function handleWatchGet(req, res, params) {
+  const watch = getWatch(params.id);
+  if (!watch) return deny(res, 404, "watch_not_found");
+  sendJson(res, 200, { watch });
+}
+
+// POST /watches/{id}/revoke (Q5): additive — removes the watch from the
+// active scheduler set, never rewrites or deletes what it already produced
+// (journal entries, receipts, the consent record itself all stay intact).
+async function handleWatchRevoke(req, res, params) {
+  let body = {};
+  try {
+    body = await readJsonBody(req);
+  } catch {
+    return deny(res, 400, "invalid_json");
+  }
+  const revoked = revokeWatch(params.id, { revokedBy: body?.revoked_by });
+  if (!revoked) return deny(res, 404, "watch_not_found");
+  sendJson(res, 200, { watch: revoked });
+}
+
 // GET /matters[?status=intake|working|closed] (HELM-MATTER-H1): list matters,
 // newest-created last, optionally filtered by status.
 function handleMattersList(req, res, params, db) {
@@ -1220,6 +1270,8 @@ export const ROUTES = {
   "GET /provenance/head": handleProvenanceHead,
   "GET /matters": handleMattersList,
   "POST /matters": handleMattersCreate,
+  "GET /watches": handleWatchesList,
+  "POST /watches": handleWatchesCreate,
   // HELM-H9: MCP v2 JSON-RPC endpoint, same Host+Origin+Bearer gate as every
   // other route here (row: "same bearer-token auth as REST"). GET/DELETE are
   // registered too, deliberately — SEP-2567 (final, no delta) removed the
@@ -1240,6 +1292,8 @@ export const DYNAMIC_ROUTES = [
   { method: "GET", pattern: /^\/workflows\/(?<id>[^/]+)\/euc-entry$/, docPath: "/workflows/{id}/euc-entry", handler: handleEucEntry },
   { method: "GET", pattern: /^\/workflows\/(?<id>[^/]+)\/export$/, docPath: "/workflows/{id}/export", handler: handleWorkflowExportRoute },
   { method: "GET", pattern: /^\/templates\/(?<slug>[^/]+)$/, docPath: "/templates/{slug}", handler: handleTemplateDetail },
+  { method: "GET", pattern: /^\/watches\/(?<id>[^/]+)$/, docPath: "/watches/{id}", handler: handleWatchGet },
+  { method: "POST", pattern: /^\/watches\/(?<id>[^/]+)\/revoke$/, docPath: "/watches/{id}/revoke", handler: handleWatchRevoke },
   { method: "GET", pattern: /^\/matters\/(?<id>[^/]+)$/, docPath: "/matters/{id}", handler: handleMatterGet },
   { method: "POST", pattern: /^\/matters\/(?<id>[^/]+)\/update$/, docPath: "/matters/{id}/update", handler: handleMatterUpdate },
   { method: "POST", pattern: /^\/matters\/(?<id>[^/]+)\/delete$/, docPath: "/matters/{id}/delete", handler: handleMatterDelete },

@@ -1009,6 +1009,66 @@
         }
       }
     },
+    "/watches": {
+      "get": {
+        "summary": "List cadence watches (HELM-WATCH-BUILD-SPEC.md §1 Q1) — operator-local config, not run/receipt data.",
+        "tags": [
+          "Watches"
+        ],
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Missing or invalid bearer token."
+          },
+          "403": {
+            "description": "Host or Origin mismatch (D8 loopback hardening)."
+          }
+        }
+      },
+      "post": {
+        "summary": "Create a watch: pack + cadence + inputs_source (phase 1: sample/operator_supplied only) + consent_ref. Refused if the pack is HA-gated (§2), the pack_digest has drifted, or consent_ref is absent (Q5).",
+        "tags": [
+          "Watches"
+        ],
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Missing or invalid bearer token."
+          },
+          "403": {
+            "description": "Host or Origin mismatch (D8 loopback hardening)."
+          }
+        }
+      }
+    },
     "/mcp": {
       "post": {
         "summary": "MCP v2 JSON-RPC endpoint (HELM-H9): catalog.search, workflow.describe/manifest_get/dry_run/run, artifact.get/verify, evidence.export. Same bearer-token auth as every REST route.",
@@ -1335,6 +1395,88 @@
         "parameters": [
           {
             "name": "slug",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ]
+      }
+    },
+    "/watches/{id}": {
+      "get": {
+        "summary": "Fetch one watch by watch_id.",
+        "tags": [
+          "Watches"
+        ],
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Missing or invalid bearer token."
+          },
+          "403": {
+            "description": "Host or Origin mismatch (D8 loopback hardening)."
+          }
+        },
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ]
+      }
+    },
+    "/watches/{id}/revoke": {
+      "post": {
+        "summary": "Revoke a watch: removes it from the active scheduler set. Additive — every journal entry, receipt, and the consent record it already produced stays intact (Q5).",
+        "tags": [
+          "Watches"
+        ],
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Missing or invalid bearer token."
+          },
+          "403": {
+            "description": "Host or Origin mismatch (D8 loopback hardening)."
+          }
+        },
+        "parameters": [
+          {
+            "name": "id",
             "in": "path",
             "required": true,
             "schema": {

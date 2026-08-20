@@ -30,6 +30,7 @@ import { publicKeysOf } from "./keys.mjs";
 import { uninstallAutostart, isAutostartInstalled, autostartLocation, autostartStatus } from "./autostart.mjs";
 import { uninstallShortcut, isShortcutInstalled, shortcutLocation } from "./shortcut.mjs";
 import { createIdleTimer } from "./idle-timer.mjs";
+import { createWatchScheduler } from "./watch-scheduler.mjs";
 import { getSseConnectionCount, getRunsInFlightCount } from "./server.mjs";
 import { isPairingWindowOpen } from "./token.mjs";
 import { isBackupInFlight } from "./backup.mjs";
@@ -229,6 +230,13 @@ async function cmdStart({ open = false, _recoveredFrom = null, _isFirstRun = nul
     db.close();
     process.exit(1);
   }
+
+  // HELM-WATCH-SCHED-1: the cadence loop is its own poll, independent of the
+  // idle timer above — a watch fires whether or not a browser tab is open,
+  // same as the checkpoint/snapshot fire-and-forget blocks below it. The
+  // interval timer is unref'd (watch-scheduler.mjs), so it never itself
+  // keeps the process alive past an idle shutdown.
+  createWatchScheduler({ db }).start();
 
   // Fire-and-forget, deliberately not awaited — see the comment above
   // nextCheckpointSeq. Any unexpected failure here (not just a relay
