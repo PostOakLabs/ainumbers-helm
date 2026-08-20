@@ -26,6 +26,7 @@ const {
   updateMatter,
   deleteMatter,
   unresolvedBindings,
+  validateMatterShape,
   registerEvidenceBundle,
   assembleMatterExport,
   closeMatter,
@@ -223,6 +224,34 @@ test("matter-store: create refuses a manifest that fails §2 schema shape (unkno
     /refused create/
   );
   db.close();
+});
+
+// ---------------------------------------------------------------------------
+// lmss_tags[] (amendment §2, 2026-08-20): OPTIONAL array of SALI LMSS IRIs.
+// Backward compatibility (SO row): every pre-existing shipped manifest — none
+// of which carries lmss_tags at all — still validates.
+
+test("matter-store: lmss_tags — golden fixture (no lmss_tags at all) still validates (backward compat)", () => {
+  const golden = JSON.parse(readFileSync(join(HERE, "..", "fixtures", "matter-manifest", "golden.json"), "utf8"));
+  assert.deepEqual(validateMatterShape(golden), []);
+});
+
+test("matter-store: lmss_tags — a valid SALI IRI validates", () => {
+  const golden = JSON.parse(readFileSync(join(HERE, "..", "fixtures", "matter-manifest", "golden.json"), "utf8"));
+  const withTag = { ...golden, lmss_tags: ["http://lmss.sali.org/R7Mpgb1WQXzd7cnaiMK0dig"] };
+  assert.deepEqual(validateMatterShape(withTag), []);
+});
+
+test("matter-store: lmss_tags — a SALI short code (dc:identifier) instead of an IRI is REJECTED", () => {
+  const tampered = JSON.parse(
+    readFileSync(join(HERE, "..", "fixtures", "matter-manifest", "tampered-lmss-shortcode.json"), "utf8")
+  );
+  const errors = validateMatterShape(tampered);
+  assert.ok(errors.length > 0, "expected the short-code lmss_tags entry to fail validation");
+  assert.ok(
+    errors.some((e) => e.includes("lmss_tags") && e.includes("ASI-TH-TH+24")),
+    `expected an lmss_tags error citing the rejected short code, got: ${JSON.stringify(errors)}`
+  );
 });
 
 test("matter-store: get/list/update/delete round trip", () => {
