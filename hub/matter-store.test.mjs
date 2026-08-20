@@ -26,10 +26,13 @@ const {
   updateMatter,
   deleteMatter,
   unresolvedBindings,
+  validateMatterShape,
   registerEvidenceBundle,
   assembleMatterExport,
   closeMatter,
   getMatterExport,
+  buildEBundlePdf,
+  buildEdrmDat,
 } = await import("./matter-store.mjs");
 
 const keys = loadOrCreateKeys();
@@ -225,6 +228,34 @@ test("matter-store: create refuses a manifest that fails §2 schema shape (unkno
   db.close();
 });
 
+// ---------------------------------------------------------------------------
+// lmss_tags[] (amendment §2, 2026-08-20): OPTIONAL array of SALI LMSS IRIs.
+// Backward compatibility (SO row): every pre-existing shipped manifest — none
+// of which carries lmss_tags at all — still validates.
+
+test("matter-store: lmss_tags — golden fixture (no lmss_tags at all) still validates (backward compat)", () => {
+  const golden = JSON.parse(readFileSync(join(HERE, "..", "fixtures", "matter-manifest", "golden.json"), "utf8"));
+  assert.deepEqual(validateMatterShape(golden), []);
+});
+
+test("matter-store: lmss_tags — a valid SALI IRI validates", () => {
+  const golden = JSON.parse(readFileSync(join(HERE, "..", "fixtures", "matter-manifest", "golden.json"), "utf8"));
+  const withTag = { ...golden, lmss_tags: ["http://lmss.sali.org/R7Mpgb1WQXzd7cnaiMK0dig"] };
+  assert.deepEqual(validateMatterShape(withTag), []);
+});
+
+test("matter-store: lmss_tags — a SALI short code (dc:identifier) instead of an IRI is REJECTED", () => {
+  const tampered = JSON.parse(
+    readFileSync(join(HERE, "..", "fixtures", "matter-manifest", "tampered-lmss-shortcode.json"), "utf8")
+  );
+  const errors = validateMatterShape(tampered);
+  assert.ok(errors.length > 0, "expected the short-code lmss_tags entry to fail validation");
+  assert.ok(
+    errors.some((e) => e.includes("lmss_tags") && e.includes("ASI-TH-TH+24")),
+    `expected an lmss_tags error citing the rejected short code, got: ${JSON.stringify(errors)}`
+  );
+});
+
 test("matter-store: get/list/update/delete round trip", () => {
   const db = dbAt("crud.db");
   const created = createMatter(db, entityInput({ status: "working", narrative: "initial" }));
@@ -381,6 +412,87 @@ test("closeMatter: an already-closed matter never re-emits on a later edit (sign
   const stillOriginal = getMatterExport(db, matter.matter_id);
   assert.equal(stillOriginal.envelope_digest, first.export.envelope_digest);
   db.close();
+});
+
+// ---------------------------------------------------------------------------
+// §5.1/§5.2 (amendment): e-bundle PDF index + EDRM DAT manifest, emitted from
+// the SAME closeout path, signed via the SAME envelope as the rest of the
+// export — no second signature, no new signing code.
+
+test("closeMatter: emits an e-bundle PDF and EDRM DAT alongside the existing evidence-bundle-of-bundles, signed via the same envelope", async () => {
+  const db = dbAt("close-ebundle-edrm.db");
+  const runResult = await completeSimpleRun(db, "run-close-eb-1");
+  const externalHash = randomSha256Ref();
+
+  const matter = createMatter(db, entityInput({
+    status: "working",
+    deadlines: [{ date: "2026-10-01", action: "Respond to request #4", type: "regulatory-response", source: "test", done: false }],
+    bindings: [
+      { subject_hash: runResult.executionHash, subject_kind: "run" },
+      { subject_hash: externalHash, subject_kind: "external_reference", note: "received PDF" },
+    ],
+  }));
+
+  const { export: exported } = closeMatter(db, matter.matter_id, { status: "closed" }, keys);
+  assert.ok(exported);
+
+  // Signed via the SAME envelope as the rest of the export — verifying the
+  // envelope proves e_bundle_pdf_base64/edrm_dat_text weren't altered after
+  // signing, same as every other predicate field.
+  const verified = verifyEnvelope(exported.envelope, publicKeys);
+  assert.equal(verified.valid, true);
+  assert.equal(verified.statement.predicate.e_bundle_pdf_base64, exported.predicate.e_bundle_pdf_base64);
+  assert.equal(verified.statement.predicate.edrm_dat_text, exported.predicate.edrm_dat_text);
+
+  // §5.1 — a real, minimally well-formed single PDF: pagination, an outline
+  // (bookmarks), and hyperlink annotations from the index to each binding
+  // (CTJ ¶2, ¶3), one page per binding plus the cover/index page.
+  const pdfText = Buffer.from(exported.predicate.e_bundle_pdf_base64, "base64").toString("latin1");
+  assert.match(pdfText, /^%PDF-1\.7/);
+  assert.match(pdfText, /%%EOF$/);
+  assert.equal((pdfText.match(/\/Type \/Page\b/g) || []).length, matter.bindings.length + 1);
+  assert.match(pdfText, /\/Type \/Outlines/);
+  assert.match(pdfText, /\/Subtype \/Link/);
+  assert.match(pdfText, /\/OpenAction .*\/XYZ null null 1/);
+  assert.match(pdfText, new RegExp(`Page 1 of ${matter.bindings.length + 1}`));
+  assert.match(pdfText, /Respond to request #4/); // open deadline surfaced unredacted, front of bundle
+  assert.equal(exported.predicate.e_bundle_pdf_filename, `${matter.matter_id}-e-bundle.pdf`);
+
+  // §5.2 — EDRM's own 24-field header, one data row per binding, DOCID/HASH
+  // populated from subject_hash.
+  const datLines = exported.predicate.edrm_dat_text.split("\r\n").filter(Boolean);
+  assert.equal(datLines.length, matter.bindings.length + 1); // header + one row per binding
+  const header = datLines[0];
+  ["DOCID", "HASH", "RCRDTYPE", "PARENTID", "CUSTODIAN", "ATTACHMENTIDS", "THREAD ID"].forEach((f) => {
+    assert.ok(header.includes(f), `EDRM DAT header missing field "${f}"`);
+  });
+  assert.ok(datLines[1].includes(runResult.executionHash), "DOCID/HASH row must carry the binding's subject_hash");
+  assert.equal(exported.predicate.edrm_dat_filename, `${matter.matter_id}.dat`);
+
+  db.close();
+});
+
+test("buildEBundlePdf: zero bindings still produces a well-formed single-page PDF (index only)", () => {
+  const matter = { matter_id: "01J8Z3K9N4R7T2VXWQHF6C8D5M", entity: { id: "did:key:ztest" }, deadlines: [] };
+  const pdf = buildEBundlePdf(matter, []);
+  const text = pdf.toString("latin1");
+  assert.match(text, /^%PDF-1\.7/);
+  assert.equal((text.match(/\/Type \/Page\b/g) || []).length, 1);
+  assert.doesNotMatch(text, /\/Annots/); // no bindings — no link annotations to emit
+});
+
+test("buildEdrmDat: field order matches the pinned EDRM page's own order exactly", () => {
+  const matter = { matter_id: "01J8Z3K9N4R7T2VXWQHF6C8D5M", entity: { id: "did:key:ztest" } };
+  const dat = buildEdrmDat(matter, [{ subject_hash: "sha256:" + "a".repeat(64), subject_kind: "run" }]);
+  const header = dat.split("\r\n")[0];
+  const fields = header.split("¶").map((f) => f.replace(/þ/g, ""));
+  const expectedOrder = [
+    "ATTACHMENTIDS", "AUTHORS", "BATES RANGE", "BCC", "CC", "CUSTODIAN", "DATECREATED",
+    "DATERECEIVED", "DATESAVED", "DATESENT", "DOCEXT", "DOCID", "DOCLINK", "FILENAME",
+    "FOLDER", "FROM", "HASH", "PARENTID", "RCRDTYPE", "SUBJECT", "THREAD ID",
+    "TIMERECEIVED", "TIMESENT", "TO",
+  ];
+  assert.deepEqual(fields, expectedOrder);
 });
 
 test("assembleMatterExport: refuses on a matter that is not closed", () => {

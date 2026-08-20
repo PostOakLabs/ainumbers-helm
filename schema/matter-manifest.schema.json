@@ -87,6 +87,15 @@
       "type": "string",
       "description": "OPTIONAL free text for matter-level context not belonging to any one bound artifact. NOT a place to restate findings/decisions already existing as §27 records — those stay referenced via bindings[]."
     },
+    "lmss_tags": {
+      "type": "array",
+      "items": {
+        "type": "string",
+        "pattern": "^http://lmss\\.sali\\.org/R[0-9A-Za-z]{22}$",
+        "description": "A SALI LMSS ontology IRI (rdf:about), e.g. http://lmss.sali.org/R7Mpgb1WQXzd7cnaiMK0dig — pinned shape: research/clause-snapshots/SALI-LMSS.citations.md, \"Namespace / IRI shape\". The pinned snapshot's own dc:identifier short codes (e.g. ASI-TH-TH+24) are explicitly NOT valid values here — SALI's internal display code, not the stable identifier."
+      },
+      "description": "OPTIONAL, amendment 2026-08-20 (§2). Open vocabulary within LMSS — zero or more IRIs per matter, no local matter-type taxonomy invented. Absent on every matter created before this amendment; an empty or missing array is equivalent and remains valid."
+    },
     "created_at": { "type": "string", "pattern": "^\\d{4}-\\d{2}-\\d{2}T\\d{2}:\\d{2}:\\d{2}(\\.\\d+)?Z$" },
     "updated_at": { "type": "string", "pattern": "^\\d{4}-\\d{2}-\\d{2}T\\d{2}:\\d{2}:\\d{2}(\\.\\d+)?Z$" },
     "manifest_digest": {
