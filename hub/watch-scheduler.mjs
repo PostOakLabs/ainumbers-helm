@@ -17,6 +17,20 @@
 // (SPEC §2). Cadence is a fixed interval, never a wall-clock cron expression
 // (Q1) — SO #0's line: the receipt states what happened, this config states
 // a spacing, neither promises a future run.
+//
+// 2026 enhancement (binding, staged): a watch definition carries an optional
+// `evidences[]` field, each entry `{framework, control_id}` (CCM vocabulary —
+// generic across control frameworks; DORA is the worked example below, not a
+// hardcoded case), naming which control-framework article/id the watch's
+// output evidences. The gap between a watch's intended cadence and what a
+// receipt actually observed is named the DRIFT WINDOW — the term this row
+// introduces into schema and copy, computed by HELM-WATCH-RECEIPT-1's
+// `cadence_conformance` (spec §1 Q2: `expected_by`/`ran_at`) over the journal
+// entries this scheduler produces. A worked example: a watch over a pack that
+// checks ICT third-party risk register freshness might carry
+// `evidences: [{framework: "DORA", control_id: "Art. 28"}]`, so an examiner
+// reading its eventual receipt reads "this receipt evidences DORA Art. 28
+// control freshness, drift window: <expected_by> to <ran_at>" directly.
 import { randomUUID } from "node:crypto";
 import { readFileSync, writeFileSync, existsSync } from "node:fs";
 import { statePath } from "./state-dir.mjs";
@@ -112,6 +126,22 @@ function validateWatchInput(input) {
       for (const a of input.alert_on) if (!allowed.has(a)) errors.push(`alert_on entry "${a}" is not one of miss|result_change|gate_hold`);
     }
   }
+  // 2026 enhancement (binding, staged): `evidences[]` maps a watch's output to
+  // the control-framework id it evidences — CCM vocabulary (`framework` +
+  // `control_id`), generic across frameworks, DORA is the worked example, not
+  // a hardcoded case. Optional and, when present, non-empty for the same
+  // Q1 JCS-empty-array reason `alert_on` already enforces above: there is no
+  // "evidences configured to nothing" state distinct from omitting the key.
+  if (input?.evidences !== undefined) {
+    if (!Array.isArray(input.evidences) || input.evidences.length === 0) {
+      errors.push("evidences, when present, must be a non-empty array — omit the key entirely for a watch that evidences no named control");
+    } else {
+      input.evidences.forEach((e, i) => {
+        if (typeof e?.framework !== "string" || !e.framework) errors.push(`evidences[${i}].framework is required (e.g. "DORA", "CCM")`);
+        if (typeof e?.control_id !== "string" || !e.control_id) errors.push(`evidences[${i}].control_id is required (e.g. "Art. 17(3)")`);
+      });
+    }
+  }
   if (typeof input?.created_by?.id !== "string" || !input.created_by.id) errors.push("created_by.id is required (did:key or LEI)");
   // Q5: consent-gated at creation, never inferred, never soft-defaulted. This
   // row does not mint or verify the signature behind consent_ref (that is
@@ -157,6 +187,7 @@ export function createWatch(input) {
       ? { mode: "operator_supplied", inputs: input.inputs_source.inputs }
       : { mode: "sample" },
     ...(input.alert_on !== undefined ? { alert_on: input.alert_on } : {}),
+    ...(input.evidences !== undefined ? { evidences: input.evidences.map((e) => ({ framework: e.framework, control_id: e.control_id })) } : {}),
     created_at: new Date().toISOString(),
     created_by: { id: input.created_by.id },
     consent_ref: input.consent_ref,
