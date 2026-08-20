@@ -271,7 +271,9 @@ function mountTokenForm(root, onPaired, port) {
 // render into #view-content only; #view-header is never touched by a view.
 function renderViewHeader(app, view) {
   const tab = TABS.find((t) => t.id === view);
-  app.viewHeader.innerHTML = tab ? `<h1>${tab.label}</h1><p class="tab-intro">${tab.intro}</p>` : "";
+  app.viewHeader.innerHTML = tab
+    ? `<h1>${tab.label}</h1><p class="tab-intro">${tab.intro}</p><p class="tab-when">${tab.whenToUse}</p>`
+    : "";
 }
 
 async function render(app) {
@@ -286,6 +288,16 @@ async function render(app) {
   app.navLinks.forEach((a) => {
     if (a.dataset.view === view) a.setAttribute("aria-current", "page");
     else a.removeAttribute("aria-current");
+  });
+  // The dropdown stays collapsed on navigation (opening it back up would
+  // re-clutter the exact nav row this row set out to shrink) — instead the
+  // summary itself names which of its tabs is current, so "where am I" is
+  // answered without expanding anything.
+  document.querySelectorAll("nav.shell-nav details.nav-dropdown").forEach((details) => {
+    const summary = details.querySelector("summary");
+    const current = details.querySelector('a[aria-current="page"]');
+    summary.textContent = current ? `${summary.dataset.group} · ${current.textContent}` : summary.dataset.group;
+    summary.classList.toggle("has-current", !!current);
   });
   renderViewHeader(app, view);
 
@@ -351,37 +363,93 @@ function startBrowserJournal() {
 // keeps the HELM-UX-1 §6.2/§6.3 role="group" + aria-label + data-group
 // contract theme.css's sibling-selector separator relies on, so reordering
 // or adding a tab here can never silently break the separator or grouping.
+// HELM-IA-TABS-1: a group of 2+ tabs collapses into one <details> dropdown
+// (native, keyboard-operable, no JS framework) so the top-level nav shows
+// one item per GROUP instead of one per TAB — was ~10 flat links, now one
+// per group (5 today). A single-tab group (Home, AI agents) stays a plain
+// link: a dropdown with one entry is a click users don't need. Every tab's
+// `#/<id>` href is unchanged, so every existing bookmark/deep link still
+// resolves — this only changes how the link is reached, never where it goes.
+function buildTabLink(tab) {
+  if (tab.disabled) {
+    // HELM-UX2-J-AGENTS-SLOT (§19.2): reserved slot, no route reachable —
+    // a <span> has no href to activate, so there's nothing to click through
+    // to an empty/placeholder view. aria-disabled tells AT it's inert.
+    const span = document.createElement("span");
+    span.className = "shell-nav-disabled";
+    span.setAttribute("aria-disabled", "true");
+    span.textContent = tab.label;
+    return span;
+  }
+  const a = document.createElement("a");
+  a.href = `#/${tab.id}`;
+  a.dataset.view = tab.id;
+  a.textContent = tab.label;
+  return a;
+}
+
+function closeOtherDropdowns(except) {
+  document.querySelectorAll("nav.shell-nav details.nav-dropdown[open]").forEach((d) => {
+    if (d !== except) d.removeAttribute("open");
+  });
+}
+
 function generateNav(navEl) {
   navEl.innerHTML = "";
-  let currentGroup = null;
-  let groupEl = null;
+  const groups = new Map();
   for (const tab of TABS) {
-    if (tab.group !== currentGroup) {
-      currentGroup = tab.group;
-      groupEl = document.createElement("div");
-      groupEl.setAttribute("role", "group");
-      groupEl.setAttribute("aria-label", currentGroup);
-      groupEl.dataset.group = currentGroup.toLowerCase();
+    if (!groups.has(tab.group)) groups.set(tab.group, []);
+    groups.get(tab.group).push(tab);
+  }
+
+  for (const [groupName, tabs] of groups) {
+    const groupEl = document.createElement("div");
+    groupEl.setAttribute("role", "group");
+    groupEl.setAttribute("aria-label", groupName);
+    groupEl.dataset.group = groupName.toLowerCase();
+
+    if (tabs.length === 1) {
+      groupEl.appendChild(buildTabLink(tabs[0]));
       navEl.appendChild(groupEl);
-    }
-    if (tab.disabled) {
-      // HELM-UX2-J-AGENTS-SLOT (§19.2): reserved slot, no route reachable —
-      // a <span> has no href to activate, so there's nothing to click through
-      // to an empty/placeholder view. aria-disabled tells AT it's inert.
-      const span = document.createElement("span");
-      span.className = "shell-nav-disabled";
-      span.setAttribute("aria-disabled", "true");
-      span.textContent = tab.label;
-      groupEl.appendChild(span);
       continue;
     }
 
-    const a = document.createElement("a");
-    a.href = `#/${tab.id}`;
-    a.dataset.view = tab.id;
-    a.textContent = tab.label;
-    groupEl.appendChild(a);
+    const details = document.createElement("details");
+    details.className = "nav-dropdown";
+    const summary = document.createElement("summary");
+    summary.textContent = groupName;
+    summary.dataset.group = groupName;
+    details.appendChild(summary);
+    // Opening one dropdown closes any other open one — two open menus
+    // overlapping is worse than the extra click to reopen.
+    details.addEventListener("toggle", () => {
+      if (details.open) closeOtherDropdowns(details);
+    });
+    const menu = document.createElement("div");
+    menu.className = "nav-dropdown-menu";
+    for (const tab of tabs) {
+      const link = buildTabLink(tab);
+      // A click always resolves to a real hashchange (nothing here is
+      // disabled inside a real dropdown today), so closing on click is
+      // safe — render() re-opens the correct group afterward regardless.
+      link.addEventListener("click", () => details.removeAttribute("open"));
+      menu.appendChild(link);
+    }
+    details.appendChild(menu);
+    groupEl.appendChild(details);
+    navEl.appendChild(groupEl);
   }
+
+  // Outside click / Escape closes an open dropdown — native <details> has
+  // neither behavior, and a nav menu that only closes when you click its
+  // own summary again reads as stuck.
+  document.addEventListener("click", (e) => {
+    if (!(e.target instanceof Node) || !navEl.contains(e.target)) closeOtherDropdowns(null);
+  });
+  document.addEventListener("keydown", (e) => {
+    if (e.key === "Escape") closeOtherDropdowns(null);
+  });
+
   return Array.from(navEl.querySelectorAll("a"));
 }
 

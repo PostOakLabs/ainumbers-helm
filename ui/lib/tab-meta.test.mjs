@@ -51,6 +51,13 @@ test("tab-meta: every intro is non-empty and at most 150 characters", () => {
   }
 });
 
+test("tab-meta: every whenToUse is non-empty and at most 150 characters", () => {
+  for (const tab of TABS) {
+    assert.ok(typeof tab.whenToUse === "string" && tab.whenToUse.length > 0, `${tab.id}: whenToUse must be non-empty`);
+    assert.ok(tab.whenToUse.length <= 150, `${tab.id}: whenToUse is ${tab.whenToUse.length} chars, must be <= 150`);
+  }
+});
+
 test("tab-meta: every requiresPairing is an explicit boolean", () => {
   for (const tab of TABS) {
     assert.equal(typeof tab.requiresPairing, "boolean", `${tab.id}: requiresPairing must be an explicit boolean`);

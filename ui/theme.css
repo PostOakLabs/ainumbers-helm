@@ -135,6 +135,78 @@ nav.shell-nav a[aria-current="page"] {
   background: var(--accent);
 }
 
+/* HELM-IA-TABS-1: a group of 2+ tabs collapses into this native <details>
+   dropdown instead of a flat row of links. */
+nav.shell-nav details.nav-dropdown {
+  position: relative;
+}
+
+nav.shell-nav details.nav-dropdown > summary {
+  list-style: none;
+  cursor: pointer;
+  color: var(--text-muted);
+  font-weight: 500;
+  padding: var(--space-2) var(--space-3);
+  min-height: 40px;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.3em;
+  border-radius: var(--radius);
+}
+
+nav.shell-nav details.nav-dropdown > summary::-webkit-details-marker {
+  display: none;
+}
+
+/* Down-caret, drawn with border triangles so it never needs an icon font
+   or an inline SVG — flips to point up while the menu is open. */
+nav.shell-nav details.nav-dropdown > summary::after {
+  content: "";
+  display: inline-block;
+  width: 0;
+  height: 0;
+  border-left: 4px solid transparent;
+  border-right: 4px solid transparent;
+  border-top: 5px solid currentcolor;
+  opacity: 0.6;
+}
+
+nav.shell-nav details.nav-dropdown[open] > summary::after {
+  transform: rotate(180deg);
+}
+
+nav.shell-nav details.nav-dropdown > summary:hover,
+nav.shell-nav details.nav-dropdown > summary:focus-visible {
+  color: var(--text);
+  background: var(--surface-raised);
+}
+
+/* The group's current tab shows in the summary itself (§ render()'s
+   "<group> · <tab>" text swap) so a collapsed dropdown still answers
+   "where am I" without needing to open it. */
+nav.shell-nav details.nav-dropdown > summary.has-current {
+  color: var(--accent);
+}
+
+nav.shell-nav details.nav-dropdown .nav-dropdown-menu {
+  position: absolute;
+  top: calc(100% + var(--space-1));
+  left: 0;
+  z-index: 20;
+  display: flex;
+  flex-direction: column;
+  min-width: 10rem;
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  box-shadow: 0 4px 16px rgb(0 0 0 / 0.15);
+  padding: var(--space-1);
+}
+
+nav.shell-nav details.nav-dropdown .nav-dropdown-menu a {
+  border-radius: var(--radius);
+}
+
 /* HELM-UX2-J-AGENTS-SLOT (§19): reserved, disabled nav slot — no href, no
    hover/focus affordance, since there's nowhere for it to lead yet. */
 nav.shell-nav .shell-nav-disabled {
@@ -222,6 +294,15 @@ main.shell-main {
 
 #view-header .tab-intro {
   color: var(--text-muted);
+  margin: 0 0 var(--space-1);
+}
+
+/* HELM-IA-TABS-1: second header line — when you'd reach for this tab,
+   distinct from .tab-intro's "what it is". */
+#view-header .tab-when {
+  color: var(--text-muted);
+  font-size: 0.9rem;
+  font-style: italic;
   margin: 0 0 var(--space-3);
 }
 
