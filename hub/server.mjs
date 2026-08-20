@@ -1246,6 +1246,31 @@ export const DYNAMIC_ROUTES = [
   { method: "GET", pattern: /^\/matters\/(?<id>[^/]+)\/export$/, docPath: "/matters/{id}/export", handler: handleMatterExportGet },
 ];
 
+// HELM-FRESHDB-CRASH-1: a route handler that throws synchronously (or a
+// synchronous first step of one — e.g. a bad `db.prepare(...)` before the
+// first `await`) is otherwise UNCAUGHT here — nothing wraps `handler(...)`,
+// so the exception propagates out of the http.Server request listener and
+// kills the daemon process. Every handler in `routes`/`dynamicRoutes` already
+// catches its OWN async errors after its first await; this is the
+// belt-and-braces backstop for the gap before that point, and for any
+// handler that misses a catch. Never lets a storage/programming error take
+// the whole daemon down — always a 500, never a crash.
+function runHandlerSafely(handler, req, res, params, db, pathname) {
+  try {
+    const result = handler(req, res, params, db);
+    if (result && typeof result.catch === "function") {
+      result.catch((err) => {
+        log.error("unhandled route error", { path: pathname, error: String(err?.message || err) });
+        if (!res.headersSent) deny(res, 500, "internal_error");
+      });
+    }
+    return result;
+  } catch (err) {
+    log.error("unhandled route error", { path: pathname, error: String(err?.message || err) });
+    if (!res.headersSent) deny(res, 500, "internal_error");
+  }
+}
+
 export function createHelmServer({
   port,
   allowedOrigin,
@@ -1365,12 +1390,12 @@ export function createHelmServer({
     onAuthenticated();
 
     const handler = routes[`${req.method} ${pathname}`];
-    if (handler) return handler(req, res, {}, db);
+    if (handler) return runHandlerSafely(handler, req, res, {}, db, pathname);
 
     for (const route of dynamicRoutes) {
       if (route.method !== req.method) continue;
       const match = pathname.match(route.pattern);
-      if (match) return route.handler(req, res, match.groups || {}, db);
+      if (match) return runHandlerSafely(route.handler, req, res, match.groups || {}, db, pathname);
     }
     return deny(res, 404, "not_found");
   });

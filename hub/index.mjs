@@ -21,6 +21,8 @@ import { openJournal, replayVerify, replayVerifyFrom, recordFullVerification, st
 import { quarantineStateDir } from "./recovery.mjs";
 import { buildAnchoredCheckpoint, saveCheckpoint, latestCheckpoint, verifyCheckpointSignature } from "./checkpoint.mjs";
 import { initStateSnapshotTables, emitStateSnapshot } from "./state-snapshot.mjs";
+import { initRunTables } from "./run.mjs";
+import { initHaTables } from "./ha-store.mjs";
 import { publicKeysOf } from "./keys.mjs";
 // HELM-AUTOSTART-1: install* is deliberately NOT imported here any more —
 // nothing on the daemon's start path may write a persistence entry. The only
@@ -120,6 +122,15 @@ async function cmdStart({ open = false, _recoveredFrom = null, _isFirstRun = nul
   const journalPath = statePath("journal.db");
   const db = openJournal(journalPath);
   initStateSnapshotTables(db);
+  // HELM-FRESHDB-CRASH-1: runs/step_results and ha_* tables were only ever
+  // created lazily, the first time a write path (run.mjs / matter-store.mjs
+  // / ha-store.mjs) touched them. A fresh install's first read-only route
+  // (GET /ha/pending) hit `runs` before any write path had run, threw
+  // uncaught, and killed the daemon. Same eager-init shape as
+  // initStateSnapshotTables above — create every table the HTTP surface can
+  // read from before the server starts accepting requests.
+  initRunTables(db);
+  initHaTables(db);
   const publicKeys = publicKeysOf(identityKeys);
   const checkpoint = latestCheckpoint(db);
   let sig = checkpoint ? verifyCheckpointSignature(checkpoint, publicKeys) : null;

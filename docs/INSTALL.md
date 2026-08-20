@@ -148,6 +148,16 @@ sent to the server). If nothing opens (headless box, no default browser,
 or the auto-open step failed) the URL is also printed to the console —
 copy/paste it yourself; it's always a working fallback, never required.
 
+**Installing Helm does not start it.** winget/Homebrew/npm all just place
+the binary; nothing about the install itself launches the daemon. Run
+`helmd start` (then `helmd open` if you need the pairing link again), or
+double-click the Start Menu shortcut (Windows, if you added one, below).
+Skip both and the UI never loads, and it will look like nothing happened.
+And once it's up, Helm auto-stops after 120 seconds idle (no open UI tab,
+no in-flight run) unless you turn on **Start Helm when I sign in** on the
+Operate tab's autostart switch, so a Helm you started once and walked away
+from will need `helmd start` again next time. That's expected.
+
 ### A Start Menu shortcut, if you ask for one (Windows)
 
 Ticking **Add a Helm shortcut to this computer** on the **Operate** tab adds

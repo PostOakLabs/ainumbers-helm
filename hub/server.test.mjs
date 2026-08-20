@@ -1237,3 +1237,46 @@ test("GET /matters/{id}/export 404s for a matter that was never closed", async (
     assert.equal(JSON.parse(res.body).error, "matter_export_not_found");
   });
 });
+
+// --- HELM-FRESHDB-CRASH-1: handler-boundary catch is the backstop for the
+// gap before a route handler's own try/catch (or when one is missing/misses
+// a case) — a storage exception thrown BEFORE a handler's first await must
+// never propagate out of the dispatch loop and kill the daemon process. This
+// injects the exact failure shape the fresh-state-dir bug had (db.prepare
+// throwing synchronously) without needing a virgin state dir, proving the
+// dispatch-level catch itself, independent of freshdb-boot.test.mjs's
+// full-boot regression cover.
+test("a handler that throws synchronously (db.prepare) returns 500, not a dropped connection", async () => {
+  const port = asPortSeq++;
+  const origin = `http://127.0.0.1:${port}`;
+  const dbDir = mkdtempSync(join(tmpdir(), "helm-handler-boundary-test-"));
+  const db = openJournal(join(dbDir, "journal.db"));
+  const poisonedDb = {
+    ...db,
+    prepare: () => {
+      throw new Error("simulated: no such table: runs");
+    },
+  };
+  const server8 = createHelmServer({ port, allowedOrigin: origin, token, db: poisonedDb });
+  try {
+    const res = await asRequest(port, {
+      path: "/ha/pending",
+      headers: { Host: `127.0.0.1:${port}`, Origin: origin, Authorization: `Bearer ${token}` },
+    });
+    assert.equal(res.status, 500);
+    assert.equal(JSON.parse(res.body).error, "internal_error");
+
+    // The daemon must still be serving other requests right after — the
+    // whole point of the catch is that one bad handler never takes the
+    // process down with it.
+    const health = await asRequest(port, {
+      path: "/health",
+      headers: { Host: `127.0.0.1:${port}`, Origin: origin, Authorization: `Bearer ${token}` },
+    });
+    assert.equal(health.status, 200);
+  } finally {
+    await new Promise((resolve) => server8.close(resolve));
+    db.close();
+    rmSync(dbDir, { recursive: true, force: true });
+  }
+});
