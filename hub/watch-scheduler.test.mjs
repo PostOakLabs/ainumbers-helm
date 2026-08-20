@@ -97,6 +97,33 @@ test("createWatch: refuses alert_on: [] (Q1 JCS empty-array trap — omit the ke
   assertThrowsContaining(() => createWatch(baseInput({ watch_id: "watch-empty-alert", alert_on: [] })), "alert_on");
 });
 
+test("createWatch: a worked DORA mapping — evidences round-trips on the stored watch", () => {
+  const watch = createWatch(
+    baseInput({
+      watch_id: "watch-dora-mapping",
+      evidences: [{ framework: "DORA", control_id: "Art. 28" }],
+    })
+  );
+  assert.deepEqual(watch.evidences, [{ framework: "DORA", control_id: "Art. 28" }]);
+  assert.deepEqual(getWatch("watch-dora-mapping").evidences, [{ framework: "DORA", control_id: "Art. 28" }]);
+});
+
+test("createWatch: refuses evidences: [] (same JCS empty-array trap as alert_on)", () => {
+  assertThrowsContaining(() => createWatch(baseInput({ watch_id: "watch-empty-evidences", evidences: [] })), "evidences");
+});
+
+test("createWatch: refuses an evidences entry missing framework or control_id", () => {
+  assertThrowsContaining(
+    () => createWatch(baseInput({ watch_id: "watch-bad-evidence", evidences: [{ framework: "DORA" }] })),
+    "control_id"
+  );
+});
+
+test("createWatch: a watch with no evidences key carries none (no soft default)", () => {
+  const watch = createWatch(baseInput({ watch_id: "watch-no-evidences" }));
+  assert.equal("evidences" in watch, false);
+});
+
 test("createWatch: accepts alert_on with entries, and a watch with no alert_on key at all", () => {
   const withAlert = createWatch(baseInput({ watch_id: "watch-alert-on", alert_on: ["miss", "gate_hold"] }));
   assert.deepEqual(withAlert.alert_on, ["miss", "gate_hold"]);
