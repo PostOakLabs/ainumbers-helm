@@ -56,6 +56,7 @@ const ROUTE_DOCS = {
   "GET /watches": { summary: "List cadence watches (HELM-WATCH-BUILD-SPEC.md §1 Q1) — operator-local config, not run/receipt data.", tags: ["Watches"] },
   "POST /watches": { summary: "Create a watch: pack + cadence + inputs_source (phase 1: sample/operator_supplied only) + consent_ref. Refused if the pack is HA-gated (§2), the pack_digest has drifted, or consent_ref is absent (Q5).", tags: ["Watches"] },
   "GET /watches/{id}": { summary: "Fetch one watch by watch_id.", tags: ["Watches"] },
+  "GET /watches/{id}/receipt": { summary: "Compute the current freshness receipt for one watch — a dated observation over its journal entries, not a stored history (Q2/Q3).", tags: ["Watches"] },
   "POST /watches/{id}/revoke": { summary: "Revoke a watch: removes it from the active scheduler set. Additive — every journal entry, receipt, and the consent record it already produced stays intact (Q5).", tags: ["Watches"] },
   "GET /matters": { summary: "List matters (HELM-MATTER-BUILD-SPEC.md §2), optionally filtered by ?status=.", tags: ["Matters"] },
   "POST /matters": { summary: "Create a matter. Refused if the manifest fails the frozen §2 schema or any non-external_reference binding doesn't resolve to a known local run/evidence-bundle/approval-record/attested-artifact (§3).", tags: ["Matters"] },

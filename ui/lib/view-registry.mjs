@@ -17,5 +17,6 @@ import { renderLearn } from "../views/learn.mjs";
 import { renderRegister } from "../views/register.mjs";
 import { renderDeadlines } from "../views/deadlines.mjs";
 import { renderMatters } from "../views/matters.mjs";
+import { renderWatches } from "../views/watches.mjs";
 
-export const VIEWS = { home: renderHome, choose: renderChoose, canvas: renderCanvas, connect: renderConnect, run: renderRun, verify: renderVerify, review: renderReview, operate: renderOperate, register: renderRegister, deadlines: renderDeadlines, matters: renderMatters, learn: renderLearn, agents: renderAgents };
+export const VIEWS = { home: renderHome, choose: renderChoose, canvas: renderCanvas, connect: renderConnect, run: renderRun, verify: renderVerify, review: renderReview, operate: renderOperate, register: renderRegister, deadlines: renderDeadlines, matters: renderMatters, watches: renderWatches, learn: renderLearn, agents: renderAgents };

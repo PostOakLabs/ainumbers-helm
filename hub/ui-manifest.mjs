@@ -91,6 +91,7 @@ const FILES = [
   "views/review.mjs",
   "views/run.mjs",
   "views/verify.mjs",
+  "views/watches.mjs",
 ];
 
 export const UI_ASSETS = new Map();
