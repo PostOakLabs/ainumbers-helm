@@ -27,7 +27,16 @@
         { "path": "der-encode.mjs", "sha256": "d7035152842020a7b71901793c9f5369883d6485fc25d3593c9876fb17b63bab", "portedFrom": "not a port — hand-rolled DER writer (HELM-P3-A5)" },
         { "path": "der-encode.test.mjs", "sha256": "751ccfcd8fd8c05d5637d4cd58f1f05db49fdea9a6e602c1bb6be51267401b50", "portedFrom": "not a port — this repo's own test for der-encode.mjs" },
         { "path": "tsa-roots.mjs", "sha256": "274d36df41f7821fff11bc01bc037fb8d28fe5c00eb86a73e7a8ce644f221f68", "portedFrom": "not a port — own capture of public RFC 3161 TSA root certificates (HELM-TSA-1); the certificates themselves are public trust-chain data, not copyrighted third-party code" },
-        { "path": "PORT.md", "sha256": "e50bedb8bbb9156cfa3a6726fb971f26730b81ead235d620f436f7357d325f89", "portedFrom": "not a port — this repo's own provenance documentation" }
+        { "path": "PORT.md", "sha256": "3b520cd90f3f476c9fb81c2ab7909c114ab4da6437979a6e5efe2e5242b30395", "portedFrom": "not a port — this repo's own provenance documentation" }
+      ]
+    },
+    {
+      "classification": "first-party-port",
+      "sourceRepo": "https://github.com/PostOakLabs/ainumbers.git",
+      "pinnedSha": "34cd823a80da0b082327bb90f55b5e793f92ef16",
+      "license": "MIT License, Copyright (c) 2026 PostOakLabs (same license/holder as this repo's OCG vendor tree; ported directly from that repo's chaingraph/kernels rather than via hub/vendored/ocg — see PORT.md for why)",
+      "files": [
+        { "path": "evidence-envelope-verify.mjs", "sha256": "ef20b41cbce69c25f89f7b67309256a138a27e11d0102f2d88218d296de5fe91", "portedFrom": "chaingraph/kernels/art-652-verify-receipt.kernel.mjs (verifyReceipt()/compute() ported; Ed25519 + SHA-256 via WebCrypto instead of the inlined noble bundle; JCS reused from this directory's own hash.mjs, not reimplemented)" }
       ]
     },
     {
