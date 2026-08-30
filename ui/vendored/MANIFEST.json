@@ -27,7 +27,7 @@
         { "path": "der-encode.mjs", "sha256": "d7035152842020a7b71901793c9f5369883d6485fc25d3593c9876fb17b63bab", "portedFrom": "not a port — hand-rolled DER writer (HELM-P3-A5)" },
         { "path": "der-encode.test.mjs", "sha256": "751ccfcd8fd8c05d5637d4cd58f1f05db49fdea9a6e602c1bb6be51267401b50", "portedFrom": "not a port — this repo's own test for der-encode.mjs" },
         { "path": "tsa-roots.mjs", "sha256": "274d36df41f7821fff11bc01bc037fb8d28fe5c00eb86a73e7a8ce644f221f68", "portedFrom": "not a port — own capture of public RFC 3161 TSA root certificates (HELM-TSA-1); the certificates themselves are public trust-chain data, not copyrighted third-party code" },
-        { "path": "PORT.md", "sha256": "e50bedb8bbb9156cfa3a6726fb971f26730b81ead235d620f436f7357d325f89", "portedFrom": "not a port — this repo's own provenance documentation" }
+        { "path": "PORT.md", "sha256": "3b520cd90f3f476c9fb81c2ab7909c114ab4da6437979a6e5efe2e5242b30395", "portedFrom": "not a port — this repo's own provenance documentation" }
       ]
     },
     {

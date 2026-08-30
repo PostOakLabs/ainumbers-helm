@@ -68,6 +68,7 @@ const FILES = [
   "oauth-callback.mjs",
   "vendored/der.mjs",
   "vendored/der-encode.mjs",
+  "vendored/evidence-envelope-verify.mjs",
   "vendored/hash.mjs",
   "vendored/pkijs.bundle.mjs",
   "vendored/proof.mjs",
