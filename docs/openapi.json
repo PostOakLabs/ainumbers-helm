@@ -2,7 +2,7 @@
   "openapi": "3.0.3",
   "info": {
     "title": "Helm daemon (helmd) — local REST API",
-    "version": "2026.8.21",
+    "version": "2026.8.30",
     "description": "Loopback-only REST + SSE API served by helmd on 127.0.0.1. Every request must present Host: 127.0.0.1:<port>, a matching Origin, and (except /health-adjacent detection routes) a Bearer token issued during pairing — see docs/POWER-QUERY-BRIDGE.md and README.md for the pairing flow. This document is generated from hub/server.mjs's own route table (scripts/gen-openapi.mjs) — never hand-edited."
   },
   "servers": [
