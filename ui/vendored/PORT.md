@@ -24,6 +24,29 @@ pinned SHA in `../../scripts/vendor.config.json` (currently
 vendored file — they mirror helm's own `hub/envelope.mjs` / `hub/bundle.mjs`
 logic for the daemon-free Verify view (see each file's header).
 
+**`evidence-envelope-verify.mjs` (HELM-ENVELOPE-INTEGRATION-1) — an exception to the
+"ported from a hub source" rule above.** Ported directly from the site repo,
+`PostOakLabs/ainumbers.git @ 34cd823a80da0b082327bb90f55b5e793f92ef16`,
+`chaingraph/kernels/art-652-verify-receipt.kernel.mjs` (its `verifyReceipt()`/
+`compute()` pair — the offline verifier for AINumbers Evidence Envelope v0.1
+receipts, `research/EVIDENCE-ENVELOPE-V01-RATIFIED-2026-08-20.md` in the workspace-root
+AINumbers estate). NOT routed through `hub/vendored/ocg` first: that tree's
+whole-directory pin (`../../scripts/vendor.config.json`, currently
+`8a1e86418ec956dcf0c1de4b60a1bf1599fd87be`) predates art-652, and bumping it to pick
+up this one new kernel would re-vendor several hundred unrelated kernel files —
+out of scope for this port. Resync this file by hand (re-copy the upstream
+kernel's `verifyReceipt()` logic) if it changes, same discipline as every other
+row in this table; there is no reconciliation test against a hub copy for this one
+specifically (none exists to reconcile against) — instead
+`ui/lib/evidence-envelope-verify.test.mjs` reconciles it against the upstream
+kernel's own golden fixture vectors (`ui/fixtures/evidence-envelope-verify-fixtures.mjs`,
+also pinned at the same SHA), check-for-check.
+Two crypto-primitive substitutions (Ed25519 verify + SHA-256 via WebCrypto instead
+of the upstream kernel's inlined noble bundle, which exists only because that
+kernel's zkVM guest has no WebCrypto) are documented in the file's own header;
+JCS canonicalization is NOT reimplemented — it imports `cgCanon` from this
+directory's own `hash.mjs`.
+
 **HELM-TSA-1 exception to the "no pkijs in `ui/`" rule above (der.mjs row):** the
 signature/chain-of-trust half of RFC 3161 verification that row's Transform column
 calls out as "dropped — no WebCrypto equivalent" turned out to have one: WebCrypto

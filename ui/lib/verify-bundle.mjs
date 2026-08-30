@@ -13,6 +13,14 @@ import { parseRfc3161MessageImprint, base64ToBytes } from "../vendored/der.mjs";
 import { verifyRfc3161Full } from "./rfc3161-verify.mjs";
 import { validate } from "../vendored/schema-validator.mjs";
 import EVIDENCE_BUNDLE_MANIFEST_SCHEMA from "../vendored/schemas/evidence_bundle_manifest.schema.mjs";
+import { verifyEvidenceEnvelopeReceipt } from "../vendored/evidence-envelope-verify.mjs";
+
+// HELM-ENVELOPE-INTEGRATION-1: the §26.4 object kind an AINumbers Evidence Envelope
+// v0.1 receipt (research/EVIDENCE-ENVELOPE-V01-RATIFIED-2026-08-20.md, workspace-root
+// AINumbers estate) travels in, DSSE-sealed like any other bundle object with
+// predicate = { receipt, previous_receipt? }. Exported so hub/bundle.mjs's
+// DEFAULT_TRUST_LABEL and any producer never hand-duplicate this string.
+export const EVIDENCE_ENVELOPE_RECEIPT_KIND = "evidence_envelope_receipt";
 
 const FORBIDDEN_FIELD_NAMES = new Set([
   "access_token", "refresh_token", "id_token", "secret", "secretKey", "privateKey",
@@ -180,6 +188,17 @@ export async function verifyBundle(bundle, publicKeys, opts = {}) {
     }
     row.valid = true;
     row.predicate = objResult.statement.predicate;
+    // Additive: only an entry of this kind gets the extra check below; every other
+    // kind's verdict is unchanged from before this row, so a pre-existing bundle
+    // (no evidence_envelope_receipt entries) verifies byte-identically.
+    if (entry.kind === EVIDENCE_ENVELOPE_RECEIPT_KIND) {
+      const receiptResult = await verifyEvidenceEnvelopeReceipt(row.predicate.receipt, row.predicate.previous_receipt ?? null);
+      row.evidence_envelope = receiptResult;
+      if (!receiptResult.valid) {
+        row.valid = false;
+        reasons.push(`entry_evidence_envelope_invalid:${entry.digest}`);
+      }
+    }
     detail.entries.push(row);
   }
 

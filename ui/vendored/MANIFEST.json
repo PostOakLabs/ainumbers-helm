@@ -31,6 +31,15 @@
       ]
     },
     {
+      "classification": "first-party-port",
+      "sourceRepo": "https://github.com/PostOakLabs/ainumbers.git",
+      "pinnedSha": "34cd823a80da0b082327bb90f55b5e793f92ef16",
+      "license": "MIT License, Copyright (c) 2026 PostOakLabs (same license/holder as this repo's OCG vendor tree; ported directly from that repo's chaingraph/kernels rather than via hub/vendored/ocg — see PORT.md for why)",
+      "files": [
+        { "path": "evidence-envelope-verify.mjs", "sha256": "ef20b41cbce69c25f89f7b67309256a138a27e11d0102f2d88218d296de5fe91", "portedFrom": "chaingraph/kernels/art-652-verify-receipt.kernel.mjs (verifyReceipt()/compute() ported; Ed25519 + SHA-256 via WebCrypto instead of the inlined noble bundle; JCS reused from this directory's own hash.mjs, not reimplemented)" }
+      ]
+    },
+    {
       "classification": "third-party-bundle",
       "sourceRepo": "https://github.com/PostOakLabs/anchor-suite.git",
       "pinnedSha": "1aa6d2222b64ff9b5f53245e6be244ddc091d401",

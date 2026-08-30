@@ -26,6 +26,7 @@ const OUT = join(ROOT, "ui", "lib", "standalone-verifier-runtime.gen.mjs");
 // seven fixed files, not a general resolver).
 const MODULES = [
   { id: "hash", file: "ui/vendored/hash.mjs", imports: {} },
+  { id: "evidenceEnvelopeVerify", file: "ui/vendored/evidence-envelope-verify.mjs", imports: { "./hash.mjs": "hash" } },
   { id: "proof", file: "ui/vendored/proof.mjs", imports: { "./hash.mjs": "hash" } },
   { id: "der", file: "ui/vendored/der.mjs", imports: {} },
   { id: "schemaValidator", file: "ui/vendored/schema-validator.mjs", imports: {} },
@@ -43,6 +44,7 @@ const MODULES = [
       "../vendored/der.mjs": "der",
       "../vendored/schema-validator.mjs": "schemaValidator",
       "../vendored/schemas/evidence_bundle_manifest.schema.mjs": "manifestSchema",
+      "../vendored/evidence-envelope-verify.mjs": "evidenceEnvelopeVerify",
     },
   },
 ];

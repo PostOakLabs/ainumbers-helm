@@ -12,7 +12,7 @@ import { fileURLToPath } from "node:url";
 import { cgCanon, assertIJson } from "./vendored/ocg/kernels/_hash.mjs";
 import { buildStatement, emitEnvelope, verifyEnvelope, helmPredicateType } from "./envelope.mjs";
 import { validate } from "../scripts/lib/schema-validator.mjs";
-import { verifyBundle as verifyBundleOffline, verifyAnchorBinding } from "../ui/lib/verify-bundle.mjs";
+import { verifyBundle as verifyBundleOffline, verifyAnchorBinding, EVIDENCE_ENVELOPE_RECEIPT_KIND } from "../ui/lib/verify-bundle.mjs";
 import { envelopeDigest as envelopeDigestOffline } from "../ui/lib/verify-envelope.mjs";
 import { buildStandaloneVerifierHtml } from "../ui/lib/standalone-verifier.mjs";
 import { buildAuditorHtml } from "../ui/lib/auditor-pdf.mjs";
@@ -55,6 +55,11 @@ const DEFAULT_TRUST_LABEL = {
   // no kernel re-executed to produce it), so it earns hash_verified, not
   // kernel_verified — the same reasoning policy_decision already gets.
   freshness_receipt: "hash_verified",
+  // HELM-ENVELOPE-INTEGRATION-1: an AINumbers Evidence Envelope v0.1 receipt is a
+  // hash+signature integrity artifact (schema shape, Ed25519 signature, chain
+  // link) with no live connector call and no human review folded in — the same
+  // "unchanged relative to its stated preimage" claim hash_verified already means.
+  [EVIDENCE_ENVELOPE_RECEIPT_KIND]: "hash_verified",
 };
 
 // Structural redaction backstop (§26.7 "no secret values, no raw credential
