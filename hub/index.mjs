@@ -32,7 +32,9 @@ import { uninstallShortcut, isShortcutInstalled, shortcutLocation } from "./shor
 // HELM-PROTO-1: same discipline as autostart/shortcut above — uninstall is
 // the daemon's only scheme-registration writer; install lives behind the
 // pairing tab's opt-in toggle (POST /autostart in server.mjs).
-import { uninstallProtocol, isProtocolInstalled, protocolLocation, protocolStatus } from "./protocol.mjs";
+// HELM-PROTO-2: FROM_SCHEME_FLAG is imported, not re-spelled, so the flag the
+// registration writes and the flag the CLI dispatch matches stay one literal.
+import { uninstallProtocol, isProtocolInstalled, protocolLocation, protocolStatus, FROM_SCHEME_FLAG } from "./protocol.mjs";
 import { createIdleTimer } from "./idle-timer.mjs";
 import { createWatchScheduler } from "./watch-scheduler.mjs";
 import { createUptimeHeartbeat } from "./uptime-record.mjs";
@@ -475,11 +477,27 @@ function isNotRunning(err) {
   return err.code === "ENOENT" || err.code === "ECONNREFUSED";
 }
 
-async function cmdOpen() {
+async function cmdOpen({ fromScheme = false } = {}) {
   try {
     const result = await callDaemon("pair");
     console.log(result.url);
   } catch (err) {
+    // HELM-PROTO-2 (spec §5): the scheme registration invokes the binary
+    // itself as `helmd open --from-scheme`, and a scheme click has no console
+    // to print "no daemon listening" to. FROM_SCHEME_FLAG is a MARKER only —
+    // the one fixed literal the registered command adds (protocol.mjs); it
+    // carries no data from the invoking URL and accepts none (spec §2.1).
+    // With it, a not-running daemon falls through to the same start path a
+    // Start Menu double-click uses — cmdStart's existing first-run/--open
+    // browser gate, reused as-is: no new gate, no new consent surface, no
+    // persistence written by the click (the idle timer still owns the
+    // daemon's lifetime; autostart stays an independently opt-in thing).
+    // Plain `helmd open` keeps its client contract unchanged: exit 1 when
+    // nothing is listening, so scripts keep a branchable signal.
+    if (fromScheme && isNotRunning(err)) {
+      log.info("helm:// open: no daemon running — starting helmd (scheme launch)");
+      return cmdStart({ open: true });
+    }
     console.error(`helmd open: ${isNotRunning(err) ? "no daemon listening (run `helmd start` first)" : err.message}`);
     process.exit(1);
   }
@@ -550,7 +568,12 @@ const args = process.argv.slice(2);
 const cmd = args[0] || "start";
 if (cmd === "doctor") await cmdDoctor();
 else if (cmd === "start") await cmdStart({ open: args.includes("--open") });
-else if (cmd === "open") await cmdOpen();
+// HELM-PROTO-2 (spec §9 gate 1): the scheme's only argv footprint is this one
+// fixed-literal presence check — `--from-scheme` is matched against
+// FROM_SCHEME_FLAG exactly as `--open` is above, never templated, and no byte
+// of any scheme-invocation string is parsed anywhere (protocol.mjs's
+// registration writes the same literal; from-scheme.test.mjs pins both).
+else if (cmd === "open") await cmdOpen({ fromScheme: args.includes(FROM_SCHEME_FLAG) });
 else if (cmd === "stop") await cmdStop();
 else if (cmd === "status") await cmdStatus();
 else if (cmd === "uninstall") cmdUninstall();
