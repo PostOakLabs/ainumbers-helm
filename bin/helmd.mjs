@@ -37,6 +37,7 @@ const MATTER_CLOSE_ENTRY = join(ROOT, "scripts", "matter-close.mjs");
 const BILAT_PUBKEY_ENTRY = join(ROOT, "scripts", "bilat-pubkey.mjs");
 const BILAT_EXPORT_ENTRY = join(ROOT, "scripts", "bilat-export.mjs");
 const BILAT_IMPORT_ENTRY = join(ROOT, "scripts", "bilat-import.mjs");
+const SDJWT_EMIT_ENTRY = join(ROOT, "scripts", "sdjwt-emit.mjs");
 
 // Read straight off hub/index.mjs's own dispatch, not a hand-copied guess —
 // see the row's warning: "read the dispatcher, do not grep a guessed list."
@@ -99,6 +100,16 @@ Commands:
                       on success, write the recovered payload. Fails closed (exit 1) on bad
                       signature, unrecognized version, or unrecognized payload_type — never
                       a partial write. No daemon required.
+  emit-sdjwt --claims <claims.json> --key <private.pem> [--frame <frame.json>]
+             [--profile base|vc] [--seed <hex>] [--out <token.txt>] [...]
+                      mint an SD-JWT (RFC 9901) offline from a claims file, plus an
+                      emission record. --profile vc adds the SD-JWT VC layer, which
+                      TRACKS A DRAFT (draft-ietf-oauth-sd-jwt-vc-19, IESG Last Call at
+                      pin time; labelled "tracks draft" in every emission record) and
+                      is not a ratified RFC. --seed makes the emission reproducible;
+                      a seeded record is issuer-private (it re-derives the disclosure
+                      salts). Emission only — nothing is submitted anywhere. Exit codes:
+                      0 success, 1 emit/verify failure, 2 usage error.
 
 Options:
   -h, --help          show this help and exit 0
@@ -178,8 +189,11 @@ if (PASSTHROUGH_COMMANDS.has(cmd)) {
 } else if (cmd === "bilat-import") {
   const result = spawnSync(process.execPath, [BILAT_IMPORT_ENTRY, ...rest], { stdio: "inherit" });
   process.exit(result.status ?? 1);
+} else if (cmd === "emit-sdjwt") {
+  const result = spawnSync(process.execPath, [SDJWT_EMIT_ENTRY, ...rest], { stdio: "inherit" });
+  process.exit(result.status ?? 1);
 } else {
-  console.error(`helmd: unknown command "${cmd}" (expected: start | stop | status | doctor | open | uninstall | export-bpmn | list-scenarios | run-template | check | verify | matter-close | bilat-pubkey | bilat-export | bilat-import)`);
+  console.error(`helmd: unknown command "${cmd}" (expected: start | stop | status | doctor | open | uninstall | export-bpmn | list-scenarios | run-template | check | verify | matter-close | bilat-pubkey | bilat-export | bilat-import | emit-sdjwt)`);
   console.error("Run 'helmd --help' for usage.");
   process.exit(2);
 }
