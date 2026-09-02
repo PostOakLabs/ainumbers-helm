@@ -33,24 +33,24 @@ Default port is `4173` (`hub/config.mjs:9`). Default allowed browser origin is d
 
 ### Start
 
-`helmd start` runs `cmdStart()` (`hub/index.mjs:101-413`) in this order:
+`helmd start` runs `cmdStart()` (`hub/index.mjs:103-415`) in this order:
 
-1. Load config, load or create the bearer token, load or create the Ed25519 + ML-DSA-44 identity keys, load or create the HA identity (`hub/index.mjs:102-110`).
-2. Open the journal database, eagerly create every table the HTTP surface reads from (state-snapshot, run, HA), and verify the journal's hash chain before serving anything (§4 below, `hub/index.mjs:128-181`).
-3. Build the idle timer (`hub/index.mjs:206-216`).
-4. Create the HTTP server and bind it. A port already in use is a clean refusal, never a silent fallback to another port (`hub/server.mjs:1495`, `1504-1516`, called at `hub/index.mjs:233-237`).
-5. Start the cadence loop (`hub/watch-scheduler.mjs`), which polls `watches.json` and fires any due watch's compiled pack, independent of the idle timer, so a watch fires whether or not a browser tab is open (`hub/index.mjs:239-244`).
-6. Start helmd's own continuous-uptime heartbeat (`hub/uptime-record.mjs`), journaling an "I was up during [T1,T2]" record on `helmd_uptime` so a later freshness check can tell a genuine miss (helmd continuously up, nothing fired) apart from "no evidence either way" (the machine was asleep or offline). `stop()` closes the final interval on every graceful exit path below, via the `exit` event, never on an abrupt kill, which is exactly the gap the next boot's coverage check must see (`hub/index.mjs:246-255`).
-7. Only after the socket is listening, fire the checkpoint build, deliberately not awaited, so readiness never depends on a timestamp authority round trip (`hub/index.mjs:257-284`).
-8. Open the CLI channel, a named pipe on Windows and a unix domain socket elsewhere, carrying `pair`, `stop`, and `status` (`hub/index.mjs:300-350`, `hub/cli-channel.mjs`).
-9. Print the pairing URL, then open a browser tab only on a genuine first run (no token on disk yet) or an explicit `--open`, not on every start. Opening on every start used to spam a tab per restart when autostart or a crash loop re-fired `helmd start` unattended (`hub/index.mjs:359-394`).
-10. Fire the daemon's own state-snapshot emission (SPEC.md §SNAP-1/§HEAD-1), deliberately not awaited and gated on a non-empty journal, the same fire-and-forget discipline as the checkpoint build in step 7 (`hub/index.mjs:286-299`).
+1. Load config, load or create the bearer token, load or create the Ed25519 + ML-DSA-44 identity keys, load or create the HA identity (`hub/index.mjs:104-112`).
+2. Open the journal database, eagerly create every table the HTTP surface reads from (state-snapshot, run, HA), and verify the journal's hash chain before serving anything (§4 below, `hub/index.mjs:130-183`).
+3. Build the idle timer (`hub/index.mjs:208-218`).
+4. Create the HTTP server and bind it. A port already in use is a clean refusal, never a silent fallback to another port (`hub/server.mjs:1495`, `1504-1516`, called at `hub/index.mjs:235-239`).
+5. Start the cadence loop (`hub/watch-scheduler.mjs`), which polls `watches.json` and fires any due watch's compiled pack, independent of the idle timer, so a watch fires whether or not a browser tab is open (`hub/index.mjs:241-246`).
+6. Start helmd's own continuous-uptime heartbeat (`hub/uptime-record.mjs`), journaling an "I was up during [T1,T2]" record on `helmd_uptime` so a later freshness check can tell a genuine miss (helmd continuously up, nothing fired) apart from "no evidence either way" (the machine was asleep or offline). `stop()` closes the final interval on every graceful exit path below, via the `exit` event, never on an abrupt kill, which is exactly the gap the next boot's coverage check must see (`hub/index.mjs:248-257`).
+7. Only after the socket is listening, fire the checkpoint build, deliberately not awaited, so readiness never depends on a timestamp authority round trip (`hub/index.mjs:259-286`).
+8. Open the CLI channel, a named pipe on Windows and a unix domain socket elsewhere, carrying `pair`, `stop`, and `status` (`hub/index.mjs:302-352`, `hub/cli-channel.mjs`).
+9. Print the pairing URL, then open a browser tab only on a genuine first run (no token on disk yet) or an explicit `--open`, not on every start. Opening on every start used to spam a tab per restart when autostart or a crash loop re-fired `helmd start` unattended (`hub/index.mjs:361-396`).
+10. Fire the daemon's own state-snapshot emission (SPEC.md §SNAP-1/§HEAD-1), deliberately not awaited and gated on a non-empty journal, the same fire-and-forget discipline as the checkpoint build in step 7 (`hub/index.mjs:288-301`).
 
-`helmd stop` and `helmd status` do not go over HTTP. They connect to that CLI channel, whose trust boundary is the operating system's own ACL on the pipe or socket. The reasoning is recorded in the code: an unauthenticated HTTP route that stops the daemon or hands out the token would be reachable by any local process (`hub/index.mjs:302-318`).
+`helmd stop` and `helmd status` do not go over HTTP. They connect to that CLI channel, whose trust boundary is the operating system's own ACL on the pipe or socket. The reasoning is recorded in the code: an unauthenticated HTTP route that stops the daemon or hands out the token would be reachable by any local process (`hub/index.mjs:304-320`).
 
 ### Idle shutdown
 
-`helmd` stops itself after `idleTimeoutMs`, default 120000 ms (`hub/idle-timer.mjs:8`, `hub/config.mjs:44`). "Idle" is deliberately wider than "no request arrived": an open server-sent-events connection, a run in flight, a live pairing window, or a backup in progress each hold the daemon open (`hub/index.mjs:208`). The timeout is announced on `GET /health`, in `helmd status`, and in the boot banner rather than only enforced (`hub/index.mjs:372`, `hub/server.mjs:178-180`).
+`helmd` stops itself after `idleTimeoutMs`, default 120000 ms (`hub/idle-timer.mjs:8`, `hub/config.mjs:44`). "Idle" is deliberately wider than "no request arrived": an open server-sent-events connection, a run in flight, a live pairing window, or a backup in progress each hold the daemon open (`hub/index.mjs:210`). The timeout is announced on `GET /health`, in `helmd status`, and in the boot banner rather than only enforced (`hub/index.mjs:374`, `hub/server.mjs:178-180`).
 
 ### Serving the shell
 
@@ -81,9 +81,9 @@ The pairing URL is `http://127.0.0.1:<port>/#token=<token>&pair=<nonce>&fp=<fing
 
 - **`token`** is the durable credential the browser tab keeps for the session. It stays durable because revoking it per call would break server-sent-events and health polling, which cannot rotate a credential mid-connection (`hub/token.mjs:21-26`).
 - **`pair`** is a single-use nonce with a five minute TTL, held in memory only and cleared on restart. Redemption deletes it whether or not it was still valid, so a second redeem of the same value always fails. Its only power is `/pair/redeem`, which records the pairing event so a replayed old link is detectable. It never gates ordinary API calls (`hub/token.mjs:51-68`).
-- **`fp`** is the fingerprint of the daemon's own Ed25519 identity key. This is the one channel a port squatter cannot spoof, because only the process holding the key file can mint it. The browser pins it and afterwards refuses any `/pair/challenge` response whose public key fingerprint does not match, which closes a self-consistency-only gap in challenge verification (`hub/token.mjs:28-34`, `hub/index.mjs:111-116`).
+- **`fp`** is the fingerprint of the daemon's own Ed25519 identity key. This is the one channel a port squatter cannot spoof, because only the process holding the key file can mint it. The browser pins it and afterwards refuses any `/pair/challenge` response whose public key fingerprint does not match, which closes a self-consistency-only gap in challenge verification (`hub/token.mjs:28-34`, `hub/index.mjs:113-118`).
 
-Re-pairing goes over the CLI channel (`helmd open`), never over HTTP (`hub/index.mjs:302-311`).
+Re-pairing goes over the CLI channel (`helmd open`), never over HTTP (`hub/index.mjs:304-313`). A `helm://` scheme click reaches the same verb as the binary itself, registered as the fixed literal `helmd open --from-scheme`; when nothing is listening, the marker flag falls through to `cmdStart({ open: true })` — the same start path a Start Menu double-click uses, with its existing first-run/`--open` browser gate unchanged — so the click always ends in a started daemon and a dashboard tab (`hub/index.mjs:480-505`). The marker carries no data from the invoking URL and accepts none: the registration writes `open --from-scheme` and nothing else (`hub/protocol.mjs:35`, `43-47`).
 
 For server-sent events specifically, the durable token is not put in the query string. `POST /events/ticket` mints a 15 second single-use ticket over an already-authenticated call, and `/events` accepts that ticket instead (`hub/token.mjs:88-104`, `hub/server.mjs:367-373`, `1463-1467`).
 
@@ -111,11 +111,11 @@ Requests are logged by pathname only, never by `req.url`. The reason is written 
 
 ### Autostart
 
-Autostart and the Start Menu shortcut are **opt-in and default off on every platform**. Nothing on the daemon's start path writes a persistence entry; `hub/index.mjs` does not import an installer at all (`hub/index.mjs:27-35`, and the explanation at `396-412`). The two diverge on one thing: the autostart command (Run key / LaunchAgent) never carries `--open`, since a login has no user watching, while the Start Menu shortcut always does, since a double-click on it IS the explicit user action (`hub/autostart.mjs:37-52`, `hub/shortcut.mjs:80-88`). The `helm://` URL-scheme registration (`hub/protocol.mjs`) is the third member of the same family: opt-in, default off, Windows-only, never touched by the start path, and removed by `helmd uninstall` like the other two.
+Autostart and the Start Menu shortcut are **opt-in and default off on every platform**. Nothing on the daemon's start path writes a persistence entry; `hub/index.mjs` does not import an installer at all (`hub/index.mjs:27-37`, and the explanation at `398-414`). The two diverge on one thing: the autostart command (Run key / LaunchAgent) never carries `--open`, since a login has no user watching, while the Start Menu shortcut always does, since a double-click on it IS the explicit user action (`hub/autostart.mjs:37-52`, `hub/shortcut.mjs:80-88`). The `helm://` URL-scheme registration (`hub/protocol.mjs`) is the third member of the same family: opt-in, default off, Windows-only, never touched by the start path, and removed by `helmd uninstall` like the other two.
 
 The only way any of them gets installed is a person ticking the box in the Helm tab, which issues `POST /autostart`. That route is POST and never GET, because a GET that installs persistence is reachable from an `<img src=...>` or a prefetch, paths where a page's script never runs and the Origin check is the only obstacle. Both `/autostart` routes sit in the ordinary route table behind the full Host, Origin, and bearer gate, not in the static allowlist and not in the detection paths (`hub/server.mjs:453-555`, registered at `1300-1301`). The same handler carries a third independent toggle, `body.protocol`, for the scheme registration, applied only when that exact field is present, so a POST from a tab written before the toggle existed never registers the scheme.
 
-The status route reports what is actually on the machine rather than what was requested: on an unsupported platform the installer returns `{supported:false}` and writes nothing, so the response echoes re-read state (`hub/server.mjs:554-557`). Status distinguishes `ok`, `not_installed`, `unsupported`, `target_missing`, `unreadable`, and `command_mismatch`, and `target_missing` surfaces as a `BROKEN` state in `helmd status` and in `helmd doctor` rather than reporting healthy forever (`hub/autostart.mjs:213-281`, `hub/index.mjs:505-527`). The scheme registration reports through the same payload and the same staleness vocabulary (`hub/protocol.mjs`'s `protocolStatus()`), as `protocol_handler_valid` in `helmd doctor` and a `helm://` line in `helmd status`.
+The status route reports what is actually on the machine rather than what was requested: on an unsupported platform the installer returns `{supported:false}` and writes nothing, so the response echoes re-read state (`hub/server.mjs:554-557`). Status distinguishes `ok`, `not_installed`, `unsupported`, `target_missing`, `unreadable`, and `command_mismatch`, and `target_missing` surfaces as a `BROKEN` state in `helmd status` and in `helmd doctor` rather than reporting healthy forever (`hub/autostart.mjs:213-281`, `hub/index.mjs:521-547`). The scheme registration reports through the same payload and the same staleness vocabulary (`hub/protocol.mjs`'s `protocolStatus()`), as `protocol_handler_valid` in `helmd doctor` and a `helm://` line in `helmd status`.
 
 ---
 
@@ -154,7 +154,7 @@ Only the bare `journal_root_digest` scalar ever leaves the machine to a timestam
 
 ### Verification at boot
 
-A daemon must never serve a journal it cannot prove is unbroken, but a full genesis-to-head replay on every boot grows without bound and eventually exhausts memory on a long-lived install. The resolution (`hub/index.mjs:118-181`):
+A daemon must never serve a journal it cannot prove is unbroken, but a full genesis-to-head replay on every boot grows without bound and eventually exhausts memory on a long-lived install. The resolution (`hub/index.mjs:120-183`):
 
 - If the latest checkpoint's envelope signature and internal consistency verify, and it is anchored or anchoring is not required, boot replays **from that checkpoint forward** (`hub/journal.mjs:195-214`). Cost is bounded by rows written since the checkpoint.
 - Otherwise boot does a full replay from genesis and records the timestamp (`hub/journal.mjs:165-182`, `90-97`).
@@ -163,11 +163,11 @@ The fast path is not a weaker check. Every row's `rh` is still recomputed and co
 
 `helmd doctor` always runs the unconditional full replay. That is the tool for proving the whole history, and it is deliberately not what every boot does (`hub/journal.mjs:158-164`).
 
-After a clean verification, boot advances the checkpoint frontier so the next boot's delta is bounded by one uptime rather than by the daemon's lifetime (`hub/index.mjs:183-197`).
+After a clean verification, boot advances the checkpoint frontier so the next boot's delta is bounded by one uptime rather than by the daemon's lifetime (`hub/index.mjs:185-199`).
 
 ### Broken journals
 
-A journal that fails verification is no longer a dead end. The whole state directory is renamed aside with a timestamp, never deleted, a crash log recording `brokenAt` is written into the quarantined copy, `config.json` is carried forward because port and idle timeout are user preference rather than trust-sensitive state, and boot re-enters against fresh state (`hub/recovery.mjs:25-51`, driven from `hub/index.mjs:169-176`). A second failure immediately after quarantine refuses loudly instead of quarantining in a loop (`hub/index.mjs:158-168`). The recovery is announced in the boot banner, not only in a log line, because a double-click launch closes its console (`hub/index.mjs:362-371`).
+A journal that fails verification is no longer a dead end. The whole state directory is renamed aside with a timestamp, never deleted, a crash log recording `brokenAt` is written into the quarantined copy, `config.json` is carried forward because port and idle timeout are user preference rather than trust-sensitive state, and boot re-enters against fresh state (`hub/recovery.mjs:25-51`, driven from `hub/index.mjs:177-182`). A second failure immediately after quarantine refuses loudly instead of quarantining in a loop (`hub/index.mjs:164-173`). The recovery is announced in the boot banner, not only in a log line, because a double-click launch closes its console (`hub/index.mjs:364-373`).
 
 ### Checkpoints
 
@@ -272,7 +272,7 @@ Anchoring submits only the `journal_root_digest` to an external timestamp author
 
 The RFC 3161 path reuses the shipped Anchor Suite relay at `anchor.ainumbers.co` and its vendored TimeStampReq builder, the same code the browser-side anchor and verify pages run, rather than reimplementing DER encoding (`hub/anchor-client.mjs:7-10`, `22`). The OpenTimestamps path posts the raw digest to public calendars and stores the returned pending attestation as-is; upgrading that to a full Merkle-to-block-header proof is **not built** (`hub/anchor-client.mjs:12-17`).
 
-Anchoring is off by default (`hub/config.mjs:50`) and is logged once per boot when disabled, with the exact config key to change (`hub/index.mjs:259-266`). A checkpoint that could not be anchored is still a valid, verifiable signed object; a relay failure produces a schema-valid queued or skipped marker rather than an exception (`hub/checkpoint.mjs:20-22`, `50-55`).
+Anchoring is off by default (`hub/config.mjs:50`) and is logged once per boot when disabled, with the exact config key to change (`hub/index.mjs:265-272`). A checkpoint that could not be anchored is still a valid, verifiable signed object; a relay failure produces a schema-valid queued or skipped marker rather than an exception (`hub/checkpoint.mjs:20-22`, `50-55`).
 
 ---
 
@@ -315,8 +315,8 @@ Consequences visible throughout the code:
 
 - The journal uses the Node builtin `node:sqlite` rather than `better-sqlite3`, which is why transactions are hand-wrapped (`hub/journal.mjs:16-19`, `39-49`).
 - JSON Schema validation is a hand-rolled validator (`scripts/lib/schema-validator.mjs`), not Ajv.
-- Opening a browser shells out to each platform's native opener rather than using the `open` package (`hub/index.mjs:43`, `70-91`).
-- The CLI is `process.argv.slice(2)` and a chain of comparisons, with the zero-dep test spelling out that a CLI framework must never sneak back in (`bin/zero-dep.test.mjs:4-6`, `hub/index.mjs:549-560`).
+- Opening a browser shells out to each platform's native opener rather than using the `open` package (`hub/index.mjs:45`, `70-91`).
+- The CLI is `process.argv.slice(2)` and a chain of comparisons, with the zero-dep test spelling out that a CLI framework must never sneak back in (`bin/zero-dep.test.mjs:4-6`, `hub/index.mjs:567-583`).
 
 ---
 
@@ -363,7 +363,7 @@ Published deliberately. A reader finding these is worse than a reader being told
 
 Both are recorded here because the accuracy rule requires the disagreement to be written down rather than silently resolved.
 
-- **"Journal corruption crashes rather than degrades" is no longer true.** It was true when it was written. `hub/recovery.mjs` and the boot path at `hub/index.mjs:159-180` now quarantine the broken state directory with a timestamp, never delete it, carry `config.json` forward, write a crash log into the quarantined copy, and re-enter boot against fresh state, announcing all of it in the banner. The residual risk is different and smaller: an install whose journal breaks starts over fresh (carrying nothing but that boot's own `helmd_uptime` heartbeat, §2 above), and the old data is preserved only as a quarantined directory a human must go look at.
+- **"Journal corruption crashes rather than degrades" is no longer true.** It was true when it was written. `hub/recovery.mjs` and the boot path at `hub/index.mjs:161-183` now quarantine the broken state directory with a timestamp, never delete it, carry `config.json` forward, write a crash log into the quarantined copy, and re-enter boot against fresh state, announcing all of it in the banner. The residual risk is different and smaller: an install whose journal breaks starts over fresh (carrying nothing but that boot's own `helmd_uptime` heartbeat, §2 above), and the old data is preserved only as a quarantined directory a human must go look at.
 
 - **"`exportBpmn` is unreachable" is no longer true.** It is reachable from the CLI: `helmd export-bpmn <workflow_id> [out.bpmn]` dispatches to `scripts/export-bpmn.mjs`, which loads a compiled pack and calls `exportBpmn` from `hub/bpmn-export.mjs` (`bin/helmd.mjs:31`, `165-166`). It is documented in `helmd --help` and listed among the stable verbs (`bin/helmd.mjs:58`, `122`). **Update:** the "CLI-only" residual is also gone. `GET /workflows/:id/export?format=bpmn` (`hub/server.mjs`) and an "Export BPMN diagram" button on the canvas view now reach it too.
 
