@@ -1,11 +1,11 @@
 {
   "_comment": "Anti-drift stamp for HELM-TECHNICAL-DESIGN-IMPLEMENTATION.md. Each entry is a file the doc cites, digested as of the last time a human re-read the doc's claims against that code. Enforced by scripts/check-techdoc-citations.mjs. Re-stamp with scripts/stamp-techdoc-citations.mjs, by hand, in the same pull request that re-verifies the prose. Never automatically.",
   "doc": "docs/HELM-TECHNICAL-DESIGN-IMPLEMENTATION.md",
-  "stampedAtSha": "43011cb2446fc27e98b79a0162873a1217abf236",
+  "stampedAtSha": "ff2d40973c9e918382d274c28a5c1e882fa3757e",
   "files": [
     {
       "path": "bin/helmd.mjs",
-      "sha256": "1ba695b2dd7c02e9cb2a9e262e1c82552d202872b6611080c94063b14803eb84"
+      "sha256": "f8b6f80d6ec93853750d8a29f22902d5ac9578d166472b4401749244f365c951"
     },
     {
       "path": "bin/zero-dep.test.mjs",
@@ -89,7 +89,7 @@
     },
     {
       "path": "hub/index.mjs",
-      "sha256": "52ee1597b6f1c80743cd5c039dbda6092395b1b63238c313be0c07094d322451"
+      "sha256": "599ec72b935fc9a656c2e55f6d49ed46f2560cd05b35d83650cea2263d166a50"
     },
     {
       "path": "hub/journal.mjs",
@@ -108,6 +108,10 @@
       "sha256": "1f5306455eb5a8a305c5735d43f0f78d624f957509fd0315fadb44c4ee77cee8"
     },
     {
+      "path": "hub/protocol.mjs",
+      "sha256": "979367877306abcf43498492b76a26d5c074cb6cc31cc0d156f928458bd0c2d8"
+    },
+    {
       "path": "hub/recovery.mjs",
       "sha256": "a7b050305c456825b62b73d66e1d949ec64758fff9e5b08092b59c284f9dc636"
     },
@@ -121,7 +125,7 @@
     },
     {
       "path": "hub/server.mjs",
-      "sha256": "f99b9459bf1abbd8144e80c0d288752b0bbefbdeaa8b608266c4110316728135"
+      "sha256": "22d242935620a7fe03ab618abe2a653122c8ed7f2791df246ade519241553807"
     },
     {
       "path": "hub/shortcut.mjs",
