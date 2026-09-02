@@ -85,6 +85,16 @@ Generated from the shared credits registry (`data/credits-registry.json`, source
   - `hub/vendored/sigstore/trusted-root/trusted_root.json`
   - `hub/vendored/sigstore/trusted-root/PIN.md`
 
+## @sd-jwt/core + @owf/identity-common (helm node_modules vendor)
+
+- **Version:** core 0.20.1 + identity-common 0.3.2
+- **License:** Apache-2.0
+- **Upstream:** https://github.com/openwallet-foundation/sd-jwt-js
+- **Upstream ships a NOTICE file:** no (checked upstream root — no NOTICE file)
+- **Note:** HELM-SDJWT-EMIT-1: byte-identical npm-tarball vendor of @sd-jwt/core 0.20.1 (the RFC 9901 implementation) plus its sole runtime dependency @owf/identity-common 0.3.2 (upstream https://github.com/openwallet-foundation-labs/identity-common-ts, also Apache-2.0, ships no NOTICE file — checked upstream root), laid out as a hand-placed node_modules/@scope/* tree so bare import/require calls resolve via walk-up. Per-package tarball provenance in hub/vendored/sd-jwt/MANIFEST.json. Same upstream family as the sd-jwt-core bundle entry (repo/mcp-apps-poc) but a newer pin and a different vendor layout; kept as a separate entry so the older bundles' pinned version stays accurate.
+- **Path(s) in this repo:**
+  - `hub/vendored/sd-jwt/`
+
 ## rtoy/fdlibm-js (embedded SunPro fdlibm port)
 
 - **Version:** n/a

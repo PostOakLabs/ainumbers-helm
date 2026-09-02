@@ -115,6 +115,19 @@
       }
     },
     {
+      "id": "sd-jwt-core-helm",
+      "name": "@sd-jwt/core + @owf/identity-common (helm node_modules vendor)",
+      "version": "core 0.20.1 + identity-common 0.3.2",
+      "license": "Apache-2.0",
+      "upstream_url": "https://github.com/openwallet-foundation/sd-jwt-js",
+      "upstream_ships_notice": false,
+      "note": "HELM-SDJWT-EMIT-1: byte-identical npm-tarball vendor of @sd-jwt/core 0.20.1 (the RFC 9901 implementation) plus its sole runtime dependency @owf/identity-common 0.3.2 (upstream https://github.com/openwallet-foundation-labs/identity-common-ts, also Apache-2.0, ships no NOTICE file — checked upstream root), laid out as a hand-placed node_modules/@scope/* tree so bare import/require calls resolve via walk-up. Per-package tarball provenance in hub/vendored/sd-jwt/MANIFEST.json. Same upstream family as the sd-jwt-core bundle entry (repo/mcp-apps-poc) but a newer pin and a different vendor layout; kept as a separate entry so the older bundles' pinned version stays accurate.",
+      "repos": ["helm"],
+      "paths": {
+        "helm": ["hub/vendored/sd-jwt/"]
+      }
+    },
+    {
       "id": "detmath-fdlibm",
       "name": "rtoy/fdlibm-js (embedded SunPro fdlibm port)",
       "version": "n/a",

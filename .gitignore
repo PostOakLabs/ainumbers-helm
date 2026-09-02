@@ -13,3 +13,11 @@ dist/
 # specific pinned tree.
 !hub/vendored/sigstore/node_modules/
 !hub/vendored/sigstore/node_modules/**
+
+# HELM-SDJWT-EMIT-1: hub/vendored/sd-jwt/node_modules/{@sd-jwt,@owf}/* — same
+# shape as the sigstore carve-out above: committed byte-identical npm-tarball
+# copies of @sd-jwt/core + @owf/identity-common, hand-placed so the vendored
+# packages' own bare import/require calls resolve via the node_modules walk-up
+# (see hub/vendored/sd-jwt/MANIFEST.json). Not install output.
+!hub/vendored/sd-jwt/node_modules/
+!hub/vendored/sd-jwt/node_modules/**

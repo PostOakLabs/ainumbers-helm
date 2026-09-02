@@ -183,7 +183,7 @@ export function collectHeterogeneousIssues(destRoot, manifestPath, label) {
 // checks above — a NEW vendored tree added without a manifest must fail loud,
 // not silently skip verification.
 // ---------------------------------------------------------------------------
-const KNOWN_VENDORED_ROOTS = new Set(["hub/vendored/ocg", "hub/vendored/anchor-suite", "hub/vendored/ssh-sig", "hub/vendored/sigstore", "ui/vendored"]);
+const KNOWN_VENDORED_ROOTS = new Set(["hub/vendored/ocg", "hub/vendored/anchor-suite", "hub/vendored/ssh-sig", "hub/vendored/sigstore", "hub/vendored/sd-jwt", "ui/vendored"]);
 
 export function collectUncoveredTreeIssues(root) {
   const issues = [];
@@ -276,6 +276,7 @@ async function runCLI() {
 
   issues = issues.concat(collectHeterogeneousIssues(join(ROOT, "ui/vendored"), join(ROOT, "ui/vendored/MANIFEST.json"), "ui/vendored"));
   issues = issues.concat(collectHeterogeneousIssues(join(ROOT, "hub/vendored/sigstore"), join(ROOT, "hub/vendored/sigstore/MANIFEST.json"), "hub/vendored/sigstore"));
+  issues = issues.concat(collectHeterogeneousIssues(join(ROOT, "hub/vendored/sd-jwt"), join(ROOT, "hub/vendored/sd-jwt/MANIFEST.json"), "hub/vendored/sd-jwt"));
   issues = issues.concat(collectUncoveredTreeIssues(ROOT));
 
   for (const msg of issues) console.error(msg);

@@ -1,0 +1,324 @@
+{
+  "note": "Byte-identical vendor of 2 npm packages (@sd-jwt/core, @owf/identity-common), laid out as a hand-placed node_modules/@scope/* tree so the vendored packages' own bare import/require calls (e.g. @sd-jwt/core -> @owf/identity-common) resolve via Node's standard node_modules walk-up — zero npm install, zero rewritten import paths. Each package ships its already-built dist/ output from its npm tarball (no build step run here). Every tarball was downloaded directly from registry.npmjs.org and checked against the registry's own published dist.shasum (sha1) AND dist.integrity (sha512) before unpacking; per-file sha256 below is recomputed over the unpacked bytes. Consumed via createRequire(<this MANIFEST.json>)('@sd-jwt/core') — see hub/sdjwt-emit.mjs.",
+  "entries": [
+    {
+      "classification": "third-party-vendor",
+      "packageName": "@sd-jwt/core",
+      "sourceRepo": "https://github.com/openwallet-foundation/sd-jwt-js",
+      "sourceRepoTagSha": "b983e03253481ab6d33e147cc7e30e4904d0813f (tag v0.20.1; package.json gitHead ded40e4551bde7ae93083181bf26bd1b38bbfcfb is the monorepo release commit)",
+      "npmTarball": "https://registry.npmjs.org/@sd-jwt/core/-/core-0.20.1.tgz",
+      "npmTarballShasum": "a0a3deb96ed6d29164b3f42e6e916031ce1b2b46",
+      "npmTarballIntegrity": "sha512-RUBZ3WxnjicKgQyUysaFNMuC88xXSQlNLK7V1vxSBKYHAoi/yCXtCGlxxj7JXISAJgFTkmPSV5ZEZp0Dt5bXyw==",
+      "pinnedSha": "0.20.1",
+      "license": "Apache-2.0",
+      "upstreamShipsNotice": false,
+      "files": [
+        {
+          "path": "node_modules/@sd-jwt/core/CHANGELOG.md",
+          "sha256": "772f7f40d465277676d111a493bfbeff956d070de65d309d3d7186c7b91139df"
+        },
+        {
+          "path": "node_modules/@sd-jwt/core/dist/index.d.mts",
+          "sha256": "de56c1e2104766e95c86c652be539fdb01569ab3f25aaf6f01a2b49aa76e8940"
+        },
+        {
+          "path": "node_modules/@sd-jwt/core/dist/index.d.ts",
+          "sha256": "de56c1e2104766e95c86c652be539fdb01569ab3f25aaf6f01a2b49aa76e8940"
+        },
+        {
+          "path": "node_modules/@sd-jwt/core/dist/index.js",
+          "sha256": "a777e3f7126c6dcaaea2aba422014969ad9473738643e2ae69a462f38d415dbd"
+        },
+        {
+          "path": "node_modules/@sd-jwt/core/dist/index.mjs",
+          "sha256": "4e72a72894fbebb3da64a7005fb4053c638dff42197cf871034ce007197157d2"
+        },
+        {
+          "path": "node_modules/@sd-jwt/core/LICENSE",
+          "sha256": "c71d239df91726fc519c6eb72d318ec65820627232b2f796219e87dcf35d0ab4"
+        },
+        {
+          "path": "node_modules/@sd-jwt/core/package.json",
+          "sha256": "5642cf913fe84835c3c41bc139795c8fd7b6ecf6dbfab7b344118b24d82053c1"
+        },
+        {
+          "path": "node_modules/@sd-jwt/core/README.md",
+          "sha256": "c90e4a5d18572a0968544526d1fa63d6ef149bad9412c2fc3bff2581006c2c3d"
+        },
+        {
+          "path": "node_modules/@sd-jwt/core/src/decode/decode.ts",
+          "sha256": "0614273d7ca6026a1a3f0200920bc0c1786d644d7356ccafb4cc7c3bcb503c72"
+        },
+        {
+          "path": "node_modules/@sd-jwt/core/src/decode/index.ts",
+          "sha256": "7a2fddc83d89fbea058e058791fa87d70da2f346d81c6b236f1e8310ee81b52f"
+        },
+        {
+          "path": "node_modules/@sd-jwt/core/src/decoy.ts",
+          "sha256": "b89d3a543bd3591ce1bedc127bab9cd8c72334f1794f8543c8646e706531c62e"
+        },
+        {
+          "path": "node_modules/@sd-jwt/core/src/flattenJSON.ts",
+          "sha256": "f44d19f586879cc7137f65f6a698c8765e91e09f003703013128f8c1d64eebca"
+        },
+        {
+          "path": "node_modules/@sd-jwt/core/src/generalJSON.ts",
+          "sha256": "8ac0453f1758e1c248f1bb6f366250a544d0e096f391d534eecb8dddae57ce25"
+        },
+        {
+          "path": "node_modules/@sd-jwt/core/src/index.ts",
+          "sha256": "40f0e77bc2fb82053d7d997b164536e7c0d5fe9fd99245dd19aed4492a1a0ba9"
+        },
+        {
+          "path": "node_modules/@sd-jwt/core/src/jwt.ts",
+          "sha256": "97d6597e3b74d44c77be34ea2a9b1aecb76b9f6b756eb37ea3eeae3220442336"
+        },
+        {
+          "path": "node_modules/@sd-jwt/core/src/kbjwt.ts",
+          "sha256": "33e7c84cfe331f765d478100b936a115eef5c70dc05ac3990acabfe5c85ec497"
+        },
+        {
+          "path": "node_modules/@sd-jwt/core/src/present/index.ts",
+          "sha256": "bc1dd044993bb248a1cbe4542ad530e1a4964290fe17854732b7a15fe329f11b"
+        },
+        {
+          "path": "node_modules/@sd-jwt/core/src/present/present.ts",
+          "sha256": "538c13d174a54d56888710a7ff75dbcf98e426a0581b4d214c1f04b3bb00b7a7"
+        },
+        {
+          "path": "node_modules/@sd-jwt/core/src/sdjwt.ts",
+          "sha256": "a8c21ad03b97c6e343dd6d632915531c9dda6756a9d159a54db580e1b8c0a611"
+        },
+        {
+          "path": "node_modules/@sd-jwt/core/src/test/decode/decode.spec.ts",
+          "sha256": "653047ecc19288d8adad5b087042dd9a4ab99199935a3c67f23b82e94c07df4e"
+        },
+        {
+          "path": "node_modules/@sd-jwt/core/src/test/decoy.spec.ts",
+          "sha256": "edd68d2abeef4a246c809f8afc502213cdf9f1680ea578b0aa1968239689185d"
+        },
+        {
+          "path": "node_modules/@sd-jwt/core/src/test/flattenJSON.spec.ts",
+          "sha256": "89b19de785a450aa8ce1306366c4a8d78a66a0676f2c8fd0f9cec074790bc5d2"
+        },
+        {
+          "path": "node_modules/@sd-jwt/core/src/test/generalJSON.spec.ts",
+          "sha256": "4c41991e1a51c6d493c0e779b442cae9c854e623e33fcd3ba21c081131a2a325"
+        },
+        {
+          "path": "node_modules/@sd-jwt/core/src/test/index.spec.ts",
+          "sha256": "ed83107d1d80a342393107bd1649329c01f73aa4e9674612f5c2d1a13745a13c"
+        },
+        {
+          "path": "node_modules/@sd-jwt/core/src/test/jwt.spec.ts",
+          "sha256": "aa1189cf8d1d116e23c0ba77c4f40e1324cfcab1bfedced73d21e56916831dce"
+        },
+        {
+          "path": "node_modules/@sd-jwt/core/src/test/kbjwt.spec.ts",
+          "sha256": "fe5ffc98d46cf8350ffdcfae6cc42589e5c53d71dbb0fb9040a07fcba42f5fca"
+        },
+        {
+          "path": "node_modules/@sd-jwt/core/src/test/pass.spec.ts",
+          "sha256": "87c413cca9e5073146564d7ed9d42672eee668b88a463496f3b2bd1160546b87"
+        },
+        {
+          "path": "node_modules/@sd-jwt/core/src/test/present/present.spec.ts",
+          "sha256": "c8889b18880dc87f649ae35a8d980afb24098de0b5f35098c6d6a8499b8481b2"
+        },
+        {
+          "path": "node_modules/@sd-jwt/core/src/test/sdjwt.spec.ts",
+          "sha256": "cc32439e0fc8c8d69470caf36dfd9eaa030b72babbfd129d5f5f3a9aad62f778"
+        },
+        {
+          "path": "node_modules/@sd-jwt/core/src/test/types/type.spec.ts",
+          "sha256": "6ff9892e6ea51c9d1bc72a3bc4ebe5ace5c151b776c7cbf1b6882bd719b9fb71"
+        },
+        {
+          "path": "node_modules/@sd-jwt/core/src/test/utils/base64url.spec.ts",
+          "sha256": "4ec990ea001e89de01b18faed932b65c3d6c03a80c0f21094c822a2bda35ea03"
+        },
+        {
+          "path": "node_modules/@sd-jwt/core/src/test/utils/disclosure.spec.ts",
+          "sha256": "7b2f1883f13367dc9cfd439d08bdd907bd22ac4568bb753e10f9ecc9e89ef9b6"
+        },
+        {
+          "path": "node_modules/@sd-jwt/core/src/test/utils/error.spec.ts",
+          "sha256": "ae5d8253149fc54748f60019661aa816da6e8c62ad4bc9bfbfe76fe509fb2696"
+        },
+        {
+          "path": "node_modules/@sd-jwt/core/src/types/index.ts",
+          "sha256": "9d3a1e2f3b96a3864bd06fcfe04c1c691e2e96584c4fa61103ee28a24e609d09"
+        },
+        {
+          "path": "node_modules/@sd-jwt/core/src/types/type.ts",
+          "sha256": "c6e9a3b793ee35d9548273a496246d46f6f24431f20c29463c4f5a45457a6bfb"
+        },
+        {
+          "path": "node_modules/@sd-jwt/core/src/types/verification-error.ts",
+          "sha256": "33fd7579e220de110adaa13324ac9399eba0e782d5cfa891d074fd3ec5cfe104"
+        },
+        {
+          "path": "node_modules/@sd-jwt/core/src/utils/base64url.ts",
+          "sha256": "bce25c1540f329bcd054d7e34e2697bbae67799b4dce1291e4ce33098e5595ea"
+        },
+        {
+          "path": "node_modules/@sd-jwt/core/src/utils/disclosure.ts",
+          "sha256": "069b3837f916dc9d7648fff2982199e7a0b27e56cd190e83f342e44f6877e797"
+        },
+        {
+          "path": "node_modules/@sd-jwt/core/src/utils/error.ts",
+          "sha256": "74d6a39e3a4c15fbd7c9a4ecc538af2852aa5d4039ae0708cd5ba58d2098cac8"
+        },
+        {
+          "path": "node_modules/@sd-jwt/core/src/utils/index.ts",
+          "sha256": "2ab8c1dcfdbe2a13089f44a15114abb3ac1a3c85e866d40a01393de5ab1dc0cc"
+        },
+        {
+          "path": "node_modules/@sd-jwt/core/src/utils/strict-json.ts",
+          "sha256": "5b18b8227a97dc89d97c9172a1e0e90befac368e329d619f59627f326899f4d3"
+        },
+        {
+          "path": "node_modules/@sd-jwt/core/test/app-e2e.spec.ts",
+          "sha256": "f5675a8110e9ad7c326e7c0cceb9cbe975e96eb6856ab1566d3f9753849bf21d"
+        },
+        {
+          "path": "node_modules/@sd-jwt/core/test/array_data_types.json",
+          "sha256": "83238ee336663d1e7d937aac9011d74f8cd454869f78ea643c9040a23e805535"
+        },
+        {
+          "path": "node_modules/@sd-jwt/core/test/array_full_sd.json",
+          "sha256": "cf217c83bbfd336027028303801d82f9d19de5a80f2a4bae43bffc2453b4377a"
+        },
+        {
+          "path": "node_modules/@sd-jwt/core/test/array_in_sd.json",
+          "sha256": "486620ab0c0a20f0425acdaf78a8df4d860a9cbf0551e4f6bba3e08204967731"
+        },
+        {
+          "path": "node_modules/@sd-jwt/core/test/array_nested_in_plain.json",
+          "sha256": "587f9801303fddae5aebaf0d082cc2ebc6c374c4662e86931d8e3307ded8c98f"
+        },
+        {
+          "path": "node_modules/@sd-jwt/core/test/array_none_disclosed.json",
+          "sha256": "b5d79a0102f601959f09546989cb6f19b15c84c0bd0b2000e6b608eb6f938855"
+        },
+        {
+          "path": "node_modules/@sd-jwt/core/test/array_of_nulls.json",
+          "sha256": "e658da3c4ef8fe36cee15abbf887f052b34679dbdaeb8f830aa474a3e5f829d0"
+        },
+        {
+          "path": "node_modules/@sd-jwt/core/test/array_of_objects.json",
+          "sha256": "798cd25a6fb49e6fde509509e2b621a60e46527b4d59ca60dbc6028ac403e14c"
+        },
+        {
+          "path": "node_modules/@sd-jwt/core/test/array_of_scalars.json",
+          "sha256": "ff5c5ca47df7fd3bf399e2a0782c031881e201f327cb554ac47d9caef966f2df"
+        },
+        {
+          "path": "node_modules/@sd-jwt/core/test/array_recursive_sd_some_disclosed.json",
+          "sha256": "b9281fcca821e433f0623cf5cd2fe7babb8fa0d69d582493fc6557f46d3505a0"
+        },
+        {
+          "path": "node_modules/@sd-jwt/core/test/array_recursive_sd.json",
+          "sha256": "ffc6ce4d4c7788bab61cf45a8e9ae73b90f233adf402c00e883390c14e33abb7"
+        },
+        {
+          "path": "node_modules/@sd-jwt/core/test/complex.json",
+          "sha256": "3bdf9e31ba9284b87262df24e6778788653b84c256caa34900d15b8d4f92e7d5"
+        },
+        {
+          "path": "node_modules/@sd-jwt/core/test/header_mod.json",
+          "sha256": "3c4aacc89a85b4737510dc51a038407f12091ba3a75ddc8e02b8696f7c00df5e"
+        },
+        {
+          "path": "node_modules/@sd-jwt/core/test/json_serialization.json",
+          "sha256": "3c4aacc89a85b4737510dc51a038407f12091ba3a75ddc8e02b8696f7c00df5e"
+        },
+        {
+          "path": "node_modules/@sd-jwt/core/test/key_binding.json",
+          "sha256": "3c4aacc89a85b4737510dc51a038407f12091ba3a75ddc8e02b8696f7c00df5e"
+        },
+        {
+          "path": "node_modules/@sd-jwt/core/test/no_sd.json",
+          "sha256": "88d520287caaa96dcb6b399876765d915c57991f1d69bbdcaac003564021b709"
+        },
+        {
+          "path": "node_modules/@sd-jwt/core/test/object_data_types.json",
+          "sha256": "13311e6881c3a34f1050dcf5d79b8fb83a522ca07f58f57dee5511460bf79b82"
+        },
+        {
+          "path": "node_modules/@sd-jwt/core/test/recursions.json",
+          "sha256": "0192563f16ab6e2b75395fb3ea247674e49f2eaed1bb508943a5f94eb0d87ffd"
+        },
+        {
+          "path": "node_modules/@sd-jwt/core/test/rfc9901-audit-fixes.spec.ts",
+          "sha256": "b1384a48fdd3c9fbc558287dc291372029d0955dea33d4fa2454d0d8053bb1aa"
+        },
+        {
+          "path": "node_modules/@sd-jwt/core/test/rfc9901-validation.spec.ts",
+          "sha256": "ee115ca8e8e739e83f47d8375f8738274f286006b0107373ef3f8da576d31b27"
+        },
+        {
+          "path": "node_modules/@sd-jwt/core/test/tsconfig.json",
+          "sha256": "209b19053ccea0c414a40e7ceb05bad767e3fd86ffc7684cf97b6612b153db2d"
+        },
+        {
+          "path": "node_modules/@sd-jwt/core/tsconfig.json",
+          "sha256": "aa7a55224693c0b8899f19259f84c0d7a2a89dcbe99d6f10d29ff70d5ea23e8c"
+        },
+        {
+          "path": "node_modules/@sd-jwt/core/vitest.config.mts",
+          "sha256": "9db07511c1ee6829893638d1c08a083deab9dc379e0791381ce1944b53d0e153"
+        }
+      ]
+    },
+    {
+      "classification": "third-party-vendor",
+      "packageName": "@owf/identity-common",
+      "sourceRepo": "https://github.com/openwallet-foundation-labs/identity-common-ts",
+      "npmTarball": "https://registry.npmjs.org/@owf/identity-common/-/identity-common-0.3.2.tgz",
+      "npmTarballShasum": "78cbb77d383bdda29e0256636760668d311d0f6c",
+      "npmTarballIntegrity": "sha512-XH5Bg6zuXc9SeimTe2ZD/+54GnhSyenFSy2Qe/z2HY1ul5j+6/lDNIhI83xct5aOkCD0uZ7zHbMhTI4Nq8YJOQ==",
+      "pinnedSha": "0.3.2",
+      "license": "Apache-2.0",
+      "upstreamShipsNotice": false,
+      "files": [
+        {
+          "path": "node_modules/@owf/identity-common/dist/index.cjs",
+          "sha256": "23b4807093d165d8dcdf1121e43384b57feea75d78ec17689f6243848e044040"
+        },
+        {
+          "path": "node_modules/@owf/identity-common/dist/index.cjs.map",
+          "sha256": "2e3c877cae99ec02cd916fed3423529f568716a963b2e35d8a11fb424225fa71"
+        },
+        {
+          "path": "node_modules/@owf/identity-common/dist/index.d.cts",
+          "sha256": "e458270bfee7ea22c54115691fbc6772bc9323d10f3a8da0f7adfc50841b0e77"
+        },
+        {
+          "path": "node_modules/@owf/identity-common/dist/index.d.mts",
+          "sha256": "e0f0b6f36773bed4641f18f6cfb6cad3a1d888f51e09e066545171ab95ed15a6"
+        },
+        {
+          "path": "node_modules/@owf/identity-common/dist/index.mjs",
+          "sha256": "fde4c99fb4643129372efc323d74e098ff3e11005fab128cd45bebe5b2034c88"
+        },
+        {
+          "path": "node_modules/@owf/identity-common/dist/index.mjs.map",
+          "sha256": "70b163ec6a323d29a339f81d627cc99aa7fa4e83fc7ffe3d2d711ec51777735a"
+        },
+        {
+          "path": "node_modules/@owf/identity-common/LICENSE",
+          "sha256": "7339fa418c9ad3e8e12e74ad0fd26a9cc4be8703f9c110728a992b193be85cb2"
+        },
+        {
+          "path": "node_modules/@owf/identity-common/package.json",
+          "sha256": "5b6985f983aa8c6ff3dfbca2292f28f1fb6b96eaedfe3524b295125f5f433c53"
+        },
+        {
+          "path": "node_modules/@owf/identity-common/README.md",
+          "sha256": "e4dfd9017a7892262cd27c34a70d592fea5b252e2dd1101a1f60198c0d927615"
+        }
+      ]
+    }
+  ]
+}
