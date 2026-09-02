@@ -15,6 +15,7 @@ import { openJournal, replayVerify, recordFullVerification, lastFullVerifiedAt }
 import { checkVersion } from "./version-check.mjs";
 import { uiAssetsReadable } from "./static.mjs";
 import { autostartDoctorCheck } from "./autostart.mjs";
+import { protocolDoctorCheck } from "./protocol.mjs";
 import { atRestPassphraseRef } from "./keys.mjs";
 import { vaultBackendFor } from "./vault.mjs";
 
@@ -166,6 +167,13 @@ export async function runDoctor() {
   // so a user who moved or re-downloaded the binary had a Run key that failed
   // silently at every logon while every status surface said healthy.
   checks.push(autostartDoctorCheck());
+
+  // HELM-PROTO-1 (spec §3.4): the helm:// scheme registration gets the same
+  // posture — opt-in and default-off, so "not registered" is a PASS, while a
+  // registration that exists but points at a moved/deleted binary (or was
+  // overwritten by another app — HKCU\Software\Classes is last-writer-wins)
+  // is exactly the state this check exists to stop reporting healthy.
+  checks.push(protocolDoctorCheck());
 
   // Version-check notice (HELM-H8, D10): informational only. Unreachable
   // (offline/airgapped) or disabled (empty url) are both a PASS — this

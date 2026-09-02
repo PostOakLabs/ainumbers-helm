@@ -791,6 +791,7 @@ function fakeAutostartOps() {
   const calls = [];
   let installed = false;
   let shortcut = false;
+  let protocol = false;
   return {
     calls,
     ops: {
@@ -821,6 +822,26 @@ function fakeAutostartOps() {
       uninstallShortcut: () => {
         calls.push("uninstallShortcut");
         shortcut = false;
+        return { ok: true };
+      },
+      // HELM-PROTO-1: the helm:// scheme registration rides the same
+      // consent-gated endpoint, as its own independent toggle.
+      protocolStatus: () => ({
+        supported: true,
+        installed: protocol,
+        stale: false,
+        reason: protocol ? "ok" : "not_installed",
+        location: "HKCU\\Software\\Classes\\helm\\shell\\open\\command",
+        recorded: protocol ? '"C:\\helmd.exe" open --from-scheme' : null,
+      }),
+      installProtocol: () => {
+        calls.push("installProtocol");
+        protocol = true;
+        return { ok: true };
+      },
+      uninstallProtocol: () => {
+        calls.push("uninstallProtocol");
+        protocol = false;
         return { ok: true };
       },
     },
@@ -954,6 +975,70 @@ test("autostart: shortcut toggles through the same gate, independently of autost
     assert.deepEqual(calls, ["installShortcut"]);
     assert.equal(JSON.parse(res.body).shortcut.installed, true);
     assert.equal(JSON.parse(res.body).autostart.installed, false, "the two toggles are not wired together");
+  });
+});
+
+// --- HELM-PROTO-1: the helm:// scheme registration rides the same consent gate ---
+//
+// Spec §3 / HELM-AUTOSTART-1's rule: a persistent OS entry is written ONLY by
+// an explicit user action. These tests pin the third toggle's gate (Host +
+// Origin + Bearer, POST-only), its independence from the other two, and gate
+// 5's server half: with no consent given, NOTHING writes a scheme
+// registration — a GET (the "first run just rendered the tab" shape) and a
+// rejected POST must both leave the installer uncalled.
+test("protocol: POST installs through the same Host+Origin+Bearer gate, and reports the re-read state", async () => {
+  await withAutostartServer(async ({ calls, call, headers }) => {
+    const res = await call({ method: "POST", headers: headers(), body: { protocol: true } });
+    assert.equal(res.status, 200);
+    assert.deepEqual(calls, ["installProtocol"]);
+    const body = JSON.parse(res.body);
+    assert.equal(body.protocol.installed, true);
+    assert.equal(body.protocol.reason, "ok");
+    assert.equal(body.autostart.installed, false, "the toggles are not wired together");
+    assert.equal(body.shortcut.installed, false, "the toggles are not wired together");
+
+    const off = await call({ method: "POST", headers: headers(), body: { protocol: false } });
+    assert.equal(off.status, 200);
+    assert.deepEqual(calls, ["installProtocol", "uninstallProtocol"]);
+    assert.equal(JSON.parse(off.body).protocol.installed, false, "revoke must actually remove the registration");
+  });
+});
+
+test("protocol: negative — cross-origin POST is rejected AND nothing is registered", async () => {
+  await withAutostartServer(async ({ calls, call, headers }) => {
+    const res = await call({ method: "POST", headers: headers({ Origin: "https://evil.example" }), body: { protocol: true } });
+    assert.equal(res.status, 403);
+    assert.deepEqual(calls, [], "a rejected request must not have reached the installer");
+  });
+});
+
+test("protocol: negative — no bearer token is rejected AND nothing is registered", async () => {
+  await withAutostartServer(async ({ calls, call, headers }) => {
+    const noAuth = headers();
+    delete noAuth.Authorization;
+    const res = await call({ method: "POST", headers: noAuth, body: { protocol: true } });
+    assert.equal(res.status, 401);
+    assert.deepEqual(calls, []);
+  });
+});
+
+test("protocol: a POST naming only the OTHER toggles never touches the scheme registration", async () => {
+  await withAutostartServer(async ({ calls, call, headers }) => {
+    const res = await call({ method: "POST", headers: headers(), body: { autostart: true, shortcut: true } });
+    assert.equal(res.status, 200);
+    assert.deepEqual(calls, ["install", "installShortcut"]);
+    assert.equal(JSON.parse(res.body).protocol.installed, false, "an old tab's POST must not register the scheme");
+  });
+});
+
+test("protocol: GET reports state and registers NOTHING (gate 5 — no consent, no scheme registration)", async () => {
+  await withAutostartServer(async ({ calls, call, headers }) => {
+    const res = await call({ headers: headers() });
+    assert.equal(res.status, 200);
+    const body = JSON.parse(res.body);
+    assert.equal(body.protocol.installed, false);
+    assert.equal(body.protocol.supported, true);
+    assert.deepEqual(calls, [], "a GET must never write a persistent OS entry");
   });
 });
 
