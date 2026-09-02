@@ -43,6 +43,7 @@ import { createInboundWebhookConnector, CONNECTOR_ID as INBOUND_WEBHOOK_CONNECTO
 import { vaultGet } from "./vault.mjs";
 import { autostartStatus, installAutostart, uninstallAutostart } from "./autostart.mjs";
 import { installShortcut, uninstallShortcut, isShortcutInstalled, shortcutLocation } from "./shortcut.mjs";
+import { protocolStatus, installProtocol, uninstallProtocol } from "./protocol.mjs";
 import {
   verifyWebhookSignature,
   isTimestampFresh,
@@ -474,11 +475,18 @@ const DEFAULT_AUTOSTART_OPS = {
   shortcutStatus: () => ({ installed: isShortcutInstalled(), location: shortcutLocation() }),
   installShortcut,
   uninstallShortcut,
+  // HELM-PROTO-1: the helm:// scheme registration rides the SAME consent
+  // surface — one tick-box event family, never a new one (spec §3: nothing
+  // writes a persistent OS entry without an explicit user action).
+  protocolStatus,
+  installProtocol,
+  uninstallProtocol,
 };
 
 function autostartPayload(ops) {
   const status = ops.status();
   const shortcut = ops.shortcutStatus();
+  const protocol = ops.protocolStatus();
   return {
     autostart: {
       supported: status.supported,
@@ -492,6 +500,14 @@ function autostartPayload(ops) {
       supported: shortcut.location !== null,
       installed: shortcut.installed,
       location: shortcut.location,
+    },
+    protocol: {
+      supported: protocol.supported,
+      installed: protocol.installed,
+      stale: protocol.stale,
+      reason: protocol.reason,
+      location: protocol.location,
+      recorded: protocol.recorded,
     },
   };
 }
@@ -509,7 +525,8 @@ async function handleAutostartSet(req, res, params, db, ops = DEFAULT_AUTOSTART_
   }
   const wantAutostart = typeof body.autostart === "boolean";
   const wantShortcut = typeof body.shortcut === "boolean";
-  if (!wantAutostart && !wantShortcut) return deny(res, 400, "missing_autostart_or_shortcut");
+  const wantProtocol = typeof body.protocol === "boolean";
+  if (!wantAutostart && !wantShortcut && !wantProtocol) return deny(res, 400, "missing_autostart_or_shortcut");
 
   // reg.exe / launchctl / the WScript.Shell PowerShell call can all fail on a
   // locked-down machine. Report it as a failure rather than letting it 500 as
@@ -522,6 +539,13 @@ async function handleAutostartSet(req, res, params, db, ops = DEFAULT_AUTOSTART_
     if (wantShortcut) {
       if (body.shortcut) ops.installShortcut();
       else ops.uninstallShortcut();
+    }
+    // HELM-PROTO-1: same gate, same event shape, third independent toggle —
+    // each field applies only when its own boolean is present, so an older
+    // tab's {autostart:...} POST never touches the scheme registration.
+    if (wantProtocol) {
+      if (body.protocol) ops.installProtocol();
+      else ops.uninstallProtocol();
     }
   } catch (err) {
     log.warn("autostart change failed", { error: String(err?.message || err) });

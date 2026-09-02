@@ -29,6 +29,10 @@ import { publicKeysOf } from "./keys.mjs";
 // installer callers are POST /autostart (server.mjs) and the user.
 import { uninstallAutostart, isAutostartInstalled, autostartLocation, autostartStatus } from "./autostart.mjs";
 import { uninstallShortcut, isShortcutInstalled, shortcutLocation } from "./shortcut.mjs";
+// HELM-PROTO-1: same discipline as autostart/shortcut above — uninstall is
+// the daemon's only scheme-registration writer; install lives behind the
+// pairing tab's opt-in toggle (POST /autostart in server.mjs).
+import { uninstallProtocol, isProtocolInstalled, protocolLocation, protocolStatus } from "./protocol.mjs";
 import { createIdleTimer } from "./idle-timer.mjs";
 import { createWatchScheduler } from "./watch-scheduler.mjs";
 import { createUptimeHeartbeat } from "./uptime-record.mjs";
@@ -323,6 +327,10 @@ async function cmdStart({ open = false, _recoveredFrom = null, _isFirstRun = nul
       // works" — a Run key baked with a path that has since moved reported
       // healthy forever. One call: it shells out to `reg query`.
       const autostart = autostartStatus();
+      // HELM-PROTO-1: same staleness visibility for the helm:// registration
+      // (spec §3.4) — a scheme key pointing at a moved binary is detectable,
+      // never silently healthy.
+      const protocol = protocolStatus();
       return {
         running: true,
         pid: process.pid,
@@ -334,6 +342,10 @@ async function cmdStart({ open = false, _recoveredFrom = null, _isFirstRun = nul
         autostartReason: autostart.reason,
         shortcut: isShortcutInstalled(),
         shortcutLocation: shortcutLocation(),
+        protocol: protocol.installed,
+        protocolLocation: protocol.location,
+        protocolStale: protocol.stale,
+        protocolReason: protocol.reason,
         // §18.4: announced here too, not just Operate — `helmd status` is the
         // zero-CLI-else escape hatch this project's headless/no-DE users have.
         idleTimeoutMs: config.idleTimeoutMs,
@@ -415,9 +427,17 @@ function cmdUninstall() {
   }
   // Anything first run installs, uninstall removes — the same orphan lesson.
   // A Start Menu entry pointing at a deleted binary is the desktop version of
-  // the leftover LaunchAgent this function exists to prevent.
+  // the leftover LaunchAgent this function exists to prevent. The helm://
+  // registration joins the same list (spec §4): one `reg delete` of the whole
+  // key tree, same session as autostart + shortcut above.
   const shortcut = uninstallShortcut();
   if (shortcut.ok) console.log("helmd uninstall: Start Menu shortcut removed.");
+  const protocol = uninstallProtocol();
+  if (protocol.supported === false) {
+    console.log("helmd uninstall: no helm:// registration on this platform, nothing to remove.");
+  } else {
+    console.log("helmd uninstall: helm:// registration removed.");
+  }
 }
 
 // Client side of the re-pair path (DEC-3): connects to the ALREADY-RUNNING
@@ -490,6 +510,15 @@ async function cmdStatus() {
       : staleReason === "unreadable"
         ? `UNVERIFIABLE — entry exists at ${where} but could not be read back`
         : describeEntry(installed, where);
+  // HELM-PROTO-1: the helm:// registration gets the same honest treatment —
+  // spec §3.4 wants a scheme line in status, and a stale one must not read
+  // as healthy (spec §3.1's detectability mitigation for scheme squatting).
+  const describeProtocol = (installed, where, staleReason) =>
+    staleReason === "target_missing"
+      ? `BROKEN — registration exists at ${where} but its target no longer exists; helm:// links will fail`
+      : staleReason === "unreadable"
+        ? `UNVERIFIABLE — registration exists at ${where} but could not be read back`
+        : describeEntry(installed, where);
   try {
     const r = await callDaemon("status");
     console.log(`helmd: running (pid ${r.pid})`);
@@ -497,6 +526,7 @@ async function cmdStatus() {
     console.log(`  version    ${r.version}`);
     console.log(`  autostart  ${describeAutostart(r.autostart, r.autostartLocation, r.autostartStale ? r.autostartReason : null)}`);
     console.log(`  shortcut   ${describeEntry(r.shortcut, r.shortcutLocation)}`);
+    console.log(`  helm://    ${describeProtocol(r.protocol, r.protocolLocation, r.protocolStale ? r.protocolReason : null)}`);
     console.log(`  idle stop  after ${Math.round(r.idleTimeoutMs / 1000)}s idle (configurable in ~/.helm/config.json); relaunch via Start Menu / Applications`);
     console.log("  pairing    helmd open");
     console.log("  stop       helmd stop");
@@ -507,6 +537,7 @@ async function cmdStatus() {
       console.log("helmd: not running.");
       console.log(`  autostart  ${describeEntry(isAutostartInstalled(), autostartLocation())}`);
       console.log(`  shortcut   ${describeEntry(isShortcutInstalled(), shortcutLocation())}`);
+      console.log(`  helm://    ${describeEntry(isProtocolInstalled(), protocolLocation())}`);
       console.log("  start      helmd start");
       process.exit(1);
     }
