@@ -1,0 +1,44 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://ainumbers.co/attestation/helm-run/v1",
+  "title": "helm-run-v1 — a Helm evidence bundle exported as an in-toto predicate (HELM-INTOTO-EXPORT-1)",
+  "description": "The predicate carried by an in-toto Statement v1 whose subject is a Helm evidence bundle (bundle.json) and whose predicateType is https://ainumbers.co/attestation/helm-run/v1. Digest-level only: no raw payload, no secret-shaped field survives the exporter (the same redaction backstop hub/bundle.mjs already enforces upstream). Fields the source bundle carries as digest-level record are required; the three provenance fields that only some bundle producers seal (workflow_id, execution_hash, kernel_digest) are conditional — the exporter copies them from the bundle's own DSSE-signed statements verbatim and fails closed if the same field is found with conflicting values.",
+  "$defs": {
+    "sha256ref": { "type": "string", "pattern": "^sha256:[0-9a-f]{64}$" },
+    "trustLabel": {
+      "type": "string",
+      "enum": ["hash_verified", "kernel_verified", "connector_asserted", "human_attested", "external_ack_captured"]
+    },
+    "step": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["step_id", "output_digest"],
+      "properties": {
+        "step_id": { "type": "string", "minLength": 1 },
+        "output_digest": { "$ref": "#/$defs/sha256ref" }
+      }
+    }
+  },
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["run_id", "manifest_digest", "steps", "trust_labels", "bundle_sha256"],
+  "properties": {
+    "run_id": { "type": "string", "minLength": 1, "description": "Copied verbatim from the bundle manifest predicate's run_id." },
+    "workflow_id": { "type": "string", "minLength": 1, "description": "Copied from a sealed object statement's workflow_id field when the bundle carries one." },
+    "manifest_digest": { "$ref": "#/$defs/sha256ref", "description": "The bundle's workflow_manifest_digest as recorded in (and signed by) the bundle manifest itself." },
+    "execution_hash": { "$ref": "#/$defs/sha256ref", "description": "The run's OCG execution_hash as recorded in a sealed object statement; present only when the bundle carries it." },
+    "kernel_digest": { "$ref": "#/$defs/sha256ref", "description": "The executed kernel's pinned digest as recorded in a sealed object statement; present only when the bundle carries it." },
+    "steps": {
+      "type": "array",
+      "description": "One entry per sealed object statement that carries a step_id and output_digest, in bundle order.",
+      "items": { "$ref": "#/$defs/step" }
+    },
+    "trust_labels": {
+      "type": "array",
+      "minItems": 1,
+      "description": "The distinct §26.6 trust labels covering the bundle's manifest entries, sorted so the list is canonical.",
+      "items": { "$ref": "#/$defs/trustLabel" }
+    },
+    "bundle_sha256": { "$ref": "#/$defs/sha256ref", "description": "SHA-256 over the bundle file's raw bytes — the same digest the Statement's subject binds, so the subject and the predicate agree." }
+  }
+}
