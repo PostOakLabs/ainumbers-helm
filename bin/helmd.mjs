@@ -38,6 +38,7 @@ const BILAT_PUBKEY_ENTRY = join(ROOT, "scripts", "bilat-pubkey.mjs");
 const BILAT_EXPORT_ENTRY = join(ROOT, "scripts", "bilat-export.mjs");
 const BILAT_IMPORT_ENTRY = join(ROOT, "scripts", "bilat-import.mjs");
 const SDJWT_EMIT_ENTRY = join(ROOT, "scripts", "sdjwt-emit.mjs");
+const EXPORT_INTOTO_ENTRY = join(ROOT, "scripts", "export-intoto.mjs");
 
 // Read straight off hub/index.mjs's own dispatch, not a hand-copied guess —
 // see the row's warning: "read the dispatcher, do not grep a guessed list."
@@ -110,6 +111,17 @@ Commands:
                       a seeded record is issuer-private (it re-derives the disclosure
                       salts). Emission only — nothing is submitted anywhere. Exit codes:
                       0 success, 1 emit/verify failure, 2 usage error.
+  export-intoto <bundle.json> [--out statement.json] [--json]
+                      export a Helm evidence bundle as an in-toto Statement v1
+                      with the registered predicate type
+                      https://ainumbers.co/attestation/helm-run/v1, wrapped in
+                      the same dual-signature DSSE envelope every Helm object
+                      gets (Ed25519 MUST + ML-DSA-44 SHOULD) — signed with this
+                      install's own at-rest keys, no daemon required.
+                      Digest-level only: ids, digests, trust labels. Recipes for
+                      cosign / Kyverno / gh attestation verify:
+                      docs/INTEROP-ATTESTATIONS.md. Exit codes: 0 success,
+                      1 export failure, 2 usage error.
 
 Options:
   -h, --help          show this help and exit 0
@@ -120,7 +132,8 @@ unchanged (check has its own six-way exit contract, see above); an unknown
 command is a usage error and exits 2.
 
 Stability: start/stop/status/doctor/open/uninstall/export-bpmn/list-scenarios/
-run-template/check/verify/matter-close/bilat-pubkey/bilat-export/bilat-import
+run-template/check/verify/matter-close/bilat-pubkey/bilat-export/bilat-import/
+emit-sdjwt/export-intoto
 and their plain-text output/exit codes are STABLE. --json output shapes are
 PROVISIONAL and may change without notice until this line is removed.`);
 }
@@ -192,8 +205,11 @@ if (PASSTHROUGH_COMMANDS.has(cmd)) {
 } else if (cmd === "emit-sdjwt") {
   const result = spawnSync(process.execPath, [SDJWT_EMIT_ENTRY, ...rest], { stdio: "inherit" });
   process.exit(result.status ?? 1);
+} else if (cmd === "export-intoto") {
+  const result = spawnSync(process.execPath, [EXPORT_INTOTO_ENTRY, ...rest], { stdio: "inherit" });
+  process.exit(result.status ?? 1);
 } else {
-  console.error(`helmd: unknown command "${cmd}" (expected: start | stop | status | doctor | open | uninstall | export-bpmn | list-scenarios | run-template | check | verify | matter-close | bilat-pubkey | bilat-export | bilat-import | emit-sdjwt)`);
+  console.error(`helmd: unknown command "${cmd}" (expected: start | stop | status | doctor | open | uninstall | export-bpmn | list-scenarios | run-template | check | verify | matter-close | bilat-pubkey | bilat-export | bilat-import | emit-sdjwt | export-intoto)`);
   console.error("Run 'helmd --help' for usage.");
   process.exit(2);
 }

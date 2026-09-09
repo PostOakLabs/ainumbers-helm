@@ -275,6 +275,18 @@ Exports a compiled pack's workflow as BPMN 2.0 XML — to stdout, or to
 `out.bpmn` if given. Exits non-zero with a message on stderr for an unknown
 `workflow_id`.
 
+```
+helmd export-intoto <bundle.json> [--out statement.json]
+```
+
+Exports a Helm evidence bundle as an in-toto Statement v1 with the
+registered predicate type `https://ainumbers.co/attestation/helm-run/v1`,
+wrapped in the same dual-signature DSSE envelope every Helm object gets —
+signed with this install's own at-rest keys, no daemon required. Exit
+codes: 0 success, 1 export failure, 2 usage error. Verification recipes
+for cosign / Kyverno / `gh attestation verify` are in
+[docs/INTEROP-ATTESTATIONS.md](INTEROP-ATTESTATIONS.md).
+
 ## Updates
 
 Helm does **not** auto-update (D10 — decided, not a gap: a control-plane
