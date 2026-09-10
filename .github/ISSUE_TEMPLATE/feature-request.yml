@@ -1,0 +1,48 @@
+name: Feature request
+description: Propose a new operator feature. Helm is in maintenance mode (from 2026-09-10) — new operator features are built as skills or plugins for the hosts that call Helm wherever possible.
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Helm is in **maintenance mode (from 2026-09-10)**: the daemon is feature-complete for its purpose — run deterministic OCG kernels locally and emit evidence bundles that verify without us. Ongoing work is bug fixes, security fixes, re-vendoring of kernels, and importers/emitters under `scripts/`.
+
+        New operator features are built as **skills or plugins for the hosts that call Helm** (OpenClaw, Claude Desktop/Cowork, VS Code, Gemini CLI, n8n). Read the agent-integration guide [docs/AGENTS.md](https://github.com/PostOakLabs/ainumbers-helm/blob/main/docs/AGENTS.md) before filing — most feature requests belong there, not in the daemon.
+  - type: dropdown
+    id: host
+    attributes:
+      label: Which host is this feature for?
+      description: The host that calls Helm. The daemon itself stays a local-first, loopback-only execution and evidence service either way.
+      options:
+        - OpenClaw
+        - AutoClaw
+        - Claude Desktop/Cowork
+        - VS Code
+        - Gemini CLI
+        - n8n
+        - other
+    validations:
+      required: true
+  - type: textarea
+    id: ask
+    attributes:
+      label: What would you like to happen?
+      description: Name the Helm CLI verbs or MCP tools involved, the host, and what an ideal outcome looks like.
+    validations:
+      required: true
+  - type: dropdown
+    id: skill-or-importer
+    attributes:
+      label: Could a skill or importer do this?
+      description: "Could this be delivered as a host-side skill/plugin or a `scripts/` importer/emitter instead of a daemon change? See docs/AGENTS.md for the patterns."
+      options:
+        - "yes"
+        - "no"
+    validations:
+      required: true
+  - type: textarea
+    id: skill-or-importer-why
+    attributes:
+      label: Why or why not?
+      description: If yes — what would the skill, plugin, or importer do? If no — why does this require a change to the daemon itself?
+    validations:
+      required: true

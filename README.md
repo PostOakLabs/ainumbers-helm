@@ -4,6 +4,8 @@ Local-first control plane for verifiable connected workflows: a self-installed h
 
 **Status:** Public repository since 2026-07-24; Phases 1-4 shipped.
 
+**Maintenance mode (from 2026-09-10).** Helm's daemon is feature-complete for its purpose: run deterministic OCG kernels locally and emit evidence bundles that verify without us. Ongoing work is bug fixes, security fixes, re-vendoring of kernels, and importers/emitters under `scripts/` that connect Helm to agent runtimes and audit systems. New operator features are built as skills or plugins for the hosts that call Helm (OpenClaw, Claude Desktop/Cowork, VS Code, Gemini CLI, n8n) — see `docs/AGENTS.md`. Support floor: `docs/RELEASE-CHANNEL.md` §4.
+
 - Build spec: `HELM-PHASE1-BUILD-SPEC.md` (workspace root, AINumbers estate)
 - Normative profile: OCG SPEC.md §26 `ocg-control-plane@1` (draft: `SPEC-S26-CONTROL-PLANE-PROFILE-DRAFT.md`)
 

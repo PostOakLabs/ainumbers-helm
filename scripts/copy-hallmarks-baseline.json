@@ -1,9 +1,6 @@
 {
   "generated": "check-copy-hallmarks.mjs --update",
   "baseline": {
-    "docs/AGENT-GATEWAY-LOG-DEMO.md": {
-      "emdash": 3
-    },
     "docs/CATEGORIZATION-SUBMISSIONS-RUNBOOK.md": {
       "emdash": 12
     },
@@ -71,7 +68,7 @@
       "emdash": 47
     },
     "README.md": {
-      "emdash": 9
+      "emdash": 10
     },
     "SECURITY.md": {
       "emdash": 2

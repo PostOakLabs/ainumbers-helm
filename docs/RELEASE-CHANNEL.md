@@ -67,6 +67,13 @@ consistent with "local-first, no vendor control plane" everywhere else in
 this repo. A published support-window policy is easy to add later and hard to retract
 once public.
 
+**Maintenance window:** Helm is in maintenance mode from 2026-09-10 (see the
+[README](../README.md) status statement): ongoing releases are bug fixes,
+security fixes, re-vendoring of kernels, and importers/emitters under
+`scripts/`; new operator features are built as skills or plugins for the
+hosts that call Helm (`docs/AGENTS.md`). This section's `minimum_supported_version`
+signal is the CAB-facing support floor for that window.
+
 ## 5. Offline kit = the version-pinned change-managed channel
 
 Don't build a parallel "managed channel" — the
