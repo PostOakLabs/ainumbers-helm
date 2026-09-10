@@ -24,7 +24,7 @@ Tim 2026-07-23 (HELM-R1). These positions are revisited before Helm ships a
 
 ### Optional config keys an operator discovers in their own file
 
-- `otelCollectorUrl` (`~/.helm/config.json`, default `""` — HELM-OTEL-1): when set,
+- `otelCollectorUrl` (`~/.helm/config.json`, default `""`): when set,
   each completed run also POSTs its OTLP GenAI span document (span attributes only)
   to that collector; the local `<state-dir>/otel/<run_id>.json` copy is written
   regardless. The POST goes through the connector egress guard, so loopback
