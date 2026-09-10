@@ -1,0 +1,106 @@
+# SPDX-License-Identifier: Apache-2.0
+# Copyright (c) 2026 Post Oak Labs, Inc.
+# HELM-VERIFY-ACTION-1: composite GitHub Action that verifies a HELM evidence
+# bundle offline with `helmd verify` (HELM-MAINTENANCE-BUILD-SPEC.md §3.6).
+#
+# No third-party actions and no npm registry: the step downloads the tagged
+# release source tarball with curl, checks its sha256 against the pinned
+# `helm_sha256` input, then runs `node bin/helmd.mjs verify <bundle>
+# --keys <keys> --json` straight out of the extracted tree — the verify path
+# is zero-dependency (vendored pure-JS ML-DSA-44 + WebCrypto Ed25519), so no
+# install step exists to trust. Exit 0 (VALID) and 1 (INVALID) are both
+# reported via the `valid`/`reason` outputs; only a usage error (exit 2) or a
+# digest mismatch fails the action — a failed verdict is a result, not an
+# error.
+name: 'helmd verify'
+description: >-
+  Verify a HELM evidence bundle offline with `helmd verify` from a
+  sha256-pinned Helm release. Sets `valid` and `reason` outputs.
+branding:
+  icon: 'shield'
+  color: 'blue'
+
+inputs:
+  bundle:
+    description: 'Path to the evidence bundle JSON to verify (from `helmd check --out`).'
+    required: true
+  keys:
+    description: 'Path to publicKeys.json (ed25519SpkiB64 + mldsa44B64, travels out-of-band).'
+    required: true
+  helm_version:
+    description: 'Helm release tag to fetch the source tarball from.'
+    required: false
+    default: '2026.9.10'
+  helm_sha256:
+    description: 'sha256 of the release tag source tarball — re-pin per helm_version.'
+    required: false
+    default: '847cbf378be7163762674f1389bae2f4ae5e8af1f90d72c58509eb3fdacfbef9'
+
+outputs:
+  valid:
+    description: '"true" when the bundle cryptographically verified, otherwise "false".'
+    value: ${{ steps.verify.outputs.valid }}
+  reason:
+    description: 'Semicolon-joined verification failure reasons (empty when valid).'
+    value: ${{ steps.verify.outputs.reason }}
+
+runs:
+  using: composite
+  steps:
+    - name: download release tarball
+      shell: bash
+      run: |
+        curl -sfL --retry 3 \
+          "https://github.com/PostOakLabs/ainumbers-helm/archive/refs/tags/${{ inputs.helm_version }}.tar.gz" \
+          -o "$RUNNER_TEMP/helm-src.tar.gz"
+
+    - name: verify tarball sha256
+      shell: bash
+      run: |
+        node -e '
+          const { createHash } = require("node:crypto");
+          const { readFileSync } = require("node:fs");
+          const actual = createHash("sha256")
+            .update(readFileSync(process.argv[1]))
+            .digest("hex");
+          if (actual !== process.argv[2]) {
+            console.error("helmd-verify-action: sha256 mismatch for release tarball — expected " + process.argv[2] + ", got " + actual);
+            process.exit(1);
+          }
+          console.log("helmd-verify-action: release tarball sha256 verified (" + actual + ")");
+        ' "$RUNNER_TEMP/helm-src.tar.gz" "${{ inputs.helm_sha256 }}"
+
+    - name: extract tarball
+      shell: bash
+      run: |
+        mkdir -p "$RUNNER_TEMP/helm-src"
+        tar -xzf "$RUNNER_TEMP/helm-src.tar.gz" -C "$RUNNER_TEMP/helm-src"
+        echo "HELM_SRC=$RUNNER_TEMP/helm-src/$(ls -1 "$RUNNER_TEMP/helm-src" | head -n1)" >> "$GITHUB_ENV"
+
+    - name: run helmd verify
+      id: verify
+      shell: bash
+      env:
+        HELM_BUNDLE: ${{ inputs.bundle }}
+        HELM_KEYS: ${{ inputs.keys }}
+      run: |
+        OUT=$(node "$HELM_SRC/bin/helmd.mjs" verify "$HELM_BUNDLE" --keys "$HELM_KEYS" --json 2>"$RUNNER_TEMP/helmd-verify.err") && CODE=0 || CODE=$?
+        if [ "$CODE" -ne 0 ] && [ "$CODE" -ne 1 ]; then
+          echo "helmd-verify-action: helmd verify exited $CODE (usage/unexpected) — failing" >&2
+          cat "$RUNNER_TEMP/helmd-verify.err" >&2
+          exit 1
+        fi
+        JSON_LINE=$(printf '%s\n' "$OUT" | grep -m1 '^{' || true)
+        if [ -z "$JSON_LINE" ]; then
+          echo "helmd-verify-action: helmd verify printed no JSON verdict (exit $CODE) — failing" >&2
+          cat "$RUNNER_TEMP/helmd-verify.err" >&2
+          exit 1
+        fi
+        VALID=$(node -p "JSON.parse(process.argv[1]).valid" "$JSON_LINE")
+        {
+          echo "valid=$VALID"
+          echo "reason<<HELM_VERIFY_REASON"
+          node -p "JSON.parse(process.argv[1]).reasons.join('; ')" "$JSON_LINE"
+          echo "HELM_VERIFY_REASON"
+        } >> "$GITHUB_OUTPUT"
+        echo "helmd-verify-action: verdict exit=$CODE valid=$VALID"

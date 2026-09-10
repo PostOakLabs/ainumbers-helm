@@ -122,6 +122,34 @@ both travel with the release out-of-band, matching Helm's no-key-registry
 design (Helm has no key registry by design; trust material travels out of
 band and is verified by digest).
 
+## Recipe 4: verify a bundle in CI with the `helmd verify` GitHub Action
+
+The repo's root `action.yml` is a composite action (no third-party actions,
+no npm registry) for consuming pipelines: it downloads the pinned Helm
+release tarball with `curl`, checks its sha256, and runs
+`helmd verify <bundle> --keys <keys> --json` offline, exposing the verdict
+as `valid` / `reason` outputs. Pin `helm_sha256` to the digest of the source
+tarball for your `helm_version` (re-pin per version):
+
+```yaml
+- uses: PostOakLabs/ainumbers-helm@2026.9.10
+  id: helm
+  with:
+    bundle: evidence/bundle.json          # from `helmd check --out`
+    keys: evidence/publicKeys.json        # out-of-band, see Recipe 1
+    helm_version: 2026.9.10
+    helm_sha256: 847cbf378be7163762674f1389bae2f4ae5e8af1f90d72c58509eb3fdacfbef9
+- run: |
+    test "${{ steps.helm.outputs.valid }}" = "true" || {
+      echo "bundle rejected: ${{ steps.helm.outputs.reason }}"; exit 1; }
+```
+
+An INVALID verdict is a result, not an action failure: read
+`steps.helm.outputs.valid`; only a digest mismatch or usage error fails the
+step. The action self-tests on every `action.yml` change
+(`.github/workflows/verify-action-selftest.yml`) against the repo's
+golden + tampered demo bundles.
+
 ## What this page deliberately does not do
 
 - It does not vendor sigstore-js or cosign into Helm — zero dependencies

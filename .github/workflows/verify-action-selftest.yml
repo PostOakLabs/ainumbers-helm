@@ -1,0 +1,66 @@
+# SPDX-License-Identifier: Apache-2.0
+# Copyright (c) 2026 Post Oak Labs, Inc.
+# Self-test for the root composite action.yml: runs the action from this repo
+# (`uses: ./`) against the repo's own demo fixture pair — the DSSE-signed
+# golden evidence bundle proven valid and its byte-tampered sibling proven
+# invalid (ui/fixtures/verify-demo.mjs, the same pair scripts/verify.test.mjs
+# asserts against). The fixtures are materialized
+# to $RUNNER_TEMP at run time from the committed fixture module, so no new
+# fixture files are added to the repo. Expectations: golden -> valid=true,
+# tampered -> valid=false with a non-empty reason. Pinned actions/checkout
+# only — the action under test downloads and digest-checks the helm release
+# tarball itself, no third-party actions anywhere.
+name: verify-action-selftest
+
+on:
+  workflow_dispatch:
+  pull_request:
+    paths:
+      - action.yml
+
+permissions:
+  contents: read
+
+jobs:
+  selftest:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@9c091bb21b7c1c1d1991bb908d89e4e9dddfe3e0 # v7.0.0
+
+      - name: materialize demo fixtures (golden + tampered + keys)
+        run: |
+          node --input-type=module -e "
+            import { writeFileSync } from 'node:fs';
+            const { DEMO_PUBLIC_KEYS, DEMO_GOLDEN_BUNDLE, DEMO_TAMPERED_BUNDLE } =
+              await import('./ui/fixtures/verify-demo.mjs');
+            writeFileSync(process.env.RUNNER_TEMP + '/keys.json', JSON.stringify(DEMO_PUBLIC_KEYS));
+            writeFileSync(process.env.RUNNER_TEMP + '/golden.json', JSON.stringify(DEMO_GOLDEN_BUNDLE));
+            writeFileSync(process.env.RUNNER_TEMP + '/tampered.json', JSON.stringify(DEMO_TAMPERED_BUNDLE));
+            console.log('fixtures materialized to ' + process.env.RUNNER_TEMP);
+          "
+
+      - name: run action on golden bundle (expect valid)
+        id: golden
+        uses: ./
+        with:
+          bundle: ${{ runner.temp }}/golden.json
+          keys: ${{ runner.temp }}/keys.json
+
+      - name: assert golden bundle is valid
+        run: |
+          echo "golden verdict: valid=${{ steps.golden.outputs.valid }} reason=${{ steps.golden.outputs.reason }}"
+          test "${{ steps.golden.outputs.valid }}" = "true"
+          test -z "${{ steps.golden.outputs.reason }}"
+
+      - name: run action on tampered bundle (expect invalid)
+        id: tampered
+        uses: ./
+        with:
+          bundle: ${{ runner.temp }}/tampered.json
+          keys: ${{ runner.temp }}/keys.json
+
+      - name: assert tampered bundle is invalid with a reason
+        run: |
+          echo "tampered verdict: valid=${{ steps.tampered.outputs.valid }} reason=${{ steps.tampered.outputs.reason }}"
+          test "${{ steps.tampered.outputs.valid }}" = "false"
+          test -n "${{ steps.tampered.outputs.reason }}"
