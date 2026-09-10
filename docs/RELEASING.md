@@ -65,6 +65,23 @@ publishes to npm.
 and published as-is — it is not retagged or rewritten. The first CalVer tag
 is simply the next release.
 
+## Weekly re-vendor PR (automatic)
+
+`.github/workflows/autovendor.yml` runs every Monday at 06:00 UTC and keeps
+`hub/vendored/ocg` current with the upstream site repo: it compares
+`scripts/vendor.config.json`'s `pinnedSha` against PostOakLabs/ainumbers
+`main`, and when they differ it bumps the pin, runs `scripts/vendor.mjs`,
+`scripts/verify-vendored.mjs` and the full test suite, then opens a single
+`autovendor/<date>` PR carrying the gate outputs (labelled `automerge`,
+which is truthful because a failing gate stops the run before any PR
+exists). When the pin already matches, the run opens nothing, so repeated
+runs are no-ops. Manual dispatches default to `dry_run: true`, which prints
+the plan (pin old -> new, gates, branch name) and changes nothing. To stop
+the weekly PR, set the repository variable `AUTOVENDOR_ENABLED` to `false`
+(Settings -> Secrets and variables -> Actions -> Variables) or disable the
+workflow under the Actions tab; either takes effect before the next
+scheduled run.
+
 ## npm publishing (GA releases only)
 
 GA tags publish `@ainumbers/helm-cli` to npm via the `publish-npm` job in
