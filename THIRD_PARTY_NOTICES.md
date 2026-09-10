@@ -151,3 +151,13 @@ Generated from the shared credits registry (`data/credits-registry.json`, source
 - **Upstream ships a NOTICE file:** no (checked upstream root — no NOTICE file)
 - **Path(s) in this repo:**
   - `ui/vendored/pptxgen.bundle.js`
+
+## PostOakLabs/ainumbers-mcp-apps (worker-otelspan)
+
+- **Version:** 4412017
+- **License:** MIT
+- **Upstream:** https://github.com/PostOakLabs/ainumbers-mcp-apps
+- **Upstream ships a NOTICE file:** no (checked upstream root — no NOTICE file)
+- **Note:** HELM-OTEL-1: in-house OTel GenAI span worker vendored from the org's own mcp-apps site-repo (MIT, no third-party code in the subtree); hub/vendored/worker-otelspan/MANIFEST.json pins the source SHA (44120172359257d9b68fe92b1162dfccc3e65b6d) with per-file digests, and scripts/verify-vendored.mjs enforces byte accuracy against that pin.
+- **Path(s) in this repo:**
+  - `hub/vendored/worker-otelspan/`

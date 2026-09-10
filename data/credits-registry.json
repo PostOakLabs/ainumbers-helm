@@ -255,6 +255,17 @@
       "upstream_ships_notice": false,
       "repos": ["helm"],
       "paths": { "helm": ["ui/vendored/pptxgen.bundle.js"] }
+    },
+    {
+      "id": "worker-otelspan",
+      "name": "PostOakLabs/ainumbers-mcp-apps (worker-otelspan)",
+      "version": "4412017",
+      "license": "MIT",
+      "upstream_url": "https://github.com/PostOakLabs/ainumbers-mcp-apps",
+      "upstream_ships_notice": false,
+      "note": "HELM-OTEL-1: in-house OTel GenAI span worker vendored from the org's own mcp-apps site-repo (MIT, no third-party code in the subtree); hub/vendored/worker-otelspan/MANIFEST.json pins the source SHA (44120172359257d9b68fe92b1162dfccc3e65b6d) with per-file digests, and scripts/verify-vendored.mjs enforces byte accuracy against that pin.",
+      "repos": ["helm"],
+      "paths": { "helm": ["hub/vendored/worker-otelspan/"] }
     }
   ],
   "pattern_only": [
