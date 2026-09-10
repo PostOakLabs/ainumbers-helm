@@ -1,0 +1,50 @@
+# SPDX-License-Identifier: Apache-2.0
+# Copyright (c) 2026 Post Oak Labs, Inc.
+#
+# OpenSSF Scorecard supply-chain analysis.
+#
+# Runs weekly and on every push to main. `publish_results: true` sends the
+# run's results to the OpenSSF Scorecard API, which backs the README badge
+# and the public report at scorecard.dev. The SARIF file the action writes
+# is kept for local inspection; there is deliberately no code-scanning
+# upload step, so this workflow uses only the two actions below, both
+# pinned by full commit SHA (release.yml is the in-repo pattern).
+#
+# This is CI-only: nothing here runs in or near the shipped daemon
+# (docs/TRUST.md "Build/release-time only" lists the endpoint).
+
+name: OpenSSF Scorecard
+
+on:
+  push:
+    branches: [main]
+  schedule:
+    # Weekly, Mondays 03:17 UTC (off the top of the hour).
+    - cron: "17 3 * * 1"
+
+# Nothing at the top level can write. The analysis job below elevates
+# exactly the two write scopes the Scorecard action needs: id-token (GitHub
+# OIDC federation, required to publish results) and security-events (SARIF).
+permissions: read-all
+
+jobs:
+  analysis:
+    name: Scorecard analysis
+    runs-on: ubuntu-latest
+    permissions:
+      # Read scope for checkout; the elevated writes are the two above it.
+      contents: read
+      id-token: write
+      security-events: write
+    steps:
+      - name: Check out code
+        uses: actions/checkout@9c091bb21b7c1c1d1991bb908d89e4e9dddfe3e0 # v7.0.0
+        with:
+          persist-credentials: false
+
+      - name: Run Scorecard analysis
+        uses: ossf/scorecard-action@2d1146689b8cda280b9bc96326124645441f03bc # v2.4.4
+        with:
+          results_file: results.sarif
+          results_format: sarif
+          publish_results: true
