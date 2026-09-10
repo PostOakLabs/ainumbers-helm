@@ -23,6 +23,15 @@ const DEFAULT_VERSION_CHECK_URL = "https://ainumbers.co/helm/version.json";
 // URLs and flips the flag. "mainnet" is a label default only; it takes
 // effect solely once enabled + both RPC URLs are set.
 const DEFAULT_HELIOS_NETWORK = "mainnet";
+// HELM-OTEL-1: optional OTel collector endpoint for GenAI span POSTs.
+// Default "" = default-off: the OTLP-JSON span doc is still written to
+// <state-dir>/otel/<run_id>.json locally, but NOTHING egresses to a
+// collector unless the operator sets a URL here. A configured URL goes
+// through performEgress (DNS-rebind guard applies — loopback collectors are
+// therefore REFUSED; see docs/TRUST.md §1 row 13 and the OPERATIONS.md
+// config note: a loopback collector needs the tailnet/LAN-bind follow-up
+// row, LATER — no guard carve-out was made for it).
+const DEFAULT_OTEL_COLLECTOR_URL = "";
 
 // helmd serves the UI itself (HELM-U4, Syncthing pattern) — the page's real
 // Origin is http://127.0.0.1:<port>, so that's what gets exact-matched
@@ -42,6 +51,9 @@ export function loadConfig() {
       // §18.3: written out explicitly (not left implicit) so the file itself
       // is where a user retunes it, per Tim's "we can always change it".
       idleTimeoutMs: DEFAULT_IDLE_TIMEOUT_MS,
+      // HELM-OTEL-1: default-off egress — the collector URL is written out
+      // empty so an operator discovers it in the file they already own.
+      otelCollectorUrl: DEFAULT_OTEL_COLLECTOR_URL,
     };
     writeFileSync(path, JSON.stringify(config, null, 2) + "\n", { mode: 0o600 });
     return {
@@ -107,6 +119,8 @@ export function loadConfig() {
       consensusRpcUrl: parsed.heliosSidecar?.consensusRpcUrl ?? "",
       network: parsed.heliosSidecar?.network ?? DEFAULT_HELIOS_NETWORK,
     },
+    // HELM-OTEL-1: default "" — see the comment at DEFAULT_OTEL_COLLECTOR_URL.
+    otelCollectorUrl: parsed.otelCollectorUrl ?? DEFAULT_OTEL_COLLECTOR_URL,
     path,
   };
 }

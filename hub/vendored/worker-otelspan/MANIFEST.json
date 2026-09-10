@@ -1,0 +1,25 @@
+{
+  "sourceRepo": "https://github.com/PostOakLabs/ainumbers-mcp-apps.git",
+  "license": "MIT License, Copyright (c) 2026 Post Oak Labs (in-house worker code; same MIT license the source repo ships, see its LICENSE — no third-party code in this vendored subtree)",
+  "pinnedSha": "44120172359257d9b68fe92b1162dfccc3e65b6d",
+  "vendoredPaths": [
+    "otelspan.mjs",
+    "kernels/_hash.mjs",
+    "kernels/_proof.mjs"
+  ],
+  "fileCount": 3,
+  "files": [
+    {
+      "path": "kernels/_hash.mjs",
+      "sha256": "81a2e002177279a341cfa6a245052c912dbc85751884f39c96a29e0f384e8c11"
+    },
+    {
+      "path": "kernels/_proof.mjs",
+      "sha256": "f105954e77e285a412256ca193d4b0426fc828caa54f9458b56a64012a529b41"
+    },
+    {
+      "path": "otelspan.mjs",
+      "sha256": "5c791decfab74b1825fb928247d58fc416a66d07266d94ed44c8d953e60f8289"
+    }
+  ]
+}

@@ -22,6 +22,15 @@ Tim 2026-07-23 (HELM-R1). These positions are revisited before Helm ships a
   patch reaches a machine only when whoever runs it chooses to update: "released"
   ≠ "deployed."
 
+### Optional config keys an operator discovers in their own file
+
+- `otelCollectorUrl` (`~/.helm/config.json`, default `""`): when set,
+  each completed run also POSTs its OTLP GenAI span document (span attributes only)
+  to that collector; the local `<state-dir>/otel/<run_id>.json` copy is written
+  regardless. The POST goes through the connector egress guard, so loopback
+  collector URLs are refused (see `docs/TRUST.md` §1 row 13; a local collector
+  waits on the tailnet/LAN-bind row, LATER). Disable = leave the URL empty.
+
 ## Cutting a release (v0.1.0+)
 
 1. `node scripts/gen-release-keys.mjs` — writes public keys to `schema/release-signing-keys.json` (commit them), prints the private key blob to stdout.
