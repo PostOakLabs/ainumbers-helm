@@ -44,6 +44,17 @@ Generated from the shared credits registry (`data/credits-registry.json`, source
 - **Path(s) in this repo:**
   - `hub/vendored/claude-plugin-schema/`
 
+## modelcontextprotocol/mcpb
+
+- **Version:** 70fe3b3
+- **License:** Apache-2.0/MIT/CC-BY-4.0
+- **Upstream:** https://github.com/modelcontextprotocol/mcpb
+- **Upstream ships a NOTICE file:** no (checked upstream root — no NOTICE file)
+- **Note:** reference-only citation, not executed at runtime.
+- **Note:** HELM-MCPB-1 (2026-09-10): MCPB manifest.json JSON Schema (Draft 07, manifest_version 0.3), vendored for offline .mcpb bundle-manifest validation. See hub/vendored/mcpb-schema/MANIFEST.json.
+- **Path(s) in this repo:**
+  - `hub/vendored/mcpb-schema/`
+
 ## @sigstore/core
 
 - **Version:** 4.0.1
