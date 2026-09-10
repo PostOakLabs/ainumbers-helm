@@ -19,6 +19,7 @@
 import { createHash } from "node:crypto";
 import { cgCanon, assertIJson } from "./vendored/ocg/kernels/_hash.mjs";
 import { appendEntry } from "./journal.mjs";
+import { recordRunSpans } from "./otel-export.mjs"; // HELM-OTEL-1 finalisation hook (best-effort, throw-free)
 
 // Phase-1 lifecycle subset (SPEC.md §26.5 defines the full enum; review
 // states are Phase 2). Only these are reachable through this engine.
@@ -479,12 +480,22 @@ export async function executeRun(db, { runId, manifest, stepRunner, dryRun = fal
     }
   } catch (err) {
     transitionState(db, { runId, workflowManifestDigest, fromState: "running", toState: "failed", humansInvolved });
+    // Optional failure-leg of the finalisation hook (same single concern as
+    // the completed leg above; dry-run legs stay side-effect-free).
+    if (!dryRun) await recordRunSpans(db, runId);
     throw err;
   }
 
   const executionHash = sha256ref(jcsDigestHex({ run_id: runId, workflow_manifest_digest: workflowManifestDigest, steps: stepDigests }));
   db.prepare("UPDATE runs SET execution_hash = ? WHERE run_id = ?").run(executionHash, runId);
   transitionState(db, { runId, workflowManifestDigest, fromState: "running", toState: "completed", humansInvolved });
+
+  // HELM-OTEL-1 (finalisation hook — the ONE call the OTEL row adds to this
+  // file): capture the run's OTLP GenAI span tree (file write, optional
+  // collector POST via performEgress). Best-effort by charter: never throws,
+  // never affects the run's outcome. dry-run stays side-effect-free like the
+  // step loop above.
+  if (!dryRun) await recordRunSpans(db, runId);
 
   return { runId, state: "completed", executionHash, steps: stepDigests, dryRun };
 }

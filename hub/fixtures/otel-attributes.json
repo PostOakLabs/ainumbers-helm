@@ -1,0 +1,25 @@
+{
+  "_comment": "HELM-OTEL-1 — pinned attribute-name inventory for the OTel GenAI span tree built by hub/otel-export.mjs over a helm run (vendored worker-otelspan/otelspan.mjs shapes). Mirrors the worker's tests/fixtures/otel-attributes.json (MCP-OTEL-LINK-1) with run_id/workflow_id added per HELM-OTEL-1. The GenAI conventions are still 'Development' status upstream, so drift is a TEST FAILURE, never a silent rename: if a name moves, update otelspan.mjs + this fixture + the vendored copy in the same commit and say so in the PR.",
+  "semconv_snapshot_id": "genai-semconv-snapshot-2026-07-18",
+  "invoke_agent_span": [
+    "gen_ai.operation.name",
+    "gen_ai.system",
+    "gen_ai.agent.name",
+    "ocg.composite_execution_hash",
+    "ocg.run_id",
+    "ocg.workflow_id"
+  ],
+  "execute_tool_span": [
+    "gen_ai.operation.name",
+    "gen_ai.system",
+    "gen_ai.tool.name",
+    "ocg.execution_hash",
+    "ocg.kernel_digest",
+    "ocg.run_id",
+    "ocg.workflow_id"
+  ],
+  "resource": [
+    "service.name",
+    "telemetry.sdk.name"
+  ]
+}

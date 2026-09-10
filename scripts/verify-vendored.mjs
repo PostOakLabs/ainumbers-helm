@@ -4,6 +4,7 @@
 // Re-verifies EVERY vendored tree's integrity + provenance:
 //   - hub/vendored/ocg           (config-driven, single upstream: scripts/vendor.config.json)
 //   - hub/vendored/anchor-suite  (config-driven, single upstream: scripts/vendor-anchor.config.json)
+//   - hub/vendored/worker-otelspan (config-driven, single upstream: scripts/vendor-worker.config.json — HELM-OTEL-1)
 //   - ui/vendored                (heterogeneous, hand-ported: ui/vendored/MANIFEST.json)
 // For each: local bytes must match the manifest's recorded hashes, and the
 // manifest must carry non-empty `license` + `pinnedSha` for every tree/entry
@@ -183,7 +184,7 @@ export function collectHeterogeneousIssues(destRoot, manifestPath, label) {
 // checks above — a NEW vendored tree added without a manifest must fail loud,
 // not silently skip verification.
 // ---------------------------------------------------------------------------
-const KNOWN_VENDORED_ROOTS = new Set(["hub/vendored/ocg", "hub/vendored/anchor-suite", "hub/vendored/ssh-sig", "hub/vendored/sigstore", "hub/vendored/sd-jwt", "ui/vendored"]);
+const KNOWN_VENDORED_ROOTS = new Set(["hub/vendored/ocg", "hub/vendored/anchor-suite", "hub/vendored/worker-otelspan", "hub/vendored/ssh-sig", "hub/vendored/sigstore", "hub/vendored/sd-jwt", "ui/vendored"]);
 
 export function collectUncoveredTreeIssues(root) {
   const issues = [];
@@ -265,14 +266,17 @@ async function runCLI() {
   const ocgConfig = JSON.parse(readFileSync(join(HERE, "vendor.config.json"), "utf8"));
   const anchorConfig = JSON.parse(readFileSync(join(HERE, "vendor-anchor.config.json"), "utf8"));
   const sshSigConfig = JSON.parse(readFileSync(join(HERE, "vendor-ssh-sig.config.json"), "utf8"));
+  const workerConfig = JSON.parse(readFileSync(join(HERE, "vendor-worker.config.json"), "utf8"));
 
   const ocgIssues = collectConfigDrivenIssues(join(ROOT, ocgConfig.destination), ocgConfig);
   const anchorIssues = collectConfigDrivenIssues(join(ROOT, anchorConfig.destination), anchorConfig);
   const sshSigIssues = collectConfigDrivenIssues(join(ROOT, sshSigConfig.destination), sshSigConfig);
-  issues = issues.concat(ocgIssues, anchorIssues, sshSigIssues);
+  const workerIssues = collectConfigDrivenIssues(join(ROOT, workerConfig.destination), workerConfig);
+  issues = issues.concat(ocgIssues, anchorIssues, sshSigIssues, workerIssues);
   if (ocgIssues.length === 0) console.log(`${ocgConfig.destination}: local vendored tree OK.`);
   if (anchorIssues.length === 0) console.log(`${anchorConfig.destination}: local vendored tree OK.`);
   if (sshSigIssues.length === 0) console.log(`${sshSigConfig.destination}: local vendored tree OK.`);
+  if (workerIssues.length === 0) console.log(`${workerConfig.destination}: local vendored tree OK.`);
 
   issues = issues.concat(collectHeterogeneousIssues(join(ROOT, "ui/vendored"), join(ROOT, "ui/vendored/MANIFEST.json"), "ui/vendored"));
   issues = issues.concat(collectHeterogeneousIssues(join(ROOT, "hub/vendored/sigstore"), join(ROOT, "hub/vendored/sigstore/MANIFEST.json"), "hub/vendored/sigstore"));
@@ -296,6 +300,9 @@ async function runCLI() {
       collectUpstreamDriftIssues(join(ROOT, ocgConfig.destination), ocgConfig, (relPath) => relPath.split("/").pop()),
       collectUpstreamDriftIssues(join(ROOT, anchorConfig.destination), anchorConfig, (relPath) => relPath.replace(/^public\//, "")),
       collectUpstreamDriftIssues(join(ROOT, sshSigConfig.destination), sshSigConfig, (relPath) => (relPath === "LICENSE" ? "LICENSE" : `reference/${relPath}`)),
+      // worker-otelspan preserves the source's full relative shape — identity map
+      // (HELM-OTEL-1; the tree keeps otelspan.mjs's own imports resolvable verbatim).
+      collectUpstreamDriftIssues(join(ROOT, workerConfig.destination), workerConfig, (relPath) => relPath),
     ])
   ).flat();
 

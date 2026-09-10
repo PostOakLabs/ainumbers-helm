@@ -29,10 +29,15 @@ call under `hub/` and `ui/` (excluding tests, node_modules, generated
 | 10 | `GET https://ainumbers.co/helm/version.json` | **On by default.** Fired by helmd itself, on behalf of row 12 below, once on every UI boot and then every hour (`ui/app.mjs` `checkSkew()` + `setInterval(checkSkew, 60*60*1000)`, relayed by `hub/server.mjs` `GET /version-check`). Also fired once, separately, whenever `helmd doctor` runs (`hub/doctor.mjs`). | Bare GET, no request body, no identifiers, no user or workflow data. Response is a static version-notice JSON (`schema/version_notice.schema.json`) used only to show a passive "an update exists" banner — never downloaded or applied automatically (D10). Like any HTTP request it necessarily reveals the caller's IP and User-Agent to the server. **Disable:** set `"versionCheckUrl": ""` (or omit and let a falsy value pass) in `~/.helm/config.json` (`hub/config.mjs`) — `hub/server.mjs`'s `GET /version-check` handler then returns `{ checked: false, reason: "disabled" }` without making row 10's outbound call at all. |
 | 11 | `GET http://127.0.0.1:{port}/version` | Browser UI probing a local `helmd` for handoff, only on explicit user click, never on page load | Loopback only — never leaves the machine |
 | 12 | `GET http://127.0.0.1:{port}/version-check` | Browser UI, authenticated loopback call that triggers row 10 above: once on boot, then hourly (`ui/app.mjs`) | Loopback only — never leaves the machine; the outbound leg it triggers is row 10 |
+| 13 | `POST {otelCollectorUrl}` (operator-configured OTLP/JSON collector) | **Default-off.** Set `otelCollectorUrl` to a non-empty URL in `~/.helm/config.json` (`hub/config.mjs`) — helmd then POSTs the run's completed OTLP GenAI span document (`hub/otel-export.mjs`, one `invoke_agent` span + one `execute_tool` span per executed step) after run finalisation, in addition to the **always-local** copy at `<state-dir>/otel/<run_id>.json`. The POST goes through `performEgress` (`hub/connector.mjs`), so the DNS-rebind guard and journaling apply — **a loopback collector is therefore REFUSED** (a local collector needs the tailnet/LAN-bind follow-up row, LATER: no guard carve-out was made). **Disable:** leave `otelCollectorUrl` empty (default) — the local file write still happens, but nothing egresses, and the test suite pins zero-fetch behaviour with the URL unset. | Span attributes only (GenAI attribute names pinned in `hub/fixtures/otel-attributes.json`; `execution_hash`/`kernel_digest`/`run_id`/`workflow_id`) — no step inputs, no payload bodies, no secrets |
 
 **No telemetry, analytics, or crash-reporting library exists anywhere in
 this repo.** (Checked for Sentry, PostHog, Segment, Mixpanel, and generic
-beacon/analytics patterns — none found.)
+beacon/analytics patterns — none found.) The one first-party telemetry
+surface — row 13's opt-in OTel span export — POSTs a document to a
+collector **the operator explicitly configures**, carries span attributes
+only by construction, and with the URL unset (default) never touches the
+network at all.
 
 ### Present in code, not reachable at runtime today
 
