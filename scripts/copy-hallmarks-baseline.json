@@ -1,6 +1,9 @@
 {
   "generated": "check-copy-hallmarks.mjs --update",
   "baseline": {
+    "docs/AGENT-GATEWAY-LOG-DEMO.md": {
+      "emdash": 3
+    },
     "docs/CATEGORIZATION-SUBMISSIONS-RUNBOOK.md": {
       "emdash": 12
     },
@@ -26,10 +29,13 @@
       "emdash": 13
     },
     "docs/INSTALL.md": {
-      "emdash": 24,
+      "emdash": 25,
       "overuse": {
         "honest": 2
       }
+    },
+    "docs/INTEROP-ATTESTATIONS.md": {
+      "emdash": 12
     },
     "docs/IT-DEPLOYMENT.md": {
       "emdash": 15
@@ -65,7 +71,7 @@
       "emdash": 47
     },
     "README.md": {
-      "emdash": 10
+      "emdash": 9
     },
     "SECURITY.md": {
       "emdash": 2
