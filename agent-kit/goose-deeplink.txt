@@ -1,0 +1,1 @@
+goose mcp://add?cmd=npx&arg=mcp-remote@0.8.6&arg=http://127.0.0.1:4173/mcp&arg=--header&arg=Authorization%3ABearer%20%24%7BHELM_TOKEN%7D&arg=--header&arg=Origin:http://127.0.0.1:4173

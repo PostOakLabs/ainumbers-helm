@@ -1,0 +1,18 @@
+{
+  "mcpServers": {
+    "helm": {
+      "url": "http://127.0.0.1:4173/mcp",
+      "transport": "streamable-http",
+      "headers": {
+        "Authorization": "Bearer ${HELM_TOKEN}",
+        "Origin": "http://127.0.0.1:4173"
+      },
+      "toolFilter": {
+        "exclude": [
+          "workflow.run",
+          "evidence.export"
+        ]
+      }
+    }
+  }
+}

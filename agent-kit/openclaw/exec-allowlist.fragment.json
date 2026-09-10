@@ -1,0 +1,16 @@
+{
+  "exec": {
+    "allow": [
+      "helmd check",
+      "helmd verify",
+      "helmd status --json",
+      "helmd list-scenarios"
+    ],
+    "safeBins": [
+      "helmd"
+    ],
+    "safeBinTrustedDirs": [
+      "~/.helm/bin"
+    ]
+  }
+}

@@ -1,0 +1,18 @@
+{
+  "automations": [
+    {
+      "name": "helm-nightly-check",
+      "schedule": "0 0 * * *",
+      "commands": [
+        "helmd check <pack_id> --glob \"extracts/*.json\" --json"
+      ]
+    },
+    {
+      "name": "helm-heartbeat",
+      "schedule": "0 4,12,20 * * *",
+      "commands": [
+        "helmd status --json"
+      ]
+    }
+  ]
+}

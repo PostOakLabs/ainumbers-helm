@@ -3,6 +3,10 @@
 `helmd` is a Node SEA (single-executable) binary — no runtime dependency,
 loopback-only by default (D8). Pick one:
 
+Agents and automation hosts (OpenClaw, AutoClaw, Claude Code plugins, goose,
+n8n) connect through a generated manifest kit instead; start at
+[AGENTS.md](AGENTS.md).
+
 Deploying to a managed fleet instead of installing by hand? See
 [IT-DEPLOYMENT.md](IT-DEPLOYMENT.md) (Intune Win32 app, MDM `.pkg`).
 

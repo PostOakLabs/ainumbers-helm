@@ -45,6 +45,18 @@
       "paths": { "helm": ["hub/vendored/ssh-sig/"] }
     },
     {
+      "id": "claude-plugin-schema",
+      "name": "pv-udpv/claude-plugin-schemas",
+      "version": "368f037",
+      "license": "MIT",
+      "upstream_url": "https://github.com/pv-udpv/claude-plugin-schemas",
+      "upstream_ships_notice": false,
+      "reference_only": true,
+      "note": "HELM-AGENT-KIT-1 (2026-09-09): unofficial Claude Code plugin.json manifest JSON Schema, vendored for offline agent-kit validation. See hub/vendored/claude-plugin-schema/MANIFEST.json.",
+      "repos": ["helm"],
+      "paths": { "helm": ["hub/vendored/claude-plugin-schema/"] }
+    },
+    {
       "id": "sigstore-core",
       "name": "@sigstore/core",
       "version": "4.0.1",
