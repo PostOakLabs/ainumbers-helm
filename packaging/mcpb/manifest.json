@@ -1,0 +1,58 @@
+{
+  "manifest_version": "0.3",
+  "name": "helm",
+  "display_name": "Helm",
+  "version": "2026.9.3",
+  "description": "One-click bridge from Claude Desktop / Cowork to a running helmd daemon: the host launches a pinned mcp-remote that talks to Helm's loopback-only MCP endpoint (http://127.0.0.1:4173/mcp) with your pairing token.",
+  "author": {
+    "name": "Post Oak Labs, Inc."
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/PostOakLabs/ainumbers-helm"
+  },
+  "license": "Apache-2.0",
+  "icon": "icon.png",
+  "server": {
+    "type": "node",
+    "entry_point": "npx",
+    "mcp_config": {
+      "command": "npx",
+      "args": [
+        "-y",
+        "mcp-remote@0.8.6",
+        "http://127.0.0.1:${user_config.port}/mcp",
+        "--header",
+        "Authorization: Bearer ${user_config.token}",
+        "--header",
+        "Origin: http://127.0.0.1:${user_config.port}"
+      ]
+    }
+  },
+  "user_config": {
+    "token": {
+      "type": "string",
+      "title": "Pairing token",
+      "description": "A Helm pairing token (helmd open prints a fresh one). The host masks this value and stores it securely; it is sent as the Authorization: Bearer header on every bridge request.",
+      "required": true,
+      "sensitive": true
+    },
+    "port": {
+      "type": "number",
+      "title": "Daemon port",
+      "description": "The TCP port your helmd daemon listens on (loopback only). Must match the daemon's configured port; the default is 4173.",
+      "required": false,
+      "default": 4173
+    }
+  },
+  "compatibility": {
+    "platforms": [
+      "darwin",
+      "win32",
+      "linux"
+    ],
+    "runtimes": {
+      "node": ">=22.5"
+    }
+  }
+}

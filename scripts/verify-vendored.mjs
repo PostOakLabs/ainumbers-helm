@@ -183,7 +183,7 @@ export function collectHeterogeneousIssues(destRoot, manifestPath, label) {
 // checks above — a NEW vendored tree added without a manifest must fail loud,
 // not silently skip verification.
 // ---------------------------------------------------------------------------
-const KNOWN_VENDORED_ROOTS = new Set(["hub/vendored/ocg", "hub/vendored/anchor-suite", "hub/vendored/ssh-sig", "hub/vendored/sigstore", "hub/vendored/sd-jwt", "hub/vendored/claude-plugin-schema", "ui/vendored"]);
+const KNOWN_VENDORED_ROOTS = new Set(["hub/vendored/ocg", "hub/vendored/anchor-suite", "hub/vendored/ssh-sig", "hub/vendored/sigstore", "hub/vendored/sd-jwt", "hub/vendored/claude-plugin-schema", "hub/vendored/mcpb-schema", "ui/vendored"]);
 
 export function collectUncoveredTreeIssues(root) {
   const issues = [];
@@ -278,6 +278,7 @@ async function runCLI() {
   issues = issues.concat(collectHeterogeneousIssues(join(ROOT, "hub/vendored/sigstore"), join(ROOT, "hub/vendored/sigstore/MANIFEST.json"), "hub/vendored/sigstore"));
   issues = issues.concat(collectHeterogeneousIssues(join(ROOT, "hub/vendored/sd-jwt"), join(ROOT, "hub/vendored/sd-jwt/MANIFEST.json"), "hub/vendored/sd-jwt"));
   issues = issues.concat(collectHeterogeneousIssues(join(ROOT, "hub/vendored/claude-plugin-schema"), join(ROOT, "hub/vendored/claude-plugin-schema/MANIFEST.json"), "hub/vendored/claude-plugin-schema")); // HELM-AGENT-KIT-1
+  issues = issues.concat(collectHeterogeneousIssues(join(ROOT, "hub/vendored/mcpb-schema"), join(ROOT, "hub/vendored/mcpb-schema/MANIFEST.json"), "hub/vendored/mcpb-schema")); // HELM-MCPB-1
   issues = issues.concat(collectUncoveredTreeIssues(ROOT));
 
   for (const msg of issues) console.error(msg);

@@ -57,6 +57,18 @@
       "paths": { "helm": ["hub/vendored/claude-plugin-schema/"] }
     },
     {
+      "id": "mcpb-schema",
+      "name": "modelcontextprotocol/mcpb",
+      "version": "70fe3b3",
+      "license": "Apache-2.0/MIT/CC-BY-4.0",
+      "upstream_url": "https://github.com/modelcontextprotocol/mcpb",
+      "upstream_ships_notice": false,
+      "reference_only": true,
+      "note": "HELM-MCPB-1 (2026-09-10): MCPB manifest.json JSON Schema (Draft 07, manifest_version 0.3), vendored for offline .mcpb bundle-manifest validation. See hub/vendored/mcpb-schema/MANIFEST.json.",
+      "repos": ["helm"],
+      "paths": { "helm": ["hub/vendored/mcpb-schema/"] }
+    },
+    {
       "id": "sigstore-core",
       "name": "@sigstore/core",
       "version": "4.0.1",

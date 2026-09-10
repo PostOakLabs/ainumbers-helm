@@ -50,6 +50,42 @@ install. If your org mirrors npm through an internal proxy (Artifactory,
 Nexus, etc.), push the tarball into your virtual npm repo instead of
 installing it locally and consume it from there like any other package.
 
+## Claude Desktop / Cowork (one-click)
+
+If your Claude Desktop (or Cowork) should talk to Helm, install the `.mcpb`
+bundle, after `helmd` itself (any way you like above). The bundle does not
+install the daemon; it bridges to one that is already running.
+
+1. Have `helmd` installed and running (`helmd start`).
+2. Download `helm-<version>.mcpb` from the
+   [GitHub release page](https://github.com/PostOakLabs/ainumbers-helm/releases)
+   and double-click it. The desktop app imports the extension.
+3. When prompted, paste a pairing token (`helmd open` prints a fresh one).
+   The host treats it as a sensitive value (masked in the UI, stored
+   securely) and sends it as the `Authorization: Bearer` header on every
+   bridge call.
+
+The bundle contains no Helm code. The bridge is `mcp-remote`, run by the
+host itself (`npx -y mcp-remote@<pin>`, the version pinned in the bundle's
+manifest). It is a user-side tool, not a Helm dependency and not bundled. It
+talks to `http://127.0.0.1:4173/mcp` (port adjustable at import, default
+4173) and adds the `Origin` header the daemon requires. The daemon stays
+loopback-only.
+
+Two notes before you rely on this path:
+
+- The bundle is **unsigned** for now (signing with the release key belongs
+  to a later packaging row), so the desktop app may show an
+  unsigned-developer prompt on first import.
+- Anthropic's `@anthropic-ai/mcpb` CLI (`validate`, `sign`) is an optional
+  maintainer tool, **never a build dependency**: Helm's own builder
+  (`scripts/build-mcpb.mjs`) validates the manifest against a vendored copy
+  of the MCPB manifest schema using Node builtins alone, and is
+  deterministic (two builds are byte-identical). That CLI's `validate`
+  expects a bundled server file, which this bundle deliberately does not
+  have (the bridge is `npx`-fetched); the reasoning is recorded in
+  `packaging/mcpb/PINS.md`.
+
 ## Running from a repo clone (developers)
 
 The [`ainumbers-helm`](https://github.com/PostOakLabs/ainumbers-helm) repo

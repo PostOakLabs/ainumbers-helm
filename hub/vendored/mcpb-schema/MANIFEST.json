@@ -1,0 +1,21 @@
+{
+  "entries": [
+    {
+      "classification": "third-party-schema (offline vendored: JSON Schema document + upstream LICENSE; no upstream code imported)",
+      "sourceRepo": "https://github.com/modelcontextprotocol/mcpb",
+      "pinnedSha": "70fe3b34cd6dff1b3bba046638edc72a6467a4fb",
+      "license": "Apache-2.0/MIT/CC-BY-4.0 (hybrid upstream LICENSE carried in-tree)",
+      "note": "HELM-MCPB-1 (2026-09-10): the MCPB manifest JSON Schema (Draft 07, manifest_version 0.3 — byte-identical to schemas/mcpb-manifest-latest.schema.json at the pin, sha256-verified), vendored so packaging/mcpb/manifest.json validation runs offline and zero-dep in scripts/build-mcpb.mjs. Upstream ships no NOTICE file (checked upstream root 2026-09-10). Upstream changes: copy the pinned schema bytes + LICENSE and rotate pinnedSha here.",
+      "files": [
+        {
+          "path": "LICENSE",
+          "sha256": "0382b0057770ca05e9c350a50aa3b1c1fea84da0bc81d723bf00b9aa841be58a"
+        },
+        {
+          "path": "mcpb-manifest-v0.3.schema.json",
+          "sha256": "3a0ac9d845711a1b9b17dfa5a52f8b60628239d6a86a9db417206a9efc78592d"
+        }
+      ]
+    }
+  ]
+}
