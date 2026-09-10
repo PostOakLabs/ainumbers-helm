@@ -25,6 +25,9 @@
     "docs/INSTALL.md": {
       "bare-wu-id": 4
     },
+    "docs/INTEROP-ATTESTATIONS.md": {
+      "bare-wu-id": 1
+    },
     "docs/IT-DEPLOYMENT.md": {
       "bare-wu-id": 2
     },
