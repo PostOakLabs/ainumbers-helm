@@ -1,0 +1,15 @@
+{
+  "servers": {
+    "helm": {
+      "command": "npx",
+      "args": [
+        "mcp-remote@0.8.6",
+        "http://127.0.0.1:4173/mcp",
+        "--header",
+        "Authorization: Bearer ${HELM_TOKEN}",
+        "--header",
+        "Origin: http://127.0.0.1:4173"
+      ]
+    }
+  }
+}

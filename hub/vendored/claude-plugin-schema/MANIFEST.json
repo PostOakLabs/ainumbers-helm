@@ -1,0 +1,21 @@
+{
+  "entries": [
+    {
+      "classification": "third-party-schema (offline vendored: JSON Schema document + upstream LICENSE; no upstream code imported)",
+      "sourceRepo": "https://github.com/pv-udpv/claude-plugin-schemas",
+      "pinnedSha": "368f037196748e92d9143059e912beb4dbc5b486",
+      "license": "MIT",
+      "note": "HELM-AGENT-KIT-1: unofficial Claude Code plugin.json manifest schema (Draft 2020-12), vendored so agent-kit validation runs offline and zero-dep. The upstream repo ships no NOTICE (checked 2026-09-09). Upstream changes: copy the pinned schema bytes and rotate pinnedSha here.",
+      "files": [
+        {
+          "path": "claude-plugin.schema.json",
+          "sha256": "c8b58afea4710a3e782f6a473b93cbc9ba47f932b934aaadb1f41b93bf553016"
+        },
+        {
+          "path": "LICENSE",
+          "sha256": "8d628c9e917dce85914a5f2e48acb89533cc08f020d0cb68baa24fedebc89dc3"
+        }
+      ]
+    }
+  ]
+}

@@ -23,6 +23,9 @@ node scripts/check-copy-hallmarks.mjs
 echo "pre-push: lint ..."
 node scripts/lint.mjs
 
+echo "pre-push: check-agent-kit (regenerated kit byte-compare) ..."
+node scripts/check-agent-kit.mjs
+
 echo "pre-push: test ..."
 node scripts/test.mjs
 

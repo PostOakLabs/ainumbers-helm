@@ -24,6 +24,8 @@ jobs:
         run: node scripts/check-copy-hallmarks.mjs
       - name: lint
         run: node scripts/lint.mjs
+      - name: agent kit regeneration gate (byte-compare + schema + verb checks)
+        run: node scripts/check-agent-kit.mjs
       # Install a real Secret Service so the linux-secret-tool vault tier is
       # genuinely reachable in CI, not just warned about. Without this the
       # ubuntu runner has no Secret Service daemon, vaultSet's

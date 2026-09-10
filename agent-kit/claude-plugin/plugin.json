@@ -1,0 +1,29 @@
+{
+  "name": "helm-evidence",
+  "version": "1.0.0",
+  "description": "Local-first AI-number figures via helmd and its loopback MCP server. Offline check, verify, and scenario listing; no knowledge of anything outside this repo.",
+  "author": {
+    "name": "Post Oak Labs, Inc."
+  },
+  "repository": "https://github.com/PostOakLabs/ainumbers-helm",
+  "license": "Apache-2.0",
+  "keywords": [
+    "helm",
+    "evidence",
+    "mcp",
+    "verification"
+  ],
+  "mcpServers": {
+    "helm": {
+      "command": "npx",
+      "args": [
+        "mcp-remote@0.8.6",
+        "http://127.0.0.1:4173/mcp",
+        "--header",
+        "Authorization: Bearer ${HELM_TOKEN}",
+        "--header",
+        "Origin: http://127.0.0.1:4173"
+      ]
+    }
+  }
+}

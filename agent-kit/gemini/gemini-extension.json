@@ -1,0 +1,13 @@
+{
+  "name": "helm-evidence",
+  "version": "1.0.0",
+  "mcpServers": {
+    "helm": {
+      "httpUrl": "http://127.0.0.1:4173/mcp",
+      "headers": {
+        "Authorization": "Bearer ${HELM_TOKEN}",
+        "Origin": "http://127.0.0.1:4173"
+      }
+    }
+  }
+}

@@ -33,6 +33,17 @@ Generated from the shared credits registry (`data/credits-registry.json`, source
 - **Path(s) in this repo:**
   - `hub/vendored/ssh-sig/`
 
+## pv-udpv/claude-plugin-schemas
+
+- **Version:** 368f037
+- **License:** MIT
+- **Upstream:** https://github.com/pv-udpv/claude-plugin-schemas
+- **Upstream ships a NOTICE file:** no (checked upstream root — no NOTICE file)
+- **Note:** reference-only citation, not executed at runtime.
+- **Note:** HELM-AGENT-KIT-1 (2026-09-09): unofficial Claude Code plugin.json manifest JSON Schema, vendored for offline agent-kit validation. See hub/vendored/claude-plugin-schema/MANIFEST.json.
+- **Path(s) in this repo:**
+  - `hub/vendored/claude-plugin-schema/`
+
 ## @sigstore/core
 
 - **Version:** 4.0.1

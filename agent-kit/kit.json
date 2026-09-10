@@ -1,0 +1,173 @@
+{
+  "kitVersion": 1,
+  "version": "1.0.0",
+  "repository": "https://github.com/PostOakLabs/ainumbers-helm",
+  "installDir": "~/.helm/bin",
+  "daemon": {
+    "url": "http://127.0.0.1:4173",
+    "defaultPort": 4173,
+    "tokenLocation": "~/.helm/"
+  },
+  "mcp": {
+    "path": "/mcp",
+    "transport": "streamable-http",
+    "headers": {
+      "Authorization": "Bearer ${HELM_TOKEN}",
+      "Origin": "http://127.0.0.1:4173"
+    },
+    "toolFilter": {
+      "exclude": [
+        "workflow.run",
+        "evidence.export"
+      ]
+    }
+  },
+  "cli": {
+    "helpSource": "bin/helmd.mjs --help",
+    "verbs": [
+      {
+        "verb": "start",
+        "exitCodes": [
+          "0 success",
+          "2 usage error"
+        ]
+      },
+      {
+        "verb": "stop",
+        "exitCodes": [
+          "0 success",
+          "2 usage error"
+        ]
+      },
+      {
+        "verb": "status",
+        "exitCodes": [
+          "0 success",
+          "2 usage error"
+        ]
+      },
+      {
+        "verb": "doctor",
+        "exitCodes": [
+          "0 success",
+          "2 usage error"
+        ]
+      },
+      {
+        "verb": "open",
+        "exitCodes": [
+          "0 success",
+          "2 usage error"
+        ]
+      },
+      {
+        "verb": "uninstall",
+        "exitCodes": [
+          "0 success",
+          "2 usage error"
+        ]
+      },
+      {
+        "verb": "export-bpmn",
+        "exitCodes": [
+          "0 success",
+          "2 usage error"
+        ]
+      },
+      {
+        "verb": "list-scenarios",
+        "exitCodes": [
+          "0 success",
+          "2 usage error"
+        ]
+      },
+      {
+        "verb": "run-template",
+        "exitCodes": [
+          "0 success",
+          "2 usage error"
+        ]
+      },
+      {
+        "verb": "check",
+        "exitCodes": [
+          "0 match",
+          "1 differs",
+          "2 no asserted value (recompute-only)",
+          "3 insufficient input",
+          "4 usage error",
+          "5 scope disagreement"
+        ]
+      },
+      {
+        "verb": "verify",
+        "exitCodes": [
+          "0 valid",
+          "1 invalid",
+          "2 usage error (verification never attempted)"
+        ]
+      },
+      {
+        "verb": "matter-close",
+        "exitCodes": [
+          "0 success",
+          "2 usage error"
+        ]
+      },
+      {
+        "verb": "bilat-pubkey",
+        "exitCodes": [
+          "0 success",
+          "2 usage error"
+        ]
+      },
+      {
+        "verb": "bilat-export",
+        "exitCodes": [
+          "0 success",
+          "2 usage error"
+        ]
+      },
+      {
+        "verb": "bilat-import",
+        "exitCodes": [
+          "0 success",
+          "2 usage error"
+        ]
+      },
+      {
+        "verb": "emit-sdjwt",
+        "exitCodes": [
+          "0 success",
+          "1 emit/verify failure",
+          "2 usage error"
+        ]
+      },
+      {
+        "verb": "export-intoto",
+        "exitCodes": [
+          "0 success",
+          "1 export failure",
+          "2 usage error"
+        ]
+      }
+    ]
+  },
+  "mcpTools": {
+    "source": "hub/mcp.mjs TOOLS",
+    "names": [
+      "catalog.search",
+      "workflow.describe",
+      "workflow.manifest_get",
+      "workflow.dry_run",
+      "workflow.run",
+      "artifact.get",
+      "artifact.verify",
+      "evidence.export"
+    ]
+  },
+  "mcpRemote": {
+    "pin": "0.8.6",
+    "note": "User-side tool, documented not bundled (spec §1): pin is the registry 'latest' at 2026-09-09; dist shasum b0d53af611c2b9fb48ab228838134cd60068e5e0."
+  }
+}
