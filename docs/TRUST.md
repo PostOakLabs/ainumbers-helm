@@ -94,6 +94,11 @@ of a workflow the caller already holds.
 - Standard GitHub Actions / npm registry / GH release-asset traffic in
   `.github/workflows/release.yml` — ordinary CI plumbing, not something
   the shipped daemon does.
+- `https://api.scorecard.dev` from `.github/workflows/scorecard.yml`:
+  the weekly OpenSSF Scorecard job publishes this repository's supply-chain
+  score to the OpenSSF Scorecard API (repo-level metadata only; no source,
+  secrets, or build artifacts in the payload). A CI-runner call, never
+  made by the shipped daemon or the browser UI.
 
 ### External counter-signature verification (SSHSIG)
 

@@ -1,0 +1,23 @@
+# SPDX-License-Identifier: Apache-2.0
+# Copyright (c) 2026 Post Oak Labs, Inc.
+#
+# Keep the full-commit-SHA pins in .github/workflows/ current.
+# This repo has zero npm dependencies by policy (bin/zero-dep.test.mjs), so the
+# github-actions ecosystem is the only one Dependabot watches. Grouped: one PR
+# per week for every outdated pin, so a review stays a single pass.
+#
+# The `dependencies` label is GitHub's default Dependabot label; Dependabot
+# creates it automatically on the first update PR if it does not exist yet.
+
+version: 2
+updates:
+  - package-ecosystem: "github-actions"
+    directory: "/"
+    schedule:
+      interval: "weekly"
+    groups:
+      github-actions:
+        patterns:
+          - "*"
+    labels:
+      - "dependencies"

@@ -49,6 +49,8 @@ zone-level DNS hardening status (DNSSEC + CAA, runbook in
 `docs/DNSSEC-CAA-RUNBOOK.md`), dated SSL Labs / Mozilla Observatory grades
 for every host we touch, and the SRI statement.
 
+OpenSSF Scorecard: [![OpenSSF Scorecard](https://api.scorecard.dev/projects/github.com/PostOakLabs/ainumbers-helm/badge)](https://scorecard.dev/viewer/?uri=github.com/PostOakLabs/ainumbers-helm) published weekly from CI, with the per-check detail one click away in the linked report.
+
 ## Continuity
 
 Evidence bundles self-verify independently of the vendor: every bundle
