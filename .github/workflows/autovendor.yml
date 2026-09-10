@@ -1,0 +1,240 @@
+name: Autovendor
+
+# Keeps hub/vendored/ocg current with the upstream site repo without a human
+# remembering to run scripts/vendor.mjs. Every Monday at 06:00 UTC it compares
+# scripts/vendor.config.json's pinnedSha against PostOakLabs/ainumbers main;
+# when they differ it bumps the pin, re-vendors, runs the integrity gate and
+# the full test suite, and opens ONE PR carrying the gate outputs. When the
+# pin already matches it exits without opening anything, so back-to-back runs
+# (schedule after a manual run, or two dispatches in a row) are no-ops.
+#
+# Manual dispatches default to dry_run: true, which prints the plan (pin
+# old -> new, the gates that would run, the branch name) and modifies
+# nothing — the same discipline as the site repo's vendor-freshness
+# schedule. The weekly schedule itself always runs live; a dry run is for
+# verifying the plumbing, not for suspending the automation.
+#
+# WHY AN APP TOKEN, NOT GITHUB_TOKEN — same trap as auto-tag-release.yml:
+# a PR authored by GITHUB_TOKEN does not trigger `pull_request` workflows,
+# so the re-vendor PR would sit there with no CI running and nothing would
+# ever merge it. The App installation token is a different actor, so the
+# PR's checks start normally. Same App + same pinned action as
+# automerge-label.yml, scoped to pull-requests:write + contents:write (the
+# branch push this job authors needs contents:write).
+#
+# STOPPING IT: set the repository variable AUTOVENDOR_ENABLED to `false`
+# (Settings -> Secrets and variables -> Actions -> Variables) or disable the
+# workflow under the Actions tab. docs/RELEASING.md documents both.
+
+on:
+  schedule:
+    - cron: "0 6 * * 1" # Mondays 06:00 UTC
+  workflow_dispatch:
+    inputs:
+      dry_run:
+        description: >-
+          Print the plan (pin bump, gates, branch) without vendoring,
+          committing, or opening a PR. Unchecked = live run.
+        type: boolean
+        default: true
+
+permissions:
+  contents: read
+
+jobs:
+  autovendor:
+    name: Re-vendor OCG from site main (PR if changed)
+    # Kill switch: a repository variable reads as unset until someone sets
+    # it, so the default path (variable absent) is enabled.
+    if: vars.AUTOVENDOR_ENABLED != 'false'
+    runs-on: ubuntu-latest
+    permissions:
+      # The default GITHUB_TOKEN deliberately keeps NO write scope here: all
+      # writes (branch push, PR) go through the App installation token
+      # minted below, for the same reason auto-tag-release.yml states.
+      contents: read
+    steps:
+      - uses: actions/checkout@9c091bb21b7c1c1d1991bb908d89e4e9dddfe3e0 # v7.0.0
+        with:
+          fetch-depth: 1
+          # The App token is supplied explicitly at push time (env, last
+          # steps) instead of being persisted into git's credential store.
+          persist-credentials: false
+      - uses: actions/setup-node@249970729cb0ef3589644e2896645e5dc5ba9c38 # v6.5.0
+        with:
+          node-version: "22"
+
+      - name: resolve pinnedSha vs site main
+        id: upstream
+        run: |
+          set -euo pipefail
+          PIN="$(node --input-type=module -e "import { readFileSync } from 'node:fs'; console.log(JSON.parse(readFileSync('scripts/vendor.config.json', 'utf8')).pinnedSha)")"
+          SITE_HEAD="$(git ls-remote https://github.com/PostOakLabs/ainumbers.git refs/heads/main | cut -f1)"
+          echo "pin=$PIN" >> "$GITHUB_OUTPUT"
+          echo "site_head=$SITE_HEAD" >> "$GITHUB_OUTPUT"
+          if [ "$PIN" = "$SITE_HEAD" ]; then
+            echo "stale=false" >> "$GITHUB_OUTPUT"
+            echo "pinnedSha is already current: $PIN"
+          else
+            echo "stale=true" >> "$GITHUB_OUTPUT"
+            echo "pinnedSha $PIN is behind site main $SITE_HEAD"
+          fi
+
+      - name: plan (dry run prints and stops, live proceeds)
+        id: plan
+        env:
+          # Via env, never `${{ }}` inside the run: script text. On a schedule
+          # trigger `inputs.dry_run` is unset, so the expression falls through
+          # to false and the run is live — the schedule is the point.
+          DRY_RUN: ${{ inputs.dry_run || false }}
+          PIN: ${{ steps.upstream.outputs.pin }}
+          SITE_HEAD: ${{ steps.upstream.outputs.site_head }}
+          STALE: ${{ steps.upstream.outputs.stale }}
+        run: |
+          set -euo pipefail
+          if [ "$STALE" != "true" ]; then
+            echo "proceed=noop" >> "$GITHUB_OUTPUT"
+            exit 0
+          fi
+          BRANCH="autovendor/$(date -u +%Y-%m-%d)"
+          echo "branch=$BRANCH" >> "$GITHUB_OUTPUT"
+          if [ "$DRY_RUN" = "true" ]; then
+            echo "Autovendor dry run — nothing below was executed. The live path would:"
+            echo "  1. bump scripts/vendor.config.json pinnedSha: $PIN -> $SITE_HEAD"
+            echo "  2. node scripts/vendor.mjs            (re-vendor hub/vendored/ocg at the new pin)"
+            echo "  3. node scripts/verify-vendored.mjs   (integrity + provenance gate)"
+            echo "  4. node scripts/test.mjs              (full test suite)"
+            echo "  5. push branch $BRANCH and gh pr create against main, labelled automerge (reachable only when every gate passed)"
+            echo "No files were modified."
+            echo "proceed=dry" >> "$GITHUB_OUTPUT"
+            exit 0
+          fi
+          echo "proceed=live" >> "$GITHUB_OUTPUT"
+
+      # Fails loudly and specifically when the App secrets are absent rather
+      # than letting the token step fail with a generic error — and never
+      # falls back to GITHUB_TOKEN, which would silently restore the exact
+      # defect described in the header. Only the live path needs a credential.
+      - name: require spec-sync app secrets
+        if: steps.plan.outputs.proceed == 'live'
+        env:
+          CLIENT_ID: ${{ secrets.SYNC_APP_CLIENT_ID }}
+          PRIVATE_KEY: ${{ secrets.SYNC_APP_PRIVATE_KEY }}
+        run: |
+          set -euo pipefail
+          missing=""
+          [ -n "$CLIENT_ID" ] || missing="$missing SYNC_APP_CLIENT_ID"
+          [ -n "$PRIVATE_KEY" ] || missing="$missing SYNC_APP_PRIVATE_KEY"
+          if [ -n "$missing" ]; then
+            echo "missing required secret(s):$missing — the PR must be App-authored; there is no GITHUB_TOKEN fallback." >&2
+            exit 1
+          fi
+
+      - name: mint spec-sync installation token
+        if: steps.plan.outputs.proceed == 'live'
+        id: app-token
+        uses: actions/create-github-app-token@bcd2ba49218906704ab6c1aa796996da409d3eb1 # v3.2.0
+        with:
+          client-id: ${{ secrets.SYNC_APP_CLIENT_ID }}
+          private-key: ${{ secrets.SYNC_APP_PRIVATE_KEY }}
+          owner: ${{ github.repository_owner }}
+          repositories: ${{ github.event.repository.name }}
+          permission-pull-requests: write
+          permission-contents: write
+
+      # One gate step, ordered: pin bump -> vendor -> verify -> suite. Any
+      # failure stops the job here, before a branch or PR can exist, which is
+      # what makes the automerge label on the PR step truthful.
+      - name: bump pin, re-vendor, run gates
+        if: steps.plan.outputs.proceed == 'live'
+        id: vendor
+        env:
+          # Via env, never spliced into the JS source text: the same
+          # injection discipline as auto-tag-release.yml's version bump.
+          SITE_HEAD: ${{ steps.upstream.outputs.site_head }}
+        run: |
+          set -euo pipefail
+          node --input-type=module -e "
+            import { readFileSync, writeFileSync } from 'node:fs';
+            const path = 'scripts/vendor.config.json';
+            const config = JSON.parse(readFileSync(path, 'utf8'));
+            config.pinnedSha = process.env.SITE_HEAD;
+            writeFileSync(path, JSON.stringify(config, null, 2) + '\n');
+          "
+          node scripts/vendor.mjs
+          node scripts/verify-vendored.mjs
+          node scripts/test.mjs > /tmp/autovendor-test.log 2>&1 || {
+            echo "test suite FAILED — no PR will be opened; tail of the log follows" >&2
+            tail -n 40 /tmp/autovendor-test.log >&2
+            exit 1
+          }
+          tail -n 8 /tmp/autovendor-test.log
+
+      - name: commit + push branch (skips out if a run today already did)
+        if: steps.plan.outputs.proceed == 'live'
+        env:
+          BRANCH: ${{ steps.plan.outputs.branch }}
+          SITE_HEAD: ${{ steps.upstream.outputs.site_head }}
+          # Via env, never inlined into the script: an expression interpolated
+          # into `run:` is substituted as literal text before the shell sees
+          # it, which both leaks the credential onto the command line and
+          # makes it shell-evaluable (same comment as release.yml).
+          APP_TOKEN: ${{ steps.app-token.outputs.token }}
+        run: |
+          set -euo pipefail
+          # Idempotency against a still-open PR: if today's branch already
+          # exists on origin, an earlier run opened (or is opening) the PR;
+          # opening a second identical one would only add noise.
+          if git ls-remote --heads origin "refs/heads/$BRANCH" | grep -q "refs/heads/$BRANCH"; then
+            echo "::notice title=Branch already exists::$BRANCH is already on origin — the re-vendor PR from an earlier run is still open; not opening a duplicate."
+            exit 0
+          fi
+          git config user.name "helm-autovendor-bot"
+          git config user.email "noreply@postoaklabs.com"
+          git checkout -b "$BRANCH"
+          # Explicit pathspecs only: vendor.mjs is single-writer for
+          # hub/vendored/ocg, and the pin bump touches vendor.config.json.
+          git add hub/vendored/ocg scripts/vendor.config.json
+          # The pinned SHA belongs in the commit message (scripts/vendor.mjs
+          # header: "Single-writer: run this script alone, commit the pinned
+          # SHA in the commit message").
+          git commit -m "vendor(ocg): re-vendor from PostOakLabs/ainumbers@$SITE_HEAD"
+          # The checkout ran with persist-credentials:false, so supply the App
+          # token here, at push time only — App-authored pushes are the house
+          # pattern (auto-tag-release.yml, release.yml).
+          git remote set-url origin "https://x-access-token:${APP_TOKEN}@github.com/${GITHUB_REPOSITORY}.git"
+          git push origin "$BRANCH"
+
+      - name: open the re-vendor PR
+        if: steps.plan.outputs.proceed == 'live'
+        env:
+          GH_TOKEN: ${{ steps.app-token.outputs.token }}
+          APP_TOKEN: ${{ steps.app-token.outputs.token }}
+          BRANCH: ${{ steps.plan.outputs.branch }}
+          PIN: ${{ steps.upstream.outputs.pin }}
+          SITE_HEAD: ${{ steps.upstream.outputs.site_head }}
+          RUN_URL: ${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}
+        run: |
+          set -euo pipefail
+          {
+            echo "Automated weekly re-vendor ([run]($RUN_URL))."
+            echo ""
+            echo "- Pin bump: \`scripts/vendor.config.json\` \`pinnedSha\` \`$PIN\` -> \`$SITE_HEAD\`"
+            echo "- \`node scripts/vendor.mjs\`: ok (hub/vendored/ocg + MANIFEST.json regenerated at the new pin)"
+            echo "- \`node scripts/verify-vendored.mjs\`: ok (hashes match the regenerated manifest)"
+            echo "- \`node scripts/test.mjs\` (full suite): ok"
+            echo ""
+            echo "All three gates passed in this run — reaching this step at all requires it, which is why the PR carries the \`automerge\` label. If the branch already existed, an earlier run's PR is still open and this run pushed nothing."
+            echo ""
+            echo "Last 8 lines of the suite log:"
+            echo ""
+            echo '```'
+            tail -n 8 /tmp/autovendor-test.log
+            echo '```'
+          } > /tmp/autovendor-pr-body.md
+          gh pr create \
+            --base main \
+            --head "$BRANCH" \
+            --title "vendor(ocg): re-vendor from ainumbers@${SITE_HEAD:0:12}" \
+            --body-file /tmp/autovendor-pr-body.md \
+            --label automerge
