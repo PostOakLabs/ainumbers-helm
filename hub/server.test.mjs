@@ -1459,15 +1459,21 @@ test("a handler that throws synchronously (db.prepare) returns 500, not a droppe
 // needs a non-null origin to mean anything) and a real db (handleMcp 503s
 // without one). Same shape as withMatterServer above.
 async function withMcpOriginServer(fn) {
-  const port = asPortSeq++;
-  const origin = `http://127.0.0.1:${port}`;
+  // Port-ref conversion (HELM-AUTOSTART-PORT-COLLISION-2): #268 removed the
+  // asPortSeq walk this helper was written against (#266 merged minutes after
+  // #268, so neither saw the other). EPHEMERAL_ORIGIN as allowedOrigin keeps
+  // every assertion honest: the helper exists so a literal `Origin: null`
+  // does NOT match a real (non-null) allowed origin, and all four tests are
+  // no-origin or wrong-origin cases — none relies on a matching origin.
+  const ref = portRef();
   const dbDir = mkdtempSync(join(tmpdir(), "helm-mcp-origin-test-"));
   const db = openJournal(join(dbDir, "journal.db"));
-  const serverMcp = createHelmServer({ port, allowedOrigin: origin, token, db });
+  const serverMcp = createHelmServer({ port: ref, allowedOrigin: EPHEMERAL_ORIGIN, token, db });
+  const port = await listenReady(serverMcp, ref);
   const callMcp = (opts) =>
     asRequest(port, { ...opts, headers: { Host: `127.0.0.1:${port}`, ...opts.headers } });
   try {
-    await fn({ call: callMcp, origin });
+    await fn({ call: callMcp, origin: EPHEMERAL_ORIGIN });
   } finally {
     await new Promise((resolve) => serverMcp.close(resolve));
     db.close();
