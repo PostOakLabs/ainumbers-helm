@@ -4,15 +4,74 @@ import { mkdtempSync, rmSync, writeFileSync } from "node:fs";
 import { tmpdir } from "node:os";
 import { join } from "node:path";
 import { request, createServer } from "node:http";
+import { once } from "node:events";
 import { generateKeyPairSync } from "node:crypto";
 
 const TMP = mkdtempSync(join(tmpdir(), "helm-test-"));
 process.env.HELM_HOME = TMP;
 
-const PORT = 41999;
 const ORIGIN = "null";
 
-writeFileSync(join(TMP, "config.json"), JSON.stringify({ port: PORT, allowedOrigin: ORIGIN }));
+// HELM-AUTOSTART-PORT-COLLISION-1: this file previously pinned a dozen fixed
+// ports in the 41999-42020 band (PORT 41999 here, plus SHUTDOWN/IDLE/AUTH
+// constants and the asPortSeq walk below). Any sibling hub test file — or a
+// second concurrent copy of the whole suite, the exact hazard the
+// scripts/test.mjs SKIP_DIRS comment documents — holding one of those ports
+// killed this file's spin-up with `listen EADDRINUSE` as an
+// uncaughtException before the test's own assertions ran (CI run
+// 34696274913: test 589 died that way on 127.0.0.1:42008). Every server in
+// this file now binds port 0 on 127.0.0.1, and every Host header, request
+// target and 127.0.0.1:${port} assertion derives from the bound address.
+//
+// Test-only seam (no product code touched): hub/server.mjs reads its
+// CONFIGURED `port` in three places — server.listen(port, "127.0.0.1"),
+// checkHost's `127.0.0.1:${port}` comparison (the Host gate), and
+// handlePairRelink's minted pairing URL — but an ephemeral bind only reveals
+// its port AFTER listen. The ref below therefore passes listen's options
+// validation via a `port` getter (reads 0 at bind time) and coerces to the
+// real bound port everywhere else (Symbol.toPrimitive), which the gate
+// evaluates at REQUEST time — i.e. only after listenReady() latched
+// ref.bound. The Host gate thus compares against the daemon's true bound
+// address exactly as it would with a concrete port, and /pair/relink still
+// mints a real URL (asserted below against that same bound port).
+function portRef() {
+  const ref = { host: "127.0.0.1", bound: 0 };
+  Object.defineProperty(ref, "port", { get() { return ref.bound; } });
+  // One coercion seam for every consumer of the configured port: server.listen's
+  // options validation reads the `port` getter (0 at bind time), while every
+  // request-time consumer — checkHost's and handlePairRelink's template
+  // literals (ToString hint), log fields, arithmetic — lands in
+  // Symbol.toPrimitive and sees the real bound port once latched. (A valueOf
+  // alone is NOT enough: template literals coerce with the "string" hint and
+  // would stringify as "[object Object]" — measured.)
+  ref[Symbol.toPrimitive] = () => ref.bound;
+  return ref;
+}
+
+async function listenReady(server, ref) {
+  if (!server.listening) await once(server, "listening");
+  ref.bound = server.address().port;
+  return ref.bound;
+}
+
+// Self-referential origins (`http://127.0.0.1:<own bound port>`) cannot be
+// derived inside a test file: server.mjs captures allowedOrigin at
+// construction and compares req.headers.origin === allowedOrigin per
+// request, but the bound port does not exist until after listen. The helper
+// servers whose happy paths must PASS the origin gate therefore pin both
+// sides of that equality to this constant — the served-UI shape, minus the
+// unknowable ephemeral port. The gate's exact-match/mismatch logic is fully
+// exercised either way (the negative tests still aim evil.example at it);
+// deriving the string would require a product change, which this row's
+// fence forbids. (Recorded as the row's one deviation.)
+const EPHEMERAL_ORIGIN = "http://127.0.0.1:0";
+
+// Latched to the main server's real bound port in before(); every get()/post()
+// target, Host header and 127.0.0.1:${PORT} assertion below reads it then.
+let PORT = 0;
+const MAIN_PORT_REF = portRef();
+
+writeFileSync(join(TMP, "config.json"), JSON.stringify({ port: 0, allowedOrigin: ORIGIN }));
 
 const { loadConfig } = await import("./config.mjs");
 const { loadOrCreateToken, createPairingNonce } = await import("./token.mjs");
@@ -31,8 +90,12 @@ const token = loadOrCreateToken();
 const identityKeys = loadOrCreateKeys();
 let server;
 
-before(() => {
-  server = createHelmServer({ port: config.port, allowedOrigin: config.allowedOrigin, token, identityKeys });
+before(async () => {
+  // config.port (0 above) is deliberately not passed straight through: the
+  // ref object lets the server's Host gate and /pair/relink minting see the
+  // real bound port once listenReady() latches it.
+  server = createHelmServer({ port: MAIN_PORT_REF, allowedOrigin: config.allowedOrigin, token, identityKeys });
+  PORT = await listenReady(server, MAIN_PORT_REF);
 });
 
 after(() => {
@@ -389,16 +452,17 @@ test("negative: an unknown /events ticket is rejected", async () => {
 // process.exit() — a real exitFn is only ever wired in production (helmd's
 // own entrypoint).
 test("§8: POST /shutdown replies before exiting, then calls exitFn", async () => {
-  const SHUTDOWN_PORT = 42000;
+  const shutdownRef = portRef();
   let exited = false;
   const shutdownServer = createHelmServer({
-    port: SHUTDOWN_PORT,
+    port: shutdownRef,
     allowedOrigin: ORIGIN,
     token,
     identityKeys,
     exitFn: () => { exited = true; },
   });
   try {
+    const SHUTDOWN_PORT = await listenReady(shutdownServer, shutdownRef);
     const res = await new Promise((resolve, reject) => {
       const data = JSON.stringify({});
       const req = request(
@@ -423,11 +487,12 @@ test("§8: POST /shutdown replies before exiting, then calls exitFn", async () =
 });
 
 test("§18: GET /health announces idleTimeoutMs", async () => {
-  const IDLE_PORT = 42003;
+  const idleRef = portRef();
   const idleServer = createHelmServer({
-    port: IDLE_PORT, allowedOrigin: ORIGIN, token, identityKeys, idleTimeoutMs: 5000,
+    port: idleRef, allowedOrigin: ORIGIN, token, identityKeys, idleTimeoutMs: 5000,
   });
   try {
+    const IDLE_PORT = await listenReady(idleServer, idleRef);
     const res = await new Promise((resolve, reject) => {
       const req = request({ host: "127.0.0.1", port: IDLE_PORT, path: "/health", method: "GET", headers: headers({ Host: `127.0.0.1:${IDLE_PORT}` }) }, (res) => {
         let body = "";
@@ -445,12 +510,13 @@ test("§18: GET /health announces idleTimeoutMs", async () => {
 });
 
 test("§18.2: onAuthenticated fires once per authenticated request, not on a rejected one", async () => {
-  const AUTH_PORT = 42004;
+  const authRef = portRef();
   let calls = 0;
   const authServer = createHelmServer({
-    port: AUTH_PORT, allowedOrigin: ORIGIN, token, identityKeys, onAuthenticated: () => calls++,
+    port: authRef, allowedOrigin: ORIGIN, token, identityKeys, onAuthenticated: () => calls++,
   });
   try {
+    const AUTH_PORT = await listenReady(authServer, authRef);
     await new Promise((resolve, reject) => {
       const req = request({ host: "127.0.0.1", port: AUTH_PORT, path: "/health", method: "GET", headers: { Host: `127.0.0.1:${AUTH_PORT}`, Origin: ORIGIN } }, (res) => {
         res.on("data", () => {});
@@ -528,10 +594,10 @@ test("static: GET /views/learn.mjs serves as a JS module, no auth required (regr
 // pre-U4 shape, so this needs a second instance with a real origin to prove
 // "null" is no longer accepted anywhere.
 test("negative: null Origin rejected against a served-UI (non-null) allowedOrigin", async () => {
-  const port2 = PORT + 1;
-  const origin2 = `http://127.0.0.1:${port2}`;
-  const server2 = createHelmServer({ port: port2, allowedOrigin: origin2, token });
+  const server2Ref = portRef();
+  const server2 = createHelmServer({ port: server2Ref, allowedOrigin: EPHEMERAL_ORIGIN, token });
   try {
+    const port2 = await listenReady(server2, server2Ref);
     const res = await new Promise((resolve, reject) => {
       const req = request(
         { host: "127.0.0.1", port: port2, path: "/health", method: "GET", headers: { Host: `127.0.0.1:${port2}`, Origin: "null", Authorization: `Bearer ${token}` } },
@@ -666,9 +732,10 @@ test("GET /pair/challenge: signed with the daemon's identity key, verifiable, no
 });
 
 test("GET /pair/challenge: 503 when the daemon has no identity keys configured", async () => {
-  const port2 = PORT + 2;
-  const server2 = createHelmServer({ port: port2, allowedOrigin: `http://127.0.0.1:${port2}`, token });
+  const server2Ref = portRef();
+  const server2 = createHelmServer({ port: server2Ref, allowedOrigin: EPHEMERAL_ORIGIN, token });
   try {
+    const port2 = await listenReady(server2, server2Ref);
     const res = await new Promise((resolve, reject) => {
       const req = request(
         { host: "127.0.0.1", port: port2, path: "/pair/challenge", method: "GET", headers: { Host: `127.0.0.1:${port2}`, Origin: DETECTION_ORIGIN } },
@@ -747,10 +814,12 @@ test("negative: POST to a detection-surface path (not GET/OPTIONS) 404s rather t
 });
 
 test("bindOrExit: squatted port is refused cleanly, never falls back to a different port", async () => {
-  const port3 = PORT + 3;
-  // Occupy the port first, simulating another process already bound there.
+  // Occupy the port first, simulating another process already bound there —
+  // on an EPHEMERAL port of our own, so the squatted port can never collide
+  // with a sibling test file's or a parallel suite run's fixed port.
   const squatter = createServer();
-  await new Promise((resolve) => squatter.listen(port3, "127.0.0.1", resolve));
+  await new Promise((resolve) => squatter.listen(0, "127.0.0.1", resolve));
+  const port3 = squatter.address().port;
   try {
     const server3 = createHelmServer({ port: port3, allowedOrigin: `http://127.0.0.1:${port3}`, token });
     const bound = await bindOrExit(server3, port3);
@@ -764,11 +833,14 @@ test("bindOrExit: squatted port is refused cleanly, never falls back to a differ
 });
 
 test("bindOrExit: a free port binds successfully", async () => {
-  const port4 = PORT + 4;
-  const server4 = createHelmServer({ port: port4, allowedOrigin: `http://127.0.0.1:${port4}`, token });
+  const port4Ref = portRef();
+  const server4 = createHelmServer({ port: port4Ref, allowedOrigin: EPHEMERAL_ORIGIN, token });
+  const bound = await bindOrExit(server4, port4Ref);
+  assert.equal(bound, true);
+  const port4 = await listenReady(server4, port4Ref);
   try {
-    const bound = await bindOrExit(server4, port4);
-    assert.equal(bound, true);
+    assert.equal(port4, server4.address().port, "the ref must have latched the real bound port");
+    assert.ok(port4 > 0, "an ephemeral bind must yield a concrete port");
   } finally {
     server4.close();
   }
@@ -848,10 +920,11 @@ function fakeAutostartOps() {
   };
 }
 
-// Each test gets its OWN port: server.close() does not settle before the next
-// test starts listening, and the shared-port version of this block failed with
-// ECONNRESET on every second test.
-let asPortSeq = PORT + 5;
+// Each test still gets its OWN server — server.close() does not settle before
+// the next test starts listening, and the shared-port version of this block
+// failed with ECONNRESET on every second test — but since
+// HELM-AUTOSTART-PORT-COLLISION-1 those ports are ephemeral (0) instead of a
+// fixed asPortSeq walk through the sibling files' band.
 
 function asRequest(port, { method = "GET", path = "/autostart", headers = {}, body }) {
   return new Promise((resolve, reject) => {
@@ -878,10 +951,11 @@ function asRequest(port, { method = "GET", path = "/autostart", headers = {}, bo
 }
 
 async function withAutostartServer(fn) {
-  const port = asPortSeq++;
-  const origin = `http://127.0.0.1:${port}`;
+  const ref = portRef();
   const fake = fakeAutostartOps();
-  const server5 = createHelmServer({ port, allowedOrigin: origin, token, autostartOps: fake.ops });
+  const server5 = createHelmServer({ port: ref, allowedOrigin: EPHEMERAL_ORIGIN, token, autostartOps: fake.ops });
+  const port = await listenReady(server5, ref);
+  const origin = EPHEMERAL_ORIGIN;
   const call5 = (opts) => asRequest(port, opts);
   const headers5 = (overrides = {}) => ({ Host: `127.0.0.1:${port}`, Origin: origin, Authorization: `Bearer ${token}`, ...overrides });
   try {
@@ -1070,11 +1144,12 @@ function wireTestManifest() {
 }
 
 async function withRunEngineServer(fn) {
-  const port = asPortSeq++;
-  const origin = `http://127.0.0.1:${port}`;
+  const ref = portRef();
   const dbDir = mkdtempSync(join(tmpdir(), "helm-bind-wire-test-"));
   const db = openJournal(join(dbDir, "journal.db"));
-  const server6 = createHelmServer({ port, allowedOrigin: origin, token, db });
+  const server6 = createHelmServer({ port: ref, allowedOrigin: EPHEMERAL_ORIGIN, token, db });
+  const port = await listenReady(server6, ref);
+  const origin = EPHEMERAL_ORIGIN;
   const call6 = (opts) => asRequest(port, opts);
   const headers6 = (overrides = {}) => ({ Host: `127.0.0.1:${port}`, Origin: origin, Authorization: `Bearer ${token}`, ...overrides });
   vaultSet(WIRE_CREDENTIAL_REF, { access_token: "tok-wire-1" });
@@ -1105,11 +1180,12 @@ async function withRunEngineServer(fn) {
 // `server` fixture (no db) nor withRunEngineServer (no identityKeys, and
 // pulls in connector/run-engine wiring this test doesn't need) supply both.
 async function withMatterServer(fn) {
-  const port = asPortSeq++;
-  const origin = `http://127.0.0.1:${port}`;
+  const ref = portRef();
   const dbDir = mkdtempSync(join(tmpdir(), "helm-matter-http-test-"));
   const db = openJournal(join(dbDir, "journal.db"));
-  const server7 = createHelmServer({ port, allowedOrigin: origin, token, db, identityKeys });
+  const server7 = createHelmServer({ port: ref, allowedOrigin: EPHEMERAL_ORIGIN, token, db, identityKeys });
+  const port = await listenReady(server7, ref);
+  const origin = EPHEMERAL_ORIGIN;
   const call7 = (opts) => asRequest(port, opts);
   const headers7 = (overrides = {}) => ({ Host: `127.0.0.1:${port}`, Origin: origin, Authorization: `Bearer ${token}`, ...overrides });
   try {
@@ -1332,8 +1408,7 @@ test("GET /matters/{id}/export 404s for a matter that was never closed", async (
 // dispatch-level catch itself, independent of freshdb-boot.test.mjs's
 // full-boot regression cover.
 test("a handler that throws synchronously (db.prepare) returns 500, not a dropped connection", async () => {
-  const port = asPortSeq++;
-  const origin = `http://127.0.0.1:${port}`;
+  const ref = portRef();
   const dbDir = mkdtempSync(join(tmpdir(), "helm-handler-boundary-test-"));
   const db = openJournal(join(dbDir, "journal.db"));
   const poisonedDb = {
@@ -1342,8 +1417,10 @@ test("a handler that throws synchronously (db.prepare) returns 500, not a droppe
       throw new Error("simulated: no such table: runs");
     },
   };
-  const server8 = createHelmServer({ port, allowedOrigin: origin, token, db: poisonedDb });
+  const server8 = createHelmServer({ port: ref, allowedOrigin: EPHEMERAL_ORIGIN, token, db: poisonedDb });
+  const origin = EPHEMERAL_ORIGIN;
   try {
+    const port = await listenReady(server8, ref);
     const res = await asRequest(port, {
       path: "/ha/pending",
       headers: { Host: `127.0.0.1:${port}`, Origin: origin, Authorization: `Bearer ${token}` },
