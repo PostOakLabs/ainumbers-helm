@@ -53,6 +53,21 @@ site repo @ pinned SHA  --[vendor.mjs single-writer]-->  hub/vendored/ocg/
 | Release trust (A4) | Dual-sign Ed25519 (MUST) + ML-DSA-44 (SHOULD) DSSE; `verify-release-manifest.mjs` fail-closed before publish; keys never in repo | `hub/envelope.test.mjs` 7/7 |
 | Vendoring (A4) | Fetch by immutable pinned SHA (git verifies object hashes); single-writer; MANIFEST.json of per-file sha256 | `scripts/vendor.mjs` |
 
+**Delta (absent-`Origin` allowance for non-browser MCP clients):** the loopback
+gate's exact-`Origin`-match
+defense (row 1, A1) now has one documented exception: on `POST /mcp` ONLY, a
+request whose `Origin` header is genuinely absent (`=== undefined`, never merely
+falsy) skips the Origin check and falls through to the Bearer-token check, so
+non-browser MCP clients (OpenClaw, mcp-remote, the SDKs), which send no `Origin`
+at all, can connect. This does not widen A1's surface: a browser page cannot
+attach a custom `Authorization` header to a cross-origin request without a CORS
+preflight that `applyCors` answers only for the exact allowed origin, so on this
+route the Bearer token (256-bit, constant-time compare) remains the CSRF control.
+A present-but-wrong `Origin`, including a literal `Origin: null` from sandboxed
+iframes or redirects, is still refused 403 on every route; the `Sec-Fetch-Site`
+same-origin fallback is unchanged, `applyCors` is unchanged, and no other route
+gained an absent-`Origin` allowance (each pinned by a test in `hub/server.test.mjs`).
+
 ## 5. Findings (HELM-R1 adversarial pass)
 
 All findings filed as follow-on board rows (`board/queued/HELM-SEC-*`). Severity is

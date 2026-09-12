@@ -1365,3 +1365,122 @@ test("a handler that throws synchronously (db.prepare) returns 500, not a droppe
     rmSync(dbDir, { recursive: true, force: true });
   }
 });
+
+// --- HELM-MCP-ORIGIN-ABSENT-1: non-browser MCP clients (OpenClaw,
+// mcp-remote, the SDKs) are not browsers — they send no Origin header at
+// all — so POST /mcp died at the origin gate before the bearer check could
+// even run. On THIS one route the bearer is the CSRF control (a browser
+// cannot attach a custom Authorization header cross-origin without a CORS
+// preflight that applyCors answers only for allowedOrigin), so an ABSENT
+// Origin falls through to the bearer check. Every other route, every
+// present-but-wrong Origin (including a literal `Origin: null`), and the
+// Sec-Fetch-Site fallback keep today's behaviour.
+
+// Dedicated instance with a REAL allowedOrigin (the shared `server` above
+// deliberately runs allowedOrigin: "null", under which a literal
+// `Origin: null` header MATCHES — so the present-but-wrong assertion below
+// needs a non-null origin to mean anything) and a real db (handleMcp 503s
+// without one). Same shape as withMatterServer above.
+async function withMcpOriginServer(fn) {
+  const port = asPortSeq++;
+  const origin = `http://127.0.0.1:${port}`;
+  const dbDir = mkdtempSync(join(tmpdir(), "helm-mcp-origin-test-"));
+  const db = openJournal(join(dbDir, "journal.db"));
+  const serverMcp = createHelmServer({ port, allowedOrigin: origin, token, db });
+  const callMcp = (opts) =>
+    asRequest(port, { ...opts, headers: { Host: `127.0.0.1:${port}`, ...opts.headers } });
+  try {
+    await fn({ call: callMcp, origin });
+  } finally {
+    await new Promise((resolve) => serverMcp.close(resolve));
+    db.close();
+    rmSync(dbDir, { recursive: true, force: true });
+  }
+}
+
+test("HELM-MCP-ORIGIN-ABSENT-1: POST /mcp with NO Origin header and a valid bearer succeeds (the non-browser MCP client shape)", async () => {
+  await withMcpOriginServer(async ({ call }) => {
+    const res = await call({
+      method: "POST",
+      path: "/mcp",
+      headers: { Authorization: `Bearer ${token}` },
+      body: { jsonrpc: "2.0", id: 1, method: "tools/list" },
+    });
+    assert.equal(res.status, 200);
+    // The MCP handler really ran — the catalog tool list came back, not just
+    // some other 200-shaped ack.
+    assert.ok(JSON.parse(res.body).result.tools.some((t) => t.name === "catalog.search"));
+  });
+});
+
+test("HELM-MCP-ORIGIN-ABSENT-1: POST /mcp with NO Origin header and a BAD bearer is still 401 (the bearer stays the CSRF control)", async () => {
+  await withMcpOriginServer(async ({ call }) => {
+    const res = await call({
+      method: "POST",
+      path: "/mcp",
+      headers: { Authorization: "Bearer not-the-token" },
+      body: { jsonrpc: "2.0", id: 1, method: "tools/list" },
+    });
+    assert.equal(res.status, 401);
+    assert.equal(JSON.parse(res.body).error, "unauthorized");
+  });
+});
+
+test("HELM-MCP-ORIGIN-ABSENT-1: POST /mcp with a literal Origin: null and a valid bearer stays 403 (present-but-wrong; the relaxation keys on === undefined, never falsy)", async () => {
+  await withMcpOriginServer(async ({ call }) => {
+    const res = await call({
+      method: "POST",
+      path: "/mcp",
+      headers: { Origin: "null", Authorization: `Bearer ${token}` },
+      body: { jsonrpc: "2.0", id: 1, method: "tools/list" },
+    });
+    assert.equal(res.status, 403);
+    assert.equal(JSON.parse(res.body).error, "origin_mismatch");
+  });
+});
+
+test("HELM-MCP-ORIGIN-ABSENT-1: POST /mcp with a wrong Origin and a valid bearer stays 403 (no relaxation for spoofed browsers)", async () => {
+  await withMcpOriginServer(async ({ call }) => {
+    const res = await call({
+      method: "POST",
+      path: "/mcp",
+      headers: { Origin: "https://evil.example", Authorization: `Bearer ${token}` },
+      body: { jsonrpc: "2.0", id: 1, method: "tools/list" },
+    });
+    assert.equal(res.status, 403);
+    assert.equal(JSON.parse(res.body).error, "origin_mismatch");
+  });
+});
+
+test("HELM-MCP-ORIGIN-ABSENT-1: GET /events with NO Origin header stays 403 (the relaxation never leaves POST /mcp)", async () => {
+  const res = await get("/events", { Host: `127.0.0.1:${PORT}`, Authorization: `Bearer ${token}` });
+  assert.equal(res.status, 403);
+  assert.equal(JSON.parse(res.body).error, "origin_mismatch");
+});
+
+test("HELM-MCP-ORIGIN-ABSENT-1: POST /run with NO Origin header stays 403 (the relaxation never leaves POST /mcp)", async () => {
+  const res = await post("/run", { workflow_id: "w1" }, { Host: `127.0.0.1:${PORT}`, Authorization: `Bearer ${token}` });
+  assert.equal(res.status, 403);
+  assert.equal(JSON.parse(res.body).error, "origin_mismatch");
+});
+
+test("HELM-MCP-ORIGIN-ABSENT-1: OPTIONS /mcp is unchanged — preflight from the allowed origin still 204s, preflight with NO Origin still 403s", async () => {
+  const opts = (headers) =>
+    new Promise((resolve, reject) => {
+      const req = request(
+        { host: "127.0.0.1", port: PORT, path: "/mcp", method: "OPTIONS", headers },
+        (r) => {
+          let body = "";
+          r.on("data", (c) => (body += c));
+          r.on("end", () => resolve({ status: r.statusCode, body }));
+        }
+      );
+      req.on("error", reject);
+      req.end();
+    });
+  const allowed = await opts({ Host: `127.0.0.1:${PORT}`, Origin: ORIGIN });
+  assert.equal(allowed.status, 204);
+  const absent = await opts({ Host: `127.0.0.1:${PORT}` });
+  assert.equal(absent.status, 403);
+  assert.equal(JSON.parse(absent.body).error, "origin_mismatch");
+});
