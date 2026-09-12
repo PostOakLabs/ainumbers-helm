@@ -22,8 +22,8 @@ jobs:
     permissions:
       contents: read
     steps:
-      - uses: actions/checkout@9c091bb21b7c1c1d1991bb908d89e4e9dddfe3e0 # v7.0.0
-      - uses: actions/setup-node@249970729cb0ef3589644e2896645e5dc5ba9c38 # v6.5.0
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+      - uses: actions/setup-node@820762786026740c76f36085b0efc47a31fe5020 # v7.0.0
         with:
           node-version: "22"
       - name: lint
@@ -71,8 +71,8 @@ jobs:
     permissions:
       contents: read
     steps:
-      - uses: actions/checkout@9c091bb21b7c1c1d1991bb908d89e4e9dddfe3e0 # v7.0.0
-      - uses: actions/setup-node@249970729cb0ef3589644e2896645e5dc5ba9c38 # v6.5.0
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+      - uses: actions/setup-node@820762786026740c76f36085b0efc47a31fe5020 # v7.0.0
         with:
           node-version: "22"
       # Stamp package.json's version to the EXACT tag string (including any
@@ -90,7 +90,7 @@ jobs:
           "
       - name: build SEA binary (${{ matrix.tag }})
         run: node scripts/build-sea.mjs
-      - uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4.6.2
+      - uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a # v7.0.1
         with:
           name: helmd-${{ matrix.tag }}
           path: dist/${{ matrix.tag }}/*
@@ -107,11 +107,11 @@ jobs:
     outputs:
       is_ga: ${{ steps.tag-kind.outputs.is_ga }}
     steps:
-      - uses: actions/checkout@9c091bb21b7c1c1d1991bb908d89e4e9dddfe3e0 # v7.0.0
-      - uses: actions/setup-node@249970729cb0ef3589644e2896645e5dc5ba9c38 # v6.5.0
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+      - uses: actions/setup-node@820762786026740c76f36085b0efc47a31fe5020 # v7.0.0
         with:
           node-version: "22"
-      - uses: actions/download-artifact@018cc2cf5baa6db3ef3c5f8a56943fffe632ef53 # v6.0.0
+      - uses: actions/download-artifact@3e5f45b2cfb9172054b4087a40e8e0b5a5461e7c # v8.0.1
         with:
           path: dist
           pattern: helmd-*
@@ -206,7 +206,7 @@ jobs:
       # RESEARCH-2026-07-23 §5). Verify with:
       #   gh attestation verify dist/upload/helmd-linux-x64 --repo PostOakLabs/ainumbers-helm
       - name: attest build provenance
-        uses: actions/attest-build-provenance@0f67c3f4856b2e3261c31976d6725780e5e4c373 # v4.1.1
+        uses: actions/attest-build-provenance@4d101475d8b20a2381f78447822ac1eab6504dd8 # v4.2.2
         with:
           subject-path: "dist/upload/helmd-*\ndist/upload/helm-cli-*.tgz"
 
@@ -232,7 +232,7 @@ jobs:
       # gen-packaging-manifests.mjs above. publish-npm downloads it rather
       # than regenerating, so what's published is byte-identical to what the
       # release manifest attested to.
-      - uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4.6.2
+      - uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a # v7.0.1
         with:
           name: npm-package
           path: dist/packaging/npm
@@ -249,7 +249,7 @@ jobs:
     permissions:
       contents: read
     steps:
-      - uses: actions/checkout@9c091bb21b7c1c1d1991bb908d89e4e9dddfe3e0 # v7.0.0
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
 
       # HELM-P4-C3: CycloneDX SBOM per release, published as a release asset
       # (docs/TRUST.md §5). anchore/sbom-action (syft-based) scans the
@@ -258,13 +258,13 @@ jobs:
       # secrets touched. Pinned by commit SHA (v0.24.0): a tag can be
       # repointed by its author, a commit hash cannot.
       - name: generate CycloneDX SBOM
-        uses: anchore/sbom-action@e22c389904149dbc22b58101806040fa8d37a610 # v0.24.0
+        uses: anchore/sbom-action@3ad7283483fc7af8ff2b4ea19663c2d5ca935e26 # v0.24.2
         with:
           path: .
           format: cyclonedx-json
           output-file: sbom.cyclonedx.json
 
-      - uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4.6.2
+      - uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a # v7.0.1
         with:
           name: sbom
           path: sbom.cyclonedx.json
@@ -279,7 +279,7 @@ jobs:
     permissions:
       contents: write
     steps:
-      - uses: actions/download-artifact@018cc2cf5baa6db3ef3c5f8a56943fffe632ef53 # v6.0.0
+      - uses: actions/download-artifact@3e5f45b2cfb9172054b4087a40e8e0b5a5461e7c # v8.0.1
         with:
           name: sbom
           path: sbom-dl
@@ -307,11 +307,11 @@ jobs:
       id-token: write
       contents: read
     steps:
-      - uses: actions/download-artifact@018cc2cf5baa6db3ef3c5f8a56943fffe632ef53 # v6.0.0
+      - uses: actions/download-artifact@3e5f45b2cfb9172054b4087a40e8e0b5a5461e7c # v8.0.1
         with:
           name: npm-package
           path: npm-package
-      - uses: actions/setup-node@249970729cb0ef3589644e2896645e5dc5ba9c38 # v6.5.0
+      - uses: actions/setup-node@820762786026740c76f36085b0efc47a31fe5020 # v7.0.0
         with:
           node-version: "22"
           registry-url: "https://registry.npmjs.org"
@@ -362,13 +362,13 @@ jobs:
           repositories: ainumbers
           permission-contents: write
 
-      - uses: actions/checkout@9c091bb21b7c1c1d1991bb908d89e4e9dddfe3e0 # v7.0.0
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
         with:
           path: helm
       # `persist-credentials: false` keeps the App token out of the checkout's
       # stored git credential (zizmor `artipacked`); it is supplied explicitly
       # at push time instead, via env, in the last step.
-      - uses: actions/checkout@9c091bb21b7c1c1d1991bb908d89e4e9dddfe3e0 # v7.0.0
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
         with:
           repository: PostOakLabs/ainumbers
           token: ${{ steps.app-token.outputs.token }}
