@@ -4,6 +4,8 @@
 // Re-verifies EVERY vendored tree's integrity + provenance:
 //   - hub/vendored/ocg           (config-driven, single upstream: scripts/vendor.config.json)
 //   - hub/vendored/anchor-suite  (config-driven, single upstream: scripts/vendor-anchor.config.json)
+//   - hub/vendored/ssh-sig       (config-driven, single upstream: scripts/vendor-ssh-sig.config.json)
+//   - hub/vendored/sigstore      (npm-registry pinned: hub/vendored/sigstore/MANIFEST.json)
 //   - ui/vendored                (heterogeneous, hand-ported: ui/vendored/MANIFEST.json)
 // For each: local bytes must match the manifest's recorded hashes, and the
 // manifest must carry non-empty `license` + `pinnedSha` for every tree/entry
@@ -13,7 +15,11 @@
 // get a live upstream re-fetch + byte comparison in the CLI path (HELM-SEC-3 /
 // THREAT-MODEL §5 F3) — that part needs network, so it is kept OUT of the pure
 // functions below (import.meta-guarded CLI only) so verify-vendored.test.mjs
-// can exercise the local-only checks offline under `npm test`.
+// can exercise the local-only checks offline under `npm test`. The sigstore
+// tree gets the same treatment in the CLI path (see
+// collectSigstoreRegistryIssues): its MANIFEST.json is regenerable by any PR,
+// so a manifest-only check can never catch tamper+regenerate — the anti-tamper
+// anchor for that tree is the npm registry tarball each entry pins.
 // Zero npm deps — git + node builtins only (STANDING ORDERS #10: never npm).
 import { execFileSync } from "node:child_process";
 import { mkdtempSync, rmSync, readFileSync, readdirSync, statSync, existsSync } from "node:fs";
@@ -21,6 +27,7 @@ import { join, dirname } from "node:path";
 import { tmpdir } from "node:os";
 import { fileURLToPath, pathToFileURL } from "node:url";
 import { createHash } from "node:crypto";
+import { gunzipSync } from "node:zlib";
 
 const HERE = dirname(fileURLToPath(import.meta.url));
 const ROOT = join(HERE, "..");
@@ -179,6 +186,182 @@ export function collectHeterogeneousIssues(destRoot, manifestPath, label) {
 }
 
 // ---------------------------------------------------------------------------
+// hub/vendored/sigstore: npm-registry re-fetch + byte comparison.
+//
+// The sigstore tree's MANIFEST.json is regenerable by any PR, so the
+// local bytes-vs-manifest check alone cannot detect the tamper+regenerate
+// attack: an attacker who edits vendored verifier code and recomputes the
+// manifest hashes ships a green local check. The anti-tamper anchor must
+// therefore be a source the manifest cannot influence — every npm entry in
+// the manifest records the registry tarball URL and its shasum, so this
+// re-fetches the tarball from the registry, verifies the shasum, unpacks
+// it, and compares every manifest-listed file against BOTH the unpacked
+// registry bytes and the on-disk vendored bytes. The one disclosed gap:
+// manifest files the tarball does not contain (LICENSE-class files that
+// live only in the upstream git repo) cannot be registry-compared — those
+// are reported as skipped, and a dist/ file going missing from a tarball
+// is still a hard failure. Manifest entries without an npmTarball (the
+// pinned trusted root) are pinned by the TUF walk documented in
+// trusted-root/PIN.md and are skipped here.
+//
+// fetchTarball is injectable so the offline test suite can exercise the
+// whole path without network; the CLI passes no option and hits the real
+// registry. Like the config-driven trees' live re-fetch, this runs only in
+// the CLI path, never under `npm test`.
+// ---------------------------------------------------------------------------
+const NPM_REGISTRY_HOSTS = new Set(["registry.npmjs.org"]);
+
+// Minimal tar reader (ustar + GNU longname 'L' + pax 'x' path records) —
+// enough for npm package tarballs, which is all it is ever fed. Returns
+// Map<entryPath, Buffer> for regular files only.
+function parseTar(buf) {
+  const files = new Map();
+  const field = (header, off, len) => {
+    const s = header.subarray(off, off + len).toString("utf8");
+    const nul = s.indexOf("\0");
+    return (nul === -1 ? s : s.slice(0, nul)).trim();
+  };
+  let off = 0;
+  let pendingLongName = null; // from GNU ././@LongLink ('L') entries
+  let pendingPaxPath = null; // from pax extended headers ('x')
+  while (off + 512 <= buf.length) {
+    const header = buf.subarray(off, off + 512);
+    if (header.every((b) => b === 0)) break;
+    const name = field(header, 0, 100);
+    const size = parseInt(field(header, 124, 12).replace(/\s/g, ""), 8) || 0;
+    const typeflag = String.fromCharCode(header[156] ?? 48);
+    const prefix = field(header, 345, 155);
+    const ustar = field(header, 257, 6).startsWith("ustar");
+    off += 512;
+    const data = buf.subarray(off, off + size);
+    off += Math.ceil(size / 512) * 512;
+    if (typeflag === "L") {
+      pendingLongName = data.toString("utf8").replace(/\0+$/, "");
+      continue;
+    }
+    if (typeflag === "x") {
+      const m = /(?:^|\n)\d+ path=([^\n]*)\n/.exec(data.toString("utf8"));
+      pendingPaxPath = m ? m[1] : null;
+      continue;
+    }
+    if (typeflag === "0" || typeflag === "\0") {
+      let path = pendingPaxPath ?? pendingLongName ?? (ustar && prefix ? `${prefix}/${name}` : name);
+      path = path.replace(/^\.\//, "");
+      files.set(path, data);
+    }
+    pendingLongName = null;
+    pendingPaxPath = null;
+  }
+  return files;
+}
+
+function readTarball(bytes) {
+  return parseTar(gunzipSync(bytes));
+}
+
+export async function collectSigstoreRegistryIssues(destRoot, manifestPath, { fetchTarball } = {}) {
+  const issues = [];
+  if (!existsSync(manifestPath)) {
+    issues.push("hub/vendored/sigstore: no MANIFEST.json — every vendored tree must carry one (HELM-VENDOR-LICENSE-1).");
+    return issues;
+  }
+  const manifest = JSON.parse(readFileSync(manifestPath, "utf8"));
+  const doFetch =
+    fetchTarball ??
+    (async (url) => {
+      const res = await fetch(url);
+      if (!res.ok) throw new Error(`HTTP ${res.status}`);
+      return Buffer.from(await res.arrayBuffer());
+    });
+
+  for (const entry of manifest.entries ?? []) {
+    if (!entry.npmTarball) continue; // pinned by other means (trusted root: PIN.md TUF walk)
+    const label = `hub/vendored/sigstore: ${entry.packageName}@${entry.pinnedSha}`;
+
+    // The manifest is the very artifact under test, so its tarball URL can
+    // never be trusted as a fetch target: only the pinned public registry.
+    let url;
+    try {
+      url = new URL(entry.npmTarball);
+    } catch {
+      issues.push(`${label}: npmTarball is not a valid URL: ${entry.npmTarball}`);
+      continue;
+    }
+    if (url.protocol !== "https:" || !NPM_REGISTRY_HOSTS.has(url.host)) {
+      issues.push(`${label}: npmTarball must point at ${[...NPM_REGISTRY_HOSTS].join("/")} over https (got ${entry.npmTarball}) — refusing to compare against an arbitrary host`);
+      continue;
+    }
+
+    let tarballBytes;
+    try {
+      tarballBytes = await doFetch(entry.npmTarball);
+    } catch (e) {
+      issues.push(`${label}: could not fetch ${entry.npmTarball}: ${e.message}`);
+      continue;
+    }
+
+    // npm shasums are sha1 over the tarball bytes. A mismatch here means the
+    // manifest's pin and the registry disagree about what this package IS.
+    if (entry.npmTarballShasum) {
+      const registryShasum = createHash("sha1").update(tarballBytes).digest("hex");
+      if (registryShasum !== entry.npmTarballShasum) {
+        issues.push(`${label}: registry tarball shasum mismatch (manifest ${entry.npmTarballShasum} != registry ${registryShasum}) — MANIFEST pin does not describe the registry package`);
+      }
+    }
+
+    let tarFiles;
+    try {
+      tarFiles = readTarball(tarballBytes);
+    } catch (e) {
+      issues.push(`${label}: registry tarball could not be unpacked: ${e.message}`);
+      continue;
+    }
+
+    const vendoredPrefix = `node_modules/${entry.packageName}/`;
+    for (const f of entry.files ?? []) {
+      if (!f.path.startsWith(vendoredPrefix)) {
+        issues.push(`${label}: manifest file outside the package's node_modules prefix is not registry-checkable: ${f.path}`);
+        continue;
+      }
+      const tarPath = `package/${f.path.slice(vendoredPrefix.length)}`;
+      const registryBytes = tarFiles.get(tarPath);
+      if (registryBytes === undefined) {
+        // Some manifest files legitimately do not ship in the npm tarball
+        // (sigstore-js keeps LICENSE at its repo root, so the tarball carries
+        // only package.json + README.md + dist/). Those bytes came from the
+        // source repo at the entry's pinnedSha, and their anchor remains the
+        // manifest self-check above — say so, loudly, instead of pretending a
+        // comparison happened. Code that ships in dist/ has no such excuse:
+        // a dist/ file missing from the tarball means the manifest and the
+        // registry disagree about the package's shape, which is exactly the
+        // drift this gate exists to catch.
+        if (/(^|\/)dist\//.test(f.path)) {
+          issues.push(`${label}: file listed in MANIFEST is absent from the registry tarball: ${f.path} (looked for ${tarPath})`);
+        } else {
+          console.error(`${label}: registry compare skipped, file does not ship in the npm tarball (pinned by manifest + sourceRepo @ ${entry.pinnedSha} only): ${f.path}`);
+        }
+        continue;
+      }
+      const registryHash = createHash("sha256").update(registryBytes).digest("hex");
+      if (registryHash !== f.sha256) {
+        issues.push(`${label}: MANIFEST sha256 does not match registry tarball bytes: ${f.path} (manifest ${f.sha256} != registry ${registryHash})`);
+      }
+      let diskHash;
+      try {
+        diskHash = sha256(join(destRoot, f.path));
+      } catch {
+        issues.push(`${label}: registry file not vendored: ${f.path}`);
+        continue;
+      }
+      if (diskHash !== registryHash) {
+        issues.push(`${label}: vendored bytes DRIFT from registry tarball: ${f.path}`);
+      }
+    }
+  }
+  return issues;
+}
+
+// ---------------------------------------------------------------------------
 // Completeness: every known vendored root must be covered by one of the
 // checks above — a NEW vendored tree added without a manifest must fail loud,
 // not silently skip verification.
@@ -293,11 +476,15 @@ async function runCLI() {
   // strips the shared "public/" prefix and keeps the rest, so relative imports
   // between vendored files still resolve) — mirror each exactly, or a correct
   // upstream byte-for-byte match would misreport as "not vendored".
+  // hub/vendored/sigstore takes its upstream comparison from the npm registry
+  // tarballs its MANIFEST pins (collectSigstoreRegistryIssues) instead of a
+  // git fetch — the registry is that tree's source of truth.
   const upstreamIssues = (
     await Promise.all([
       collectUpstreamDriftIssues(join(ROOT, ocgConfig.destination), ocgConfig, (relPath) => relPath.split("/").pop()),
       collectUpstreamDriftIssues(join(ROOT, anchorConfig.destination), anchorConfig, (relPath) => relPath.replace(/^public\//, "")),
       collectUpstreamDriftIssues(join(ROOT, sshSigConfig.destination), sshSigConfig, (relPath) => (relPath === "LICENSE" ? "LICENSE" : `reference/${relPath}`)),
+      collectSigstoreRegistryIssues(join(ROOT, "hub/vendored/sigstore"), join(ROOT, "hub/vendored/sigstore/MANIFEST.json")),
     ])
   ).flat();
 

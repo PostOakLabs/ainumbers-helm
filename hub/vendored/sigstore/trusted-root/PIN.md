@@ -34,9 +34,15 @@ once instead of automated per-verify:
    (content-addressed target path per TUF consistent-snapshot convention)
 5. Independently recomputed `sha256(downloaded bytes)` and confirmed it
    equals the hash `targets.json` declared in step 3 **before** trusting the
-   file — this is the load-bearing check: it proves the bytes below are the
-   ones the TUF root-of-trust signed for, not merely "some file that happened
-   to be served at that URL."
+   file. This is a self-consistency check: it ties the file below to the
+   target the TUF metadata *references*, ruling out "some file that happened
+   to be served at that URL." It does **not** by itself prove the metadata is
+   what the TUF root-of-trust signed — this walk does not verify the TUF
+   root/timestamp/snapshot/targets signatures themselves (see the paragraph
+   below), so the authenticity anchor for this pin is the TLS transport to
+   `tuf-repo-cdn.sigstore.dev` plus the recorded version chain above. A
+   skeptical reviewer closes that gap by redoing this walk (or running a
+   real TUF client) and comparing the pinned digest.
 
 This repo does not re-verify the TUF root/timestamp/snapshot/targets
 signatures themselves (that would require vendoring a TUF signature verifier
