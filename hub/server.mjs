@@ -110,7 +110,19 @@ function isSameOriginFallback(req) {
   return req.headers.origin === undefined && req.headers["sec-fetch-site"] === "same-origin";
 }
 
-function checkOrigin(req, allowedOrigin) {
+// HELM-MCP-ORIGIN-ABSENT-1: on POST /mcp ONLY, a request with the Origin
+// header genuinely ABSENT is waved through to the bearer check. Non-browser
+// MCP clients (OpenClaw, mcp-remote, the SDKs) send no Origin at all, and
+// the Origin gate was refusing them before the bearer check could even run.
+// The bearer is the CSRF control on this route: a browser page cannot attach
+// a custom Authorization header cross-origin without a CORS preflight that
+// applyCors answers only for allowedOrigin, so the check added nothing here
+// except refusing legitimate non-browser clients. The relaxation keys on
+// `origin === undefined`, never falsy — a literal `Origin: null` (sandboxed
+// iframe, some redirects) is present-but-wrong and stays refused. Every
+// other route, and every present Origin on /mcp itself, is unchanged.
+function checkOrigin(req, allowedOrigin, { allowAbsentOriginOnMcpPost = false } = {}) {
+  if (allowAbsentOriginOnMcpPost && req.headers.origin === undefined) return true;
   return req.headers.origin === allowedOrigin || isSameOriginFallback(req);
 }
 
@@ -1441,7 +1453,11 @@ export function createHelmServer({
       return handleInboundWebhook(req, res, db, webhookContract, webhookContractDigest);
     }
 
-    if (!checkOrigin(req, allowedOrigin)) {
+    // HELM-MCP-ORIGIN-ABSENT-1: only an ABSENT Origin on POST /mcp skips the
+    // Origin check and falls through to the bearer check below; applyCors,
+    // the OPTIONS preflight, and the Sec-Fetch-Site fallback are untouched.
+    const absentOriginOnMcpPost = req.method === "POST" && pathname === "/mcp";
+    if (!checkOrigin(req, allowedOrigin, { allowAbsentOriginOnMcpPost: absentOriginOnMcpPost })) {
       log.warn("rejected: origin mismatch", { origin: req.headers.origin, path: pathname });
       return deny(res, 403, "origin_mismatch");
     }
