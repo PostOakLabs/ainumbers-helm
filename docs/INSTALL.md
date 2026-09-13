@@ -86,6 +86,15 @@ Two notes before you rely on this path:
   have (the bridge is `npx`-fetched); the reasoning is recorded in
   `packaging/mcpb/PINS.md`.
 
+## MCP Registry
+
+`helmd` is listed in the MCP registries as `io.github.PostOakLabs/helm`
+(a local `packages[]` entry only: the daemon is loopback-only, so the
+entry claims no remote endpoints):
+
+- Official MCP Registry: <https://registry.modelcontextprotocol.io/v0.1/servers?search=io.github.PostOakLabs>
+- GitHub MCP Registry: <https://github.com/mcp/io.github.PostOakLabs/helm>
+
 ## Running from a repo clone (developers)
 
 The [`ainumbers-helm`](https://github.com/PostOakLabs/ainumbers-helm) repo
