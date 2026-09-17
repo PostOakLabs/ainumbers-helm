@@ -47,27 +47,26 @@ jobs:
         run: node scripts/test.mjs
       - name: validate control-plane schemas
         run: node scripts/validate-schemas.mjs
-      # HELM-REGISTRY-LIST-1: server.json (the MCP Registry listing) is
-      # validated by TWO independent gates — they catch different defect
-      # classes, and the second exists because of a measured hole in the
-      # first (Tim's 2026-09-17 review of PR #270).
+      # server.json (the MCP Registry listing) is validated by TWO
+      # independent gates — they catch different defect classes, and the
+      # second exists because of a measured hole in the first.
       #
       # Gate 1: `mcp-publisher validate` — the registry project's own
-      # validation tool. NOT vendored, NOT a GitHub Action (SO #8 — a
-      # downloaded binary needs no new-action review): downloaded from the
+      # validation tool. Deliberately NOT a GitHub Action: a pinned binary
+      # download needs no new-action review. It is downloaded from the
       # release the upstream project publishes and verified against that
       # release's own checksums file (registry_1.7.9_checksums.txt,
       # sigstore-attested upstream) before it may run. v1.7.9 is the exact
-      # version the row's validation quote used and the worker repo ships
-      # Tim-side; v1.8.1 measured identically on 2026-09-17.
+      # version used to validate this file at review time; the next
+      # upstream release (v1.8.1) measured identically.
       #
-      # Measured hole (2026-09-17): mcp-publisher 1.7.9 AND 1.8.1 both
-      # report a packages[] entry with registryType "github" as VALID —
-      # no published server.schema.json versions registryType as a hard
-      # enum (description/examples only), yet registry consumers resolve
-      # only npm | pypi | oci | nuget | mcpb. That hole is how #270's
-      # invalid "github" entry survived a green validate. Gate 2 exists
-      # for exactly that class.
+      # Measured hole: mcp-publisher 1.7.9 AND 1.8.1 both report a
+      # packages[] entry with registryType "github" as VALID — no published
+      # server.schema.json versions registryType as a hard enum
+      # (description/examples only), yet registry consumers resolve only
+      # npm | pypi | oci | nuget | mcpb. That hole is how an invalid
+      # "github" entry survived a green validate. Gate 2 exists for exactly
+      # that class.
       - name: MCP Registry server.json — mcp-publisher validate (pinned binary)
         run: |
           curl -sS -L --fail -o /tmp/mcp-publisher.tar.gz \
