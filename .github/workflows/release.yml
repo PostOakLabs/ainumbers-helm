@@ -8,10 +8,29 @@ name: Release
 # HELM-CALVER-1: version IS the ship date — YYYY.M.D, no zero-padding, no
 # `v` prefix (Tim, 2026-07-25: "the tagging system is dumb ... it's
 # arbitrary"). Tag with: git tag 2026.7.25 && git push --tags.
+#
+# HELM-REGISTRY-LIST-1: a workflow_dispatch surface exists ONLY for the
+# .mcpb bundle job (dry-run validation of the new step on a branch, and
+# backfilling the bundle onto a release that predates it). It is
+# side-effect-free by default (dry_run: true). A real release still comes
+# ONLY from an explicit CalVer tag push — on tag pushes the inputs context
+# is empty and every job behaves exactly as before this trigger existed.
 on:
   push:
     tags:
       - "20[0-9][0-9].*"
+  workflow_dispatch:
+    inputs:
+      tag:
+        description: "Existing release tag to (re)build the .mcpb for (e.g. 2026.9.13); empty = the dispatching ref"
+        type: string
+        required: false
+        default: ""
+      dry_run:
+        description: "Build + print the bundle sha256 only; skip the release upload"
+        type: boolean
+        required: false
+        default: true
 
 permissions:
   contents: read
@@ -54,6 +73,13 @@ jobs:
 
   build:
     needs: test
+    # Dispatch runs are the .mcpb dry-run/backfill surface (see `on:`) —
+    # they exercise the test job + the mcpb job only. Gating the SEA build
+    # HERE cascades the skip everywhere else: sign-and-release and sbom skip
+    # via needs, attach-sbom-asset via needs, and publish-npm /
+    # publish-version-feed via the empty is_ga output — so a dispatch can
+    # never reach release creation, npm publish, or the site-repo feed push.
+    if: github.event_name == 'push'
     strategy:
       matrix:
         include:
@@ -287,6 +313,90 @@ jobs:
         env:
           GH_TOKEN: ${{ github.token }}
         run: gh release upload "$GITHUB_REF_NAME" sbom-dl/sbom.cyclonedx.json --repo "$GITHUB_REPOSITORY"
+
+  # HELM-REGISTRY-LIST-1: the Official MCP Registry listing (server.json at
+  # the repo root) points its packages[] entry at
+  # .../releases/download/<version>/helm-<version>.mcpb, so a release is not
+  # complete until that bundle is attached to it. The bundle is the
+  # deterministic store-only zip scripts/build-mcpb.mjs produces
+  # (HELM-MCPB-1: same tree in, same bytes out, byte-identity test-covered),
+  # built here from the TAG's tree so the published asset is byte-identical
+  # to what server.json's fileSha256 pins.
+  #
+  # Own job, not a step in sign-and-release — the same isolation shape as
+  # the SBOM job above: no signing key, no OIDC, no npm; only the
+  # already-pinned first-party actions + `run:` + the preinstalled gh CLI.
+  #
+  # Modes:
+  #   tag push            — build from the pushed tag, upload to the new
+  #                         release (after sign-and-release created it).
+  #   dispatch, dry_run=true (default) — build from the `tag` input's tree,
+  #                         print the sha256, upload NOTHING. The pre-merge
+  #                         exercise surface for this step (SO #40): the
+  #                         printed digest must equal server.json's pinned
+  #                         fileSha256.
+  #   dispatch, dry_run=false + tag — BACKFILL: attach the bundle to an
+  #                         existing release that predates this job
+  #                         (--clobber makes re-runs idempotent).
+  mcpb:
+    needs: [sign-and-release]
+    # On a dispatch, sign-and-release is skipped — skipped != failure, so
+    # !failure() (not success()) is what lets this job run there.
+    if: ${{ !failure() && !cancelled() && (github.event_name == 'push' || inputs.tag != '') }}
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          # Backfill dispatch checks out the NAMED tag's tree; a tag push
+          # checks out the pushed tag itself (inputs.tag is null there, and
+          # null != '' is false under GitHub expression coercion, so the
+          # expression falls through to the triggering ref).
+          ref: ${{ inputs.tag != '' && inputs.tag || github.ref }}
+          persist-credentials: false
+      - uses: actions/setup-node@820762786026740c76f36085b0efc47a31fe5020 # v7.0.0
+        with:
+          node-version: "22"
+      - name: derive bundle version
+        env:
+          MCPB_TAG: ${{ inputs.tag }}
+        run: |
+          if [ -n "$MCPB_TAG" ]; then
+            echo "HELM_MCPB_VERSION=$MCPB_TAG" >> "$GITHUB_ENV"
+          else
+            echo "HELM_MCPB_VERSION=${GITHUB_REF_NAME}" >> "$GITHUB_ENV"
+          fi
+      # Same stamp the build/sign jobs do: the bundle's manifest version is
+      # injected from package.json by build-mcpb.mjs — one source of truth,
+      # never retyped.
+      - name: stamp package.json version
+        run: |
+          node -e "
+            const fs = require('node:fs');
+            const pkg = JSON.parse(fs.readFileSync('package.json', 'utf8'));
+            pkg.version = process.env.HELM_MCPB_VERSION;
+            fs.writeFileSync('package.json', JSON.stringify(pkg, null, 2) + '\n');
+          "
+      - name: build .mcpb bundle (deterministic, store-only)
+        run: node scripts/build-mcpb.mjs
+      # The digest server.json's packages[mcpb].fileSha256 must pin —
+      # restated loudly so a dry-run log doubles as the verification
+      # surface for that pin.
+      - name: report bundle digest
+        run: |
+          sha256sum "dist/helm-${HELM_MCPB_VERSION}.mcpb"
+          echo "server.json packages[mcpb].fileSha256 for ${HELM_MCPB_VERSION} must be the sha256 above"
+      - name: upload bundle to the release
+        # dry_run defaults true, so a manual dispatch uploads nothing by
+        # default; on a tag push the inputs context is empty and this runs.
+        if: ${{ inputs.dry_run != true }}
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          gh release upload "$HELM_MCPB_VERSION" \
+            "dist/helm-${HELM_MCPB_VERSION}.mcpb" \
+            --repo "$GITHUB_REPOSITORY" --clobber
 
   # HELM-REL-NPM-DEFER: ainumbers-helm is unregistered on npm and npm only
   # lets you attach a trusted publisher from an EXISTING package's settings
