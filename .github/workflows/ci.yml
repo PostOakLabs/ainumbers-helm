@@ -47,6 +47,43 @@ jobs:
         run: node scripts/test.mjs
       - name: validate control-plane schemas
         run: node scripts/validate-schemas.mjs
+      # HELM-REGISTRY-LIST-1: server.json (the MCP Registry listing) is
+      # validated by TWO independent gates — they catch different defect
+      # classes, and the second exists because of a measured hole in the
+      # first (Tim's 2026-09-17 review of PR #270).
+      #
+      # Gate 1: `mcp-publisher validate` — the registry project's own
+      # validation tool. NOT vendored, NOT a GitHub Action (SO #8 — a
+      # downloaded binary needs no new-action review): downloaded from the
+      # release the upstream project publishes and verified against that
+      # release's own checksums file (registry_1.7.9_checksums.txt,
+      # sigstore-attested upstream) before it may run. v1.7.9 is the exact
+      # version the row's validation quote used and the worker repo ships
+      # Tim-side; v1.8.1 measured identically on 2026-09-17.
+      #
+      # Measured hole (2026-09-17): mcp-publisher 1.7.9 AND 1.8.1 both
+      # report a packages[] entry with registryType "github" as VALID —
+      # no published server.schema.json versions registryType as a hard
+      # enum (description/examples only), yet registry consumers resolve
+      # only npm | pypi | oci | nuget | mcpb. That hole is how #270's
+      # invalid "github" entry survived a green validate. Gate 2 exists
+      # for exactly that class.
+      - name: MCP Registry server.json — mcp-publisher validate (pinned binary)
+        run: |
+          curl -sS -L --fail -o /tmp/mcp-publisher.tar.gz \
+            "https://github.com/modelcontextprotocol/registry/releases/download/v1.7.9/mcp-publisher_linux_amd64.tar.gz"
+          echo "ab128162b0616090b47cf245afe0a23f3ef08936fdce19074f5ba0a4469281ac  /tmp/mcp-publisher.tar.gz" | sha256sum -c -
+          mkdir -p /tmp/mcp-publisher-bin
+          tar -xzf /tmp/mcp-publisher.tar.gz -C /tmp/mcp-publisher-bin
+          /tmp/mcp-publisher-bin/mcp-publisher validate server.json
+      # Gate 2: registry-consumer policy — the constraints the official
+      # schema leaves open, made mechanical: registryType in the
+      # registry-documented set, mcpb identifier == the release asset the
+      # release workflow's mcpb job attaches, versions consistent, and the
+      # row's ⛔ no-remote-endpoints fence (loopback transport, remotes
+      # [], loopback stated in the description).
+      - name: MCP Registry server.json — registry-consumer policy gate
+        run: node scripts/check-server-json.mjs
       - name: verify vendored OCG integrity
         run: node scripts/verify-vendored.mjs
       - name: credits registry coverage (vendored-code license gate)

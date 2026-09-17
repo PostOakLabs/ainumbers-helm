@@ -32,6 +32,13 @@ node scripts/test.mjs
 echo "pre-push: validate control-plane schemas ..."
 node scripts/validate-schemas.mjs
 
+# HELM-REGISTRY-LIST-1. CI's mcp-publisher validate step (the downloaded,
+# pinned registry binary) is CI-only by construction — this zero-dep policy
+# gate is the hook-side half of that pair (see ci.yml for the measured
+# validate-vs-policy split).
+echo "pre-push: MCP Registry server.json policy gate ..."
+node scripts/check-server-json.mjs
+
 echo "pre-push: verify vendored OCG integrity ..."
 node scripts/verify-vendored.mjs
 

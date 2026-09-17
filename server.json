@@ -3,7 +3,7 @@
   "name": "io.github.PostOakLabs/helm",
   "title": "Helm",
   "description": "Local-first control plane daemon (helmd). Loopback-only MCP (127.0.0.1); no remote endpoints.",
-  "version": "2026.9.11",
+  "version": "2026.9.13",
   "repository": {
     "url": "https://github.com/PostOakLabs/ainumbers-helm",
     "source": "github"
@@ -11,19 +11,9 @@
   "packages": [
     {
       "registryType": "mcpb",
-      "identifier": "https://github.com/PostOakLabs/ainumbers-helm/releases/download/2026.9.11/helm-2026.9.11.mcpb",
-      "version": "2026.9.11",
-      "fileSha256": "74d2f8a5d4ed8361002b917edc76f59298307a0db572f6b10fb8d7303af96f3a",
-      "transport": {
-        "type": "streamable-http",
-        "url": "http://127.0.0.1:4173/mcp"
-      }
-    },
-    {
-      "registryType": "github",
-      "identifier": "https://github.com/PostOakLabs/ainumbers-helm/releases/download/2026.9.11/helm-cli-2026.9.11.tgz",
-      "version": "2026.9.11",
-      "fileSha256": "9970ec828021e8b8a0200c14d534aff012773c640d18b3c3a44d9686ddbd4e38",
+      "identifier": "https://github.com/PostOakLabs/ainumbers-helm/releases/download/2026.9.13/helm-2026.9.13.mcpb",
+      "version": "2026.9.13",
+      "fileSha256": "9df8c1626a42640b3eb175c606489a3c209d0e0dfebe6a68eb477d3a95d93082",
       "transport": {
         "type": "streamable-http",
         "url": "http://127.0.0.1:4173/mcp"
