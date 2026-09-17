@@ -89,13 +89,19 @@ after(async () => {
   rmSync(TMP, { recursive: true, force: true });
 });
 
-async function waitForStatus(flowId, wantStatus, timeoutMs = 2000) {
+// Poll until the wanted status appears; the deadline is the FAILURE DETECTOR,
+// not a sleep — the loop returns as soon as the status flips. The ceiling is
+// generous because the blocking DPAPI vaultSet in oauth-pkce.mjs can cost
+// ~2.3-3.0s on some Windows hosts (powershell.exe first-call), which a tight
+// budget turns into a paradoxical machine-specific timeout of a flow whose
+// status is already "complete" (HELM-OAUTH-PKCE-WAIT-HEAL-1).
+async function waitForStatus(flowId, wantStatus, timeoutMs = 15_000) {
   const start = Date.now();
   while (Date.now() - start < timeoutMs) {
     const s = getFlowStatus(flowId);
     if (s.status === wantStatus) return s;
     if (s.status === "error" && wantStatus !== "error") throw new Error(`flow errored: ${s.error}`);
-    await new Promise((r) => setTimeout(r, 20));
+    await new Promise((r) => setTimeout(r, 150));
   }
   throw new Error(`timed out waiting for status "${wantStatus}", last: ${JSON.stringify(getFlowStatus(flowId))}`);
 }
