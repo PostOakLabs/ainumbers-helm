@@ -23,14 +23,14 @@
       {
         "node_id": "n3",
         "kernel_id": "art-216-trid-tolerance-cure",
-        "kernel_digest": "sha256:9be448c7f2f02ca2d2b223550734fe431b0dacf6d93db36ccae0cb6963e83cb3"
+        "kernel_digest": "sha256:a14561c3b546632ff5be0fb5ede6be4eb9476a72fab5dde8ed67075849b3c16f"
       }
     ],
     "connectors": [],
     "gates": [],
     "actions": []
   },
-  "workflow_manifest_digest": "sha256:a470a785f63e9ed00f353e5e232db58f0c4380833f6e87fb21d9a70d199d5a32",
+  "workflow_manifest_digest": "sha256:b5eb4cbb1a37e6afce5a22cbbee5b5ceb97f6b07ea693ca23722a8d6c330d4fb",
   "declared_inputs": [
     {
       "from": "art-332-build-amortization-schedule",

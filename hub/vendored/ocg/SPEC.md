@@ -5,12 +5,12 @@ status: NORMATIVE — Single Source of Truth
 canonical: repo/chaingraph/standard/SPEC.md
 machine_schema: openchain-graph-v0.4.schema.json
 version_of_record: chaingraph.json#spec_version
-last_reconciled: 2026-07-02
+last_reconciled: 2026-09-03
 renders_to: openchain-graph-spec.html (hand-kept, guarded by spec-version-consistency.mjs)
 mirrors_to: PostOakLabs/chaingraph (GitHub Pages, generated)
 ---
 
-# OpenChainGraph Standard — v0.8.1
+# OpenChainGraph Standard — v0.8.13
 
 > **This file is the normative source of truth.** `openchain-graph-spec.html` renders it for the
 > web; `CONTRACT.md` §A3 references it; `chaingraph.json` + kernels validate against
@@ -63,7 +63,7 @@ additive updates). No single one of these should be read as "the OpenChainGraph 
 
 | Identifier | Where it lives | Answers | Current | Bumps when |
 |---|---|---|---|---|
-| `spec_version` | `chaingraph.json` (the version of record) | which OCG **release** is this? | `0.8.0` | every release (additive or breaking) |
+| `spec_version` | `chaingraph.json` (the version of record) | which OCG **release** is this? | `0.8.13` | every release (additive or breaking) |
 | `chaingraph_version` | every **artifact** envelope | which **schema** do I parse/validate this with? | `0.4.0` (frozen) | **only a breaking envelope change** |
 | `@context` URL | the artifact (`…/context/v0.3/…`) | which JSON-LD **vocabulary** applies? | `v0.3` | only when the context vocabulary changes |
 | `payloadType` `;version=` | `audit_signature` (the DSSE shell) | which **signing-envelope** shell? | `0.2` | only when the DSSE shell changes |
@@ -135,6 +135,62 @@ attestation_mandate, cryptographic_mandate, aml_rule, risk_parameter`. This is a
 AINumbers taxonomy, not AP2 v0.2 vocabulary.** The schema treats `mandate_type` as a non-empty string
 (NOT a hard enum): shipped nodes also use `agent_guardrail_mandate` (fit diagnostics) and `scheme_rule`,
 and the enum is not CI-enforced. New tools SHOULD prefer a §4 type where one fits.
+
+### §5.1 `pm:*` Prediction/Event-Market Provenance Extension (NORMATIVE-informative, OPTIONAL — new in v0.8.24)
+Extends the §5 vocabulary with seven `mandate_type` values for prediction/event-market provenance
+artifacts. Like §5 itself, this is a recommended-vocabulary addition, not a schema or enum change: no
+`$defs/artifact.required` edit, no `chaingraph_version` bump, and no new §15 gate — an implementation
+correct for v0.8.23 stays correct, and a verifier ignorant of `pm:*` reads these artifacts as any other
+open-string-`mandate_type` artifact it already handles. Full registration rationale, worked payload
+examples, and the ADR are in `PM-MANDATE-EXTENSION.md` (this directory) — this section is the normative
+vocabulary entry; that document is the informative proposal record.
+
+**Scope boundary (load-bearing).** This extension registers a **provenance format** for market
+lifecycle events. It defines no oracle, no settlement rail, no matching engine, and no on-chain
+deployment — none of that is buildable under this repo's constraints (§0), and none of it is implied by
+registering these seven `mandate_type` values. A tool_id under the `pm:` prefix that only builds/validates/
+displays these artifacts is in scope; a tool that resolves markets, matches orders, or moves funds is not,
+regardless of `mandate_type`.
+
+**Three agnosticism properties (normative to this extension).** Each `pm:*` artifact MUST remain:
+- **Settlement-mechanism-agnostic** — `market_definition.settlement_mode` is `"on_chain"` or `"off_chain"`;
+  neither this section nor any `pm:*` artifact structurally favors one.
+- **Identity-agnostic** — every artifact referencing a party uses `participant_ref`, an opaque string
+  accepting a `did:key`, a wallet address, or an opaque account id. No field assumes crypto-native identity.
+- **Outcome-structure-agnostic** — `market_definition.outcomes` is an array of two or more entries. No
+  `pm:*` artifact carries a bare `side: "YES"|"NO"` field or otherwise structurally assumes a binary market.
+
+**Resolution enters as an external attested input, never as an OCG computation.** A `resolution_certificate`
+artifact's outcome is a claim OCG *records*, not one OCG *computes* — the same relationship §23 already
+defines for any external oracle. The resolving party's attestation (a SECO-style threshold signature, a
+regulated resolution desk's signed determination, or any other resolver's signed output) attaches via
+`audit_signature` (§16) or `input_attestations` (§23), pointing at the `resolution_evidence` artifact's
+`evidence_root`. `chain.parent_hashes` links a `resolution_certificate` to its `resolution_evidence`
+artifact the same way it links a `trade_execution` to its parent `trade_order`s (§4) — a general pattern,
+not `pm:*`-specific.
+
+**Prohibited language (normative, Corda-tripwire discipline).** No `pm:*` artifact, schema comment, or
+prose describing this extension may use "accept" or "finality" to describe what OCG does with a resolution
+or a settlement. `pm:settlement`'s `output_payload` is a **verify-only payout recompute** — the prescribed
+arithmetic applied to an already-resolved outcome and the recorded `all_positions` — never an operative
+transfer of funds, never an ordering or matching duty, spec-only or otherwise. An implementation that reads
+`settlement`'s `output_payload.payouts` as authorization to move value has misread this section.
+
+| Artifact | `tool_id` prefix | `mandate_type` | `policy_parameters` (illustrative) | `output_payload` (illustrative) |
+|---|---|---|---|---|
+| Market Definition | `pm:define_market` | `market_definition` | `question, outcomes[] (2+), settlement_asset, settlement_mode ("on_chain"\|"off_chain"), trading_rules, fee_rules, resolution_source_profile, resolution_window` | `market_id, start_time, end_time` |
+| Order | `pm:order` | `trade_order` | `market_id, outcome_selected, quantity, price_limit, timestamp, participant_ref, signature` | `order_id, status` |
+| Trade Execution | `pm:trade` | `trade_execution` | `buy_order_execution_hash, sell_order_execution_hash, match_quantity, match_price` | `trade_id, filled_quantity, timestamp` |
+| Position Update | `pm:position` | `position_update` | `trade_execution_hash, participant_ref` | `new_position: {outcome: quantity, ...}` |
+| Resolution Evidence | `pm:evidence_root` | `resolution_evidence` | `attester_signatures[], evidence_hash, resolution_method` | `evidence_root: hash` |
+| Resolution Certificate | `pm:resolver` | `resolution_certificate` | `evidence_root_execution_hash` | `outcome, rationale (optional)` |
+| Settlement | `pm:settlement` | `settlement` | `market_definition_hash, outcome, all_positions` | `payouts: {participant_ref: amount, ...}` |
+
+`chain.parent_hashes` links: `trade_execution` → its two parent `trade_order`s; `position_update` → its
+parent `trade_execution`; `resolution_certificate` → its parent `resolution_evidence`; `settlement` → its
+parent `market_definition` and the `resolution_certificate` whose outcome it recomputes payouts from.
+`execution_hash` for every `pm:*` artifact follows the unmodified §4 canonicalization; mutable fields
+(timestamps, assigned IDs) are excluded from the preimage exactly as §4 already requires generally.
 
 ## §7 DCAT 3.0 Graph Index
 
@@ -346,7 +402,7 @@ so an agent gets a verifiable artifact in one MCP round-trip.
   `meta`; registered in `kernels/index.mjs`; passes `kernel-hash-integrity.mjs` + `kernel-contract.test.mjs`.
 - The artifact records dispatch in `compute_mode` (`"server" | "browser"`), excluded from the hash preimage.
 - `gpu:true` nodes ignore `compute` and always delegate to the browser.
-- **Every `gpu:false` node MUST have a kernel** (`kernel-coverage.mjs --strict`) — a missing kernel
+- **Every `gpu:false` node MUST have a kernel** (`check-kernel-coverage.mjs --strict`) — a missing kernel
   FAILS CI; it is never a silent skip (lesson of the Arc-kernel incident, §15).
 
 ### §12.5 artifact delta
@@ -746,6 +802,68 @@ deferred until the proving queue clears it. Derive it from the gate rather than 
 
 > Informative: a narrated walkthrough of how the AINumbers reference deployment reached full §18.6 coverage (universal guest, the deferred set, and the cross-engine determinism gate) is at [chaingraph/zkvm-compute-integrity.html](../chaingraph/zkvm-compute-integrity.html).
 
+**§18.7 Journal byte contract (NORMATIVE — clarifies §18.0/§18.1; no envelope change, no schema change).**
+§18.0 stores `journal` as a **decoded JSON object**, but the zkVM claim the `seal` commits to binds `sha256`
+over the **byte string the guest actually committed**. Those are not the same artifact, and §18.1's
+"reconstructs the named system's ReceiptClaim digest from `(imageId, journal)`" is only performable if the
+serialization from object back to bytes is specified. Absent that, a third party holding a published receipt
+cannot recompute the claim digest — which defeats the purpose of publishing receipts. This clause closes that
+gap. It states the contract the reference deployment has always implemented: no existing artifact, receipt,
+seal, or schema changes.
+
+- **The journal byte string MUST be the RFC 8785 (JCS) canonical serialization of the `journal` object,
+  encoded UTF-8** — compact, keys sorted at every nesting depth, no insignificant whitespace.
+- **The journal digest MUST be `sha256` over exactly those bytes**, and it is that digest which enters the
+  named system's ReceiptClaim (for risc0: `ReceiptClaim::ok(imageId, journalBytes)`).
+- **This is §4's canonicalizer, not a second one.** The same `cgCanon` (RFC 8785) that produces the
+  `execution_hash` preimage produces the journal bytes; a verifier MUST NOT introduce a parallel
+  canonicalization path. The shipped reference verifier does exactly this in one line —
+  `kernels/_computeproof.mjs`: `const journalBytes = enc(JSON.stringify(cgCanon(cp.journal)));` — and the §15
+  gate `compute-proof.test.mjs` fails if it ever stops being true, because wrongly-serialized journal bytes
+  yield a different claim digest and the BN254 pairing check then rejects a genuine receipt.
+- **Stored insertion order is NOT the contract.** A journal whose stored key order happens to be sorted
+  serializes identically under both readings; that coincidence is not evidence, and it is precisely why the
+  contract went undocumented for so long (see the evidence note).
+
+*Worked recompute — a verifier holding only the published receipt:*
+
+```
+journalBytes  = utf8( JCS( receipt.journal ) )
+journalDigest = sha256( journalBytes )
+claim         = ReceiptClaim::ok( receipt.imageId, journalBytes )
+verify( receipt.seal, claim, receipt.imageId )   ->   true for a genuine receipt
+```
+
+*Evidence (INFORMATIVE), including the correction that produced it.* The contract was settled empirically
+against real sealed receipts by an external verifier built independently of the reference implementation
+(`PostOakLabs/zkprof-web`, `docs/JOURNAL-BYTES-HYPOTHESIS.md`, headline **CONFIRMED-JCS**). The arc is recorded
+because the first answer over-claimed: an initial run reported the contract confirmed on three fixture receipts
+whose journals were **already key-sorted**, so JCS and compact-insertion-order produced byte-identical strings
+and the experiment discriminated only whitespace, never key ordering. Review caught it, the headline was
+downgraded to exactly what the experiment had shown, and the deciding receipt was then identified and run:
+`art-04-agent-identity-attestation-checker` (imageId `sha256:93c746e79afcf4b2…`, a different guest image) is the
+one receipt in the published corpus whose journal carries **unsorted nested keys**, so its two candidate
+serializations diverge. Under full risc0 3.0.5 Groth16 verification:
+
+| Candidate journal bytes | `sha256` of those bytes | Verification |
+|---|---|---|
+| RFC 8785 / JCS canonical | `3a089ca010da4cc939c482b41b52b659a6ff177a2b82df91c64a774164bcd4be` | **VERIFIES** |
+| compact, stored insertion order | `a92cceb5da47a360d4097c7585584aefac5036df9dd0d3be28b9cf0475243136` | **REJECTED** |
+
+Both directions on the one artifact that can separate them — a discriminating negative control, not a
+confirmation-only result. An independent `snarkjs` twin reproduces the same derivation byte-exactly.
+
+*Scope caveat (INFORMATIVE).* The corpus that settled this carries only finite, small JSON numbers. RFC 8785's
+number-serialization edge cases — negative zero, the exponent thresholds at which ECMAScript switches
+representation, and integers beyond the IEEE-754 safe range — are **not exercised** by any published receipt.
+§3's I-JSON guard already rejects such values on the `execution_hash` path; an implementer whose journal could
+carry them treats the RFC as authoritative over any implementation's shortcut.
+
+*Not specified here (INFORMATIVE).* Emitting the raw journal bytes, or an explicit `journalDigest` field, in
+**future** receipts would spare verifiers the re-derivation, and would be additive and hash-neutral for existing
+seals. That is a receipt-format change and is deliberately **not** specified by this clause, which documents the
+existing contract only.
+
 ## §20 Anchor Binding (NORMATIVE, OPTIONAL — new in v0.7)
 An artifact MAY carry portable, offline-verifiable evidence that its `execution_hash` was included in a
 transparency log or timestamp service by a point in time. Anchor evidence attaches at the OPTIONAL
@@ -974,6 +1092,13 @@ composite_output = { chain, steps: [ { tool_id, mandate_type, execution_hash, ou
 
 Per-step timestamps and `mandate_id`s are EXCLUDED from the preimage, so the composite hash is
 reproducible. If no step ran, `composite_execution_hash` is `null` and no composite artifact is emitted.
+
+> **NOTE (non-normative).** `composite_policy.compute_mode` above is written as the literal
+> `"server"` — this composite preimage is defined for `compute_mode: "server"` only. No browser-leg
+> or other-backend composite preimage is defined anywhere in this standard; this is deliberate as of
+> the current version, not an oversight. See `research/CHAIN-DIFF-HASHTARGET-ADJUDICATION-2026-08-10.md`
+> for the reasoning. A non-server composite is parked, not specced, pending the first genuine
+> consumer that needs one.
 
 ### §21.3 Composite artifact
 The composite artifact carries `chaingraph_version:"0.4.0"`, `compute_mode:"server"`,
@@ -1625,7 +1750,7 @@ enforces it; the profile introduces no gate of its own.
 | D4 | **Wall-clock time** (`Date.*`, timers) | No `Date`, timestamp, or timer reading may enter `output_payload` or the §4 preimage. Time-bearing evidence (anchor `genTime`, escalation `opened_at`) is defined hash-EXCLUDED (§20, §22.8). The §18 guest disables `Date` at the intrinsic level (§18.5); VM-1 disables it identically. | §4 reproducibility (`golden-parity.test.mjs`, live `hash-sweep.mjs`); wall-clock exclusion of escalation records enforced by `test-escalate-emit.mjs` (§22.8.2 — asserts `record_hash` is identical across two escalation runs with different `opened_at`; `linear-hash-freeze.mjs`/`gate-parity.test.mjs` do not exercise escalation records, corrected SPECREF-GATEPARITY-FIX-1 2026-07-28). |
 | D5 | **Randomness** (`Math.random`, CSPRNG) | No nondeterministic randomness may reach `output_payload`. `Math.random` is stubbed out of the §18 guest and the VM-1 prelude. The one CSPRNG in the standard (§13.12 SD-JWT salts) is confined to disclosure material that is EXCLUDED from the artifact hash. | §4 determinism (`golden-parity.test.mjs`); SD-JWT salt-as-sole-nondeterminism is pinned by `sd-export-roundtrip.test.mjs`. |
 | D6 | **Locale / `Intl`** | No locale-sensitive formatting may affect `output_payload`. Locale-dependent number formatting routes through a pinned `en-US` formatter verified value-for-value against V8 (§18.5(a)); the §18 guest and the QuickJS-ng VM ship **no `Intl`** at all (a determinism gift, not a gap). | §4 cross-surface parity (`golden-parity.test.mjs`); the pinned formatter's equivalence is covered by the same golden fixtures. |
-| D7 | **Environment / platform APIs** | Where a rule would otherwise depend on a V8 platform API whose result is environment-sensitive or infeasible to prove in-guest, the kernel MUST substitute a fully specified deterministic replacement used **identically on every surface**, with its out-of-scope aspects stated in source (§18.5). Network, filesystem, and ambient I/O are already forbidden by CONTRACT §0 (zero-fetch). | §18.5 replacements + §12 kernel-coverage (`kernel-coverage.mjs --strict`); cross-surface identity by `golden-parity.test.mjs` and, for gated chains, `gate-parity.test.mjs`. |
+| D7 | **Environment / platform APIs** | Where a rule would otherwise depend on a V8 platform API whose result is environment-sensitive or infeasible to prove in-guest, the kernel MUST substitute a fully specified deterministic replacement used **identically on every surface**, with its out-of-scope aspects stated in source (§18.5). Network, filesystem, and ambient I/O are already forbidden by CONTRACT §0 (zero-fetch). | §18.5 replacements + §12 kernel-coverage (`check-kernel-coverage.mjs --strict`); cross-surface identity by `golden-parity.test.mjs` and, for gated chains, `gate-parity.test.mjs`. |
 
 Rows D1–D7 are exhaustive over the escape hatches the Wasm 3.0 Deterministic Profile enumerates for a
 JS/Wasm execution environment (float exceptions, memory/iteration nondeterminism, `NaN` bit-patterns, host calls,
@@ -1977,7 +2102,7 @@ The producer-local journal is append-only. Each entry carries: `journal_seq` (mo
 
 Run lifecycle states (`execution_state.state`): `draft` `validated` `queued` `running` `awaiting_data` `awaiting_review` `approved` `rejected` `overridden` `executing_action` `submitted` `acknowledged` `completed` `failed` `cancelled`.
 
-**Checkpoints** are signed (§26.2) summaries emitted periodically and at run completion: `{checkpoint_seq, per-stream {stream_id, journal_seq, rh}, journal_root_digest, anchors[]}`. Each `anchors[]` member is `{type, ...}` with `type` ∈ `rfc3161` | `opentimestamps` | `scitt-receipt` (reserved; SCITT is not yet an RFC — producers MUST NOT emit it under `@1`). Checkpoints SHOULD be anchored per §20 to at least one external authority. Unknown `anchors[].type` values MUST be reported as unrecognized, not as failures.
+**Checkpoints** are signed (§26.2) summaries emitted periodically and at run completion: `{checkpoint_seq, per-stream {stream_id, journal_seq, rh}, journal_root_digest, anchors[]}`. Each `anchors[]` member is `{type, ...}` with `type` ∈ `rfc3161` | `opentimestamps` | `scitt-receipt` (SCITT is now an RFC — architecture = RFC 9943, COSE Receipts = RFC 9942, both Proposed Standard, June 2026; see §XMAP-1). Checkpoints SHOULD be anchored per §20 to at least one external authority. Unknown `anchors[].type` values MUST be reported as unrecognized, not as failures.
 
 ### §26.6 Trust labels (NORMATIVE vocabulary)
 
@@ -3025,6 +3150,186 @@ flagship instances (TMPG fails-charge claims, PE waterfall true-ups, trustee-rep
 document exams) are specified in `BILAT-CSR-BUILD-SPEC.md` and are NOT restated here; conformance-vector
 coverage (`validate-ha-records.test.mjs`) is a separate WU's scope, not this subsection's.
 
+**§27.13 Party role — a per-party fact about the underlying agreement (NORMATIVE, OPTIONAL — new in
+v0.8.22).** §27.1's `role` records what accountability ACT an identity performed (prepared, reviewed,
+approved, submitted, or — §27.12 — independently verified); it says nothing about that identity's standing
+under the agreement the subject artifact reports on. A `counter_signed_receipt` (§27.12) routinely crosses
+an org boundary where the parties' own governing agreement already assigns each of them a standing —
+signatory to the agreement, an observer with visibility but no signing authority, or the controlling party
+for the matter at hand. §27.13 adds `party_role` (`$defs/haPartyRole`), a THIRD OPTIONAL sibling field of
+`record_type` — alongside `kernel_pin` and `replay_verified` (§27.12) — not in `required[]`, reusing the
+exact extension mechanism those two established.
+
+**The vocabulary (NORMATIVE, closed).** `party_role` is one of exactly three values: `signatory` (the
+identity is a signatory to the agreement the subject artifact reports on), `observer` (the identity has
+visibility into the agreement but no signing authority under it), `controlling_party` (the identity holds
+controlling standing over the matter at hand under the agreement). **⛔⛔ NEVER "controller"** — that word
+reads as authority THIS RECORD grants; `party_role` records authority the parties' own prior agreement
+already assigned, and §27 grants none. Closed: adding a value IS a spec change, same footing as
+`record_type` / `role` / `haGatePolicy`.
+
+**What it is not (NORMATIVE, binding — Corda tripwires).** `party_role` records a FACT ABOUT THE PARTIES'
+OWN PRE-EXISTING AGREEMENT — never an authorization this record confers, an act this record performs, or a
+duty this record enforces. It is INERT BY CONSTRUCTION: no gate reads it, no §27.4 policy counts over it,
+no §27.3 threshold treats it as a role for dual-control purposes, and nothing in this spec branches on its
+value. Its absence means NO CLAIM about standing, never "no standing" — a record MAY populate `role` alone,
+`party_role` alone, both, or neither, since §27.1's accountability role and §27.13's party standing answer
+independent questions (a `checker` MAY be a `signatory`, an `observer`, or hold no party role at all). The
+line is LIVENESS DUTY, never operatorship: "accept", "acceptance", "settled", "final", or "finality" (or a
+synonym implying legal or economic settlement) MUST NOT be used to describe `party_role`, exactly as
+§27.12's vocabulary ban already requires of `counter_signed_receipt`.
+
+**Additivity and hash impact (NORMATIVE, demonstrated).** `party_role` is a sibling OPTIONAL member of
+`$defs/humanAccountabilityRecord`, exactly as `kernel_pin` and `replay_verified` are: it is part of the
+approval record's OWN `{policy_parameters, output_payload}` preimage (so a NEW record populating it gets
+its own new §4 hash, as any populated field would), and it has ZERO impact on any OTHER artifact's hash —
+the subject artifact's `execution_hash` stays byte-identical per §27.0, and every EXISTING approval record
+(minted before this pass, lacking the field) stays byte-identical since absence was already conformant.
+No `$defs/artifact.required` change, no `chaingraph_version` change (stays `"0.4.0"`). **Schema-file change
+required, stated explicitly:** unlike §29's `audit_signature` object, `$defs/humanAccountabilityRecord`
+carries `additionalProperties: false` (confirmed by inspection of
+`openchain-graph-v0.4.schema.json`), so `party_role` cannot validate without a `$defs` entry
+(`haPartyRole`, the closed three-value enum) and a new `properties.party_role` reference — the same schema
+edit shape `kernel_pin` and `replay_verified` each required. No existing hash, gate, or golden vector
+moves; a verifier ignorant of `party_role` continues to validate every existing artifact and every existing
+§27 record unchanged.
+
+**§27.14 Cure records and itemized deltas (NORMATIVE, OPTIONAL — new in v0.8.23).** A regulatory cure-of-error
+(for example TRID's cure-of-error mechanism for a mortgage disclosure) and a value-level correction with a
+stated reason (the AvaTax `TaxOverride` shape) are both value corrections, but they are not the same fact:
+an override (§27.5) is a time-boxed §22.10 attenuation of a GATE POLICY, scoped and expiring by
+construction; a cure evidences that a PRIOR ARTIFACT'S VALUE was wrong and has been corrected, with no
+policy attenuation implied. §27.14 gives the cure its own name so a reader never has to disambiguate two
+meanings inside one enum value, and adds the one genuinely missing piece, an itemized record of what
+changed, as a field both `cure` and `override` records may carry.
+
+**The record.** `record_type` gains a seventh closed member, **`cure`** (joining `role_binding | approval |
+rejection | override | annotation | counter_signed_receipt`, §27.2 / §27.12): a §27.2 approval-record
+artifact whose `record_type` is this value asserts that the acting identity corrected an error in the
+subject artifact's value(s) and is evidencing that correction. `subject_hash` (§27.2, unchanged) is the
+SCITT reference to the artifact being cured; `identity` (§9, unchanged) and `timestamp` (unchanged) carry
+who performed the cure and when. `cure` does NOT reuse `override`'s `scope`/`expiry` shape (§27.5) — a
+cure is not time-boxed and does not revert, because it is not attenuating a policy, it is recording a fact
+about a value.
+
+**`delta` — the new OPTIONAL sibling field.** `$defs/humanAccountabilityRecord` gains one new OPTIONAL
+member, `delta` (`$defs/haDelta`), a FOURTH sibling of `record_type` alongside `kernel_pin`,
+`replay_verified`, and `party_role` (§27.12/§27.13) — not a `record_type` member, not in `required[]`, and
+outside every `execution_hash` preimage of the SUBJECT artifact. It is an array of `{field_pointer,
+old_value_digest, new_value_digest}` entries: `field_pointer` is an RFC 6901 JSON Pointer naming the
+changed field within the subject artifact's `output_payload`, and `old_value_digest`/`new_value_digest`
+are sha256 digests of the field's value before and after the change. **Digests, never raw values** — the
+field records THAT a value changed and lets a holder of both artifacts confirm WHICH value, without
+re-opening what belongs in a preimage. Both `cure` and `override` records MAY carry `delta`; its absence
+means NO CLAIM about what changed, never that nothing changed.
+
+**Validation (NORMATIVE, stated explicitly).** A `cure` or `override` record naming a `subject_hash` that
+was never sealed fails the SAME validation §27.2 already runs for any approval record — no new check is
+needed for that case. A `delta` claiming a new value is a bare assertion unless a NEW sealed artifact
+carrying that value exists and is the artifact this record's `subject_hash` cites, via `chain.parent_hashes`
+reusing the §21.6 ancestry-commitment pattern — "this recompute supersedes that one" is already expressible
+as the corrected artifact's `chain.parent_hashes` citing the failing artifact's `execution_hash`, and a
+`delta` without such a citation states an intent to correct, not a proven correction. A verifier holding
+only the cure/override record and not the corrected artifact reports the delta as unverified, never as
+false.
+
+**AvaTax comparison, stated (NORMATIVE honesty).** AvaTax's `TaxOverride.Reason` is a flatter shape: a
+free-text reason attached to a replaced value, with no itemized field-level digest and no ancestry link to
+a superseding sealed artifact. §27.5's `override` mechanism (time-boxed, scoped, expiring, subject-linked)
+is already stricter and better-evidenced than that shape; this section does NOT rebuild AvaTax's flat
+shape as a new construct — it reuses §27.5 as the base and adds only the itemized `delta` that was
+genuinely missing.
+
+**Additivity (demonstrated).** §27.14 adds one closed-enum member (`cure`) and one OPTIONAL schema field
+(`delta`), under the EXISTING `$defs/humanAccountabilityRecord` shape §27.2 already defines. It introduces
+no new artifact type, no new `$defs/artifact.required` member, and no `execution_hash` preimage change to
+the SUBJECT artifact: minting, revising, or discarding a `cure` record, with or without `delta`, leaves the
+subject artifact's `execution_hash` byte-identical, exactly as §27.0 requires of every §27 construct.
+Because `$defs/humanAccountabilityRecord` carries `additionalProperties: false`, this addition DOES require
+a schema-file edit (new `$defs/haDelta` `$defs` entry, a new `cure` enum member on `record_type`, and a
+new `properties.delta` reference) — the same edit shape `kernel_pin`, `replay_verified`, and `party_role`
+each required. `chaingraph_version` stays `"0.4.0"`, and no existing hash, gate, or golden vector moves. A
+verifier that has never heard of `cure` or `delta` continues to validate every existing artifact and every
+existing §27 record unchanged; only a NEW record populating these members carries its own new §4 hash.
+
+**§27.15 Receipt-chain transitions — the closed `receipt_transition` sibling (NORMATIVE, OPTIONAL — new in
+v0.8.24).** §27.12 models exactly one fact: a checker independently recomputed A subject and signed a
+receipt of that recomputation, referenced once via `subject_hash`. A real bilateral exchange is rarely
+single-shot — a later `counter_signed_receipt` routinely responds to an EARLIER one: an identity countersigns
+it, challenges it, supersedes it, attests to it without recomputing, or extends how long it treats it as
+current. §27.15 names the closed, versioned vocabulary for that fact and reuses §27.12's own mechanism to
+carry it — no new reference field, no second extension path.
+
+**No new reference field (NORMATIVE).** A `receipt_transition` describes this record's relationship to a
+PRIOR `counter_signed_receipt`. That prior receipt is named by `subject_hash` — the field §27.2 already
+requires on every record — exactly as it names any other subject: `receipt_transition` MAY be present only
+when `record_type` is `counter_signed_receipt` and `subject_hash` is the prior receipt's own
+`execution_hash`. This is §27.12's mechanism unchanged, pointed at a receipt instead of an original artifact.
+
+**The vocabulary (NORMATIVE, closed).** `receipt_transition.type` is one of exactly five values —
+`countersign`, `challenge`, `supersede`, `attest`, `extend` — each carrying its own typed payload
+sub-object, and no other shape:
+- `countersign` — the acting identity independently reproduced the prior receipt's own recomputation and
+  reached the same result. Payload: none (the empty fact is the payload; no field to add).
+- `challenge` — the acting identity disputes the prior receipt. Payload: `{reason_code}` (a machine-stable
+  token naming why). Recording a challenge is descriptive only — it names a disagreement and MUST NOT be
+  read as opening, routing, or deciding any dispute-resolution process, since none exists in this spec.
+- `supersede` — the acting identity treats this record as the operative one for the subject the prior
+  receipt covered, going forward from its own point of view. Payload: `{replacement_subject_hash}` — the
+  `execution_hash` of the artifact this record newly recomputed. Recording a supersession is additive: the
+  prior receipt is never deleted, mutated, or marked invalid by this record — only marked superseded IN THE
+  EYES OF THE ACTING PARTY, exactly as §28.1 requires of a `superseded_by` citation.
+- `attest` — the acting identity attests the prior receipt still holds AS OF a given instant, without
+  re-performing the underlying recomputation. Payload: `{as_of}` (ISO 8601). Distinct from `countersign`,
+  which requires independent recomputation; `attest` requires none.
+- `extend` — the acting identity extends how long IT will treat the prior receipt as current. Payload:
+  `{new_valid_until}` (ISO 8601). Extending is a statement about the acting party's own future conduct, not
+  a claim that any other party is bound to honor the new date.
+
+Adding a sixth value, renaming one, or letting a caller define its own transition type IS a spec change —
+the exact discipline `record_type` / `haRole` / `haGatePolicy` already carry. A verifier MUST reject an
+unrecognized `receipt_transition.type` rather than silently accept it, the same closure §27.10 states for
+`haRunState`.
+
+**`consuming` — a property of the record, never a lock (NORMATIVE, binding — Corda tripwires).** A
+`receipt_transition` MAY carry `consuming` (boolean): the acting identity's own claim about whether it now
+treats the prior receipt as no longer the operative one for its subject. Governed by the same omit-not-false
+discipline §27.4 and `replay_verified` (§27.12) already established: where the acting party makes no claim
+either way, `consuming` MUST be omitted, never set `false`. `consuming` is INERT BY CONSTRUCTION — no gate
+reads it, nothing here executes a transition, no ordering is enforced between transitions on the same
+receipt chain, and no "valid next transition" machinery exists or is implied. It records what one party now
+believes about a prior receipt, never what the standard requires, permits, or will reject — the same
+descriptive-not-enforcing line §27.11.3 draws for a gate-evaluation record. The line is LIVENESS DUTY, never
+operatorship: no global total order over a receipt chain is implied, spec-only or otherwise, and no ordering
+service is named — the same tripwire §27.12 already checked.
+
+**Vocabulary ban (binding, NORMATIVE).** The same ban §27.12 states for `counter_signed_receipt` and §27.13
+states for `party_role` applies here without exception: no field, schema description, gate-policy prose, or
+product copy describing a `receipt_transition` — including `countersign` and `challenge`, the two values
+most likely to invite it — may use "accept", "acceptance", "settled", "final", or "finality" (or a synonym
+implying legal or economic settlement).
+
+**Additivity and hash impact (NORMATIVE, demonstrated).** `receipt_transition` is a FIFTH OPTIONAL sibling
+member of `$defs/humanAccountabilityRecord`, alongside `kernel_pin`, `replay_verified`, `party_role`, and `delta` (§27.12/§27.13/§27.14): not
+a `record_type` member, not in `required[]`, and — like every §27.12/§27.13 sibling before it — part of the
+approval record's OWN `{policy_parameters, output_payload}` preimage, so a NEW record populating it gets its
+own new §4 hash, exactly as any newly-populated field would, with ZERO impact on any OTHER artifact's hash.
+The subject artifact's `execution_hash` stays byte-identical per §27.0; every EXISTING approval record
+(minted before this pass, lacking the field) stays byte-identical since absence was already conformant. No
+`$defs/artifact.required` change, no `chaingraph_version` change (stays `"0.4.0"`). Because
+`$defs/humanAccountabilityRecord` carries `additionalProperties: false`, this addition requires the same
+schema-file edit shape `kernel_pin`, `replay_verified`, `party_role`, and `delta` each required: a new
+`$defs/haReceiptTransitionType` closed enum, a new `$defs/haReceiptTransition` object (five typed,
+mutually-exclusive payload sub-objects plus the `consuming` sibling), and a new
+`properties.receipt_transition` reference. No existing hash, gate, or golden vector moves; a verifier
+ignorant of `receipt_transition` continues to validate every existing artifact and every existing §27 record
+unchanged.
+
+**Scope note.** §27.15 specifies the SHAPE of a receipt-chain transition only. Whether, or how, an
+implementation displays a chain of `counter_signed_receipt` records to a human, and any offline
+dispute-resolution process a `challenge` might inform, are out of scope here and unspecified by this
+section, exactly as §27.12's own scope note already draws that line for the exchange format.
+
 ## §28 Clause Binding Profile — `ocg-clause-binding@1` (NORMATIVE, OPTIONAL, profile-scoped — new in v0.8.14)
 A citation like `"MiCA"` or `"17 CFR 240.15c3-3"` sitting in a tool's `regulatory_frameworks` /
 `regulatory_citations` prose is **unpinned**: it reads present-tense forever, is never bound to any
@@ -3140,8 +3445,388 @@ the same artifact with `clause_bindings` stripped produce byte-identical `execut
 §25, the profile **defaults OFF**: no node is required to adopt it, and its absence is never itself a
 finding.
 
+## §29 Twin Execution Record — `audit_signature.twin_execution` (NORMATIVE, OPTIONAL — new in v0.8.20)
+A kernel's hand-written implementation and a formally-modeled twin of the same specification can be
+executed against the same inputs and compared. Agreement between the two is evidence the hand-written
+kernel matches the formal model of the specification it was built against — **it is not evidence that
+either implementation matches the underlying regulation**, which remains the human-signed spec's job
+(`FORMALVERIF-BUILD-SPEC.md` §5 step 3, unchanged by this section). §29 records the result of that
+comparison as a first-class `audit_signature` sub-object, following the exact placement precedent §18's
+`compute_proof` already established.
+
+**§29.0 Home + object (NORMATIVE).** The record lives at `audit_signature.twin_execution`
+(hash-excluded — see §29.3; keeps the frozen v0.4 root schema). It MUST carry:
+- `twin_digest` — `sha256:`-prefixed identity of the compiled twin module, the same construction as
+  §17's `kernel_digest`;
+- `kernel_digest` — `sha256:`-prefixed; MUST equal `audit_signature.build_identity.kernel_digest`,
+  restated here so this object is independently checkable without cross-referencing another field;
+- `agreement` — boolean; whether the twin's output matched the hand-written kernel's output within
+  `tolerance` across `cases_checked`;
+- `max_divergence` — the largest measured divergence across the comparison, or `null` when the
+  comparison is exact/boolean-only;
+- `tolerance` — the tolerance the comparison was run against (e.g. `"1/8pp §1026.22(a)(2)"`);
+- `method` — `"differential" | "property-based"`;
+- `cases_checked` — integer count of cases the comparison covered;
+- `checked_at` — ISO 8601 timestamp of when the comparison ran.
+
+**§29.1 What agreement proves, and what it does not (NORMATIVE, informative derivation).**
+`agreement:true` is evidence the hand-written kernel matches its formal twin — a continuous version of
+the differential-test snapshot precedent (`FV-C1-DIFFTEST-REFRESH-1`). It is **not** evidence that
+either side correctly implements the cited regulation: the twin itself can be a mistranslation of the
+specification, so neither side is presumed correct by construction. **`agreement:false` is a finding
+that requires human adjudication — it MUST NOT be read as an automatic verdict that the hand-written
+kernel is wrong.** A verifier or gate that treats `agreement:false` as a refusal or auto-hold, rather
+than a recorded finding for a human to adjudicate, misreads this section.
+
+**§29.2 Execution location (NORMATIVE).** The twin executes **offline, worker/CI-side, at
+proof-generation time** — the same location §18's `compute_proof` is generated — and is never shipped
+to the browser. The browser verifier that recomputes `execution_hash` (§4) reads `twin_execution` as
+asserted evidence and never re-executes the twin itself, exactly as it already reads `compute_proof`'s
+seal without re-running the zkVM guest, and never requires any arbitrary-precision runtime dependency
+the twin's toolchain may emit. Twin agreement is therefore **build-time provenance, not runtime
+verification** — the same trust model as every other `audit_signature` sub-object.
+
+**§29.3 Frozen-envelope invariance (NORMATIVE).** `twin_execution` is declared as an OPTIONAL,
+hash-excluded member of `audit_signature`, exactly as §18 `compute_proof` was. `$defs/artifact.required`
+is UNCHANGED, the §4 preimage members (`policy_parameters`, `output_payload`) are UNCHANGED, and
+`chaingraph_version` stays `"0.4.0"`. Measured against §0.4-FREEZE's three-condition bar: this addition
+(a) moves no existing artifact's `execution_hash` — `twin_execution` sits outside the hashed preimage,
+so `execution_hash` is byte-identical with and without it for every existing artifact; (b) changes no
+`required[]` — every member of this section is optional; (c) imposes no MUST-emit — absence of
+`twin_execution` is fully conformant and means NO CLAIM. All three conditions clear, so this is an
+additive change under §0.4-FREEZE, not a breaking one. A verifier correct for v0.8.19 computes an
+identical `execution_hash` for a v0.8.20 artifact and MAY ignore `twin_execution` entirely.
+
+**§29.4 Relationship to `compute_proof_ready` (NORMATIVE).** `compute_proof_ready` is per-artifact,
+never a per-kernel literal (§18). `twin_execution` is a sibling object to `compute_proof`, not a
+modifier of it, and this section imposes no requirement on `compute_proof_ready`: a kernel MAY carry
+`twin_execution` with no `compute_proof` at all (twin-checked but not zk-proved), or `compute_proof`
+with no `twin_execution`, or both, or neither.
+
+**§29.5 Conformance (NORMATIVE).** An implementation MAY populate `audit_signature.twin_execution` for
+an artifact whose kernel has a twin comparison on record. Conformance requires: all §29.0 members
+present when the object is present; `kernel_digest` equal to `audit_signature.build_identity.kernel_digest`;
+`checked_at` a valid ISO 8601 timestamp; and the no-hash-move guarantee of §29.3 (an artifact with
+`twin_execution` and the same artifact with it stripped produce byte-identical `execution_hash`). Like
+§18, this section **defaults OFF**: no node is required to adopt it, and its absence is never itself a
+finding.
+
+## §30 Cited Clause Digest — retrieval provenance (NORMATIVE, OPTIONAL — SPEC-TEXT PASS, record stays at whatever `chaingraph.json` carries, same text-pass/record-bump separation as §5.1/§14 above)
+A sealed, proven, published node (`art-365`) shipped routing behaviour the cited primary text never
+states, because it was built from secondary summaries after sessions wrongly concluded the publisher was
+unreachable (`ART365-DIVERGENCE-CONFIRM-1`). Nothing in the standard previously distinguished a node
+built from retrieved primary text from one built from nothing. §30 closes that specific gap: it makes
+**"built from nothing" structurally impossible** for a node that declares itself standards-implementing.
+
+**§30.0 Scope — honestly stated (NORMATIVE).** §30 proves retrieval happened. It does **NOT** prove the
+retrieved text was read correctly — `art-365`'s wrong routing would have passed a §30 gate, since a
+person can retrieve a clause and still misinterpret it. Any gate, doc, or output implementing §30 MUST
+say so plainly; a gate that oversells itself as catching misreading is worse than no gate, because it
+teaches readers to stop reading past green.
+
+**§30.1 The catalog fields (NORMATIVE — `$defs.citedClauseDigestEntry`).** A `chaingraph.json` `nodes[]`
+entry MAY declare `standards_basis` (`"implements_standard"` or `"not_applicable"`) and, when
+`"implements_standard"`, a non-empty `cited_clause_digest[]` array. Each entry is a retrieval-provenance
+record, REQUIRED members `digest` (a `sha256:`-prefixed content hash), `source_url`, `retrieved_at` (ISO
+date), and `clause_path` (the paragraph/section this node implements — e.g. `"(a)(2)"` or `"ASU 2023-09
+para 26"`); OPTIONAL `scheme`/`id` reuse §1.2's open-enum vocabulary. Both fields are hash-excluded
+catalog-only metadata — they are not part of any artifact's `execution_hash` preimage and this section
+defines no artifact-envelope change.
+
+**§30.2 Granularity — a whole-document digest is not a clause digest (NORMATIVE).** `digest` MUST be the
+sha256 of a clause-level snapshot **excerpt**, never a hash of an entire source document. A whole-PDF or
+whole-webpage digest asserts nothing about which clause a node actually implements and was explicitly
+rejected as insufficient by `FASB-RETRIEVAL-ROUTE-1`. This is enforced structurally, not by convention: a
+`digest` is only valid if it resolves to an entry in `chaingraph/standard/clause-snapshot-registry.json`,
+and the sole writer of that registry (`chaingraph/standard/pin-clause-snapshot.mjs`) refuses to register
+any excerpt above its size cap (20,000 bytes — a real paragraph/section excerpt; a whole regulatory
+instrument is not). The registry records digest + locator metadata only, never the retrieved text itself,
+so a copyrighted primary-source excerpt (e.g. a FASB ASU) is never committed to this public repository.
+
+**§30.3 In-scope declaration — explicit, never silent (NORMATIVE).** Not every node implements a
+published standard; some are pure math or format converters. A node declares itself in scope by setting
+`standards_basis: "implements_standard"` (a conformance verdict about an artifact against a published
+specification, or a computation performed against a regulatory or accounting clause), or explicitly out
+of scope by setting `standards_basis: "not_applicable"`. Naming a specification whose structure a node
+recomputes, converts, decodes, compares, or scores is not a standards citation for this purpose; a
+conformance verdict about an artifact against a published specification, or a computation performed
+against a regulatory or accounting clause, is. There is no silent default: `check-clause-digest.mjs` REQUIRES one
+of the three values (`implements_standard`, `not_applicable`, `cites_informative`) on every NEW or
+CHANGED node (branch-aware, the same detection `check-shard-assembly.mjs` uses), and a node carrying
+none of them fails the gate naming itself.
+
+**§30.3a `cites_informative` — retrieval provenance without a conformance claim (NORMATIVE, added
+`NODE-CITATION-CLASS-FIX-1`, 2026-08-20).** A node's citations are retrieval provenance only; the node
+makes no conformance claim against the cited text; SIDEBYSIDE (SO #39) and PROVE gates treat it as
+non-standards-implementing. This is the metadata-side twin of `KERNEL-CITATION-CLASS-1`'s separation of
+kernel behaviour from citation: a node whose own kernel disclaims any compliance claim against a cited
+text (e.g. a `regulatory_framework`/`not_proven` string stating the citation is informative only) but
+whose `compute()` still exercises none of the clause's operative requirements declares
+`standards_basis: "cites_informative"` instead of `"implements_standard"`. It is NOT the `not_applicable`
+opt-out — `not_applicable` is for nodes with no standards citation at all (pure math/format-conversion);
+`cites_informative` is for nodes that DO cite a standard for context and MUST therefore still carry
+retrieval provenance. Consequently `cites_informative` REQUIRES a non-empty `cited_clause_digest[]`,
+identically to `implements_standard` (§30.5) — it is a provenance class, not an opt-out from §30.1/§30.2.
+`check-clause-digest.mjs` and the `#39` SIDEBYSIDE/PROVE pipeline MUST NOT treat `cites_informative` as a
+standards-implementing declaration.
+
+**§30.4 Scope — new/changed nodes only (NORMATIVE).** Consistent with §28.5 and every other profile in
+this standard, §30 imposes no retrofit obligation. A pre-existing node with no `standards_basis`
+declaration is reported as a gap — a visible count, never a percentage, never backfilled — and is never
+itself a CI failure. Only a node NEW or CHANGED on the current branch, relative to its base ref, is
+gated.
+
+**§30.5 Conformance (NORMATIVE).** `check-clause-digest.mjs` (§15) proves three directions: (a) a
+new/changed in-scope node with no resolvable `cited_clause_digest` entry fails, naming the node; (b) a
+new/changed in-scope node whose entries all resolve to registered snapshots passes; (c) a `digest` that
+does not resolve to any `clause-snapshot-registry.json` entry fails — the case that matters, since a gate
+satisfied by an arbitrary string is theatre, not a control. Like every OPTIONAL profile in this standard,
+absence on an out-of-scope or pre-existing node carries no meaning and is fully conformant.
+
+**§30.6 Frozen-envelope invariance (NORMATIVE).** `standards_basis` and `cited_clause_digest` are
+OPTIONAL catalog-node properties, not artifact-envelope members. They move no `execution_hash`, add no
+`required[]` member to `$defs/artifact`, and impose no MUST-emit on any existing or future node. Measured
+against §0.4-FREEZE's three-condition bar, this is additive.
+
+## §NODEPAGE-1 Page-less nodes — the `pageless` declaration (NORMATIVE, OPTIONAL — additive, record stays at whatever `chaingraph.json` carries, same text-pass/record-bump separation as §30)
+Most catalog nodes carry a composer page of their own, and `NODE-COMPLETENESS-GATE-1` axis (d) exists to
+stop a node shipping without one. Some legitimately do not: a node presented entirely through a shared
+surface owns no page, and pretending otherwise would mean publishing an empty page to satisfy a gate.
+`NODE-COMPLETENESS-GATE-1` opened an escape hatch for that case without defining it, and `art-662`
+improvised the rest: it declared the escape while `tools/662-odnsf-fee-recompute.html` existed and its own
+`url` pointed straight at it. The declaration was false, no shard-level check could see it, the v0.4 node
+object is `additionalProperties: false` so assembling that shard produced an **invalid `chaingraph.json`**,
+and `main` was left carrying an unregistered node that failed `NODE-REGISTRATION-GAP-1` on every site PR.
+§NODEPAGE-1 makes the concept legitimate and the declaration machine-checked, so it can never again be
+improvised per shard.
+
+**§NODEPAGE-1.1 What it licenses (NORMATIVE).** A `chaingraph.json` `nodes[]` entry MAY declare
+`pageless`. It licenses exactly one thing: **the node legitimately has no composer page of its own.** A
+node that declares it satisfies the axis-(d) node-page requirement WITHOUT a page — the gate reports the
+waiver and its reason instead of a page path. It licenses nothing else. In particular it is **NOT** an
+exemption from `NAV-ISLAND-1` nav reachability for a page that DOES exist (a page that exists must still
+be reachable; `pageless` is a claim that none exists, not a claim that an existing one may hide), **NOT**
+an exemption from the REQUIRED `url` member, and **NOT** an exemption from the §15 `catalog-parity.mjs`
+rule that a live node's `url` resolves to a real file. A live page-less node therefore addresses the
+shared surface that presents it — a `guides/` hub, for example — never a page it owns.
+
+**§NODEPAGE-1.2 The catalog field (NORMATIVE).** `pageless` is an OPTIONAL string property on
+`$defs/node` whose value is the prose reason the waiver was taken; an empty or non-string value is
+invalid. It is hash-excluded catalog-only metadata: it is not an artifact-envelope member, moves no
+`execution_hash`, and adds no `required[]` entry. Absence is the default and means the node is expected
+to carry a page, exactly as before this section.
+
+**§NODEPAGE-1.3 The consistency rule — a false declaration is a HARD FAIL (NORMATIVE).** `pageless`
+asserts the ABSENCE of a page, and that assertion is checkable from the filesystem, so it MUST be checked
+there and never taken on trust (STANDING-ORDERS #34: anything derivable MUST be derived). A node **OWNS a
+page** when either candidate resolves to a real file, in the working tree or on the default branch: (a)
+the canonical node-page path `chaingraph/<tool_id>.html`; or (b) its own `url`, when that `url` addresses
+an `.html` file under `chaingraph/` or `tools/` (`NODE-COMPLETENESS-PAGEAXIS-1`: a `tools/`-hosted page is
+a node page too). **A node that declares `pageless` while it owns a page is a FALSE DECLARATION and MUST
+fail.** The remedy is one of two things and never a third: drop the `pageless` key, or remove the page.
+
+**§NODEPAGE-1.4 One definition, two consumers (NORMATIVE).** The page-ownership resolution in
+§NODEPAGE-1.3 has exactly ONE implementation, `resolveOwnPage()` in
+`chaingraph/standard/check-pageless-consistency.mjs`. The axis that ACCEPTS the waiver
+(`scripts/check-node-complete.mjs` axis (d)) imports it rather than carrying a second copy, so the
+acceptance rule and the policing rule cannot drift apart. A second implementation of "does this node own
+a page" is a defect, not an optimisation.
+
+**§NODEPAGE-1.5 Conformance (NORMATIVE).** `check-pageless-consistency.mjs` (§15) sweeps every node
+shard AND the assembled catalog and proves four directions: (a) a node declaring `pageless` with no page
+owned PASSES; (b) a node declaring `pageless` while a page it owns exists HARD FAILS, naming the page that
+contradicts the waiver; (c) a normal page-bearing node with no declaration is untouched, reported as
+not-applicable rather than as a pass or a gap; (d) a `pageless` key carrying a non-string or empty value
+is its own distinct FAIL, never a silent skip (STANDING-ORDERS #34c). The controls in
+`pageless-consistency.test.mjs` exercise the RED and GREEN halves of each direction and verify the checker
+by mutation, using `art-662`'s real pre-fix shard as the false-declaration fixture.
+
+**§NODEPAGE-1.6 Frozen-envelope invariance (NORMATIVE).** `pageless` is an OPTIONAL catalog-node
+property, not an artifact-envelope member. It moves no `execution_hash`, adds no `required[]` member to
+`$defs/artifact`, leaves `chaingraph_version` at `"0.4.0"`, changes no existing property's semantics, and
+imposes no MUST-emit on any existing or future node. Measured against §0.4-FREEZE's three-condition bar,
+this is additive. A catalog carrying a `pageless` node is schema-valid; the same catalog was invalid
+before this section only because `$defs/node` is `additionalProperties: false`.
+
+## §AGID-1 Agent-Identity Binding — `audit_signature.requesting_agent` (NORMATIVE, OPTIONAL — additive, record stays at whatever `chaingraph.json` carries, same text-pass/record-bump separation as §30)
+
+When an artifact is produced at an agent's request, the producer MAY record the requesting agent's
+asserted identity at `audit_signature.requesting_agent`. The standard already answers what computed
+(§4), that it computed correctly (§16/§18), which kernel source ran (§17), who was authorized in
+advance (§22), and which human took responsibility (§27). None of those records which agent actually
+requested this one artifact. §22 is the standing grant to an agent class; §AGID-1 is the per-artifact
+assertion of the requester on one run, the same grant/act split §22 and §27 already draw for humans.
+Like every attestation member, it is attached AFTER hashing and is EXCLUDED from the §4 preimage:
+adding, removing, or altering it leaves every `execution_hash` byte-identical (both halves asserted by
+`agent-identity-binding.test.mjs`), `$defs/artifact.required` is unchanged, and `chaingraph_version`
+stays `"0.4.0"`. An artifact without the member is fully conformant and asserts nothing.
+
+**§AGID-1.1 Shape (NORMATIVE).**
+
+```json
+"requesting_agent": {
+  "agid_version": "1",
+  "scheme": "did" | "rfc9421-keyid" | "webbotauth-card" | "mcp-i" | "x-<vendor>",
+  "id": "<scheme-scoped identifier>",
+  "evidence": { },
+  "asserted_by": "producer" | "agent"
+}
+```
+
+`scheme` and `id` are REQUIRED when the member is present; every other member is OPTIONAL. The closed
+v1 scheme set is agent-runtime identity only: `did` (any DID method, `did:key`, `did:web`, `did:trail`
+included; `id` is the DID), `rfc9421-keyid` (`id` is the RFC 9421 `keyId`; the TAP and Web Bot Auth
+families), `webbotauth-card` (`id` is the Signature Agent Card URL or its digest), and `mcp-i` (`id` is
+a DIF MCP-Identity identifier). The `x-` prefix is the vendor extension point: the schema accepts any
+`x-<vendor>` value, and a verifier that does not implement a given `x-` scheme SHOULD evaluate the
+claim as present-but-unevaluated; the schema never rejects the `x-` form itself. A scheme outside the
+closed set and the `x-` form fails the schema. Organizational identity keeps its own slot and is
+deliberately NOT admitted in v1: an LEI is §9's organization identity (§9 already covers the operating
+organization and its `did:key` signer), not an agent-runtime one, and a deployment can state both today
+(§9 for the organization, §AGID-1 for the agent). `agid_version` is `"1"` when present. `evidence` is
+OPTIONAL scheme-scoped material (for `rfc9421-keyid`, the captured `Signature-Input`/`Signature` pair
+over the triggering request; for `webbotauth-card`, the card bytes or their digest). `asserted_by`
+records who wrote the claim: `producer` (the producer observed the caller) or `agent` (the agent
+supplied its own identity).
+
+**§AGID-1.2 What this binding is (NORMATIVE honesty clause).** The recorded identity is ASSERTED, never
+verified: this binding performs no resolution, no signature verification, and no registry lookup.
+Verifying the assertion is the consumer's per-scheme duty (RFC 9421 base-string verification for
+`rfc9421-keyid`, DID resolution for `did`, card and directory validation for `webbotauth-card`), and a
+deployment MAY cite its own conformant tooling for that duty without this section absorbing any
+external specification. A verification surface that renders the claim SHOULD classify a bare
+`requesting_agent` under §26.6's `connector_asserted` label (a party reported an identity at a time,
+with no claim about identity truth) and SHOULD NOT present it as `hash_verified`; §26.6's own
+no-collapse rule already governs any surface implementing that profile. The member is not an
+authorization statement (§22), not a human-accountability record (§27), and not stream provenance
+(§APROV-1).
+
+**§AGID-1.3 Tamper posture (NORMATIVE).** Because the member is hash-excluded, it is strippable and
+swappable in isolation by construction. A deployment that needs it tamper-evident covers it the way
+every attestation member is covered: a §16 whole-artifact proof secures `requesting_agent`
+transitively (the member sits inside the secured document), and a claim with `asserted_by: "agent"`
+SHOULD carry `evidence` the agent itself signed.
+
+**§AGID-1.4 Per-artifact scope, no chain propagation (NORMATIVE).** The binding asserts the requester
+of the single run that produced one artifact. Chain execution is untouched: §21 defines no requester
+threading across steps, and no chain-level propagation semantics exist in v1. A later additive
+subsection of this section may define propagation against a real chain consumer; none exists today,
+and speculative mechanism stays out of v1.
+
+**§AGID-1.5 Frozen-envelope invariance (NORMATIVE).** `requesting_agent` is an OPTIONAL, hash-excluded
+member of `audit_signature`, exactly as §17's `build_identity`, §18's `compute_proof`, and §29's
+`twin_execution` were. `$defs/artifact.required` is UNCHANGED, the §4 preimage members
+(`policy_parameters`, `output_payload`) are UNCHANGED, and `chaingraph_version` stays `"0.4.0"`.
+Measured against §0.4-FREEZE's three-condition bar: (a) no existing hash moves (the member sits
+outside the hashed preimage, asserted by `agent-identity-binding.test.mjs`); (b) no `required[]`
+change (every member of this section is optional); (c) no MUST-emit on any existing artifact (absence
+is fully conformant and means NO CLAIM). All three conditions clear, so this is an additive change
+under §0.4-FREEZE. A verifier correct for the previous record computes an identical `execution_hash`
+for an artifact carrying the member and MAY ignore it entirely.
+
+**§AGID-1.6 Interop crosswalk (INFORMATIVE — §XMAP-1 convention).**
+
+| External | Their locus | Maps to |
+|---|---|---|
+| MCP-I (DIF, 2026-03 draft) | agent identifier presented at the MCP boundary | `scheme: "mcp-i"`, `id` |
+| TAP (Visa, RFC 9421) | `Signature-Input`/`Signature` headers, `keyId`, registry key lookup | `scheme: "rfc9421-keyid"`, `id` is the `keyId`, headers in `evidence` |
+| Web Bot Auth / Agent Card | card + `/.well-known` signature directory | `scheme: "webbotauth-card"` |
+| TRAIL `did:trail` / W3C Agent Identity Registry CG | DID-based agent identity | `scheme: "did"` |
+| AP2 v0.2 (FIDO) | Shopping Agent role inside the mandate chain | the mandate names the actor; `requesting_agent` records the same actor on the OCG artifact the mandate's execution produced (a correspondence, not an import) |
+
+**§AGID-1.7 Conformance (§15).** The section joins `schema-validate.mjs` (the member's shape under the
+`audit_signature` object: required `scheme`/`id`, the closed scheme set plus the `x-` extension,
+`agid_version` const `"1"`, the `asserted_by` enum, `evidence` an object when present) and
+`agent-identity-binding.test.mjs` (hash-invariance: add, remove, and mutate the member and assert
+every `execution_hash` byte-identical; scheme discipline against the real gate: the four v1 schemes
+and the `x-` form accepted, while a bare unknown scheme, an `lei` scheme, a missing `id`, a wrong
+`agid_version`, an unknown `asserted_by`, and an unknown member are each rejected; absence accepted).
+This section adds no second gate and changes no existing gate; nothing emits the member yet, and
+adoption is a later decision.
+
 ## §14 Changelog
-See `standard/CHANGELOG.md`. **v0.8.19 (2026-08-04 — SPEC-TEXT PASS drafting the STP forward decision-outcome
+See `standard/CHANGELOG.md`. **SPEC-TEXT PASS (2026-09-12: §AGID-1 Agent-Identity Binding, staged by
+`AGENTID-SPEC-APPLY-1` from Tim's 2026-09-02 signed proposal `research/OCG-AGENT-IDENTITY-PROPOSAL-2026-09-02.md`;
+the record `spec_version` stays at whatever `chaingraph.json` carries, same separation as every prior
+text pass):** §AGID-1 adds ONE OPTIONAL, hash-excluded member, `audit_signature.requesting_agent`,
+recording the requesting agent's ASSERTED identity when an artifact is produced at an agent's request.
+Tim signed the three open parameters: the slot is `audit_signature.requesting_agent` (it inherits §16
+signature coverage transitively); NO chain propagation in v1 (§21 untouched, per-artifact assertion
+only); agent-runtime identity schemes only, NO `lei`/§9-bridge scheme in v1. The shape (required
+`scheme`/`id`, closed scheme set `did`/`rfc9421-keyid`/`webbotauth-card`/`mcp-i` plus the `x-` vendor
+extension) lands in `openchain-graph-v0.4.schema.json` in the same change, gate-covered by
+`schema-validate.mjs`; hash-invariance and scheme discipline are proved by
+`agent-identity-binding.test.mjs`. No kernel, page, or manifest change: nothing emits the member yet
+and absence is fully conformant. The rendered spec page does not carry the section yet; §AGID-1 is
+registered in `spec-page-parity-baseline.json` as known-missing debt until the page backfill lands. **SPEC-TEXT PASS (2026-09-06 — §30.3 `standards_basis` gloss, staged by
+`SPEC-30-3-GLOSS-1`; the record `spec_version` stays at whatever `chaingraph.json` carries, same
+separation as every prior text pass):** §30.3's gloss states the declaration vocabulary's existing
+shape explicitly: naming a specification whose structure a node recomputes, converts, decodes, compares,
+or scores is not a standards citation for this purpose, while a conformance verdict about an artifact
+against a published specification, or a computation performed against a regulatory or accounting clause,
+is. Derived from the estate's own declarations (spec-naming `not_applicable` nodes `art-26`, `art-590`,
+`art-591`; the conformance-verdict `implements_standard` node `art-651`). Purely prose: no schema,
+shard, hash, or gate change, every existing artifact and declaration stays byte-identical.
+**v0.8.24 (2026-08-13 — SPEC-TEXT PASS adding §5.1 pm:* Prediction/
+Event-Market Provenance Extension, staged by `PM-OCG-SCHEMA-SPEC-1` carrying the
+`SECO-OCG-Prediction-Market-Scoping.md` §4.1 ratified scoping and Tim's 2026-08-13 provenance-layer-only
+ruling; the record `spec_version` stays at whatever `chaingraph.json` carries until the next coordinated
+K landing bumps it, same separation as every prior text pass):** §5.1 registers seven `mandate_type`
+values (`market_definition, trade_order, trade_execution, position_update, resolution_evidence,
+resolution_certificate, settlement`) under the `pm:` tool_id prefix for prediction/event-market
+provenance artifacts. Settlement-mechanism-agnostic, identity-agnostic, and outcome-structure-agnostic
+by construction; resolution enters as an external attested input via §16/§23, never as an OCG
+computation; `settlement`'s `output_payload` is a verify-only payout recompute, never an operative
+transfer, ordering, or matching duty (Corda-tripwire discipline — no accept/finality language anywhere
+in the section). Purely additive: no `$defs/artifact.required` change, `chaingraph_version` stays
+`"0.4.0"`, no new §15 gate (mirrors §5's own not-CI-enforced status), every existing artifact stays
+byte-identical. No kernel, tool, or `chaingraph.json` touched by this pass — documentation only. Full
+proposal + ADR + illustrative payloads in `PM-MANDATE-EXTENSION.md` (same directory).
+**v0.8.23 (2026-08-11 — SPEC-TEXT PASS adding §27.14 Cure records and
+itemized deltas, staged by `RECEIPT-DELTA-CURE-1` carrying the 2026-08-10 robert-persona mechanism
+adjudication; the record `spec_version` stays at whatever `chaingraph.json` carries until the next
+coordinated K landing bumps it, same separation as every prior text pass):** §27.14 adds `cure`, a
+SEVENTH closed `record_type` member distinct from `override` (a value-level correction fact, not a
+time-boxed policy attenuation), and `delta` (`$defs/haDelta`) — OPTIONAL, a FOURTH sibling of
+`record_type` alongside `kernel_pin`/`replay_verified`/`party_role` (§27.12/§27.13), an itemized
+`{field_pointer, old_value_digest, new_value_digest}` array carrying digests only, never raw values.
+Available to both `cure` and `override` records. States the validation explicitly: an unsealed
+`subject_hash` fails the existing §27.2 check, and a `delta`'s claimed new value must cite a real new
+sealed artifact via `chain.parent_hashes` (the §21.6 ancestry-commitment pattern) or it is a bare
+assertion. `additionalProperties: false` on `$defs/humanAccountabilityRecord` means this DOES require a
+schema-file edit (new `$defs/haDelta` + the `cure` enum member + `properties.delta`), same shape the
+`kernel_pin`/`replay_verified`/`party_role` edits each required. Purely additive: no
+`$defs/artifact.required` change, `chaingraph_version` stays `"0.4.0"`, every existing artifact and every
+existing §27 record (lacking the field) stays byte-identical. No kernel, `chaingraph.json`, or spec-page
+structural change beyond the mirrored prose — documentation only. **v0.8.22 (2026-08-10 — SPEC-TEXT PASS adding §27.13 Party role, staged by
+`RECEIPT-ROLES-1` carrying Tim's 2026-08-10 robert-adjudication approval; the record `spec_version` stays
+at whatever `chaingraph.json` carries until the next coordinated K landing bumps it, same separation as
+every prior text pass):** §27.13 adds `party_role` (`$defs/haPartyRole`) — OPTIONAL, closed three-value
+enum (`signatory` | `observer` | `controlling_party`), a THIRD sibling of `record_type` alongside
+`kernel_pin`/`replay_verified` (§27.12). Records a FACT about a party's standing under the agreement the
+subject artifact reports on — never an authorization this spec grants, never something a gate reads, never
+something anything branches on. `additionalProperties: false` on `$defs/humanAccountabilityRecord` means
+this DOES require a schema-file edit (new `$defs/haPartyRole` + new `properties.party_role`), stated
+explicitly — same shape as the `kernel_pin`/`replay_verified` edits. Purely additive: no
+`$defs/artifact.required` change, `chaingraph_version` stays `"0.4.0"`, every existing artifact and every
+existing §27 record (lacking the field) stays byte-identical. Corda tripwires respected: no accept/
+finality/settlement language, no operatorship, liveness-duty framing only. No kernel, page, or
+`chaingraph.json` touched by this pass — documentation only. **v0.8.20 (2026-08-10 — SPEC-TEXT PASS adding §29 Twin Execution Record,
+staged by `FV-RUNTIME-TWIN-SPEC-1.md` §1/§6 WU 1 carrying Tim's 2026-08-10 models-allowed/proofs-frozen
+ruling; the record `spec_version` stays at whatever `chaingraph.json` carries until the next coordinated
+K landing bumps it, same separation as every prior text pass):** §29 defines `audit_signature.twin_execution`
+— OPTIONAL, hash-excluded, sibling to §18 `compute_proof`, recording agreement/divergence between a
+hand-written kernel and a Dafny-compiled twin of the same specification. Purely additive: no schema
+`required[]` change, `chaingraph_version` stays `0.4.0`, every existing `execution_hash` byte-identical
+with and without the member (§29.3). The JSON Schema's `audit_signature` object carries no
+`additionalProperties:false`, so it already accepts this member without a schema-file edit — confirmed
+by inspection of `openchain-graph-v0.4.schema.json`, no `$defs` entry added by this pass. States plainly
+that agreement is evidence the kernel matches its formal twin, not evidence either matches the
+regulation (§29.1), that disagreement is a human-adjudicated finding, never an automatic verdict
+(§29.1), that the twin executes offline/worker/CI-side only and the browser never re-executes it
+(§29.2), and that `compute_proof_ready` is untouched — `twin_execution` is a sibling to `compute_proof`,
+not a modifier (§29.4). No `dafny verify` invocation, no proof discharge, and no kernel/page/schema code
+touched by this pass — documentation only. **v0.8.19 (2026-08-04 — SPEC-TEXT PASS drafting the STP forward decision-outcome
 mandate carved out by `STP-BRANCHABILITY-BUILD-SPEC.md` §3; the record `spec_version` stays at whatever
 `chaingraph.json` carries until the next coordinated K landing bumps it, exactly as the v0.8.18/v0.8.17/v0.8.16
 text passes were separated from their record bumps):** §STPFWD-1 requires a node first published
@@ -3333,7 +4018,7 @@ A free, client-side, no-account checker (`chaingraph/conformance-gate.html`) run
 | Rule | Gate | When |
 |---|---|---|
 | §4 canonical execution_hash | `kernel-hash-integrity.mjs`, `lint-forbidden-hash.mjs`, `golden-parity.test.mjs`, `determinism-replay.test.mjs` (N=3 idempotency + JCS key-order stability) | validate |
-| §12 every gpu:false node has a kernel (no silent skip) | `kernel-coverage.mjs --strict` | validate |
+| §12 every gpu:false node has a kernel (no silent skip) | `check-kernel-coverage.mjs --strict` | validate |
 | §4 buildArtifact reproduces hash offline | `kernel-contract.test.mjs` | validate |
 | §4 **live** re-verifiability of every deployed node | **`hash-sweep.mjs`** | post-deploy |
 | Live server registers every expected mcp_name | **`verify-mcp-registered.mjs`** (Addendum A) | post-deploy |
@@ -3348,7 +4033,7 @@ A free, client-side, no-account checker (`chaingraph/conformance-gate.html`) run
 | §13 export gate honored (incl. §13.11 `vc`: view-only, no new hash/proof, deterministic, base-profile) | `exporters/export.test.mjs` (unit) + `smoke-compute.mjs` (export round-trip) | validate + post-deploy |
 | §16 proof: eddsa-jcs-2022 whole-artifact at `audit_signature.proof`, no new hash, no `chaingraph_version` bump, deterministic, offline-verifiable, default-off | `proof-binding.test.mjs` (unit: sign→verify round-trip + tamper-detect + determinism + backward-compat) | validate |
 | §17 kernel identity binding: digest at `audit_signature.build_identity` ↔ Graph Index `compute_images` ↔ recomputed source, hash-excluded, no `chaingraph_version` bump | `kernel-identity.test.mjs` (unit: digest determinism + three-way cross-check + tamper-detect + backward-compat) | validate |
-| §18 compute-integrity proof: object structure, `imageId` ↔ Graph Index `compute_images`, journal ↔ `output_payload`, no new hash, version stays 0.4.0, default-off; PLUS the shipped self-contained BN254 Groth16 verifier accepts a real receipt fixture and rejects a tampered seal / wrong journal (stark stays vendor-delegated per §18.1) | `compute-proof.test.mjs` (unit: binding + real-receipt verify + tamper-detect + backward-compat) | validate |
+| §18 compute-integrity proof: object structure, `imageId` ↔ Graph Index `compute_images`, journal ↔ `output_payload`, no new hash, version stays 0.4.0, default-off; PLUS the shipped self-contained BN254 Groth16 verifier accepts a real receipt fixture and rejects a tampered seal / wrong journal (stark stays vendor-delegated per §18.1); PLUS §18.7's journal byte contract — the verifier derives journal bytes as `utf8(JCS(journal))` via §4's `cgCanon` and no second canonicalization path, which the real-receipt pairing check enforces by construction (wrong bytes ⇒ wrong claim digest ⇒ a genuine receipt is rejected) | `compute-proof.test.mjs` (unit: binding + real-receipt verify + tamper-detect + backward-compat) | validate |
 | §20 anchor binding: per-type proof verification (`rfc3161-tst` real TST vs pinned TSA root incl. messageImprint/CMS/chain/EKU/genTime, `opentimestamps` completed proof vs pinned Bitcoin block header, `c2sp-tlog-proof-v1` vs pinned test log key + cosigners + Merkle inclusion, `scitt-receipt-rfc9942` COSE receipt), `anchored_hash` == recomputed `execution_hash`, tampered proof / mismatched hash MUST fail, outside hash scope | `anchor-binding.test.mjs` | validate |
 | §13.12 SD-JWT export: redact→verify round-trip with disclosures, digest mismatch fails, always-disclosed set complete (no input leaks into always-disclosed, no output becomes redactable), fresh CSPRNG salts the only nondeterminism, JWS EdDSA under the §16 key | `sd-export-roundtrip.test.mjs` | validate |
 | §13.13 xBRL-JSON export profile `ocg-xbrl-json@1`: fixture round-trip determinism (re-canonicalize twice ⇒ byte-identical), `canonicalValues` conformance (every fact value canonical-lexical string, no raw number/boolean), Annex 1 FFIEC Call Report sample structurally valid (real MDRM concept names, no placeholder/null concept), never labeled submittable | `xbrl-json-fixtures.test.mjs` | validate |
@@ -3383,7 +4068,10 @@ A free, client-side, no-account checker (`chaingraph/conformance-gate.html`) run
 | §28 clause binding profile `ocg-clause-binding@1`: hash-excluded top-level `clause_bindings[]` (zero-entry artifact hash-identical + fully conformant); each entry's RFC 6901 `pointer` MUST root at `/policy_parameters` or `/output_payload` — a pointer rooted elsewhere is RED (§28.3); each resolved §28.1 citation object carries the five REQUIRED members (`scheme`, `id`, `in_force_from`, `mapped_by`, `mapped_at`), ISO-date fields validated, `interpretation_ref` when present is a `sha256:` content hash, no unknown members on the closed pinned form; a legacy bare-string citation is valid but classified UNPINNED and MUST NOT be declared in `clause_bindings`; unresolved pointer / malformed citation / off-preimage pointer MUST fail; `$defs/artifact.required` + `chaingraph_version` 0.4.0 UNCHANGED; defaults OFF, absence conformant, new-artifacts-only (no migration path) | `clause-binding.test.mjs`, `schema-validate.mjs` | validate |
 | §21.6 ancestry_digest: bottom-up recompute over `{execution_hash, parent_ancestry_digests}` via the one `cgCanon` path, root uses `[]`, mutation-sensitive (an omitted/reordered/substituted ancestor MUST change the terminal digest — the exact `cgCanon`-object-not-string trap §PPH-1 already guards against, tested identically here), hash-EXCLUDED (byte-identical `execution_hash` with and without the member, both halves asserted), absence conformant + reported as no-claim, incomplete bundle reported as a distinct `incomplete-bundle` tier never conflated with `failed` | `ancestry-digest.test.mjs` (unit) + `schema-validate.mjs` (shape) | validate |
 | §20.3 retention profile: a verifier presented a hash-only survivor (leaf + inclusion proof + cosigned checkpoint, no body) reports `body-absent: anchored-hash-only`, never `verified`/`failed`; a `regulatory-N-years` fixture pruned before N elapses MUST fail a conformance check; `fixture`-class artifacts are NEVER eligible regardless of checkpoint state; top-level `retention_class` (§20.3.0, distinct from §23.4's per-attestation field of the same name) is hash-EXCLUDED (byte-identical `execution_hash` with and without the member); the tier is additive — an artifact/verifier that never encounters a pruned body behaves exactly as before v0.8.18 | `retention-profile.test.mjs` | validate |
-| §STPFWD-1 forward decision-outcome mandate: a NEW gpu:false live node emits `haGatePolicy` (§27.4) at `/output_payload/decision/gate_policy` and `haRunState` (§27.10) at `/output_payload/decision/execution_state`, both closed enums unchanged and both inside the §4 preimage; silent about every node published before this section; no schema property, no `required[]` entry, no MUST-emit on an existing artifact — enforced at build time (repo scripts/check-compute-proof-coverage.mjs ratchet, cited §18) rather than by a second §15 gate, since every in-scope node is already required to be proven-or-explicitly-deferred before it can ship | `kernel-coverage.mjs --strict`, `compute-proof.test.mjs` | validate |
+| §STPFWD-1 forward decision-outcome mandate: a NEW gpu:false live node emits `haGatePolicy` (§27.4) at `/output_payload/decision/gate_policy` and `haRunState` (§27.10) at `/output_payload/decision/execution_state`, both closed enums unchanged and both inside the §4 preimage; silent about every node published before this section; no schema property, no `required[]` entry, no MUST-emit on an existing artifact — enforced at build time (repo scripts/check-compute-proof-coverage.mjs ratchet, cited §18) rather than by a second §15 gate, since every in-scope node is already required to be proven-or-explicitly-deferred before it can ship | `check-kernel-coverage.mjs --strict`, `compute-proof.test.mjs` | validate |
+| §30 cited clause digest: a `chaingraph.json` `nodes[]` entry NEW or CHANGED on the current branch MUST declare `standards_basis` (`implements_standard`\|`not_applicable`) — undeclared FAILS, no silent default (§30.3); `implements_standard` MUST carry >=1 `cited_clause_digest[]` entry whose `digest` resolves to a registered `chaingraph/standard/clause-snapshot-registry.json` entry — a non-resolving digest FAILS (§30.5c); registry entries are written only by `pin-clause-snapshot.mjs`, which refuses any excerpt exceeding the clause-level size cap (§30.2, whole-document digests structurally impossible); a PRE-EXISTING/untouched node is NEVER retro-gated, reported as a count only (§30.4); hash-excluded, no `execution_hash`/`required[]` change (§30.6); gate output states plainly it proves retrieval, not correct interpretation (§30.0) | `check-clause-digest.mjs`, `check-clause-digest.test.mjs` | validate |
+| §NODEPAGE-1 pageless waiver: a node declaring `pageless` with no page owned PASSES (§NODEPAGE-1.1); a node declaring `pageless` while it OWNS a page (the canonical `chaingraph/<tool_id>.html`, or its own `url` resolving to an `.html` under `chaingraph/` or `tools/`) HARD FAILS naming the page that contradicts the waiver, with page existence RECOMPUTED from the filesystem and never read from the node's own claim (§NODEPAGE-1.3, SO #34); a page-bearing node with no declaration is untouched, reported as not-applicable rather than as a pass or a gap; a `pageless` key carrying a non-string or empty value is its own distinct FAIL, never a silent skip (SO #34c); page-ownership has ONE implementation, shared by the axis that accepts the waiver and the gate that polices it (§NODEPAGE-1.4); hash-excluded, no `execution_hash` or `required[]` change, `chaingraph_version` stays 0.4.0, and a catalog carrying a `pageless` node is schema-valid where the same catalog was invalid before the property was declared (§NODEPAGE-1.6) | `check-pageless-consistency.mjs`, `pageless-consistency.test.mjs`, `schema-validate.mjs` | validate |
+| §AGID-1 agent-identity binding: OPTIONAL hash-excluded `audit_signature.requesting_agent`, absence fully conformant and means NO CLAIM; shape: `scheme` + `id` REQUIRED when present, closed v1 scheme set (`did`, `rfc9421-keyid`, `webbotauth-card`, `mcp-i`) plus the `x-<vendor>` extension accepted, a bare unknown scheme (an organizational `lei` stays §9's slot, NOT admitted in v1) rejected, `agid_version` const `"1"`, `asserted_by` in (`producer`, `agent`), `evidence` an object when present; hash-EXCLUDED, add/remove/mutate leaves `execution_hash` byte-identical (both halves asserted), `$defs/artifact.required` + `chaingraph_version` 0.4.0 UNCHANGED | `schema-validate.mjs`, `agent-identity-binding.test.mjs` | validate |
 | every rule above has a gate (meta) | `spec-gate-coverage.mjs` | validate |
 
 **Meta-rule:** a PR that adds a normative MUST to this file without a referenced gate in this table

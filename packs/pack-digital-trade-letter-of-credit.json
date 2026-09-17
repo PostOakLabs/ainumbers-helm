@@ -18,7 +18,7 @@
       {
         "node_id": "n2",
         "kernel_id": "art-08-en16931-einvoice-batch-validator",
-        "kernel_digest": "sha256:2ae638995633cb25dd6ef2c645f6246c8aef863054019213ba1424a7509c4c7e"
+        "kernel_digest": "sha256:0fe6cfcfcb1244f162fd67f674d4ff0d3d444f905b6e4eab29996991284d3ea1"
       },
       {
         "node_id": "n3",
@@ -30,7 +30,7 @@
     "gates": [],
     "actions": []
   },
-  "workflow_manifest_digest": "sha256:e313a57d9351bc3fd9dc1a288b7420e9f7404cacce9f56d9f7d52c5596ded497",
+  "workflow_manifest_digest": "sha256:39a64899f41137bdc171b429eb34ca24396e41d09d075be09a6d6d4120f1ef7d",
   "declared_inputs": [
     {
       "from": "art-52-digital-trade-fit-diagnostic",

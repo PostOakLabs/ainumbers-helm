@@ -528,15 +528,96 @@ import * as art587    from './art-587-finp2p-ledger-proof-verifier.kernel.mjs';
 import * as art588    from './art-588-docket-deadline-sweep.kernel.mjs';
 import * as art589    from './art-589-redline-round-classifier.kernel.mjs';
 import * as art59     from './art-59-settlement-asset-finality-classifier.kernel.mjs';
+import * as art590    from './art-590-x402-eip712-digest-recomputer.kernel.mjs';
+import * as art591    from './art-591-x402-signer-recovery-verifier.kernel.mjs';
+import * as art592    from './art-592-x402-domain-nonce-window-checker.kernel.mjs';
+import * as art593    from './art-593-webbotauth-nonce-replay-check.kernel.mjs';
+import * as art594    from './art-594-tempo-mpp-voucher-receipt-verifier.kernel.mjs';
+import * as art595    from './art-595-ap2-cartmandate-hashchain-builder.kernel.mjs';
+import * as art596    from './art-596-ap2-x402-cart-correlation.kernel.mjs';
+import * as art597    from './art-597-c2pa-aiml-assertion-decoder.kernel.mjs';
+import * as art598    from './art-598-input-attestation-verifier.kernel.mjs';
+import * as art599    from './art-599-gleif-snapshot-digest.kernel.mjs';
 import * as art60     from './art-60-agent-economy-runtime-fit-diagnostic.kernel.mjs';
+import * as art600    from './art-600-lei-relationship-consistency.kernel.mjs';
+import * as art601    from './art-601-dora-roi-gleif-preflight-pack.kernel.mjs';
+import * as art602    from './art-602-mica-register-presence-check.kernel.mjs';
+import * as art603    from './art-603-stablecoin-reserve-3source-recompute.kernel.mjs';
+import * as art604    from './art-604-erc8004-registry-entry-verifier.kernel.mjs';
+import * as art605    from './art-605-merkle-airdrop-proof-verifier.kernel.mjs';
+import * as art606    from './art-606-erc165-interface-id-verifier.kernel.mjs';
+import * as art607    from './art-607-erc1967-proxy-slot-classifier.kernel.mjs';
+import * as art608    from './art-608-erc2981-royalty-calculator.kernel.mjs';
+import * as art609    from './art-609-jwks-pinned-directory-check.kernel.mjs';
 import * as art61     from './art-61-x402-batch-settlement-reconciler.kernel.mjs';
+import * as art610    from './art-610-erc4626-vault-share-math.kernel.mjs';
+import * as art611    from './art-611-erc7540-async-vault-request-accounting.kernel.mjs';
+import * as art612    from './art-612-erc2612-permit-binding-verifier.kernel.mjs';
+import * as art613    from './art-613-erc4337-userop-math.kernel.mjs';
+import * as art614    from './art-614-eip7702-authorization-tuple-decoder.kernel.mjs';
+import * as art615    from './art-615-mla-charge-inclusion-classifier.kernel.mjs';
+import * as art616    from './art-616-mla-mapr-actuarial-recompute.kernel.mjs';
+import * as art617    from './art-617-m3p-monthly-cap-calculator.kernel.mjs';
+import * as art618    from './art-618-naic-clo-rbc-factor-calculator.kernel.mjs';
+import * as art619    from './art-619-ccd2-aprc-annex3-recompute.kernel.mjs';
 import * as art62     from './art-62-ap2-payment-receipt-verifier.kernel.mjs';
+import * as art620    from './art-620-summa-mst-inclusion-checker.kernel.mjs';
+import * as art621    from './art-621-summa-mst-liability-aggregator.kernel.mjs';
+import * as art626    from './art-626-deterministic-amortization-schedule.kernel.mjs';
+import * as art627    from './art-627-effective-date-rule-version-registry.kernel.mjs';
+import * as art628    from './art-628-declarative-decision-tree-evaluator.kernel.mjs';
 import * as art63     from './art-63-agent-service-metering-modeler.kernel.mjs';
+import * as art633    from './art-633-asc280-reportable-segment-tester.kernel.mjs';
+import * as art634    from './art-634-codm-expense-significance-classifier.kernel.mjs';
+import * as art635    from './art-635-rate-rec-5pct-threshold-classifier.kernel.mjs';
+import * as art636    from './art-636-globe-transition-deferred-tax-tracker.kernel.mjs';
+import * as art637    from './art-637-globe-de-minimis-exclusion.kernel.mjs';
 import * as art64     from './art-64-ai-act-highrisk-fit-diagnostic.kernel.mjs';
+import * as art645    from './art-645-compute-index-weights.kernel.mjs';
+import * as art646    from './art-646-compile-rebalance-evidence-pack.kernel.mjs';
+import * as art647    from './art-647-record-index-correction.kernel.mjs';
+import * as art648    from './art-648-record-model-input-lineage.kernel.mjs';
+import * as art649    from './art-649-publish-model-risk-head.kernel.mjs';
 import * as art65     from './art-65-ai-conformity-pack-builder.kernel.mjs';
+import * as art651    from './art-651-authzen-conformance-fixture.kernel.mjs';
+import * as art652    from './art-652-verify-receipt.kernel.mjs';
+import * as art653    from './art-653-pta-verifier.kernel.mjs';
+import * as art654    from './art-654-perp-funding-implied-yield.kernel.mjs';
+import * as art655    from './art-655-publish-market-mark-head.kernel.mjs';
+import * as art656    from './art-656-derivatives-margin-workbench.kernel.mjs';
+import * as art657    from './art-657-forecast-accuracy-scorer.kernel.mjs';
+import * as art658    from './art-658-publish-index-head.kernel.mjs';
+import * as art659    from './art-659-publish-fund-nav-head.kernel.mjs';
 import * as art66     from './art-66-fria-postmarket-monitoring-builder.kernel.mjs';
+import * as art660    from './art-660-compile-nav-error-evidence-pack.kernel.mjs';
+import * as art661    from './art-661-interest-accrual-recompute.kernel.mjs';
+import * as art662    from './art-662-odnsf-fee-recompute.kernel.mjs';
+import * as art663    from './art-663-apy-earned-recompute.kernel.mjs';
+import * as art664    from './art-664-loan-servicing-waterfall-recompute.kernel.mjs';
+import * as art665    from './art-665-gl-tieout-recompute.kernel.mjs';
+import * as art669    from './art-669-algo-execution-schedule-simulator.kernel.mjs';
 import * as art67     from './art-67-agentic-ai-risk-classifier.kernel.mjs';
+import * as art670    from './art-670-examination-readiness-pack.kernel.mjs';
+import * as art671    from './art-671-short-sale-locate-ssr-checker.kernel.mjs';
+import * as art672    from './art-672-fx-funding-sequencer.kernel.mjs';
+import * as art673    from './art-673-lending-recall-prioritizer.kernel.mjs';
+import * as art674    from './art-674-eba-im-model-validation-tracker.kernel.mjs';
+import * as art675    from './art-675-recordkeeping-completeness-mapper.kernel.mjs';
+import * as art676    from './art-676-proxy-voting-record.kernel.mjs';
+import * as art677    from './art-677-whistleblowing-channel-clock.kernel.mjs';
+import * as art678    from './art-678-consultation-response-tracker.kernel.mjs';
+import * as art679    from './art-679-orsa-readiness-pack.kernel.mjs';
 import * as art68     from './art-68-carbon-compliance-fit-diagnostic.kernel.mjs';
+import * as art680    from './art-680-control-attestation-campaign-roll-up.kernel.mjs';
+import * as art681    from './art-681-best-execution-evidence-pack.kernel.mjs';
+import * as art682    from './art-682-rule-605-publication-composer.kernel.mjs';
+import * as art683    from './art-683-consolidation-cta-minority-interest.kernel.mjs';
+import * as art684    from './art-684-intercompany-elimination-netting.kernel.mjs';
+import * as art685    from './art-685-direct-indexing-fit-screen.kernel.mjs';
+import * as art686    from './art-686-ltc-funding-comparator.kernel.mjs';
+import * as art687    from './art-687-wash-sale-window-guard.kernel.mjs';
+import * as art688    from './art-688-education-funding-gap-calculator.kernel.mjs';
+import * as art689    from './art-689-pack-dependency-map.kernel.mjs';
 import * as art69     from './art-69-cbam-embedded-emissions-calculator.kernel.mjs';
 import * as art70     from './art-70-cbam-default-value-resolver.kernel.mjs';
 import * as art71     from './art-71-cbam-certificate-cost-engine.kernel.mjs';
@@ -1112,15 +1193,96 @@ export const KERNELS = {
   'art-588-docket-deadline-sweep':                              art588,
   'art-589-redline-round-classifier':                           art589,
   'art-59-settlement-asset-finality-classifier':                art59,
+  'art-590-x402-eip712-digest-recomputer':                      art590,
+  'art-591-x402-signer-recovery-verifier':                      art591,
+  'art-592-x402-domain-nonce-window-checker':                   art592,
+  'art-593-webbotauth-nonce-replay-check':                      art593,
+  'art-594-tempo-mpp-voucher-receipt-verifier':                 art594,
+  'art-595-ap2-cartmandate-hashchain-builder':                  art595,
+  'art-596-ap2-x402-cart-correlation':                          art596,
+  'art-597-c2pa-aiml-assertion-decoder':                        art597,
+  'art-598-input-attestation-verifier':                         art598,
+  'art-599-gleif-snapshot-digest':                              art599,
   'art-60-agent-economy-runtime-fit-diagnostic':                art60,
+  'art-600-lei-relationship-consistency':                       art600,
+  'art-601-dora-roi-gleif-preflight-pack':                      art601,
+  'art-602-mica-register-presence-check':                       art602,
+  'art-603-stablecoin-reserve-3source-recompute':               art603,
+  'art-604-erc8004-registry-entry-verifier':                    art604,
+  'art-605-merkle-airdrop-proof-verifier':                      art605,
+  'art-606-erc165-interface-id-verifier':                       art606,
+  'art-607-erc1967-proxy-slot-classifier':                      art607,
+  'art-608-erc2981-royalty-calculator':                         art608,
+  'art-609-jwks-pinned-directory-check':                        art609,
   'art-61-x402-batch-settlement-reconciler':                    art61,
+  'art-610-erc4626-vault-share-math':                           art610,
+  'art-611-erc7540-async-vault-request-accounting':             art611,
+  'art-612-erc2612-permit-binding-verifier':                    art612,
+  'art-613-erc4337-userop-math':                                art613,
+  'art-614-eip7702-authorization-tuple-decoder':                art614,
+  'art-615-mla-charge-inclusion-classifier':                    art615,
+  'art-616-mla-mapr-actuarial-recompute':                       art616,
+  'art-617-m3p-monthly-cap-calculator':                         art617,
+  'art-618-naic-clo-rbc-factor-calculator':                     art618,
+  'art-619-ccd2-aprc-annex3-recompute':                         art619,
   'art-62-ap2-payment-receipt-verifier':                        art62,
+  'art-620-summa-mst-inclusion-checker':                        art620,
+  'art-621-summa-mst-liability-aggregator':                     art621,
+  'art-626-deterministic-amortization-schedule':                art626,
+  'art-627-effective-date-rule-version-registry':               art627,
+  'art-628-declarative-decision-tree-evaluator':                art628,
   'art-63-agent-service-metering-modeler':                      art63,
+  'art-633-asc280-reportable-segment-tester':                   art633,
+  'art-634-codm-expense-significance-classifier':               art634,
+  'art-635-rate-rec-5pct-threshold-classifier':                 art635,
+  'art-636-globe-transition-deferred-tax-tracker':              art636,
+  'art-637-globe-de-minimis-exclusion':                         art637,
   'art-64-ai-act-highrisk-fit-diagnostic':                      art64,
+  'art-645-compute-index-weights':                              art645,
+  'art-646-compile-rebalance-evidence-pack':                    art646,
+  'art-647-record-index-correction':                            art647,
+  'art-648-record-model-input-lineage':                         art648,
+  'art-649-publish-model-risk-head':                            art649,
   'art-65-ai-conformity-pack-builder':                          art65,
+  'art-651-authzen-conformance-fixture':                        art651,
+  'art-652-verify-receipt':                                     art652,
+  'art-653-pta-verifier':                                       art653,
+  'art-654-perp-funding-implied-yield':                         art654,
+  'art-655-publish-market-mark-head':                           art655,
+  'art-656-derivatives-margin-workbench':                       art656,
+  'art-657-forecast-accuracy-scorer':                           art657,
+  'art-658-publish-index-head':                                 art658,
+  'art-659-publish-fund-nav-head':                              art659,
   'art-66-fria-postmarket-monitoring-builder':                  art66,
+  'art-660-compile-nav-error-evidence-pack':                    art660,
+  'art-661-interest-accrual-recompute':                         art661,
+  'art-662-odnsf-fee-recompute':                                art662,
+  'art-663-apy-earned-recompute':                               art663,
+  'art-664-loan-servicing-waterfall-recompute':                 art664,
+  'art-665-gl-tieout-recompute':                                art665,
+  'art-669-algo-execution-schedule-simulator':                  art669,
   'art-67-agentic-ai-risk-classifier':                          art67,
+  'art-670-examination-readiness-pack':                         art670,
+  'art-671-short-sale-locate-ssr-checker':                      art671,
+  'art-672-fx-funding-sequencer':                               art672,
+  'art-673-lending-recall-prioritizer':                         art673,
+  'art-674-eba-im-model-validation-tracker':                    art674,
+  'art-675-recordkeeping-completeness-mapper':                  art675,
+  'art-676-proxy-voting-record':                                art676,
+  'art-677-whistleblowing-channel-clock':                       art677,
+  'art-678-consultation-response-tracker':                      art678,
+  'art-679-orsa-readiness-pack':                                art679,
   'art-68-carbon-compliance-fit-diagnostic':                    art68,
+  'art-680-control-attestation-campaign-roll-up':               art680,
+  'art-681-best-execution-evidence-pack':                       art681,
+  'art-682-rule-605-publication-composer':                      art682,
+  'art-683-consolidation-cta-minority-interest':                art683,
+  'art-684-intercompany-elimination-netting':                   art684,
+  'art-685-direct-indexing-fit-screen':                         art685,
+  'art-686-ltc-funding-comparator':                             art686,
+  'art-687-wash-sale-window-guard':                             art687,
+  'art-688-education-funding-gap-calculator':                   art688,
+  'art-689-pack-dependency-map':                                art689,
   'art-69-cbam-embedded-emissions-calculator':                  art69,
   'art-70-cbam-default-value-resolver':                         art70,
   'art-71-cbam-certificate-cost-engine':                        art71,

@@ -161,11 +161,11 @@
     },
     {
       "path": "hub/vendored/ocg/MANIFEST.json",
-      "sha256": "3171ef20c00d0b31c1405aa2429616d8c092db369821767371b8205d998d09d9"
+      "sha256": "444246124794b99bb19cb27e25078f27101558d9a85dae943abbb0e416de9eb0"
     },
     {
       "path": "hub/vendored/ocg/kernels/_proof.mjs",
-      "sha256": "1254a6a3bb5f227ce68b882d484ff13825ce3018a8b5dd00f9adbdead8d2272f"
+      "sha256": "f105954e77e285a412256ca193d4b0426fc828caa54f9458b56a64012a529b41"
     },
     {
       "path": "hub/watch-scheduler.mjs",
@@ -181,7 +181,7 @@
     },
     {
       "path": "packs/pack-2052a-classify-daily.json",
-      "sha256": "57b9677f130fc9b67e06e60034e8a3ca20488bc174c02ccaeecace6c5989dec7"
+      "sha256": "dea662dd235c81d9bee50462ecbee4640c60332768ac02b4fd8abc09acad7aa2"
     },
     {
       "path": "packs/pack-bank-nydfs-annual-certification.json",

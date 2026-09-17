@@ -23,7 +23,7 @@
       {
         "node_id": "n3",
         "kernel_id": "art-132-agent-key-rotation-auditor",
-        "kernel_digest": "sha256:25ff3998171f39653fb0799f0c1892c148031af3615a59fe45b4a7e1ab3cecd3"
+        "kernel_digest": "sha256:a394588aa87698b40dba7cc1d088b210f1a1043ea22387e7b104adb71ab9cb20"
       },
       {
         "node_id": "n4",
@@ -43,7 +43,7 @@
     "gates": [],
     "actions": []
   },
-  "workflow_manifest_digest": "sha256:1aeb5f4fb450aa48058f96ee651a608b312a64a154b88dbcb068058dfc209b90",
+  "workflow_manifest_digest": "sha256:abaa49e93fe043e2bb4ab4379cd77037b42aae791b7053a9a5ad29a2d6199d3e",
   "declared_inputs": [],
   "steps_meta": [
     {

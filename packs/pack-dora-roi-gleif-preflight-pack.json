@@ -1,0 +1,58 @@
+{
+  "workflow_id": "pack-dora-roi-gleif-preflight-pack",
+  "name": "DORA RoI GLEIF Pre-Submission Preflight Pack",
+  "outcome": "DORA (EU) 2022/2554 Art. 28/30 Register of Information build, GLEIF-hardened: art-466's RoI template set feeds a GLEIF snapshot digest + relationship-consistency check for each LEI-bearing counterparty (provider) in the register, and art-601 composes the results into one preparation-aid evidence pack with a named-human attestation closure. Preparation aid only -- not a submission, not a filing, not a determination that a submission is complete or accurate, and not a statement that any regulator has reviewed or would accept this output.",
+  "spec_version": "ocg-control-plane@1",
+  "manifest": {
+    "manifest_version": "1",
+    "workflow_id": "pack-dora-roi-gleif-preflight-pack",
+    "trigger": {
+      "type": "manual"
+    },
+    "nodes": [
+      {
+        "node_id": "n1",
+        "kernel_id": "art-466-dora-roi-builder",
+        "kernel_digest": "sha256:4f605ce91ebec16f4f7e409b383f1f5f273b5f3e0551894aed9765e2b7681d80"
+      },
+      {
+        "node_id": "n2",
+        "kernel_id": "art-599-gleif-snapshot-digest",
+        "kernel_digest": "sha256:0b3902db12128174f906bfc436ef14f2415464d9bd58aa2215b3e5e2d1be2a7b"
+      },
+      {
+        "node_id": "n3",
+        "kernel_id": "art-600-lei-relationship-consistency",
+        "kernel_digest": "sha256:5f6da9c921850504efa9bfc5e8e7f0e2bd92ee4271a81a8eb7d71e7a4dd60b96"
+      },
+      {
+        "node_id": "n4",
+        "kernel_id": "art-601-dora-roi-gleif-preflight-pack",
+        "kernel_digest": "sha256:bf3d3052e3888bced6a3528b63c51fffe36755a4e6d970720d62c04f4443438c"
+      }
+    ],
+    "connectors": [],
+    "gates": [],
+    "actions": []
+  },
+  "workflow_manifest_digest": "sha256:a9c30e0b80ee46c41535490d71a8b0b0a0783622f8314a84765cdd9225bd286b",
+  "declared_inputs": [],
+  "steps_meta": [
+    {
+      "node_id": "n1",
+      "data_classification": "compute"
+    },
+    {
+      "node_id": "n2",
+      "data_classification": "compute"
+    },
+    {
+      "node_id": "n3",
+      "data_classification": "compute"
+    },
+    {
+      "node_id": "n4",
+      "data_classification": "compute"
+    }
+  ]
+}

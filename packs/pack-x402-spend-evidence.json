@@ -1,0 +1,49 @@
+{
+  "workflow_id": "pack-x402-spend-evidence",
+  "name": "x402 Spend Evidence Pack",
+  "outcome": "Linear three-step evidence pipeline recomputing the trust signals behind an x402/EIP-3009 TransferWithAuthorization: EIP-712 digest recomputation, ECDSA signer recovery, and domain/nonce/window verification. Each step's fields compose into the x402_spend_evidence pack that a downstream agent or human uses to decide whether to trust an authorization; this is an evidence bundle, not a settlement proof.",
+  "spec_version": "ocg-control-plane@1",
+  "manifest": {
+    "manifest_version": "1",
+    "workflow_id": "pack-x402-spend-evidence",
+    "trigger": {
+      "type": "manual"
+    },
+    "nodes": [
+      {
+        "node_id": "n1",
+        "kernel_id": "art-590-x402-eip712-digest-recomputer",
+        "kernel_digest": "sha256:62dbc12bf0d0a66b089587f7c30ca10fa8ec5e33bed5d8867d9d7dfdba7b0b15"
+      },
+      {
+        "node_id": "n2",
+        "kernel_id": "art-591-x402-signer-recovery-verifier",
+        "kernel_digest": "sha256:4dfa2047d3aeebb35c0825fa07d54d487c7b254d0ad031e2d0c360a3736b5ab7"
+      },
+      {
+        "node_id": "n3",
+        "kernel_id": "art-592-x402-domain-nonce-window-checker",
+        "kernel_digest": "sha256:b38255c8483b8792648d21f7a06a061fa24aaaea6ffce83ffb9c9b340afab72a"
+      }
+    ],
+    "connectors": [],
+    "gates": [],
+    "actions": []
+  },
+  "workflow_manifest_digest": "sha256:366b7457f7924cdbd31f52621d69f973ded351164d5d39e8b908c2211fd05ded",
+  "declared_inputs": [],
+  "steps_meta": [
+    {
+      "node_id": "n1",
+      "data_classification": "compute"
+    },
+    {
+      "node_id": "n2",
+      "data_classification": "compute"
+    },
+    {
+      "node_id": "n3",
+      "data_classification": "compute"
+    }
+  ]
+}

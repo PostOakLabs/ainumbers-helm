@@ -13,24 +13,24 @@
       {
         "node_id": "n1",
         "kernel_id": "art-126-ai-act-art50-marking-checker",
-        "kernel_digest": "sha256:3baa21f9a81107596607b29ef5a324d8ef993842384da54dac31e65811e55479"
+        "kernel_digest": "sha256:7b3eb5f17b46b43c54e96195da8716c39b2eccc9ac75080186ff0dd578e31411"
       },
       {
         "node_id": "n2",
         "kernel_id": "art-127-dual-layer-disclosure-verifier",
-        "kernel_digest": "sha256:5562ad0d21f0602d5f812fea8b7149afe980514fd642b2231bfb9e48713486c2"
+        "kernel_digest": "sha256:56cd22eca21423290fd3c332d722f6e6afd0c5a3b24650cf68b266aa33db0ae8"
       },
       {
         "node_id": "n3",
         "kernel_id": "art-128-content-binding-assertion-validator",
-        "kernel_digest": "sha256:37bac36fc216d5a8a8c3828b47eaa645982663dd39ebcbd34e14dfd78ddead1f"
+        "kernel_digest": "sha256:60e81365b579a79abf492ac5f0629ac124c93f263ad1a66363dca62be1c898af"
       }
     ],
     "connectors": [],
     "gates": [],
     "actions": []
   },
-  "workflow_manifest_digest": "sha256:5285fd88197068a75320056c79ed04615802afbd30685d3007b5101af908f151",
+  "workflow_manifest_digest": "sha256:71d20a3711282e185c1e11bfbf11e7b9dd129a0cd632b3dd09c2dc0b218d9e91",
   "declared_inputs": [],
   "steps_meta": [
     {

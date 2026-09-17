@@ -18,7 +18,7 @@
       {
         "node_id": "n2",
         "kernel_id": "mms-03-app-fraud-graph",
-        "kernel_digest": "sha256:e4475d26f24233cd44e35864937108b85615179add6786403c54a4540d903def"
+        "kernel_digest": "sha256:2565275e186544ca763e580cc913d85774c91973bb8db2c3b161bd0d74d13552"
       },
       {
         "node_id": "n3",
@@ -30,7 +30,7 @@
     "gates": [],
     "actions": []
   },
-  "workflow_manifest_digest": "sha256:da2c76660ffbb411a7caafedb5ead89395e70e71e9900d4fabb286824ff01e41",
+  "workflow_manifest_digest": "sha256:f32329cb61af67537da1f30252609bb6a6448f7d13bb3c58bd133e7bf3acf592",
   "declared_inputs": [],
   "steps_meta": [
     {

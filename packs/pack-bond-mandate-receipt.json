@@ -18,7 +18,7 @@
       {
         "node_id": "n2",
         "kernel_id": "art-02-agent-spend-policy-simulator",
-        "kernel_digest": "sha256:236e163038383b05b4d5d18a1d3cf7d32a974a1035496ab1c00fbad3e84f412a"
+        "kernel_digest": "sha256:21bb183dab5514851b032b8c5f42354cb6845ba26aa51648175a2a62de0e4af3"
       },
       {
         "node_id": "n3",
@@ -31,7 +31,7 @@
     "gates": [],
     "actions": []
   },
-  "workflow_manifest_digest": "sha256:6fdc5f5ea904f66d8b61d2b7f8103a0aa4f934da2f9568f582e0ff9fa0797974",
+  "workflow_manifest_digest": "sha256:a2cb2cef2c5cd0251ea95fc3bbd578fd420ae9f8c48ed1d6ae1d42d09b9d1baf",
   "declared_inputs": [],
   "steps_meta": [
     {

@@ -18,7 +18,7 @@
       {
         "node_id": "n2",
         "kernel_id": "rca-02-mica-reserve-stress",
-        "kernel_digest": "sha256:6fce2ba734c51cd45d54192ce1f75dba7e32561d4e7ee9792a7bfae0cdfea260"
+        "kernel_digest": "sha256:c66896024cd7ffc75c46cdd7c67e42c929234c4c7ce4b342a372b3627a68377b"
       },
       {
         "node_id": "n3",
@@ -30,7 +30,7 @@
     "gates": [],
     "actions": []
   },
-  "workflow_manifest_digest": "sha256:b3eb72bfb1e825d932a88d5ccc5109755e2c9379bd877bd96b0773655ebd6af7",
+  "workflow_manifest_digest": "sha256:262bf14230bfccb5c12a5ba0529d219651bfd5eb1249c119c7dc0f2c0ab1765f",
   "declared_inputs": [],
   "steps_meta": [
     {

@@ -13,7 +13,7 @@
       {
         "node_id": "n1",
         "kernel_id": "art-220-reg-z-threshold-lookup",
-        "kernel_digest": "sha256:224b7fe562fe4671cc165a1228afc28e82d8abbdfc5ec4c9e93ee480e50587a5"
+        "kernel_digest": "sha256:d8b0d25c1f2ec5d46b13155ce06213c2bbb4d4749903d18d3777adffeaf5a392"
       },
       {
         "node_id": "n2",
@@ -35,7 +35,7 @@
     "gates": [],
     "actions": []
   },
-  "workflow_manifest_digest": "sha256:beb0904d9867214218e1ec9530e6c723f098d58f68e54d3b443bba07dd7165dd",
+  "workflow_manifest_digest": "sha256:f4ad5ab86b7811947e8d52f2adf497b2bb0feaede754090a13f78d45af77dea8",
   "declared_inputs": [],
   "steps_meta": [
     {

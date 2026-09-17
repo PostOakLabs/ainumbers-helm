@@ -13,7 +13,7 @@
       {
         "node_id": "n1",
         "kernel_id": "art-223-conforming-loan-limit",
-        "kernel_digest": "sha256:114e209f4a992a5b64a0357a6263fe467420738e6ac70b6c238b17987521fb40"
+        "kernel_digest": "sha256:a8d8f41dc80af6482131e4333caca8533cb1f95a85979a3f51e7b6f45865f878"
       },
       {
         "node_id": "n2",
@@ -30,7 +30,7 @@
     "gates": [],
     "actions": []
   },
-  "workflow_manifest_digest": "sha256:b6515e8abfcc92fc20cf7e08f95fa974d2e948e6bf4408eefb0e86fabcbc6195",
+  "workflow_manifest_digest": "sha256:8bb15de0acaf635904777b130734135daa5a1f280e65b92b25ebfa2be973e633",
   "declared_inputs": [],
   "steps_meta": [
     {

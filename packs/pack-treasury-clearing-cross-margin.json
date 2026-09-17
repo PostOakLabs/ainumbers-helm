@@ -18,19 +18,19 @@
       {
         "node_id": "n2",
         "kernel_id": "qfa-02-portfolio-var-engine",
-        "kernel_digest": "sha256:9051ffa2fd22d389890aa26c21be6f7d3f32a0da1de5ba47890946271487ebe3"
+        "kernel_digest": "sha256:67c5c2976b7975d288b117c00cca935f88d372df75fd8bfb91665ace700deed9"
       },
       {
         "node_id": "n3",
         "kernel_id": "qfa-03-stress-test-engine",
-        "kernel_digest": "sha256:16acc10c94489a5127aab924048c6903c4df2ac6bb1acb5f2d1b2ed1982769d4"
+        "kernel_digest": "sha256:eac621d13075cc8aee43a78b7245aae8bc9ab8201be56721993b906f1546feb0"
       }
     ],
     "connectors": [],
     "gates": [],
     "actions": []
   },
-  "workflow_manifest_digest": "sha256:e52bf861a6a43893b21b15b84a3e7a0fc0fcf3473e7ca87eab69bc2ceacd9d9f",
+  "workflow_manifest_digest": "sha256:a05877cdc489de4984660647cd857331acfebf1b8f41f178a2db478e7bf310cf",
   "declared_inputs": [
     {
       "from": "art-48-treasury-clearing-fit-diagnostic",

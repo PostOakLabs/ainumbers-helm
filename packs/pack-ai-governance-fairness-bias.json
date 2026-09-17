@@ -19,19 +19,19 @@
       {
         "node_id": "n2",
         "kernel_id": "ml-02-credit-default-risk-scorer",
-        "kernel_digest": "sha256:a2933b0418c10f52d341cae29d664e594f88937aa4ad42187f95eaf86af9bb2f"
+        "kernel_digest": "sha256:ad5e65c90d06ca772a56e65a332990b9fdec2d8966a2eec552aece2dadf7d3a1"
       },
       {
         "node_id": "n3",
         "kernel_id": "ml-01-isolation-forest",
-        "kernel_digest": "sha256:78207d018dcf3f06b8aa059f913a99be9170d053e9cdccb55f4db93837d377fb"
+        "kernel_digest": "sha256:157a2103a758127d8f6afe40c5c7733d63896ccf6cfaf8a4f9f1ef80b103126f"
       }
     ],
     "connectors": [],
     "gates": [],
     "actions": []
   },
-  "workflow_manifest_digest": "sha256:326a4a924febcc3ce2c3d3702ae162ef2ba9b5234ff44fd31c6e1bc8e93bff34",
+  "workflow_manifest_digest": "sha256:9d43b24eb4361f7c3064364741b6fd9de8013f35caaba5a65d5817dc38ff7536",
   "declared_inputs": [],
   "steps_meta": [
     {

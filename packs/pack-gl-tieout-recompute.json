@@ -1,0 +1,31 @@
+{
+  "workflow_id": "pack-gl-tieout-recompute",
+  "name": "GL Tie-Out Recompute",
+  "outcome": "Core Verify pack, chain 3 of 3 (CORE-VERIFY-BUILD-SPEC.md §6): independently ties a caller-declared reported figure to a caller-declared general-ledger figure, by account, using the existing report-to-GL reconciliation node (art-526) -- no new kernel, no new node. This is internal-control arithmetic, not a regulatory recompute: a general-ledger tie-out is a pure accounting identity (reported total must equal the GL total, net of any declared plug), not a rule stated by any external standard, so this chain carries no regulatory citation by design (see regulatory_basis_status below). The same node also serves the pack's core-conversion-balancing use (CORE-VERIFY-BUILD-SPEC.md §7): running it once with a legacy-core export as the 'reported' side and a new-core export as the 'gl' side, over the same period and account scope, produces a symmetric two-source diff with no 'correct' side asserted -- a caller-side framing choice, not a second code path.",
+  "spec_version": "ocg-control-plane@1",
+  "manifest": {
+    "manifest_version": "1",
+    "workflow_id": "pack-gl-tieout-recompute",
+    "trigger": {
+      "type": "manual"
+    },
+    "nodes": [
+      {
+        "node_id": "n1",
+        "kernel_id": "art-526-report-gl-reconciliation",
+        "kernel_digest": "sha256:ac0706aea54457a53cc1f56d8642d7b5f4bf09c4377b8bc7d1e52562a9d59e12"
+      }
+    ],
+    "connectors": [],
+    "gates": [],
+    "actions": []
+  },
+  "workflow_manifest_digest": "sha256:06ab6d115d93464be41962095450352033814ede1eb7439a3f0768d4eaab72f3",
+  "declared_inputs": [],
+  "steps_meta": [
+    {
+      "node_id": "n1",
+      "data_classification": "compute"
+    }
+  ]
+}

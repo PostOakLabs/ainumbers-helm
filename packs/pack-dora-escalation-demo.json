@@ -18,14 +18,14 @@
       {
         "node_id": "n2",
         "kernel_id": "art-09-dora-incident-classifier",
-        "kernel_digest": "sha256:4ca4b897808a6d8852181840dd20aa62859b23b1ad3384d78cfcb7d8ddc9e4fa"
+        "kernel_digest": "sha256:34a97e2f8bf698256758e5a961ca48865bc61479195b7fe14a950d2761f10bfc"
       }
     ],
     "connectors": [],
     "gates": [],
     "actions": []
   },
-  "workflow_manifest_digest": "sha256:60813e9dbe3e0d727988dd67d8c52ebcfbc3aeb85a7f88b08b0475a1d8a5f809",
+  "workflow_manifest_digest": "sha256:de002cdc21908c651d9bc9365bbb1bb0b2cc233d696427b2e03695b453610dc9",
   "declared_inputs": [],
   "steps_meta": [
     {

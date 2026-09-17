@@ -1,3 +1,11 @@
+// @ts-nocheck — plain CLI utility script, never meant to be type-checked; only
+// swept into tsc --checkJs's program because it lives under chaingraph/kernels/
+// and this edit makes it "touched" (JSDOC-CHECKJS-PREFLIGHT-1's own path filter,
+// landed 2026-08-16, watches the whole directory, not just *.kernel.mjs). Without
+// this it fails on bare node:fs/process usage — a directory-wide @types/node gap
+// (SO #47's exemption only reaches chaingraph/kernels/__proptests__/) that would
+// block ANY future edit to any of the ~40 non-kernel .mjs scripts in this
+// directory, not something specific to this file's own logic.
 // vm-parity-gate.mjs — VM-1a CI PARITY GATE.
 //
 // Runs every gpu:false, status:live kernel's conformance fixtures (fixtures/<tool_id>.fixtures.json)
@@ -25,13 +33,16 @@
 //                                            but do not fail CI while any are outstanding.
 //   node vm-parity-gate.mjs --strict        divergences also fail (the set is empty as of session-3).
 //   node vm-parity-gate.mjs --report <path> write the full JSON divergence report to <path>.
+//   node vm-parity-gate.mjs --only <tool-id> KERNEL-PREFLIGHT-1: scope to ONE kernel id (whole-
+//                                            estate run is unchanged when this flag is absent).
 
 import { readFileSync, existsSync, writeFileSync } from 'node:fs';
 import { resolve, dirname } from 'node:path';
-import { fileURLToPath } from 'node:url';
+import { fileURLToPath, pathToFileURL } from 'node:url';
 import { executionHash } from './_hash.mjs';
 import { KERNELS } from './index.mjs';
 import { runKernelArtifactInVM } from '../vm/kernel-vm.mjs';
+import { readCases } from './_shape.mjs';
 
 const HERE = dirname(fileURLToPath(import.meta.url));
 const FIXDIR = resolve(HERE, 'fixtures');
@@ -60,6 +71,8 @@ const STRICT = process.argv.includes('--strict');
 const KNOWN_VM1A_LIMITATIONS = new Map([]);
 const reportIdx = process.argv.indexOf('--report');
 const reportPath = reportIdx !== -1 ? process.argv[reportIdx + 1] : null;
+const onlyIdx = process.argv.indexOf('--only');
+const ONLY_ID = onlyIdx !== -1 ? process.argv[onlyIdx + 1] : null;
 
 function stable(x) {
   if (Array.isArray(x)) return x.map(stable);
@@ -74,9 +87,23 @@ let checked = 0, matched = 0, diverged = 0, hardErrors = 0, knownLimitations = 0
 const divergences = [];
 const limitationsHit = [];
 
-const toolIds = Object.keys(KERNELS);
+let toolIds = Object.keys(KERNELS);
+const FALLBACK_KERNELS = {};
+if (ONLY_ID) {
+  if (!toolIds.includes(ONLY_ID)) {
+    // Same staleness-by-construction as check-guest-builtin-safety.mjs (SO #35: index.mjs's
+    // single writer is the post-merge regen bot) — import the kernel file directly when it
+    // exists on disk but isn't indexed yet (ASSEMBLE-LAND-0817-1, 2026-08-17).
+    const modPath = resolve(HERE, `${ONLY_ID}.kernel.mjs`);
+    if (!existsSync(modPath)) {
+      throw new Error(`vm-parity-gate.mjs --only ${ONLY_ID}: no such kernel id in index.mjs, and no ${ONLY_ID}.kernel.mjs on disk.`);
+    }
+    FALLBACK_KERNELS[ONLY_ID] = await import(pathToFileURL(modPath).href);
+  }
+  toolIds = [ONLY_ID];
+}
 for (const id of toolIds) {
-  const kernel = KERNELS[id];
+  const kernel = FALLBACK_KERNELS[id] || KERNELS[id];
   if (kernel?.meta?.gpu === true) { skippedGpu++; continue; } // §24.0: gpu:true nodes out of scope
   // OCG §25 ocg-private-input@1 nodes (PRIV-IN-1-BUILD, 2026-07-20): buildArtifact's first
   // argument is the caller's PRIVATE WITNESS (e.g. {parties, salt}), never the artifact's own
@@ -100,7 +127,8 @@ for (const id of toolIds) {
   const kernelSource = readFileSync(kernelPath, 'utf8');
 
   const doc = JSON.parse(readFileSync(fpath, 'utf8'));
-  for (const v of doc.vectors ?? []) {
+  // KERNEL-OUTPUT-READER-1: fixture cases come from _shape.mjs, not a local `.vectors` guess.
+  for (const v of readCases(doc)) {
     const tag = `${id}/${v.name}`;
     checked++;
 

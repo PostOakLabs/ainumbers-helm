@@ -13,7 +13,7 @@
       {
         "node_id": "n1",
         "kernel_id": "art-195-creative-commons-license-chooser",
-        "kernel_digest": "sha256:e774c0903bee2e48da8fbe099e50e3004183c9ddd51777c75ccaedfa7011f32e"
+        "kernel_digest": "sha256:23d99c49276243711b0b156cb0a24b24261b258f8c17e768786073d33139e117"
       },
       {
         "node_id": "n2",
@@ -45,7 +45,7 @@
     "gates": [],
     "actions": []
   },
-  "workflow_manifest_digest": "sha256:69d4216808730e5ca4c6f38de996009bc9fd9b0af23f8a23cb0f0826220991ac",
+  "workflow_manifest_digest": "sha256:ec9eb8d27531fc7e493fe90c796551d15c81310ef5e300f6dd7e9505a28e5073",
   "declared_inputs": [],
   "steps_meta": [
     {

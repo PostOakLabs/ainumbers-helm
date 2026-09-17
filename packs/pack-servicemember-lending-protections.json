@@ -13,7 +13,7 @@
       {
         "node_id": "n1",
         "kernel_id": "art-231-compute-mla-mapr",
-        "kernel_digest": "sha256:e6ea4f134e6e8a83ead3c9b8c4003302fff90bb70c26a05c76538c4722c64e41"
+        "kernel_digest": "sha256:302410302655744df0ba87706c7aa12347ad96fd99d175c3ed1d497372abc0d0"
       },
       {
         "node_id": "n2",
@@ -25,7 +25,7 @@
     "gates": [],
     "actions": []
   },
-  "workflow_manifest_digest": "sha256:e82477e9a82a694ca499c5bd1398a9681d5220cfc216d700093bc79ddfcc29a0",
+  "workflow_manifest_digest": "sha256:303fef480491988e565844f38032942bf05afb8dba5ca72a2c048d999e81b65d",
   "declared_inputs": [],
   "steps_meta": [
     {

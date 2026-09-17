@@ -1,0 +1,31 @@
+{
+  "workflow_id": "pack-interest-accrual-recompute",
+  "name": "Interest Accrual Recompute",
+  "outcome": "Core Verify pack, chain 1 of 3 (CORE-VERIFY-BUILD-SPEC.md §1): independently recomputes a core-system-reported interest accrual figure from the caller-declared principal, annual rate, day-count basis, and days accrued, then diffs the recomputed figure against the core's reported amount under a caller-declared variance tolerance. This chain configures the existing audit recalculation suite (art-463) to its interest_accrual category only -- no new kernel, no new node. The day-count/compounding convention is a contract term the caller declares for each item, never inferred or defaulted by this chain. A DIVERGES result names the exact recalculated-vs-reported variance in cents and percent for the flagged item(s); MATCHES/DIVERGES/INDETERMINATE semantics are the underlying node's own verdict, unchanged.",
+  "spec_version": "ocg-control-plane@1",
+  "manifest": {
+    "manifest_version": "1",
+    "workflow_id": "pack-interest-accrual-recompute",
+    "trigger": {
+      "type": "manual"
+    },
+    "nodes": [
+      {
+        "node_id": "n1",
+        "kernel_id": "art-463-recalc-suite",
+        "kernel_digest": "sha256:d913e4c1ab2a8875f2d19463184c19f2de2051342302d321d03e1c790841c02a"
+      }
+    ],
+    "connectors": [],
+    "gates": [],
+    "actions": []
+  },
+  "workflow_manifest_digest": "sha256:e2d72f4cd6078fb769b9c75ce2dd1aeb26e7180b0c04c6c1cf79f3bdbd5caef0",
+  "declared_inputs": [],
+  "steps_meta": [
+    {
+      "node_id": "n1",
+      "data_classification": "compute"
+    }
+  ]
+}
