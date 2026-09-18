@@ -359,8 +359,9 @@ jobs:
         with:
           node-version: "22"
           # zizmor cache-poisoning audit: this job PUBLISHES the mcpb; never
-          # let setup-node's caching become an attack surface (explicit opt-out).
-          cache: false
+          # let setup-node's package-manager cache become an attack surface
+          # (the audit's accepted opt-out input for setup-node v4+).
+          package-manager-cache: false
       - name: derive bundle version
         env:
           MCPB_TAG: ${{ inputs.tag }}
