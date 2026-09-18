@@ -13,12 +13,12 @@
       {
         "node_id": "n1",
         "kernel_id": "art-02-agent-spend-policy-simulator",
-        "kernel_digest": "sha256:236e163038383b05b4d5d18a1d3cf7d32a974a1035496ab1c00fbad3e84f412a"
+        "kernel_digest": "sha256:21bb183dab5514851b032b8c5f42354cb6845ba26aa51648175a2a62de0e4af3"
       },
       {
         "node_id": "n2",
         "kernel_id": "mms-03-app-fraud-graph",
-        "kernel_digest": "sha256:e4475d26f24233cd44e35864937108b85615179add6786403c54a4540d903def"
+        "kernel_digest": "sha256:2565275e186544ca763e580cc913d85774c91973bb8db2c3b161bd0d74d13552"
       },
       {
         "node_id": "n3",
@@ -30,7 +30,7 @@
     "gates": [],
     "actions": []
   },
-  "workflow_manifest_digest": "sha256:03edc4e12c52fc4981e900a83201686198eb371200fe7b2edf43494328acf37f",
+  "workflow_manifest_digest": "sha256:1184f6135568b481a388cc00b7f47fa341c868c78b7f0116e0033cc58ff4b98c",
   "declared_inputs": [
     {
       "from": "art-01-ap2-mandate-chain-validator",

@@ -1,0 +1,58 @@
+{
+  "workflow_id": "pack-mica-register-crosscheck",
+  "name": "MiCA Register Cross-Check",
+  "outcome": "A cross-check for the case of a MiCA-authorised issuer whose register presence, published reserve disclosure and stablecoin attestation recompute ought to line up. Stage 1 records whether the entity was present in a pasted ESMA register extract as of the date the reader captured it, pinned by a digest of the pasted bytes. Stage 2 checks that issuer's published reserve disclosure against the composition, concentration, segregation and cadence terms the reader declares. Stages 3 and 4 recompute the stablecoin side twice from the reader's own declared figures: a GENIUS Act reserve-attestation precheck, and a GENIUS-shaped conformance read over the published monthly disclosure. Every stage is computed independently from its own declared inputs; a chain composes computations in an analytical order and the execution model carries nothing between them. The evidence value is that four separate readings about one issuer, each dated and hash-anchored, can be laid beside each other by whoever is asking. HARD FENCE: presence in a register snapshot is a dated fact about pasted text, never authorisation, never a current status, and never a claim that the register is complete or current. Nothing in this chain fetches a register, an issuer disclosure or a market price, and no stage certifies compliance, solvency, or the truthfulness of the underlying data.",
+  "spec_version": "ocg-control-plane@1",
+  "manifest": {
+    "manifest_version": "1",
+    "workflow_id": "pack-mica-register-crosscheck",
+    "trigger": {
+      "type": "manual"
+    },
+    "nodes": [
+      {
+        "node_id": "n1",
+        "kernel_id": "art-602-mica-register-presence-check",
+        "kernel_digest": "sha256:7457760d26cd21fb26da3a02695102c4a9345d971ef5eb464a38361db636d3c8"
+      },
+      {
+        "node_id": "n2",
+        "kernel_id": "art-512-check-mica-reserve-disclosure",
+        "kernel_digest": "sha256:3123cd816d8e2879a6ea052f973621b149340b5cd6072232bf2666e1bbe9c333"
+      },
+      {
+        "node_id": "n3",
+        "kernel_id": "art-06-genius-act-reserve-attestation",
+        "kernel_digest": "sha256:6468279d5e4cac620841ee276045a53a20995b40ce5c8564ce601e67454b3434"
+      },
+      {
+        "node_id": "n4",
+        "kernel_id": "art-582-genius-reserve-disclosure-conformance-monitor",
+        "kernel_digest": "sha256:938dff18fe631418b8fc865198f0e4cb4ca4d6a9ee87967ccf818d5f2189edf9"
+      }
+    ],
+    "connectors": [],
+    "gates": [],
+    "actions": []
+  },
+  "workflow_manifest_digest": "sha256:65cdefc17f96808ef3fedc06864dd035482e59a448dace73d761cff11268c305",
+  "declared_inputs": [],
+  "steps_meta": [
+    {
+      "node_id": "n1",
+      "data_classification": "compute"
+    },
+    {
+      "node_id": "n2",
+      "data_classification": "compute"
+    },
+    {
+      "node_id": "n3",
+      "data_classification": "compute"
+    },
+    {
+      "node_id": "n4",
+      "data_classification": "compute"
+    }
+  ]
+}

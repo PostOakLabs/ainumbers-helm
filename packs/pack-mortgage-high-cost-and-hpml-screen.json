@@ -13,19 +13,19 @@
       {
         "node_id": "n1",
         "kernel_id": "art-234-test-hoepa-high-cost",
-        "kernel_digest": "sha256:e5a263ed1661368515b9067ec68da298ff6673a824b28c901bb1325bcf51a2a7"
+        "kernel_digest": "sha256:395efd18dd8233b45dc22b2414180fd195afa91e131b4ea32e131175efaedd9e"
       },
       {
         "node_id": "n2",
         "kernel_id": "art-235-test-hpml-escrow",
-        "kernel_digest": "sha256:41826ca9f3d3ba48ad150289c96f2aad017594ea96ff49fb448fabf84fdb6bef"
+        "kernel_digest": "sha256:1ae198828032158cef3630502b962e02ce05235c503f0b43bea0f76f0feac74a"
       }
     ],
     "connectors": [],
     "gates": [],
     "actions": []
   },
-  "workflow_manifest_digest": "sha256:7bc41f19c013edf96f16346df7eff5fd4ff399fe15437d3b2abc565a96eb3169",
+  "workflow_manifest_digest": "sha256:c8984acf45738a1e08b8a52e4027d3b3423dd9107d40707a1e1bdf64994c1a08",
   "declared_inputs": [
     {
       "from": "art-220-reg-z-threshold-lookup",

@@ -13,7 +13,7 @@
       {
         "node_id": "n1",
         "kernel_id": "art-91-ownership-50pct-aggregator",
-        "kernel_digest": "sha256:f1505eeba83572c78e56a22d102dca7aae6db7cbefab4c87b98653969f191037"
+        "kernel_digest": "sha256:b11141989c4ba450fb1156c03f7307a5eb328631dfbada5c4e0d45cca04237b6"
       },
       {
         "node_id": "n2",
@@ -30,7 +30,7 @@
     "gates": [],
     "actions": []
   },
-  "workflow_manifest_digest": "sha256:da206c64eb3adb9189877136d669c936639fd20869729f4c97ee6e1ae1cf24d5",
+  "workflow_manifest_digest": "sha256:60b32e7582505e4e62eca97dbab66bf30a800527497f989778fb7227210a208d",
   "declared_inputs": [
     {
       "from": "art-90-sanctions-screening-fit-diagnostic",

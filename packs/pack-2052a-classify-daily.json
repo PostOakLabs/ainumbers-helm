@@ -13,7 +13,7 @@
       {
         "node_id": "n1",
         "kernel_id": "art-437-fr2052a-inflow-outflow-classifier",
-        "kernel_digest": "sha256:e6b15395a2f44a43b2968b7f10f6d7ef12137cd68b1a0ff292e5031b775f4f97"
+        "kernel_digest": "sha256:257900eac445c93d28915230529b2be9f0a097be855547ee8c50c98f11a7d122"
       }
     ],
     "connectors": [
@@ -44,7 +44,7 @@
       }
     ]
   },
-  "workflow_manifest_digest": "sha256:83c13a2515481b698aad062b9902936056da31089cbf94db705fcac6ca34018a",
+  "workflow_manifest_digest": "sha256:fb79ef920476dddeb68a7537a6bec526a448af9a096a0dc16993c31c61011016",
   "declared_inputs": [],
   "steps_meta": [
     {

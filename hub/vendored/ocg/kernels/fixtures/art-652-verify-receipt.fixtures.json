@@ -1,0 +1,509 @@
+{
+  "tool_id": "art-652-verify-receipt",
+  "note": "golden_hash pinned (see vectors).",
+  "vectors": [
+    {
+      "name": "genesis-receipt-verifies",
+      "policy_parameters": {
+        "receipt": {
+          "schema": "ainumbers.evidence.v0.1",
+          "receipt_id": "r-0001",
+          "event_type": "policy_decision",
+          "source_adapter": "native-tool",
+          "issuer_id": "did:key:z6MkwQ66vScU6Hepc1oKGpu5TrMaCDM1oQQsaGSbEzB52pZH",
+          "issued_at": "2026-08-20T14:00:00Z",
+          "result_status": "success",
+          "input_hash": "sha256:e979b29ee8bcaf3f544784e34d467b70c683ab5d09e55c25e3b435245a77ccff",
+          "policy_digest": "sha256:ea9ede5814bedf41150053db439d54a24235dd62d18510d5288f6855d26da5b3",
+          "execution_hash": "sha256:fa15b56aeacde51aee48abb5342b48d13184689698d40993eab079ac95b8e46e",
+          "output_hash": "sha256:b5e78a89b3d010bb4265a4e77a27bf70b2ec13d52200471f35b896f989d0f1cd",
+          "links": [],
+          "extensions": {},
+          "signatures": [
+            {
+              "alg": "EdDSA",
+              "kid": "did:key:z6MkwQ66vScU6Hepc1oKGpu5TrMaCDM1oQQsaGSbEzB52pZH",
+              "value": "1h6aJpKXmQZVBwJIrKK9Vm2L--OulcUwORtKcimojjInu8hGo-AMQcQIoSUf9Jk6qB18jldkZ2HsQw612VogBA"
+            }
+          ],
+          "unprotected": {
+            "proofs": {},
+            "countersignatures": []
+          }
+        }
+      },
+      "output_payload": {
+        "schema_checked": "ainumbers.evidence.v0.1",
+        "receipt_id": "r-0001",
+        "valid": true,
+        "checks": [
+          {
+            "code": "SCHEMA_OK",
+            "ok": true,
+            "detail": "ainumbers.evidence.v0.1"
+          },
+          {
+            "code": "HASH_FIELD_FORMAT_OK",
+            "ok": true,
+            "detail": "input_hash,policy_digest,execution_hash,output_hash"
+          },
+          {
+            "code": "SIGNATURE_VALID",
+            "ok": true,
+            "detail": "signatures[0] kid=did:key:z6MkwQ66vScU6Hepc1oKGpu5TrMaCDM1oQQsaGSbEzB52pZH"
+          }
+        ],
+        "failed_codes": [],
+        "errors": []
+      },
+      "golden_hash": "5cc1c2ca300d3383172ee1b3d617726504b2bf5dc0feadb6c9108e51caea041c"
+    },
+    {
+      "name": "chained-receipt-verifies-with-previous",
+      "policy_parameters": {
+        "receipt": {
+          "schema": "ainumbers.evidence.v0.1",
+          "receipt_id": "r-0002",
+          "event_type": "policy_decision",
+          "source_adapter": "native-tool",
+          "issuer_id": "did:key:z6MkwQ66vScU6Hepc1oKGpu5TrMaCDM1oQQsaGSbEzB52pZH",
+          "issued_at": "2026-08-20T14:05:00Z",
+          "result_status": "success",
+          "input_hash": "sha256:e979b29ee8bcaf3f544784e34d467b70c683ab5d09e55c25e3b435245a77ccff",
+          "policy_digest": "sha256:ea9ede5814bedf41150053db439d54a24235dd62d18510d5288f6855d26da5b3",
+          "execution_hash": "sha256:fa15b56aeacde51aee48abb5342b48d13184689698d40993eab079ac95b8e46e",
+          "output_hash": "sha256:b5e78a89b3d010bb4265a4e77a27bf70b2ec13d52200471f35b896f989d0f1cd",
+          "links": [],
+          "extensions": {},
+          "previousReceiptHash": "sha256:a0aea15ac6ca1ea89f4247f8e5220d17c3a31a6cf67ffade4e0bb3ea607e422c",
+          "signatures": [
+            {
+              "alg": "EdDSA",
+              "kid": "did:key:z6MkwQ66vScU6Hepc1oKGpu5TrMaCDM1oQQsaGSbEzB52pZH",
+              "value": "pZKQ9ESV6chNCm1uylQqP3k1KuI3vfzaySORQpufx8ReVBxD5TQOiE_o6s3ekeb43kwpaFudBTsEsb5puQTrBQ"
+            }
+          ],
+          "unprotected": {
+            "proofs": {},
+            "countersignatures": []
+          }
+        },
+        "previous_receipt": {
+          "schema": "ainumbers.evidence.v0.1",
+          "receipt_id": "r-0001",
+          "event_type": "policy_decision",
+          "source_adapter": "native-tool",
+          "issuer_id": "did:key:z6MkwQ66vScU6Hepc1oKGpu5TrMaCDM1oQQsaGSbEzB52pZH",
+          "issued_at": "2026-08-20T14:00:00Z",
+          "result_status": "success",
+          "input_hash": "sha256:e979b29ee8bcaf3f544784e34d467b70c683ab5d09e55c25e3b435245a77ccff",
+          "policy_digest": "sha256:ea9ede5814bedf41150053db439d54a24235dd62d18510d5288f6855d26da5b3",
+          "execution_hash": "sha256:fa15b56aeacde51aee48abb5342b48d13184689698d40993eab079ac95b8e46e",
+          "output_hash": "sha256:b5e78a89b3d010bb4265a4e77a27bf70b2ec13d52200471f35b896f989d0f1cd",
+          "links": [],
+          "extensions": {},
+          "signatures": [
+            {
+              "alg": "EdDSA",
+              "kid": "did:key:z6MkwQ66vScU6Hepc1oKGpu5TrMaCDM1oQQsaGSbEzB52pZH",
+              "value": "1h6aJpKXmQZVBwJIrKK9Vm2L--OulcUwORtKcimojjInu8hGo-AMQcQIoSUf9Jk6qB18jldkZ2HsQw612VogBA"
+            }
+          ],
+          "unprotected": {
+            "proofs": {},
+            "countersignatures": []
+          }
+        }
+      },
+      "output_payload": {
+        "schema_checked": "ainumbers.evidence.v0.1",
+        "receipt_id": "r-0002",
+        "valid": true,
+        "checks": [
+          {
+            "code": "SCHEMA_OK",
+            "ok": true,
+            "detail": "ainumbers.evidence.v0.1"
+          },
+          {
+            "code": "HASH_FIELD_FORMAT_OK",
+            "ok": true,
+            "detail": "input_hash,policy_digest,execution_hash,output_hash"
+          },
+          {
+            "code": "SIGNATURE_VALID",
+            "ok": true,
+            "detail": "signatures[0] kid=did:key:z6MkwQ66vScU6Hepc1oKGpu5TrMaCDM1oQQsaGSbEzB52pZH"
+          },
+          {
+            "code": "PREV_LINK_OK",
+            "ok": true,
+            "detail": "sha256:a0aea15ac6ca1ea89f4247f8e5220d17c3a31a6cf67ffade4e0bb3ea607e422c"
+          }
+        ],
+        "failed_codes": [],
+        "errors": []
+      },
+      "golden_hash": "e97183df3639d0e7d23e7ae1cee1f07c827fb74bb95211f3b9245a8e4dfdc792"
+    },
+    {
+      "name": "chained-receipt-unverified-link-without-previous",
+      "policy_parameters": {
+        "receipt": {
+          "schema": "ainumbers.evidence.v0.1",
+          "receipt_id": "r-0002",
+          "event_type": "policy_decision",
+          "source_adapter": "native-tool",
+          "issuer_id": "did:key:z6MkwQ66vScU6Hepc1oKGpu5TrMaCDM1oQQsaGSbEzB52pZH",
+          "issued_at": "2026-08-20T14:05:00Z",
+          "result_status": "success",
+          "input_hash": "sha256:e979b29ee8bcaf3f544784e34d467b70c683ab5d09e55c25e3b435245a77ccff",
+          "policy_digest": "sha256:ea9ede5814bedf41150053db439d54a24235dd62d18510d5288f6855d26da5b3",
+          "execution_hash": "sha256:fa15b56aeacde51aee48abb5342b48d13184689698d40993eab079ac95b8e46e",
+          "output_hash": "sha256:b5e78a89b3d010bb4265a4e77a27bf70b2ec13d52200471f35b896f989d0f1cd",
+          "links": [],
+          "extensions": {},
+          "previousReceiptHash": "sha256:a0aea15ac6ca1ea89f4247f8e5220d17c3a31a6cf67ffade4e0bb3ea607e422c",
+          "signatures": [
+            {
+              "alg": "EdDSA",
+              "kid": "did:key:z6MkwQ66vScU6Hepc1oKGpu5TrMaCDM1oQQsaGSbEzB52pZH",
+              "value": "pZKQ9ESV6chNCm1uylQqP3k1KuI3vfzaySORQpufx8ReVBxD5TQOiE_o6s3ekeb43kwpaFudBTsEsb5puQTrBQ"
+            }
+          ],
+          "unprotected": {
+            "proofs": {},
+            "countersignatures": []
+          }
+        }
+      },
+      "output_payload": {
+        "schema_checked": "ainumbers.evidence.v0.1",
+        "receipt_id": "r-0002",
+        "valid": true,
+        "checks": [
+          {
+            "code": "SCHEMA_OK",
+            "ok": true,
+            "detail": "ainumbers.evidence.v0.1"
+          },
+          {
+            "code": "HASH_FIELD_FORMAT_OK",
+            "ok": true,
+            "detail": "input_hash,policy_digest,execution_hash,output_hash"
+          },
+          {
+            "code": "SIGNATURE_VALID",
+            "ok": true,
+            "detail": "signatures[0] kid=did:key:z6MkwQ66vScU6Hepc1oKGpu5TrMaCDM1oQQsaGSbEzB52pZH"
+          },
+          {
+            "code": "PREV_LINK_UNVERIFIED",
+            "ok": null,
+            "detail": "previousReceiptHash present but no previous_receipt was supplied to check it against"
+          }
+        ],
+        "failed_codes": [],
+        "errors": []
+      },
+      "golden_hash": "581b970bb2d4f0a57e2f7013a54eb19a4496113375a38af2ed1f777c3861daf4"
+    },
+    {
+      "name": "tampered-payload-field-fails-signature",
+      "policy_parameters": {
+        "receipt": {
+          "schema": "ainumbers.evidence.v0.1",
+          "receipt_id": "r-0001",
+          "event_type": "policy_decision",
+          "source_adapter": "native-tool",
+          "issuer_id": "did:key:z6MkwQ66vScU6Hepc1oKGpu5TrMaCDM1oQQsaGSbEzB52pZH",
+          "issued_at": "2026-08-20T14:00:00Z",
+          "result_status": "error",
+          "input_hash": "sha256:e979b29ee8bcaf3f544784e34d467b70c683ab5d09e55c25e3b435245a77ccff",
+          "policy_digest": "sha256:ea9ede5814bedf41150053db439d54a24235dd62d18510d5288f6855d26da5b3",
+          "execution_hash": "sha256:fa15b56aeacde51aee48abb5342b48d13184689698d40993eab079ac95b8e46e",
+          "output_hash": "sha256:b5e78a89b3d010bb4265a4e77a27bf70b2ec13d52200471f35b896f989d0f1cd",
+          "links": [],
+          "extensions": {},
+          "signatures": [
+            {
+              "alg": "EdDSA",
+              "kid": "did:key:z6MkwQ66vScU6Hepc1oKGpu5TrMaCDM1oQQsaGSbEzB52pZH",
+              "value": "1h6aJpKXmQZVBwJIrKK9Vm2L--OulcUwORtKcimojjInu8hGo-AMQcQIoSUf9Jk6qB18jldkZ2HsQw612VogBA"
+            }
+          ],
+          "unprotected": {
+            "proofs": {},
+            "countersignatures": []
+          }
+        }
+      },
+      "output_payload": {
+        "schema_checked": "ainumbers.evidence.v0.1",
+        "receipt_id": "r-0001",
+        "valid": false,
+        "checks": [
+          {
+            "code": "SCHEMA_OK",
+            "ok": true,
+            "detail": "ainumbers.evidence.v0.1"
+          },
+          {
+            "code": "HASH_FIELD_FORMAT_OK",
+            "ok": true,
+            "detail": "input_hash,policy_digest,execution_hash,output_hash"
+          },
+          {
+            "code": "SIGNATURE_INVALID",
+            "ok": false,
+            "detail": "signatures[0] kid=did:key:z6MkwQ66vScU6Hepc1oKGpu5TrMaCDM1oQQsaGSbEzB52pZH digest=sha256:19095c926a3b2e79f8fb6fdfcabb76139e5b7b710676a1afd1e5500fdfe3439c"
+          }
+        ],
+        "failed_codes": [
+          "SIGNATURE_INVALID"
+        ],
+        "errors": [
+          "SIGNATURE_INVALID"
+        ]
+      },
+      "golden_hash": "f7bc10d5e31b8af1cf4567cfc8ac96f9159f64a4225e1584d81e5740b300161c"
+    },
+    {
+      "name": "tampered-signature-bytes-fails",
+      "policy_parameters": {
+        "receipt": {
+          "schema": "ainumbers.evidence.v0.1",
+          "receipt_id": "r-0001",
+          "event_type": "policy_decision",
+          "source_adapter": "native-tool",
+          "issuer_id": "did:key:z6MkwQ66vScU6Hepc1oKGpu5TrMaCDM1oQQsaGSbEzB52pZH",
+          "issued_at": "2026-08-20T14:00:00Z",
+          "result_status": "success",
+          "input_hash": "sha256:e979b29ee8bcaf3f544784e34d467b70c683ab5d09e55c25e3b435245a77ccff",
+          "policy_digest": "sha256:ea9ede5814bedf41150053db439d54a24235dd62d18510d5288f6855d26da5b3",
+          "execution_hash": "sha256:fa15b56aeacde51aee48abb5342b48d13184689698d40993eab079ac95b8e46e",
+          "output_hash": "sha256:b5e78a89b3d010bb4265a4e77a27bf70b2ec13d52200471f35b896f989d0f1cd",
+          "links": [],
+          "extensions": {},
+          "signatures": [
+            {
+              "alg": "EdDSA",
+              "kid": "did:key:z6MkwQ66vScU6Hepc1oKGpu5TrMaCDM1oQQsaGSbEzB52pZH",
+              "value": "1h6aJpKXmQZVBwJIrKK9Vm2L--OulcUwORtKcimojjInu8hGo-AMQcQIoSUf9Jk6qB18jldkZ2HsQw612VogAA"
+            }
+          ],
+          "unprotected": {
+            "proofs": {},
+            "countersignatures": []
+          }
+        }
+      },
+      "output_payload": {
+        "schema_checked": "ainumbers.evidence.v0.1",
+        "receipt_id": "r-0001",
+        "valid": false,
+        "checks": [
+          {
+            "code": "SCHEMA_OK",
+            "ok": true,
+            "detail": "ainumbers.evidence.v0.1"
+          },
+          {
+            "code": "HASH_FIELD_FORMAT_OK",
+            "ok": true,
+            "detail": "input_hash,policy_digest,execution_hash,output_hash"
+          },
+          {
+            "code": "SIGNATURE_INVALID",
+            "ok": false,
+            "detail": "signatures[0] kid=did:key:z6MkwQ66vScU6Hepc1oKGpu5TrMaCDM1oQQsaGSbEzB52pZH digest=sha256:02a6a801e2d8c45eff727bbcb196ef043cdbf0a311ee62f05f1553267afcdbca"
+          }
+        ],
+        "failed_codes": [
+          "SIGNATURE_INVALID"
+        ],
+        "errors": [
+          "SIGNATURE_INVALID"
+        ]
+      },
+      "golden_hash": "4637905b3608f7966abd0096253c69296f1fcfe0c77924c65aff0a635579172b"
+    },
+    {
+      "name": "tampered-kid-not-resolvable",
+      "policy_parameters": {
+        "receipt": {
+          "schema": "ainumbers.evidence.v0.1",
+          "receipt_id": "r-0001",
+          "event_type": "policy_decision",
+          "source_adapter": "native-tool",
+          "issuer_id": "did:key:z6MkwQ66vScU6Hepc1oKGpu5TrMaCDM1oQQsaGSbEzB52pZH",
+          "issued_at": "2026-08-20T14:00:00Z",
+          "result_status": "success",
+          "input_hash": "sha256:e979b29ee8bcaf3f544784e34d467b70c683ab5d09e55c25e3b435245a77ccff",
+          "policy_digest": "sha256:ea9ede5814bedf41150053db439d54a24235dd62d18510d5288f6855d26da5b3",
+          "execution_hash": "sha256:fa15b56aeacde51aee48abb5342b48d13184689698d40993eab079ac95b8e46e",
+          "output_hash": "sha256:b5e78a89b3d010bb4265a4e77a27bf70b2ec13d52200471f35b896f989d0f1cd",
+          "links": [],
+          "extensions": {},
+          "signatures": [
+            {
+              "alg": "EdDSA",
+              "kid": "did:key:z6MkhaXgBZDvotDkL5257faiztiGiC2QtKLGpbnnEGta2doK",
+              "value": "1h6aJpKXmQZVBwJIrKK9Vm2L--OulcUwORtKcimojjInu8hGo-AMQcQIoSUf9Jk6qB18jldkZ2HsQw612VogBA"
+            }
+          ],
+          "unprotected": {
+            "proofs": {},
+            "countersignatures": []
+          }
+        }
+      },
+      "output_payload": {
+        "schema_checked": "ainumbers.evidence.v0.1",
+        "receipt_id": "r-0001",
+        "valid": false,
+        "checks": [
+          {
+            "code": "SCHEMA_OK",
+            "ok": true,
+            "detail": "ainumbers.evidence.v0.1"
+          },
+          {
+            "code": "HASH_FIELD_FORMAT_OK",
+            "ok": true,
+            "detail": "input_hash,policy_digest,execution_hash,output_hash"
+          },
+          {
+            "code": "KID_NOT_RESOLVABLE",
+            "ok": false,
+            "detail": "signatures[0] kid=did:key:z6MkhaXgBZDvotDkL5257faiztiGiC2QtKLGpbnnEGta2doK issuer_id=did:key:z6MkwQ66vScU6Hepc1oKGpu5TrMaCDM1oQQsaGSbEzB52pZH"
+          }
+        ],
+        "failed_codes": [
+          "KID_NOT_RESOLVABLE"
+        ],
+        "errors": [
+          "KID_NOT_RESOLVABLE"
+        ]
+      },
+      "golden_hash": "c0811a62fd52bb6467feb4b5ab2d8292e34e3ad55f6eb54c031d8d38fb4f34fe"
+    },
+    {
+      "name": "tampered-prev-link-mismatch",
+      "policy_parameters": {
+        "receipt": {
+          "schema": "ainumbers.evidence.v0.1",
+          "receipt_id": "r-0002",
+          "event_type": "policy_decision",
+          "source_adapter": "native-tool",
+          "issuer_id": "did:key:z6MkwQ66vScU6Hepc1oKGpu5TrMaCDM1oQQsaGSbEzB52pZH",
+          "issued_at": "2026-08-20T14:05:00Z",
+          "result_status": "success",
+          "input_hash": "sha256:e979b29ee8bcaf3f544784e34d467b70c683ab5d09e55c25e3b435245a77ccff",
+          "policy_digest": "sha256:ea9ede5814bedf41150053db439d54a24235dd62d18510d5288f6855d26da5b3",
+          "execution_hash": "sha256:fa15b56aeacde51aee48abb5342b48d13184689698d40993eab079ac95b8e46e",
+          "output_hash": "sha256:b5e78a89b3d010bb4265a4e77a27bf70b2ec13d52200471f35b896f989d0f1cd",
+          "links": [],
+          "extensions": {},
+          "previousReceiptHash": "sha256:0000000000000000000000000000000000000000000000000000000000000000",
+          "signatures": [
+            {
+              "alg": "EdDSA",
+              "kid": "did:key:z6MkwQ66vScU6Hepc1oKGpu5TrMaCDM1oQQsaGSbEzB52pZH",
+              "value": "pZKQ9ESV6chNCm1uylQqP3k1KuI3vfzaySORQpufx8ReVBxD5TQOiE_o6s3ekeb43kwpaFudBTsEsb5puQTrBQ"
+            }
+          ],
+          "unprotected": {
+            "proofs": {},
+            "countersignatures": []
+          }
+        },
+        "previous_receipt": {
+          "schema": "ainumbers.evidence.v0.1",
+          "receipt_id": "r-0001",
+          "event_type": "policy_decision",
+          "source_adapter": "native-tool",
+          "issuer_id": "did:key:z6MkwQ66vScU6Hepc1oKGpu5TrMaCDM1oQQsaGSbEzB52pZH",
+          "issued_at": "2026-08-20T14:00:00Z",
+          "result_status": "success",
+          "input_hash": "sha256:e979b29ee8bcaf3f544784e34d467b70c683ab5d09e55c25e3b435245a77ccff",
+          "policy_digest": "sha256:ea9ede5814bedf41150053db439d54a24235dd62d18510d5288f6855d26da5b3",
+          "execution_hash": "sha256:fa15b56aeacde51aee48abb5342b48d13184689698d40993eab079ac95b8e46e",
+          "output_hash": "sha256:b5e78a89b3d010bb4265a4e77a27bf70b2ec13d52200471f35b896f989d0f1cd",
+          "links": [],
+          "extensions": {},
+          "signatures": [
+            {
+              "alg": "EdDSA",
+              "kid": "did:key:z6MkwQ66vScU6Hepc1oKGpu5TrMaCDM1oQQsaGSbEzB52pZH",
+              "value": "1h6aJpKXmQZVBwJIrKK9Vm2L--OulcUwORtKcimojjInu8hGo-AMQcQIoSUf9Jk6qB18jldkZ2HsQw612VogBA"
+            }
+          ],
+          "unprotected": {
+            "proofs": {},
+            "countersignatures": []
+          }
+        }
+      },
+      "output_payload": {
+        "schema_checked": "ainumbers.evidence.v0.1",
+        "receipt_id": "r-0002",
+        "valid": false,
+        "checks": [
+          {
+            "code": "SCHEMA_OK",
+            "ok": true,
+            "detail": "ainumbers.evidence.v0.1"
+          },
+          {
+            "code": "HASH_FIELD_FORMAT_OK",
+            "ok": true,
+            "detail": "input_hash,policy_digest,execution_hash,output_hash"
+          },
+          {
+            "code": "SIGNATURE_INVALID",
+            "ok": false,
+            "detail": "signatures[0] kid=did:key:z6MkwQ66vScU6Hepc1oKGpu5TrMaCDM1oQQsaGSbEzB52pZH digest=sha256:0e37a25c108c089564a1a08e0972b388a4b7e1cea8f534751c1ae187ba385f1f"
+          },
+          {
+            "code": "PREV_LINK_MISMATCH",
+            "ok": false,
+            "detail": "expected sha256:a0aea15ac6ca1ea89f4247f8e5220d17c3a31a6cf67ffade4e0bb3ea607e422c, receipt claims sha256:0000000000000000000000000000000000000000000000000000000000000000"
+          }
+        ],
+        "failed_codes": [
+          "SIGNATURE_INVALID",
+          "PREV_LINK_MISMATCH"
+        ],
+        "errors": [
+          "SIGNATURE_INVALID",
+          "PREV_LINK_MISMATCH"
+        ]
+      },
+      "golden_hash": "876300d154e96053f4bb33d53b26220afd3d55c50751668e50c8b0e11a1842b2"
+    },
+    {
+      "name": "missing-receipt",
+      "policy_parameters": {},
+      "output_payload": {
+        "schema_checked": "ainumbers.evidence.v0.1",
+        "receipt_id": null,
+        "valid": false,
+        "checks": [
+          {
+            "code": "RECEIPT_MISSING",
+            "ok": false,
+            "detail": "no receipt object supplied"
+          }
+        ],
+        "failed_codes": [
+          "RECEIPT_MISSING"
+        ],
+        "errors": [
+          "RECEIPT_MISSING"
+        ]
+      },
+      "golden_hash": "e633ccb621af6223e5d1ca1ad26f4e236c87b903189742185a6be2ba0e297b0f"
+    }
+  ]
+}

@@ -13,7 +13,7 @@
       {
         "node_id": "n1",
         "kernel_id": "art-26-x402-payload-decoder-flow-simulator",
-        "kernel_digest": "sha256:3e47e2ed8b75c0eacebb1bad77f5deb167321634e9040fc3f7cadc125b7090b3"
+        "kernel_digest": "sha256:24dadadd4a0901134a41d251fcac134657970dc8015251d06ab4757f1bcaf17e"
       },
       {
         "node_id": "n2",
@@ -25,7 +25,7 @@
     "gates": [],
     "actions": []
   },
-  "workflow_manifest_digest": "sha256:46ea7d779bb85ba47342c3da75cb0add976aa8e6a5e9f73e56275c2b1a241a27",
+  "workflow_manifest_digest": "sha256:60a986fa316f2befbfa2d3cd93a72596e7bf2ac89f054a890f1e0aac7fdd0ea5",
   "declared_inputs": [
     {
       "from": "art-22-agentic-payments-protocol-comparator",

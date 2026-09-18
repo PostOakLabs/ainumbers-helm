@@ -18,7 +18,7 @@
       {
         "node_id": "n2",
         "kernel_id": "ml-02-credit-default-risk-scorer",
-        "kernel_digest": "sha256:a2933b0418c10f52d341cae29d664e594f88937aa4ad42187f95eaf86af9bb2f"
+        "kernel_digest": "sha256:ad5e65c90d06ca772a56e65a332990b9fdec2d8966a2eec552aece2dadf7d3a1"
       },
       {
         "node_id": "n3",
@@ -30,7 +30,7 @@
     "gates": [],
     "actions": []
   },
-  "workflow_manifest_digest": "sha256:333f10d2c55b4fe6cae83c9a450201787f7c0911387f58e72eff2a582342b3b6",
+  "workflow_manifest_digest": "sha256:c7615903cb353d50cf1f1404d902d91e562a0727d96b446f998de82f08bf83a0",
   "declared_inputs": [
     {
       "from": "art-52-digital-trade-fit-diagnostic",

@@ -13,24 +13,24 @@
       {
         "node_id": "n1",
         "kernel_id": "art-129-webbotauth-signature-verifier",
-        "kernel_digest": "sha256:6e54e84c5d83d433fc37b31030c1fd5bc32d029f016f7ab3ea0a37883b3f8615"
+        "kernel_digest": "sha256:540c9d7518ba023177cc5b43c463c8ae89c8fcedb57a44e4f007de93b891ebcf"
       },
       {
         "node_id": "n2",
         "kernel_id": "art-130-signature-directory-validator",
-        "kernel_digest": "sha256:3826cbd5f7c8d26075aaa4ebe3fa0b1f62f959e159a28b2eb6a153d6f307efcb"
+        "kernel_digest": "sha256:77d084f5d2d837ac21a389f2d1b651d8e3fe5faca6b43a737b22be0bfeaf6532"
       },
       {
         "node_id": "n3",
         "kernel_id": "art-131-signature-agent-card-validator",
-        "kernel_digest": "sha256:02cc79e6816db16e1e31ee80ce2bf4101ab8959fbb51653651ac1a84084b1134"
+        "kernel_digest": "sha256:5d6f9fd42c6de44f905132f55d36afa25bbe38665916fcbd9130d08308ea05d3"
       }
     ],
     "connectors": [],
     "gates": [],
     "actions": []
   },
-  "workflow_manifest_digest": "sha256:1f0adc714460bb6f543d2376e3a67831c33cf202db692f79440adbedb2f502d7",
+  "workflow_manifest_digest": "sha256:1d600457d452a86593835b403de224ea298f1bc6e82f2b83eebecb5819b23218",
   "declared_inputs": [],
   "steps_meta": [
     {

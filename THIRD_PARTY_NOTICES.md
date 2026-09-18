@@ -12,6 +12,7 @@ Generated from the shared credits registry (`data/credits-registry.json`, source
 - **Upstream ships a NOTICE file:** no (checked upstream root — no NOTICE file)
 - **Path(s) in this repo:**
   - `hub/vendored/ocg/kernels/_noble-bn254.bundle.mjs`
+  - `hub/vendored/ocg/kernels/_noble-ed25519.bundle.mjs`
   - `hub/vendored/ocg/kernels/_noble-secp256k1.bundle.mjs`
 
 ## @noble/post-quantum (ML-DSA)

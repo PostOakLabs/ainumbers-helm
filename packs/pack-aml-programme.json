@@ -1,7 +1,7 @@
 {
   "workflow_id": "pack-aml-programme",
   "name": "AML Programme",
-  "outcome": "Customer risk rating > TM rule building > CTR/SAR thresholds > AML Policy Mandate. Full audited run available in the composer.",
+  "outcome": "Customer risk rating > TM rule building > CTR/SAR thresholds > AML Policy Mandate. Full receipted run available in the composer.",
   "spec_version": "ocg-control-plane@1",
   "manifest": {
     "manifest_version": "1",

@@ -38,6 +38,10 @@
     {
       "from": "art-33-mcp-server-self-attestation-pack",
       "kind": "external"
+    },
+    {
+      "from": "cry-04-merkle-batch-verifier",
+      "kind": "external"
     }
   ],
   "steps_meta": [

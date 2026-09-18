@@ -23,14 +23,14 @@
       {
         "node_id": "n3",
         "kernel_id": "sim-03-basel-rwa-scenario-modeler",
-        "kernel_digest": "sha256:20305fc80c7e9f21ce85aaa35d67d4208e694fc0a45b1b9598d65046b4e9900a"
+        "kernel_digest": "sha256:14b190b3b3c72743aa24ef2ee999acf4ee34f237f10a7eb26f8d2686e295c5fb"
       }
     ],
     "connectors": [],
     "gates": [],
     "actions": []
   },
-  "workflow_manifest_digest": "sha256:4866a03684d2b5765b6be5f1dd92627ce47d03be119ec437a206372cbd91a244",
+  "workflow_manifest_digest": "sha256:a61a2ad9eed53a902828b82b13c914fa26ccec87e3e690d14dfbda71c0d8d2f6",
   "declared_inputs": [
     {
       "from": "503-canton-tokenization-readiness-diagnostic",

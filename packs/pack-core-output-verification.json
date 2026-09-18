@@ -1,0 +1,67 @@
+{
+  "workflow_id": "pack-core-output-verification",
+  "name": "Core Output Verification Pack",
+  "outcome": "Indexes the five independent core-output recompute chains — interest accrual (art-661), overdraft/NSF fee application (art-662), APY-earned (art-663), loan-servicing payment-application waterfall (art-664), and GL tie-out (art-665) — as one on-demand pack. Each chain takes a batch, caller-pasted statement export, independently recomputes the figure from those same inputs, and receipts its run per SPEC.md §18; this pack-level manifest is the chain-of-receipts index over those per-chain receipts (one receipt per chain per run), itself a content-digested artifact following the existing OKF bundle pattern used by art-342 — it is not a new envelope type and asserts no execution event of its own. Account/customer identifiers are caller-supplied opaque tokens or hashes; no name, SSN, or address field exists in any chain's input contract, and account scope is reported by count of tokens, never by identity. On-demand mode only: manual trigger, batch caller-pasted input — the pack does nothing until a caller runs it, and this row ships no automation of any kind. CORE-VERIFY-PACK-1 (CORE-VERIFY-BUILD-SPEC.md §8).",
+  "spec_version": "ocg-control-plane@1",
+  "manifest": {
+    "manifest_version": "1",
+    "workflow_id": "pack-core-output-verification",
+    "trigger": {
+      "type": "manual"
+    },
+    "nodes": [
+      {
+        "node_id": "n1",
+        "kernel_id": "art-661-interest-accrual-recompute",
+        "kernel_digest": "sha256:b57f3f681d019782405635040340d51f868e535834246366a930ca52336768e7"
+      },
+      {
+        "node_id": "n2",
+        "kernel_id": "art-662-odnsf-fee-recompute",
+        "kernel_digest": "sha256:08217afde2dfb95ca1d609a0f728de20f5c0786e6784d47b79847984109622a3"
+      },
+      {
+        "node_id": "n3",
+        "kernel_id": "art-663-apy-earned-recompute",
+        "kernel_digest": "sha256:8f873b59228d5260e6aaaf4c82cf1f455e515ad601dd4133e74517741edd7608"
+      },
+      {
+        "node_id": "n4",
+        "kernel_id": "art-664-loan-servicing-waterfall-recompute",
+        "kernel_digest": "sha256:a5294931be53b050f99b64e583ecf46c561050b194b01b0a27b92cec2c735a78"
+      },
+      {
+        "node_id": "n5",
+        "kernel_id": "art-665-gl-tieout-recompute",
+        "kernel_digest": "sha256:a584ec949403437257fff542b1a398296b05bd693748e96a1382329d3dff139c"
+      }
+    ],
+    "connectors": [],
+    "gates": [],
+    "actions": []
+  },
+  "workflow_manifest_digest": "sha256:38ac66a431680edbb06b8846161de72655f29bedd429b36ffebce7541fbd1183",
+  "declared_inputs": [],
+  "steps_meta": [
+    {
+      "node_id": "n1",
+      "data_classification": "compute"
+    },
+    {
+      "node_id": "n2",
+      "data_classification": "compute"
+    },
+    {
+      "node_id": "n3",
+      "data_classification": "compute"
+    },
+    {
+      "node_id": "n4",
+      "data_classification": "compute"
+    },
+    {
+      "node_id": "n5",
+      "data_classification": "compute"
+    }
+  ]
+}

@@ -23,7 +23,7 @@
       {
         "node_id": "n3",
         "kernel_id": "art-02-agent-spend-policy-simulator",
-        "kernel_digest": "sha256:236e163038383b05b4d5d18a1d3cf7d32a974a1035496ab1c00fbad3e84f412a"
+        "kernel_digest": "sha256:21bb183dab5514851b032b8c5f42354cb6845ba26aa51648175a2a62de0e4af3"
       },
       {
         "node_id": "n4",
@@ -35,7 +35,7 @@
     "gates": [],
     "actions": []
   },
-  "workflow_manifest_digest": "sha256:266f076199d39daaa36f20fdda6360bcd685bbf6a4c65225525289c368903d3a",
+  "workflow_manifest_digest": "sha256:51da03bae0cdeb8082d84ad8551e0720ad9412076d6676a11f73feb54f47e040",
   "declared_inputs": [
     {
       "from": "art-34-tempo-fit-diagnostic",

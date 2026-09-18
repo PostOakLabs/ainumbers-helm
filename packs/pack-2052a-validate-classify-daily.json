@@ -18,14 +18,14 @@
       {
         "node_id": "n2",
         "kernel_id": "art-437-fr2052a-inflow-outflow-classifier",
-        "kernel_digest": "sha256:e6b15395a2f44a43b2968b7f10f6d7ef12137cd68b1a0ff292e5031b775f4f97"
+        "kernel_digest": "sha256:257900eac445c93d28915230529b2be9f0a097be855547ee8c50c98f11a7d122"
       }
     ],
     "connectors": [],
     "gates": [],
     "actions": []
   },
-  "workflow_manifest_digest": "sha256:25b1461aecc3f08792443aacc44a845ca94e238467d8153a687a24678f0eddb9",
+  "workflow_manifest_digest": "sha256:e056bcfc55045dc3f5f3c872c6d7bdf8da65687699d55f1f8ccc8ec9542c34dc",
   "declared_inputs": [],
   "steps_meta": [
     {

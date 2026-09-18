@@ -13,7 +13,7 @@
       {
         "node_id": "n1",
         "kernel_id": "art-189-markdown-document-converter",
-        "kernel_digest": "sha256:a207d209c504b5fd261aae969d2c9ed362c95df104378ec95e84ce2c4acece89"
+        "kernel_digest": "sha256:366d56b7225bb3a094fb31f8ff393b6a63adf21a07735d58df87c49b385b71cd"
       },
       {
         "node_id": "n2",
@@ -30,7 +30,7 @@
     "gates": [],
     "actions": []
   },
-  "workflow_manifest_digest": "sha256:9bf9767ccfbc53df88a813bd8a3bc555152522831a4dbb83848b0a261b0f9718",
+  "workflow_manifest_digest": "sha256:0c6415a310a4ca6166b097c3041f3d5701ba1e640fe00ab2542652f3435ec64d",
   "declared_inputs": [],
   "steps_meta": [
     {

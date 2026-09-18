@@ -1,7 +1,7 @@
 {
   "workflow_id": "pack-stablecoin-examiner-pack",
   "name": "Stablecoin Examiner Pack",
-  "outcome": "Examiner-facing composition over three landed nodes: a GENIUS-shaped reserve disclosure conformance check (art-582), an independent Proof-of-Reserves recompute (art-584), and a sanctions-screening decision pinned to the exact versioned dataset it ran against (art-585). On-chain circulating supply enters as a DECLARED caller input, compared numerically against the issuer's reported outstanding-token count; it is informational, reaches no requirement verdict, and involves no network read. Reading that figure directly from a light client is a named follow-on, not part of this pack. Produces the evidence a stablecoin examination asks for; it is not a compliance certification and takes no position on solvency.",
+  "outcome": "Examiner-facing composition over four landed nodes: a GENIUS-shaped reserve disclosure conformance check (art-582), an independent Proof-of-Reserves recompute (art-584), a sanctions-screening decision pinned to the exact versioned dataset it ran against (art-585), and a granular three-source reserve recompute that reconciles the issuer's per-asset-class breakdown, an EDGAR N-MFP Part 1 series summary and a declared on-chain supply figure against one another (art-603). On-chain circulating supply enters as a DECLARED caller input throughout and involves no network read: art-582 compares it numerically against the issuer's reported outstanding-token count as an informational figure reaching no requirement verdict, and art-603 treats the same declared figure as a first-class reconcile leg with its own RECONCILED, DISCREPANT or INDETERMINATE verdict, gated on how far apart the three as-of dates sit. Reading that figure directly from a light client is a named follow-on, not part of this pack. Produces the evidence a stablecoin examination asks for; it is not a compliance certification and takes no position on solvency.",
   "spec_version": "ocg-control-plane@1",
   "manifest": {
     "manifest_version": "1",
@@ -24,13 +24,18 @@
         "node_id": "n3",
         "kernel_id": "art-585-sanctions-screening-evidence-pack",
         "kernel_digest": "sha256:c686a99d6d05d28e3feba866c69df7eb43ba13b49c2ce7c8e260be818d13c8a6"
+      },
+      {
+        "node_id": "n4",
+        "kernel_id": "art-603-stablecoin-reserve-3source-recompute",
+        "kernel_digest": "sha256:c8316be3de60b7720200258695a7e8932fc30fc151208c12d87714c647bfc3db"
       }
     ],
     "connectors": [],
     "gates": [],
     "actions": []
   },
-  "workflow_manifest_digest": "sha256:92484a9a82621f040b53a3cac5de40b77895e018e512bb16a622b82bc9267e2d",
+  "workflow_manifest_digest": "sha256:172e21539c0af750d0c4180de4362210da2e9366c5f9ecdadd7d49da2d473f8d",
   "declared_inputs": [],
   "steps_meta": [
     {
@@ -43,6 +48,10 @@
     },
     {
       "node_id": "n3",
+      "data_classification": "compute"
+    },
+    {
+      "node_id": "n4",
       "data_classification": "compute"
     }
   ]

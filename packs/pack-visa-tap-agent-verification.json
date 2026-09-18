@@ -1,0 +1,58 @@
+{
+  "workflow_id": "pack-visa-tap-agent-verification",
+  "name": "Visa TAP Agent Verification (RFC 9421 Web Bot Auth + Nonce + JWKS Pin)",
+  "outcome": "Four independent verification facts about a caller-captured Visa TAP-shaped agent request: the RFC 9421 Ed25519 Web Bot Auth signature base (art-129), the request's nonce format/freshness/replay-set membership per TAP's 8-minute window (art-593), a caller-pinned SHA-256 digest match against the caller-supplied JWKS directory document (art-609), and the directory's own shape plus keyid resolution (art-130, reused unmodified). Verification only -- zero network, zero key hosting, never a facilitator or transaction-path role.",
+  "spec_version": "ocg-control-plane@1",
+  "manifest": {
+    "manifest_version": "1",
+    "workflow_id": "pack-visa-tap-agent-verification",
+    "trigger": {
+      "type": "manual"
+    },
+    "nodes": [
+      {
+        "node_id": "n1",
+        "kernel_id": "art-129-webbotauth-signature-verifier",
+        "kernel_digest": "sha256:540c9d7518ba023177cc5b43c463c8ae89c8fcedb57a44e4f007de93b891ebcf"
+      },
+      {
+        "node_id": "n2",
+        "kernel_id": "art-593-webbotauth-nonce-replay-check",
+        "kernel_digest": "sha256:4d4491d75002a02d8a1448ca25e0aa851ccd4ea646dccde0afdd5d745f48967b"
+      },
+      {
+        "node_id": "n3",
+        "kernel_id": "art-609-jwks-pinned-directory-check",
+        "kernel_digest": "sha256:c2d3b27062a33c356a19c8e65db737fe59d34ad93c8ed44ecde8e960cd22813b"
+      },
+      {
+        "node_id": "n4",
+        "kernel_id": "art-130-signature-directory-validator",
+        "kernel_digest": "sha256:77d084f5d2d837ac21a389f2d1b651d8e3fe5faca6b43a737b22be0bfeaf6532"
+      }
+    ],
+    "connectors": [],
+    "gates": [],
+    "actions": []
+  },
+  "workflow_manifest_digest": "sha256:47674f61ef05c83d66a72c82f82e945c1fab5ebf13fcbf07d5c31b7b2689087f",
+  "declared_inputs": [],
+  "steps_meta": [
+    {
+      "node_id": "n1",
+      "data_classification": "compute"
+    },
+    {
+      "node_id": "n2",
+      "data_classification": "compute"
+    },
+    {
+      "node_id": "n3",
+      "data_classification": "compute"
+    },
+    {
+      "node_id": "n4",
+      "data_classification": "compute"
+    }
+  ]
+}

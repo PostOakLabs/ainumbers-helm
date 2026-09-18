@@ -1,3 +1,12 @@
+// @ts-nocheck — plain CLI utility script, never meant to be type-checked; only
+// swept into tsc --checkJs's program because it lives under chaingraph/kernels/
+// and this edit makes it "touched" (JSDOC-CHECKJS-PREFLIGHT-1's own path filter,
+// landed 2026-08-16, watches the whole directory, not just *.kernel.mjs). Without
+// this it fails on bare node:fs/process usage — a directory-wide @types/node gap
+// (SO #47's exemption only reaches chaingraph/kernels/__proptests__/) that would
+// block ANY future edit to any of the ~40 non-kernel .mjs scripts in this
+// directory, not something specific to this file's own logic. Same fix already
+// applied to lint-forbidden-hash.mjs, bootstrap-fixtures.mjs, and five others.
 // gen-kernel-identity.mjs — §17 Kernel Identity Binding, suite-wide adoption (OCG SPEC.md §17).
 //
 // Publishes, per gpu:false LIVE node with a registered kernel, a Graph Index identity:
@@ -46,7 +55,25 @@ const HERE = dirname(fileURLToPath(import.meta.url));
 const KDIR = HERE;
 const CGPATH = resolve(HERE, '..', 'chaingraph.json');
 const NODES_DIR = resolve(HERE, '..', 'graph', 'nodes');
-const VALID_FROM = '2026-07-10';
+
+// VALID_FROM (VALIDFROM-NEW-IDENTITY-DATE-1, 2026-08-27): the date stamped on a GENUINELY NEW
+// sha256-source identity — an inserted entry (no prior sha256-source at all) or a digest that
+// actually moved (see the GENERATOR-NOOP-STABILITY-1 comment on `validFrom` below). This used to
+// be a hardcoded constant ('2026-07-10') that every run after that date silently backdated new
+// identities by however long it went unbumped — six-plus weeks, measured. A generator invocation
+// IS the moment a new identity is recorded, so "today" (UTC, computed once per run) is the correct,
+// self-maintaining value — nobody has to remember to bump it again.
+//
+// Determinism, checked (do not "fix" this into something CI-unstable without re-reading this note):
+//   - --check (the ONLY invocation in CI/preflight: land-verify.yml, deploy-to-dreamhost.yml,
+//     scripts/preflight.mjs) never reads valid_from — it only compares image_id digests — so this
+//     wall-clock value cannot make --check flap, on any run, in any timezone.
+//   - --write only ever writes when the canonically-parsed JSON actually changes
+//     (GENERATOR-NOOP-STABILITY-1's no-op guard, below). Re-running --write against an unmoved
+//     digest is always a no-op, so a given identity's date is written a single time — the run it
+//     first appears in — and is never rewritten afterward (its recorded date is then a historical
+//     fact `validFrom` below preserves, same as before this row).
+const VALID_FROM = new Date().toISOString().slice(0, 10);
 
 const mode = process.argv.includes('--write') ? 'write'
   : process.argv.includes('--check') ? 'check' : null;
@@ -75,7 +102,19 @@ function upsertComputeImages(blockTxt, tool_id, digest) {
     let arr;
     try { arr = JSON.parse(m[2]); } catch { throw new Error(`bad compute_images JSON in ${tool_id}`); }
     const kept = arr.filter((i) => i.system !== 'sha256-source');
-    const merged = [JSON.parse(entry), ...kept];
+    // GENERATOR-NOOP-STABILITY-1: `valid_from` on an EXISTING entry is a historical fact —
+    // "this exact source digest has been published since <date>" — and this generator has
+    // no basis to restate it. Re-stamping the VALID_FROM constant over it moved 32 shards'
+    // dates BACKWARDS (e.g. 2026-07-19 -> 2026-07-10) on every run, and the date is
+    // load-bearing downstream: scripts/gen-euc-register.mjs derives each register entry's
+    // published `data_vintage` and `last_validated` from max(compute_images[].valid_from).
+    // So: same digest ⇒ keep the recorded date. A digest that actually MOVED is a new
+    // identity and takes VALID_FROM, exactly as before — this narrows what the generator
+    // overwrites, it does not narrow what it detects (proven by mutation in the row).
+    const prior = arr.find((i) => i.system === 'sha256-source');
+    const normId = (d) => (typeof d === 'string' && d.startsWith('sha256:')) ? d : 'sha256:' + d;
+    const validFrom = (prior && prior.valid_from && normId(prior.image_id) === digest) ? prior.valid_from : VALID_FROM;
+    const merged = [{ system: 'sha256-source', image_id: digest, valid_from: validFrom }, ...kept];
     const newLine = `\n${indent}"compute_images": [${merged.map((i) => JSON.stringify(i)).join(',')}],`;
     return { out: blockTxt.slice(0, m.index) + newLine + blockTxt.slice(m.index + m[0].length), kind: 'replaced' };
   }
@@ -178,7 +217,7 @@ async function runShardMode(mode, onlyId, registered) {
   }
 
   // --- WRITE (shard mode) ---
-  let stamped = 0, inserted = 0, replaced = 0;
+  let stamped = 0, inserted = 0, replaced = 0, unchanged = 0;
   const touched = [];
   for (const { id, shardPath, raw, n } of inScope) {
     let upsert;
@@ -195,12 +234,29 @@ async function runShardMode(mode, onlyId, registered) {
       process.exit(4);
     }
 
+    // GENERATOR-NOOP-STABILITY-1 — NO-OP GUARD, the fix for the 181-shard reformat class.
+    // upsertComputeImages() rebuilds the compute_images line unconditionally, in its own
+    // one-line-per-array style. Shard files on disk are pretty-printed, so a shard whose
+    // digest was ALREADY correct still got its formatting rewritten: 181 shards churned on
+    // every SO #28 regen with not one byte of semantic change (measured by
+    // board/done/NODE-REG-UNBLOCK-1.md, which reverted them by hand). Since every row that
+    // adds a node runs this chain, those 181 files collided between concurrent PRs whose
+    // real changes were disjoint — the systemic cause of the 2026-08-15 rebase storm.
+    // Compare CANONICALLY (parsed JSON, so indentation and line breaks are invisible while
+    // key order, array order and values are not), and if nothing moved, leave the file
+    // entirely alone — original formatting and original mtime both intact. A genuine digest
+    // change still writes, exactly as before; see the mutation proof in the row's check-off.
+    if (JSON.stringify(JSON.parse(raw)) === JSON.stringify(afterObj)) {
+      unchanged++;
+      continue;
+    }
+
     writeFileSync(shardPath, upsert.out);
     if (upsert.kind === 'inserted') inserted++; else replaced++;
     stamped++;
     touched.push(id);
   }
-  console.log(`✓ §17 stamped ${stamped} shard(s) directly: ${inserted} inserted, ${replaced} merged into existing compute_images. chaingraph.json untouched. Run ASSEMBLE+LAND to fold into the monolith, then --check to verify.`);
+  console.log(`✓ §17 stamped ${stamped} shard(s) directly: ${inserted} inserted, ${replaced} merged into existing compute_images. ${unchanged} shard(s) already current — left untouched. chaingraph.json untouched. Run ASSEMBLE+LAND to fold into the monolith, then --check to verify.`);
   if (touched.length) console.log('  shards written: ' + touched.join(', '));
   if (skipped.length) console.log(`  ${skipped.length} shard(s) out of scope, skipped.`);
 }
@@ -257,23 +313,42 @@ if (mode === 'check') {
 
 // --- WRITE (surgical text upsert) ------------------------------------------
 // Locate each in-scope node's text span via its unique `      "tool_id": "<id>",` anchor.
-const edits = []; // { start, end, replacement }
-let stamped = 0, inserted = 0, replaced = 0;
-
-for (const n of inScope) {
-  // Node's own tool_id line is the SHALLOWEST-indent occurrence of this id (nested chain-step
-  // refs to the same tool_id sit deeper, e.g. 10 spaces vs. 6 — but node indent isn't uniformly
-  // 6 across the file, so scan all occurrences and pick the least-indented one).
+//
+// GENKERNELID-UPSERT-FIX-1 (2026-08-27): a node's END boundary used to be found by re-searching
+// for "the next tool_id at THIS node's OWN indent" — which silently assumed every node in
+// chaingraph.json shares one uniform indent. It does not: the monolith mixes 2-space and 6-space
+// top-level node formatting (assembler output vs. hand-edited legacy), so that search would skip
+// straight past a differently-indented neighbor and land on the next SAME-indent node, sometimes
+// dozens of nodes later — swallowing every node in between into one oversized blockTxt. When one
+// of the swallowed nodes ALSO needed its own edit, the two edits' [start,end) ranges overlapped;
+// the apply-loop below assumes non-overlapping ranges (each edit's offsets are computed once
+// against the pristine `raw`, then spliced in descending-start order), so an overlap desyncs a
+// later (lower-start) edit's `end` against the already-mutated `out`, corrupting the splice — in
+// the Lander's reproduced monolith --write, this produced literal `{e,` garbage mid-token and an
+// uncaught JSON.parse SyntaxError (fails closed: nothing was ever written to disk, but every
+// monolith --write crashed, blocking the single-writer Lander's whole batch).
+//
+// Fix: stop re-deriving "the next node" via a same-indent text search. We already trust the
+// shallowest-occurrence anchor search to find each node's OWN start correctly (that part was never
+// wrong) — so run it ONCE for every node in cg.nodes, in the SAME order they appear in the parsed
+// array (which matches their physical order in the file), and take a node's end as the TRUE next
+// node's own start, whatever indent that next node happens to use. No indent assumption left.
+const nodeStarts = (cg.nodes ?? []).map((n) => {
   const idRe = new RegExp(`\\n( *)"tool_id": ${JSON.stringify(n.tool_id)},`, 'g');
   let m2, best = null;
   while ((m2 = idRe.exec(raw))) { if (!best || m2[1].length < best[1].length) best = m2; }
   if (!best) { console.error(`! could not locate node anchor for ${n.tool_id}`); process.exit(3); }
-  const at = best.index + 1; // skip the leading \n
-  const anchorLen = best[0].length - 1;
-  const nodeIndent = best[1];
-  // Node block ends at the next node's tool_id anchor (any indent) or EOF.
-  const nextTool = raw.indexOf('\n' + nodeIndent + '"tool_id": "', at + anchorLen);
-  const end = nextTool < 0 ? raw.length : nextTool;
+  return best.index + 1; // skip the leading \n
+});
+const nodeIndexByToolId = new Map((cg.nodes ?? []).map((n, i) => [n.tool_id, i]));
+
+const edits = []; // { start, end, replacement }
+let stamped = 0, inserted = 0, replaced = 0;
+
+for (const n of inScope) {
+  const i = nodeIndexByToolId.get(n.tool_id);
+  const at = nodeStarts[i];
+  const end = (i + 1 < nodeStarts.length) ? nodeStarts[i + 1] : raw.length;
   const blockTxt = raw.slice(at, end);
 
   let upsert;
@@ -300,6 +375,14 @@ const strip = (o) => {
 if (JSON.stringify(strip(JSON.parse(before))) !== JSON.stringify(strip(JSON.parse(JSON.stringify(afterObj))))) {
   console.error('✗ SAFETY: stamped chaingraph.json differs beyond the sha256-source compute_images entries — aborting, no write.');
   process.exit(4);
+}
+
+// GENERATOR-NOOP-STABILITY-1: same no-op guard as shard mode above. Canonical compare
+// (parsed JSON — formatting invisible, values and ordering not); nothing moved ⇒ nothing
+// written, so chaingraph.json keeps its bytes AND its mtime.
+if (before === JSON.stringify(afterObj)) {
+  console.log(`✓ §17 all ${inScope.length} in-scope node(s) already carry a current sha256-source digest — chaingraph.json left untouched.`);
+  process.exit(0);
 }
 
 writeFileSync(CGPATH, out);
