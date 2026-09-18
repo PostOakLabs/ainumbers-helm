@@ -1,0 +1,24 @@
+{
+  "$schema": "https://static.modelcontextprotocol.io/schemas/2025-12-11/server.schema.json",
+  "name": "io.github.PostOakLabs/helm",
+  "title": "Helm",
+  "description": "Local-first control plane daemon (helmd). Loopback-only MCP (127.0.0.1); no remote endpoints.",
+  "version": "2026.9.13",
+  "repository": {
+    "url": "https://github.com/PostOakLabs/ainumbers-helm",
+    "source": "github"
+  },
+  "packages": [
+    {
+      "registryType": "mcpb",
+      "identifier": "https://github.com/PostOakLabs/ainumbers-helm/releases/download/2026.9.13/helm-2026.9.13.mcpb",
+      "version": "2026.9.13",
+      "fileSha256": "9df8c1626a42640b3eb175c606489a3c209d0e0dfebe6a68eb477d3a95d93082",
+      "transport": {
+        "type": "streamable-http",
+        "url": "http://127.0.0.1:4173/mcp"
+      }
+    }
+  ],
+  "remotes": []
+}
