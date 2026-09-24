@@ -1,10 +1,32 @@
-/**
- * rca-02-mica-reserve-stress.kernel.mjs
- * MiCA Reserve Stress Simulator — LCG + Box-Muller (replaces unseeded Math.random()).
- * Pure decision kernel — no DOM, no window, no Date.now(), no Math.random().
- */
-
-import { executionHash } from './_hash.mjs';
+// @ts-nocheck
+// _rca-01-detmath-snapshot.mjs -- PINNED, non-instrumented copy of the
+// rca-01-frtb-ima-pre-validator.kernel.mjs BEGIN..END deterministic-transcendental-math block.
+//
+// WHY THIS FILE EXISTS (RCA01-PLA-SCOPE-1 PROPTEST-BYTES-EVAL fix): the P6 proptest used to
+// slice this block out of the LIVE kernel.mjs bytes at test-run time and eval() the slice.
+// Under Stryker mutation instrumentation, kernel.mjs on disk is rewritten with calls into a
+// stryMutAct_* coverage/mutant-select helper declared elsewhere in that (much larger)
+// instrumented file, outside the sliced BEGIN..END range -- so the isolated eval threw
+// "ReferenceError: stryMutAct_* is not defined" and Stryker never produced report.json
+// (SO #34c hard fail: absence of a report is not a pass).
+//
+// This file is a copy of that same block, extracted from the plain (un-instrumented) kernel
+// source via `git show`, with a trailing `export { det };` added. It deliberately does NOT
+// touch rca-01-frtb-ima-pre-validator.kernel.mjs itself -- that file already carries a sealed
+// groth16 compute_proof over its exact bytes (MERGED-PROVE-0831), and any edit to it, however
+// small, would stale that receipt (HASH-NEUTRAL doctrine). It is also NOT the Stryker mutate
+// target (run-mutation-tier.mjs mutates only rca-01-frtb-ima-pre-validator.kernel.mjs -- see
+// `mutate: [kernelRelPath]`), so it is never instrumented and the eval/ReferenceError problem
+// cannot recur here. compute()'s own use of det.* inside the live kernel is still exercised --
+// and still killable by mutation -- through the fixture-oracle and P1-P5 differential/
+// metamorphic checks against compute()'s output_payload, which run against the real (possibly
+// instrumented) kernel module via a normal ESM import.
+//
+// kernel_digest_at_authoring: sha256:270c13fb871367dfb26354afef861b44f31e9ab426a797814c7cd667b1f4a584
+// PROVENANCE (of the block below): unchanged from rca-01-frtb-ima-pre-validator.kernel.mjs --
+// see that file's own header for the fdlibm/rtoy/SunPro attribution this slice carries.
+// Re-extract and update the digest comment above if the kernel's detmath block ever changes
+// (HASH-NEUTRAL doctrine: any kernel byte change stales this pinned copy too).
 
 /* ===== BEGIN deterministic transcendental math (inlined; OCG SPEC Sec 18.5) ===== */
 // _detmath inline snippet - deterministic transcendental math (pure-JS fdlibm).
@@ -413,8 +435,8 @@ return log;
 const log2 = (function () {
 // NOTE: rtoy's log2.js assigns p_h/p_l/z_h/z_l as implicit globals (valid in its
 // non-strict <script> origin). ESM is always strict, so declare them here. Pure
-// scoping fix, declared as of 2026-08-30; the numeric algorithm is the fdlibm port
-// embedded per the PROVENANCE section at the top of this file.
+// scoping fix (declarations added only); numeric algorithm as embedded — see the
+// PROVENANCE header above for the upstream source and copyright notices.
 var p_h, p_l, z_h, z_l;
 //
 // ====================================================
@@ -1561,205 +1583,5 @@ return { exp: exp, log: log, log2: log2, sin: sin, cos: cos, tan: tan, pow: pow,
 })();
 /* ===== END deterministic transcendental math ===== */
 
-export const meta = {
-  tool_id:      'rca-02-mica-reserve-stress',
-  mcp_name:     'simulate_stablecoin_reserve',
-  mandate_type: 'liquidity_mandate',
-  version:      '1.0.0',
-};
+export { det };
 
-const TOOL_ID      = 'rca-02-mica-reserve-stress';
-const TOOL_VERSION = '1.0.0';
-
-// ── LCG ──────────────────────────────────────────────────────────────────────
-function makeLCG(seed) {
-  let s = seed;
-  return () => {
-    s = (1664525 * s + 1013904223) & 0xFFFFFFFF;
-    return (s >>> 0) / 0xFFFFFFFF;
-  };
-}
-
-// ── Box-Muller (seeded, replaces source randn() that used Math.random()) ─────
-function makeRandn(rng) {
-  let spare = null;
-  return () => {
-    if (spare !== null) { const v = spare; spare = null; return v; }
-    let u, v, s;
-    do {
-      u = rng() * 2 - 1;
-      v = rng() * 2 - 1;
-      s = u * u + v * v;
-    } while (s >= 1 || s === 0);
-    const mul = Math.sqrt(-2 * det.log(s) / s);
-    spare = v * mul;
-    return u * mul;
-  };
-}
-
-// ── Shock parameters (from source SHOCK_PARAMS) ───────────────────────────────
-const SHOCK_PARAMS = {
-  mild:     { sigma: 0.008, peakDrop: 0.08, firesaleBase: 0.10 },
-  moderate: { sigma: 0.015, peakDrop: 0.18, firesaleBase: 0.20 },
-  severe:   { sigma: 0.025, peakDrop: 0.35, firesaleBase: 0.40 },
-};
-
-// ── Redemption curve: fraction redeemed per day over T days ──────────────────
-// Takes the resolved SHOCK profile (single derivation in compute()); no scenario
-// string is re-resolved here, so an unknown profile can never crash the path loop.
-function buildRedemptionCurve(sp, T, randn) {
-  const curve = [];
-  // Peak outflow at day 5, exponential decay
-  for (let d = 0; d < T; d++) {
-    const peakDay = 5;
-    const base = sp.peakDrop * det.exp(-Math.abs(d - peakDay) * 0.3);
-    const noise = randn() * sp.sigma;
-    curve.push(Math.max(0, base + noise));
-  }
-  return curve;
-}
-
-// ── Shock scalar: asset value haircut path ────────────────────────────────────
-function buildShockScalar(sp, T, randn) {
-  const scalars = [1.0];
-  for (let d = 1; d < T; d++) {
-    // Reversion to 1.0 after peak
-    const prev  = scalars[d - 1];
-    const shock = randn() * sp.sigma;
-    const revert = (1.0 - prev) * 0.05; // gentle mean reversion
-    scalars.push(Math.max(0.50, prev + shock + revert));
-  }
-  return scalars;
-}
-
-// ── Percentile (nearest-rank: index ceil(p*n)-1, clamped to [0, n-1]; p=1.0
-//    returns the maximum — never a silent-zero fallback; empty array -> null) ───
-function pctile(sorted, p) {
-  if (!sorted.length) return null;
-  const idx = Math.min(sorted.length - 1, Math.max(0, Math.ceil(p * sorted.length) - 1));
-  return sorted[idx];
-}
-
-// ── compute ───────────────────────────────────────────────────────────────────
-export function compute(pp) {
-  const scenario           = pp.scenario           ?? 'moderate';
-  const n_paths            = Math.min(Math.max(pp.n_paths ?? 500, 50), 2000);
-  const T                  = pp.horizon_days        ?? 30;
-  const reserve_ratio_init = pp.reserve_ratio_init  ?? 1.05;  // initial reserve / supply
-  const art36_buffer       = pp.art36_buffer        ?? 0.02;  // over-collateralization buffer above 100% parity — declared modelling convention (see node metadata), not a statute-sourced figure
-  const seed               = pp.seed                ?? 42;
-
-  // Single profile resolution: a scenario name outside SHOCK_PARAMS (e.g. the registered
-  // manifest's bank_run/gradual_drain/flash_crash vocabulary) falls back deterministically
-  // to the moderate profile, and the output echoes the profile actually simulated.
-  const sp  = SHOCK_PARAMS[scenario] ?? SHOCK_PARAMS.moderate;
-  const effectiveScenario  = SHOCK_PARAMS[scenario] ? scenario : 'moderate';
-  const rng    = makeLCG(seed);
-  const randn  = makeRandn(rng);
-
-  // Run MC paths
-  const coverageAtEnd = new Float64Array(n_paths);
-  const breachCounts  = new Uint32Array(n_paths); // days below 100% coverage per path
-  const peakBreaches  = new Float64Array(n_paths); // worst coverage ratio per path
-
-  for (let p = 0; p < n_paths; p++) {
-    const redemptionCurve = buildRedemptionCurve(sp, T, randn);
-    const shockScalars    = buildShockScalar(sp, T, randn);
-
-    let supply        = 1.0;            // normalised
-    let reserveValue  = reserve_ratio_init;  // £ of reserves per £ supply
-    let breachDays    = 0;
-    let peakCoverage  = reserve_ratio_init;
-    let minCoverage   = reserve_ratio_init;
-
-    for (let d = 0; d < T; d++) {
-      // Redemptions reduce supply
-      const redeemed   = supply * redemptionCurve[d];
-      const firesale   = redeemed * sp.firesaleBase * shockScalars[d];
-      supply           = Math.max(0, supply - redeemed);
-      reserveValue     = Math.max(0, reserveValue - redeemed - firesale) * shockScalars[d];
-
-      const coverage   = supply > 0 ? reserveValue / supply : (reserveValue > 0 ? 999 : 0);
-      if (coverage < 1.0 && supply > 0) breachDays++;
-      if (coverage < minCoverage) minCoverage = coverage;
-    }
-
-    coverageAtEnd[p] = supply > 0 ? reserveValue / supply : (reserveValue > 0 ? 999 : 0);
-    breachCounts[p]  = breachDays;
-    peakBreaches[p]  = minCoverage;
-  }
-
-  const sortedCoverage    = [...coverageAtEnd].sort((a, b) => a - b);
-  const sortedPeak        = [...peakBreaches].sort((a, b) => a - b);
-
-  const coverage_p50_end_day = +pctile(sortedCoverage, 0.50).toFixed(4);
-  const coverage_p5_end_day  = +pctile(sortedCoverage, 0.05).toFixed(4);
-  const breach_probability_pct = +(coverageAtEnd.filter(v => v < 1.0).length / n_paths * 100).toFixed(2);
-  const peak_breach_pct       = +(peakBreaches.filter(v => v < 1.0).length / n_paths * 100).toFixed(2);
-
-  // Adequacy test reads the ADVERSE tail. Coverage = reserve/supply, so HIGHER is better:
-  // the adverse tail is the LOW percentile (P5), the same accounting breach_probability_pct
-  // uses. The buffer is a declared modelling convention (see node metadata). The tail figure
-  // this verdict depends on is coverage_p5_end_day, surfaced in output_payload below.
-  const art36_buffer_adequate_pct = +((coverage_p5_end_day >= 1.0 + art36_buffer ? 100 : 0)).toFixed(2);
-
-  const compliance_flags = [];
-  if (breach_probability_pct < 5)  compliance_flags.push('MICA_ART36_RESERVE_ADEQUATE');
-  else if (breach_probability_pct < 20) compliance_flags.push('MICA_ART36_RESERVE_AT_RISK');
-  else compliance_flags.push('MICA_ART36_RESERVE_BREACH_LIKELY');
-  if (art36_buffer_adequate_pct >= 100) compliance_flags.push('MICA_ART36_BUFFER_SUFFICIENT');
-  else compliance_flags.push('MICA_ART36_BUFFER_INSUFFICIENT');
-
-  // Flag-mirror doctrine (AUTHORING-STANDARD, "Flag-mirror doctrine" section):
-  // compliance_flags rides OUTSIDE output_payload, so a chain gate resolving its pointer
-  // against this step's output_payload can never route on it. Mirror the cautionary
-  // subset into output_payload.warnings — empty exactly when no cautionary flag fired.
-  const cautionary = new Set([
-    'MICA_ART36_RESERVE_AT_RISK',
-    'MICA_ART36_RESERVE_BREACH_LIKELY',
-    'MICA_ART36_BUFFER_INSUFFICIENT',
-  ]);
-  const warnings = compliance_flags.filter((f) => cautionary.has(f));
-
-  // Estate compute() convention (mirrors art-01/art-123): return the payload under
-  // output_payload with compliance_flags as its sibling, so downstream gates can read
-  // BOTH channels. The artifact's output_payload keeps its exact prior shape.
-  return {
-    output_payload: {
-      verdict:               breach_probability_pct < 5 ? 'ADEQUATE' : breach_probability_pct < 20 ? 'AT_RISK' : 'BREACH_LIKELY',
-      coverage_p50_end_day,
-      coverage_p5_end_day,
-      breach_probability_pct,
-      peak_breach_pct,
-      art36_buffer_adequate_pct,
-      scenario:              effectiveScenario,
-      n_paths,
-      horizon_days:          T,
-      compliance_flags,
-      warnings,
-    },
-    compliance_flags,
-  };
-}
-
-export async function buildArtifact(pp, { now, parent_hashes = [], parent_tool_ids = [], chain_depth = 0 } = {}) {
-  const result = compute(pp);
-  const { compliance_flags = {} } = result;
-  const output_payload = result.output_payload;
-  const hash = await executionHash(pp, output_payload);
-  return {
-    '@context': 'https://ainumbers.co/chaingraph/context/v0.3/context.jsonld',
-    chaingraph_version: '0.4.0',
-    mandate_type: meta.mandate_type,
-    tool_id: TOOL_ID,
-    tool_version: TOOL_VERSION,
-    generated_at: now ?? null,
-    execution_hash: hash,
-    chain: { parent_hashes, parent_tool_ids, chain_depth },
-    policy_parameters: pp,
-    output_payload,
-    compliance_flags,
-    compute_mode: 'server',
-    audit_signature: { payloadType: 'application/vnd.openchain.graph+json;version=0.4', payload: '', signatures: [] },
-  };
-}

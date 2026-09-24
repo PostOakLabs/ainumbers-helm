@@ -23,14 +23,14 @@
       {
         "node_id": "n3",
         "kernel_id": "art-236-build-ai-decision-log-record",
-        "kernel_digest": "sha256:38e616aa1627146cb9496fe598eea7869de615e58bcc59363e22fc24da851e1c"
+        "kernel_digest": "sha256:d45fd5d7dc550addeff5e297d0fe8a9dc4a233743d78c6021443a6e891ea654e"
       }
     ],
     "connectors": [],
     "gates": [],
     "actions": []
   },
-  "workflow_manifest_digest": "sha256:446857ee0ff8af2064fdef6c621b9c5d841f8eb2bc8607331d815a5b49000f42",
+  "workflow_manifest_digest": "sha256:16505906a7f3fbe7819fec8158bc5f4f57b7029dc56369f76b811d422c5f968c",
   "declared_inputs": [],
   "steps_meta": [
     {

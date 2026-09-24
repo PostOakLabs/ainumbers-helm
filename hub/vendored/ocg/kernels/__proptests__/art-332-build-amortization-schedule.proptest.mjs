@@ -1,5 +1,5 @@
 // art-332-build-amortization-schedule.proptest.mjs — FV property-test FLOOR (FV-PROPFLOOR-SHARD-C14-1).
-// kernel_digest_at_authoring: sha256:8885c70d3b73687cac1d701f769dca9e13c67e4101c9ff6cd9707922f141439b
+// kernel_digest_at_authoring: sha256:c43a019193d999e9f93930a4bf793f51192c11245151211f1c26f038629caef9
 // human_sign_off: PENDING
 //
 // SCOPE: floor tier only (FV-PBT-FLOOR-BUILD-SPEC.md §3, class C). NOT a proof, NOT Dafny.
@@ -19,6 +19,50 @@
 // Zero external dependencies — pure Node built-ins only (mulberry32 PRNG, hand-rolled).
 //
 // Run: node chaingraph/kernels/__proptests__/art-332-build-amortization-schedule.proptest.mjs
+//
+// MUTATION-MODE TRIAL CAP (ART332-MUTATION-TIER-COST-1, test-side cost cut;
+// the ART215-MUTATION-TIER-COST-1 / site PR 1969 shape ported verbatim — same
+// detection, same env override, no second flag):
+// Under the mutation tier (scripts/run-mutation-tier.mjs, Stryker 8.7.1 command
+// runner) each of this kernel's 384 mutants (on origin/main 4419268e, measured
+// 2026-09-20) re-runs this whole floor against Stryker's INSTRUMENTED kernel,
+// and the instrumenter is the cost: the full-trial floor runs in ~0.38 s
+// standalone (measured on this file: wall 379 ms incl. node boot) but the
+// tier's initial dry run measured net 6518 ms on origin/main — a ~21x
+// instrumenter factor on the same ~12,000 compute() calls. Projection at full
+// trials: 384 x ~6.5 s / 2 runners ~ 1,248 s, past the 600 s per-kernel bound
+// (MUTATION-TIER-HANG-MMS03-PNR01-1) — reproduced on the row: the tier HARD
+// FAILS at 600 s, killed before any money-math line prints.
+//
+// Cost driver, measured (not guessed): compute() is a fixed-iteration-count
+// schedule builder whose cost is ~linear in num_payments — median 2 us at
+// num_payments=1, 4 us at 6, 10 us at 60, 18 us at 240, 34 us at 480
+// (generator range 1..480, mean ~240). That CLOSES the generator-range lever
+// the way PR 1969 closed it for art-215: fitting 384 mutants / 2 runners
+// inside 600 s needs a per-pass ~3 s, i.e. a mean num_payments ~110 — which
+// would amputate the entire upper half of the range (every schedule over ~220
+// payments, the very rows P1's 600-payment bound case guards) in mutation
+// mode. The chosen lever is TRIAL COUNT, capped IN MUTATION MODE ONLY,
+// detected two ways exactly as art-215/pnr-01 before it: (a) the seam Stryker
+// itself owns — CommandTestRunner.mutantRun() sets env __STRYKER_ACTIVE_MUTANT__
+// for MUTANT runs; (b) the tier sandbox cwd — run-mutation-tier.mjs copies
+// this proptest into %TEMP%\ain-mutation-tier-<pid>\ and runs the Stryker
+// INITIAL DRY RUN there too, so __dirname under that root marks dry-run
+// context (a full-trial dry run would also blow the bound: 6.5 s is inside
+// Stryker's 300 s dryRunTimeout here, but the dry run must be capped for the
+// same bound arithmetic as the mutant runs; the floor is still validated at
+// FULL trials by this file's standalone repo-checkout run, outside the tier,
+// where neither detection fires). Default cap 50 (a capped pass takes the
+// first 50 draws per property of the SAME seeded mulberry32 stream — still
+// spanning num_payments 1..480 including the 480-row extremes — at ~0.09 s
+// instrumented; projected tier wall ~384 x (0.09 s + process spawn) / 2 + boot,
+// far inside the 600 s bound); override with documented env PROPFLOOR_TRIAL_CAP,
+// a positive integer, invalid values throw. The fixture oracle and P4
+// ULP-boundary forcing are NEVER capped (mandatory, float_sensitive: YES).
+// Every property is deterministic (seeded mulberry32), so a violation found
+// under the cap is found under full trials too: kill-power can only be
+// affected by violations that first surface on a late draw, quantified by the
+// fixed named-mutant subset before/after comparison quoted on the row's PR.
 
 import { compute } from '../art-332-build-amortization-schedule.kernel.mjs';
 import { readFileSync } from 'node:fs';
@@ -66,7 +110,19 @@ function randomPP(rng) {
   };
 }
 
-const TRIALS = 4000;
+// ---------- mutation-mode trial cap (ART332-MUTATION-TIER-COST-1; see header) ----------
+const MUTATION_MODE =
+  process.env.__STRYKER_ACTIVE_MUTANT__ !== undefined ||
+  __dirname.replace(/\\/g, '/').includes('/ain-mutation-tier-');
+let mutationTrials = 50; // default per-mutant cap; full trials remain the default outside the tier
+if (process.env.PROPFLOOR_TRIAL_CAP !== undefined) {
+  const cap = Number(process.env.PROPFLOOR_TRIAL_CAP);
+  if (!Number.isInteger(cap) || cap <= 0) {
+    throw new Error(`PROPFLOOR_TRIAL_CAP must be a positive integer, got "${process.env.PROPFLOOR_TRIAL_CAP}"`);
+  }
+  mutationTrials = cap;
+}
+const TRIALS = MUTATION_MODE ? mutationTrials : 4000;
 
 // ---------- P1: termination — schedule length always equals declared num_payments ----------
 function checkP1_termination_length_bounded() {
@@ -148,6 +204,41 @@ function checkP4_ulp_forcing() {
   return { name: 'P4_ulp_boundary_forcing_near_zero_rate_threshold', trials: checked, violations };
 }
 
+// ---------- P5: caller-supplied schedule length is clamped at NUM_PAYMENTS_CAP=12000 ----------
+// The cap flags must be COMPUTED from the requested counts, never static: absent at/below the
+// boundary, present above it. The balloon path's nominal_amortization_periods is its own
+// clamped loop bound (it drives the payment-size factor loop).
+function checkP5_numPaymentsCap() {
+  let violations = 0, checked = 0;
+  // at the boundary the clamp is a no-op and NO cap flag is raised
+  const atCap = compute({ schedule_type: 'level_payment', loan_amount: 1000, note_rate_pct: 0, num_payments: 12000, periods_per_year: 12 });
+  checked++;
+  if (atCap.output_payload.num_payments !== 12000 || atCap.output_payload.schedule.length !== 12000) violations++;
+  if (atCap.compliance_flags.includes('NUM_PAYMENTS_CAPPED')) violations++;
+  // one past the boundary: schedule clamped to 12000 and the cap flag IS raised
+  const overCap = compute({ schedule_type: 'level_payment', loan_amount: 1000, note_rate_pct: 0, num_payments: 12001, periods_per_year: 12 });
+  checked++;
+  if (overCap.output_payload.num_payments !== 12000 || overCap.output_payload.schedule.length !== 12000) violations++;
+  if (!overCap.compliance_flags.includes('NUM_PAYMENTS_CAPPED')) violations++;
+  // small inputs unaffected: length preserved, no flag
+  const small = compute({ schedule_type: 'level_payment', loan_amount: 300000, note_rate_pct: 6.5, num_payments: 60, periods_per_year: 12 });
+  checked++;
+  if (small.output_payload.num_payments !== 60 || small.output_payload.schedule.length !== 60) violations++;
+  if (small.compliance_flags.includes('NUM_PAYMENTS_CAPPED')) violations++;
+  // balloon: nominal_amortization_periods above the ceiling is clamped and flagged
+  const balloonOver = compute({ schedule_type: 'balloon', loan_amount: 300000, note_rate_pct: 6.5, num_payments: 60, periods_per_year: 12, nominal_amortization_periods: 50000 });
+  checked++;
+  if (balloonOver.output_payload.nominal_amortization_periods !== 12000) violations++;
+  if (!balloonOver.compliance_flags.includes('NOMINAL_AMORTIZATION_PERIODS_CAPPED')) violations++;
+  if (balloonOver.compliance_flags.includes('NUM_PAYMENTS_CAPPED')) violations++; // num_payments=60 is under the ceiling; only the nominal clamp binds
+  // balloon: default nominal (= num_payments) raises neither flag
+  const balloonNominal = compute({ schedule_type: 'balloon', loan_amount: 300000, note_rate_pct: 6.5, num_payments: 60, periods_per_year: 12 });
+  checked++;
+  if (balloonNominal.compliance_flags.includes('NOMINAL_AMORTIZATION_PERIODS_CAPPED')) violations++;
+  if (balloonNominal.compliance_flags.includes('NUM_PAYMENTS_CAPPED')) violations++;
+  return { name: 'P5_num_payments_and_nominal_clamped_flags_computed', trials: checked, violations };
+}
+
 // ---------- run ----------
 const oracleOk = runFixtureOracle();
 if (!oracleOk) {
@@ -159,6 +250,7 @@ results.properties.push(checkP1_termination_length_bounded());
 results.properties.push(checkP2_convergence_or_report());
 results.properties.push(checkP3_boundedness());
 results.properties.push(checkP4_ulp_forcing());
+results.properties.push(checkP5_numPaymentsCap());
 
 const anyPropertyViolation = results.properties.some((p) => p.violations > 0);
 

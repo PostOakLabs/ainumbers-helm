@@ -23,19 +23,19 @@
       {
         "node_id": "n3",
         "kernel_id": "art-06-genius-act-reserve-attestation",
-        "kernel_digest": "sha256:6468279d5e4cac620841ee276045a53a20995b40ce5c8564ce601e67454b3434"
+        "kernel_digest": "sha256:ec85212f943fdac1370d3afaa204e2c1a9e6d0d742a7c888666679c75bfe19bf"
       },
       {
         "node_id": "n4",
         "kernel_id": "art-582-genius-reserve-disclosure-conformance-monitor",
-        "kernel_digest": "sha256:938dff18fe631418b8fc865198f0e4cb4ca4d6a9ee87967ccf818d5f2189edf9"
+        "kernel_digest": "sha256:ea5ccb019619a9879e2993cf18a2ca7b3c01f0a8be54d671bece308f737fcea6"
       }
     ],
     "connectors": [],
     "gates": [],
     "actions": []
   },
-  "workflow_manifest_digest": "sha256:65cdefc17f96808ef3fedc06864dd035482e59a448dace73d761cff11268c305",
+  "workflow_manifest_digest": "sha256:38e18947052810cd8fb09ddefdf8df3b5331fb205c8abc98db7704098d02b806",
   "declared_inputs": [],
   "steps_meta": [
     {

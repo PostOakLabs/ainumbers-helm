@@ -13,7 +13,7 @@
       {
         "node_id": "n1",
         "kernel_id": "art-582-genius-reserve-disclosure-conformance-monitor",
-        "kernel_digest": "sha256:938dff18fe631418b8fc865198f0e4cb4ca4d6a9ee87967ccf818d5f2189edf9"
+        "kernel_digest": "sha256:ea5ccb019619a9879e2993cf18a2ca7b3c01f0a8be54d671bece308f737fcea6"
       },
       {
         "node_id": "n2",
@@ -35,7 +35,7 @@
     "gates": [],
     "actions": []
   },
-  "workflow_manifest_digest": "sha256:172e21539c0af750d0c4180de4362210da2e9366c5f9ecdadd7d49da2d473f8d",
+  "workflow_manifest_digest": "sha256:e8471b752d9d1f9546497b658529d31635eb82eb3ab04d1c4153df08ce5395f4",
   "declared_inputs": [],
   "steps_meta": [
     {

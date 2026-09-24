@@ -13,7 +13,7 @@
       {
         "node_id": "n1",
         "kernel_id": "art-215-reg-z-appendix-j-apr",
-        "kernel_digest": "sha256:23d06ce0530f333676cee2d8435ec0f6622170fc8040d471151cd64a01025225"
+        "kernel_digest": "sha256:11378014fd087d551a663ee640914801101ae04fd8a943a8d669314da98f2c88"
       },
       {
         "node_id": "n2",
@@ -30,7 +30,7 @@
     "gates": [],
     "actions": []
   },
-  "workflow_manifest_digest": "sha256:b5eb4cbb1a37e6afce5a22cbbee5b5ceb97f6b07ea693ca23722a8d6c330d4fb",
+  "workflow_manifest_digest": "sha256:385fb45f2a1aa949df0c1bbe93f89a21449d5f76efb2dc5eb625e9b2930d07a2",
   "declared_inputs": [
     {
       "from": "art-332-build-amortization-schedule",

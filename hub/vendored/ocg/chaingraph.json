@@ -733,16 +733,17 @@
         }
       ],
       "compute_capability": "server",
-      "compute_images": [{"system":"sha256-source","image_id":"sha256:0ffd03e4aa9960ce7c1c4b4ed9d985e33b3a166f5f96942ff5eb419487a0e62b","valid_from":"2026-07-10"},{"system":"risc0","image_id":"sha256:a1a0bc89b5b1febaeda3519f6dbade0fa5ac16beeb143c4e1b01689573567bc6","valid_from":"2026-06-28"}],
+      "compute_images": [{"system":"sha256-source","image_id":"sha256:50741b9d96f28fae793b5612ef94aa0a7d4d82c7caee633d71ef57ed9a5430fe","valid_from":"2026-09-02"},{"system":"risc0","image_id":"sha256:a1a0bc89b5b1febaeda3519f6dbade0fa5ac16beeb143c4e1b01689573567bc6","valid_from":"2026-06-28"}],
+      "compute_proof_ready": "ready",
       "compute_proof": {
         "type": "ZkVmReceipt",
         "system": "risc0",
         "receiptFormat": "groth16-bn254",
         "imageId": "sha256:a1a0bc89b5b1febaeda3519f6dbade0fa5ac16beeb143c4e1b01689573567bc6",
-        "seal": "Cq3KtZapb8WJoDZoAO5ICPx+B4IxH6WkD8MhSEmDBj4YLCNIARdVGMeFgLpeoct9yN3u0KElvKZPyHLpyTAcixL7vRD9uDzibzUPaRXM1zEc0Fr/ba35R8wicrbCFfh9K7KZBmzTZok+DdqRieeOj+br5oiZGl7jJShOohuSGooLo2vMoEnxO7OgvI0UIqK96h7d3jbbmwbJTsfTdxykeSpbd3KUxAmnQY9bHWHBL8O3gm4ejUyexayogR2pdjACGEIdS6zhD7SbzYrStnvzMFst7mlEM+AVBwD91xy07xcHHMR2KPnVpHV9+Hw+xUT6+xY6+SiH+ES36a5bb0UnYw==",
+        "seal": "IEV8vI9Sk2+t7X1kjNOFna2IeRH6VtsQMuFzcDF8fUkdWR1QfvODxKYLoSovMwh/I/IQNtjH1AKIldimOvZ+2h53aDJIlu0BLKDjX/ypi3uf/WQQ7oD5rESxG+lswN2iHq3PvVclSBxExGqfOOZkWGAF0oxB1+1+KStSZeC8jt0GjxH+a/IBO5hD46xLt5LMfS4KoSYPVvA+lf8up03ZowaHM8qtmbYW9T5UaV6ig4zRvvUDwjBLi5ZtgHGEhGyRJU1oDQPUNbhC0VClZIkDwNnk0b3b+daZBZml9w/yKCcHIK5bnZGcjeVU5aOm2yJuN7M7sd5YXGEe6cbkk4RuKw==",
         "journal": {
           "chaingraph_version": "0.4.0",
-          "kernel_digest": "sha256:eab6863d1f34f7bec9c87f59c6c249211ea94f27ad04ada9f2d993297a35ff65",
+          "kernel_digest": "sha256:50741b9d96f28fae793b5612ef94aa0a7d4d82c7caee633d71ef57ed9a5430fe",
           "output": {
             "adjusted_collateral_value": 1000000,
             "eligibility": "ELIGIBLE",
@@ -1150,17 +1151,17 @@
       "status": "live",
       "conformance_fixtures": false,
       "compute_capability": "server",
-      "compute_images": [{"system":"sha256-source","image_id":"sha256:6468279d5e4cac620841ee276045a53a20995b40ce5c8564ce601e67454b3434","valid_from":"2026-09-08"},{"system":"risc0","image_id":"sha256:a1a0bc89b5b1febaeda3519f6dbade0fa5ac16beeb143c4e1b01689573567bc6","valid_from":"2026-06-28"}],
+      "compute_images": [{"system":"sha256-source","image_id":"sha256:ec85212f943fdac1370d3afaa204e2c1a9e6d0d742a7c888666679c75bfe19bf","valid_from":"2026-09-19"},{"system":"risc0","image_id":"sha256:a1a0bc89b5b1febaeda3519f6dbade0fa5ac16beeb143c4e1b01689573567bc6","valid_from":"2026-06-28"}],
       "compute_proof_ready": "ready",
       "compute_proof": {
         "type": "ZkVmReceipt",
         "system": "risc0",
         "receiptFormat": "groth16-bn254",
         "imageId": "sha256:a1a0bc89b5b1febaeda3519f6dbade0fa5ac16beeb143c4e1b01689573567bc6",
-        "seal": "CGealxDJkRGsIhI8W/YqB/qez0pDv8U9G+9sphi1Ys4VCRUTVNtb5P7wc3rtZbeSPowKCquyiDf8/02iPzpdGC2Z77ShARnsVB5z0C0CSiHylppEJQ1qvU6CR5MK7E6rGbBZJxFGNENHt2rpYFnB16ZkrG/4rQ//rM4BKrlaCqEjQKc2BP1mizXjhqCzU/3/YghAbm38afw0tdJznDWp7Sier+ZnGasXxrICBeHvO83y++fpbRV9A1cNqBVtNJ1mCdrmDYaZw/gB9o/19aBO/3qdRBa56p/FKxnAEgERIJknQt6sKtO9s+YMQgPsbDhq0qsH3NV95t5Ah6l3/PQ3Tg==",
+        "seal": "EAeqMG/G2gy8293/iDHv2Q3m5qs4xU20p0piZToiKbsv/OG3v+kf+2ML7HsZn6VOI4jrRQfIy97+pDVcJlElTBytqcNEygHU7cpiIwFBNe/QlOSCLfxW6Keneex02hdZLcniW4fUwVl9IzH+ZeCHUmbGp0UwV4elNzZm9fiHktMVd3VaHfbU7g5YrTqjuaWMN/KH3nDGzHevbka+S+UPJRT8+1ca6O8MKkwqqcG/85Q8wcbqRRSlz244D29ZwpGZAHAuyUCUc8S4Gh+bTeHmf2PAMzbgNkugDJxdGXcTDJcj5IGknfSsIC/bjWRXvC05odQ4gxRs4uZNHF3u7++XkA==",
         "journal": {
           "chaingraph_version": "0.4.0",
-          "kernel_digest": "sha256:6468279d5e4cac620841ee276045a53a20995b40ce5c8564ce601e67454b3434",
+          "kernel_digest": "sha256:ec85212f943fdac1370d3afaa204e2c1a9e6d0d742a7c888666679c75bfe19bf",
           "output": {
             "aicpa_2025_score_pct": 0,
             "applicable_deadline": "2027-01-18",
@@ -1170,7 +1171,7 @@
             "coverage_ratio_pct": null,
             "failing_dimensions": [],
             "prohibited_assets_usd": 0,
-            "regulatory_framework": "GENIUS Act S.394 · AICPA 2025 Attestation Criteria",
+            "regulatory_framework": "GENIUS Act, Pub. L. 119-27 (S.1582) · AICPA 2025 Attestation Criteria",
             "reserve_shortfall_usd": null,
             "total_liabilities_usd": 0,
             "total_reserves_usd": 0,
@@ -3790,16 +3791,16 @@
       "status": "live",
       "conformance_fixtures": false,
       "compute_capability": "server",
-      "compute_images": [{"system":"sha256-source","image_id":"sha256:0fa24d32f68661ef9900f03ddab76d94fc674c6cf4327d809bd7bd5d2451c316","valid_from":"2026-07-10"},{"system":"risc0","image_id":"sha256:a1a0bc89b5b1febaeda3519f6dbade0fa5ac16beeb143c4e1b01689573567bc6","valid_from":"2026-06-28"}],
+      "compute_images": [{"system":"sha256-source","image_id":"sha256:f5e88b40ff67283153a60a064c7226387fe7da982ac9d1cb6d8224e6e2c4f07f","valid_from":"2026-09-11"},{"system":"risc0","image_id":"sha256:a1a0bc89b5b1febaeda3519f6dbade0fa5ac16beeb143c4e1b01689573567bc6","valid_from":"2026-06-28"}],
       "compute_proof": {
         "type": "ZkVmReceipt",
         "system": "risc0",
         "receiptFormat": "groth16-bn254",
         "imageId": "sha256:a1a0bc89b5b1febaeda3519f6dbade0fa5ac16beeb143c4e1b01689573567bc6",
-        "seal": "BR5SFgz+F1TcJIil874bQmCdI0NSZGayXZ8l+xFGGUEP1ghg9UOOL2r0dXSJxTnqp5wj/jfLxshMFDrx05ryByyXz+6JwJ7mVG0GuU+4UCVAD8E0fooGgoBrtpkd5AnQKorxUuWwVNrN+AR88XgY08SF+Ua7pelFwv36mYg9M6UjKB+d5XkuS5GWkLN6DB2j2TfDiAfrPyAX2giPH5C6gA1PIaD7r13FNddlJJAo9/Bf/Xb356QLVOzLynCDztGBL0fbXAaHBn1TiDlONGZUwcJcai2P4BbLVJ5bjpSNRUkVn+nplebcAEFgV8y2pzqIjOpEKyYMpD6wM7tLutkB6Q==",
+        "seal": "KJQ5w7IHsKST7FEeLZ1SmfPXmVX132lQP5g7z6RtVSAjdhPMWuLkUHDQsBzYuwpvLGbTlxc6SIRK7my1X2Da6i0sSQX9D91AIeL6eNDHkZ2vrFASCWeuF5LXsEBKjWH/FVr+KOb8QUqxxte1rwASISA5Anv9DBIsaACrlDq8uQAsw7P1q5g8+jJlyQFq1F8Fkmoay67a1BLlNVthtusGJRf8VkOD7Z87cqmUhq1hI+MwnsYUzL7ixaVc1vVgFAgPKX0/ukA4r/TXeJnoTdMug0CIHPxG3gm7lDGIooiSpcQMZ4cfjLXJQafLiWQ5Rb2WlKsBe5luJy5i5cIr2qUoKw==",
         "journal": {
           "chaingraph_version": "0.4.0",
-          "kernel_digest": "sha256:0fa24d32f68661ef9900f03ddab76d94fc674c6cf4327d809bd7bd5d2451c316",
+          "kernel_digest": "sha256:f5e88b40ff67283153a60a064c7226387fe7da982ac9d1cb6d8224e6e2c4f07f",
           "output": {
             "composite_grade": "A",
             "composite_score": 98,
@@ -6894,63 +6895,160 @@
   "compute_proof_ready": "ready"
 },
     {
-      "tool_id": "art-71-cbam-certificate-cost-engine",
-      "tool_version": "1.0.0",
-      "display_name": "CBAM Certificate Cost & Free-Allocation Engine",
-      "mcp_name": "model_cbam_certificate_cost",
-      "mandate_type": "compliance_mandate",
-      "wave": 16,
-      "gpu": false,
-      "url": "https://ainumbers.co/chaingraph/art-71-cbam-certificate-cost-engine.html",
-      "description": "Converts embedded emissions into a CBAM certificate liability: applies the CBAM factor (free-allocation phase-out 2.5% 2026 to 100% 2034), deducts origin carbon price already paid, and projects the quarterly holding and surrender schedule to the 30 Sep deadline.",
-      "input_schema_ref": "chaingraph/art-71-cbam-certificate-cost-engine.html#manifest",
-      "consumes": [
-        "art-69-cbam-embedded-emissions-calculator"
-      ],
-      "feeds": [
-        "cry-05-agent-action-audit-trail-aggregator",
-        "art-76-climate-scenario-applicator"
-      ],
-      "status": "live",
-      "conformance_fixtures": false,
-      "compute_capability": "server",
-      "compute_images": [{"system":"sha256-source","image_id":"sha256:80df4fc1195a5177c803aad81d51aabbfad003ca7e5c117591b4f557b278f2d9","valid_from":"2026-07-10"},{"system":"risc0","image_id":"sha256:a1a0bc89b5b1febaeda3519f6dbade0fa5ac16beeb143c4e1b01689573567bc6","valid_from":"2026-06-28"}],
-      "compute_proof": {
-        "type": "ZkVmReceipt",
-        "system": "risc0",
-        "receiptFormat": "groth16-bn254",
-        "imageId": "sha256:a1a0bc89b5b1febaeda3519f6dbade0fa5ac16beeb143c4e1b01689573567bc6",
-        "seal": "K7ExJNwlFNPf6tty3hVvFRVtBhcv/zGVigTunSdhAdcNShwN4TGgxy/SRGICpJybMpoSUrtp1F1asm6r79Y24S5Lldv/NZic5YUPbTkHeuL2DCzGXaKbZqcpaDoemHlDLveEsmJZgO8RSSl5Vno5IGd3CXqhnURlajv4cEZUqpsMI5QuQtKqezgRnuXZS/MUw5CUalFfWhrJ2hBlry+OvRvD/0UXyEgnckAN5eGIoIbDD4MmFOcBv7OB7d66RWynDuK4v7CzU2PQTiOperOvSyn5sQNdh9WdLoXQFn8awJQm35f9eG89IQQ16gcblg3JRiqXZqZyymxiqpbjy37WJQ==",
-        "journal": {
-          "chaingraph_version": "0.4.0",
-          "kernel_digest": "sha256:80df4fc1195a5177c803aad81d51aabbfad003ca7e5c117591b4f557b278f2d9",
-          "output": {
-            "cbam_factor": 0.025,
-            "cbam_factor_applied": 0.025,
-            "cbam_factor_year": 2026,
-            "certificate_liability_eur": 0,
-            "certificates_required": 0,
-            "eua_reference_price": 65,
-            "free_allocation_phaseout_pct": 97.5,
-            "gross_liability_tco2e": 0,
-            "net_liability_eur": 0,
-            "note": "DECISION-SUPPORT DRAFT — not an official CBAM declaration. Certificate liability depends on actual EUA auction prices and origin carbon-price verification. Verify surrender deadline (30 Sep) + holding obligation (≥80% rolling) against CBAM Reg. Arts 21–22. CBAM factor schedule: verify Annex V edition.",
-            "origin_price_credit": 0,
-            "quarterly_holding_schedule": [],
-            "reference": {
-              "cbam_factor_source": "CBAM Reg. 2023/956 Annex V — verify current edition",
-              "eua_price_note": "EUA reference price is a user-supplied input. Verify against current CBAM certificate auction prices (quarterly 2026, weekly 2027+).",
-              "reference_version": "CBAM-IR-v1.0-2024-Q4"
-            },
-            "surrender_deadline": "30 Sep 2027"
-          }
-        }
-      },
-      "export_capability": [
-        "pdf",
-        "xlsx"
-      ]
+  "tool_id": "art-71-cbam-certificate-cost-engine",
+  "tool_version": "1.1.0",
+  "display_name": "CBAM Certificate Cost & Free-Allocation Engine",
+  "mcp_name": "model_cbam_certificate_cost",
+  "mandate_type": "compliance_mandate",
+  "wave": 16,
+  "gpu": false,
+  "url": "https://ainumbers.co/chaingraph/art-71-cbam-certificate-cost-engine.html",
+  "description": "Converts embedded emissions into a CBAM certificate liability: screens the 50 tonne mass-based de minimis exemption, applies the CBAM factor (free-allocation phase-out 2.5% 2026 to 100% 2034), deducts origin carbon price already paid, prices 2026-vintage certificates at the quarterly average of the quarter of importation and later vintages at the weekly closing average, and projects the quarterly holding and surrender schedule to the 30 Sep deadline. The quarterly minimum holding is year-keyed: 50% of embedded emissions imported since the start of the calendar year, in force from 1 January 2027 only, with a one-quarter grace after the mass threshold is exceeded. Certificate sales begin 1 February 2027. Not modelled, and named in the omnibus_out_of_scope output field: the repurchase limit rewrite, the 2026-vintage repurchase window, and the certificate cancellation regime. The CBAM factor ramp is unaffected by Reg. (EU) 2025/2083 and is carried forward unchanged.",
+  "standards_basis": "implements_standard",
+  "cited_clause_digest": [
+    {
+      "digest": "sha256:ab8da63ac28f2dfe535373990b5ac375172f2368d6c86df0c4208e809548d7b6",
+      "source_url": "https://eur-lex.europa.eu/legal-content/EN/TXT/HTML/?uri=OJ:L_202502083",
+      "retrieved_at": "2026-08-23",
+      "clause_path": "Art 1(18)(a)-(c) → Reg. (EU) 2023/956 Art 22(1),(2),(2a)",
+      "scheme": "celex",
+      "id": "32025R2083"
     },
+    {
+      "digest": "sha256:3de13c699dd014a7cb79ca976c84a758a5b13427ca9c0357843b7b426a449177",
+      "source_url": "https://eur-lex.europa.eu/legal-content/EN/TXT/HTML/?uri=OJ:L_202502083",
+      "retrieved_at": "2026-08-23",
+      "clause_path": "Art 1(27)(a) → Reg. (EU) 2023/956 Art 36(2)(b),(c),(d)",
+      "scheme": "celex",
+      "id": "32025R2083"
+    },
+    {
+      "digest": "sha256:5737e83d4e782cf6172ba25a35fbb4350bbc7b641b129046021f42cc3a77fb5f",
+      "source_url": "https://eur-lex.europa.eu/legal-content/EN/TXT/HTML/?uri=OJ:L_202502083",
+      "retrieved_at": "2026-08-23",
+      "clause_path": "Art 1(2) → Reg. (EU) 2023/956 Art 2a(1)-(4); Art 1(33) → Annex VII pt 1",
+      "scheme": "celex",
+      "id": "32025R2083"
+    },
+    {
+      "digest": "sha256:230d7b72913f451316922490781983f61e204f2532043a9197006895c6b8244d",
+      "source_url": "https://eur-lex.europa.eu/legal-content/EN/TXT/HTML/?uri=OJ:L_202502083",
+      "retrieved_at": "2026-08-23",
+      "clause_path": "Art 1(16)(a) → Art 20(1); Art 1(17)(a),(b) → Art 21(1),(1a)",
+      "scheme": "celex",
+      "id": "32025R2083"
+    }
+  ],
+  "input_schema_ref": "chaingraph/art-71-cbam-certificate-cost-engine.html#manifest",
+  "consumes": [
+    "art-69-cbam-embedded-emissions-calculator"
+  ],
+  "feeds": [
+    "cry-05-agent-action-audit-trail-aggregator",
+    "art-76-climate-scenario-applicator"
+  ],
+  "status": "live",
+  "conformance_fixtures": false,
+  "compute_capability": "server",
+  "compute_images": [{"system":"sha256-source","image_id":"sha256:b17a4d4c2d75fa70d54b818c6fad1e1d5fac3413d1ed2bd5e7b0e3ee36bbf8db","valid_from":"2026-09-19"},{"system":"risc0","image_id":"sha256:a1a0bc89b5b1febaeda3519f6dbade0fa5ac16beeb143c4e1b01689573567bc6","valid_from":"2026-06-28"}],
+  "compute_proof": {
+    "type": "ZkVmReceipt",
+    "system": "risc0",
+    "receiptFormat": "groth16-bn254",
+    "imageId": "sha256:a1a0bc89b5b1febaeda3519f6dbade0fa5ac16beeb143c4e1b01689573567bc6",
+    "seal": "JxXU7G8faqIeAlb1ZHpJ35llJUpWjn2ZsZ5IrJgBi5MizQfqM+kAxAQ2ylRKrza5enkNPVDhJPY7mbqyvJ2C1SqjyWgHsl1BJS9OO/Z4163hTviIyeZENg4ZmD33EMYRABK3vh/mvzErUrLLPUeb1iMPuPPjyn756J1PG09dX8EruJY1MhfQXhXSOBmV2ordUpUKIvGNDJQQzSlCqiPq/iqvIIbTJxGMgqt08P7OyhOlHWp+1/gBmeZfOhc/PGszBaBK95AU9m/KqL0S2KnukqI/Up2e52JxsGkVYaKhZ1EUeYDDHd5QC7p1yVVUU220QmE4b/rImOzjaEdzVo/Lzg==",
+    "journal": {
+      "chaingraph_version": "0.4.0",
+      "kernel_digest": "sha256:b17a4d4c2d75fa70d54b818c6fad1e1d5fac3413d1ed2bd5e7b0e3ee36bbf8db",
+      "output": {
+        "caveats": [
+          "Declared annual net mass exceeds the threshold, which pulls all goods imported that calendar year into scope.",
+          "An origin carbon price was supplied and credited; it must be verified against the origin scheme before relying on it."
+        ],
+        "cbam_factor": 0.05,
+        "cbam_factor_applied": 0.05,
+        "cbam_factor_year": 2027,
+        "cbam_factor_year_tabled": true,
+        "certificate_liability_eur": 0,
+        "certificate_sales_start": "2027-02-01",
+        "certificates_required": 0,
+        "de_minimis_exemption": false,
+        "de_minimis_threshold_source": "Reg. (EU) 2025/2083, Annex VII pt 1 (single mass-based threshold); movable by delegated act under Art 2a(3) where the recomputed value deviates by more than 15 tonnes",
+        "de_minimis_threshold_t": 50,
+        "eua_reference_price": 65,
+        "free_allocation_phaseout_pct": 95,
+        "gross_liability_tco2e": 500,
+        "holding_basis": "at least 50% of embedded emissions imported since start of calendar year (Annex IV default values without the point-4.1 mark-up, or the prior-year surrendered count for the same CN codes and countries of origin); the free-allocation adjustment under Art 31 is taken into account",
+        "holding_rule_applies": true,
+        "holding_rule_applies_from": "2027-01-01",
+        "net_liability_eur": 0,
+        "note": "DECISION-SUPPORT DRAFT, not an official CBAM declaration. Certificate liability depends on actual EUA auction prices and origin carbon-price verification. Quarterly minimum holding is 50% of embedded emissions imported since the start of the calendar year, applying from 1 Jan 2027; surrender is due 30 Sep each year, first in 2027 for the 2026 year. Provisions listed in omnibus_out_of_scope are not modelled.",
+        "omnibus_out_of_scope": [
+          "Repurchase limit rewrite (Reg. (EU) 2023/956 Art 23(2) as replaced by Reg. (EU) 2025/2083 Art 1(19)): not modelled by this tool",
+          "Repurchase window for 2026-vintage certificates (Art 23(2a)): not modelled by this tool",
+          "Cancellation regime (Art 24 as replaced, annual cancellation on 1 November, and the 1 November 2027 derogation for 2026-vintage certificates): not modelled by this tool"
+        ],
+        "origin_price_credit": 32500,
+        "pricing_rule": "weekly-closing-average",
+        "pricing_rule_source": "Art 21(1a) (2026 vintage, quarterly average of the quarter of importation) / Art 21(1) (weekly closing average), Reg. (EU) 2023/956 as amended by Reg. (EU) 2025/2083 Art 1(17)",
+        "purchase_window": "weekly sales",
+        "quarterly_holding_minimum_share": 0.5,
+        "quarterly_holding_schedule": [
+          {
+            "cumulative_certs_required": 0,
+            "holding_applies": true,
+            "holding_enforced": true,
+            "holding_required": 0,
+            "q_liability_eur": 0,
+            "q_price_applied": 65,
+            "quarter": "Q1"
+          },
+          {
+            "cumulative_certs_required": 0,
+            "holding_applies": true,
+            "holding_enforced": true,
+            "holding_required": 0,
+            "q_liability_eur": 0,
+            "q_price_applied": 65,
+            "quarter": "Q2"
+          },
+          {
+            "cumulative_certs_required": 0,
+            "holding_applies": true,
+            "holding_enforced": true,
+            "holding_required": 0,
+            "q_liability_eur": 0,
+            "q_price_applied": 65,
+            "quarter": "Q3"
+          },
+          {
+            "cumulative_certs_required": 0,
+            "holding_applies": true,
+            "holding_enforced": true,
+            "holding_required": 0,
+            "q_liability_eur": 0,
+            "q_price_applied": 65,
+            "quarter": "Q4"
+          }
+        ],
+        "reference": {
+          "cbam_factor_source": "CBAM factor schedule: Directive 2003/87/EC Art 10a(1a), applied through the Art 31 free-allocation adjustment (LOCATOR-UNRETRIEVED: the directive text itself was not retrieved; values carried forward unchanged). Confirmed untouched by Reg. (EU) 2025/2083, whose Art 1 amendment list contains no Art 31 and no directive amendment.",
+          "eua_price_note": "EUA reference price is a user-supplied input. No certificate sales occur before 2027-02-01; 2026-vintage certificates are purchased from 2027-02-01 at the quarterly average of the quarter of importation, and weekly closing-average pricing applies from 2027 onward.",
+          "holding_rule_source": "Reg. (EU) 2023/956 Art 22(2) and Art 22(2a) as replaced/inserted by Reg. (EU) 2025/2083 Art 1(18)(b)-(c); applicable from 1 Jan 2027 per Art 36(2) point (c) as added by Art 1(27)(a)",
+          "reference_version": "EU-2025-2083-OJ-2025-10-17",
+          "sales_start_source": "Reg. (EU) 2023/956 Art 20(1) as replaced by Reg. (EU) 2025/2083 Art 1(16)(a); applicable from 1 Feb 2027 per Art 36(2) point (d)",
+          "superseded_reference": "CBAM-IR-v1.0-2024-Q4 (superseded: the 80% quarterly minimum holding it carried was replaced by 50% from 1 Jan 2027)",
+          "surrender_rule_source": "Reg. (EU) 2023/956 Art 22(1) as replaced by Reg. (EU) 2025/2083 Art 1(18)(a): by 30 September of each year, and for the first time in 2027 for the year 2026"
+        },
+        "surrender_deadline": "30 Sep 2028"
+      }
+    }
+  },
+  "export_capability": [
+    "pdf",
+    "xlsx"
+  ]
+},
     {
       "tool_id": "art-72-cbam-precursor-emissions-aggregator",
       "tool_version": "1.0.0",
@@ -7428,6 +7526,7 @@
       "gpu": false,
       "url": "https://ainumbers.co/chaingraph/art-78-csdr-penalty-calculator.html",
       "description": "Flagship. Computes the CSDR cash penalty for a settlement fail: selects the asset-class daily rate (incl. Oct-2025 RTS increases: equities 1 bp/day, SSA bonds 0.50 bp/day, non-SSA bonds 0.50 bp/day), applies fail duration and reference price/notional, credits partial settlement, and projects forward penalty exposure over an open-fails set.",
+      "scope_statement": "ASSET_CLASS IS CALLER-DECLARED, NEVER INFERRED. This node does not classify an instrument from a fact pattern (\"a bond\", \"an equity\") into ssa_bond/non_ssa_bond/equity/etf/illiquid — the caller supplies asset_class explicitly, and a source worked example that only says \"a bond\" without stating sovereign/supranational/agency status requires the caller to make that call before invoking this kernel. PRESENT-STATE NOTE: in this node's current rate table, ssa_bond and non_ssa_bond both resolve to 0.50 bp/day, so a caller's choice between exactly those two values is output-neutral today. DECLARED LIMIT, NOT A GUARANTEE: secondary CSDR commentary (ESMA's 2024 technical-advice consultation on the penalty mechanism) describes the RTS penalty-rate increase as differentiated by category — sovereign-issued debt instruments vs. other debt instruments moved by different percentages — which is inconsistent with a single shared 0.50 bp/day rate for both tiers under the real Delegated Reg. (EU) 2017/389 Annex. This node has NOT retrieved and pinned that Annex's primary-source rate table (SO #38); the ssa_bond/non_ssa_bond rate-table accuracy question is open and OUT OF THIS NODE'S SCOPE — it is a separate, output-changing, re-prove-bearing fix, not a caller-input question.",
       "input_schema_ref": "chaingraph/art-78-csdr-penalty-calculator.html#manifest",
       "consumes": [
         "art-77-t1-settlement-readiness-diagnostic"
@@ -10039,14 +10138,14 @@
     },
     {
       "tool_id": "art-124-content-credential-signature-verifier",
-      "tool_version": "1.0.0",
+      "tool_version": "1.1.0",
       "display_name": "Content Credential Signature Verifier",
       "mcp_name": "verify_content_credential_signature",
       "mandate_type": "compliance_mandate",
       "wave": 23,
-      "gpu": true,
+      "gpu": false,
       "url": "https://ainumbers.co/chaingraph/art-124-content-credential-signature-verifier.html",
-      "description": "Verify-only node: callable in chains, carrying no compute-proof claim. Verify the COSE_Sign1 claim signature against a caller-supplied signer public key using crypto.subtle.verify (Ed25519/ES256/ES384/PS256). Trust-anchor membership, cert validity window, and revocation status are caller-supplied policy inputs: zero network, no OCSP. Emits ACCEPT or REFUSE verdict. PS256 (RSA-PSS) support means this kernel has no faithful sync in-guest verifier today, so its zkVM compute-integrity proof is out of the ocg-p18-deterministic profile's scope: not counted as proven.",
+      "description": "Deterministic policy core over a caller-attested signature result. The caller performs the COSE_Sign1 signature check over the manifest bytes with the declared alg (Ed25519/ES256/ES384/PS256) and attests the outcome via the required signature_verified input; the kernel does not re-verify. Trust-anchor membership, cert validity window, and revocation status are caller-supplied policy inputs: zero network, no OCSP. Emits ACCEPT or REFUSE verdict. The signature caveat travels inside the hashed output_payload (signature_verification: caller_attested); full in-guest verification returns in a separate accelerated-guest row.",
       "input_schema_ref": "chaingraph/art-124-content-credential-signature-verifier.html#manifest",
       "consumes": [
         "art-123-c2pa-manifest-validator"
@@ -10057,7 +10156,9 @@
       "status": "live",
       "conformance_fixtures": true,
       "compute_capability": "server",
-      "compute_images": [{"system":"sha256-source","image_id":"sha256:e9897ef4cb8f7cf9529ef898e949895809edb037f346eb0a0557216bb3875fd1","valid_from":"2026-07-10"}],
+      "compute_proof_ready": "ready",
+      "compute_proof": {"type":"ZkVmReceipt","system":"risc0","receiptFormat":"groth16-bn254","imageId":"sha256:a1a0bc89b5b1febaeda3519f6dbade0fa5ac16beeb143c4e1b01689573567bc6","seal":"A1ioEtEpPxAdLzFXBy2cYHfP29xLLmtVc3tINEqHOr4mWKNPdWFHkaa9HGZTIRfU1p5HRvKe18bpiIiF6airKwZoSSr2UV6JWbDDL79TqsjUxj3SPTL1ix/rxJNLboOlDV07M9LJaR6hCz3y4uaTUwSRwGxd7+IpjHeeO+T4NNUWsg9wK75v5TwEp+oLbnka/Etgc/C/alcoYk+WCfXhFzAnhltLfjNu3I4WlPvfo5JsOEZ0nwaJoiOHLe0/9/hjLNhGlMDiplJX7Okwh1MtymtGxzM1jkRd3zE4XXxpmWYlEuXWE/OoDxKLjdgc7fftPoCru8y8JfSBRvNvnrfm1g==","journal":{"chaingraph_version":"0.4.0","kernel_digest":"sha256:815b73ede91f61e07afc98d9ac7e04f808c7c477c00535e5f0817df1f041bca9","output":{"alg":"Ed25519","alg_allowed":true,"caveats":["signature verification is caller-attested"],"chain_trusted":true,"signature_verification":"caller_attested","signature_verified":true,"verdict":"ACCEPT"}}},
+      "compute_images": [{"system":"sha256-source","image_id":"sha256:815b73ede91f61e07afc98d9ac7e04f808c7c477c00535e5f0817df1f041bca9","valid_from":"2026-09-17"},{"system":"risc0","image_id":"sha256:a1a0bc89b5b1febaeda3519f6dbade0fa5ac16beeb143c4e1b01689573567bc6","valid_from":"2026-09-17"}],
       "export_capability": [
         "xlsx",
         "csv",
@@ -14817,8 +14918,27 @@
       ],
       "status": "live",
       "conformance_fixtures": true,
+      "standards_basis": "implements_standard",
+      "cited_clause_digest": [
+        {
+          "digest": "sha256:a558362611d0ca8dcfc5c1526c76ddfa721e0804d9346a49116e829d7586ca9b",
+          "source_url": "https://www.consumerfinance.gov/rules-policy/regulations/1026/j/",
+          "retrieved_at": "2026-08-16",
+          "clause_path": "12 CFR 1026 Appendix J (a)(2) -- actuarial-method balance recurrence, authority for rounding_steps 4 (principal_component) and 5 (closing_balance)",
+          "scheme": "cfr",
+          "id": "12 CFR 1026 Appendix J"
+        },
+        {
+          "digest": "sha256:b523793b29e30669d51a91b8e093010d2b9ffeb35763f10cd20ea5fc8811a960",
+          "source_url": "https://www.consumerfinance.gov/rules-policy/regulations/1026/j/",
+          "retrieved_at": "2026-08-15",
+          "clause_path": "12 CFR 1026 Appendix J (b)(6) -- stub-period fraction pricing precedent for UNIT_PERIOD",
+          "scheme": "cfr",
+          "id": "12 CFR 1026 Appendix J"
+        }
+      ],
       "compute_capability": "server",
-      "compute_images": [{"system":"sha256-source","image_id":"sha256:23d06ce0530f333676cee2d8435ec0f6622170fc8040d471151cd64a01025225","valid_from":"2026-07-10"},{"system":"risc0","image_id":"sha256:a1a0bc89b5b1febaeda3519f6dbade0fa5ac16beeb143c4e1b01689573567bc6","valid_from":"2026-07-04"}],
+      "compute_images": [{"system":"sha256-source","image_id":"sha256:11378014fd087d551a663ee640914801101ae04fd8a943a8d669314da98f2c88","valid_from":"2026-09-02"},{"system":"risc0","image_id":"sha256:a1a0bc89b5b1febaeda3519f6dbade0fa5ac16beeb143c4e1b01689573567bc6","valid_from":"2026-07-04"}],
       "export_capability": [
         "json"
       ],
@@ -14828,10 +14948,10 @@
         "system": "risc0",
         "receiptFormat": "groth16-bn254",
         "imageId": "sha256:a1a0bc89b5b1febaeda3519f6dbade0fa5ac16beeb143c4e1b01689573567bc6",
-        "seal": "MBd6BxEyTGeDZRNZ/aKFreZ229BNzILoim18As7EcnwAxnogxWxD9SD944ISqPIs2iF0Lwm7aKmtcb9ejDihRA1dkahKzFIa3PB8G93f5aqXZLEAP6UIRIusirq+D/AyAWm1aTnzG+eiXl28wVBfGzqzsx8cD76vDEf+Tmij8ZQfmacS0DYo8d1mK4slgQ+54204adoO+RLLehu+WJ+IYwFsS6d7fg4fd/gtdKQvN18tKI70ROYt0v0GvAaGc881FSRKXgqd530txm3CnORfYcdGMUfvbe1fJWnOQZiaCd0BG+EDt1J4hr3+jRdsZ+GRAfIsYJeKaMKzfqBuKT1lig==",
+        "seal": "CjgugYN1PByrpi++8NX7gVjtYHJrdaWgPF0n7Np+GcUOzHoddcIDMotyF7irYszX2q1b3HBN99gDtoP5jetjuB1Gt0YjA2aszH1FDw/BPkDeLY/IkgNuw7Sk8Itm/WxSCDPrGR3mMDedhjz/sQwRMm+5fQ+kwnU6lbEHj41JPJMQxrgHq7p1GB93q7q8CbRV1vDEr4yAA9R/H972ndcgTxYS/FpCrdux/mGbAAckK9mJYO/1p2NPnjYK84+IfYHiFmrL80vUCObY15783EEXxiQMbY6E3JwVGU4I6qrYlDQRdqAmbkfEtBCWMNPznMJtMKF7ZQr9RmCXODXAttM8Vg==",
         "journal": {
           "chaingraph_version": "0.4.0",
-          "kernel_digest": "sha256:23d06ce0530f333676cee2d8435ec0f6622170fc8040d471151cd64a01025225",
+          "kernel_digest": "sha256:11378014fd087d551a663ee640914801101ae04fd8a943a8d669314da98f2c88",
           "output": {
             "advance_total": 6000,
             "apr_pct": 11.9961,
@@ -15020,9 +15140,20 @@
       "status": "live",
       "conformance_fixtures": true,
       "compute_capability": "server",
-      "compute_images": [{"system":"sha256-source","image_id":"sha256:d7ba34da2e378662fbb05bc23d6aad6b0b4660bbae6f3111e0dd1c471209029b","valid_from":"2026-07-10"},{"system":"risc0","image_id":"sha256:a1a0bc89b5b1febaeda3519f6dbade0fa5ac16beeb143c4e1b01689573567bc6","valid_from":"2026-07-04"}],
+      "compute_images": [{"system":"sha256-source","image_id":"sha256:451c7b3b5ae225db716a4b46040eb80af02bf7aa2a2ac25a35f3da1e295700ce","valid_from":"2026-09-21"},{"system":"risc0","image_id":"sha256:a1a0bc89b5b1febaeda3519f6dbade0fa5ac16beeb143c4e1b01689573567bc6","valid_from":"2026-07-04"}],
       "export_capability": [
         "json"
+      ],
+      "standards_basis": "implements_standard",
+      "cited_clause_digest": [
+        {
+          "digest": "sha256:c6e5f4f8fa4359dc2e7c6fa34ab1fad5de294737ad3922ba8b9ec0d77eef2b06",
+          "source_url": "https://www.ecfr.gov/api/versioner/v1/full/2026-09-17/title-12.xml?part=1026&section=1026.43",
+          "retrieved_at": "2026-09-21",
+          "clause_path": "(e)(3) chapeau, (i)(A)-(E), (ii)",
+          "scheme": "cfr",
+          "id": "12 CFR 1026.43"
+        }
       ],
       "compute_proof_ready": "ready",
       "compute_proof": {
@@ -15030,13 +15161,13 @@
         "system": "risc0",
         "receiptFormat": "groth16-bn254",
         "imageId": "sha256:a1a0bc89b5b1febaeda3519f6dbade0fa5ac16beeb143c4e1b01689573567bc6",
-        "seal": "IQqWGYRAJpZpgx6zdSmC6sgn1BnWdL81VwhUEmnlfMkuxBPqalZl8iBACiHjCr4qoFYgWLzDJQuBB6Pyl64XSCTYQyjrKQA5UA20TK5mCRbk7jVHM4mn6u9egHJRkbYEGtlTXM5izz979ddtnJJq82Zqij1VM1uShO8rHkaTnywIZGpKIbetgnGDq6snxpZPLv9frGXxSITGkQNGZ5kwlyrGTb2cA4zvmYpYI4y16oZAK2uBjdWpWDxsobvurYfyJ0ezOH3HJSUOCpyi79deECfvtH7mBpvdiRTO+/nzGIUc7Q/aXF0ihovBNL0K8gtNDs+0//R5Y8M2dv/sDrX60Q==",
+        "seal": "Ldqh6uSsIVbv65o9ZhdjeB8/YcUZhz+Yp1pmk8HkzFMBTJEOXj7OFS2KOYvJUIYvrXueAJ6zGPFnbU3Gy8TU6AVWgxv50NbXamwqEpLpspXF3FXjZFNpAfmnSdqJ407YGIEM+l3pyTn6w8Ls9MzaodqnW9LgTotg7dNcVJKdAzQuUe/V4fnzI7m2jF/g74bJ1stvBM6D6YA4S71w5J5pjAZyF30wCaBg1k6RyftbrFepHX0Vf6NIGSchMusVNP5sK0D1uCTbooEgX7pjmIBJaA8zHxzZRshDmf6vdnYyEsUdAwv43mdaGq41t9vgtkJmYUCrLT6v4oFZmnQ3Wxz03Q==",
         "journal": {
           "chaingraph_version": "0.4.0",
-          "kernel_digest": "sha256:d7ba34da2e378662fbb05bc23d6aad6b0b4660bbae6f3111e0dd1c471209029b",
+          "kernel_digest": "sha256:451c7b3b5ae225db716a4b46040eb80af02bf7aa2a2ac25a35f3da1e295700ce",
           "output": {
             "effective_date": "2026-01-01",
-            "fr_citation": "FR 2025-22773 (effective Jan 1, 2026)",
+            "fr_citation": "FR 2025-22773, 90 FR 57890",
             "headroom": 1500,
             "limit": 13500,
             "limit_fixed": null,
@@ -15109,21 +15240,21 @@
     },
     {
       "tool_id": "art-220-reg-z-threshold-lookup",
-      "tool_version": "1.0.0",
+      "tool_version": "1.1.0",
       "display_name": "Reg Z Threshold Lookup",
       "mcp_name": "lookup_reg_z_thresholds",
       "mandate_type": "compliance_mandate",
       "wave": 37,
       "gpu": false,
       "url": "https://ainumbers.co/chaingraph/art-220-reg-z-threshold-lookup.html",
-      "description": "Reg Z version-pinned threshold lookup service. Tables: qm_points_fees, hoepa, hpml, card_penalty. 2021-2026 rows with Federal Register citations and effective dates. This node exists because agents reliably hallucinate current-year dollar thresholds. Annual refresh cadence with FR citation pinning. Covers CARD Act penalty fee note: the CFPB dollar-eight late-fee cap rule was vacated May 2025; prior safe-harbor amounts apply.",
+      "description": "Reg Z version-pinned threshold lookup service. Tables: qm_points_fees, hoepa, hpml, card_penalty. 2021-2026 rows with Federal Register citations and effective dates. This node exists because agents reliably hallucinate current-year dollar thresholds. Annual refresh cadence with FR citation pinning. Covers CARD Act penalty fees under 12 CFR 1026.52(b)(1)(ii)(A)/(B) as one general safe harbor of $32 for a first violation and $43 for each subsequent violation of the same type, applying to late fees and other violations alike: the CFPB $8 late-fee cap (89 FR 19128) was enjoined 2024-05-10 before its 2024-05-14 effective date and vacated 2025-04-15 in Chamber of Commerce v. CFPB, No. 4:24-cv-00213-P (N.D. Tex.), so it is void and was never operative even though the eCFR still prints it. The hpml rows carry the 12 CFR 1026.35(c)(2)(ii) special-appraisal exemption, $34,200 for 2026 per FR 2025-22875, 90 FR 58141.",
       "input_schema_ref": "chaingraph/art-220-reg-z-threshold-lookup.html#manifest",
       "consumes": [],
       "feeds": [],
       "status": "live",
       "conformance_fixtures": true,
       "compute_capability": "server",
-      "compute_images": [{"system":"sha256-source","image_id":"sha256:d8b0d25c1f2ec5d46b13155ce06213c2bbb4d4749903d18d3777adffeaf5a392","valid_from":"2026-09-12"},{"system":"risc0","image_id":"sha256:a1a0bc89b5b1febaeda3519f6dbade0fa5ac16beeb143c4e1b01689573567bc6","valid_from":"2026-07-04"}],
+      "compute_images": [{"system":"sha256-source","image_id":"sha256:0d1692ca8219b6bbb13b90eb63b60610aaebd17ec605d3a5532e767b56dbac55","valid_from":"2026-09-20"},{"system":"risc0","image_id":"sha256:a1a0bc89b5b1febaeda3519f6dbade0fa5ac16beeb143c4e1b01689573567bc6","valid_from":"2026-07-04"}],
       "export_capability": [
         "json"
       ],
@@ -15144,10 +15275,10 @@
         "system": "risc0",
         "receiptFormat": "groth16-bn254",
         "imageId": "sha256:a1a0bc89b5b1febaeda3519f6dbade0fa5ac16beeb143c4e1b01689573567bc6",
-        "seal": "BGZVXAKdE1OnavpqF7ZIGabuLxbEk4qSnHO32VtIIYEg6HFwVj85Lhow8mKM69taqpCEw65P31MpHwlPqT2BFSyuC9YuAbeSJGoXnztDRllT4EqNiJNSYzQajrm65SK9IoCkN6sk1uPisuolymAUcZgeXEamMqTYDGCAjm3MztUJRlJ9d9RQuOpzgY/vT9gEdgS+YKqyjfvDQcQv7M5JKSn5ccopqOhaAe0HiX0uRKx0B9FU9FM8LMVqk3Q8cID8JmCBtCMXjgD55xQt0P3AjSbHBalA++kdbTbXDn6JdEkMRp8kHEEV9qBh/v24Tm7rYUEtN1sptpUznMtsFQtQgw==",
+        "seal": "LB0WIaY/Z9+odQhszQ4HTTRdj/kUr+hdIyn6vBd/ZkoDx97XbsDtsZu8O+6GMZjPrVHnwqP3xomK8zQkNbz8iR9xUNJPHOCiKTRW+gse0qCTQVcbjp9/OHALW0NPyKSUG3OE9oHiCFt/zuMy+DkxGMT0Zf9TZ9kzLsrxABpFfh8VSA5vIyHLaPG3uVJTvDrhr5BmYZ0FPwrw/UAiMuOILieK9USgpuRys+v1LfRxm94sF8RpdG0Cc4Nup2HoxOS6BjaK781L650hplQeq1mIqiKUSsMheTzYSOzpvaL8o2UPCh/+QRnEuxICcqDb3B1JJ6OqDi264bkgXXiSyMqtIg==",
         "journal": {
           "chaingraph_version": "0.4.0",
-          "kernel_digest": "sha256:d8b0d25c1f2ec5d46b13155ce06213c2bbb4d4749903d18d3777adffeaf5a392",
+          "kernel_digest": "sha256:0d1692ca8219b6bbb13b90eb63b60610aaebd17ec605d3a5532e767b56dbac55",
           "output": {
             "available_years": [
               2021,
@@ -15159,7 +15290,7 @@
             ],
             "data": {
               "effective": "2026-01-01",
-              "fr_citation": "FR 2025-22773, effective 2026-01-01",
+              "fr_citation": "FR 2025-22773, 90 FR 57890",
               "tier_1_min": 137958,
               "tier_1_pct": 3,
               "tier_2_fixed": 4139,
@@ -16526,8 +16657,35 @@
       ],
       "status": "live",
       "conformance_fixtures": true,
+      "standards_basis": "implements_standard",
+      "cited_clause_digest": [
+        {
+          "digest": "sha256:c4f8972dd71b4b7ca7e7efd209600cea96ad1dd62313176f4cada775aa0fdda4",
+          "source_url": "https://eur-lex.europa.eu/legal-content/EN/TXT/HTML/?uri=CELEX:32024R1689",
+          "retrieved_at": "2026-09-19",
+          "clause_path": "Regulation (EU) 2024/1689 Article 12(2)",
+          "scheme": "eu",
+          "id": "Regulation (EU) 2024/1689"
+        },
+        {
+          "digest": "sha256:8f3705bc0e1af5ca62874529aa8da40c7ea626a52a5e14af8935ded7c52bceaf",
+          "source_url": "https://eur-lex.europa.eu/legal-content/EN/TXT/HTML/?uri=CELEX:32024R1689",
+          "retrieved_at": "2026-09-19",
+          "clause_path": "Regulation (EU) 2024/1689 Article 26(6)",
+          "scheme": "eu",
+          "id": "Regulation (EU) 2024/1689"
+        },
+        {
+          "digest": "sha256:1b580f6ed8391ef9056306ecc3f2a094ad7735db9d7e5d346849128932f4388a",
+          "source_url": "https://eur-lex.europa.eu/legal-content/EN/TXT/HTML/?uri=CELEX:32024R1689",
+          "retrieved_at": "2026-09-19",
+          "clause_path": "Regulation (EU) 2024/1689 Annex III point 5(b) and 5(c)",
+          "scheme": "eu",
+          "id": "Regulation (EU) 2024/1689"
+        }
+      ],
       "compute_capability": "server",
-      "compute_images": [{"system":"sha256-source","image_id":"sha256:38e616aa1627146cb9496fe598eea7869de615e58bcc59363e22fc24da851e1c","valid_from":"2026-07-10"},{"system":"risc0","image_id":"sha256:a1a0bc89b5b1febaeda3519f6dbade0fa5ac16beeb143c4e1b01689573567bc6","valid_from":"2026-07-04"}],
+      "compute_images": [{"system":"sha256-source","image_id":"sha256:d45fd5d7dc550addeff5e297d0fe8a9dc4a233743d78c6021443a6e891ea654e","valid_from":"2026-09-10"},{"system":"risc0","image_id":"sha256:a1a0bc89b5b1febaeda3519f6dbade0fa5ac16beeb143c4e1b01689573567bc6","valid_from":"2026-07-04"}],
       "export_capability": [
         "json"
       ],
@@ -16537,10 +16695,10 @@
         "system": "risc0",
         "receiptFormat": "groth16-bn254",
         "imageId": "sha256:a1a0bc89b5b1febaeda3519f6dbade0fa5ac16beeb143c4e1b01689573567bc6",
-        "seal": "IwCE/oiKLmbo9dZZxSDOv80IMmu7RRhrEm5ThBQqtyglkFuF+eFEzrwyx0Otm0riUrGSsaV7+zsRlT/NmuJ/cgQRAlcY8fYvUSVniemVoddxHpIeHS2ejmcAMFXmL6hMBfz+xKzvQ5gUIC3q5NTqOUCp+CKOSoGuIOczj+RmW3QmlNw7KZw8ILx/OsLDKY73wAJhQw9ddhQQdqZ2bjFIHSFATA2E8LVcJu/MkH0krYNuwUAPZ/TM0Zy1WPQ7zxByJX+atuZL8daR31UQ+XHM7OvWtVS+IBl2LLARdTB000QedT9HixgsqbFN99Dv1C7gw/iJfIcCAYyxuN+R54JT/w==",
+        "seal": "B4p6Agh4Hy6qv2R6b5OygRH6h2ygxO7xXWGEyVvH4gYkGIeF3HctaJRSrF2VI9OeVpHUuV6vl2EUFNDA/wIr8Sdg1o5DHpcd3AOLtTTi69eY5tm+KoTELVThh0RPfU6iHhr8+9wfxpQ9+YZZffY2ozUSmGNrSgFC85VPqll4Y0wJ0I45MxhKEVrS7e2bi4fWfeV95/sCpP3uR7vRhFfyNB+9nry0ncGP6KEx8hoSl8iWdNhXX8B9ONJ5+pT/OcvoHHrGpL6DnL+jh9XGrc1YpZ75QclhdmZIWbcDiU6Jkw4f1I9ZIBiWCcAGY68GVaTR7kmcFtOOoow6IFp+RXeqGA==",
         "journal": {
           "chaingraph_version": "0.4.0",
-          "kernel_digest": "sha256:ddb7da11f55693e35c501b0f9df6ff4e73eda5978e48d4e720d80b36f78d6014",
+          "kernel_digest": "sha256:d45fd5d7dc550addeff5e297d0fe8a9dc4a233743d78c6021443a6e891ea654e",
           "output": {
             "anchor_surface": "anchor.ainumbers.co/mcp",
             "anchor_tools": {
@@ -16555,9 +16713,10 @@
             "decision_label": "CREDIT_APPROVED",
             "enforcement_dates": {
               "digital_omnibus_proposed": "2027-12-02",
-              "note": "Digital Omnibus (provisional agreement 7 May 2026) proposes Annex III high-risk obligations to 2 Dec 2027; legal effect only on formal adoption. Verify current AI Act status.",
+              "note": "Digital Omnibus amendments (European Parliament final approval, 16 June 2026) confirm Annex III high-risk obligations move to 2 December 2027.",
               "original": "2026-08-02"
             },
+            "ha_evidence_bundle": null,
             "input_digest": "abc123def456abc123def456abc123def456abc123def456abc123def456abcd",
             "missing_art12_fields": [],
             "model_id": "credit-ai-v2",
@@ -16650,8 +16809,35 @@
       "feeds": [],
       "status": "live",
       "conformance_fixtures": true,
+      "standards_basis": "implements_standard",
+      "cited_clause_digest": [
+        {
+          "digest": "sha256:c4f8972dd71b4b7ca7e7efd209600cea96ad1dd62313176f4cada775aa0fdda4",
+          "source_url": "https://eur-lex.europa.eu/legal-content/EN/TXT/HTML/?uri=CELEX:32024R1689",
+          "retrieved_at": "2026-09-19",
+          "clause_path": "Regulation (EU) 2024/1689 Article 12(2)",
+          "scheme": "eu",
+          "id": "Regulation (EU) 2024/1689"
+        },
+        {
+          "digest": "sha256:8f3705bc0e1af5ca62874529aa8da40c7ea626a52a5e14af8935ded7c52bceaf",
+          "source_url": "https://eur-lex.europa.eu/legal-content/EN/TXT/HTML/?uri=CELEX:32024R1689",
+          "retrieved_at": "2026-09-19",
+          "clause_path": "Regulation (EU) 2024/1689 Article 26(6)",
+          "scheme": "eu",
+          "id": "Regulation (EU) 2024/1689"
+        },
+        {
+          "digest": "sha256:1b580f6ed8391ef9056306ecc3f2a094ad7735db9d7e5d346849128932f4388a",
+          "source_url": "https://eur-lex.europa.eu/legal-content/EN/TXT/HTML/?uri=CELEX:32024R1689",
+          "retrieved_at": "2026-09-19",
+          "clause_path": "Regulation (EU) 2024/1689 Annex III point 5(b) and 5(c)",
+          "scheme": "eu",
+          "id": "Regulation (EU) 2024/1689"
+        }
+      ],
       "compute_capability": "server",
-      "compute_images": [{"system":"sha256-source","image_id":"sha256:8bc32901d512c613154fd05bc8dba90a59d45911b83c8c2b2174ad8fddce59cb","valid_from":"2026-07-10"},{"system":"risc0","image_id":"sha256:a1a0bc89b5b1febaeda3519f6dbade0fa5ac16beeb143c4e1b01689573567bc6","valid_from":"2026-07-04"}],
+      "compute_images": [{"system":"sha256-source","image_id":"sha256:efb6c1bcd74577c8ae8d9c1f631130aa78043237bbf9e2f2ea11e8cb31c1672c","valid_from":"2026-09-10"},{"system":"risc0","image_id":"sha256:a1a0bc89b5b1febaeda3519f6dbade0fa5ac16beeb143c4e1b01689573567bc6","valid_from":"2026-07-04"}],
       "export_capability": [
         "json"
       ],
@@ -16661,10 +16847,10 @@
         "system": "risc0",
         "receiptFormat": "groth16-bn254",
         "imageId": "sha256:a1a0bc89b5b1febaeda3519f6dbade0fa5ac16beeb143c4e1b01689573567bc6",
-        "seal": "Hu8CzF+/nDmhBEtCGbaYS2u7Ou15R8n2+mf3j9RNlUMJ6uGksEnkvErZorgYg+5fPy1Jv0F2K2pwnWtbTCD1hgyuMjaafGWtSWwYIa8TtsCVkIMJJG0HByKZVyqJxe+FKjI8KELZZMH5G2PKasXvTnErGc+1xTQdArWLv0IEP2EFaxlQdONvrn3fbhJth//a31K1IYdoTWkA9Nokse9EaCgMmJpKPjE22Htwuh7PFlXW6u5AaGdiB3gezqbkEP8WI2CD+7ovFApgXTQX1YsWtMugme4nGVHsejpXgpKA1D0btGwkSIfaYb8y5OlXmjMLmKJi8nM6YUDvvYGIhuye/g==",
+        "seal": "ENEtB6vfvPyJiwph4dT1pYKmzMIx4yIx8K9ooIGgWnERwQzPGzigxtf2BpCQutcunEvgQqyrqOatTzQi43SpcQOIpKDVWctJMNiZmuRdY+2lOaT40/6PPumXgQ+BzzfKD1b8CKHDksAHjcyGfKGMxhFWCbV82n3XZucb52lPsyERFCl2GuR6kC9Vz1BAC4aNZ9eBh4Fl8OF6n5YzL419YBrLU64ZZKH/eQwYB/vW+Qtf1MLkq+b8SOEjs5rXUFioJmHZ4JB/GrTimo1WyHB0wbAwpmnHOB6BdRIkn7aQQTMg54qgqRLHX55BTnoNY1SMN/WDtSe8OFtppA35/ybwOw==",
         "journal": {
           "chaingraph_version": "0.4.0",
-          "kernel_digest": "sha256:0b45d429f6c43e46f0917a4fdb5c651ce821e6ee33ad8dd67223d6bdfb394431",
+          "kernel_digest": "sha256:efb6c1bcd74577c8ae8d9c1f631130aa78043237bbf9e2f2ea11e8cb31c1672c",
           "output": {
             "all_obligations_met": true,
             "annex3_category": "5b_creditworthiness",
@@ -16675,7 +16861,7 @@
             "do_now": [],
             "enforcement_dates": {
               "digital_omnibus_proposed": "2027-12-02",
-              "note": "Digital Omnibus (provisional agreement 7 May 2026) proposes Annex III high-risk obligations to 2 Dec 2027. Verify current AI Act status.",
+              "note": "Digital Omnibus amendments (European Parliament final approval, 16 June 2026) confirm Annex III high-risk obligations move to 2 December 2027.",
               "original": "2026-08-02"
             },
             "enforcement_readiness": "READY",
@@ -16688,7 +16874,7 @@
             "obligations": [
               {
                 "article": "Art 12(2)",
-                "obligation": "Log inputs, outputs, timestamps, model version, override flags, natural-person-ID field. Retain >= 6 months.",
+                "obligation": "Log model identifier, model version, input digest, output digest, decision label, event timestamp, override flag, and a structural subject reference (synthetic/opaque case ID, never a real natural-person identifier). Retain >= 6 months.",
                 "status": "IMPLEMENTED"
               },
               {
@@ -19216,16 +19402,17 @@
       "status": "live",
       "conformance_fixtures": true,
       "compute_capability": "server",
-      "compute_images": [{"system":"sha256-source","image_id":"sha256:0f28358a1106be5fd951174ff9984a32af17133642481706a056f43ce6fe0d22","valid_from":"2026-07-10"},{"system":"risc0","image_id":"sha256:a1a0bc89b5b1febaeda3519f6dbade0fa5ac16beeb143c4e1b01689573567bc6","valid_from":"2026-07-10"}],
+      "compute_images": [{"system":"sha256-source","image_id":"sha256:c1ee715ad62a5e063ca3fe43e2da0b537ee17a436894a26b554ce7bd542049ce","valid_from":"2026-09-19"},{"system":"risc0","image_id":"sha256:a1a0bc89b5b1febaeda3519f6dbade0fa5ac16beeb143c4e1b01689573567bc6","valid_from":"2026-07-10"}],
+      "compute_proof_ready": "ready",
       "compute_proof": {
         "type": "ZkVmReceipt",
         "system": "risc0",
         "receiptFormat": "groth16-bn254",
         "imageId": "sha256:a1a0bc89b5b1febaeda3519f6dbade0fa5ac16beeb143c4e1b01689573567bc6",
-        "seal": "A0BSd+yshPOT0VRmB/MqzwHJtFWFXoPiRNxfvrRvCbwS+oJAY8sv5PP0nofWfKi8pS/pElzRsOdmUQMqdOUZjS6iYzub02DTTc1DU9HnBIccEUoaFydXddcAA4yWBSQhEDuLlhcIYk8/txHCHx5/d3zrUz+h15oin4pUvbBeyAkwSWYa98DvZ5jhfuxCDkTeFyl1E+KRc1B0B4Huh0oPKg58LysrPplcN28mbTL7LfKuDCYB2AQIbmxS4XgShTX+BDAJwKgJ8iUxP/dTrloMLwv8OhzhSLFAJWDaT6DktJgnsNM8SE1/MiWeu4a/h+rv8wO7HX6iD+FjlDQBBT+zyw==",
+        "seal": "HPtdq8tfx+LSc1ZHNV6/YKV+6zDIxh+IvAmQbzhHES8ChoSZgm7b/i3Bd/vPhhfBzih8fiHj8rdJoFUB6Z4aCA/QZyJe9QzRBgxG//mB5gnYHQSb52QEQuBEWxiTSMHpLqAUPGdZLA9UJDHYETMrghpaCDv6PxD8RO7ilAv55yUAeKf9PaaJtQgYZ1c9Nc782/QzEAYxWtU3jgtcrUawHRVk6zL/HEGrdDO7IlYKZqLfVqTC5bRaqi2IGDWyGB/3KiQZwtg+DXF2Vm5dZ0YNY5+f+1c0Tx5v51N9HZHD4v4hcGTfXtR9Py5KvFGfP/VoxZp2rnpR0iGUrGL23UkMDg==",
         "journal": {
           "chaingraph_version": "0.4.0",
-          "kernel_digest": "sha256:0f28358a1106be5fd951174ff9984a32af17133642481706a056f43ce6fe0d22",
+          "kernel_digest": "sha256:c1ee715ad62a5e063ca3fe43e2da0b537ee17a436894a26b554ce7bd542049ce",
           "output": {
             "applicable_deadline": "2027-01-18",
             "asset_results": [],
@@ -19241,17 +19428,17 @@
               {
                 "detail": "Reserves (0.00) cover only 0.00% of outstanding tokens. Shortfall: 0.00.",
                 "dim": "Coverage ratio < 100%",
-                "ref": "GENIUS Act S.394 §4(a)"
+                "ref": "GENIUS Act, Pub. L. 119-27 (S.1582) §4(a)"
               },
               {
                 "detail": "Monthly report requires a dual_control(2) CEO/CFO certification. CEO certification missing. CFO certification missing.",
                 "dim": "CEO/CFO certification",
-                "ref": "GENIUS Act S.394 §4; FDIC NPR 2026-04-10; OCG SPEC.md §27.3 dual_control(2)"
+                "ref": "GENIUS Act, Pub. L. 119-27 (S.1582) §4; FDIC NPR 2026-04-10; OCG SPEC.md §27.3 dual_control(2)"
               },
               {
                 "detail": "No registered public accounting firm named as examiner for this report.",
                 "dim": "Registered accounting-firm examiner",
-                "ref": "GENIUS Act S.394 §4"
+                "ref": "GENIUS Act, Pub. L. 119-27 (S.1582) §4"
               }
             ],
             "gate_policy": "dual_control(2)",
@@ -19265,10 +19452,10 @@
               "provided": false,
               "reported_outstanding_tokens": 0
             },
-            "pdf_extraction_note": "This linter operates on extracted disclosure fields (JSON), not the source PDF filing. It does NOT cryptographically verify the underlying published PDF — PDF-only publishing is the industry gap (see XBRL US comment letters). Successor to the pre-issuance art-06 attestation pre-check; not a substitute for it. Re-verify against GENIUS Act final-rule text on/after 2026-07-18.",
+            "pdf_extraction_note": "This linter operates on extracted disclosure fields (JSON), not the source PDF filing. It does NOT cryptographically verify the underlying published PDF — PDF-only publishing is the industry gap (see XBRL US comment letters). Successor to the pre-issuance art-06 attestation pre-check; not a substitute for it. Re-verify against GENIUS Act final-rule text on/after 2026-07-18. Deadline leg-basis (dated observation): applicable_deadline 2027-01-18 is the 18-month leg of the GENIUS Act, Pub. L. 119-27 (S.1582) §20 effective date — the earlier of 18 months after the 2025-07-18 enactment or 120 days after the primary Federal payment stablecoin regulators issue final implementing regulations; no final regulations existed as of 2026-09-01.",
             "prohibited_assets_usd": 0,
             "registered_examiner_named": false,
-            "regulatory_framework": "GENIUS Act S.394 §4 — Monthly Reserve Composition Report",
+            "regulatory_framework": "GENIUS Act, Pub. L. 119-27 (S.1582) §4 — Monthly Reserve Composition Report",
             "report_month": "",
             "reserve_shortfall_usd": 0,
             "total_liabilities_usd": 0,
@@ -22642,13 +22829,358 @@
   ],
   "status": "live",
   "conformance_fixtures": true,
+  "standards_basis": "implements_standard",
+  "cited_clause_digest": [
+    {
+      "digest": "sha256:a558362611d0ca8dcfc5c1526c76ddfa721e0804d9346a49116e829d7586ca9b",
+      "source_url": "https://www.consumerfinance.gov/rules-policy/regulations/1026/j/",
+      "retrieved_at": "2026-08-16",
+      "clause_path": "12 CFR 1026 Appendix J (a)(2) -- actuarial-method balance recurrence, authority for rounding_steps 4 (principal_component) and 5 (closing_balance)",
+      "scheme": "cfr",
+      "id": "12 CFR 1026 Appendix J"
+    },
+    {
+      "digest": "sha256:b523793b29e30669d51a91b8e093010d2b9ffeb35763f10cd20ea5fc8811a960",
+      "source_url": "https://www.consumerfinance.gov/rules-policy/regulations/1026/j/",
+      "retrieved_at": "2026-08-15",
+      "clause_path": "12 CFR 1026 Appendix J (b)(6) -- stub-period fraction pricing precedent for UNIT_PERIOD",
+      "scheme": "cfr",
+      "id": "12 CFR 1026 Appendix J"
+    }
+  ],
   "compute_capability": "server",
-  "compute_images": [{"system":"sha256-source","image_id":"sha256:8885c70d3b73687cac1d701f769dca9e13c67e4101c9ff6cd9707922f141439b","valid_from":"2026-07-10"},{"system":"risc0","image_id":"sha256:a1a0bc89b5b1febaeda3519f6dbade0fa5ac16beeb143c4e1b01689573567bc6","valid_from":"2026-06-28"}],
+  "compute_images": [{"system":"sha256-source","image_id":"sha256:c43a019193d999e9f93930a4bf793f51192c11245151211f1c26f038629caef9","valid_from":"2026-09-02"},{"system":"risc0","image_id":"sha256:a1a0bc89b5b1febaeda3519f6dbade0fa5ac16beeb143c4e1b01689573567bc6","valid_from":"2026-06-28"}],
   "export_capability": [
     "json"
   ],
   "compute_proof_ready": "ready",
-  "compute_proof": {"type":"ZkVmReceipt","system":"risc0","receiptFormat":"groth16-bn254","imageId":"sha256:a1a0bc89b5b1febaeda3519f6dbade0fa5ac16beeb143c4e1b01689573567bc6","seal":"F2IU+UOo8i+xJ9p6reR9Cxlvl0UE4bgvDL3CTaeA0B0Clu7SOVOsI8kcpaQvJxh75mT1nvqozveWpHhP1v9QUyE69Ufid+YVfVHZc2jXX9yaSf49zeCRoeLRbSUgG3g/LLi0fBixaO3ePTJIqNAfjBsMLcdpJa5mDc3W9CHPfRImp1zaQEasEUpku/gJ+McRX6ER8FZxLYN5lza0t4uFXBKR62FCgbHmgQYETytOy3pJ4F6lBfpOjtsfnQZu/3Q/Dnak7wUxWMRQa8Mxf7YcYNSRGHUzEOhdD9dMALIDnugjDygvgK4rrmLwdFvBHkp+pTcj6L6K+H8+M+NsrOhIvA==","journal":{"chaingraph_version":"0.4.0","kernel_digest":"sha256:8885c70d3b73687cac1d701f769dca9e13c67e4101c9ff6cd9707922f141439b","output":{"advances":[{"amount":6000,"periods_from_consummation":0}],"loan_amount":6000,"note":"Odd-days fraction shifts periods_from_consummation for the first period per Appendix J unit-period convention; it does not change per-period interest/principal allocation. Feed advances/payments directly into compute_reg_z_appendix_j_apr (art-215) for an actuarial APR on this schedule.","note_rate_pct":12,"num_payments":24,"odd_days":0,"payment_amount":282.44,"payments":[{"amount":282.44,"periods_from_consummation":1},{"amount":282.44,"periods_from_consummation":2},{"amount":282.44,"periods_from_consummation":3},{"amount":282.44,"periods_from_consummation":4},{"amount":282.44,"periods_from_consummation":5},{"amount":282.44,"periods_from_consummation":6},{"amount":282.44,"periods_from_consummation":7},{"amount":282.44,"periods_from_consummation":8},{"amount":282.44,"periods_from_consummation":9},{"amount":282.44,"periods_from_consummation":10},{"amount":282.44,"periods_from_consummation":11},{"amount":282.44,"periods_from_consummation":12},{"amount":282.44,"periods_from_consummation":13},{"amount":282.44,"periods_from_consummation":14},{"amount":282.44,"periods_from_consummation":15},{"amount":282.44,"periods_from_consummation":16},{"amount":282.44,"periods_from_consummation":17},{"amount":282.44,"periods_from_consummation":18},{"amount":282.44,"periods_from_consummation":19},{"amount":282.44,"periods_from_consummation":20},{"amount":282.44,"periods_from_consummation":21},{"amount":282.44,"periods_from_consummation":22},{"amount":282.44,"periods_from_consummation":23},{"amount":282.47,"periods_from_consummation":24}],"periods_per_year":12,"regulatory_basis":"12 CFR 1026 Appendix J (Reg Z general actuarial equation, unit-period and odd-days conventions). Buydown modeling (temp_buydown) is a schedule-construction convenience, not an Appendix J concept.","schedule":[{"ending_balance":5777.56,"interest":60,"payment_amount":282.44,"period_index":1,"periods_from_consummation":1,"principal":222.44},{"ending_balance":5552.9,"interest":57.78,"payment_amount":282.44,"period_index":2,"periods_from_consummation":2,"principal":224.66},{"ending_balance":5325.99,"interest":55.53,"payment_amount":282.44,"period_index":3,"periods_from_consummation":3,"principal":226.91},{"ending_balance":5096.81,"interest":53.26,"payment_amount":282.44,"period_index":4,"periods_from_consummation":4,"principal":229.18},{"ending_balance":4865.34,"interest":50.97,"payment_amount":282.44,"period_index":5,"periods_from_consummation":5,"principal":231.47},{"ending_balance":4631.55,"interest":48.65,"payment_amount":282.44,"period_index":6,"periods_from_consummation":6,"principal":233.79},{"ending_balance":4395.43,"interest":46.32,"payment_amount":282.44,"period_index":7,"periods_from_consummation":7,"principal":236.12},{"ending_balance":4156.94,"interest":43.95,"payment_amount":282.44,"period_index":8,"periods_from_consummation":8,"principal":238.49},{"ending_balance":3916.07,"interest":41.57,"payment_amount":282.44,"period_index":9,"periods_from_consummation":9,"principal":240.87},{"ending_balance":3672.79,"interest":39.16,"payment_amount":282.44,"period_index":10,"periods_from_consummation":10,"principal":243.28},{"ending_balance":3427.08,"interest":36.73,"payment_amount":282.44,"period_index":11,"periods_from_consummation":11,"principal":245.71},{"ending_balance":3178.91,"interest":34.27,"payment_amount":282.44,"period_index":12,"periods_from_consummation":12,"principal":248.17},{"ending_balance":2928.26,"interest":31.79,"payment_amount":282.44,"period_index":13,"periods_from_consummation":13,"principal":250.65},{"ending_balance":2675.1,"interest":29.28,"payment_amount":282.44,"period_index":14,"periods_from_consummation":14,"principal":253.16},{"ending_balance":2419.41,"interest":26.75,"payment_amount":282.44,"period_index":15,"periods_from_consummation":15,"principal":255.69},{"ending_balance":2161.16,"interest":24.19,"payment_amount":282.44,"period_index":16,"periods_from_consummation":16,"principal":258.25},{"ending_balance":1900.33,"interest":21.61,"payment_amount":282.44,"period_index":17,"periods_from_consummation":17,"principal":260.83},{"ending_balance":1636.89,"interest":19,"payment_amount":282.44,"period_index":18,"periods_from_consummation":18,"principal":263.44},{"ending_balance":1370.82,"interest":16.37,"payment_amount":282.44,"period_index":19,"periods_from_consummation":19,"principal":266.07},{"ending_balance":1102.09,"interest":13.71,"payment_amount":282.44,"period_index":20,"periods_from_consummation":20,"principal":268.73},{"ending_balance":830.67,"interest":11.02,"payment_amount":282.44,"period_index":21,"periods_from_consummation":21,"principal":271.42},{"ending_balance":556.54,"interest":8.31,"payment_amount":282.44,"period_index":22,"periods_from_consummation":22,"principal":274.13},{"ending_balance":279.67,"interest":5.57,"payment_amount":282.44,"period_index":23,"periods_from_consummation":23,"principal":276.87},{"ending_balance":0,"interest":2.8,"payment_amount":282.47,"period_index":24,"periods_from_consummation":24,"principal":279.67}],"schedule_type":"level_payment","totals":{"ending_balance":0,"num_payments":24,"total_interest":778.59,"total_principal":6000},"unit_period_days":30}}}
+  "compute_proof": {
+    "type": "ZkVmReceipt",
+    "system": "risc0",
+    "receiptFormat": "groth16-bn254",
+    "imageId": "sha256:a1a0bc89b5b1febaeda3519f6dbade0fa5ac16beeb143c4e1b01689573567bc6",
+    "seal": "D0eNG8othTOO0vwjNgPBVx12ootNcnz2Ep09yqh3HD8IInrcatd5alWRxDFBOBcE2xKMo7rzTexO7o/cHgbUzw7BE9WcT8gKTXLxGzEZKoQWaq5EEGpykFIzad88xQB0K4+XyjsC2HLEn+4AcGY5ut+6EKK/vYlvsmCQ49seGmwssNV2bztPghB82wL1X9B6dshWmi+sXFpN+mwr4+0fKiVlkfa4x3evP/+Oc6JEd47/mkVh1befP86WudUJJJAgI2OCZWG1i3YbymhawtYkfLWTRoPx44OPFwmiqcsGl4ManG89bQuPKfNJA7rA6BiHOJjGqgypqH2eG3A8wAorwA==",
+    "journal": {
+      "chaingraph_version": "0.4.0",
+      "kernel_digest": "sha256:c43a019193d999e9f93930a4bf793f51192c11245151211f1c26f038629caef9",
+      "output": {
+        "advances": [
+          {
+            "amount": 6000,
+            "periods_from_consummation": 0
+          }
+        ],
+        "loan_amount": 6000,
+        "note": "Odd-days fraction shifts periods_from_consummation for the first period per Appendix J unit-period convention; it does not change per-period interest/principal allocation. Feed advances/payments directly into compute_reg_z_appendix_j_apr (art-215) for an actuarial APR on this schedule.",
+        "note_rate_pct": 12,
+        "num_payments": 24,
+        "odd_days": 0,
+        "payment_amount": 282.44,
+        "payments": [
+          {
+            "amount": 282.44,
+            "periods_from_consummation": 1
+          },
+          {
+            "amount": 282.44,
+            "periods_from_consummation": 2
+          },
+          {
+            "amount": 282.44,
+            "periods_from_consummation": 3
+          },
+          {
+            "amount": 282.44,
+            "periods_from_consummation": 4
+          },
+          {
+            "amount": 282.44,
+            "periods_from_consummation": 5
+          },
+          {
+            "amount": 282.44,
+            "periods_from_consummation": 6
+          },
+          {
+            "amount": 282.44,
+            "periods_from_consummation": 7
+          },
+          {
+            "amount": 282.44,
+            "periods_from_consummation": 8
+          },
+          {
+            "amount": 282.44,
+            "periods_from_consummation": 9
+          },
+          {
+            "amount": 282.44,
+            "periods_from_consummation": 10
+          },
+          {
+            "amount": 282.44,
+            "periods_from_consummation": 11
+          },
+          {
+            "amount": 282.44,
+            "periods_from_consummation": 12
+          },
+          {
+            "amount": 282.44,
+            "periods_from_consummation": 13
+          },
+          {
+            "amount": 282.44,
+            "periods_from_consummation": 14
+          },
+          {
+            "amount": 282.44,
+            "periods_from_consummation": 15
+          },
+          {
+            "amount": 282.44,
+            "periods_from_consummation": 16
+          },
+          {
+            "amount": 282.44,
+            "periods_from_consummation": 17
+          },
+          {
+            "amount": 282.44,
+            "periods_from_consummation": 18
+          },
+          {
+            "amount": 282.44,
+            "periods_from_consummation": 19
+          },
+          {
+            "amount": 282.44,
+            "periods_from_consummation": 20
+          },
+          {
+            "amount": 282.44,
+            "periods_from_consummation": 21
+          },
+          {
+            "amount": 282.44,
+            "periods_from_consummation": 22
+          },
+          {
+            "amount": 282.44,
+            "periods_from_consummation": 23
+          },
+          {
+            "amount": 282.47,
+            "periods_from_consummation": 24
+          }
+        ],
+        "periods_per_year": 12,
+        "regulatory_basis": "12 CFR 1026 Appendix J (Reg Z general actuarial equation, unit-period and odd-days conventions). Buydown modeling (temp_buydown) is a schedule-construction convenience, not an Appendix J concept.",
+        "schedule": [
+          {
+            "ending_balance": 5777.56,
+            "interest": 60,
+            "payment_amount": 282.44,
+            "period_index": 1,
+            "periods_from_consummation": 1,
+            "principal": 222.44
+          },
+          {
+            "ending_balance": 5552.9,
+            "interest": 57.78,
+            "payment_amount": 282.44,
+            "period_index": 2,
+            "periods_from_consummation": 2,
+            "principal": 224.66
+          },
+          {
+            "ending_balance": 5325.99,
+            "interest": 55.53,
+            "payment_amount": 282.44,
+            "period_index": 3,
+            "periods_from_consummation": 3,
+            "principal": 226.91
+          },
+          {
+            "ending_balance": 5096.81,
+            "interest": 53.26,
+            "payment_amount": 282.44,
+            "period_index": 4,
+            "periods_from_consummation": 4,
+            "principal": 229.18
+          },
+          {
+            "ending_balance": 4865.34,
+            "interest": 50.97,
+            "payment_amount": 282.44,
+            "period_index": 5,
+            "periods_from_consummation": 5,
+            "principal": 231.47
+          },
+          {
+            "ending_balance": 4631.55,
+            "interest": 48.65,
+            "payment_amount": 282.44,
+            "period_index": 6,
+            "periods_from_consummation": 6,
+            "principal": 233.79
+          },
+          {
+            "ending_balance": 4395.43,
+            "interest": 46.32,
+            "payment_amount": 282.44,
+            "period_index": 7,
+            "periods_from_consummation": 7,
+            "principal": 236.12
+          },
+          {
+            "ending_balance": 4156.94,
+            "interest": 43.95,
+            "payment_amount": 282.44,
+            "period_index": 8,
+            "periods_from_consummation": 8,
+            "principal": 238.49
+          },
+          {
+            "ending_balance": 3916.07,
+            "interest": 41.57,
+            "payment_amount": 282.44,
+            "period_index": 9,
+            "periods_from_consummation": 9,
+            "principal": 240.87
+          },
+          {
+            "ending_balance": 3672.79,
+            "interest": 39.16,
+            "payment_amount": 282.44,
+            "period_index": 10,
+            "periods_from_consummation": 10,
+            "principal": 243.28
+          },
+          {
+            "ending_balance": 3427.08,
+            "interest": 36.73,
+            "payment_amount": 282.44,
+            "period_index": 11,
+            "periods_from_consummation": 11,
+            "principal": 245.71
+          },
+          {
+            "ending_balance": 3178.91,
+            "interest": 34.27,
+            "payment_amount": 282.44,
+            "period_index": 12,
+            "periods_from_consummation": 12,
+            "principal": 248.17
+          },
+          {
+            "ending_balance": 2928.26,
+            "interest": 31.79,
+            "payment_amount": 282.44,
+            "period_index": 13,
+            "periods_from_consummation": 13,
+            "principal": 250.65
+          },
+          {
+            "ending_balance": 2675.1,
+            "interest": 29.28,
+            "payment_amount": 282.44,
+            "period_index": 14,
+            "periods_from_consummation": 14,
+            "principal": 253.16
+          },
+          {
+            "ending_balance": 2419.41,
+            "interest": 26.75,
+            "payment_amount": 282.44,
+            "period_index": 15,
+            "periods_from_consummation": 15,
+            "principal": 255.69
+          },
+          {
+            "ending_balance": 2161.16,
+            "interest": 24.19,
+            "payment_amount": 282.44,
+            "period_index": 16,
+            "periods_from_consummation": 16,
+            "principal": 258.25
+          },
+          {
+            "ending_balance": 1900.33,
+            "interest": 21.61,
+            "payment_amount": 282.44,
+            "period_index": 17,
+            "periods_from_consummation": 17,
+            "principal": 260.83
+          },
+          {
+            "ending_balance": 1636.89,
+            "interest": 19,
+            "payment_amount": 282.44,
+            "period_index": 18,
+            "periods_from_consummation": 18,
+            "principal": 263.44
+          },
+          {
+            "ending_balance": 1370.82,
+            "interest": 16.37,
+            "payment_amount": 282.44,
+            "period_index": 19,
+            "periods_from_consummation": 19,
+            "principal": 266.07
+          },
+          {
+            "ending_balance": 1102.09,
+            "interest": 13.71,
+            "payment_amount": 282.44,
+            "period_index": 20,
+            "periods_from_consummation": 20,
+            "principal": 268.73
+          },
+          {
+            "ending_balance": 830.67,
+            "interest": 11.02,
+            "payment_amount": 282.44,
+            "period_index": 21,
+            "periods_from_consummation": 21,
+            "principal": 271.42
+          },
+          {
+            "ending_balance": 556.54,
+            "interest": 8.31,
+            "payment_amount": 282.44,
+            "period_index": 22,
+            "periods_from_consummation": 22,
+            "principal": 274.13
+          },
+          {
+            "ending_balance": 279.67,
+            "interest": 5.57,
+            "payment_amount": 282.44,
+            "period_index": 23,
+            "periods_from_consummation": 23,
+            "principal": 276.87
+          },
+          {
+            "ending_balance": 0,
+            "interest": 2.8,
+            "payment_amount": 282.47,
+            "period_index": 24,
+            "periods_from_consummation": 24,
+            "principal": 279.67
+          }
+        ],
+        "schedule_type": "level_payment",
+        "totals": {
+          "ending_balance": 0,
+          "num_payments": 24,
+          "total_interest": 778.59,
+          "total_principal": 6000
+        },
+        "unit_period_days": 30
+      }
+    }
+  }
 },
     {
       "tool_id": "art-335-compute-dti-ratios",
@@ -22840,18 +23372,7 @@
       "id": "SSA Contribution and Benefit Base 2026"
     }
   ],
-  "compute_images": [
-    {
-      "system": "sha256-source",
-      "image_id": "sha256:884e9783d26552ef06435b323571abcc4f1cecc3b10648477fa0291b39dab877",
-      "valid_from": "2026-08-27"
-    },
-    {
-      "system": "risc0",
-      "image_id": "sha256:a1a0bc89b5b1febaeda3519f6dbade0fa5ac16beeb143c4e1b01689573567bc6",
-      "valid_from": "2026-07-17"
-    }
-  ],
+  "compute_images": [{"system":"sha256-source","image_id":"sha256:58c1128e8a66033dfe7cbae4e700f57f370ae362cf62b4b12ac7c70a1710afa5","valid_from":"2026-09-17"},{"system":"risc0","image_id":"sha256:a1a0bc89b5b1febaeda3519f6dbade0fa5ac16beeb143c4e1b01689573567bc6","valid_from":"2026-07-17"}],
   "export_capability": [
     "json"
   ],
@@ -22861,10 +23382,10 @@
     "system": "risc0",
     "receiptFormat": "groth16-bn254",
     "imageId": "sha256:a1a0bc89b5b1febaeda3519f6dbade0fa5ac16beeb143c4e1b01689573567bc6",
-    "seal": "Ibz/6jgRnpEw/FuD5HKVuA5eYYiNGadD4//s4vfP9mIK5g4JhLPD6gQiIS0xQPJoXeGHGZ3c39S39benhMvHCRRCokRP6ZSvxxrRhl/cN1SA5UONwczl1h2pUjZriTlMDXVm/BhdCJD5uyDDRmJqrJym/fgV6Eua1GY4TJtkAascHlxheZf3CY6kjwWg9ugXTo6NNe4NVIB++KvIAz49JyeXxFMMrAxoLyZmELq7ozbk1jt035T5Xz9Nmn/th++XJuznMoLnkm3w7ZmIqhcLdfh2viWwuz7PC+EDA9K8SSQjeQRbuTYcf7L6a5Wym0K8BZ6Rp+QrmjPVVv1VuXs67A==",
+    "seal": "L3UUb6MitaKd/ht3kI0HP8HY6NAyPiSLzRu3sR+ssm4iLu32RmEt/S4ab25hee5J7TyfZguxkQd6QMscuZ0j+wjmc8dUc0sRpXsfmNltZqBBLbidI6+Bj2R9X5rQNz5gLC5iX4WM/ADLg1wB4FN/D0Cub/0PYxTQcTwZvw6X5vEZpi8lCAUlOxq+TavkUVe7g+nlnXs6zQVlAIZC/FSbIhC0e+nNa+nfekZmyLDuN6OqTMEry1WKeNOuGfDL/gfTEbXRrIR/KUkRF16ey/bCbZgiOYup96kuWERdi2WD21UAxHaTWxKyhiUPL9Wb3fNkczbB2QqlUXmUglPB990ObA==",
     "journal": {
       "chaingraph_version": "0.4.0",
-      "kernel_digest": "sha256:884e9783d26552ef06435b323571abcc4f1cecc3b10648477fa0291b39dab877",
+      "kernel_digest": "sha256:58c1128e8a66033dfe7cbae4e700f57f370ae362cf62b4b12ac7c70a1710afa5",
       "output": {
         "additional_medicare_tax": 0,
         "additional_medicare_threshold": 200000,
@@ -22879,7 +23400,7 @@
         "note": "Federal FICA and net pay only; not tax advice. State/local withholding and state disability/unemployment employee contributions out of scope. federal_withholding_per_period is a declared input (e.g. from compute_federal_withholding, which must be called with the same tax_year), not recomputed here.",
         "post_tax_other_deductions": 0,
         "pretax_reduces_fica_and_fit": 0,
-        "regulatory_basis": "IRC 3101/3121 (FICA); SSA 2026 Contribution and Benefit Base ($184,500 OASDI wage base); IRC 3101(b)(2) Additional Medicare Tax ($200,000 employer-withholding threshold).",
+        "regulatory_basis": "IRC 3101/3121 (FICA, https://www.irs.gov/publications/p15); SSA 2026 Contribution and Benefit Base ($184,500 OASDI wage base, https://www.ssa.gov/oact/cola/cbb.html); IRC 3101(b)(2) Additional Medicare Tax ($200,000 employer-withholding threshold, https://www.irs.gov/publications/p15).",
         "social_security_tax": 279,
         "ss_taxable_wages_this_period": 4500,
         "ss_wage_base": 184500,
@@ -24453,7 +24974,8 @@
   "standards_basis": "not_applicable",
   "conformance_fixtures": true,
   "compute_capability": "server",
-  "compute_images": [{"system":"sha256-source","image_id":"sha256:e43e90202b192f7f8a4b0d8f5da090c81db5ea4e4d492e6c8a398ce189ac8736","valid_from":"2026-07-10"},{"system":"risc0","image_id":"sha256:d022c4822d2fee377994fcc2aa06d8b004c2c2709cc128a6428b8f9bcfa07988","valid_from":"2026-07-21"}],
+  "compute_images": [{"system":"sha256-source","image_id":"sha256:5e03b986ab0189445180af9d2785a508b95bc0f3ae47c68b24d462066c0b42cc","valid_from":"2026-09-18"},{"system":"risc0","image_id":"sha256:a1a0bc89b5b1febaeda3519f6dbade0fa5ac16beeb143c4e1b01689573567bc6","valid_from":"2026-09-13"}],
+  "cycle_preflight": "FAST - 62,559,977 user_cycles at proved vector 2 of 6 (vector-own-inputs; n_assets 2, n_paths 100, 3,600 uniform draws), measured exec-only 2026-09-18 against these guarded bytes (sha256:5e03b986ab0189445180af9d2785a508b95bc0f3ae47c68b24d462066c0b42cc); production-scale vector 0 remains ~21.5 G user_cycles (SLOW; pre-guard measurement 21,516,388,936 max across all vectors, argmax v4), resumable from the kept 20.6% checkpoint as an optional later upgrade. Honesty line: This receipt attests execution of published fixture vector 2 (3,600 uniform draws), not the production-scale vector 0 (1,320,000 draws); freshness and recompute-equality are satisfied by any published vector; a vector-0 receipt is an optional later upgrade.",
   "compute_proof_ready": "ready",
   "export_capability": [
     "xlsx",
@@ -24465,26 +24987,26 @@
     "type": "ZkVmReceipt",
     "system": "risc0",
     "receiptFormat": "groth16-bn254",
-    "imageId": "sha256:d022c4822d2fee377994fcc2aa06d8b004c2c2709cc128a6428b8f9bcfa07988",
-    "seal": "HL8YPNqiHP0V1qLsF4e1e1PldzriJ6YFEG0//4XRUo4oftNzc+twr6x/CJ5Uks9XxNjz7GxP3FU+1VkmdsniTwkdCYmZxVp/QMSMC6kdVCSaf37q3uoCUXJPY1fPM6tLFR/5ee+E+4jarhEdzVC5XdNRBADsu34XSXrJVZOMH0MNt+rPyAYQryAkjCEAPsmJDLJXQOtx8P36hPedpulN+QCC8T2ZHOSHtivWBfJkrnAKId0bqMDEhkppjEZ1dPeMIayjVtKfb/OWsWOwD6UZijsVmpknzPLQKX5zA5v6WgktUh3c8pEpfmYSDAgbueZXcUdO4EYNZ4bovQOnl2pW7w==",
+    "imageId": "sha256:a1a0bc89b5b1febaeda3519f6dbade0fa5ac16beeb143c4e1b01689573567bc6",
+    "seal": "HC97QXDmJdR3d4D0NsILrqP2h+o93BMXg+oGZfwFmAAGezR3/WJI5BtR1wxn9p3p2daBXZCBV6fNVYy+EAHtTSBEa/GOx9j4so0+kowkTm6DbIYBItbNwyAtZEVGbD/rJrSLR3X1oXXTNYgUPqiM/tHcnGrT9lPZ1QnQe2BhDUwWxtJEDiQK/j/iM1DupKxpD5Saga80w5JpvSuxJpqU8Qtjj2okX0Ylv42W5kCyzouA+FNdU1AsaTrblqFrrBS7LE+H8Ys9g2J0j/W1hXSJRHIFXV+56dPulRJcTBne0K0Xhl87XAT7citKTRZgNfmoC2D+x6xgtTHhZi5j95ugfw==",
     "journal": {
       "chaingraph_version": "0.4.0",
-      "kernel_digest": "sha256:e43e90202b192f7f8a4b0d8f5da090c81db5ea4e4d492e6c8a398ce189ac8736",
+      "kernel_digest": "sha256:5e03b986ab0189445180af9d2785a508b95bc0f3ae47c68b24d462066c0b42cc",
       "output": {
         "compliance_flags": ["VAR_WITHIN_LIMITS"],
-        "conf_level": 0.99,
-        "correlation": 0.3,
-        "draw_count": 1320000,
-        "es_dollar_mm": 6.9437,
-        "holding_period": 10,
-        "mc_es_pct": 0.069437,
-        "mc_var_pct": 0.060781,
-        "n_assets": 10,
-        "n_paths": 10000,
+        "conf_level": 0.95,
+        "correlation": 0,
+        "draw_count": 3600,
+        "es_dollar_mm": 2.4252,
+        "holding_period": 1,
+        "mc_es_pct": 0.024252,
+        "mc_var_pct": 0.021536,
+        "n_assets": 2,
+        "n_paths": 100,
         "prng_algorithm": "xoshiro256**",
-        "seed": 42,
-        "var_dollar_mm": 6.0781,
-        "verdict": "MODERATE_RISK"
+        "seed": 7,
+        "var_dollar_mm": 2.1536,
+        "verdict": "LOW_RISK"
       }
     }
   }
@@ -28852,8 +29374,8 @@
   "compute_images": [
     {
       "system": "sha256-source",
-      "image_id": "sha256:7c47eb66621889efcbc72476358adf9d81118f0c4692dc01375cb7251f1ada8e",
-      "valid_from": "2026-07-10"
+      "image_id": "sha256:7055ea57a88d5781f25d26b17c7175a83fff59950e1016ffa233023c791ba74e",
+      "valid_from": "2026-08-29"
     },
     {
       "system": "risc0",
@@ -28863,6 +29385,14 @@
   ],
   "standards_basis": "implements_standard",
   "cited_clause_digest": [
+    {
+      "digest": "sha256:ecc2e733027dccdc505b5f2b2e22e05c6db45e4eeb5874e89b81d2c847d4e6a4",
+      "source_url": "https://www.ecfr.gov/api/versioner/v1/full/2026-08-19/title-12.xml?part=244",
+      "retrieved_at": "2026-08-22",
+      "clause_path": "244.13(a)-(b)(3)",
+      "scheme": "cfr",
+      "id": "12 CFR 244.13"
+    },
     {
       "digest": "sha256:b4f09c5a07a458a55c725a633072338861b795da1c6def7983e07ec6981ff269",
       "source_url": "https://www.ecfr.gov/api/versioner/v1/full/2026-08-20/title-12.xml?part=244&section=244.15",
@@ -28942,10 +29472,10 @@
     "system": "risc0",
     "receiptFormat": "groth16-bn254",
     "imageId": "sha256:a1a0bc89b5b1febaeda3519f6dbade0fa5ac16beeb143c4e1b01689573567bc6",
-    "seal": "Gdkh0NijknB/AKsI6ozkuZMioNmy5jfdYISM6PoJMF0nHIysYnr9W3QG+dRMVz/iommYeEH26WPLfMe38BW/gQIHqj6p5GjBdV0bf8rIAcnyu04noGSqZJPQJoxb/W9BIyk6kJ7hgVKqySBYdN8DHchFDZJoq99VE3RZUocHDiMFd20Y3PV5BBdY0uSEczGjazr5o7DCW7lprLsxZ4+srA9qSUgVHwfZdrgEXc08EqUN4I0/aBlrN3Noplam7UilIyVIf9Ds4thwdKzhMtznX25PtwwQh3GILr6eVX9qFSMMGRBiM+F98s0MY1kKev59KBUZhOn0iea9e1XNqbRW8g==",
+    "seal": "K4LoXOH9rIYUaA8lIHldL/KZ6WXHOoRhoyxpHcp7yjMm9BCZxRvN3c7lQc/IJ8OJn1JkSGcaLxOBPL9zcXfBrSnSwXyHihzy6GU4n4AMxuTwBwB+pcfM0Tj4GmHgtGn1LpWQPJmSpGUMqQytiwOaSH/ol3xykFKLlLF9K2L5Gp8e5ImEOOGzGLo6FS4FGhtOO5eQ2pv4KM2df03ugXKO6Rs8FbQBG80GKrfi+VC6rfvVMr5x4o7xObEOyIyOLMwlD3ivJOQzEHmzk/9mNhLYOLNmqOmqNqQGz6ExJ5mduzIjngaxEFRm0sksEfO/ctOGHYWYFe3Qyvb7rGW+YXlqqQ==",
     "journal": {
       "chaingraph_version": "0.4.0",
-      "kernel_digest": "sha256:7c47eb66621889efcbc72476358adf9d81118f0c4692dc01375cb7251f1ada8e",
+      "kernel_digest": "sha256:7055ea57a88d5781f25d26b17c7175a83fff59950e1016ffa233023c791ba74e",
       "output": {
         "actual_retention_pct": 5,
         "breach_reasons": [],
@@ -28953,7 +29483,7 @@
         "jurisdiction": "eu",
         "note": "Deterministic structural check from caller-supplied retention method, exposure/retained nominal amounts, and jurisdiction-specific flags for a single reporting date.",
         "qrm_exemption_applied": false,
-        "regulatory_basis": "EU Securitisation Regulation (EU) 2017/2402 Art.6 (originator/sponsor/original-lender net economic interest, ongoing 5% retention, no hedging/sale, sole-purpose-entity prohibition); U.S. Credit Risk Retention Rule (Dodd-Frank Sec.941, Reg RR, 12 CFR Part 244) 5% base retention with Sec_.19 Qualified Residential Mortgage exemption.",
+        "regulatory_basis": "EU Securitisation Regulation (EU) 2017/2402 Art.6 (originator/sponsor/original-lender net economic interest, ongoing 5% retention, no hedging/sale, sole-purpose-entity prohibition); U.S. Credit Risk Retention Rule (Dodd-Frank Sec.941, Reg RR, 12 CFR Part 244) 5% base retention with 12 CFR 244.13 Qualified Residential Mortgage exemption.",
         "required_retention_pct": 5,
         "retained_amount_musd": 100,
         "retained_interest_hedged_or_sold": false,
@@ -43060,33 +43590,21 @@
   "status": "live",
   "conformance_fixtures": true,
   "compute_capability": "server",
-  "compute_images": [
-    {
-      "system": "sha256-source",
-      "image_id": "sha256:938dff18fe631418b8fc865198f0e4cb4ca4d6a9ee87967ccf818d5f2189edf9",
-      "valid_from": "2026-07-10"
-    },
-    {
-      "system": "risc0",
-      "image_id": "sha256:a1a0bc89b5b1febaeda3519f6dbade0fa5ac16beeb143c4e1b01689573567bc6",
-      "valid_from": "2026-08-07"
-    }
-  ],
-  "compute_proof_ready": "ready",
-  "deferred_reason": "New shard; awaiting the async GPU proving queue (S18 steady-state) — EDGE-PROVE-1.",
+  "compute_images": [{"system":"sha256-source","image_id":"sha256:ea5ccb019619a9879e2993cf18a2ca7b3c01f0a8be54d671bece308f737fcea6","valid_from":"2026-09-19"},{"system":"risc0","image_id":"sha256:a1a0bc89b5b1febaeda3519f6dbade0fa5ac16beeb143c4e1b01689573567bc6","valid_from":"2026-08-07"}],
   "export_capability": [
     "pdf",
     "xlsx"
   ],
+  "compute_proof_ready": "ready",
   "compute_proof": {
     "type": "ZkVmReceipt",
     "system": "risc0",
     "receiptFormat": "groth16-bn254",
     "imageId": "sha256:a1a0bc89b5b1febaeda3519f6dbade0fa5ac16beeb143c4e1b01689573567bc6",
-    "seal": "LX6+o2nLxvsiM/bPO7pKKdXU5C7FBMP+AAnLUK6+NG0cxD1Ug1z12jnNrPcRult7/KhS5MObRwmauWeZ+UcUvBOb5XLTNBTblggxivv4Z05AU2SdBw5RUKauTF75f1sMBNn0xAwzj3G1FqFwO0SKm0RQNnxD77Q0TG+C+RKqVisYFe8Js1jOZBs1GnhxdJ2bh8CKDJ2jtfya0jpjiv5orgwc0gE+XUOwhWLHy6uO1kH+9ZUJKfHHDBsTCSfHzRYoH0GcAZ3sx+cwdbQHMleylKEdK3uisFpY73kTrarso+4BDbfkq/cdfV+OTG9KL6bda9U9TVe2+2d+CxE5vNpdig==",
+    "seal": "I4Xz8YtvjBgp8dRhgX8KClsfwxWBw60QXY7ZwiPmdZYuWeUIqyLEvsGCyzLX1t1hcOEZ/qxVsnyVrKr3agGNmiRr93+XiKm8FdrnUvrOYTLW7UmtKppbTvYyyySObmMXChlSSpIYRRgake8zyJ5vXgbx8KjQIVrxIkyY4Xc70TIfj1rgEl9C2O3jNKyq0iA6NqHt8EPI19Dcdh6F7ahwIwBpY3l4+GfwGw4fTgQP846QHYtqUnVKonSng0bxv2hKIG+ICgtCCoIBQJ38Adiqb5I07zUK234YAa1GVVsd3JgjvqFIJSWHn5aycVdXZXiSydsiMcnttPjRWKYvTO8HBQ==",
     "journal": {
       "chaingraph_version": "0.4.0",
-      "kernel_digest": "sha256:938dff18fe631418b8fc865198f0e4cb4ca4d6a9ee87967ccf818d5f2189edf9",
+      "kernel_digest": "sha256:ea5ccb019619a9879e2993cf18a2ca7b3c01f0a8be54d671bece308f737fcea6",
       "output": {
         "attestation_date": null,
         "attestation_present": false,
@@ -43108,13 +43626,13 @@
         "requirement_verdicts": [
           {
             "detail": "outstanding_tokens_reported is missing or non-positive — coverage ratio cannot be computed.",
-            "ref": "GENIUS Act S.394 §4(a) — 1:1 reserve coverage requirement",
+            "ref": "GENIUS Act, Pub. L. 119-27 (S.1582) §4(a) — 1:1 reserve coverage requirement",
             "requirement": "coverage_arithmetic_1to1",
             "verdict": "INDETERMINATE"
           },
           {
             "detail": "No monthly reserve report/attestation has been published for this period.",
-            "ref": "GENIUS Act S.394 §4(b) — monthly reserve report, independent examination by a registered public accounting firm",
+            "ref": "GENIUS Act, Pub. L. 119-27 (S.1582) §4(a)(3) — monthly reserve report, independent examination by a registered public accounting firm",
             "requirement": "attestation_presence_timeliness",
             "verdict": "NOT_MET"
           }
@@ -46352,18 +46870,7 @@
   "status": "live",
   "conformance_fixtures": true,
   "compute_capability": "server",
-  "compute_images": [
-    {
-      "system": "sha256-source",
-      "image_id": "sha256:fe52d9fd1931382c551fe8a68fe00b6e9f2695dbe089a890c0bd361fca7f102b",
-      "valid_from": "2026-08-14"
-    },
-    {
-      "system": "risc0",
-      "image_id": "sha256:a1a0bc89b5b1febaeda3519f6dbade0fa5ac16beeb143c4e1b01689573567bc6",
-      "valid_from": "2026-08-20"
-    }
-  ],
+  "compute_images": [{"system":"sha256-source","image_id":"sha256:a964af8add6f214ff8c3c7020a994b3b0436422b20c2145f90543968854ec2d0","valid_from":"2026-09-02"},{"system":"risc0","image_id":"sha256:a1a0bc89b5b1febaeda3519f6dbade0fa5ac16beeb143c4e1b01689573567bc6","valid_from":"2026-08-20"}],
   "export_capability": [
     "json"
   ],
@@ -46587,7 +47094,8 @@
   "conformance_fixtures": true,
   "compute_capability": "server",
   "compute_images": [
-    { "system": "sha256-source", "image_id": "sha256:b6916f257c4bafb7ddf7dd00b907aae102f03c92267a3dd99876216548835032", "valid_from": "2026-08-14" }
+    { "system": "sha256-source", "image_id": "sha256:b6916f257c4bafb7ddf7dd00b907aae102f03c92267a3dd99876216548835032", "valid_from": "2026-08-14" },
+    { "system": "risc0", "image_id": "sha256:a1a0bc89b5b1febaeda3519f6dbade0fa5ac16beeb143c4e1b01689573567bc6", "valid_from": "2026-09-13" }
   ],
   "export_capability": ["json"],
   "standards_basis": "implements_standard",
@@ -46617,8 +47125,32 @@
       "id": "Directive (EU) 2023/2225 Annex III Part I"
     }
   ],
-  "compute_proof_ready": "deferred",
-  "deferred_reason": "New gpu:false node, art-619, staged 2026-08-14. GPU-CYCLE-PREFLIGHT-1's exec-cycle tool (runq-cpu) is not present in this session's environment, so no GPU proving was attempted -- ratchet-visible deferral per the §18 steady-state rule (RIDER-KERNEL.md), never a silent claim of proof. Note for whoever runs the preflight: this kernel calls Math.pow with a real-valued exponent (fractional-t present-value discounting, per Annex III's own equation shape) inside the bisection loop, which is one of GPU-CYCLE-PREFLIGHT-SPEC.md's named static pre-screen flags (non-sqrt transcendentals) -- measure user_cycles before booking, do not assume FAST."
+  "compute_proof_ready": "ready",
+  "compute_proof": {
+    "type": "ZkVmReceipt",
+    "system": "risc0",
+    "receiptFormat": "groth16-bn254",
+    "imageId": "sha256:a1a0bc89b5b1febaeda3519f6dbade0fa5ac16beeb143c4e1b01689573567bc6",
+    "seal": "AlygOVbEZhm9tfgFKprko1KYqWHZAYldPQRaWgFHzjgWSFo0nctMCNjHSfWhGkzNq/CUz7P9VuUcs6pjus3aDRZVUWnXeapxHsDwpn7sudJEQadj5XWL69f7pofL0/sSEsoXhKX0qeJsj28V5IFmgROEC4MIE8fLinjku3bHx8sZkfI4+L0dcGYUZ1PcEPlrouKttbjS31SurGjDZ8Gq6hCnA+Q4CQJAm4J3F8T9tTw1PA/DqPM/qRmJXs9jwpPXDBKr0lSQcIPFbXgO4s9o+kSktjsWOT5StoDVip4F/CUG/fUJFxjuN9vLJ3HIqE4NzwPw2aYMqt3QoKqypNxnkw==",
+    "journal": {
+      "chaingraph_version": "0.4.0",
+      "kernel_digest": "sha256:b6916f257c4bafb7ddf7dd00b907aae102f03c92267a3dd99876216548835032",
+      "output": {
+        "aprc_pct": 10,
+        "bracketed": true,
+        "converged": true,
+        "drawdown_total": 1000,
+        "iterations_used": 26,
+        "note": "APRC solved by bracketed bisection on Annex III Part I's basic equation, real-valued t_k/s_l per the Directive's own text (no integer/fraction split). Rounded per Annex III Part I remark (d): at least one decimal place, half-up on the next digit. A rate is reported only when a sign-change bracket was established and narrowed to tolerance; otherwise aprc_pct is null and APRC_NOT_BRACKETED or APRC_DID_NOT_CONVERGE is raised. Verify-only recompute: does not determine CCD2 applicability, does not submit anything to a regulator, and does not assert compliance.",
+        "num_drawdowns": 1,
+        "num_repayments": 1,
+        "regulatory_basis": "Directive (EU) 2023/2225 (CCD2), Article 30 + Annex III Part I (basic equation).",
+        "repayment_total": 1100,
+        "residual_at_convergence": 4.5454544306267053e-7,
+        "total_charge": 100
+      }
+    }
+  }
 },
     {
   "tool_id": "art-620-summa-mst-inclusion-checker",
@@ -51420,6 +51952,63 @@
   }
 },
     {
+  "tool_id": "art-691-regulatory-obligations-register",
+  "tool_version": "1.0.0",
+  "display_name": "Regulatory Obligations Register",
+  "mcp_name": "compute_regulatory_obligations_register",
+  "mandate_type": "compliance_control",
+  "wave": 113,
+  "gpu": false,
+  "url": "https://ainumbers.co/chaingraph/art-691-regulatory-obligations-register.html",
+  "description": "A regime-agnostic rule-to-obligation-to-evidence register verdict: obligations in (rule_id, owner, control_ids, evidence_refs), coverage math out (owner and evidence percentages, control-linkage count, the unassigned list, one FAIL finding per failing check, and an overall COVERED or GAPS_FOUND determination). Five stages in one pure compute(): intake with fail-closed shape validation (a missing rule_id zeroes the register rather than producing partial counts), owner coverage, control linkage, evidence linkage, verdict. This is the spine the exam-readiness and attestation packs later hang off, per OBLIGATIONS-REGISTER-BUILD-SPEC.md (Tim-approved gap-scan slate, 2026-09-03; the estate previously had no rule-to-obligation-to-evidence register: the BaaS control mapper at tools/152-baas-provider-comparator.html maps controls to frameworks inside one BaaS scope and is linked here as the pattern source, not duplicated). Owner and evidence coverage are the gated checks; control linkage is measured but never gates the verdict, matching the spec's own worked example (control_linked 2 of 3 with no control finding). All inputs are synthetic identifiers; the node stores nothing, calls nothing, and cites no external regime: thresholds are internal design (100 percent owner and evidence coverage required for COVERED, coverage percentages rounded to one decimal), so a reader holding any regulator's rulebook uses this as the register arithmetic, not as a statement of what that regime requires. The worked example's canonical {policy_parameters, output_payload} preimage and its pinned execution_hash bdf74ddc2f836c5e34b374d65f915e96684b061792283d775b08f2e9cd34ba67 are preserved in the spec and carried as this node's oracle-backed golden fixture; compute() reproduces that payload byte-identically.",
+  "input_schema_ref": "chaingraph/art-691-regulatory-obligations-register.html#manifest",
+  "consumes": [],
+  "feeds": [],
+  "status": "live",
+  "conformance_fixtures": true,
+  "compute_capability": "server",
+  "compute_images": [{"system":"sha256-source","image_id":"sha256:3e77f4dced6cd0c03e0205a1fa7400e07a21bb1dd0525b9f7c85eb7509193ea6","valid_from":"2026-09-22"},{"system":"risc0","image_id":"sha256:a1a0bc89b5b1febaeda3519f6dbade0fa5ac16beeb143c4e1b01689573567bc6"}],
+  "export_capability": ["json"],
+  "standards_basis": "not_applicable",
+  "cited_clause_digest": [],
+  "compute_proof_ready": "ready",
+  "compute_proof": {
+    "type": "ZkVmReceipt",
+    "system": "risc0",
+    "receiptFormat": "groth16-bn254",
+    "imageId": "sha256:a1a0bc89b5b1febaeda3519f6dbade0fa5ac16beeb143c4e1b01689573567bc6",
+    "seal": "E0WprzY/goFzkJKNFviaLq9p7mU0FcLJPqnA5NZt6j8KL1VeSQldaxxuI71AEU/swNzJP2diYOllrOyMAfhQWijYENpEFUjWEmlS+DWHgcGpMqZ8z9l926IRpJ6ON5i8Fo3xV32N0eM1fH3RWSrLjbvg8kLsnapukjggN19OvnoZZgTpw3DqYbYXJ7VfqmIbYgS8aBVoisefWppY9cr3Tgn4H7Fwp/GNyRQ0D9D3zqZNsrXY2iXn/wryP8JCLYUcJPpOGShNCKBs/IArUJkvXRlMLnZYL8ghMwst9DzCsdUbV+W7rg8NoBntRvh+yRuOKh5l/L3J9a495Gs0Hm70Xw==",
+    "journal": {
+      "chaingraph_version": "0.4.0",
+      "kernel_digest": "sha256:3e77f4dced6cd0c03e0205a1fa7400e07a21bb1dd0525b9f7c85eb7509193ea6",
+      "output": {
+        "control_linked": 2,
+        "evidence_coverage_pct": 33.3,
+        "evidence_linked": 1,
+        "findings": [
+          {
+            "check": "owner_coverage",
+            "detail": "1 of 3 no owner",
+            "status": "FAIL"
+          },
+          {
+            "check": "evidence_coverage",
+            "detail": "2 of 3 no evidence pointer",
+            "status": "FAIL"
+          }
+        ],
+        "overall_determination": "GAPS_FOUND",
+        "owner_assigned": 2,
+        "owner_coverage_pct": 66.7,
+        "total": 3,
+        "unassigned": [
+          "UDAAP-5-1"
+        ]
+      }
+    }
+  }
+},
+    {
       "tool_id": "cry-01-zk-compliance-proof-generator",
       "tool_version": "1.0.0",
       "display_name": "ZK Compliance Proof Generator",
@@ -51844,8 +52433,8 @@
       "compute_images": [
         {
           "system": "sha256-source",
-          "image_id": "sha256:e4475d26f24233cd44e35864937108b85615179add6786403c54a4540d903def",
-          "valid_from": "2026-07-10"
+          "image_id": "sha256:6514f17393677b3e9ae953a3eb856118a0e8ffd5a2736eab9e7aa02a94292a81",
+          "valid_from": "2026-09-14"
         },
         {
           "system": "risc0",
@@ -51854,53 +52443,53 @@
         }
       ],
       "compute_proof": {
-        "type": "ZkVmReceipt",
-        "system": "risc0",
-        "receiptFormat": "groth16-bn254",
-        "imageId": "sha256:a1a0bc89b5b1febaeda3519f6dbade0fa5ac16beeb143c4e1b01689573567bc6",
-        "seal": "C6RawOyW1sBxWngMHFwRRa/2eAnzZD15z66BC9C0PuES905/Xh/hGFCyhuVDro/9+y5nVM83b513khqtQGu77xiGRI9W146LW/4qeEAPHq6KjVyqD3CLzeOWt4gKNo2KHggW8q7p0Wt9LWcaLnTG6s0gsJ444cMFlXRT4/U8R7sYkwJsnedwSKDfOFfN4pXAjBWC17ZMrxgJ+mv7nCAewBNYwlPXK+gMSv+NJheXJhFfRw6yYh5i2G5n/dIsIQq4JRioRGpT/OnlLg5O+CCJNHP3Ji7q00y8Mie0pYRM54kEKEaeJgafCPoxDfbw+wjok6wFOJJQwi3CpameFsZM3w==",
-        "journal": {
-          "chaingraph_version": "0.4.0",
-          "kernel_digest": "sha256:e4475d26f24233cd44e35864937108b85615179add6786403c54a4540d903def",
-          "output": {
-            "compliance_flags": [
-              "UK_PSR_REIMBURSEMENT_ASSESSED",
-              "EBA_FRAUD_MONITORING_GUIDELINES",
-              "SEPA_INSTANT_SCT_FRAUD_REVIEW",
-              "PSD2_TRANSACTION_MONITORING",
-              "PSR_BREACH_UNLIKELY"
-            ],
-            "fraud_verdict": "CONTAINED",
-            "loss_p95": 19400,
-            "mean_detection_hop": 1.31,
-            "mean_loss_at_risk": 7511.33,
-            "n_paths": 300,
-            "node_reach_probabilities": {
-              "aggregator": 0,
-              "beneficiary_001": 0.39,
-              "beneficiary_002": 0.41,
-              "clean_001": 0,
-              "clean_002": 0,
-              "clean_003": 0,
-              "clean_004": 0,
-              "clean_005": 0,
-              "clean_006": 0.3233,
-              "clean_007": 0.3267,
-              "clean_008": 0,
-              "clean_009": 0,
-              "mule_A": 0.49,
-              "mule_B": 0.51,
-              "victim_001": 0,
-              "victim_002": 0,
-              "victim_003": 0,
-              "victim_004": 0,
-              "victim_005": 0.26,
-              "victim_006": 0
-            },
-            "psr_threshold_breach_probability": 0
-          }
-        }
+  "type": "ZkVmReceipt",
+  "system": "risc0",
+  "receiptFormat": "groth16-bn254",
+  "imageId": "sha256:a1a0bc89b5b1febaeda3519f6dbade0fa5ac16beeb143c4e1b01689573567bc6",
+  "seal": "H65JPcdoEFhW4+bHnI1QUQg+jWb5Y/13bln2Y6zhfSYYsGgViPS+T3Ip5T7VagsR4eGur/brnFEJuEkNJdI+tSlVxB713eesuBEpQ8PG5fnEAviYNE/UkJSTUX5K837hMB2thOOG6XeifypU9yI9MzAWY/+IWd41VcNGLlgToDIuzaEd9kidnU6ImcUKVBJAfcrlcxnsneHyTW1c+2bYeSG2aHm/mMmcFsfWvKGJuJ3vJelUpbm06KFvkQbvvqHUAb2+lBGirAnhEgONxhgh92d/MQOih0745o0c/RPkfZAd+Qa+smYmEPcd6bCgVOf9Db1K2SIOhaOZ0SzT6xPrZg==",
+  "journal": {
+    "chaingraph_version": "0.4.0",
+    "kernel_digest": "sha256:6514f17393677b3e9ae953a3eb856118a0e8ffd5a2736eab9e7aa02a94292a81",
+    "output": {
+      "compliance_flags": [
+        "UK_PSR_REIMBURSEMENT_ASSESSED",
+        "EBA_FRAUD_MONITORING_GUIDELINES",
+        "SEPA_INSTANT_SCT_FRAUD_REVIEW",
+        "PSD2_TRANSACTION_MONITORING",
+        "PSR_BREACH_UNLIKELY"
+      ],
+      "fraud_verdict": "CONTAINED",
+      "loss_p95": 19400,
+      "mean_detection_hop": 1.31,
+      "mean_loss_at_risk": 7511.33,
+      "n_paths": 300,
+      "node_reach_probabilities": {
+        "aggregator": 0,
+        "beneficiary_001": 0.39,
+        "beneficiary_002": 0.41,
+        "clean_001": 0,
+        "clean_002": 0,
+        "clean_003": 0,
+        "clean_004": 0,
+        "clean_005": 0,
+        "clean_006": 0.3233,
+        "clean_007": 0.3267,
+        "clean_008": 0,
+        "clean_009": 0,
+        "mule_A": 0.49,
+        "mule_B": 0.51,
+        "victim_001": 0,
+        "victim_002": 0,
+        "victim_003": 0,
+        "victim_004": 0,
+        "victim_005": 0.26,
+        "victim_006": 0
       },
+      "psr_threshold_breach_probability": 0
+    }
+  }
+},
       "export_capability": [
         "xlsx",
         "csv",
@@ -51935,8 +52524,8 @@
       "compute_images": [
         {
           "system": "sha256-source",
-          "image_id": "sha256:748f40841c60b16c54741966869e7515cc7259dc78c0efc7c68f6de6068071df",
-          "valid_from": "2026-08-31"
+          "image_id": "sha256:9d917a01d1bdbc594839dfc77028fc2bbd81a07914a295e215976b7fa3141cb6",
+          "valid_from": "2026-09-14"
         },
         {
           "system": "risc0",
@@ -51949,10 +52538,10 @@
   "system": "risc0",
   "receiptFormat": "groth16-bn254",
   "imageId": "sha256:a1a0bc89b5b1febaeda3519f6dbade0fa5ac16beeb143c4e1b01689573567bc6",
-  "seal": "Cot8iQWx7NAPRerv1WEAuLwx9a6DTjePzziEyMTTBgIcoCypu3ORfzurdVGfLl14icR5l59yaNFM9v1Le9dC/h13MKh7ugXd23Ta3vf6mEuaw1m0dfe7rtDFV+wqztK6HrGjx3TADE7I3RbtJr+WYYuLtaxdFNbgHBWdTnE6oi4XMxxhbBTEryF2Qp2X4SQO+NiR0ReIC+8XOSynYC2z0ikrdIzU5lCM8U5Fnb7/DBdnoZRbwUWgjtIrareGiTEiLzSx8rmjnOMCAfVJmwJJMgtO1EbfgzUFTgzvw1j6SmMHLJFknRkjxQUXbTaspfAVdqwra6L9xYi84do3JcG4YQ==",
+  "seal": "Ejms5m0fRjOIwPVasYRJ41ZQLpxqs8PKyv4pP47cHIIhIf7SpeTgBaJvTe+BWILnHMuiv8Hnvm8594Sp2qe45ioYy/jpW+KoOEB0atGPlCgFz0POR5Ks082+Sshq5ffLDw2WdkrqR8EdT2yKx8ouuMXQXcERsl6isUSEQTPKqaIbdf5AKwW4SXzCacDgClBM+GyHD83jqptNaXrkpmZh7xg4Cf33dyV8jWnpZD691bWYBM6xOeBQAfBwsf56F0WgEyZ0k8Ld3uhI4Q2bFOHKtsinBMaL8yYB7k5sOGmto+AObaal1e7Mvusbs+aGVLyizcyHBRWCJQcD2863ZNHVGg==",
   "journal": {
     "chaingraph_version": "0.4.0",
-    "kernel_digest": "sha256:748f40841c60b16c54741966869e7515cc7259dc78c0efc7c68f6de6068071df",
+    "kernel_digest": "sha256:9d917a01d1bdbc594839dfc77028fc2bbd81a07914a295e215976b7fa3141cb6",
     "output": {
       "error": "Unknown failure node id: nosuch_node (topology: bank_core)",
       "errors": [
@@ -52418,8 +53007,28 @@
       "mandate_type": "risk_parameter",
       "wave": 3,
       "gpu": false,
+      "standards_basis": "cites_informative",
+      "cited_clause_digest": [
+        {
+          "digest": "sha256:cd267b45beafb20007e7fcf5d44ece0916ee969027141eb51619d88db032d348",
+          "source_url": "https://www.bis.org/bcbs/publ/d457.pdf",
+          "retrieved_at": "2026-08-31",
+          "clause_path": "MAR 32.34-32.35 (PLA test metrics; 250-day RTPL/HPL series)",
+          "scheme": "bis",
+          "id": "BCBS d457 MAR 32.34-32.35"
+        },
+        {
+          "digest": "sha256:a3e42e3ab35c25cdf22c1490ed45895637da387a1d2e69fe4cdfeec356abe7f1",
+          "source_url": "https://www.bis.org/bcbs/publ/d457.pdf",
+          "retrieved_at": "2026-08-31",
+          "clause_path": "MAR 32.43 (PLA red zone => IMA ineligible, standardised approach)",
+          "scheme": "bis",
+          "id": "BCBS d457 MAR 32.43"
+        }
+      ],
+      "scope_statement": "SCOPE: an educational Monte-Carlo pre-check, not a regulatory determination. (1) P&L ATTRIBUTION / PLA: this node carries NO P&L-attribution test. The regulatory PLA test (BCBS d457 MAR 32.34-32.35) compares risk-theoretical P&L to hypothetical P&L over the most recent 250 trading days, and a red-zone desk is ineligible for the IMA (MAR 32.43). This kernel accepts no HPL/RTPL time-series input and implements neither test metric. Its mc_convergence_* fields are a SIMULATION-SCALE DIAGNOSTIC: the ratio of the simulated P&L variance to the analytic variance of the SAME synthetic position set, which cannot detect model risk, missing risk factors, or valuation differences. Its GREEN/AMBER/RED bands are convergence bands, not regulatory PLA zones, and its output makes no eligibility claim: PLA backtesting per MAR 32.34 requires desk HPL/RTPL series this kernel does not accept - a caller must run real PLA separately against actual desk data. (2) AGGREGATION: capital_ima applies a flat 1.5 multiplier to ES; that multiplier is not in the text (MAR 33.15 requires rho = 0.5 across the five broad risk classes of MAR 33.14), and a flat multiplier can overstate or understate that aggregation depending on the number of classes. (3) NMRF: nmrf_surcharge is 1.5x the NMRF-subset ES on each position's assigned liquidity horizon; it is not the MAR 33.16 stress-scenario charge and omits the greater-of-assigned-horizon-and-20-days floor, so it understates for NMRFs on short horizons. NMRF positions are also NOT excluded from the main ES (MAR 31.23 requires exclusion), so NMRF risk is counted twice - conservative, but not a regulatory construction. (4) STRESS CALIBRATION: ES is calibrated to the current period only; no stress-period calibration (MAR 33.5) is performed, which is expected to understate capital outside stress periods. (5) SA FLOOR: sa_floor is 1.25x this kernel's own ES, not a standardised-approach capital requirement; because capital_ima = 1.5x ES plus a non-negative surcharge, floor_binding is dead logic that cannot fire. (6) Eligibility and capital conclusions for a real desk require data, inputs, and tests this node does not consume.",
       "url": "https://ainumbers.co/chaingraph/rca-01-frtb-ima-pre-validator.html",
-      "description": "FRTB IMA Expected Shortfall pre-validation: MC simulation across liquidity horizons LH1–LH5 (10/20/40/60/120 days), NMRF surcharge estimation, PLA Test (green/amber/red), IMA vs SA floor capital comparison. Educational pre-validator ahead of UK IMA go-live January 2028.",
+      "description": "FRTB IMA Expected Shortfall pre-validation: MC simulation across liquidity horizons LH1–LH5 (10/20/40/60/120 days), NMRF surcharge estimation, Monte-Carlo convergence diagnostic (green/amber/red; a simulation-scale self-check, NOT the regulatory P&L-attribution test), IMA vs SA-floor capital comparison. Educational pre-validator ahead of UK IMA go-live January 2028.",
       "input_schema_ref": "chaingraph/rca-01-frtb-ima-pre-validator.html#manifest",
       "deadline": "2028-01-01",
       "deadline_note": "UK FRTB-IMA go-live January 2028; EU slipped to ~2029-30. Pre-validation educational tool.",
@@ -52433,40 +53042,41 @@
       "status": "live",
       "conformance_fixtures": false,
       "compute_capability": "server",
-      "compute_images": [{"system":"sha256-source","image_id":"sha256:da8805bcbfcd243d64f4bc2ac97f773b290fe8baa5a30fa7277e2d8c965506bb","valid_from":"2026-07-10"},{"system":"risc0","image_id":"sha256:a1a0bc89b5b1febaeda3519f6dbade0fa5ac16beeb143c4e1b01689573567bc6","valid_from":"2026-06-28"}],
+      "compute_proof_ready": "ready",
+      "compute_images": [{"system":"sha256-source","image_id":"sha256:270c13fb871367dfb26354afef861b44f31e9ab426a797814c7cd667b1f4a584","valid_from":"2026-08-31"},{"system":"risc0","image_id":"sha256:a1a0bc89b5b1febaeda3519f6dbade0fa5ac16beeb143c4e1b01689573567bc6","valid_from":"2026-06-28"}],
       "compute_proof": {
-        "type": "ZkVmReceipt",
-        "system": "risc0",
-        "receiptFormat": "groth16-bn254",
-        "imageId": "sha256:a1a0bc89b5b1febaeda3519f6dbade0fa5ac16beeb143c4e1b01689573567bc6",
-        "seal": "HEGt/K7yUhVaIy2REeb5lOx1lx1mbGpk4vc+8T0WZBIv7cC1aa/nbVik39LeSP5E68C+UG+2C+rnosT2AhWeNwBDODK4FGDsTkjY0BQVGoFbALBwJOLvMM2TuohJ5kw2GudfPPEKfGE3uMBF+epg0eAGRJxUq0auOjz6RwUEGNQhQcGjgRzOVOo8HMvA4tX+g4IbevDqrtXD76fRfBn9dyhw2w79sLTGvDcursiDvC1YFXQ7gpQ0aD2vomw/XvzpL19bHQBfRXxPvjZKzPsMhkmvWcLoVnA/LdhG8WVTYl0gsu5KJQ30SbUzByc6n2bu3oFbc64NW0w0rdQg5ch3Fw==",
-        "journal": {
-          "chaingraph_version": "0.4.0",
-          "kernel_digest": "sha256:da8805bcbfcd243d64f4bc2ac97f773b290fe8baa5a30fa7277e2d8c965506bb",
-          "output": {
-            "capital_ima": 0.03,
-            "capital_required": 0.03,
-            "confidence_level": 0.975,
-            "es_97_5_pct": 0.02,
-            "es_by_lh_class": [
-              0.01,
-              0.01,
-              0.01,
-              0,
-              0
-            ],
-            "floor_binding": false,
-            "n_positions": 20,
-            "n_scenarios": 500,
-            "nmrf_surcharge": 0,
-            "pla_ratio": 1.0295,
-            "pla_test_status": "GREEN",
-            "sa_floor": 0.02,
-            "undiversified_es": 0.07,
-            "verdict": "IMA Pre-Validation Passed"
-          }
-        }
-      },
+  "type": "ZkVmReceipt",
+  "system": "risc0",
+  "receiptFormat": "groth16-bn254",
+  "imageId": "sha256:a1a0bc89b5b1febaeda3519f6dbade0fa5ac16beeb143c4e1b01689573567bc6",
+  "seal": "Hd4ypimUEo1HLCAQaWV6kiPJs982Ch0c4UFL7CaZTqoGRMoyeY4nzdMON02fakaoRs9AaOEavumKEUWl1t6slhgSVR/za4Wa+lTngwVAO3mf06g6gg7fMozrvl4dG2xZG1FtD0/zCXXX7uBjF/vBczUm8UOjal7iC2wv719YwBwbDmgfjckG17BEmCic2rlBJPHkiHcuAAqivcyxQarNhyoJD5kjX8JXLr3HoqdR7r0l8D3rDugt8MjqZd0U5JE7KP4UDhkiAMd+M0dwJUVS/MCNslUOqs2jDVqyciwZxZon8F4V8nOYWjuPT3FqQHSQcljwaLhPj/M+VEWmBn3NjA==",
+  "journal": {
+    "chaingraph_version": "0.4.0",
+    "kernel_digest": "sha256:270c13fb871367dfb26354afef861b44f31e9ab426a797814c7cd667b1f4a584",
+    "output": {
+      "capital_ima": 0.01,
+      "capital_required": 0.01,
+      "confidence_level": 0.975,
+      "es_97_5_pct": 0.01,
+      "es_by_lh_class": [
+        0,
+        0,
+        0.01,
+        0,
+        0
+      ],
+      "floor_binding": false,
+      "mc_convergence_ratio": 1.0328,
+      "mc_convergence_status": "GREEN",
+      "n_positions": 4,
+      "n_scenarios": 12,
+      "nmrf_surcharge": 0,
+      "sa_floor": 0.01,
+      "undiversified_es": 0.01,
+      "verdict": "MC Convergence Nominal"
+    }
+  }
+},
       "export_capability": [
         "xlsx",
         "csv",
@@ -52504,8 +53114,8 @@
       "compute_images": [
         {
           "system": "sha256-source",
-          "image_id": "sha256:c66896024cd7ffc75c46cdd7c67e42c929234c4c7ce4b342a372b3627a68377b",
-          "valid_from": "2026-08-31"
+          "image_id": "sha256:05e290e886586a4be8d741f9d6d1bea7e8a45270d4adb37775997bbea621430f",
+          "valid_from": "2026-09-14"
         },
         {
           "system": "risc0",
@@ -52518,10 +53128,10 @@
   "system": "risc0",
   "receiptFormat": "groth16-bn254",
   "imageId": "sha256:a1a0bc89b5b1febaeda3519f6dbade0fa5ac16beeb143c4e1b01689573567bc6",
-  "seal": "IqEaZXQoDaqbRm4hQW1LxpeJ2OAncXUpf8BmwXwPq2sW2SQEwq/igUt946Bs6lz3DvBDW0D10vP3nxXir4AgBQ4k6j0sk9FQG30XSnUhVq/iUB6bkJ0ok4DJqXs5TTi+LfW11pC7DznC8ct3/Cdmiaa/xt+CiihPkU8gI1JPjMoaTA544eUMF6UQRr50PZydI2yz/FzlpRRtT6WNSzjWQAl7CxA5dTX/47N6TN9ppWVJ91G1L/bAKsy2EcQf82WILZLsm5Mn2GeQnwNGwAmHlgMIIH11oyVqPqYAEqQxFIUqS5oKBvnMaVEId9WTx8eFrAe9ypeP56WTHK0BvjaWdQ==",
+  "seal": "FTZF66dTFTxJ5S8qSt27PTMC0JqZWarXXvPUR0LMlLML9iL5kSmKEI6QRwTh2PqsuS/vqTXsR8TwR+CAUZ9fXSUpuq8q+YKM71e3WFUBl9mBjFDIxyOIANdxH7Py3y27BO8MCcjesLXO+o9mopb3h4yjXFrc+qv/kyGD4n8X3lgQEVd1DxOhM950rbWZHDfsfzm4qd5M25NxUgb5bMb8UwjdD0qZkv1SMkeRL1Pc5DT9Dh+e7lXMNFmuNi2R2UG3EYfoDRUURcFwM5xSyHSeoy7OBZHG2EbJiZPCSmsV0pQg6JG4ucD0j59wiDK7sqfaPZZSbeACPdDR1IDpBZdXSA==",
   "journal": {
     "chaingraph_version": "0.4.0",
-    "kernel_digest": "sha256:c66896024cd7ffc75c46cdd7c67e42c929234c4c7ce4b342a372b3627a68377b",
+    "kernel_digest": "sha256:05e290e886586a4be8d741f9d6d1bea7e8a45270d4adb37775997bbea621430f",
     "output": {
       "art36_buffer_adequate_pct": 0,
       "breach_probability_pct": 0,
@@ -52529,7 +53139,7 @@
         "MICA_ART36_RESERVE_ADEQUATE",
         "MICA_ART36_BUFFER_INSUFFICIENT"
       ],
-      "coverage_p50_end_day": 1.0396,
+      "coverage_p50_end_day": 1.0391,
       "coverage_p5_end_day": 1.0082,
       "horizon_days": 2,
       "n_paths": 50,
@@ -52669,8 +53279,8 @@
       "compute_images": [
         {
           "system": "sha256-source",
-          "image_id": "sha256:e22635c466fd20d5fb8ff61aa494e70f70f958e303b5d52a90e0f0f22a6e930e",
-          "valid_from": "2026-07-13"
+          "image_id": "sha256:fb69a706dc5cd8e24698505d9ae745075b414f231d6515dfc39c9f8b2ca2b907",
+          "valid_from": "2026-09-14"
         },
         {
           "system": "risc0",
@@ -52679,32 +53289,32 @@
         }
       ],
       "compute_proof": {
-        "type": "ZkVmReceipt",
-        "system": "risc0",
-        "receiptFormat": "groth16-bn254",
-        "imageId": "sha256:a1a0bc89b5b1febaeda3519f6dbade0fa5ac16beeb143c4e1b01689573567bc6",
-        "seal": "F+RjBVhfs3aOjDpiqaDcjnu7xOp4ILjVcAbB+/wMEyAlr4nSY5Wpg7DuRjZRqu3585OVmV359s/j5PltdLmUaCGY4ipWy0aDTGcbMHfI7uTpciyFOfbbER4MOwf8u2c4KaeZaMkhw05IoRfJYhcCUsJ1gc2BMp/em+OJDW42aFAt0HoIdWvCQR954vOdKmbVQ1RxhRT2NA8PJvNsMtjAbiuRtwGr20JsehLGQZn+u0Zg73iqUuFBw12ifbLlF73AHpzqzmA3hP90yECXtU87oubEm4liiKS/JGmi80XyqEANftJouZHlvyvF4PAx9PN43uS5Z0CbeMtVS4XqscbYfA==",
-        "journal": {
-          "chaingraph_version": "0.4.0",
-          "kernel_digest": "sha256:e22635c466fd20d5fb8ff61aa494e70f70f958e303b5d52a90e0f0f22a6e930e",
-          "output": {
-            "compliance_flags": [
-              "LCR_COMPLIANT_MEDIAN",
-              "NSFR_BREACH_RISK_MEDIAN",
-              "NSFR_HIGH_BREACH_PROBABILITY"
-            ],
-            "lcr_breach_pct": 0,
-            "lcr_median_day30": 2577.0389,
-            "lcr_p5": 2459.6301,
-            "n_paths": 500,
-            "nsfr_breach_pct": 99,
-            "nsfr_median_day250": 0.9453,
-            "nsfr_p5": 0.9024,
-            "scenario": "moderate",
-            "verdict": "BORDERLINE"
-          }
-        }
-      },
+  "type": "ZkVmReceipt",
+  "system": "risc0",
+  "receiptFormat": "groth16-bn254",
+  "imageId": "sha256:a1a0bc89b5b1febaeda3519f6dbade0fa5ac16beeb143c4e1b01689573567bc6",
+  "seal": "AV7zuJzg2y6VvqY5W1XyvVJPfhccWoeVtOuyw0ZRFVgFcUdwV/7niIhQCr5YotHtUM/b87XUiVlGMF+/oFTrPCYa76ghSIZUovtDLZN4qwBgjZMmlw9bDbF+Tnn6M7rkFBtGGLjb9sgM86TsDc7EKGiLIwhPf7vXIWfQQ4oYd34GsBobJyNZiBqOanRrTJQfIbE5CGek5rhMgISQVDmTtRRomwujDNS2NMoKS3qCyCcOJsCi4myXF74N/uywXWM7Ao03SzxJbe/PLKLYUgSACB4RiYJhzcA+neXo4PER4EYb5jQCU+MxXieVrTA+/xkHDksuzi7BqxpbFQFT0T8j2Q==",
+  "journal": {
+    "chaingraph_version": "0.4.0",
+    "kernel_digest": "sha256:fb69a706dc5cd8e24698505d9ae745075b414f231d6515dfc39c9f8b2ca2b907",
+    "output": {
+      "compliance_flags": [
+        "LCR_COMPLIANT_MEDIAN",
+        "NSFR_BREACH_RISK_MEDIAN",
+        "NSFR_HIGH_BREACH_PROBABILITY"
+      ],
+      "lcr_breach_pct": 0,
+      "lcr_median_day30": 2576.3699,
+      "lcr_p5": 2457.7068,
+      "n_paths": 500,
+      "nsfr_breach_pct": 99,
+      "nsfr_median_day250": 0.9452,
+      "nsfr_p5": 0.9018,
+      "scenario": "moderate",
+      "verdict": "BORDERLINE"
+    }
+  }
+},
       "export_capability": [
         "xlsx",
         "csv",
@@ -55377,12 +55987,24 @@
       "name": "cecl-allowance-quarterly",
       "domain": "Bank Capital & Credit Risk",
       "title": "CECL Allowance Calculation & Rollforward (Quarterly)",
-      "description": "Single-node quarterly ASC 326 CECL allowance run: computes per-segment expected credit loss from caller-supplied PD/LGD/EAD curves and reconciles the allowance rollforward against the prior period balance.",
+      "description": "Single-node quarterly ASC 326 CECL allowance run: computes per-segment expected credit loss from caller-supplied PD/LGD/EAD curves and reconciles the allowance rollforward against the prior period balance. Carries a terminal §27 review_required accountability gate; an unbalanced rollforward (reconciliation_balanced false) routes to the reserved escalate target.",
       "composer_url": "https://ainumbers.co/chaingraph/chains/cecl-allowance-quarterly.html",
       "steps": [
         {
           "tool_id": "art-426-cecl-ecl-calculator",
-          "handoff": "per-segment ECL and the reconciled allowance rollforward feed the quarterly ASC 326 disclosure and audit workpaper; recurring quarterly cadence"
+          "handoff": "per-segment ECL and the reconciled allowance rollforward feed the quarterly ASC 326 disclosure and audit workpaper; an unbalanced rollforward routes to the reserved escalate target; recurring quarterly cadence",
+          "gate": {
+            "input": "/reconciliation_balanced",
+            "rules": [
+              {
+                "op": "eq",
+                "value": false,
+                "next": "escalate"
+              }
+            ],
+            "default": "end",
+            "gate_policy": "review_required"
+          }
         }
       ]
     },
@@ -57314,12 +57936,28 @@
       "name": "genius-reserve-disclosure",
       "domain": "Digital-Asset Rails",
       "title": "GENIUS Act Monthly Reserve Disclosure",
-      "description": "Single-node D0 diagnostic linting an extracted monthly reserve disclosure against GENIUS Act S.394 §4: composition, tenor, custody, certification, examiner, MoM diff, on-chain supply cross-check.",
+      "description": "Single-node D0 diagnostic linting an extracted monthly reserve disclosure against GENIUS Act S.394 §4: composition, tenor, custody, certification, examiner, MoM diff, on-chain supply cross-check. Carries a terminal §27 dual_control(2) CEO/CFO accountability gate (threshold 2 over role approver); a FAIL /monthly_disclosure_determination routes to the reserved escalate target.",
       "composer_url": "https://ainumbers.co/chaingraph/chains/genius-reserve-disclosure.html",
       "steps": [
         {
           "tool_id": "art-275-genius-reserve-disclosure-checker",
-          "handoff": "monthly_disclosure_determination and failing_dimensions feed the issuer's compliance record; standalone monthly recurring check"
+          "handoff": "monthly_disclosure_determination and failing_dimensions feed the issuer's compliance record; a FAIL determination routes to the reserved escalate target; standalone monthly recurring check",
+          "gate": {
+            "input": "/monthly_disclosure_determination",
+            "rules": [
+              {
+                "op": "eq",
+                "value": "FAIL",
+                "next": "escalate"
+              }
+            ],
+            "default": "end",
+            "gate_policy": "dual_control",
+            "gate_threshold": {
+              "role": "approver",
+              "threshold": 2
+            }
+          }
         }
       ]
     },
@@ -58086,12 +58724,24 @@
       "name": "large-exposures-check",
       "domain": "Bank Capital & Credit Risk",
       "title": "Large Exposures Limit Check (Basel III / Regulation YY)",
-      "description": "Single-node check aggregating each counterparty group's exposure against the Basel III / Regulation YY 25% (general) or 15% (GSIB-to-GSIB) single-counterparty limit, emitting a breach-list artifact.",
+      "description": "Single-node check aggregating each counterparty group's exposure against the Basel III / Regulation YY 25% (general) or 15% (GSIB-to-GSIB) single-counterparty limit, emitting a breach-list artifact. Carries a terminal §27 escalate accountability gate: a non-empty /breach_list routes to the reserved escalate target; a clean run ends normally.",
       "composer_url": "https://ainumbers.co/chaingraph/chains/large-exposures-check.html",
       "steps": [
         {
           "tool_id": "art-425-large-exposures-limit-check",
-          "handoff": "breach-list artifact feeds Basel III / Regulation YY large-exposures reporting and routes any breaching group to the §27 review gate; standalone recurring check per reporting date"
+          "handoff": "breach-list artifact feeds Basel III / Regulation YY large-exposures reporting and routes any breaching group to the terminal §27 escalate gate; standalone recurring check per reporting date",
+          "gate": {
+            "input": "/breach_list",
+            "rules": [
+              {
+                "op": "neq",
+                "value": [],
+                "next": "escalate"
+              }
+            ],
+            "default": "end",
+            "gate_policy": "escalate"
+          }
         }
       ]
     },
@@ -58829,8 +59479,7 @@
               }
             ],
             "default": "end",
-            "gate_policy": "dual_control",
-            "gate_threshold": { "role": "approver", "threshold": 1 }
+            "gate_policy": "review_required"
           }
         }
       ]

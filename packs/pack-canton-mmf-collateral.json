@@ -13,7 +13,7 @@
       {
         "node_id": "n1",
         "kernel_id": "514-tokenized-fund-collateral-validator",
-        "kernel_digest": "sha256:0ffd03e4aa9960ce7c1c4b4ed9d985e33b3a166f5f96942ff5eb419487a0e62b"
+        "kernel_digest": "sha256:50741b9d96f28fae793b5612ef94aa0a7d4d82c7caee633d71ef57ed9a5430fe"
       },
       {
         "node_id": "n2",
@@ -25,7 +25,7 @@
     "gates": [],
     "actions": []
   },
-  "workflow_manifest_digest": "sha256:008afe2261647da669f50ec1a90ffeca4832dccbd03e29a9d79919cb416d78ad",
+  "workflow_manifest_digest": "sha256:5723ecbfda96b6e88ede2aa456d84d98acbfe50850748b006e0733224687e0fd",
   "declared_inputs": [
     {
       "from": "505-tokenized-collateral-eligibility-checker",

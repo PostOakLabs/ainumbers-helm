@@ -1,7 +1,7 @@
 {
   "workflow_id": "pack-genius-reserve-disclosure",
   "name": "GENIUS Act Monthly Reserve Disclosure",
-  "outcome": "Single-node D0 diagnostic linting an extracted monthly reserve disclosure against GENIUS Act S.394 §4: composition, tenor, custody, certification, examiner, MoM diff, on-chain supply cross-check.",
+  "outcome": "Single-node D0 diagnostic linting an extracted monthly reserve disclosure against GENIUS Act S.394 §4: composition, tenor, custody, certification, examiner, MoM diff, on-chain supply cross-check. Carries a terminal §27 dual_control(2) CEO/CFO accountability gate (threshold 2 over role approver); a FAIL /monthly_disclosure_determination routes to the reserved escalate target.",
   "spec_version": "ocg-control-plane@1",
   "manifest": {
     "manifest_version": "1",
@@ -13,7 +13,7 @@
       {
         "node_id": "n1",
         "kernel_id": "art-275-genius-reserve-disclosure-checker",
-        "kernel_digest": "sha256:0f28358a1106be5fd951174ff9984a32af17133642481706a056f43ce6fe0d22",
+        "kernel_digest": "sha256:c1ee715ad62a5e063ca3fe43e2da0b537ee17a436894a26b554ce7bd542049ce",
         "gate_policy": "dual_control",
         "gate_role": "approver",
         "gate_threshold": 2
@@ -23,7 +23,7 @@
     "gates": [],
     "actions": []
   },
-  "workflow_manifest_digest": "sha256:236b8abbf9e60c9000fb362d0da215a2262c40111228ab3866773760ba1789ed",
+  "workflow_manifest_digest": "sha256:64c33ec1bad0093f2629094ed67a19c0614a4f2dbd475d416bb7cce8156e31e2",
   "declared_inputs": [],
   "steps_meta": [
     {

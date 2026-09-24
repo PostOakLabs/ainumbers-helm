@@ -13,12 +13,12 @@
       {
         "node_id": "n1",
         "kernel_id": "sim-01-lcr-nsfr-liquidity-stress-test",
-        "kernel_digest": "sha256:e22635c466fd20d5fb8ff61aa494e70f70f958e303b5d52a90e0f0f22a6e930e"
+        "kernel_digest": "sha256:fb69a706dc5cd8e24698505d9ae745075b414f231d6515dfc39c9f8b2ca2b907"
       },
       {
         "node_id": "n2",
         "kernel_id": "rca-02-mica-reserve-stress",
-        "kernel_digest": "sha256:c66896024cd7ffc75c46cdd7c67e42c929234c4c7ce4b342a372b3627a68377b"
+        "kernel_digest": "sha256:05e290e886586a4be8d741f9d6d1bea7e8a45270d4adb37775997bbea621430f"
       },
       {
         "node_id": "n3",
@@ -30,7 +30,7 @@
     "gates": [],
     "actions": []
   },
-  "workflow_manifest_digest": "sha256:262bf14230bfccb5c12a5ba0529d219651bfd5eb1249c119c7dc0f2c0ab1765f",
+  "workflow_manifest_digest": "sha256:a0fe5db2324f533dece7f1c3adacccec8d0309e340dfc653b5a7b7297937e0ad",
   "declared_inputs": [],
   "steps_meta": [
     {

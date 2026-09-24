@@ -13,7 +13,7 @@
       {
         "node_id": "n1",
         "kernel_id": "art-220-reg-z-threshold-lookup",
-        "kernel_digest": "sha256:d8b0d25c1f2ec5d46b13155ce06213c2bbb4d4749903d18d3777adffeaf5a392"
+        "kernel_digest": "sha256:0d1692ca8219b6bbb13b90eb63b60610aaebd17ec605d3a5532e767b56dbac55"
       },
       {
         "node_id": "n2",
@@ -23,7 +23,7 @@
       {
         "node_id": "n3",
         "kernel_id": "art-218-qm-points-and-fees",
-        "kernel_digest": "sha256:d7ba34da2e378662fbb05bc23d6aad6b0b4660bbae6f3111e0dd1c471209029b"
+        "kernel_digest": "sha256:451c7b3b5ae225db716a4b46040eb80af02bf7aa2a2ac25a35f3da1e295700ce"
       },
       {
         "node_id": "n4",
@@ -35,7 +35,7 @@
     "gates": [],
     "actions": []
   },
-  "workflow_manifest_digest": "sha256:f4ad5ab86b7811947e8d52f2adf497b2bb0feaede754090a13f78d45af77dea8",
+  "workflow_manifest_digest": "sha256:f7d3ceac484c088080ac03baebf48953b10bc3ccc162f98ba0779165a3e9d893",
   "declared_inputs": [],
   "steps_meta": [
     {
