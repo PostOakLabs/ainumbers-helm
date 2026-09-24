@@ -1,7 +1,7 @@
 {
   "workflow_id": "pack-cecl-allowance-quarterly",
   "name": "CECL Allowance Calculation & Rollforward (Quarterly)",
-  "outcome": "Single-node quarterly ASC 326 CECL allowance run: computes per-segment expected credit loss from caller-supplied PD/LGD/EAD curves and reconciles the allowance rollforward against the prior period balance.",
+  "outcome": "Single-node quarterly ASC 326 CECL allowance run: computes per-segment expected credit loss from caller-supplied PD/LGD/EAD curves and reconciles the allowance rollforward against the prior period balance. Carries a terminal §27 review_required accountability gate; an unbalanced rollforward (reconciliation_balanced false) routes to the reserved escalate target.",
   "spec_version": "ocg-control-plane@1",
   "manifest": {
     "manifest_version": "1",

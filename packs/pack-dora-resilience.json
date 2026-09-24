@@ -31,7 +31,7 @@
       {
         "node_id": "n4",
         "kernel_id": "pnr-01-dora-ict-cascade-simulator",
-        "kernel_digest": "sha256:748f40841c60b16c54741966869e7515cc7259dc78c0efc7c68f6de6068071df"
+        "kernel_digest": "sha256:9d917a01d1bdbc594839dfc77028fc2bbd81a07914a295e215976b7fa3141cb6"
       },
       {
         "node_id": "n5",
@@ -67,7 +67,7 @@
     "gates": [],
     "actions": []
   },
-  "workflow_manifest_digest": "sha256:ec8206d517808528dcebbe879d10a295d582fb1bb69bf4985d548dd6e1c4e8c1",
+  "workflow_manifest_digest": "sha256:aaedf4b6c101bcc0cdacd5de56400bb13987efa3ce7ad88b80560115c03f6a8c",
   "declared_inputs": [],
   "steps_meta": [
     {

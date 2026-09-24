@@ -18,7 +18,7 @@
       {
         "node_id": "n2",
         "kernel_id": "sim-01-lcr-nsfr-liquidity-stress-test",
-        "kernel_digest": "sha256:e22635c466fd20d5fb8ff61aa494e70f70f958e303b5d52a90e0f0f22a6e930e"
+        "kernel_digest": "sha256:fb69a706dc5cd8e24698505d9ae745075b414f231d6515dfc39c9f8b2ca2b907"
       },
       {
         "node_id": "n3",
@@ -30,7 +30,7 @@
     "gates": [],
     "actions": []
   },
-  "workflow_manifest_digest": "sha256:f6c11902f9e3ddabaeae0cbeb060ec16b1993ffcf38ce7ae25b7888c6b7a34ce",
+  "workflow_manifest_digest": "sha256:75e7300a8419af11449a86a28b7d196c384bc7b042d0a4d23e8ca01ded1dca98",
   "declared_inputs": [
     {
       "from": "503-canton-tokenization-readiness-diagnostic",

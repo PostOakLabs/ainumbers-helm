@@ -23,14 +23,14 @@
       {
         "node_id": "n3",
         "kernel_id": "514-tokenized-fund-collateral-validator",
-        "kernel_digest": "sha256:0ffd03e4aa9960ce7c1c4b4ed9d985e33b3a166f5f96942ff5eb419487a0e62b"
+        "kernel_digest": "sha256:50741b9d96f28fae793b5612ef94aa0a7d4d82c7caee633d71ef57ed9a5430fe"
       }
     ],
     "connectors": [],
     "gates": [],
     "actions": []
   },
-  "workflow_manifest_digest": "sha256:b717b6181e0a777ebecfc032b6221176919062ca58e72193a670dcd74a632c77",
+  "workflow_manifest_digest": "sha256:12d2a22bb0dd02073853afc48f289cad38606372ceec3fe9b3f4d47272eb6762",
   "declared_inputs": [],
   "steps_meta": [
     {

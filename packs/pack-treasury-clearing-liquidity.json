@@ -13,7 +13,7 @@
       {
         "node_id": "n1",
         "kernel_id": "sim-01-lcr-nsfr-liquidity-stress-test",
-        "kernel_digest": "sha256:e22635c466fd20d5fb8ff61aa494e70f70f958e303b5d52a90e0f0f22a6e930e"
+        "kernel_digest": "sha256:fb69a706dc5cd8e24698505d9ae745075b414f231d6515dfc39c9f8b2ca2b907"
       },
       {
         "node_id": "n2",
@@ -30,7 +30,7 @@
     "gates": [],
     "actions": []
   },
-  "workflow_manifest_digest": "sha256:3bb890f472fec0c2894a10cb8f2c722248a08109c4768a3d860d4b00cd606d5c",
+  "workflow_manifest_digest": "sha256:65cb8214a9d6feb7584cfaf44590832c07e199886fd0a0454e2eab49a68dbdc6",
   "declared_inputs": [],
   "steps_meta": [
     {

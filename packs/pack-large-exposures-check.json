@@ -1,7 +1,7 @@
 {
   "workflow_id": "pack-large-exposures-check",
   "name": "Large Exposures Limit Check (Basel III / Regulation YY)",
-  "outcome": "Single-node check aggregating each counterparty group's exposure against the Basel III / Regulation YY 25% (general) or 15% (GSIB-to-GSIB) single-counterparty limit, emitting a breach-list artifact.",
+  "outcome": "Single-node check aggregating each counterparty group's exposure against the Basel III / Regulation YY 25% (general) or 15% (GSIB-to-GSIB) single-counterparty limit, emitting a breach-list artifact. Carries a terminal §27 escalate accountability gate: a non-empty /breach_list routes to the reserved escalate target; a clean run ends normally.",
   "spec_version": "ocg-control-plane@1",
   "manifest": {
     "manifest_version": "1",

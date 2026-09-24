@@ -23,14 +23,14 @@
       {
         "node_id": "n3",
         "kernel_id": "art-33-mcp-server-self-attestation-pack",
-        "kernel_digest": "sha256:0fa24d32f68661ef9900f03ddab76d94fc674c6cf4327d809bd7bd5d2451c316"
+        "kernel_digest": "sha256:f5e88b40ff67283153a60a064c7226387fe7da982ac9d1cb6d8224e6e2c4f07f"
       }
     ],
     "connectors": [],
     "gates": [],
     "actions": []
   },
-  "workflow_manifest_digest": "sha256:994304b8ea9b6ca7dfd185eaf3148cb1345cb6755501b55ce3a0415ee94de274",
+  "workflow_manifest_digest": "sha256:869fc002b06ced0a3090b1dddd14f9f1f978dcc3bc9ced6b4b2f1b3788eb1378",
   "declared_inputs": [],
   "steps_meta": [
     {

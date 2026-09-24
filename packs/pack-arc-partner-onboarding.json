@@ -28,14 +28,14 @@
       {
         "node_id": "n4",
         "kernel_id": "rca-02-mica-reserve-stress",
-        "kernel_digest": "sha256:c66896024cd7ffc75c46cdd7c67e42c929234c4c7ce4b342a372b3627a68377b"
+        "kernel_digest": "sha256:05e290e886586a4be8d741f9d6d1bea7e8a45270d4adb37775997bbea621430f"
       }
     ],
     "connectors": [],
     "gates": [],
     "actions": []
   },
-  "workflow_manifest_digest": "sha256:a335ca82747219cd57b815bd0e407b5f88158b74a7c4bcb8111d34df1c20fd8d",
+  "workflow_manifest_digest": "sha256:009dd7cc6b5983503acab41ee5ef5f06101acebee6c28797fe759414c6491514",
   "declared_inputs": [],
   "steps_meta": [
     {

@@ -23,14 +23,14 @@
       {
         "node_id": "n3",
         "kernel_id": "art-71-cbam-certificate-cost-engine",
-        "kernel_digest": "sha256:80df4fc1195a5177c803aad81d51aabbfad003ca7e5c117591b4f557b278f2d9"
+        "kernel_digest": "sha256:b17a4d4c2d75fa70d54b818c6fad1e1d5fac3413d1ed2bd5e7b0e3ee36bbf8db"
       }
     ],
     "connectors": [],
     "gates": [],
     "actions": []
   },
-  "workflow_manifest_digest": "sha256:2b6f18f57d15d04184a30f19cce679fc60cb2a334ca38b27721b283106cf4096",
+  "workflow_manifest_digest": "sha256:02b5cd8e8a509cbec36e9ff95187bf687e2b86d80a7de80d20bad684052463c7",
   "declared_inputs": [
     {
       "from": "art-68-carbon-compliance-fit-diagnostic",
