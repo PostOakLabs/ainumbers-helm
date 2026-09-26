@@ -118,14 +118,6 @@ allowlist recipe is UNVERIFIED-ON-MACOS: this build box is Windows, and the
 row does not claim a macOS run. Record a macOS run before ever labelling this
 recipe verified there.
 
-## Meta Muse
-
-Public endpoint only; helmd not reachable; no kit entry. Muse runs in a
-per-user cloud VM and cannot reach a loopback daemon, so point it at the
-site estate's server `https://mcp.ainumbers.co/mcp` (streamable HTTP, no
-credentials) instead. Nothing under `agent-kit/` targets Muse, and no
-OpenClaw fragment in this kit is claimed to run there.
-
 ## Smoke test
 
 `openclaw mcp probe` plus `mcp doctor --probe` are the documented smoke
