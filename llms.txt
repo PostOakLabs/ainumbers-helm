@@ -25,4 +25,4 @@ Helm is a local-first control-plane daemon (`helmd`) that runs deterministic, ha
 - Site repo's own `llms.txt`: `https://ainumbers.co/llms.txt`
 
 ## For agents
-Helm is not a remotely callable MCP server today — `helmd`'s REST API is loopback-only, pairing-token-gated (see `docs/openapi.json`). An MCP Registry entry exists for discoverability metadata but is intentionally unpublished while the surface is local-only (HELM-P4-B2). Agents that want a live, publicly reachable MCP endpoint should use `https://mcp.ainumbers.co/mcp` (the site estate's server) instead.
+Helm is not a remotely callable MCP server today — `helmd`'s REST API is loopback-only, pairing-token-gated (see `docs/openapi.json`). An MCP Registry entry exists for discoverability metadata but is intentionally unpublished while the surface is local-only (HELM-P4-B2). Agents that want a live, publicly reachable MCP endpoint should use `https://mcp.ainumbers.co/mcp` (the site estate's server) instead, including Meta Muse (cloud Secure VM; cannot reach loopback, so `helmd` is not reachable from it and this kit has no Muse entry).
