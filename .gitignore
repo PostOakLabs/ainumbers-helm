@@ -21,3 +21,6 @@ dist/
 # (see hub/vendored/sd-jwt/MANIFEST.json). Not install output.
 !hub/vendored/sd-jwt/node_modules/
 !hub/vendored/sd-jwt/node_modules/**
+
+# local worktree scratch (hygiene 2026-10-08)
+.wt/
