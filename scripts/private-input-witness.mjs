@@ -59,6 +59,31 @@ const ASSEMBLERS = {
     const { defaulter_im_minor_units, defaulter_default_fund_minor_units, surviving_member_default_fund_pool_minor_units } = v.input_value;
     return { ...rest, defaulter_im_minor_units, defaulter_default_fund_minor_units, surviving_member_default_fund_pool_minor_units, salt: v.salt };
   },
+  // art-548-vop-readiness-diagnostic.kernel.mjs buildArtifact(raw):
+  //   raw = { match_score, match_threshold_exact, match_threshold_close, psp_vop_response_code,
+  //     iban, iban_salt, payee_name, payee_name_salt, account_holder_id?, account_holder_id_salt? }
+  // The thresholds and the PSP-declared response code are public (already in the publicParams
+  // spread); the disclosure input_value carries the private figures — the VoPI match score and
+  // the per-field salted identity fields (HELM-CANON-SPLIT-1: registered for the
+  // pack-eudi-acceptance-vop-evidence chain, HELM-AUTOVENDOR-RED-2026-10-01 REPORT-2 §3.1).
+  "art-548-vop-readiness-diagnostic": (publicParams, disclosureVectors) => {
+    const v = disclosureVectors[0];
+    const { iban_commitment, payee_name_commitment, account_holder_id_commitment, ...rest } = publicParams;
+    const disclosure = v.input_value;
+    const raw = {
+      ...rest,
+      match_score: disclosure.match_score,
+      iban: disclosure.iban,
+      iban_salt: disclosure.iban_salt,
+      payee_name: disclosure.payee_name,
+      payee_name_salt: disclosure.payee_name_salt,
+    };
+    if (disclosure.account_holder_id !== undefined && disclosure.account_holder_id !== null && disclosure.account_holder_id !== "") {
+      raw.account_holder_id = disclosure.account_holder_id;
+      raw.account_holder_id_salt = disclosure.account_holder_id_salt;
+    }
+    return raw;
+  },
 };
 
 export function hasWitnessAssembler(kernelId) {

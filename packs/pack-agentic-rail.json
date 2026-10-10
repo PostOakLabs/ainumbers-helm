@@ -1,0 +1,94 @@
+{
+  "workflow_id": "pack-agentic-rail",
+  "name": "Agentic Rail Chain",
+  "outcome": "Agentic payments protocol comparison > AP2 mandate > Visa TAP signature inspection > Mastercard agentic token scope > A2A agent card validation > x402 payload decode > x402 settlement modelling > MCP developer readiness scorecard. The composer page routes the comparator into a card branch and an A2A branch that converge on the readiness scorecard; the chain records that run in the linear order the page renders, because a chain has no branch construct. The sibling chain agentic-rail-standards is the standards-only check over the card-network token specifications and shares no step with this one: this chain runs the protocol end to end, that one checks conformance with the published standards.",
+  "spec_version": "ocg-control-plane@1",
+  "manifest": {
+    "manifest_version": "1",
+    "workflow_id": "pack-agentic-rail",
+    "trigger": {
+      "type": "manual"
+    },
+    "nodes": [
+      {
+        "node_id": "n1",
+        "kernel_id": "art-22-agentic-payments-protocol-comparator",
+        "kernel_digest": "sha256:0d884710ed42dd2b36075266167a7fed1219199fa4aebad015933fabc4dfdee8"
+      },
+      {
+        "node_id": "n2",
+        "kernel_id": "art-16-google-ap2-mandate-builder",
+        "kernel_digest": "sha256:f16c71bd2744673ca2bd40dc97c04c0a360c89ebb528bcef913f7243adfc6c29"
+      },
+      {
+        "node_id": "n3",
+        "kernel_id": "art-23-visa-trusted-agent-protocol-inspector",
+        "kernel_digest": "sha256:121d2bbc225f22b9f647b43ef1310b168a6b6bd0a3e0d1e45dba0bc500fc213a"
+      },
+      {
+        "node_id": "n4",
+        "kernel_id": "art-24-mastercard-agentic-token-builder",
+        "kernel_digest": "sha256:c3fc5f06ba67952f984a4b92f4a19b72dc85afedb761aaa7dace3b61ae13cc1e"
+      },
+      {
+        "node_id": "n5",
+        "kernel_id": "art-25-a2a-agent-card-validator",
+        "kernel_digest": "sha256:31f05f94d1769d1602bf8a182a0c58acbc94caa2292ed294d99233f5ba0d3e1b"
+      },
+      {
+        "node_id": "n6",
+        "kernel_id": "art-26-x402-payload-decoder-flow-simulator",
+        "kernel_digest": "sha256:24dadadd4a0901134a41d251fcac134657970dc8015251d06ab4757f1bcaf17e"
+      },
+      {
+        "node_id": "n7",
+        "kernel_id": "art-03-x402-settlement-modeler",
+        "kernel_digest": "sha256:5d693ae08f52fbf0719d500857977fff760b19d533358ae2f5edd6693854de81"
+      },
+      {
+        "node_id": "n8",
+        "kernel_id": "art-18-mcp-developer-readiness-scorecard",
+        "kernel_digest": "sha256:c81916c6a7e22cfeeef2b25f1f7aabff7bdbe4b32867e558653e5324e016ab4c"
+      }
+    ],
+    "connectors": [],
+    "gates": [],
+    "actions": []
+  },
+  "workflow_manifest_digest": "sha256:3ddc541b587a0a734a1ff3175f781d630fdeb33b7046f2b7fed489454cf4f6d5",
+  "declared_inputs": [],
+  "steps_meta": [
+    {
+      "node_id": "n1",
+      "data_classification": "compute"
+    },
+    {
+      "node_id": "n2",
+      "data_classification": "compute"
+    },
+    {
+      "node_id": "n3",
+      "data_classification": "compute"
+    },
+    {
+      "node_id": "n4",
+      "data_classification": "compute"
+    },
+    {
+      "node_id": "n5",
+      "data_classification": "compute"
+    },
+    {
+      "node_id": "n6",
+      "data_classification": "compute"
+    },
+    {
+      "node_id": "n7",
+      "data_classification": "compute"
+    },
+    {
+      "node_id": "n8",
+      "data_classification": "compute"
+    }
+  ]
+}

@@ -31,7 +31,12 @@
     "actions": []
   },
   "workflow_manifest_digest": "sha256:4283a0335e11ae8c103055e1320d958e663aa11753c64a9fe400415ff5df8b0b",
-  "declared_inputs": [],
+  "declared_inputs": [
+    {
+      "from": "art-04-agent-identity-attestation-checker",
+      "kind": "external"
+    }
+  ],
   "steps_meta": [
     {
       "node_id": "n1",

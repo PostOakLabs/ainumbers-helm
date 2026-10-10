@@ -18,7 +18,7 @@
       {
         "node_id": "n2",
         "kernel_id": "art-350-fedwire-address-sweep",
-        "kernel_digest": "sha256:64b884c3d7960d52db974c9c447144a64692ab993d434cad556a8b72ee062104"
+        "kernel_digest": "sha256:3ae08c2f86a8a34e3be03ac7e3df38b0d5d2d0ee47fda15364f8d365f6c295d2"
       },
       {
         "node_id": "n3",
@@ -31,7 +31,7 @@
     "gates": [],
     "actions": []
   },
-  "workflow_manifest_digest": "sha256:577145d96c7621132cd04b8b15bc72cf44418528a25ed24e54e7fb5a6993ef47",
+  "workflow_manifest_digest": "sha256:ad68582e582f7a47bf8e4e6e77234926f2e022d6048228b57036c2de357ab294",
   "declared_inputs": [],
   "steps_meta": [
     {

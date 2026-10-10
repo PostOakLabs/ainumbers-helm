@@ -14,20 +14,29 @@ import { KERNELS } from "../hub/vendored/ocg/kernels/index.mjs";
 
 const HERE = dirname(fileURLToPath(import.meta.url));
 const ROOT = join(HERE, "..");
-const PACKS_DIR = join(ROOT, "packs");
 const SCHEMA = JSON.parse(readFileSync(join(ROOT, "schema", "workflow-manifest.schema.json"), "utf8"));
 const CONNECTOR_BINDINGS = JSON.parse(readFileSync(join(ROOT, "scripts", "connector-bindings.json"), "utf8"));
+
+// HELM-CANON-SPLIT-1 (REPORT-2 §3.4): every compile below writes into ONE
+// per-file staging folder via HELM_PACKS_DIR — never packs/ — so a
+// concurrent compile-parity-gate.test.mjs read of packs/ can no longer hit a
+// mid-rewrite ENOENT (the CI-only race that reddened 2-4 gate tests on the
+// Monday autovendor runs). node:test runs the tests in this file serially,
+// so one shared staging dir per file is safe; packs/ itself is only ever
+// READ by this file now (the committed, pin-fresh packs).
+const STAGE = mkdtempSync(join(tmpdir(), "helm-compile-packs-stage-"));
 
 function run(args) {
   return execFileSync(process.execPath, [join(ROOT, "scripts", "compile-packs.mjs"), ...args], {
     cwd: ROOT,
     stdio: "pipe",
+    env: { ...process.env, HELM_PACKS_DIR: STAGE },
   }).toString();
 }
 
 test("compile-packs: compiles a non-empty subset and skips the rest with logged reasons", () => {
   run([]);
-  const index = JSON.parse(readFileSync(join(PACKS_DIR, "INDEX.json"), "utf8"));
+  const index = JSON.parse(readFileSync(join(STAGE, "INDEX.json"), "utf8"));
   assert.ok(index.compiledCount > 0, "expected at least one compiled pack");
   // PACKMARKER-EXTEND-97-1: skippedCount is legitimately 0 once every
   // currently-missing step across every chain resolves as a confirmed
@@ -38,15 +47,15 @@ test("compile-packs: compiles a non-empty subset and skips the rest with logged 
     assert.ok(skip.name && skip.reason, "every skip MUST carry a name + reason — no silent truncation");
   }
 
-  const packFiles = readdirSync(PACKS_DIR).filter((f) => f !== "INDEX.json");
+  const packFiles = readdirSync(STAGE).filter((f) => f !== "INDEX.json");
   assert.equal(packFiles.length, index.compiledCount);
 });
 
 test("compile-packs: every emitted pack's manifest validates against schema/workflow-manifest.schema.json", () => {
   run([]);
-  const packFiles = readdirSync(PACKS_DIR).filter((f) => f !== "INDEX.json");
+  const packFiles = readdirSync(STAGE).filter((f) => f !== "INDEX.json");
   for (const file of packFiles) {
-    const pack = JSON.parse(readFileSync(join(PACKS_DIR, file), "utf8"));
+    const pack = JSON.parse(readFileSync(join(STAGE, file), "utf8"));
     const errs = validate(SCHEMA, pack.manifest);
     assert.deepEqual(errs, [], `${file}: manifest failed schema validation: ${errs.join(", ")}`);
     assert.ok(/^sha256:[0-9a-f]{64}$/.test(pack.workflow_manifest_digest));
@@ -57,8 +66,8 @@ test("compile-packs: --check passes on freshly generated packs/, fails after a t
   run([]);
   run(["--check"]); // should not throw
 
-  const packFiles = readdirSync(PACKS_DIR).filter((f) => f !== "INDEX.json");
-  const victim = join(PACKS_DIR, packFiles[0]);
+  const packFiles = readdirSync(STAGE).filter((f) => f !== "INDEX.json");
+  const victim = join(STAGE, packFiles[0]);
   const original = readFileSync(victim, "utf8");
   const tampered = JSON.parse(original);
   tampered.name = "TAMPERED";
@@ -74,10 +83,10 @@ test("compile-packs: --check passes on freshly generated packs/, fails after a t
 test("compile-packs: packs with no connector-bindings.json entry keep connectors:[] and BOTH connector_inputs/required_inputs ABSENT", () => {
   run([]);
   const boundIds = new Set(Object.keys(CONNECTOR_BINDINGS).filter((k) => k !== "_comment"));
-  const packFiles = readdirSync(PACKS_DIR).filter((f) => f !== "INDEX.json");
+  const packFiles = readdirSync(STAGE).filter((f) => f !== "INDEX.json");
   let checked = 0;
   for (const file of packFiles) {
-    const pack = JSON.parse(readFileSync(join(PACKS_DIR, file), "utf8"));
+    const pack = JSON.parse(readFileSync(join(STAGE, file), "utf8"));
     if (boundIds.has(pack.workflow_id)) continue;
     checked++;
     assert.deepEqual(pack.manifest.connectors, []);
@@ -91,7 +100,7 @@ test("compile-packs: the bound pack emits a schema-valid real connector wired to
   run([]);
   for (const [workflowId, binding] of Object.entries(CONNECTOR_BINDINGS)) {
     if (workflowId === "_comment") continue;
-    const pack = JSON.parse(readFileSync(join(PACKS_DIR, `${workflowId}.json`), "utf8"));
+    const pack = JSON.parse(readFileSync(join(STAGE, `${workflowId}.json`), "utf8"));
     const { manifest } = pack;
 
     assert.deepEqual(validate(SCHEMA, manifest), []);
@@ -114,7 +123,7 @@ test("compile-packs: the bound pack emits a schema-valid real connector wired to
 test("compile-packs: end-to-end — a connector-fetched value reaches buildArtifact and changes execution_hash", async () => {
   run([]);
   const [workflowId, binding] = Object.entries(CONNECTOR_BINDINGS).find(([k]) => k !== "_comment");
-  const pack = JSON.parse(readFileSync(join(PACKS_DIR, `${workflowId}.json`), "utf8"));
+  const pack = JSON.parse(readFileSync(join(STAGE, `${workflowId}.json`), "utf8"));
   const nodeId = binding.feeds_node_id;
   const node = pack.manifest.nodes.find((n) => n.node_id === nodeId);
   const kernel = KERNELS[node.kernel_id];
@@ -168,7 +177,7 @@ test("HELM-CONNECTOR-PARAMS-2: pack-2052a-classify-daily's curated drive_file_id
   const binding = CONNECTOR_BINDINGS["pack-2052a-classify-daily"];
   assert.ok(binding.params?.fileId, "connector-bindings.json must carry a curated params.fileId for this binding");
 
-  const pack = JSON.parse(readFileSync(join(PACKS_DIR, "pack-2052a-classify-daily.json"), "utf8"));
+  const pack = JSON.parse(readFileSync(join(STAGE, "pack-2052a-classify-daily.json"), "utf8"));
   assert.deepEqual(validate(SCHEMA, pack.manifest), []);
   assert.equal(pack.manifest.connector_inputs[0].params.fileId, binding.params.fileId);
 
@@ -195,10 +204,10 @@ const SENTINEL_DIGEST = `sha256:${"0".repeat(64)}`;
 
 test("compile-packs: every MARKER_PILOT_CHAINS chain that compiles carries verified:false + sentinel digest on the marked (browser-tool) nodes only", () => {
   run([]);
-  const compiledPilotIds = BAAS_PILOT_WORKFLOW_IDS.filter((id) => readdirSync(PACKS_DIR).includes(`${id}.json`));
+  const compiledPilotIds = BAAS_PILOT_WORKFLOW_IDS.filter((id) => readdirSync(STAGE).includes(`${id}.json`));
   assert.ok(compiledPilotIds.length > 0, "expected at least one MARKER_PILOT_CHAINS chain to compile");
   for (const workflowId of compiledPilotIds) {
-    const pack = JSON.parse(readFileSync(join(PACKS_DIR, `${workflowId}.json`), "utf8"));
+    const pack = JSON.parse(readFileSync(join(STAGE, `${workflowId}.json`), "utf8"));
     assert.deepEqual(validate(SCHEMA, pack.manifest), [], `${workflowId}: manifest failed schema validation`);
     let sawMarked = false;
     for (const node of pack.manifest.nodes) {
@@ -217,9 +226,9 @@ test("compile-packs: every MARKER_PILOT_CHAINS chain that compiles carries verif
 
 test("compile-packs: marking is scoped to MARKER_PILOT_CHAINS only — no other compiled pack ever carries verified", () => {
   run([]);
-  const packFiles = readdirSync(PACKS_DIR).filter((f) => f !== "INDEX.json" && !BAAS_PILOT_WORKFLOW_IDS.includes(f.replace(/\.json$/, "")));
+  const packFiles = readdirSync(STAGE).filter((f) => f !== "INDEX.json" && !BAAS_PILOT_WORKFLOW_IDS.includes(f.replace(/\.json$/, "")));
   for (const file of packFiles) {
-    const pack = JSON.parse(readFileSync(join(PACKS_DIR, file), "utf8"));
+    const pack = JSON.parse(readFileSync(join(STAGE, file), "utf8"));
     for (const node of pack.manifest.nodes) {
       assert.equal("verified" in node, false, `${file}/${node.node_id}: verified must be absent outside MARKER_PILOT_CHAINS`);
     }

@@ -1,0 +1,40 @@
+{
+  "workflow_id": "pack-x402-permit2-spend-evidence",
+  "name": "x402 Permit2 Spend Evidence Pack",
+  "outcome": "Linear two-step evidence pipeline for the Permit2 asset-transfer method of an x402 exact or upto payment, the sibling of the EIP-3009 pipeline. The first step recomputes the Permit2 typed-data digest the payer signed and reports the binding, window, nonce-space and signature-form facts around it; the second step recovers the signer from that digest and reports whether the recovered address matches the claimed payer. The two outputs compose into an evidence pack a downstream agent or a human reads before relying on an authorization. This is an evidence bundle and never a settlement proof: no chain is read, nothing is submitted, and any fact whose input was not declared reports NOT_EVALUATED.",
+  "spec_version": "ocg-control-plane@1",
+  "manifest": {
+    "manifest_version": "1",
+    "workflow_id": "pack-x402-permit2-spend-evidence",
+    "trigger": {
+      "type": "manual"
+    },
+    "nodes": [
+      {
+        "node_id": "n1",
+        "kernel_id": "art-699-x402-permit2-evidence-recomputer",
+        "kernel_digest": "sha256:0c36a136f75d75a9dbc83a6d6230e082a4d33eb3fb43c2c52de58b9dcc2b39f9"
+      },
+      {
+        "node_id": "n2",
+        "kernel_id": "art-591-x402-signer-recovery-verifier",
+        "kernel_digest": "sha256:4dfa2047d3aeebb35c0825fa07d54d487c7b254d0ad031e2d0c360a3736b5ab7"
+      }
+    ],
+    "connectors": [],
+    "gates": [],
+    "actions": []
+  },
+  "workflow_manifest_digest": "sha256:51112447ac9cd26721f8fd065f31b9a8190516b285aaf49bacf6afca77d1b13c",
+  "declared_inputs": [],
+  "steps_meta": [
+    {
+      "node_id": "n1",
+      "data_classification": "compute"
+    },
+    {
+      "node_id": "n2",
+      "data_classification": "compute"
+    }
+  ]
+}

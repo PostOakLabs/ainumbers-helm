@@ -18,7 +18,7 @@
       {
         "node_id": "n2",
         "kernel_id": "art-242-pacs008-party-completeness-validator",
-        "kernel_digest": "sha256:a003fc6cc8dfa80d68668f62938102ca8f06da330407616dc9d04f146303706e"
+        "kernel_digest": "sha256:2aac07c9bd6463db4571c1800f17c85d5c09ee00b62151b485113a1ddb02de8a"
       },
       {
         "node_id": "n3",
@@ -30,7 +30,7 @@
     "gates": [],
     "actions": []
   },
-  "workflow_manifest_digest": "sha256:6fcde215f0c785ba934514be86ed05ca7f0eb01222d7c8724a3393362aabad50",
+  "workflow_manifest_digest": "sha256:0ba0ad025155500abfbf2f8baec7f0c606d23ab0479a830362eed2c9086d657e",
   "declared_inputs": [],
   "steps_meta": [
     {

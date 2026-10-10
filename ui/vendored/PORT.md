@@ -8,7 +8,7 @@ pinned SHA in `../../scripts/vendor.config.json` (currently
 
 | ui/vendored file       | Ported from (hub)                                        | Transform applied |
 |-------------------------|-----------------------------------------------------------|--------------------|
-| `hash.mjs`               | `hub/vendored/ocg/kernels/_hash.mjs`                       | none (verbatim body) |
+| `hash.mjs`               | `hub/vendored/ocg/kernels/_hash.mjs`                       | none (verbatim body). Last hand-resync at site pin `b57f9ff9f87b782a3a088c15eeede82bda48de94` (HELM-CANON-SPLIT-1): picked up the vendored copy's `jcsStringify` (RFC 8785 §3.2.3 array-index member order) and the null-prototype `cgCanon` accumulator that keeps a literal `__proto__` member in the preimage (site 911cfe38 + d5aafda9). |
 | `proof.mjs`              | `hub/vendored/ocg/kernels/_proof.mjs`                      | one import path: `./_hash.mjs` -> `./hash.mjs` |
 | `der.mjs`                | `hub/vendored/ocg/kernels/_anchor-testutil.mjs` (DER/OID reader) + `hub/vendored/ocg/kernels/_rfc3161.mjs` (`parseRfc3161Token`'s field-walk) | Buffer -> Uint8Array; `Buffer.from(x,"base64")` -> `atob()`-based `base64ToBytes`; CMS signature/chain-of-trust verification dropped (no WebCrypto equivalent — structural-only, see file header) |
 | `schema-validator.mjs`   | `scripts/lib/schema-validator.mjs` (helm's own, not site-vendored) | none (verbatim body) |
