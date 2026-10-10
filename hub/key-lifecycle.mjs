@@ -24,7 +24,8 @@
 // out of this file to share no state with HELM-KEYCHAIN-1's storage module
 // (custody vs lifecycle, per the build spec's cross-reference note).
 import { generateKeyPairSync, createPublicKey, sign as cryptoSign, verify as cryptoVerify, createHash } from "node:crypto";
-import { cgCanon, assertIJson } from "./vendored/ocg/kernels/_hash.mjs";
+import { assertIJson } from "./vendored/ocg/kernels/_hash.mjs";
+import { recordCanonV1 } from "./record-canon-v1.mjs"; // helm record canonicalization v1 (frozen) — HELM-CANON-SPLIT-1
 
 export const KEY_EVENT_PAYLOAD_TYPE = "application/vnd.helm.key-event+json";
 
@@ -34,7 +35,7 @@ function sha256Hex(buf) {
 
 function jcsBytes(obj) {
   assertIJson(obj);
-  return Buffer.from(JSON.stringify(cgCanon(obj)), "utf8");
+  return Buffer.from(recordCanonV1(obj), "utf8");
 }
 
 // Same DSSE Pre-Authentication Encoding shape as hub/envelope.mjs, binding

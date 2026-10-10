@@ -17,7 +17,8 @@
 // crash-resume and deterministic replay are the SAME code path: resuming a
 // run just means the early steps' memo lookups hit instead of miss.
 import { createHash } from "node:crypto";
-import { cgCanon, assertIJson } from "./vendored/ocg/kernels/_hash.mjs";
+import { assertIJson } from "./vendored/ocg/kernels/_hash.mjs";
+import { recordCanonV1 } from "./record-canon-v1.mjs"; // helm record canonicalization v1 (frozen) — HELM-CANON-SPLIT-1
 import { appendEntry } from "./journal.mjs";
 
 // Phase-1 lifecycle subset (SPEC.md §26.5 defines the full enum; review
@@ -41,7 +42,7 @@ const ALLOWED_TRANSITIONS = {
 
 function jcsDigestHex(obj) {
   assertIJson(obj);
-  return createHash("sha256").update(JSON.stringify(cgCanon(obj))).digest("hex");
+  return createHash("sha256").update(recordCanonV1(obj)).digest("hex");
 }
 
 function sha256ref(hex) {

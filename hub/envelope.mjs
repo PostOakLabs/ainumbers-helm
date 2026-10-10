@@ -5,11 +5,13 @@
 // manifest, release manifest) is an in-toto Statement v1 inside a DSSE
 // envelope, signed by BOTH Ed25519 (MUST) and ML-DSA-44 (SHOULD), using the
 // RFC 9964 JOSE algorithm identifiers "EdDSA" / "ML-DSA-44". Payload
-// canonicalization reuses cgCanon (JCS, RFC 8785) — the same canonicalizer
+// payload canonicalization uses recordCanonV1 (helm record canonicalization v1,
+// frozen — HELM-CANON-SPLIT-1): envelopes are persisted, hash-chained helm records.
 // the OCG kernels hash — so a statement's bytes never diverge from the OCG
 // digest convention it's built alongside.
 import { sign as cryptoSign, verify as cryptoVerify, createHash } from "node:crypto";
-import { cgCanon, assertIJson } from "./vendored/ocg/kernels/_hash.mjs";
+import { assertIJson } from "./vendored/ocg/kernels/_hash.mjs";
+import { recordCanonV1 } from "./record-canon-v1.mjs"; // helm record canonicalization v1 (frozen) — HELM-CANON-SPLIT-1
 import { ml_dsa44 } from "./vendored/ocg/kernels/_proof.mjs";
 
 export const IN_TOTO_STATEMENT_TYPE = "https://in-toto.io/Statement/v1";
@@ -52,7 +54,7 @@ function mldsa44KeyId(publicKeyBytes) {
 
 // keys = { ed25519: { privateKey }, mldsa44: { secretKey } } (see keys.mjs).
 export function emitEnvelope(statement, keys) {
-  const payloadBytes = Buffer.from(JSON.stringify(cgCanon(statement)), "utf8");
+  const payloadBytes = Buffer.from(recordCanonV1(statement), "utf8");
   const toSign = pae(DSSE_PAYLOAD_TYPE, payloadBytes);
 
   const edSig = cryptoSign(null, toSign, keys.ed25519.privateKey);

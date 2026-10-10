@@ -1,0 +1,24 @@
+{
+  "record": {
+    "record_type": "approval",
+    "role": "approver",
+    "subject_hash": "sha256:abababababababababababababababababababababababababababababababab",
+    "identity": {
+      "id": "did:key:z6MkgMArcYSjZDC6G19s1KWvek4kaREWyVtHSsPkwXQBfYXv"
+    },
+    "decision": "approve",
+    "reason_code": "FIXTURE",
+    "timestamp": "2026-10-10T00:00:00.000Z",
+    "audit_signature": {
+      "proof": {
+        "type": "DataIntegrityProof",
+        "cryptosuite": "eddsa-jcs-2022",
+        "verificationMethod": "did:key:z6MkgMArcYSjZDC6G19s1KWvek4kaREWyVtHSsPkwXQBfYXv#key-1",
+        "proofPurpose": "assertionMethod",
+        "created": "2026-10-10T00:00:00.000Z",
+        "proofValue": "z3xCEjNWmmg4i2HBTRU6SCYGHqz7SFe2mPGUDHnNsnyeBQ1ZjDeyci8HCBCcMB527CLq15mqykYjtCDw76EgxkWjf"
+      }
+    }
+  },
+  "recordId": "sha256:f0bab97a12682337a02f4004348a6053829cb0d6563c65b86cbd9d58f978c905"
+}

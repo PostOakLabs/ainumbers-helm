@@ -15,7 +15,8 @@ import { join, dirname } from "node:path";
 import { fileURLToPath } from "node:url";
 import { getPack } from "./packs.mjs";
 import { pinnedKernelDigest } from "./kernel-runner.mjs";
-import { cgCanon, assertIJson } from "./vendored/ocg/kernels/_hash.mjs";
+import { assertIJson } from "./vendored/ocg/kernels/_hash.mjs";
+import { recordCanonV1 } from "./record-canon-v1.mjs"; // helm record canonicalization v1 (frozen) — HELM-CANON-SPLIT-1
 import { validate } from "../scripts/lib/schema-validator.mjs";
 
 const HERE = dirname(fileURLToPath(import.meta.url));
@@ -29,12 +30,12 @@ function sha256Hex(bytes) {
 }
 
 // Mirrors ui/lib/manifest-digest.mjs's manifestDigest() exactly (same
-// cgCanon, same SHA-256) so a browser-computed digest and this daemon-side
+// recordCanonV1, same SHA-256) so a browser-computed digest and this daemon-side
 // one always agree — kept as separate copies per that module's own note:
 // ui/ ships static with no build step, hub/vendored isn't served to it.
 function workflowManifestDigest(manifest) {
   assertIJson(manifest);
-  return `sha256:${sha256Hex(Buffer.from(JSON.stringify(cgCanon(manifest)), "utf8"))}`;
+  return `sha256:${sha256Hex(Buffer.from(recordCanonV1(manifest), "utf8"))}`;
 }
 
 function refused(formatVersion, reason) {

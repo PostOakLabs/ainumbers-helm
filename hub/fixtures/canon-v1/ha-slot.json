@@ -1,0 +1,27 @@
+{
+  "subjectHash": "sha256:abababababababababababababababababababababababababababababababab",
+  "slot": {
+    "bundle_digest": "sha256:abababababababababababababababababababababababababababababababab",
+    "maker_signature": {
+      "keyid": "did:key:z6Mkr6Hpt9crEsfvxk9V2gFmPL3HPJ9Y4yzbdbA8PKyq6R8w",
+      "sig": "PXQt+9YkVdYYfarM3ZgQYAxtoUjBN1LpzGmj+iZLxu2eDmbJzKeWb2cOpOlrHJSRgPFz0BOQ4JPxl/HVPyoWDw==",
+      "alg": "EdDSA"
+    },
+    "countersignatures": [
+      {
+        "role": "checker",
+        "identity": {
+          "id": "did:key:z6MkgMArcYSjZDC6G19s1KWvek4kaREWyVtHSsPkwXQBfYXv"
+        },
+        "signature": {
+          "keyid": "did:key:z6MkgMArcYSjZDC6G19s1KWvek4kaREWyVtHSsPkwXQBfYXv",
+          "sig": "DmiNuFkyZql366HcQF+GMVtAPwIIKOEcK3rEU9DDMWi8W0/cn8F6YhNwjRp0qZMboQHYYo2jy86+hzTbnpPGBw==",
+          "alg": "EdDSA"
+        },
+        "signed_at": "2026-10-10T00:00:00.000Z",
+        "replay_verified": false,
+        "attester_kind": "human"
+      }
+    ]
+  }
+}
