@@ -165,6 +165,7 @@ jobs:
           node scripts/verify-vendored.mjs
           node scripts/test.mjs > /tmp/autovendor-test.log 2>&1 || {
             echo "test suite FAILED — no PR will be opened; tail of the log follows" >&2
+            grep -E "^not ok" /tmp/autovendor-test.log >&2 || true
             tail -n 40 /tmp/autovendor-test.log >&2
             exit 1
           }
