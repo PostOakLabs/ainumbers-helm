@@ -1,7 +1,7 @@
 {
   "_comment": "Anti-drift stamp for HELM-TECHNICAL-DESIGN-IMPLEMENTATION.md. Each entry is a file the doc cites, digested as of the last time a human re-read the doc's claims against that code. Enforced by scripts/check-techdoc-citations.mjs. Re-stamp with scripts/stamp-techdoc-citations.mjs, by hand, in the same pull request that re-verifies the prose. Never automatically.",
   "doc": "docs/HELM-TECHNICAL-DESIGN-IMPLEMENTATION.md",
-  "stampedAtSha": "3c900b59605efa955da3af8c7218e8d40abafbf4",
+  "stampedAtSha": "76606db475ebb35349872ed3e6edff4ed2a9ae21",
   "files": [
     {
       "path": "bin/helmd.mjs",
@@ -37,11 +37,11 @@
     },
     {
       "path": "hub/bundle.mjs",
-      "sha256": "88fe52817443ca0895463cdbf3c604d24418724e82aeea78d9d25422183966e1"
+      "sha256": "cb52d8b20492e1b1d932ec40d83449adc3fb4348700564a8d18b735d476c8250"
     },
     {
       "path": "hub/checkpoint.mjs",
-      "sha256": "9473c659f30c609ab874c088fed02c2a112c80147914da9d446483d8690f18ae"
+      "sha256": "1ba9f95b7e93dbc420b7adf090635f9f8ac5c3429ce1118c01bdffbb46ad282b"
     },
     {
       "path": "hub/cli-channel.mjs",
@@ -53,7 +53,7 @@
     },
     {
       "path": "hub/connector.mjs",
-      "sha256": "b5b4adc1dde39660321ea888ca5f12c0176e48cd7d22ea3b12936f509319206a"
+      "sha256": "1d3a947a2bc043f10c7caead5e79ada0e93cd56832681f52bb9cd8e3e7159854"
     },
     {
       "path": "hub/connectors/dispatch.mjs",
@@ -77,11 +77,11 @@
     },
     {
       "path": "hub/envelope.mjs",
-      "sha256": "2f13a789deedeceedd04fe16437cdebd20b1453a5562e6c70a3311d2d4af1b16"
+      "sha256": "e491bb445750afc0a9cac763b4438e7b821ad42b9dbfd208abaa945792908c9c"
     },
     {
       "path": "hub/ha-gate.mjs",
-      "sha256": "5a9dbb0bb5b3efd72d812df0c4f42310c2eca4c5f2c6b123d8c818c23fd0b1fa"
+      "sha256": "479bd1c057ab0b8332ee602bc14e7367ffd281072558d7a01904da2b45135e0d"
     },
     {
       "path": "hub/idle-timer.mjs",
@@ -93,7 +93,7 @@
     },
     {
       "path": "hub/journal.mjs",
-      "sha256": "00c82416505e53d1cb3828c9f4e4b3f91e7ce436766acdf3a3b6625c331f5f9f"
+      "sha256": "266fde7c2f84475e798a8c64146923f0da45812002d3450519586b129d8e6bf4"
     },
     {
       "path": "hub/kernel-runner.mjs",
@@ -112,6 +112,14 @@
       "sha256": "894f8b84761d5d49c5edf34dd6e1fe3a1b3fac3c6fa49f0d25f1e55f8b4f741c"
     },
     {
+      "path": "hub/record-canon-v1.mjs",
+      "sha256": "d906149ee2118b674458b921ba04c7db342f1c6dd6bf30a42140dae0f541b9ca"
+    },
+    {
+      "path": "hub/record-canon-v1.test.mjs",
+      "sha256": "ca2d254faf4da964582160dca888285f6e62c3de2271ccb7b318460c2ba776fd"
+    },
+    {
       "path": "hub/recovery.mjs",
       "sha256": "a7b050305c456825b62b73d66e1d949ec64758fff9e5b08092b59c284f9dc636"
     },
@@ -121,7 +129,7 @@
     },
     {
       "path": "hub/run.mjs",
-      "sha256": "7882eab197ca3c895d1a7a023d8376647e429561d0232c78dd545c901875d7fc"
+      "sha256": "ee73ced662715315c54dac2c533ba193221c94c905acbb535c21bba3c14a5a32"
     },
     {
       "path": "hub/server.mjs",
@@ -161,11 +169,15 @@
     },
     {
       "path": "hub/vendored/ocg/MANIFEST.json",
-      "sha256": "565f0265570f1c99c06a938bcdab2f5dfd4b25954140ffd06fc820d624cacd3f"
+      "sha256": "fc9a28ee6948839ad632e567c19cc6f24d4cbb82c04dd8dc8576834abdd541a4"
+    },
+    {
+      "path": "hub/vendored/ocg/kernels/_hash.mjs",
+      "sha256": "ef6fd5a1f28131dce8ca5ea3adcd1662e93cec682b7cecb3759a9647b6a56f04"
     },
     {
       "path": "hub/vendored/ocg/kernels/_proof.mjs",
-      "sha256": "f105954e77e285a412256ca193d4b0426fc828caa54f9458b56a64012a529b41"
+      "sha256": "7ad59e05207d0558e3341ed1e426b3436214bd4462aa833000e04d82b571d336"
     },
     {
       "path": "hub/watch-scheduler.mjs",
