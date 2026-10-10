@@ -326,6 +326,158 @@
       "tree_root": "sha256:cb1cf2512c3fb9a20615bdbe82a6c3befac7034f9e0fbe6059092e8e74122382",
       "key_count": 647,
       "note": "Sorted-key ainumbers-simple-v1 absence tree over the F2 registry/kernel key set (REGISTRY-TILES-BUILD-SPEC.md §4.4): tree_root + key_count committed so absence is proven against an anchored, consistency-checkable history. Derived by scripts/append-absence-lineage-record.mjs from the recomputed tree — never hand-authored."
+    },
+    {
+      "anchor_type": "ainumbers-absence-tree-v1",
+      "source": "registry-absence-tree",
+      "proofspec": "ainumbers-simple-v1",
+      "tree_root": "sha256:4a14925ce269dcf6115b3903052f86d0ab6b8e960644117df7543d4a5e9b03cd",
+      "key_count": 648,
+      "note": "Sorted-key ainumbers-simple-v1 absence tree over the F2 registry/kernel key set (REGISTRY-TILES-BUILD-SPEC.md §4.4): tree_root + key_count committed so absence is proven against an anchored, consistency-checkable history. Derived by scripts/append-absence-lineage-record.mjs from the recomputed tree — never hand-authored."
+    },
+    {
+      "anchor_type": "ainumbers-absence-tree-v1",
+      "source": "registry-absence-tree",
+      "proofspec": "ainumbers-simple-v1",
+      "tree_root": "sha256:0667b50f072a5ac195cb4007073d5a0dea21d8c9f48cfeae1f1e91bb2dcb021a",
+      "key_count": 648,
+      "note": "Sorted-key ainumbers-simple-v1 absence tree over the F2 registry/kernel key set (REGISTRY-TILES-BUILD-SPEC.md §4.4): tree_root + key_count committed so absence is proven against an anchored, consistency-checkable history. Derived by scripts/append-absence-lineage-record.mjs from the recomputed tree — never hand-authored."
+    },
+    {
+      "anchor_type": "ainumbers-absence-tree-v1",
+      "source": "registry-absence-tree",
+      "proofspec": "ainumbers-simple-v1",
+      "tree_root": "sha256:651061a2b8c3165c4d9561a41eeeb75a14be7fab4114eb0a6e5d86976678c38f",
+      "key_count": 648,
+      "note": "Sorted-key ainumbers-simple-v1 absence tree over the F2 registry/kernel key set (REGISTRY-TILES-BUILD-SPEC.md §4.4): tree_root + key_count committed so absence is proven against an anchored, consistency-checkable history. Derived by scripts/append-absence-lineage-record.mjs from the recomputed tree — never hand-authored."
+    },
+    {
+      "anchor_type": "ainumbers-absence-tree-v1",
+      "source": "registry-absence-tree",
+      "proofspec": "ainumbers-simple-v1",
+      "tree_root": "sha256:bc1862096981a3e1a360bf4bcccaeb215714c3c003dc797d39c7664168c9be7f",
+      "key_count": 649,
+      "note": "Sorted-key ainumbers-simple-v1 absence tree over the F2 registry/kernel key set (REGISTRY-TILES-BUILD-SPEC.md §4.4): tree_root + key_count committed so absence is proven against an anchored, consistency-checkable history. Derived by scripts/append-absence-lineage-record.mjs from the recomputed tree — never hand-authored."
+    },
+    {
+      "anchor_type": "ainumbers-absence-tree-v1",
+      "key_count": 649,
+      "note": "Sorted-key ainumbers-simple-v1 absence tree over the F2 registry/kernel key set (REGISTRY-TILES-BUILD-SPEC.md §4.4): tree_root + key_count committed so absence is proven against an anchored, consistency-checkable history. Derived by scripts/append-absence-lineage-record.mjs from the recomputed tree — never hand-authored.",
+      "proofspec": "ainumbers-simple-v1",
+      "source": "registry-absence-tree",
+      "tree_root": "sha256:8a8d9f434e64d66c4a811ec5ec0800cc74f225842fb2b33b0d1c3a695cb1aa45"
+    },
+    {
+      "anchor_type": "ainumbers-absence-tree-v1",
+      "source": "registry-absence-tree",
+      "proofspec": "ainumbers-simple-v1",
+      "tree_root": "sha256:b20f3727115739e11cbc3cea0c194dccc9ff3560becc3a7b8944c7398ffd1181",
+      "key_count": 649,
+      "note": "Sorted-key ainumbers-simple-v1 absence tree over the F2 registry/kernel key set (REGISTRY-TILES-BUILD-SPEC.md §4.4): tree_root + key_count committed so absence is proven against an anchored, consistency-checkable history. Derived by scripts/append-absence-lineage-record.mjs from the recomputed tree — never hand-authored."
+    },
+    {
+      "anchor_type": "ainumbers-absence-tree-v1",
+      "source": "registry-absence-tree",
+      "proofspec": "ainumbers-simple-v1",
+      "tree_root": "sha256:4f71db2080463d98773794bda484804e1d00124cfce9746cb8edc940ab7b3a51",
+      "key_count": 651,
+      "note": "Sorted-key ainumbers-simple-v1 absence tree over the F2 registry/kernel key set (REGISTRY-TILES-BUILD-SPEC.md §4.4): tree_root + key_count committed so absence is proven against an anchored, consistency-checkable history. Derived by scripts/append-absence-lineage-record.mjs from the recomputed tree — never hand-authored."
+    },
+    {
+      "anchor_type": "ainumbers-absence-tree-v1",
+      "source": "registry-absence-tree",
+      "proofspec": "ainumbers-simple-v1",
+      "tree_root": "sha256:8fad027acf6ca283474ad614eebd9ba16f9a6dce86c2e3c557197c2f9447af44",
+      "key_count": 652,
+      "note": "Sorted-key ainumbers-simple-v1 absence tree over the F2 registry/kernel key set (REGISTRY-TILES-BUILD-SPEC.md §4.4): tree_root + key_count committed so absence is proven against an anchored, consistency-checkable history. Derived by scripts/append-absence-lineage-record.mjs from the recomputed tree — never hand-authored."
+    },
+    {
+      "anchor_type": "ainumbers-absence-tree-v1",
+      "source": "registry-absence-tree",
+      "proofspec": "ainumbers-simple-v1",
+      "tree_root": "sha256:6dbc1d34e289eee41e89ea6bdc82fe99cdaf48753b37089e59331af564252a37",
+      "key_count": 653,
+      "note": "Sorted-key ainumbers-simple-v1 absence tree over the F2 registry/kernel key set (REGISTRY-TILES-BUILD-SPEC.md §4.4): tree_root + key_count committed so absence is proven against an anchored, consistency-checkable history. Derived by scripts/append-absence-lineage-record.mjs from the recomputed tree — never hand-authored."
+    },
+    {
+      "anchor_type": "ainumbers-absence-tree-v1",
+      "source": "registry-absence-tree",
+      "proofspec": "ainumbers-simple-v1",
+      "tree_root": "sha256:d792eb035abe05ad155f3d0ed5f0d2fef38f0c3eaf94741a910c64989196c214",
+      "key_count": 653,
+      "note": "Sorted-key ainumbers-simple-v1 absence tree over the F2 registry/kernel key set (REGISTRY-TILES-BUILD-SPEC.md §4.4): tree_root + key_count committed so absence is proven against an anchored, consistency-checkable history. Derived by scripts/append-absence-lineage-record.mjs from the recomputed tree — never hand-authored."
+    },
+    {
+      "anchor_type": "ainumbers-absence-tree-v1",
+      "source": "registry-absence-tree",
+      "proofspec": "ainumbers-simple-v1",
+      "tree_root": "sha256:f7a28d722c2cb0763ac69c6354c15b7806dc8842cadca635e05b053dbec4625b",
+      "key_count": 654,
+      "note": "Sorted-key ainumbers-simple-v1 absence tree over the F2 registry/kernel key set (REGISTRY-TILES-BUILD-SPEC.md §4.4): tree_root + key_count committed so absence is proven against an anchored, consistency-checkable history. Derived by scripts/append-absence-lineage-record.mjs from the recomputed tree — never hand-authored."
+    },
+    {
+      "anchor_type": "ainumbers-absence-tree-v1",
+      "source": "registry-absence-tree",
+      "proofspec": "ainumbers-simple-v1",
+      "tree_root": "sha256:88f77939c30e966c1302c07cf96fabb0276a0d3771dcc5c6790987cf0fb1fefd",
+      "key_count": 654,
+      "note": "Sorted-key ainumbers-simple-v1 absence tree over the F2 registry/kernel key set (REGISTRY-TILES-BUILD-SPEC.md §4.4): tree_root + key_count committed so absence is proven against an anchored, consistency-checkable history. Derived by scripts/append-absence-lineage-record.mjs from the recomputed tree — never hand-authored."
+    },
+    {
+      "anchor_type": "ainumbers-absence-tree-v1",
+      "source": "registry-absence-tree",
+      "proofspec": "ainumbers-simple-v1",
+      "tree_root": "sha256:27d5da9643d2505c7392a9cbc00ce4104b67345cfd75c2e14248f57ff91cc30e",
+      "key_count": 655,
+      "note": "Sorted-key ainumbers-simple-v1 absence tree over the F2 registry/kernel key set (REGISTRY-TILES-BUILD-SPEC.md §4.4): tree_root + key_count committed so absence is proven against an anchored, consistency-checkable history. Derived by scripts/append-absence-lineage-record.mjs from the recomputed tree — never hand-authored."
+    },
+    {
+      "anchor_type": "ainumbers-absence-tree-v1",
+      "source": "registry-absence-tree",
+      "proofspec": "ainumbers-simple-v1",
+      "tree_root": "sha256:1bba82a85476207adbbbf1e2d1191a3f018f3a62b357011346378e20d61863b9",
+      "key_count": 656,
+      "note": "Sorted-key ainumbers-simple-v1 absence tree over the F2 registry/kernel key set (REGISTRY-TILES-BUILD-SPEC.md §4.4): tree_root + key_count committed so absence is proven against an anchored, consistency-checkable history. Derived by scripts/append-absence-lineage-record.mjs from the recomputed tree — never hand-authored."
+    },
+    {
+      "anchor_type": "ainumbers-absence-tree-v1",
+      "source": "registry-absence-tree",
+      "proofspec": "ainumbers-simple-v1",
+      "tree_root": "sha256:4c77c5d25863eed023b45349c950a08dcb35f81bf1107ced852a22f7f283788e",
+      "key_count": 656,
+      "note": "Sorted-key ainumbers-simple-v1 absence tree over the F2 registry/kernel key set (REGISTRY-TILES-BUILD-SPEC.md §4.4): tree_root + key_count committed so absence is proven against an anchored, consistency-checkable history. Derived by scripts/append-absence-lineage-record.mjs from the recomputed tree — never hand-authored."
+    },
+    {
+      "anchor_type": "ainumbers-absence-tree-v1",
+      "source": "registry-absence-tree",
+      "proofspec": "ainumbers-simple-v1",
+      "tree_root": "sha256:7b9b936a19e6258a7e57a9514b4152c3780f923e936216d87c467c8f5c082298",
+      "key_count": 657,
+      "note": "Sorted-key ainumbers-simple-v1 absence tree over the F2 registry/kernel key set (REGISTRY-TILES-BUILD-SPEC.md §4.4): tree_root + key_count committed so absence is proven against an anchored, consistency-checkable history. Derived by scripts/append-absence-lineage-record.mjs from the recomputed tree — never hand-authored."
+    },
+    {
+      "anchor_type": "ainumbers-absence-tree-v1",
+      "source": "registry-absence-tree",
+      "proofspec": "ainumbers-simple-v1",
+      "tree_root": "sha256:9da92dee78aad023a056e9ba63a39eb9b1932ca53e95f6387c6c8b88b881397c",
+      "key_count": 657,
+      "note": "Sorted-key ainumbers-simple-v1 absence tree over the F2 registry/kernel key set (REGISTRY-TILES-BUILD-SPEC.md §4.4): tree_root + key_count committed so absence is proven against an anchored, consistency-checkable history. Derived by scripts/append-absence-lineage-record.mjs from the recomputed tree — never hand-authored."
+    },
+    {
+      "anchor_type": "ainumbers-absence-tree-v1",
+      "source": "registry-absence-tree",
+      "proofspec": "ainumbers-simple-v1",
+      "tree_root": "sha256:bf9a0186d62675e2ad2f36d22652a44fbb87f8d8127e1226dbf8f3d4a19afeb2",
+      "key_count": 657,
+      "note": "Sorted-key ainumbers-simple-v1 absence tree over the F2 registry/kernel key set (REGISTRY-TILES-BUILD-SPEC.md §4.4): tree_root + key_count committed so absence is proven against an anchored, consistency-checkable history. Derived by scripts/append-absence-lineage-record.mjs from the recomputed tree — never hand-authored."
+    },
+    {
+      "anchor_type": "ainumbers-absence-tree-v1",
+      "source": "registry-absence-tree",
+      "proofspec": "ainumbers-simple-v1",
+      "tree_root": "sha256:e427d86bfc8d5ce6365b14c19a01848f02d7bb248f5bd66b29c289b7f2476e84",
+      "key_count": 657,
+      "note": "Sorted-key ainumbers-simple-v1 absence tree over the F2 registry/kernel key set (REGISTRY-TILES-BUILD-SPEC.md §4.4): tree_root + key_count committed so absence is proven against an anchored, consistency-checkable history. Derived by scripts/append-absence-lineage-record.mjs from the recomputed tree — never hand-authored."
     }
   ]
 }
