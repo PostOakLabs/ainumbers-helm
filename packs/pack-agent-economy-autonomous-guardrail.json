@@ -39,6 +39,10 @@
     {
       "from": "art-04-agent-identity-attestation-checker",
       "kind": "external"
+    },
+    {
+      "from": "art-32-a2a-agent-card-trust-chain-validator",
+      "kind": "external"
     }
   ],
   "steps_meta": [

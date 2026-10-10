@@ -18,7 +18,8 @@
 // module. `engines.node` in package.json already requires >=22.
 import { DatabaseSync } from "node:sqlite";
 import { createHash } from "node:crypto";
-import { cgCanon, assertIJson } from "./vendored/ocg/kernels/_hash.mjs";
+import { assertIJson } from "./vendored/ocg/kernels/_hash.mjs";
+import { recordCanonV1 } from "./record-canon-v1.mjs"; // helm record canonicalization v1 (frozen) — HELM-CANON-SPLIT-1
 
 const ART12_FIELDS = ["period_start", "period_end", "reference_db_version", "triggering_input_digest", "humans_involved"];
 
@@ -30,7 +31,7 @@ function sha256Hex(...parts) {
 
 function jcsBytes(obj) {
   assertIJson(obj);
-  return Buffer.from(JSON.stringify(cgCanon(obj)), "utf8");
+  return Buffer.from(recordCanonV1(obj), "utf8");
 }
 
 // node:sqlite's DatabaseSync has no .transaction() helper (unlike

@@ -33,6 +33,10 @@
   "workflow_manifest_digest": "sha256:9e5a8616417d309bcadc2c78703873d03e1d59226f65cb4905d6d635aa423cb1",
   "declared_inputs": [
     {
+      "from": "art-03-x402-settlement-modeler",
+      "kind": "external"
+    },
+    {
       "from": "art-60-agent-economy-runtime-fit-diagnostic",
       "kind": "external"
     }

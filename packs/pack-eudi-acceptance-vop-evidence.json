@@ -1,0 +1,49 @@
+{
+  "workflow_id": "pack-eudi-acceptance-vop-evidence",
+  "name": "EUDI Credential Acceptance and VoP Session Evidence",
+  "outcome": "Three independent computations a payment service provider runs over the same payee-verification surface. Step 1 scores eIDAS 2.0 credential acceptance readiness against the EUDI Wallet attestation profiles (art-13). Step 2 runs the verification-of-payee readiness diagnostic (art-548). Step 3 builds a hash-chained VoP session receipt over a declared attempt record (art-377). Each step computes from its own declared inputs; the order is analytical. EUDI Wallet member-state rollout is dated November 2026.",
+  "spec_version": "ocg-control-plane@1",
+  "manifest": {
+    "manifest_version": "1",
+    "workflow_id": "pack-eudi-acceptance-vop-evidence",
+    "trigger": {
+      "type": "manual"
+    },
+    "nodes": [
+      {
+        "node_id": "n1",
+        "kernel_id": "art-13-eudi-wallet-credential-readiness-checker",
+        "kernel_digest": "sha256:127c97da18f98fb9a3db038f6b7dee0dc52653f7e8d0145b0eb94e0f428c1857"
+      },
+      {
+        "node_id": "n2",
+        "kernel_id": "art-548-vop-readiness-diagnostic",
+        "kernel_digest": "sha256:9d9df2ce31e5a6665cd88ed8ad73de1b8f1ca8cb79273dab000d5ea53ef8fa76"
+      },
+      {
+        "node_id": "n3",
+        "kernel_id": "art-377-build-vop-session-receipt",
+        "kernel_digest": "sha256:0a05ff3c98289d522ac8c33f9348e44f835c6ace45f93a2e25e4fa6d7871f317"
+      }
+    ],
+    "connectors": [],
+    "gates": [],
+    "actions": []
+  },
+  "workflow_manifest_digest": "sha256:aefb168ab998919bee5d90c9e7b62aefd876437d8347324d891b6ff4d207dc1e",
+  "declared_inputs": [],
+  "steps_meta": [
+    {
+      "node_id": "n1",
+      "data_classification": "compute"
+    },
+    {
+      "node_id": "n2",
+      "data_classification": "compute"
+    },
+    {
+      "node_id": "n3",
+      "data_classification": "compute"
+    }
+  ]
+}

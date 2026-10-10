@@ -1,8 +1,13 @@
 {
-  "pinnedSha": "0914b432182a6ea883eb250e4c4523043113739e",
+  "pinnedSha": "b57f9ff9f87b782a3a088c15eeede82bda48de94",
   "generatedFrom": "hub/vendored/ocg/chaingraph.json",
-  "compiledCount": 376,
+  "compiledCount": 381,
   "chainlessCount": 8,
-  "skippedCount": 0,
-  "skips": []
+  "skippedCount": 1,
+  "skips": [
+    {
+      "name": "aml-consolidation",
+      "reason": "non-kernel or unvendored step(s): 110-customer-risk-rating, 485-amlr-obliged-entity-scope-mapper"
+    }
+  ]
 }

@@ -18,14 +18,14 @@
       {
         "node_id": "n2",
         "kernel_id": "art-596-ap2-x402-cart-correlation",
-        "kernel_digest": "sha256:bd768b21783024010879049cb1560f975da0ac0a210a9fde5da62dca74523c81"
+        "kernel_digest": "sha256:ca67c63df5452d0fd9bf794ae06e15c4e0b373729431053ac2e47b04792153ab"
       }
     ],
     "connectors": [],
     "gates": [],
     "actions": []
   },
-  "workflow_manifest_digest": "sha256:71670fcdbcad757aaf9cd4cab1d53130cfcb4e7040973c0fd82dcd09d98f20d1",
+  "workflow_manifest_digest": "sha256:d8bb860ad7aa6b83d59e0be89eb971f5a0827f0390cff9776fe4909c037bbe84",
   "declared_inputs": [],
   "steps_meta": [
     {

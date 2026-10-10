@@ -37,6 +37,10 @@
       "kind": "external"
     },
     {
+      "from": "art-02-agent-spend-policy-simulator",
+      "kind": "external"
+    },
+    {
       "from": "art-13-eudi-wallet-credential-readiness-checker",
       "kind": "external"
     }

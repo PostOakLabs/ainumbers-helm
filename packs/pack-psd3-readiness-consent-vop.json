@@ -1,0 +1,49 @@
+{
+  "workflow_id": "pack-psd3-readiness-consent-vop",
+  "name": "PSD3 Readiness, Consent Stress and VoP Match Rate",
+  "outcome": "Three independent computations over an open-banking payment-initiation surface. Step 1 scores the six-domain PSD3 and PSR readiness rubric and produces a prioritised gap table (art-14). Step 2 stresses the consent-lifecycle state machine by Monte Carlo and checks the ASPSP availability threshold (sim-07). Step 3 analyses batch payee name-match rates at the declared strictness (art-11). Each step computes from its own declared inputs; the order is analytical. The graph dates PSD3 readiness at 2027-06-01.",
+  "spec_version": "ocg-control-plane@1",
+  "manifest": {
+    "manifest_version": "1",
+    "workflow_id": "pack-psd3-readiness-consent-vop",
+    "trigger": {
+      "type": "manual"
+    },
+    "nodes": [
+      {
+        "node_id": "n1",
+        "kernel_id": "art-14-psd3-psr-readiness-checker",
+        "kernel_digest": "sha256:3826069610c670c6d4dc65d677690bc66f56d815d0e4d6085fa20f0c7c59e463"
+      },
+      {
+        "node_id": "n2",
+        "kernel_id": "sim-07-open-banking-consent-flow-stress",
+        "kernel_digest": "sha256:0b2c97e4308777a28ab7fc66df7d263499547d2376a2465fc7b415effd195189"
+      },
+      {
+        "node_id": "n3",
+        "kernel_id": "art-11-vop-batch-match-rate-analyser",
+        "kernel_digest": "sha256:dc6cecdac12b5053afc065404fa713ef895d66b7721806ce245957a45a7011c6"
+      }
+    ],
+    "connectors": [],
+    "gates": [],
+    "actions": []
+  },
+  "workflow_manifest_digest": "sha256:5d0fec31e3e0e4cea0c93c129787d153b3fdd50631b549ed70510ecc7c3bce26",
+  "declared_inputs": [],
+  "steps_meta": [
+    {
+      "node_id": "n1",
+      "data_classification": "compute"
+    },
+    {
+      "node_id": "n2",
+      "data_classification": "compute"
+    },
+    {
+      "node_id": "n3",
+      "data_classification": "compute"
+    }
+  ]
+}

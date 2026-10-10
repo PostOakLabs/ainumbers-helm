@@ -10,14 +10,15 @@
 import { createHash } from "node:crypto";
 import { didKeyToPublicKey, sign, verify } from "./vendored/ocg/kernels/_proof.mjs";
 import { evaluateHaGate } from "./vendored/ocg/kernels/_hagate.mjs";
-import { cgCanon, assertIJson } from "./vendored/ocg/kernels/_hash.mjs";
+import { assertIJson } from "./vendored/ocg/kernels/_hash.mjs";
+import { recordCanonV1 } from "./record-canon-v1.mjs"; // helm record canonicalization v1 (frozen) — HELM-CANON-SPLIT-1
 import { recordsForSubject, appendHaRecord, addCountersignature, setMakerSignature, getSlot } from "./ha-store.mjs";
 import { runKernelNode } from "./kernel-runner.mjs";
 import { planSteps, getMemoizedStep, stepInputDigest } from "./run.mjs";
 
 function jcsDigestHex(obj) {
   assertIJson(obj);
-  return createHash("sha256").update(JSON.stringify(cgCanon(obj))).digest("hex");
+  return createHash("sha256").update(recordCanonV1(obj)).digest("hex");
 }
 
 // Signs an unsigned §27.2 record with the given identity (either helmd's own

@@ -9,7 +9,8 @@
 // cadence and fire-and-forget discipline as checkpoint.mjs's boot-time
 // advance (index.mjs) — never gates daemon readiness on this write finishing.
 import { createHash } from "node:crypto";
-import { cgCanon, assertIJson, executionHash } from "./vendored/ocg/kernels/_hash.mjs";
+import { assertIJson, executionHash } from "./vendored/ocg/kernels/_hash.mjs";
+import { recordCanonV1 } from "./record-canon-v1.mjs"; // helm record canonicalization v1 (frozen) — HELM-CANON-SPLIT-1
 import { buildHead, signHead, headHash, verifyChain, didKeyToPublicKey } from "./vendored/ocg/kernels/_head.mjs";
 import { streamHeads } from "./journal.mjs";
 
@@ -20,7 +21,7 @@ const STREAM = "helmd:state-snapshot";
 
 function jcsSha256Hex(obj) {
   assertIJson(obj);
-  return createHash("sha256").update(JSON.stringify(cgCanon(obj))).digest("hex");
+  return createHash("sha256").update(recordCanonV1(obj)).digest("hex");
 }
 
 export function initStateSnapshotTables(db) {

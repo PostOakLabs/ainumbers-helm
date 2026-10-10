@@ -620,8 +620,18 @@ import * as art688    from './art-688-education-funding-gap-calculator.kernel.mj
 import * as art689    from './art-689-pack-dependency-map.kernel.mjs';
 import * as art69     from './art-69-cbam-embedded-emissions-calculator.kernel.mjs';
 import * as art691    from './art-691-regulatory-obligations-register.kernel.mjs';
+import * as art692    from './art-692-close-posting-lineage.kernel.mjs';
+import * as art693    from './art-693-isa530-audit-sampling-mus.kernel.mjs';
+import * as art699    from './art-699-x402-permit2-evidence-recomputer.kernel.mjs';
 import * as art70     from './art-70-cbam-default-value-resolver.kernel.mjs';
+import * as art700    from './art-700-authorization-payload-linter.kernel.mjs';
+import * as art701    from './art-701-three-way-invoice-match.kernel.mjs';
+import * as art702    from './art-702-runway-goal-path.kernel.mjs';
+import * as art704    from './art-704-ai-token-spend.kernel.mjs';
 import * as art71     from './art-71-cbam-certificate-cost-engine.kernel.mjs';
+import * as art711    from './art-711-sco60-crypto-asset-exposure-classifier-v2.kernel.mjs';
+import * as art712    from './art-712-workforce-board-roi.kernel.mjs';
+import * as art713    from './art-713-scorp-election-break-even.kernel.mjs';
 import * as art72     from './art-72-cbam-precursor-emissions-aggregator.kernel.mjs';
 import * as art73     from './art-73-taxonomy-alignment-scorer.kernel.mjs';
 import * as art74     from './art-74-taxonomy-kpi-gar-aggregator.kernel.mjs';
@@ -1286,8 +1296,18 @@ export const KERNELS = {
   'art-689-pack-dependency-map':                                art689,
   'art-69-cbam-embedded-emissions-calculator':                  art69,
   'art-691-regulatory-obligations-register':                    art691,
+  'art-692-close-posting-lineage':                              art692,
+  'art-693-isa530-audit-sampling-mus':                          art693,
+  'art-699-x402-permit2-evidence-recomputer':                   art699,
   'art-70-cbam-default-value-resolver':                         art70,
+  'art-700-authorization-payload-linter':                       art700,
+  'art-701-three-way-invoice-match':                            art701,
+  'art-702-runway-goal-path':                                   art702,
+  'art-704-ai-token-spend':                                     art704,
   'art-71-cbam-certificate-cost-engine':                        art71,
+  'art-711-sco60-crypto-asset-exposure-classifier-v2':          art711,
+  'art-712-workforce-board-roi':                                art712,
+  'art-713-scorp-election-break-even':                          art713,
   'art-72-cbam-precursor-emissions-aggregator':                 art72,
   'art-73-taxonomy-alignment-scorer':                           art73,
   'art-74-taxonomy-kpi-gar-aggregator':                         art74,

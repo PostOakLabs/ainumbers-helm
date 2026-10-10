@@ -27,7 +27,16 @@ import { loadContract } from "../hub/connector.mjs";
 const HERE = dirname(fileURLToPath(import.meta.url));
 const ROOT = join(HERE, "..");
 const VENDORED = join(ROOT, "hub", "vendored", "ocg");
-const PACKS_DIR = join(ROOT, "packs");
+// HELM-CANON-SPLIT-1 (REPORT-2 §3.4): HELM_PACKS_DIR redirects the output to a
+// staging folder — used ONLY by compile-packs.test.mjs so the suite compiles
+// into a temp dir instead of wiping + rewriting packs/ in-repo while
+// compile-parity-gate.test.mjs reads packs/ concurrently (the CI-only race
+// that nondeterministically reddened 2-4 parity-gate tests per Monday run).
+// Production behavior (no env var) is unchanged: packs/ committed in the SAME
+// push as a vendor.mjs re-vendor, per this file header.
+const PACKS_DIR = process.env.HELM_PACKS_DIR
+  ? join(process.env.HELM_PACKS_DIR)
+  : join(ROOT, "packs");
 const MANIFEST_SCHEMA = JSON.parse(
   readFileSync(join(ROOT, "schema", "workflow-manifest.schema.json"), "utf8")
 );

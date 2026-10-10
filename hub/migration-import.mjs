@@ -20,7 +20,8 @@ import { createHash } from "node:crypto";
 import { readFileSync } from "node:fs";
 import { join, dirname } from "node:path";
 import { fileURLToPath } from "node:url";
-import { cgCanon, assertIJson } from "./vendored/ocg/kernels/_hash.mjs";
+import { assertIJson } from "./vendored/ocg/kernels/_hash.mjs";
+import { recordCanonV1 } from "./record-canon-v1.mjs"; // helm record canonicalization v1 (frozen) — HELM-CANON-SPLIT-1
 import { appendEntry, replayVerify } from "./journal.mjs";
 import { vaultSet, vaultGet } from "./vault.mjs";
 import { validate } from "../scripts/lib/schema-validator.mjs";
@@ -35,7 +36,7 @@ function sha256Hex(bytes) {
 
 function entryBytes(entry) {
   assertIJson(entry);
-  return Buffer.from(JSON.stringify(cgCanon(entry)), "utf8");
+  return Buffer.from(recordCanonV1(entry), "utf8");
 }
 
 // Mirrors ui/lib/migration.mjs's digestEntries() exactly — same seq scheme

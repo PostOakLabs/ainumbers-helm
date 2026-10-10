@@ -6,7 +6,8 @@
 // this module doesn't own numbering so H4's run engine can key checkpoints to
 // its own lifecycle without a second source of truth for "what's next".
 import { createHash } from "node:crypto";
-import { cgCanon, assertIJson } from "./vendored/ocg/kernels/_hash.mjs";
+import { assertIJson } from "./vendored/ocg/kernels/_hash.mjs";
+import { recordCanonV1 } from "./record-canon-v1.mjs"; // helm record canonicalization v1 (frozen) — HELM-CANON-SPLIT-1
 import { buildStatement, emitEnvelope, verifyEnvelope, helmPredicateType } from "./envelope.mjs";
 import { streamHeads } from "./journal.mjs";
 import { anchorForCheckpoint, toCheckpointAnchorEntry } from "./anchor-client.mjs";
@@ -14,7 +15,7 @@ import { log } from "./log.mjs";
 
 function jcsDigestHex(obj) {
   assertIJson(obj);
-  return createHash("sha256").update(JSON.stringify(cgCanon(obj))).digest("hex");
+  return createHash("sha256").update(recordCanonV1(obj)).digest("hex");
 }
 
 // anchors: array of anchor-client.mjs results ({type, ...}), or [] — checkpoints

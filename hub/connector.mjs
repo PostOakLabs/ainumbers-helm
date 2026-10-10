@@ -19,7 +19,8 @@ import { fileURLToPath } from "node:url";
 import { lookup as dnsLookup } from "node:dns/promises";
 import dns from "node:dns";
 import { isIP } from "node:net";
-import { cgCanon, assertIJson } from "./vendored/ocg/kernels/_hash.mjs";
+import { assertIJson, jcsStringify } from "./vendored/ocg/kernels/_hash.mjs";
+import { recordCanonV1 } from "./record-canon-v1.mjs"; // helm record canonicalization v1 (frozen) — HELM-CANON-SPLIT-1
 import { validate } from "../scripts/lib/schema-validator.mjs";
 import { appendEntry } from "./journal.mjs";
 import { attachCredential } from "./credential-provider.mjs";
@@ -29,9 +30,26 @@ const CONTRACT_SCHEMA = JSON.parse(
   readFileSync(join(HERE, "..", "schema", "connector_contract.schema.json"), "utf8")
 );
 
-function jcsDigestHex(obj) {
+// HELM-CANON-SPLIT-1 verify-class digest (ruling 2026-10-01): connector
+// contracts come from OUTSIDE helm, so `contractDigest` is taken over the
+// vendored RFC 8785 serializer (`jcsStringify`) FIRST. If the frozen v1
+// (pre-2026-10 helm) bytes differ — only possible for a contract carrying
+// array-index member names or a literal `__proto__` member — the returned
+// `canonicalization` says `"legacy-v1-divergent"`: a DISTINCT verdict, never a
+// plain unqualified pass. Ordinary contracts get `"rfc8785"` (the two
+// serializers agree byte-for-byte).
+function verifyClassDigestHex(obj) {
   assertIJson(obj);
-  return createHash("sha256").update(JSON.stringify(cgCanon(obj))).digest("hex");
+  const jcsHex = createHash("sha256").update(jcsStringify(obj), "utf8").digest("hex");
+  const v1Hex = createHash("sha256").update(recordCanonV1(obj), "utf8").digest("hex");
+  return { digest: jcsHex, canonicalization: jcsHex === v1Hex ? "rfc8785" : "legacy-v1-divergent" };
+}
+
+// request_digest journals helm's OWN egress decisions — a stored helm record,
+// so it hashes with the frozen v1 canonicalization (never migrated).
+function recordDigestHex(obj) {
+  assertIJson(obj);
+  return createHash("sha256").update(recordCanonV1(obj), "utf8").digest("hex");
 }
 
 function sha256ref(hex) {
@@ -46,7 +64,8 @@ export function loadContract(contractPath) {
   if (errs.length) {
     throw new Error(`connector contract invalid (${contractPath}): ${errs.join("; ")}`);
   }
-  return { contract: raw, contractDigest: sha256ref(jcsDigestHex(raw)) };
+  const { digest, canonicalization } = verifyClassDigestHex(raw);
+  return { contract: raw, contractDigest: sha256ref(digest), canonicalization };
 }
 
 // Host+method match against the contract's own allowlist. No path matching,
@@ -280,7 +299,7 @@ export async function performEgress(db, { contract, connectorId, url, method, he
   for (;;) {
     const host = new URL(currentUrl).host;
     const hostname = new URL(currentUrl).hostname;
-    const requestDigest = sha256ref(jcsDigestHex({ url: currentUrl, method, headerNames: Object.keys(resolvedHeaders).sort() }));
+    const requestDigest = sha256ref(recordDigestHex({ url: currentUrl, method, headerNames: Object.keys(resolvedHeaders).sort() }));
 
     if (!assertEgressAllowed(contract, { host, method })) {
       recordEgress(db, { connectorId, destinationHost: host, operation: method, decision: "blocked", requestDigest });

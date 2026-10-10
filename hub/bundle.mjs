@@ -9,7 +9,8 @@ import { readFileSync } from "node:fs";
 import { createHash } from "node:crypto";
 import { join, dirname } from "node:path";
 import { fileURLToPath } from "node:url";
-import { cgCanon, assertIJson } from "./vendored/ocg/kernels/_hash.mjs";
+import { assertIJson } from "./vendored/ocg/kernels/_hash.mjs";
+import { recordCanonV1 } from "./record-canon-v1.mjs"; // helm record canonicalization v1 (frozen) — HELM-CANON-SPLIT-1
 import { buildStatement, emitEnvelope, verifyEnvelope, helmPredicateType } from "./envelope.mjs";
 import { validate } from "../scripts/lib/schema-validator.mjs";
 import { verifyBundle as verifyBundleOffline, verifyAnchorBinding, EVIDENCE_ENVELOPE_RECEIPT_KIND } from "../ui/lib/verify-bundle.mjs";
@@ -86,7 +87,7 @@ function assertRedacted(obj, path = "$") {
 
 function jcsDigestHex(obj) {
   assertIJson(obj);
-  return createHash("sha256").update(JSON.stringify(cgCanon(obj))).digest("hex");
+  return createHash("sha256").update(recordCanonV1(obj)).digest("hex");
 }
 
 function sha256ref(hex) {

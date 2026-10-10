@@ -1,0 +1,49 @@
+{
+  "workflow_id": "pack-x402-permit2-sponsored-spend-evidence",
+  "name": "x402 Permit2 Sponsored Spend Evidence Pack",
+  "outcome": "Linear three-step evidence pipeline for an x402 Permit2 payment that also carries the gas-sponsoring approval extension, where the payer signs a second message approving the transfer contract and a facilitator pays the gas to submit it. The first step recomputes the Permit2 transfer digest and, when the extension is present, emits the sponsored-approval facts and a handoff in the approval verifier's input shape; the second step recovers the transfer signer; the third recomputes the approval digest and reports whether its signer binds to the declared owner. The three outputs compose into an evidence pack covering both signatures. This is an evidence bundle and never a settlement proof: no chain is read, nothing is submitted, and the approval handoff carries nulls rather than a guess when the token domain name and version were not declared.",
+  "spec_version": "ocg-control-plane@1",
+  "manifest": {
+    "manifest_version": "1",
+    "workflow_id": "pack-x402-permit2-sponsored-spend-evidence",
+    "trigger": {
+      "type": "manual"
+    },
+    "nodes": [
+      {
+        "node_id": "n1",
+        "kernel_id": "art-699-x402-permit2-evidence-recomputer",
+        "kernel_digest": "sha256:0c36a136f75d75a9dbc83a6d6230e082a4d33eb3fb43c2c52de58b9dcc2b39f9"
+      },
+      {
+        "node_id": "n2",
+        "kernel_id": "art-591-x402-signer-recovery-verifier",
+        "kernel_digest": "sha256:4dfa2047d3aeebb35c0825fa07d54d487c7b254d0ad031e2d0c360a3736b5ab7"
+      },
+      {
+        "node_id": "n3",
+        "kernel_id": "art-612-erc2612-permit-binding-verifier",
+        "kernel_digest": "sha256:a1bb4dd8ffefcc70f0f060116f108f2ff146c650f95ac1ed8d962c838b721ffd"
+      }
+    ],
+    "connectors": [],
+    "gates": [],
+    "actions": []
+  },
+  "workflow_manifest_digest": "sha256:8432f9143836f8fc4a4a01d1194d399828ccfd4f2b6eb63ac15ca2d464a9607f",
+  "declared_inputs": [],
+  "steps_meta": [
+    {
+      "node_id": "n1",
+      "data_classification": "compute"
+    },
+    {
+      "node_id": "n2",
+      "data_classification": "compute"
+    },
+    {
+      "node_id": "n3",
+      "data_classification": "compute"
+    }
+  ]
+}

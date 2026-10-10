@@ -33,7 +33,15 @@
   "workflow_manifest_digest": "sha256:78f86167477e39a43c27d653d5d3cbe772f9e0481febd538593e89583fbbe2b0",
   "declared_inputs": [
     {
+      "from": "art-01-ap2-mandate-chain-validator",
+      "kind": "external"
+    },
+    {
       "from": "art-60-agent-economy-runtime-fit-diagnostic",
+      "kind": "external"
+    },
+    {
+      "from": "art-61-x402-batch-settlement-reconciler",
       "kind": "external"
     }
   ],

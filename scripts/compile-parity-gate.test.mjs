@@ -83,7 +83,14 @@ test("compile-parity-gate: a §25 private-input node (art-413) is sourced from i
     writeFileSync(join(stagedDir, victimFile), JSON.stringify(victim, null, 2) + "\n");
 
     const result = await runParityGate({ packsDir: stagedDir, db });
-    assert.equal(result.hardErrors, 0, `expected zero hard errors, got: ${JSON.stringify(result.divergences, null, 2)}`);
+    // REPORT-2 §3.1(3) message fix: the old message printed result.divergences
+    // (always [] for a hard error) instead of pointing at the hard errors.
+    // The gate prints each hard error's own detail line to stderr as it counts it.
+    assert.equal(
+      result.hardErrors,
+      0,
+      `expected zero hard errors (each hard error's detail line is printed by the gate to stderr as it is counted; divergences: ${JSON.stringify(result.divergences)})`
+    );
     assert.equal(result.diverged, 0);
     assert.equal(result.matched, result.checkedNodes);
   } finally {
@@ -97,15 +104,19 @@ test("compile-parity-gate: a §25 kernel_id with no registered witness assembler
   const { db, tmpDir } = freshDb();
   const stagedDir = mkdtempSync(join(tmpdir(), "helm-compile-parity-privin-noassm-"));
   try {
-    // art-548-vop-readiness-diagnostic IS vendored (has a kernel + fixtures + disclosure
-    // file, private_input_profile set) but genuinely has NO entry in private-input-witness.mjs's
-    // ASSEMBLERS map — unlike art-413/414/415/529, nobody has written its witness-assembly
-    // function yet. sourcePrivateWitness() must hard-error on the missing-assembler branch
-    // before ever touching the disclosure fixture, matching this test's title exactly.
-    assert.ok(KERNELS["art-548-vop-readiness-diagnostic"], "art-548 must be vendored for this test to be meaningful");
+    // art-359-idv-session-receipt-builder IS vendored (kernel + fixtures file,
+    // private_input_profile set) but genuinely has NO entry in
+    // private-input-witness.mjs's ASSEMBLERS map. (This test previously pinned
+    // art-548-vop-readiness-diagnostic in that role; HELM-CANON-SPLIT-1
+    // registered an art-548 assembler for the pack-eudi-acceptance-vop-evidence
+    // chain — REPORT-2 §3.1 — so the "no registered assembler" role moved to
+    // the next §25 kernel nobody has written a witness-assembly function for.)
+    // sourcePrivateWitness() must hard-error on the missing-assembler branch
+    // before ever touching the disclosure fixture, matching this test's title.
+    assert.ok(KERNELS["art-359-idv-session-receipt-builder"], "art-359 must be vendored for this test to be meaningful");
     assert.ok(
-      !hasWitnessAssembler("art-548-vop-readiness-diagnostic"),
-      "art-548 must have no registered assembler for this test to be meaningful"
+      !hasWitnessAssembler("art-359-idv-session-receipt-builder"),
+      "art-359 must have no registered assembler for this test to be meaningful"
     );
 
     const packFiles = readdirSync(PACKS_DIR).filter((f) => f !== "INDEX.json");
@@ -113,8 +124,8 @@ test("compile-parity-gate: a §25 kernel_id with no registered witness assembler
     const victim = JSON.parse(readFileSync(join(PACKS_DIR, victimFile), "utf8"));
     victim.manifest.nodes[0] = {
       ...victim.manifest.nodes[0],
-      node_id: "test_privin_art548",
-      kernel_id: "art-548-vop-readiness-diagnostic",
+      node_id: "test_privin_noassembler",
+      kernel_id: "art-359-idv-session-receipt-builder",
       kernel_digest: "sha256:" + "0".repeat(64),
       verified: true,
     };

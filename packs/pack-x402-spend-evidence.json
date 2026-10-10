@@ -31,7 +31,12 @@
     "actions": []
   },
   "workflow_manifest_digest": "sha256:366b7457f7924cdbd31f52621d69f973ded351164d5d39e8b908c2211fd05ded",
-  "declared_inputs": [],
+  "declared_inputs": [
+    {
+      "from": "art-700-authorization-payload-linter",
+      "kind": "external"
+    }
+  ],
   "steps_meta": [
     {
       "node_id": "n1",

@@ -15,7 +15,8 @@ import { readFileSync } from "node:fs";
 import { join, dirname } from "node:path";
 import { fileURLToPath } from "node:url";
 import { createHash } from "node:crypto";
-import { cgCanon, assertIJson } from "./vendored/ocg/kernels/_hash.mjs";
+import { assertIJson } from "./vendored/ocg/kernels/_hash.mjs";
+import { recordCanonV1 } from "./record-canon-v1.mjs"; // helm record canonicalization v1 (frozen) — HELM-CANON-SPLIT-1
 import { validate } from "../scripts/lib/schema-validator.mjs";
 import { isConformantEvidence } from "./vendored/ocg/kernels/_hagate.mjs";
 
@@ -27,7 +28,7 @@ const HA_RECORD_SCHEMA = VENDORED_SCHEMA.$defs.humanAccountabilityRecord;
 
 function jcsDigestHex(obj) {
   assertIJson(obj);
-  return createHash("sha256").update(JSON.stringify(cgCanon(obj))).digest("hex");
+  return createHash("sha256").update(recordCanonV1(obj)).digest("hex");
 }
 
 export function initHaTables(db) {

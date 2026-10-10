@@ -32,7 +32,20 @@
     "actions": []
   },
   "workflow_manifest_digest": "sha256:4b1828dc079c863d8fd917cf87868f36dc69d98f39ecb198aaf0eba7839bb684",
-  "declared_inputs": [],
+  "declared_inputs": [
+    {
+      "from": "art-02-agent-spend-policy-simulator",
+      "kind": "external"
+    },
+    {
+      "from": "art-12-acp-checkout-conformance-validator",
+      "kind": "external"
+    },
+    {
+      "from": "art-36-tempo-mpp-agent-mandate",
+      "kind": "external"
+    }
+  ],
   "steps_meta": [
     {
       "node_id": "n1",
