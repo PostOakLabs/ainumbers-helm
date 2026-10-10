@@ -11,13 +11,25 @@
 // ha-gate.mjs's subjectHashFor bind a gate to it with zero evaluator change
 // (§3.2).
 import { createHash } from "node:crypto";
-import { cgCanon, assertIJson } from "./vendored/ocg/kernels/_hash.mjs";
+import { assertIJson, jcsStringify } from "./vendored/ocg/kernels/_hash.mjs";
+import { recordCanonV1 } from "./record-canon-v1.mjs";
 
 const SHA256REF = /^sha256:[0-9a-f]{64}$/;
 
-function jcsDigestHex(obj) {
+// HELM-CANON-SPLIT-1 verify-class path (ruling 2026-10-01): the bound artifact
+// comes from OUTSIDE helm (the site/Worker produced the three pinned digests),
+// so the execution_hash is taken over the vendored RFC 8785 serializer
+// (`jcsStringify`) FIRST. If the v1 (frozen pre-2026-10 helm) bytes differ —
+// only possible for objects with array-index member names or a literal
+// `__proto__` member — the result carries the DISTINCT verdict
+// `canonicalization: "legacy-v1-divergent"`; it is never reported as a plain,
+// unqualified verification. For every ordinary object the two serializers agree
+// and the verdict is "rfc8785".
+function verifyClassDigestHex(obj) {
   assertIJson(obj);
-  return createHash("sha256").update(JSON.stringify(cgCanon(obj))).digest("hex");
+  const jcsHex = createHash("sha256").update(jcsStringify(obj), "utf8").digest("hex");
+  const v1Hex = createHash("sha256").update(recordCanonV1(obj), "utf8").digest("hex");
+  return { digest: jcsHex, canonicalization: jcsHex === v1Hex ? "rfc8785" : "legacy-v1-divergent" };
 }
 
 export async function runAttestedArtifact(step) {
@@ -33,12 +45,13 @@ export async function runAttestedArtifact(step) {
       throw new Error(`attested artifact runner: ${label} is not a well-formed sha256ref for artifact_id "${artifact_id}"`);
     }
   }
-  const executionHash = jcsDigestHex({ tool_ref, inputs_digest, artifact });
+  const { digest: executionHash, canonicalization } = verifyClassDigestHex({ tool_ref, inputs_digest, artifact });
   return {
     trust_label: "hash_verified",
     artifact_id,
     tool_ref,
     inputs_digest,
     artifact: { ...artifact, execution_hash: executionHash },
+    canonicalization,
   };
 }

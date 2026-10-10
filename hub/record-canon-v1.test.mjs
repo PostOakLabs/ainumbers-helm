@@ -16,13 +16,16 @@
 import { test } from "node:test";
 import assert from "node:assert/strict";
 import { readFileSync } from "node:fs";
-import { createHash } from "node:crypto";
+import { createHash as sha } from "node:crypto";
 import { join, dirname } from "node:path";
 import { fileURLToPath } from "node:url";
 import { recordCanonV1 } from "./record-canon-v1.mjs";
 import { openJournal, replayVerify } from "./journal.mjs";
 import { initHaTables, getRecordById, getSlot } from "./ha-store.mjs";
 import { verifyHaRecordSignature, verifyBundleDigestSignature } from "./ha-gate.mjs";
+import { runAttestedArtifact } from "./attested-artifact-runner.mjs";
+import { loadContract } from "./connector.mjs";
+import { jcsStringify } from "./vendored/ocg/kernels/_hash.mjs";
 
 const HERE = dirname(fileURLToPath(import.meta.url));
 const FIXTURES = join(HERE, "fixtures", "canon-v1");
@@ -57,7 +60,7 @@ function rebuildDb(fixture) {
 }
 
 function entryDigestHex(entryJson) {
-  return createHash("sha256").update(recordCanonV1(JSON.parse(entryJson)), "utf8").digest("hex");
+  return sha("sha256").update(recordCanonV1(JSON.parse(entryJson)), "utf8").digest("hex");
 }
 
 test("record-canon-v1: exact v1 bytes for the pin vectors (pre-911cfe38 code, computed at the old pin)", () => {
@@ -127,4 +130,47 @@ test("record-canon-v1: old-pin countersigned HA record still verifies cryptograp
   } finally {
     db.close();
   }
+});
+
+// Step-6 verify paths (ruling 2026-10-01): artifacts from the site/Worker are
+// hashed jcs-first with a DISTINCT legacy verdict on divergence, never a plain
+// unqualified pass.
+const sha256hex = (s) => sha("sha256").update(s, "utf8").digest("hex");
+const attestedStep = (toolRefExtra) => ({
+  kind: "attested_artifacts",
+  item: {
+    artifact_id: "a1",
+    tool_ref: { manifest_digest: "sha256:" + "1".repeat(64), ...toolRefExtra },
+    inputs_digest: "sha256:" + "2".repeat(64),
+    artifact: { content_type: "application/json", content_digest: "sha256:" + "3".repeat(64) },
+  },
+});
+
+test("record-canon-v1: attested-artifact verify path reports rfc8785 for ordinary objects", async () => {
+  const out = await runAttestedArtifact(attestedStep({}));
+  assert.equal(out.canonicalization, "rfc8785");
+  // The digest is the RFC 8785 preimage (site/Worker parity).
+  assert.equal(
+    out.artifact.execution_hash,
+    sha256hex(jcsStringify({ tool_ref: attestedStep({}).item.tool_ref, inputs_digest: attestedStep({}).item.inputs_digest, artifact: attestedStep({}).item.artifact }))
+  );
+});
+
+test("record-canon-v1: attested-artifact verify path reports the DISTINCT legacy verdict when v1 bytes differ", async () => {
+  // An array-index member name inside the hashed object is exactly the case
+  // where jcsStringify and the frozen v1 serializer disagree.
+  const out = await runAttestedArtifact(attestedStep({ "source_index": { 9: 1, 10: 2 } }));
+  assert.equal(out.canonicalization, "legacy-v1-divergent");
+  assert.equal(out.trust_label, "hash_verified");
+  assert.equal(
+    out.artifact.execution_hash,
+    sha256hex(jcsStringify({ tool_ref: { manifest_digest: "sha256:" + "1".repeat(64), source_index: { 9: 1, 10: 2 } }, inputs_digest: "sha256:" + "2".repeat(64), artifact: { content_type: "application/json", content_digest: "sha256:" + "3".repeat(64) } }))
+  );
+});
+
+test("record-canon-v1: connector contract verify path classifies a real contract (rfc8785; digest reproducible)", () => {
+  // Real contract shipped with helm — plain I-JSON, no divergent members.
+  const { contractDigest, canonicalization } = loadContract(join(import.meta.dirname, "connectors", "google-drive-fetch.contract.json"));
+  assert.equal(canonicalization, "rfc8785");
+  assert.match(contractDigest, /^sha256:[0-9a-f]{64}$/);
 });
