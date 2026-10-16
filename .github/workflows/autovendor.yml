@@ -142,6 +142,20 @@ jobs:
           permission-pull-requests: write
           permission-contents: write
 
+      # Same Secret Service session ci.yml gives the suite. Without it the
+      # doctor/vault tests (signing_key_vault_tier, helmd port, passphrase_b64
+      # file-fallback) see no linux-secret-tool backend and fail only here.
+      - name: install Secret Service (libsecret + gnome-keyring)
+        if: steps.plan.outputs.proceed == 'live'
+        run: sudo apt-get update -qq && sudo apt-get install -y -qq gnome-keyring libsecret-tools dbus-x11
+      - name: start + unlock a Secret Service session (dbus + gnome-keyring)
+        if: steps.plan.outputs.proceed == 'live'
+        run: |
+          eval "$(dbus-launch --sh-syntax)"
+          echo "DBUS_SESSION_BUS_ADDRESS=$DBUS_SESSION_BUS_ADDRESS" >> "$GITHUB_ENV"
+          eval "$(printf '\n' | gnome-keyring-daemon --unlock --components=secrets)"
+          echo "GNOME_KEYRING_CONTROL=$GNOME_KEYRING_CONTROL" >> "$GITHUB_ENV"
+
       # One gate step, ordered: pin bump -> vendor -> verify -> suite. Any
       # failure stops the job here, before a branch or PR can exist, which is
       # what makes the automerge label on the PR step truthful.
