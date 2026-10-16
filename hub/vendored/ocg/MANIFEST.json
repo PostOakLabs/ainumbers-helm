@@ -1,18 +1,18 @@
 {
   "sourceRepo": "https://github.com/PostOakLabs/ainumbers.git",
   "license": "MIT License, Copyright (c) 2026 PostOakLabs (same license/holder as this repo; see this repo's own LICENSE for full terms; no third-party code in this vendored subtree)",
-  "pinnedSha": "b57f9ff9f87b782a3a088c15eeede82bda48de94",
+  "pinnedSha": "07e8ad973f349cf73068ae69155748fdb8f33df7",
   "vendoredPaths": [
     "chaingraph/kernels",
     "chaingraph/standard/SPEC.md",
     "chaingraph/standard/openchain-graph-v0.4.schema.json",
     "chaingraph/chaingraph.json"
   ],
-  "fileCount": 2590,
+  "fileCount": 2626,
   "files": [
     {
       "path": "chaingraph.json",
-      "sha256": "325bb81f95c8e4a48a3e456f06f3e61779f6bd4abef9c6d8fb89dd6ba24147b0"
+      "sha256": "0560fb1431d3ef31295c6ef2a580f583d54ab20e79b55e46eca78224ab12484b"
     },
     {
       "path": "kernels/__boundary_mr__/_mr-harness.mjs",
@@ -137,6 +137,14 @@
     {
       "path": "kernels/__proptests__/515-collateral-swap-eligibility-validator.proptest.mjs",
       "sha256": "46786fc5a4daf2cb797fc695cb3c87094898cc4235544fdf9217787260fb0845"
+    },
+    {
+      "path": "kernels/__proptests__/732-borrower-escrow-auditor.proptest.mjs",
+      "sha256": "d8f5a42c5cbf1caab97a8bbdbe84accd607171d41b088c4167e9c670b2eee1a8"
+    },
+    {
+      "path": "kernels/__proptests__/733-servicing-compliance-clock.proptest.mjs",
+      "sha256": "c25970bc6205cd8a321682d461126b71a6df362766d8e798511ba248d0a0db97"
     },
     {
       "path": "kernels/__proptests__/art-01-ap2-mandate-chain-validator.proptest.mjs",
@@ -2560,7 +2568,7 @@
     },
     {
       "path": "kernels/__proptests__/art-699-x402-permit2-evidence-recomputer.proptest.mjs",
-      "sha256": "b0e59c5ddf08075292ec82521709da282e9daee17386e2212a2c543bd9843315"
+      "sha256": "0ffffc63e175205112d3e24ba51bd47fe0557252bd3aaa7164c55c400f41cc57"
     },
     {
       "path": "kernels/__proptests__/art-70-cbam-default-value-resolver.proptest.mjs",
@@ -2579,12 +2587,40 @@
       "sha256": "915aedb7bd933436c3abb2859a360572623a6b370764fb4527065bc23c3325c8"
     },
     {
+      "path": "kernels/__proptests__/art-703-mandate-authorization-gate.proptest.mjs",
+      "sha256": "43578df9bdbbda57168463eb1f24299fe05b36ae9eb8e936838a706eb892e783"
+    },
+    {
       "path": "kernels/__proptests__/art-704-ai-token-spend.proptest.mjs",
       "sha256": "7f595b7075e4c48b6c1a23b281c7d864830ca1ec8fbd999ecd45e106e87926a3"
     },
     {
+      "path": "kernels/__proptests__/art-705-bond-ladder-builder.proptest.mjs",
+      "sha256": "482cbd15c9abe087ccafc1ef34bcb6c9109b53e16b14029347eb0ec0a2491fe9"
+    },
+    {
+      "path": "kernels/__proptests__/art-706-yield-curve-gspread.proptest.mjs",
+      "sha256": "99b70b08edc42903ef9074cda51b6e2f8078f645124edc027f70c2e5284c3a15"
+    },
+    {
+      "path": "kernels/__proptests__/art-707-tsv-tier-cap-ladder.proptest.mjs",
+      "sha256": "deaac75b71a7c18872cf1df86613bad4f950f81c31c0659b97608b07a3b394ed"
+    },
+    {
+      "path": "kernels/__proptests__/art-708-v4-hook-permission-reconciler.proptest.mjs",
+      "sha256": "7eff7dd27649d0332ef06fe38e2b902717464c22a443634664b2b0bc2a75ac0e"
+    },
+    {
+      "path": "kernels/__proptests__/art-709-v4-hook-fee-conformance.proptest.mjs",
+      "sha256": "70bc965427c413a7ff11b0718a8f71b0ec75d7bde3c40daa58aaa75ce50f2b4b"
+    },
+    {
       "path": "kernels/__proptests__/art-71-cbam-certificate-cost-engine.proptest.mjs",
       "sha256": "cd2536b07181221b56731475c8b1b646858eaaf0f816dc2a8799d6625959cff0"
+    },
+    {
+      "path": "kernels/__proptests__/art-710-tsv-stoppage-concurrency.proptest.mjs",
+      "sha256": "0193c7df3e19435156949074ab5a0d28b7b67f21bdd57a36577932b6588bb699"
     },
     {
       "path": "kernels/__proptests__/art-711-sco60-crypto-asset-exposure-classifier-v2.proptest.mjs",
@@ -2599,12 +2635,20 @@
       "sha256": "e7ddf66b846503e18fa8a7857d0158c11a6780e7688bc95dde1372eb45d6ee02"
     },
     {
+      "path": "kernels/__proptests__/art-715-token2022-transfer-fee-reconciler.proptest.mjs",
+      "sha256": "0823097c96d94c5c1e5930fef14f859ab90506e2756cb59fcaad08330c7d0c3a"
+    },
+    {
       "path": "kernels/__proptests__/art-72-cbam-precursor-emissions-aggregator.proptest.mjs",
       "sha256": "ce522addb652eb02a3935ad996e360ff8ca623d7115e47de89fbe41f2d9d4637"
     },
     {
       "path": "kernels/__proptests__/art-73-taxonomy-alignment-scorer.proptest.mjs",
       "sha256": "4dc85bf9d30dd101a9a9476c096aec247f560e2647d43300a4347806d63de36a"
+    },
+    {
+      "path": "kernels/__proptests__/art-734-force-placed-insurance-checker.proptest.mjs",
+      "sha256": "018bcaf1226810e1944177a1a1f619606cb4ba83ab725c39c032fa8fafd1656d"
     },
     {
       "path": "kernels/__proptests__/art-74-taxonomy-kpi-gar-aggregator.proptest.mjs",
@@ -3205,6 +3249,14 @@
     {
       "path": "kernels/515-collateral-swap-eligibility-validator.kernel.mjs",
       "sha256": "678f918188301de63b9847665aa262f6fc73e09a1b28292b6bd3a8b79e4a51bf"
+    },
+    {
+      "path": "kernels/732-borrower-escrow-auditor.kernel.mjs",
+      "sha256": "c2ffc6bf56930912756f2f462458ee7116baf14561a9df69b657ae80cf876e24"
+    },
+    {
+      "path": "kernels/733-servicing-compliance-clock.kernel.mjs",
+      "sha256": "759f085e71fb92d731f9c15f8b6e16d43eda57cca85572d743c13f88352d8a48"
     },
     {
       "path": "kernels/amortization-apr-chain.test.mjs",
@@ -3907,15 +3959,7 @@
       "sha256": "18f88fa54000e35774488e4e653fe00d09df23fee91ad40e50611f194cf1d7f7"
     },
     {
-      "path": "kernels/art-248-compute-remittance-disclosure.mjs",
-      "sha256": "18f88fa54000e35774488e4e653fe00d09df23fee91ad40e50611f194cf1d7f7"
-    },
-    {
       "path": "kernels/art-249-compare-corridor-cost.kernel.mjs",
-      "sha256": "5b97702d4128add63e1efcd5e53b18eb0f0c6775b5e0a7192e52492070064bec"
-    },
-    {
-      "path": "kernels/art-249-compare-corridor-cost.mjs",
       "sha256": "5b97702d4128add63e1efcd5e53b18eb0f0c6775b5e0a7192e52492070064bec"
     },
     {
@@ -3924,10 +3968,6 @@
     },
     {
       "path": "kernels/art-250-model-stablecoin-corridor-economics.kernel.mjs",
-      "sha256": "65998d555685be3e102ff17ae1fd898ca63aa688a69873358fa6d7a520660f2b"
-    },
-    {
-      "path": "kernels/art-250-model-stablecoin-corridor-economics.mjs",
       "sha256": "65998d555685be3e102ff17ae1fd898ca63aa688a69873358fa6d7a520660f2b"
     },
     {
@@ -5667,12 +5707,44 @@
       "sha256": "a62ea8245d5f29e41c714ffbcfc8b2f52d5a68cefb22a29a500b9dfc61c33beb"
     },
     {
+      "path": "kernels/art-703-mandate-authorization-gate.kernel.mjs",
+      "sha256": "de1fb32291e04241870bd357ee96bddc43e5c271c831b79b0928246896875475"
+    },
+    {
       "path": "kernels/art-704-ai-token-spend.kernel.mjs",
       "sha256": "1c2518f6e01085420d06609b2ae4d1354d5832d04729e000d4cf0bfba9460b15"
     },
     {
+      "path": "kernels/art-705-bond-ladder-builder.kernel.mjs",
+      "sha256": "970caa8ad9d2832a8a9eb606726654fa1529c9669bee6a67cd0042ed88929bdb"
+    },
+    {
+      "path": "kernels/art-705-bond-ladder-builder.parity.test.mjs",
+      "sha256": "9540adc3ced86ca5b25f38e0ddc52659c255339e83f7b921e0369c090889cbe3"
+    },
+    {
+      "path": "kernels/art-706-yield-curve-gspread.kernel.mjs",
+      "sha256": "376d1cf65cb78cf0f916e618176436b629b0fcd903bda64f5c9bd2de934e1f50"
+    },
+    {
+      "path": "kernels/art-707-tsv-tier-cap-ladder.kernel.mjs",
+      "sha256": "ec31622899cd563e7242a8382b47262710dadead214839f5029e2dee08ab9e6d"
+    },
+    {
+      "path": "kernels/art-708-v4-hook-permission-reconciler.kernel.mjs",
+      "sha256": "123470ef10f74edc5da96dff1f02ac6eaf45027301a7c64c9aea50cad3686c84"
+    },
+    {
+      "path": "kernels/art-709-v4-hook-fee-conformance.kernel.mjs",
+      "sha256": "979154bd3601f1c0e64186e41b3c0b9adef0df6842013d20fc0daf76145ef46f"
+    },
+    {
       "path": "kernels/art-71-cbam-certificate-cost-engine.kernel.mjs",
       "sha256": "b17a4d4c2d75fa70d54b818c6fad1e1d5fac3413d1ed2bd5e7b0e3ee36bbf8db"
+    },
+    {
+      "path": "kernels/art-710-tsv-stoppage-concurrency.kernel.mjs",
+      "sha256": "50b06c5208854d0622f2454f8578b75ca6ec066405ff1afe74d0d529b30e7e8b"
     },
     {
       "path": "kernels/art-711-sco60-crypto-asset-exposure-classifier-v2.kernel.mjs",
@@ -5687,12 +5759,20 @@
       "sha256": "7e1af77a80f8ba34c85d5ad070e0625aea5118c66bb72f50380f9413001b07f8"
     },
     {
+      "path": "kernels/art-715-token2022-transfer-fee-reconciler.kernel.mjs",
+      "sha256": "020915c5c02c1d2cb9bcb284db4b533d4828472f3b005e2ad70d94c473ab4578"
+    },
+    {
       "path": "kernels/art-72-cbam-precursor-emissions-aggregator.kernel.mjs",
       "sha256": "989771281b7268f99e74d59f151efd4deaf418e9c6e233529b873618190229fd"
     },
     {
       "path": "kernels/art-73-taxonomy-alignment-scorer.kernel.mjs",
       "sha256": "9b92c3c4c8082ee5def48e00030b928ad66b653ffea5f5dfb69b3356b9323ffa"
+    },
+    {
+      "path": "kernels/art-734-force-placed-insurance-checker.kernel.mjs",
+      "sha256": "dbad1174408ec1f0f5c95733d54dba4f6fb04ce2add7c6bb270fa77b271b8c39"
     },
     {
       "path": "kernels/art-74-taxonomy-kpi-gar-aggregator.kernel.mjs",
@@ -5933,6 +6013,22 @@
     {
       "path": "kernels/fixtures/515-collateral-swap-eligibility-validator.fixtures.json",
       "sha256": "c8cdac03631640f54ec697bcb0dc50b86e58f52e0553753be8ea24a9b8074838"
+    },
+    {
+      "path": "kernels/fixtures/732-borrower-escrow-auditor.fixtures.json",
+      "sha256": "3dfb410b5459b6d77626d1670f76bfc7459313db84f693ce14e900ea4e8fd6e8"
+    },
+    {
+      "path": "kernels/fixtures/732-borrower-escrow-auditor.reachability.json",
+      "sha256": "d8095b03783662a06ddadeda685480cfdb9ab1add42bb173c56b822a49fcefb5"
+    },
+    {
+      "path": "kernels/fixtures/733-servicing-compliance-clock.fixtures.json",
+      "sha256": "8a0478612cf8118897dc7ffd19876b52b6fbd56491bb1e7b0c999b290a468d6e"
+    },
+    {
+      "path": "kernels/fixtures/733-servicing-compliance-clock.reachability.json",
+      "sha256": "70436b67ad8178b46b7985b35ec6e874365a672a19fd6248f81361e2fee62a41"
     },
     {
       "path": "kernels/fixtures/aiuc1-catalog-2026-q1.json",
@@ -8447,12 +8543,40 @@
       "sha256": "04d3b3235d0be3c1f24b3ba6814c9e84d0dfa6ca1780d274c056912d22e9a8c7"
     },
     {
+      "path": "kernels/fixtures/art-703-mandate-authorization-gate.fixtures.json",
+      "sha256": "4ec7f33eb394911d1155704a1b38e7ecaaccb830d6c2068de8d4edf2592d38d7"
+    },
+    {
       "path": "kernels/fixtures/art-704-ai-token-spend.fixtures.json",
       "sha256": "c162d8bd366f30616afa82547c82d1cf39e6d2ec34649eb5fb9b0eedf967a387"
     },
     {
+      "path": "kernels/fixtures/art-705-bond-ladder-builder.fixtures.json",
+      "sha256": "7832e807453750500beb6d68dd1c3549866963a52d70f288c6cef510e7d7dde9"
+    },
+    {
+      "path": "kernels/fixtures/art-706-yield-curve-gspread.fixtures.json",
+      "sha256": "4a59529fe7d6cbec92f4db77e0842e588c62f86cb0970ce9bcb6fd278d70a067"
+    },
+    {
+      "path": "kernels/fixtures/art-707-tsv-tier-cap-ladder.fixtures.json",
+      "sha256": "038e61a3ac4f80d3a3fd59a3c4ad71b8af9fc3e4d1639e165b6cb3489c0c401d"
+    },
+    {
+      "path": "kernels/fixtures/art-708-v4-hook-permission-reconciler.fixtures.json",
+      "sha256": "bf85c9bd672e1937758f2d110b5119156fcc68ce7d891d58724feb0c5e43de6d"
+    },
+    {
+      "path": "kernels/fixtures/art-709-v4-hook-fee-conformance.fixtures.json",
+      "sha256": "6188f8f2f617df649ebafe16c73fc3c1b96fe5cb1de406f60554c3419286ec87"
+    },
+    {
       "path": "kernels/fixtures/art-71-cbam-certificate-cost-engine.fixtures.json",
       "sha256": "50cf18f2e2941b3a4c15b4b75f03d272f67c071bf56a497c19183c6b85e00489"
+    },
+    {
+      "path": "kernels/fixtures/art-710-tsv-stoppage-concurrency.fixtures.json",
+      "sha256": "b98e07fd2627f1b4a1fb5cce3740386b74a02570727b3e36a895ba7da5b9cc64"
     },
     {
       "path": "kernels/fixtures/art-711-sco60-crypto-asset-exposure-classifier-v2.fixtures.json",
@@ -8471,12 +8595,24 @@
       "sha256": "432a47eef378325b6d2eda3f7fc0e23cdff8df43368a938cdf859bc6b5b262e0"
     },
     {
+      "path": "kernels/fixtures/art-715-token2022-transfer-fee-reconciler.fixtures.json",
+      "sha256": "f10a4c1acd0c846866c5969d1e913e8ef694f240582fbd75b254c694b1a4b509"
+    },
+    {
       "path": "kernels/fixtures/art-72-cbam-precursor-emissions-aggregator.fixtures.json",
       "sha256": "4f2c9b3f11b708bce2dcb0bdbb373639c5f8bbad974489c5d2707876d41ebd7b"
     },
     {
       "path": "kernels/fixtures/art-73-taxonomy-alignment-scorer.fixtures.json",
       "sha256": "7d42ae8fa26d8dbb57d8e1dbc493656e7a1b219eec8ee00817759ffd126fc9d8"
+    },
+    {
+      "path": "kernels/fixtures/art-734-force-placed-insurance-checker.fixtures.json",
+      "sha256": "be5b21b2836241949a1d00dc21c43fb060abc39c21c9cfce7fa9a21387165e35"
+    },
+    {
+      "path": "kernels/fixtures/art-734-force-placed-insurance-checker.reachability.json",
+      "sha256": "9c59d87125c0e5ef1f4fbe627224a22977e4869db7fddb3d979f72e77e607096"
     },
     {
       "path": "kernels/fixtures/art-74-taxonomy-kpi-gar-aggregator.fixtures.json",
@@ -10172,7 +10308,7 @@
     },
     {
       "path": "kernels/index.mjs",
-      "sha256": "c7903e0da66c39272bd1b1cd9fcc17e04b8c661e1ee8c81d1870c0f9c34472e2"
+      "sha256": "270b025797a6e4ab9b87feaaec49f4edda71989df6a20f57c7eb609c6958f7d8"
     },
     {
       "path": "kernels/inline-hash-equality.test.mjs",
@@ -10197,6 +10333,14 @@
     {
       "path": "kernels/kernel-identity.test.mjs",
       "sha256": "046eec5e628282d3591584a543626ec3abe6a4e6e90f86297bdc560531e3a869"
+    },
+    {
+      "path": "kernels/lint-cgcanon-twin.mjs",
+      "sha256": "e08a8e7558f05760331131664c0534c4dd9dcda8efd61f962dcc45fb5eb6d300"
+    },
+    {
+      "path": "kernels/lint-cgcanon-twin.test.mjs",
+      "sha256": "afe302714161472d6eac6094475d86e065beb6949cb6df8a232bd6c3e6fe81e2"
     },
     {
       "path": "kernels/lint-forbidden-hash.mjs",
@@ -10236,7 +10380,7 @@
     },
     {
       "path": "kernels/mutation-tiers.config.json",
-      "sha256": "4841d3f3e8ddfbd08f899bf077516b7e13ea69dc905b0946a5c39354e07c2975"
+      "sha256": "e3755e259687d2ea30959dea3c400b98dc6409da883165b55cbf9ea508a4a070"
     },
     {
       "path": "kernels/parity-art-01.test.mjs",
@@ -10292,7 +10436,7 @@
     },
     {
       "path": "kernels/registry-lineage-records.json",
-      "sha256": "206819d549fccf9b4faa4e3fd166713f24faf7b733c9ba243abd271c7aea2ea1"
+      "sha256": "a780b6cc4c622dec4313edd9c54fa824971f49726fae2d96c7fe736ede242cd6"
     },
     {
       "path": "kernels/seed-replay.test.mjs",
@@ -10364,11 +10508,11 @@
     },
     {
       "path": "openchain-graph-v0.4.schema.json",
-      "sha256": "38f8647101b802d49183f1da5b9bc19f6023462302b47684cc8e3612ffc3a6e7"
+      "sha256": "80e83bd419c411657f190db9f49ee1a4fe9d5bf663ca6e771565c0db70aee9fb"
     },
     {
       "path": "SPEC.md",
-      "sha256": "b045a29bca9fd0beac50a6e07610c46a4aa8b47dc4efbc1d208352b8d740b3eb"
+      "sha256": "0343372342bcb5a1787f9475ad145b6103fd43286ecd8ac7b589f0f78d070681"
     }
   ]
 }
