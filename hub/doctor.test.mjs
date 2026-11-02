@@ -151,7 +151,14 @@ test("doctor: passes while helmd itself is holding the port", async () => {
 // ...but a port held by something that is NOT helmd must still fail, or the
 // fix above would have turned a real diagnostic into an unconditional pass.
 test("doctor: fails when the port is held by a process that is not helmd", async () => {
-  const squatter = createTcpServer(() => {});
+  // The squatter consumes (never answers) what the doctor's /version probe
+  // writes. A socket that never reads leaves the probe's bytes sitting unread
+  // in its kernel receive buffer: the paused connection then never observes
+  // the probe's close (even a RST), so the squatter's server.close() below
+  // never resolves and the test hangs until its parent cancels it.
+  const squatter = createTcpServer((socket) => {
+    socket.resume();
+  });
   await listen(squatter, PORT);
   try {
     const report = await runDoctor();

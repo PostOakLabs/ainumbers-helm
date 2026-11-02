@@ -5,7 +5,7 @@
 import { statSync, existsSync, readFileSync } from "node:fs";
 import { platform } from "node:os";
 import { createServer } from "node:net";
-import { request as httpRequest } from "node:http";
+import { request as httpRequest, Agent } from "node:http";
 import { join, dirname } from "node:path";
 import { fileURLToPath } from "node:url";
 import { stateDir, statePath } from "./state-dir.mjs";
@@ -38,8 +38,20 @@ function checkPortFree(port) {
 // returns something else, or nothing, and we report the port as occupied.
 function probeDaemonVersion(port, allowedOrigin) {
   return new Promise((resolve) => {
+    // keepAlive:false + Connection:close — the default global agent keeps the
+    // socket pooled across req.destroy(), so a squatter that accepts and never
+    // answers left its server-side connection open forever and hung anything
+    // waiting on the squatter to shut down (test 189, Node 24 CI runners).
     const req = httpRequest(
-      { host: "127.0.0.1", port, path: "/version", method: "GET", headers: { Origin: allowedOrigin }, timeout: 2000 },
+      {
+        host: "127.0.0.1",
+        port,
+        path: "/version",
+        method: "GET",
+        timeout: 2000,
+        agent: new Agent({ keepAlive: false }),
+        headers: { Origin: allowedOrigin, Connection: "close" },
+      },
       (res) => {
         let body = "";
         res.on("data", (c) => (body += c));
