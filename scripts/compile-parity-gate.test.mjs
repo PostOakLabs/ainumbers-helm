@@ -7,6 +7,7 @@ import { fileURLToPath } from "node:url";
 import { runParityGate } from "./compile-parity-gate.mjs";
 import { openJournal } from "../hub/journal.mjs";
 import { KERNELS } from "../hub/vendored/ocg/kernels/index.mjs";
+import { pinnedKernelDigest } from "../hub/kernel-runner.mjs";
 import { hasWitnessAssembler } from "./private-input-witness.mjs";
 
 const HERE = dirname(fileURLToPath(import.meta.url));
@@ -75,7 +76,11 @@ test("compile-parity-gate: a §25 private-input node (art-413) is sourced from i
       ...victim.manifest.nodes[0],
       node_id: "test_privin_art413",
       kernel_id: "art-413-screen-sanctions-private",
-      kernel_digest: "sha256:2af360c0c70be73aaad6a5c1ac72f0718d6480b7b8d524a8d929b684532805e2",
+      // Sourced from the vendored MANIFEST (the same generated source the
+      // kernel runner pins against), never a hand-typed literal — a literal
+      // here went stale the moment the site touched any other kernel, and
+      // would go stale for art-413 the day the site touches it.
+      kernel_digest: pinnedKernelDigest("art-413-screen-sanctions-private"),
       verified: true,
     };
 
