@@ -174,3 +174,13 @@ Generated from the shared credits registry (`data/credits-registry.json`, source
 - **Upstream ships a NOTICE file:** no (checked upstream root — no NOTICE file)
 - **Path(s) in this repo:**
   - `ui/vendored/pptxgen.bundle.js`
+
+## OpenLineage RunEvent schema (OpenLineage.json)
+
+- **Version:** 1.55.0
+- **License:** Apache-2.0
+- **Upstream:** https://github.com/OpenLineage/OpenLineage
+- **Upstream ships a NOTICE file:** no (checked upstream root — no NOTICE file)
+- **Note:** Vendored unmodified (OpenLineage.json + LICENSE, no NOTICE file at the 1.55.0 release) for art-831-receipt-export-envelopes: the kernel proptest validates the exported lineage RunEvent against the pinned upstream schema. Directory-path entry; the coverage gate keys on the vendored fixture paths. In this repo the fixtures arrive mirrored at their hub/vendored/ocg/kernels path via the pinned OCG mirror (scripts/vendor.config.json), byte-identical to the site-repo original credited by the site repo's own registry entry of the same id.
+- **Path(s) in this repo:**
+  - `hub/vendored/ocg/kernels/fixtures/vendor/openlineage-1.55.0/`
