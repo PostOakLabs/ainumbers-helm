@@ -1,0 +1,49 @@
+{
+  "workflow_id": "pack-apy-earned-check",
+  "name": "APY Earned Check",
+  "outcome": "Check whether a bank paid the APY it disclosed, in two recompute stages: first recompute the period's interest from daily balances under the caller's declared day-count convention, compounding, and rate terms, diffed against the core's reported accruals with a MATCHES, DIVERGES, or INDETERMINATE verdict (ART-661), then recompute the APY earned from a caller-supplied interest figure and the average daily balance and compare it with the disclosed APY inside a caller-declared accuracy band (ART-663), then a session receipt aggregating the run's execution hashes (CRY-05). Day-count convention, compounding, and every rate term are caller-declared inputs; a divergence is an arithmetic finding, never a determination that interest was miscalculated. Not legal advice and not tax advice.",
+  "spec_version": "ocg-control-plane@1",
+  "manifest": {
+    "manifest_version": "1",
+    "workflow_id": "pack-apy-earned-check",
+    "trigger": {
+      "type": "manual"
+    },
+    "nodes": [
+      {
+        "node_id": "n1",
+        "kernel_id": "art-661-interest-accrual-recompute",
+        "kernel_digest": "sha256:b57f3f681d019782405635040340d51f868e535834246366a930ca52336768e7"
+      },
+      {
+        "node_id": "n2",
+        "kernel_id": "art-663-apy-earned-recompute",
+        "kernel_digest": "sha256:8f873b59228d5260e6aaaf4c82cf1f455e515ad601dd4133e74517741edd7608"
+      },
+      {
+        "node_id": "n3",
+        "kernel_id": "cry-05-agent-action-audit-trail-aggregator",
+        "kernel_digest": "sha256:5f7f6ab0bb2e2b736805ecde518ca59ba9a83ad38b17545a8c7c133cffa1481f"
+      }
+    ],
+    "connectors": [],
+    "gates": [],
+    "actions": []
+  },
+  "workflow_manifest_digest": "sha256:87cea1cbd0bc1c8550cf70cd3bf0cd5d48919c6afdedb32c30daeaf817490872",
+  "declared_inputs": [],
+  "steps_meta": [
+    {
+      "node_id": "n1",
+      "data_classification": "compute"
+    },
+    {
+      "node_id": "n2",
+      "data_classification": "compute"
+    },
+    {
+      "node_id": "n3",
+      "data_classification": "compute"
+    }
+  ]
+}

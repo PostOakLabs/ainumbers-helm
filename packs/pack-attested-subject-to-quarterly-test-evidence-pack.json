@@ -1,0 +1,49 @@
+{
+  "workflow_id": "pack-attested-subject-to-quarterly-test-evidence-pack",
+  "name": "Attested Subject to Quarterly Test Evidence Pack",
+  "outcome": "AI governance and assurance, not lifecycle-bound. Identifier handoff (subject_hash), not a computed value passed on. Two-step quarterly evidence flow: bind a sealed artifact into a subject identifier, then compose the quarter's testing-evidence pack tied to that subject. Stop condition before step 2: proceed only when step 1 reports binding_complete true and producer_pinned true; a pack built over an incomplete or unpinned subject is labelled not attested.",
+  "spec_version": "ocg-control-plane@1",
+  "manifest": {
+    "manifest_version": "1",
+    "workflow_id": "pack-attested-subject-to-quarterly-test-evidence-pack",
+    "trigger": {
+      "type": "manual"
+    },
+    "nodes": [
+      {
+        "node_id": "n1",
+        "kernel_id": "art-502-bind-attested-subject",
+        "kernel_digest": "sha256:8680e25172057485acdc9fae8651fab076d8ebe76824abf35bf75b8f186568fa"
+      },
+      {
+        "node_id": "n2",
+        "kernel_id": "art-378-quarterly-test-evidence-composer",
+        "kernel_digest": "sha256:4110cf70767dc5ed8b26fc3543ef15d71239a5f52a8e9396832ac105f212de32"
+      },
+      {
+        "node_id": "n3",
+        "kernel_id": "cry-05-agent-action-audit-trail-aggregator",
+        "kernel_digest": "sha256:5f7f6ab0bb2e2b736805ecde518ca59ba9a83ad38b17545a8c7c133cffa1481f"
+      }
+    ],
+    "connectors": [],
+    "gates": [],
+    "actions": []
+  },
+  "workflow_manifest_digest": "sha256:591b5180755277d161441f3b42b5d9797ccdeb025d48b4e8298b3fba4dce4690",
+  "declared_inputs": [],
+  "steps_meta": [
+    {
+      "node_id": "n1",
+      "data_classification": "compute"
+    },
+    {
+      "node_id": "n2",
+      "data_classification": "compute"
+    },
+    {
+      "node_id": "n3",
+      "data_classification": "compute"
+    }
+  ]
+}

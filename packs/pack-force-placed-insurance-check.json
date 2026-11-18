@@ -1,0 +1,40 @@
+{
+  "workflow_id": "pack-force-placed-insurance-check",
+  "name": "Force-Placed Insurance Check",
+  "outcome": "Check a lender-placed insurance charge in two stages: first verify the 45-day advance first notice with its prescribed content set, the reminder notice at least 30 days after the first notice and at least 15 days before the charge, and the no-evidence-of-continuous-coverage precondition, with the 15-day cancellation and refund clock and the charged premium reported against borrower alternative quotes as a values-only comparison (ART-734), then a session receipt aggregating the run's execution hashes (CRY-05). All notice dates, coverage periods, and premium figures are caller-supplied inputs; the verdict is an arithmetic and sequence finding, never a legal determination. Not legal advice.",
+  "spec_version": "ocg-control-plane@1",
+  "manifest": {
+    "manifest_version": "1",
+    "workflow_id": "pack-force-placed-insurance-check",
+    "trigger": {
+      "type": "manual"
+    },
+    "nodes": [
+      {
+        "node_id": "n1",
+        "kernel_id": "art-734-force-placed-insurance-checker",
+        "kernel_digest": "sha256:dbad1174408ec1f0f5c95733d54dba4f6fb04ce2add7c6bb270fa77b271b8c39"
+      },
+      {
+        "node_id": "n2",
+        "kernel_id": "cry-05-agent-action-audit-trail-aggregator",
+        "kernel_digest": "sha256:5f7f6ab0bb2e2b736805ecde518ca59ba9a83ad38b17545a8c7c133cffa1481f"
+      }
+    ],
+    "connectors": [],
+    "gates": [],
+    "actions": []
+  },
+  "workflow_manifest_digest": "sha256:30b62fd680f3f4e6bc40064f262e9c3454d3f29e39283624ee513dd6a64591e3",
+  "declared_inputs": [],
+  "steps_meta": [
+    {
+      "node_id": "n1",
+      "data_classification": "compute"
+    },
+    {
+      "node_id": "n2",
+      "data_classification": "compute"
+    }
+  ]
+}

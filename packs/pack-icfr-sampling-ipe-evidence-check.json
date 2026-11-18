@@ -1,0 +1,58 @@
+{
+  "workflow_id": "pack-icfr-sampling-ipe-evidence-check",
+  "name": "ICFR Sampling IPE Evidence Check",
+  "outcome": "Check a SOX 404 / ICFR control test in three stages, plus a session receipt. First, size an attribute sample from caller-declared confidence level, tolerable deviation rate and expected deviation rate, using the standard zero-EDR Poisson attribute-sampling formula with an expansion factor for nonzero EDR, with deterministic interval sampling over the caller-declared population hash so any auditor can replay the same sample (ART-458). Then verify Information-Produced-by-Entity completeness and accuracy for the control test, reconciling a caller-declared source-extract hash, row count and control total against the same facts for the report built from it (ART-460). Then compose the control-test evidence artifact, reconciling a caller-declared attribute sample against a per-item pass/fail test-result set into one test-conclusion record: sample coverage, exception count against a caller-set tolerable-deviation threshold, and a conclusion of operating effectively, exception noted or incomplete, with reviewer sign-off held as a human gate (ART-461). Finally, a session receipt aggregating the run's execution hashes (CRY-05). Each stage uses its own caller-supplied inputs; no stage's output is an input to another stage, and the order is the testing cycle order: plan the sample, prove the data, then conclude on the test. This is a new chain under its own slug; the existing icfr-control-test-cycle chain, which contains art-461 alone, is left untouched. Findings are arithmetic findings, never audit opinions. Not legal advice.",
+  "spec_version": "ocg-control-plane@1",
+  "manifest": {
+    "manifest_version": "1",
+    "workflow_id": "pack-icfr-sampling-ipe-evidence-check",
+    "trigger": {
+      "type": "manual"
+    },
+    "nodes": [
+      {
+        "node_id": "n1",
+        "kernel_id": "art-458-attribute-sampling-plan",
+        "kernel_digest": "sha256:5bcd64e2925ab483c805160229d7a37241e311140192cd080b09be6d358fec1b"
+      },
+      {
+        "node_id": "n2",
+        "kernel_id": "art-460-ipe-integrity-verifier",
+        "kernel_digest": "sha256:3739111ed80b1fdde1f68667060608703b547770fc185678540d7e16fa4023c6"
+      },
+      {
+        "node_id": "n3",
+        "kernel_id": "art-461-control-test-evidence-composer",
+        "kernel_digest": "sha256:ab7d9c5cf26d42cb2205025bca9f91353454bea181602f0dd0508aa55c4e94e4"
+      },
+      {
+        "node_id": "n4",
+        "kernel_id": "cry-05-agent-action-audit-trail-aggregator",
+        "kernel_digest": "sha256:5f7f6ab0bb2e2b736805ecde518ca59ba9a83ad38b17545a8c7c133cffa1481f"
+      }
+    ],
+    "connectors": [],
+    "gates": [],
+    "actions": []
+  },
+  "workflow_manifest_digest": "sha256:d72f4eed05776656494dd464d2a865eb15f5c62ae875cb102d3802b2e661834e",
+  "declared_inputs": [],
+  "steps_meta": [
+    {
+      "node_id": "n1",
+      "data_classification": "compute"
+    },
+    {
+      "node_id": "n2",
+      "data_classification": "compute"
+    },
+    {
+      "node_id": "n3",
+      "data_classification": "compute"
+    },
+    {
+      "node_id": "n4",
+      "data_classification": "compute"
+    }
+  ]
+}

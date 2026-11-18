@@ -1,0 +1,49 @@
+{
+  "workflow_id": "pack-deposit-insurance-coverage-check",
+  "name": "Deposit Insurance Coverage Check",
+  "outcome": "Three-stage check over a bank's own deposit insurance numbers. Step 1 computes insured and uninsured minor-unit amounts per ownership right and capacity group against the caller-supplied SMDIA, reporting records that cannot be calculated as undeterminable and naming the missing field (ART-507). Step 2 validates the shape of the institution's own part 370 output file and ties its declared totals to the step 1 recompute, reporting a shape defect and a totals mismatch as separate findings (ART-535). Step 3 produces a session receipt aggregating the run's execution hashes (CRY-05). The output file is the caller's own; the coverage limit is a caller-supplied input and is never assumed. The verdict is an arithmetic and shape finding, never a determination by the FDIC, not a filing, and no deposit insurance advice.",
+  "spec_version": "ocg-control-plane@1",
+  "manifest": {
+    "manifest_version": "1",
+    "workflow_id": "pack-deposit-insurance-coverage-check",
+    "trigger": {
+      "type": "manual"
+    },
+    "nodes": [
+      {
+        "node_id": "n1",
+        "kernel_id": "art-507-determine-deposit-insurance-coverage",
+        "kernel_digest": "sha256:af6ead608e9e4066d16c80dc91534582c71e82ff5d9fc556cb6c9444a00b15d1"
+      },
+      {
+        "node_id": "n2",
+        "kernel_id": "art-535-fdic370-output-file-validator",
+        "kernel_digest": "sha256:10cb82f1a665d074500af23e512217234c39f79ad7f298e6f12a74eab4e2eeae"
+      },
+      {
+        "node_id": "n3",
+        "kernel_id": "cry-05-agent-action-audit-trail-aggregator",
+        "kernel_digest": "sha256:5f7f6ab0bb2e2b736805ecde518ca59ba9a83ad38b17545a8c7c133cffa1481f"
+      }
+    ],
+    "connectors": [],
+    "gates": [],
+    "actions": []
+  },
+  "workflow_manifest_digest": "sha256:85ad780bb62fa8baf55d4e5366099627e00cb7943b2667542810425ed6adf67e",
+  "declared_inputs": [],
+  "steps_meta": [
+    {
+      "node_id": "n1",
+      "data_classification": "compute"
+    },
+    {
+      "node_id": "n2",
+      "data_classification": "compute"
+    },
+    {
+      "node_id": "n3",
+      "data_classification": "compute"
+    }
+  ]
+}

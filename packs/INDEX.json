@@ -1,13 +1,17 @@
 {
-  "pinnedSha": "b57f9ff9f87b782a3a088c15eeede82bda48de94",
+  "pinnedSha": "8bdd256fdd4547cb410ce3357a5054edbe6a5840",
   "generatedFrom": "hub/vendored/ocg/chaingraph.json",
-  "compiledCount": 381,
+  "compiledCount": 423,
   "chainlessCount": 8,
-  "skippedCount": 1,
+  "skippedCount": 2,
   "skips": [
     {
       "name": "aml-consolidation",
       "reason": "non-kernel or unvendored step(s): 110-customer-risk-rating, 485-amlr-obliged-entity-scope-mapper"
+    },
+    {
+      "name": "regulatory-change-operationalisation",
+      "reason": "non-kernel or unvendored step(s): 318-regulatory-change-impact-assessor, 158-fintech-compliance-control-mapper"
     }
   ]
 }

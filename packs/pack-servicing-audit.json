@@ -1,0 +1,49 @@
+{
+  "workflow_id": "pack-servicing-audit",
+  "name": "Loan Servicing Audit",
+  "outcome": "Three independent recomputations over one loan's servicing math. Step 1 builds the period-by-period amortization schedule from the caller-declared note terms (art-332). Step 2 recomputes how a single borrower payment cascades under the caller-declared bucket application order and diffs the per-bucket split against the servicer's applied amounts (art-664). Step 3 runs the aggregate escrow analysis over the declared starting balance, monthly deposit and projected disbursement schedule, classifying the account as balanced, short, deficient or in surplus with the corresponding remedy (art-342). Each step computes from its own declared inputs; the order is analytical, not a statutory sequence.",
+  "spec_version": "ocg-control-plane@1",
+  "manifest": {
+    "manifest_version": "1",
+    "workflow_id": "pack-servicing-audit",
+    "trigger": {
+      "type": "manual"
+    },
+    "nodes": [
+      {
+        "node_id": "n1",
+        "kernel_id": "art-332-build-amortization-schedule",
+        "kernel_digest": "sha256:c43a019193d999e9f93930a4bf793f51192c11245151211f1c26f038629caef9"
+      },
+      {
+        "node_id": "n2",
+        "kernel_id": "art-664-loan-servicing-waterfall-recompute",
+        "kernel_digest": "sha256:a5294931be53b050f99b64e583ecf46c561050b194b01b0a27b92cec2c735a78"
+      },
+      {
+        "node_id": "n3",
+        "kernel_id": "art-342-compute-escrow-analysis",
+        "kernel_digest": "sha256:e607aef8dedf929559f5a0daafd8a26ba54b900cd7d64c91ee96f5c88416aa9d"
+      }
+    ],
+    "connectors": [],
+    "gates": [],
+    "actions": []
+  },
+  "workflow_manifest_digest": "sha256:e4de55b43c6a48ecd1318db7c1ad1dc85a734b52400485451d3924c15640fbef",
+  "declared_inputs": [],
+  "steps_meta": [
+    {
+      "node_id": "n1",
+      "data_classification": "compute"
+    },
+    {
+      "node_id": "n2",
+      "data_classification": "compute"
+    },
+    {
+      "node_id": "n3",
+      "data_classification": "compute"
+    }
+  ]
+}

@@ -1,0 +1,67 @@
+{
+  "workflow_id": "pack-eslr-recalibration-call-report-check",
+  "name": "eSLR Recalibration Call Report Check",
+  "outcome": "A GSIB or its covered depository subsidiary recomputes leverage under the recalibrated enhanced supplementary leverage ratio, maps balance sheet and regulatory capital into FFIEC Call Report schedules RC and RC-R, and runs the published Call Report edit checks over the filed figures before submission. The chain answers one question: do the ratios the bank computed survive, unchanged and internally consistent, into the schedules it files? Schedule RC-R outputs map to RC-R Part I items 56.a and 56.b, FFIEC 031, from the 30 June 2026 report. Each run computes from its own declared inputs, and each run hash is cited in the session receipt. This chain does not file a Call Report, does not derive GSIB status or the method-1 surcharge, and does not cover LTD or TLAC conforming changes.",
+  "spec_version": "ocg-control-plane@1",
+  "manifest": {
+    "manifest_version": "1",
+    "workflow_id": "pack-eslr-recalibration-call-report-check",
+    "trigger": {
+      "type": "manual"
+    },
+    "nodes": [
+      {
+        "node_id": "n1",
+        "kernel_id": "art-364-compute-lcr-nsfr-leverage",
+        "kernel_digest": "sha256:168029eb2a2ece66535b95015170c82a1babc5d499325845f30b73065fedb204"
+      },
+      {
+        "node_id": "n2",
+        "kernel_id": "art-432-call-report-rc-balance-sheet",
+        "kernel_digest": "sha256:ebdcc54a5a9f44bae3307929b2c226e91666a2929a99fb42e15eb5f0df79c7d1"
+      },
+      {
+        "node_id": "n3",
+        "kernel_id": "art-433-call-report-rcr-capital",
+        "kernel_digest": "sha256:c62ba6456819dce8756770a395024a9508cf9685dd9d3ca1409ebe2d6e01546c"
+      },
+      {
+        "node_id": "n4",
+        "kernel_id": "art-434-call-report-edit-check-gate",
+        "kernel_digest": "sha256:fc730e1410814863f534802d3bcd7d948ac232f8f1fb5ddcf9078e4c97dd075d"
+      },
+      {
+        "node_id": "n5",
+        "kernel_id": "cry-05-agent-action-audit-trail-aggregator",
+        "kernel_digest": "sha256:5f7f6ab0bb2e2b736805ecde518ca59ba9a83ad38b17545a8c7c133cffa1481f"
+      }
+    ],
+    "connectors": [],
+    "gates": [],
+    "actions": []
+  },
+  "workflow_manifest_digest": "sha256:509c3250dea3f8defb5cc82d6f559dbf5e6ce21c7f4e8b22290de2061622473b",
+  "declared_inputs": [],
+  "steps_meta": [
+    {
+      "node_id": "n1",
+      "data_classification": "compute"
+    },
+    {
+      "node_id": "n2",
+      "data_classification": "compute"
+    },
+    {
+      "node_id": "n3",
+      "data_classification": "compute"
+    },
+    {
+      "node_id": "n4",
+      "data_classification": "compute"
+    },
+    {
+      "node_id": "n5",
+      "data_classification": "compute"
+    }
+  ]
+}

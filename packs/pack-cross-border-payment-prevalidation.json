@@ -18,14 +18,14 @@
       {
         "node_id": "n2",
         "kernel_id": "art-247-prevalidation-readiness-scorer",
-        "kernel_digest": "sha256:5474f7090f70ee2ec83b77349b3e6a1aa511bfb76c6e43c9b8972f5556b752c7"
+        "kernel_digest": "sha256:3a611321fca01c490b5bf91489ba7bf44e4a97c1b74ae28e82cf1e047fc247d9"
       }
     ],
     "connectors": [],
     "gates": [],
     "actions": []
   },
-  "workflow_manifest_digest": "sha256:0906a199cd87f2961a17ffff4ca05712c2acd73c83fb7081925ce70e289f8e50",
+  "workflow_manifest_digest": "sha256:a8b19fa811e5f02bb18c8c5f8d17fd6b4bdf53e3abd94708219ebb43bdcddef9",
   "declared_inputs": [],
   "steps_meta": [
     {

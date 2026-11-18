@@ -176,6 +176,15 @@ jobs:
             writeFileSync(path, JSON.stringify(config, null, 2) + '\n');
           "
           node scripts/vendor.mjs
+          # Recompile packs/ at the fresh vendored chaingraph, in the same
+          # push as the re-vendor (compile-packs.mjs header discipline).
+          # Without this step every site commit that touches a kernel used by
+          # a committed pack leaves that pack's kernel_digest pin behind, and
+          # hub/kernel-runner.mjs refuses to run the node (digest mismatch by
+          # design) — which reddened 4 of 5 Monday runs 2026-10-26..11-16
+          # through compile-parity-gate.test.mjs (packs vs canonical run) and
+          # watch-scheduler.test.mjs (fireWatch on pack-ai-vendor-onboarding-packet).
+          node scripts/compile-packs.mjs
           node scripts/verify-vendored.mjs
           node scripts/test.mjs > /tmp/autovendor-test.log 2>&1 || {
             echo "test suite FAILED — no PR will be opened; tail of the log follows" >&2
@@ -209,7 +218,7 @@ jobs:
           git checkout -b "$BRANCH"
           # Explicit pathspecs only: vendor.mjs is single-writer for
           # hub/vendored/ocg, and the pin bump touches vendor.config.json.
-          git add hub/vendored/ocg scripts/vendor.config.json
+          git add hub/vendored/ocg packs scripts/vendor.config.json
           # The pinned SHA belongs in the commit message (scripts/vendor.mjs
           # header: "Single-writer: run this script alone, commit the pinned
           # SHA in the commit message").

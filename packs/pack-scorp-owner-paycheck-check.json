@@ -1,0 +1,58 @@
+{
+  "workflow_id": "pack-scorp-owner-paycheck-check",
+  "name": "S-Corp Owner Paycheck Check",
+  "outcome": "Model an S-Corp owner's paycheck in four independent stages: first model the S-Corp election break-even from caller-declared net self-employment income, a caller-declared reasonable W-2 salary share, and a caller-declared annual admin cost (ART-713), then compute federal income tax withholding by the IRS Publication 15-T percentage method for the declared tax year edition (ART-338), then compute gross-to-net pay with FICA at that year's Social Security wage base (ART-339), closing with a session receipt aggregating the run's execution hashes (CRY-05). The salary share is a caller input; this chain does not decide whether a salary is reasonable, and it makes no claim that any salary used is an IRS-reasonable salary. In the break-even stage, the 0.9 percent Additional Medicare Tax is a stated caveat only, not a modeled term. Filing status and the owner health premium are echoed but excluded from the break-even arithmetic, and an admin cost outside the 1,500 dollar to 3,000 dollar annual guidance band is honored and flagged, never clamped. Federal only; state withholding is out of scope. Not tax advice.",
+  "spec_version": "ocg-control-plane@1",
+  "manifest": {
+    "manifest_version": "1",
+    "workflow_id": "pack-scorp-owner-paycheck-check",
+    "trigger": {
+      "type": "manual"
+    },
+    "nodes": [
+      {
+        "node_id": "n1",
+        "kernel_id": "art-713-scorp-election-break-even",
+        "kernel_digest": "sha256:7e1af77a80f8ba34c85d5ad070e0625aea5118c66bb72f50380f9413001b07f8"
+      },
+      {
+        "node_id": "n2",
+        "kernel_id": "art-338-compute-federal-withholding",
+        "kernel_digest": "sha256:3e47de0970d976aa0ae29c66249d8ae11cf754a870d516336914a0a2f3a3825d"
+      },
+      {
+        "node_id": "n3",
+        "kernel_id": "art-339-compute-gross-to-net",
+        "kernel_digest": "sha256:58c1128e8a66033dfe7cbae4e700f57f370ae362cf62b4b12ac7c70a1710afa5"
+      },
+      {
+        "node_id": "n4",
+        "kernel_id": "cry-05-agent-action-audit-trail-aggregator",
+        "kernel_digest": "sha256:5f7f6ab0bb2e2b736805ecde518ca59ba9a83ad38b17545a8c7c133cffa1481f"
+      }
+    ],
+    "connectors": [],
+    "gates": [],
+    "actions": []
+  },
+  "workflow_manifest_digest": "sha256:bc0b541f28fd3bfe36161d0cda313f55daabfde1c31b3cd153ba2d4ee076167e",
+  "declared_inputs": [],
+  "steps_meta": [
+    {
+      "node_id": "n1",
+      "data_classification": "compute"
+    },
+    {
+      "node_id": "n2",
+      "data_classification": "compute"
+    },
+    {
+      "node_id": "n3",
+      "data_classification": "compute"
+    },
+    {
+      "node_id": "n4",
+      "data_classification": "compute"
+    }
+  ]
+}

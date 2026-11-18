@@ -1,0 +1,58 @@
+{
+  "workflow_id": "pack-irrbb-nmd-shock-and-basis-risk-check",
+  "name": "IRRBB NMD Shock and Basis Risk Check",
+  "outcome": "Check interest rate risk in the banking book in three independent runs plus a session receipt: map non-maturity deposit balances into a bucketed net repricing gap schedule under a caller-declared behavioral allocation (ART-442), sweep the prescribed parallel shock ladder over that schedule and name the binding rung (ART-369), then run the basis-risk calculation at the binding rung cited from the ladder run (ART-443), closing with a session receipt aggregating the run's execution hashes (CRY-05). All balances, allocations, betas, and gaps are caller-supplied inputs; each run is an independent recompute from its own declared inputs. This chain is an analytical check, not a regulatory filing and not a capital adequacy determination.",
+  "spec_version": "ocg-control-plane@1",
+  "manifest": {
+    "manifest_version": "1",
+    "workflow_id": "pack-irrbb-nmd-shock-and-basis-risk-check",
+    "trigger": {
+      "type": "manual"
+    },
+    "nodes": [
+      {
+        "node_id": "n1",
+        "kernel_id": "art-442-nmd-behavioral-repricing-mapper",
+        "kernel_digest": "sha256:388900a314f4d9e05be9bfcf9909a1b89a67b9c482c057d9434cb200f7bef94d"
+      },
+      {
+        "node_id": "n2",
+        "kernel_id": "art-369-run-rate-shock-ladder",
+        "kernel_digest": "sha256:225cfd55e3d840c397a4282c89669257f774926ce11c8062c5dbe6d249cc730e"
+      },
+      {
+        "node_id": "n3",
+        "kernel_id": "art-443-irrbb-basis-risk-nii-shock-calculator",
+        "kernel_digest": "sha256:6a53b2b9e42a854d9801a6759fcc8e62fbd7ee5f0585ea83b9c43165bf2d9bcc"
+      },
+      {
+        "node_id": "n4",
+        "kernel_id": "cry-05-agent-action-audit-trail-aggregator",
+        "kernel_digest": "sha256:5f7f6ab0bb2e2b736805ecde518ca59ba9a83ad38b17545a8c7c133cffa1481f"
+      }
+    ],
+    "connectors": [],
+    "gates": [],
+    "actions": []
+  },
+  "workflow_manifest_digest": "sha256:81526f85ac1511c1503313c8672b835a6cee253bc2611e6f97976bab8283ca13",
+  "declared_inputs": [],
+  "steps_meta": [
+    {
+      "node_id": "n1",
+      "data_classification": "compute"
+    },
+    {
+      "node_id": "n2",
+      "data_classification": "compute"
+    },
+    {
+      "node_id": "n3",
+      "data_classification": "compute"
+    },
+    {
+      "node_id": "n4",
+      "data_classification": "compute"
+    }
+  ]
+}

@@ -1,0 +1,40 @@
+{
+  "workflow_id": "pack-small-business-1071-readiness-check",
+  "name": "Small Business 1071 Readiness Check",
+  "outcome": "Check small business lending coverage readiness in two independent stages: first compute whether a financial institution meets the CFPB Section 1071 origination threshold from caller-supplied origination counts and validate SBLAR records against caller-declared required fields (ART-475); then a session receipt aggregating the run's execution hashes (CRY-05). All origination counts, field lists, and SBLAR records are caller-supplied; findings are arithmetic findings, never coverage determinations. Federal only, not legal advice.",
+  "spec_version": "ocg-control-plane@1",
+  "manifest": {
+    "manifest_version": "1",
+    "workflow_id": "pack-small-business-1071-readiness-check",
+    "trigger": {
+      "type": "manual"
+    },
+    "nodes": [
+      {
+        "node_id": "n1",
+        "kernel_id": "art-475-cfpb-1071-coverage-check",
+        "kernel_digest": "sha256:0ef028be15ca148086aa48b2fc87b6f735c14233206ae951b0d1c8f285b98c72"
+      },
+      {
+        "node_id": "n2",
+        "kernel_id": "cry-05-agent-action-audit-trail-aggregator",
+        "kernel_digest": "sha256:5f7f6ab0bb2e2b736805ecde518ca59ba9a83ad38b17545a8c7c133cffa1481f"
+      }
+    ],
+    "connectors": [],
+    "gates": [],
+    "actions": []
+  },
+  "workflow_manifest_digest": "sha256:3688ec91d3c8ca55d70e7ff86c63c80c64ead26213bd5b0f11ad4d31d31f0e43",
+  "declared_inputs": [],
+  "steps_meta": [
+    {
+      "node_id": "n1",
+      "data_classification": "compute"
+    },
+    {
+      "node_id": "n2",
+      "data_classification": "compute"
+    }
+  ]
+}

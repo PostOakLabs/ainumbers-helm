@@ -1,0 +1,49 @@
+{
+  "workflow_id": "pack-parametric-index-to-trigger-payout-check",
+  "name": "Parametric Index to Trigger Payout Check",
+  "outcome": "Three-stage check over a parametric trigger. Step 1 aggregates hash-pinned measurement receipts into an index value under a caller-declared metric, aggregation, and window, and stops the chain when there is insufficient evidence. Step 2 evaluates that index value against the caller-supplied threshold, coverage amount, and parametric limit, and returns trigger hit, trigger fraction, and payout amount. Step 3 aggregates the run's execution hashes into a session receipt. art-251 triggers on the high side only: index_value at or above threshold, so low-side perils such as drought cannot be modeled with this chain. Step 2's inputs contain no metric name, and unit equality is never checked, so the caller must use the same unit for the index and the threshold. Headline example: summed rainfall in millimetres over a window, against a threshold in millimetres. The verdict is an arithmetic finding under the policy terms supplied, not a settlement decision, and not actuarial, legal, or regulatory advice.",
+  "spec_version": "ocg-control-plane@1",
+  "manifest": {
+    "manifest_version": "1",
+    "workflow_id": "pack-parametric-index-to-trigger-payout-check",
+    "trigger": {
+      "type": "manual"
+    },
+    "nodes": [
+      {
+        "node_id": "n1",
+        "kernel_id": "art-309-parametric-index-deriver",
+        "kernel_digest": "sha256:69501cd554f59d8ca92176964a10773dad63d5b7c1e4ae06af5eda6fbe9d29c6"
+      },
+      {
+        "node_id": "n2",
+        "kernel_id": "art-251-compute-parametric-trigger-payout",
+        "kernel_digest": "sha256:21c850de44ea52edcd069ddb042c208ec8d8df8175a09b3fc3c9478245db8158"
+      },
+      {
+        "node_id": "n3",
+        "kernel_id": "cry-05-agent-action-audit-trail-aggregator",
+        "kernel_digest": "sha256:5f7f6ab0bb2e2b736805ecde518ca59ba9a83ad38b17545a8c7c133cffa1481f"
+      }
+    ],
+    "connectors": [],
+    "gates": [],
+    "actions": []
+  },
+  "workflow_manifest_digest": "sha256:5907650a07cb24ad21ed0643bdfa073da56fd853850298e92f5cf7f31a84ca70",
+  "declared_inputs": [],
+  "steps_meta": [
+    {
+      "node_id": "n1",
+      "data_classification": "compute"
+    },
+    {
+      "node_id": "n2",
+      "data_classification": "compute"
+    },
+    {
+      "node_id": "n3",
+      "data_classification": "compute"
+    }
+  ]
+}

@@ -1,0 +1,58 @@
+{
+  "workflow_id": "pack-cross-border-payment-cost-check",
+  "name": "Cross-Border Payment Cost Check",
+  "outcome": "Recompute a cross-border B2B payment's true all-in cost in three independent stages: itemize the invoice's cost stack (FX spread, method fee, VAT/reverse-charge, documentary-credit, reconciliation) as a percentage of invoice value (ART-367), recompute the corridor's declared cost gap against the hardcoded G20/FSB roadmap targets for the declared year (ART-549), then model the same corridor on a USDC stablecoin rail to show the cheaper alternative (ART-250), closing with a session receipt aggregating the run's execution hashes (CRY-05). Every figure is caller-declared; no live FX or rate calls. Not FX advice.",
+  "spec_version": "ocg-control-plane@1",
+  "manifest": {
+    "manifest_version": "1",
+    "workflow_id": "pack-cross-border-payment-cost-check",
+    "trigger": {
+      "type": "manual"
+    },
+    "nodes": [
+      {
+        "node_id": "n1",
+        "kernel_id": "art-367-compute-cross-border-fees",
+        "kernel_digest": "sha256:ab7cc7c6345a21988fca592f503a6b89a4ddc3fe97267f8996170f1021619817"
+      },
+      {
+        "node_id": "n2",
+        "kernel_id": "art-549-g20-corridor-cost-gap",
+        "kernel_digest": "sha256:466123f62f6e6d1ee5414ed2b8d39004b3677e2cac5a9934c3c146bb1568975d"
+      },
+      {
+        "node_id": "n3",
+        "kernel_id": "art-250-model-stablecoin-corridor-economics",
+        "kernel_digest": "sha256:65998d555685be3e102ff17ae1fd898ca63aa688a69873358fa6d7a520660f2b"
+      },
+      {
+        "node_id": "n4",
+        "kernel_id": "cry-05-agent-action-audit-trail-aggregator",
+        "kernel_digest": "sha256:5f7f6ab0bb2e2b736805ecde518ca59ba9a83ad38b17545a8c7c133cffa1481f"
+      }
+    ],
+    "connectors": [],
+    "gates": [],
+    "actions": []
+  },
+  "workflow_manifest_digest": "sha256:95bb1a41725ad9ab41c42f2468adcb0db627496fb8d88016c8b254ec171e4625",
+  "declared_inputs": [],
+  "steps_meta": [
+    {
+      "node_id": "n1",
+      "data_classification": "compute"
+    },
+    {
+      "node_id": "n2",
+      "data_classification": "compute"
+    },
+    {
+      "node_id": "n3",
+      "data_classification": "compute"
+    },
+    {
+      "node_id": "n4",
+      "data_classification": "compute"
+    }
+  ]
+}

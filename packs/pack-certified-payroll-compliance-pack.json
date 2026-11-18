@@ -1,0 +1,49 @@
+{
+  "workflow_id": "pack-certified-payroll-compliance-pack",
+  "name": "Certified Payroll Compliance Pack",
+  "outcome": "Check a federal construction week's payroll end to end in two recompute stages: first recompute whether each worker on a caller-declared certified payroll was paid at or above the wage-determination rate for their classification, with Contract Work Hours and Safety Standards Act overtime at time-and-a-half on the basic hourly rate (ART-574), then attest that the week's bulk disbursement run is internally consistent and matches its authorized control total in count and value, with duplicate candidates, roster movement, and limit breaches surfaced (ART-518), closing with a session receipt aggregating the run's execution hashes (CRY-05). Payroll rows, wage determinations, payee records, and control totals are caller-supplied inputs; a deficiency or a reconciliation break is an arithmetic finding, never a legal determination. Not legal advice.",
+  "spec_version": "ocg-control-plane@1",
+  "manifest": {
+    "manifest_version": "1",
+    "workflow_id": "pack-certified-payroll-compliance-pack",
+    "trigger": {
+      "type": "manual"
+    },
+    "nodes": [
+      {
+        "node_id": "n1",
+        "kernel_id": "art-574-certified-payroll-prevailing-wage-recompute",
+        "kernel_digest": "sha256:4da565b656d200c214becb712b820a097894e9edeae66b4275e34854847911c7"
+      },
+      {
+        "node_id": "n2",
+        "kernel_id": "art-518-bulk-disbursement-integrity",
+        "kernel_digest": "sha256:3c590d0a9987e270cb032c31ba74642ab9a7f3dab1f9fd32eca587058484bfba"
+      },
+      {
+        "node_id": "n3",
+        "kernel_id": "cry-05-agent-action-audit-trail-aggregator",
+        "kernel_digest": "sha256:5f7f6ab0bb2e2b736805ecde518ca59ba9a83ad38b17545a8c7c133cffa1481f"
+      }
+    ],
+    "connectors": [],
+    "gates": [],
+    "actions": []
+  },
+  "workflow_manifest_digest": "sha256:adf485b0e9e8407a55b511af2515579c8f4bcafd4f9b6d025a03a56c9381d5ba",
+  "declared_inputs": [],
+  "steps_meta": [
+    {
+      "node_id": "n1",
+      "data_classification": "compute"
+    },
+    {
+      "node_id": "n2",
+      "data_classification": "compute"
+    },
+    {
+      "node_id": "n3",
+      "data_classification": "compute"
+    }
+  ]
+}

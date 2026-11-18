@@ -1,0 +1,40 @@
+{
+  "workflow_id": "pack-mortgage-pi-verifier",
+  "name": "Mortgage P&I Verifier",
+  "outcome": "Verify a mortgage's monthly principal-and-interest payment in two stages: TVM annuity computation of the level payment (ART-327), then a session receipt aggregating the run's execution hashes (CRY-05). Pure time-value-of-money mathematics; no regulation applies.",
+  "spec_version": "ocg-control-plane@1",
+  "manifest": {
+    "manifest_version": "1",
+    "workflow_id": "pack-mortgage-pi-verifier",
+    "trigger": {
+      "type": "manual"
+    },
+    "nodes": [
+      {
+        "node_id": "n1",
+        "kernel_id": "art-327-tvm-annuity",
+        "kernel_digest": "sha256:165274b6b7aaf7bdd149aa20b208b60dd4d5a632e159d6801d213a8808b2e4e9"
+      },
+      {
+        "node_id": "n2",
+        "kernel_id": "cry-05-agent-action-audit-trail-aggregator",
+        "kernel_digest": "sha256:5f7f6ab0bb2e2b736805ecde518ca59ba9a83ad38b17545a8c7c133cffa1481f"
+      }
+    ],
+    "connectors": [],
+    "gates": [],
+    "actions": []
+  },
+  "workflow_manifest_digest": "sha256:1d8adc85b7ee1c8f00c3b62c18eb91c851db17d66428a222615ef4b6e124c894",
+  "declared_inputs": [],
+  "steps_meta": [
+    {
+      "node_id": "n1",
+      "data_classification": "compute"
+    },
+    {
+      "node_id": "n2",
+      "data_classification": "compute"
+    }
+  ]
+}

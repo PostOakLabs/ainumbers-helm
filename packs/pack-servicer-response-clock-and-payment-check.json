@@ -1,0 +1,49 @@
+{
+  "workflow_id": "pack-servicer-response-clock-and-payment-check",
+  "name": "Servicer Response Clock and Payment Check",
+  "outcome": "Check how a mortgage servicer handled an account in three stages: first compute the Regulation X response and action clocks for error notices, information requests, and loss-mitigation applications, with due dates and clock states from the event dates (733), then recompute how one payment was applied across escrow, fee, interest, and principal buckets under the note's declared application order, with verdict MATCHES, DIVERGES, or INDETERMINATE (ART-664), then a session receipt aggregating the run's execution hashes (CRY-05). Event dates, loan values, bucket balances, and the application order are caller-supplied inputs; a missed clock or a divergence is an arithmetic and sequence finding, never a legal determination. Not legal advice.",
+  "spec_version": "ocg-control-plane@1",
+  "manifest": {
+    "manifest_version": "1",
+    "workflow_id": "pack-servicer-response-clock-and-payment-check",
+    "trigger": {
+      "type": "manual"
+    },
+    "nodes": [
+      {
+        "node_id": "n1",
+        "kernel_id": "733-servicing-compliance-clock",
+        "kernel_digest": "sha256:e7eac9a4322542b6e39434f60df84cdc6eb24ceee9887b282aadc16f319bb4ea"
+      },
+      {
+        "node_id": "n2",
+        "kernel_id": "art-664-loan-servicing-waterfall-recompute",
+        "kernel_digest": "sha256:a5294931be53b050f99b64e583ecf46c561050b194b01b0a27b92cec2c735a78"
+      },
+      {
+        "node_id": "n3",
+        "kernel_id": "cry-05-agent-action-audit-trail-aggregator",
+        "kernel_digest": "sha256:5f7f6ab0bb2e2b736805ecde518ca59ba9a83ad38b17545a8c7c133cffa1481f"
+      }
+    ],
+    "connectors": [],
+    "gates": [],
+    "actions": []
+  },
+  "workflow_manifest_digest": "sha256:388c31e99d5a429d71d4cf3475a7dbe2ddec9567a53f5d36c3b31f0c54aa2155",
+  "declared_inputs": [],
+  "steps_meta": [
+    {
+      "node_id": "n1",
+      "data_classification": "compute"
+    },
+    {
+      "node_id": "n2",
+      "data_classification": "compute"
+    },
+    {
+      "node_id": "n3",
+      "data_classification": "compute"
+    }
+  ]
+}

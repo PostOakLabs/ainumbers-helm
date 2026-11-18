@@ -1,0 +1,40 @@
+{
+  "workflow_id": "pack-overtime-pay-check",
+  "name": "Overtime Pay Check",
+  "outcome": "Verify overtime pay for a workweek in two stages: FLSA regular-rate and overtime premium computation per 29 CFR 778 (ART-340), then a session receipt aggregating the run's execution hashes (CRY-05). Federal weekly 40-hour rule only; state daily overtime rules are out of scope. Not legal advice.",
+  "spec_version": "ocg-control-plane@1",
+  "manifest": {
+    "manifest_version": "1",
+    "workflow_id": "pack-overtime-pay-check",
+    "trigger": {
+      "type": "manual"
+    },
+    "nodes": [
+      {
+        "node_id": "n1",
+        "kernel_id": "art-340-compute-flsa-regular-rate",
+        "kernel_digest": "sha256:dc00a21aac85481160cee3c24ff63e9fae0faace62668602b069aab28cb7a06a"
+      },
+      {
+        "node_id": "n2",
+        "kernel_id": "cry-05-agent-action-audit-trail-aggregator",
+        "kernel_digest": "sha256:5f7f6ab0bb2e2b736805ecde518ca59ba9a83ad38b17545a8c7c133cffa1481f"
+      }
+    ],
+    "connectors": [],
+    "gates": [],
+    "actions": []
+  },
+  "workflow_manifest_digest": "sha256:2a5ec468d25d543e4795608ad05acb5df76bf4db4061fda1071941fe0b957609",
+  "declared_inputs": [],
+  "steps_meta": [
+    {
+      "node_id": "n1",
+      "data_classification": "compute"
+    },
+    {
+      "node_id": "n2",
+      "data_classification": "compute"
+    }
+  ]
+}

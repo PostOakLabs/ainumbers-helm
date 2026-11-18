@@ -1,0 +1,49 @@
+{
+  "workflow_id": "pack-private-student-loan-disclosure-check",
+  "name": "Private Student Loan Disclosure Check",
+  "outcome": "Three-step chain. Step 1 rebuilds the private student loan amortization schedule from loan amount, rate, and term. Step 2 checks the lender's disclosure packet across the three 12 CFR 1026.46-48 stages, HEOA self-certification presence, and the 3-business-day rescission window. Step 1 payment amount, totals, and execution hash are cited for manual comparison against the disclosed estimated total cost and repayment schedule; the checker does not read the lender's figures. Federal math only; not legal advice.",
+  "spec_version": "ocg-control-plane@1",
+  "manifest": {
+    "manifest_version": "1",
+    "workflow_id": "pack-private-student-loan-disclosure-check",
+    "trigger": {
+      "type": "manual"
+    },
+    "nodes": [
+      {
+        "node_id": "n1",
+        "kernel_id": "art-332-build-amortization-schedule",
+        "kernel_digest": "sha256:c43a019193d999e9f93930a4bf793f51192c11245151211f1c26f038629caef9"
+      },
+      {
+        "node_id": "n2",
+        "kernel_id": "art-405-check-private-student-loan-disclosures",
+        "kernel_digest": "sha256:75fd46391316b49459fd5cfc046cdfc162076a32e0f76268ed539ffb43e3bd6e"
+      },
+      {
+        "node_id": "n3",
+        "kernel_id": "cry-05-agent-action-audit-trail-aggregator",
+        "kernel_digest": "sha256:5f7f6ab0bb2e2b736805ecde518ca59ba9a83ad38b17545a8c7c133cffa1481f"
+      }
+    ],
+    "connectors": [],
+    "gates": [],
+    "actions": []
+  },
+  "workflow_manifest_digest": "sha256:a7064f59392f2101d08267804eb48b8a4ff1e7f01fa31a4f095d2eda064ae307",
+  "declared_inputs": [],
+  "steps_meta": [
+    {
+      "node_id": "n1",
+      "data_classification": "compute"
+    },
+    {
+      "node_id": "n2",
+      "data_classification": "compute"
+    },
+    {
+      "node_id": "n3",
+      "data_classification": "compute"
+    }
+  ]
+}
