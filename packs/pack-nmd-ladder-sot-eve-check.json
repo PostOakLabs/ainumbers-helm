@@ -1,0 +1,58 @@
+{
+  "workflow_id": "pack-nmd-ladder-sot-eve-check",
+  "name": "IRRBB NMD Ladder SOT EVE Check",
+  "outcome": "Check interest rate risk in the banking book in three independent runs plus a session receipt: map non-maturity deposit balances into a bucketed net repricing gap schedule under a caller-declared behavioral allocation (ART-442), sweep the prescribed US parallel shock ladder over that schedule and name the rung with the lowest delta-EVE (ART-369), then compare that worst delta-EVE against 15 percent of Tier 1 capital as a ladder-based proxy outlier indication (ART-184), closing with a session receipt aggregating the run execution hashes (CRY-05). All balances, allocations, betas, gaps, and capital are caller-supplied inputs; each run is an independent recompute from its own declared inputs. This chain is an analytical check and a comparison against a threshold under a stated ladder.",
+  "spec_version": "ocg-control-plane@1",
+  "manifest": {
+    "manifest_version": "1",
+    "workflow_id": "pack-nmd-ladder-sot-eve-check",
+    "trigger": {
+      "type": "manual"
+    },
+    "nodes": [
+      {
+        "node_id": "n1",
+        "kernel_id": "art-442-nmd-behavioral-repricing-mapper",
+        "kernel_digest": "sha256:388900a314f4d9e05be9bfcf9909a1b89a67b9c482c057d9434cb200f7bef94d"
+      },
+      {
+        "node_id": "n2",
+        "kernel_id": "art-369-run-rate-shock-ladder",
+        "kernel_digest": "sha256:225cfd55e3d840c397a4282c89669257f774926ce11c8062c5dbe6d249cc730e"
+      },
+      {
+        "node_id": "n3",
+        "kernel_id": "art-184-irrbb-sot-eve-evaluator",
+        "kernel_digest": "sha256:83f3aad85600dfd0e80b47b86e5d42e5774e39b792077038e2debae508d10ed5"
+      },
+      {
+        "node_id": "n4",
+        "kernel_id": "cry-05-agent-action-audit-trail-aggregator",
+        "kernel_digest": "sha256:5f7f6ab0bb2e2b736805ecde518ca59ba9a83ad38b17545a8c7c133cffa1481f"
+      }
+    ],
+    "connectors": [],
+    "gates": [],
+    "actions": []
+  },
+  "workflow_manifest_digest": "sha256:43f22b80d2cf5fb86c041156e0b25720d653ef57ef89b7cee7e9c43a67b35bdf",
+  "declared_inputs": [],
+  "steps_meta": [
+    {
+      "node_id": "n1",
+      "data_classification": "compute"
+    },
+    {
+      "node_id": "n2",
+      "data_classification": "compute"
+    },
+    {
+      "node_id": "n3",
+      "data_classification": "compute"
+    },
+    {
+      "node_id": "n4",
+      "data_classification": "compute"
+    }
+  ]
+}

@@ -1,0 +1,49 @@
+{
+  "workflow_id": "pack-paycheck-take-home-check",
+  "name": "Take-Home Pay Check",
+  "outcome": "Verify a paycheck's take-home pay in three stages: IRS Publication 15-T percentage-method federal withholding (ART-338), FICA and net-pay computation (ART-339), then a session receipt aggregating the run's execution hashes (CRY-05). Federal taxes only; state and local withholding are out of scope. Not tax advice.",
+  "spec_version": "ocg-control-plane@1",
+  "manifest": {
+    "manifest_version": "1",
+    "workflow_id": "pack-paycheck-take-home-check",
+    "trigger": {
+      "type": "manual"
+    },
+    "nodes": [
+      {
+        "node_id": "n1",
+        "kernel_id": "art-338-compute-federal-withholding",
+        "kernel_digest": "sha256:3e47de0970d976aa0ae29c66249d8ae11cf754a870d516336914a0a2f3a3825d"
+      },
+      {
+        "node_id": "n2",
+        "kernel_id": "art-339-compute-gross-to-net",
+        "kernel_digest": "sha256:58c1128e8a66033dfe7cbae4e700f57f370ae362cf62b4b12ac7c70a1710afa5"
+      },
+      {
+        "node_id": "n3",
+        "kernel_id": "cry-05-agent-action-audit-trail-aggregator",
+        "kernel_digest": "sha256:5f7f6ab0bb2e2b736805ecde518ca59ba9a83ad38b17545a8c7c133cffa1481f"
+      }
+    ],
+    "connectors": [],
+    "gates": [],
+    "actions": []
+  },
+  "workflow_manifest_digest": "sha256:6327c00560e63a3a10d30b6385f5bd96ea3b34b51220fdd9128b531519fb98fe",
+  "declared_inputs": [],
+  "steps_meta": [
+    {
+      "node_id": "n1",
+      "data_classification": "compute"
+    },
+    {
+      "node_id": "n2",
+      "data_classification": "compute"
+    },
+    {
+      "node_id": "n3",
+      "data_classification": "compute"
+    }
+  ]
+}

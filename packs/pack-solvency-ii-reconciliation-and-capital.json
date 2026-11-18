@@ -13,7 +13,7 @@
       {
         "node_id": "n1",
         "kernel_id": "art-180-solvency2-scr-ratio-calculator",
-        "kernel_digest": "sha256:58ddc09d3c1b6bccab424d5392e51c690e34d0466a76b885b19a819ef7f7875f"
+        "kernel_digest": "sha256:9d4a1025e0982e476cc0158b3b0d24b87328adae662f2f1449a49c356fc4ee1a"
       },
       {
         "node_id": "n2",
@@ -30,7 +30,7 @@
     "gates": [],
     "actions": []
   },
-  "workflow_manifest_digest": "sha256:842bbcc3c08449e79eb0857d5262e8017194915760cd2b060adaf52d2cc6eb01",
+  "workflow_manifest_digest": "sha256:951573f607f9934837c48e95c172763b5cc83a79f593233769c6b49786db5cd2",
   "declared_inputs": [],
   "steps_meta": [
     {

@@ -23,7 +23,7 @@
       {
         "node_id": "n3",
         "kernel_id": "art-497-validator-change-control-receipt",
-        "kernel_digest": "sha256:54af35dcf6e35f959764ddf334f63dafbdf57047a8f810e47e3f980586a861b3"
+        "kernel_digest": "sha256:dc2fd0401a33be9a8facce69b9973dd015445c249cdc58410366c2a7ea3c5751"
       },
       {
         "node_id": "n4",
@@ -35,7 +35,7 @@
     "gates": [],
     "actions": []
   },
-  "workflow_manifest_digest": "sha256:64c3ca02421d2c510afab81ba7c891ee8a5e0960d09ebbba25674984e6e09b0e",
+  "workflow_manifest_digest": "sha256:2d025db07371333511b5c414c289019eb24355d253a6066d88dc93febab78139",
   "declared_inputs": [],
   "steps_meta": [
     {

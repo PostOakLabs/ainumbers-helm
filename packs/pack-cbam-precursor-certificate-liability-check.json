@@ -1,0 +1,63 @@
+{
+  "workflow_id": "pack-cbam-precursor-certificate-liability-check",
+  "name": "CBAM Precursor Certificate Liability Check",
+  "outcome": "Price a complex good in CBAM certificates in three independent runs plus a session receipt: roll up precursor emissions for a declared final good and quantity (ART-72), calculate consignment embedded emissions from declared direct data and a declared precursor total (ART-69), then model the certificate liability, holding schedule and surrender deadline from the declared embedded total (ART-71), closing with a session receipt aggregating the run execution hashes (CRY-05). Each run computes from its own declared inputs. This chain is decision support, not a filed CBAM declaration, not a verification, and not a surrender of certificates.",
+  "spec_version": "ocg-control-plane@1",
+  "manifest": {
+    "manifest_version": "1",
+    "workflow_id": "pack-cbam-precursor-certificate-liability-check",
+    "trigger": {
+      "type": "manual"
+    },
+    "nodes": [
+      {
+        "node_id": "n1",
+        "kernel_id": "art-72-cbam-precursor-emissions-aggregator",
+        "kernel_digest": "sha256:989771281b7268f99e74d59f151efd4deaf418e9c6e233529b873618190229fd"
+      },
+      {
+        "node_id": "n2",
+        "kernel_id": "art-69-cbam-embedded-emissions-calculator",
+        "kernel_digest": "sha256:41700ba84727c6ac4cb1f9fb130ed565723c48eb48cd03b94b3f3ac31e4d6f00"
+      },
+      {
+        "node_id": "n3",
+        "kernel_id": "art-71-cbam-certificate-cost-engine",
+        "kernel_digest": "sha256:b17a4d4c2d75fa70d54b818c6fad1e1d5fac3413d1ed2bd5e7b0e3ee36bbf8db"
+      },
+      {
+        "node_id": "n4",
+        "kernel_id": "cry-05-agent-action-audit-trail-aggregator",
+        "kernel_digest": "sha256:5f7f6ab0bb2e2b736805ecde518ca59ba9a83ad38b17545a8c7c133cffa1481f"
+      }
+    ],
+    "connectors": [],
+    "gates": [],
+    "actions": []
+  },
+  "workflow_manifest_digest": "sha256:b2e2947146d33b556a2b324bbfdf1ff2f68c06bac5ada30877eaa5e8480d6832",
+  "declared_inputs": [
+    {
+      "from": "art-68-carbon-compliance-fit-diagnostic",
+      "kind": "external"
+    }
+  ],
+  "steps_meta": [
+    {
+      "node_id": "n1",
+      "data_classification": "compute"
+    },
+    {
+      "node_id": "n2",
+      "data_classification": "compute"
+    },
+    {
+      "node_id": "n3",
+      "data_classification": "compute"
+    },
+    {
+      "node_id": "n4",
+      "data_classification": "compute"
+    }
+  ]
+}

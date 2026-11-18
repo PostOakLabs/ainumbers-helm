@@ -1,0 +1,49 @@
+{
+  "workflow_id": "pack-commercial-loan-underwriting-check",
+  "name": "Commercial Loan Underwriting Check",
+  "outcome": "Checks the two numbers a credit committee starts with: debt-service coverage and risk-adjusted pricing. art-363 rebuilds the borrower's coverage ratios (basic/cash/FCF DSCR, FCCR, EBIT- and EBITDA-basis ICR, leverage in x EBITDA) against its five-category lender matrix; art-362 prices the loan on a risk-adjusted return-on-capital basis and reports the spread needed to clear the hurdle rate; cry-05 aggregates the run's execution receipts. Steps are independent runs; step-1 ratios and execution hashes are cited for manual comparison. The pricer takes user-supplied inputs. Not a credit decision.",
+  "spec_version": "ocg-control-plane@1",
+  "manifest": {
+    "manifest_version": "1",
+    "workflow_id": "pack-commercial-loan-underwriting-check",
+    "trigger": {
+      "type": "manual"
+    },
+    "nodes": [
+      {
+        "node_id": "n1",
+        "kernel_id": "art-363-compute-dscr",
+        "kernel_digest": "sha256:72672db356155cb674c7b09b6e09d78072704a9700fd99f431fead87a6816ac9"
+      },
+      {
+        "node_id": "n2",
+        "kernel_id": "art-362-compute-raroc-loan-price",
+        "kernel_digest": "sha256:924bffad0e3ca899065de2ce2e30a9339ed8b16a215ac8a5bf606f8fc0a9cc0b"
+      },
+      {
+        "node_id": "n3",
+        "kernel_id": "cry-05-agent-action-audit-trail-aggregator",
+        "kernel_digest": "sha256:5f7f6ab0bb2e2b736805ecde518ca59ba9a83ad38b17545a8c7c133cffa1481f"
+      }
+    ],
+    "connectors": [],
+    "gates": [],
+    "actions": []
+  },
+  "workflow_manifest_digest": "sha256:e2717bd613004048dd3de3b30c80f9dc477e098c223ffa1f4a35c1e73ee16858",
+  "declared_inputs": [],
+  "steps_meta": [
+    {
+      "node_id": "n1",
+      "data_classification": "compute"
+    },
+    {
+      "node_id": "n2",
+      "data_classification": "compute"
+    },
+    {
+      "node_id": "n3",
+      "data_classification": "compute"
+    }
+  ]
+}

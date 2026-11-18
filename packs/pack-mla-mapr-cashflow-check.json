@@ -1,0 +1,40 @@
+{
+  "workflow_id": "pack-mla-mapr-cashflow-check",
+  "name": "MLA MAPR Cashflow Check",
+  "outcome": "Recompute a closed-end loan's Military Annual Percentage Rate from the borrower's actual cash flows and charges in two stages: first recompute the MAPR by the Regulation Z actuarial method over the 32 CFR 232.4(c)(1) charge set and compare it with the 36 percent cap in 232.4(b) (ART-616), then a session receipt aggregating the run's execution hashes (CRY-05). Advances, payments, timings, and charges are caller-supplied inputs; bona fide fee and application-fee exception questions are surfaced for manual review, never decided. The result is an arithmetic recompute, never a legal determination and never a covered-borrower determination. Not legal advice.",
+  "spec_version": "ocg-control-plane@1",
+  "manifest": {
+    "manifest_version": "1",
+    "workflow_id": "pack-mla-mapr-cashflow-check",
+    "trigger": {
+      "type": "manual"
+    },
+    "nodes": [
+      {
+        "node_id": "n1",
+        "kernel_id": "art-616-mla-mapr-actuarial-recompute",
+        "kernel_digest": "sha256:a964af8add6f214ff8c3c7020a994b3b0436422b20c2145f90543968854ec2d0"
+      },
+      {
+        "node_id": "n2",
+        "kernel_id": "cry-05-agent-action-audit-trail-aggregator",
+        "kernel_digest": "sha256:5f7f6ab0bb2e2b736805ecde518ca59ba9a83ad38b17545a8c7c133cffa1481f"
+      }
+    ],
+    "connectors": [],
+    "gates": [],
+    "actions": []
+  },
+  "workflow_manifest_digest": "sha256:098f0632c52040d231acbfc2f8346ded26e81de1e2a59665cedbe70d841971a2",
+  "declared_inputs": [],
+  "steps_meta": [
+    {
+      "node_id": "n1",
+      "data_classification": "compute"
+    },
+    {
+      "node_id": "n2",
+      "data_classification": "compute"
+    }
+  ]
+}

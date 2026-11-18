@@ -1,0 +1,49 @@
+{
+  "workflow_id": "pack-homebuyer-affordability-check",
+  "name": "Homebuyer Affordability Check",
+  "outcome": "Check the two ratios lenders check first: debt-to-income (DTI) per Fannie Mae Selling Guide B3-6-02 (ART-335) and loan-to-value (LTV) per Fannie Mae Selling Guide B2-1.1-03 (ART-336), then a session receipt aggregating the run's execution hashes (CRY-05). This shows two underwriting ratios, not a promise of approval or denial. Not financial advice.",
+  "spec_version": "ocg-control-plane@1",
+  "manifest": {
+    "manifest_version": "1",
+    "workflow_id": "pack-homebuyer-affordability-check",
+    "trigger": {
+      "type": "manual"
+    },
+    "nodes": [
+      {
+        "node_id": "n1",
+        "kernel_id": "art-335-compute-dti-ratios",
+        "kernel_digest": "sha256:2e686160add3cada6ff0482be86c0e368cd1680f7566f8deac31974459f9dc69"
+      },
+      {
+        "node_id": "n2",
+        "kernel_id": "art-336-compute-ltv-ratios",
+        "kernel_digest": "sha256:65a08e84465e1ec8ca4a01e9b4b0c7d7d5c566ca467f6efdf622598c36511706"
+      },
+      {
+        "node_id": "n3",
+        "kernel_id": "cry-05-agent-action-audit-trail-aggregator",
+        "kernel_digest": "sha256:5f7f6ab0bb2e2b736805ecde518ca59ba9a83ad38b17545a8c7c133cffa1481f"
+      }
+    ],
+    "connectors": [],
+    "gates": [],
+    "actions": []
+  },
+  "workflow_manifest_digest": "sha256:881e7b598c837764e7b3ecb0aa0ddfb591b43edab74c90b4f97266d1c87bb989",
+  "declared_inputs": [],
+  "steps_meta": [
+    {
+      "node_id": "n1",
+      "data_classification": "compute"
+    },
+    {
+      "node_id": "n2",
+      "data_classification": "compute"
+    },
+    {
+      "node_id": "n3",
+      "data_classification": "compute"
+    }
+  ]
+}

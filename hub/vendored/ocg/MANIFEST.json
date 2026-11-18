@@ -1,18 +1,18 @@
 {
   "sourceRepo": "https://github.com/PostOakLabs/ainumbers.git",
   "license": "MIT License, Copyright (c) 2026 PostOakLabs (same license/holder as this repo; see this repo's own LICENSE for full terms; no third-party code in this vendored subtree)",
-  "pinnedSha": "d3f43284b31efd1695cf35fdd1c7e5b3f29ded7f",
+  "pinnedSha": "8bdd256fdd4547cb410ce3357a5054edbe6a5840",
   "vendoredPaths": [
     "chaingraph/kernels",
     "chaingraph/standard/SPEC.md",
     "chaingraph/standard/openchain-graph-v0.4.schema.json",
     "chaingraph/chaingraph.json"
   ],
-  "fileCount": 2637,
+  "fileCount": 3329,
   "files": [
     {
       "path": "chaingraph.json",
-      "sha256": "1a55282b18fbc212607c85e2b72427c798069e59788278567e817b5cfed3c4cf"
+      "sha256": "97005b46ca3673f68cea228bbcb0bdf36cdb5bd3a12bde82214030441958a189"
     },
     {
       "path": "kernels/__boundary_mr__/_mr-harness.mjs",
@@ -69,6 +69,50 @@
     {
       "path": "kernels/__consistency__/run-consistency.mjs",
       "sha256": "c20b47999f1dda5e4370c30e60792907b9a8061c7f9b55caad5b99f2657518c0"
+    },
+    {
+      "path": "kernels/__headroom__/art-213-perp-liquidation-calculator.headroom.json",
+      "sha256": "3c4dfafb5ebd55b7a7e6791cfdcf70dbaf1d60ebf92652142cad5629265cd8da"
+    },
+    {
+      "path": "kernels/__headroom__/art-217-trid-apr-accuracy.headroom.json",
+      "sha256": "90e5f879ae4f73752295036f88dc646d78fd49af5fced3adc800e35b5ffd3c52"
+    },
+    {
+      "path": "kernels/__headroom__/art-218-qm-points-and-fees.headroom.json",
+      "sha256": "829224d2baead35167429bccdfdc838c0f13f5cc35562c2e8c49e365b3da0d0c"
+    },
+    {
+      "path": "kernels/__headroom__/art-219-qm-apr-apor-spread.headroom.json",
+      "sha256": "ee626a3882981486d33198ae1df3c6e157122451fe5ec6bca9275ae9415da2d0"
+    },
+    {
+      "path": "kernels/__headroom__/art-273-pendle-yield.headroom.json",
+      "sha256": "32ff9a1105fede548bfc4cd694ace8e3c491d0087042c8476ab9935604987d53"
+    },
+    {
+      "path": "kernels/__headroom__/art-521-settlement-asset-backing-invariant.headroom.json",
+      "sha256": "de12416b16e12fa6ddd27e9aedd7842659c6b03452f4ce4d5fe2edf4a4b9c524"
+    },
+    {
+      "path": "kernels/__headroom__/art-703-mandate-authorization-gate.headroom.json",
+      "sha256": "10397f750de3e7817bf65f5d22de8a3dd5319509963d5940d2e6a0712716f1e0"
+    },
+    {
+      "path": "kernels/__headroom__/art-816-eip3009-agent-spend-gate.headroom.json",
+      "sha256": "400a66386eb5da7353d016337f94eda3ff3e6c2613dc633785cf39264e3f0d0d"
+    },
+    {
+      "path": "kernels/__headroom__/headroom-gates.mjs",
+      "sha256": "68b52c3ffcd96db9842a6726cd7894e3ee7bbb8a6f4218f2cf7aef48716e5a85"
+    },
+    {
+      "path": "kernels/__headroom__/run-headroom.mjs",
+      "sha256": "c9b5211250a9a9876737b9bd2ee6e5daea1d2f96e48281be5628698bb6db2c4c"
+    },
+    {
+      "path": "kernels/__proptests__/_caller-key-probes.mjs",
+      "sha256": "e101fdd6a1a817a75de9b616f25cf94f26efa7d695dfb07bc1ad0d96ce530038"
     },
     {
       "path": "kernels/__proptests__/_pbt-common.mjs",
@@ -145,6 +189,114 @@
     {
       "path": "kernels/__proptests__/733-servicing-compliance-clock.proptest.mjs",
       "sha256": "64387f852aa675beb1ed38ca2a603d467991edf54537dd37a07964507e5363fd"
+    },
+    {
+      "path": "kernels/__proptests__/783-emv-mpm-qr-validator.proptest.mjs",
+      "sha256": "a73b04d947749a1594fce6274ccbab5f02e5685f9b6a5f53ac2c599cc2333bc3"
+    },
+    {
+      "path": "kernels/__proptests__/784-cbr-data-return-validator.proptest.mjs",
+      "sha256": "258b428fb916eb8c1cbcf98b0e6f30ad40e8de4d1748b6df665b0aac3cc50ba0"
+    },
+    {
+      "path": "kernels/__proptests__/785-qr-golive-readiness.proptest.mjs",
+      "sha256": "6d3cf3f9ba07c4d380bb6a99c482d73aeb202a2f10b3680f1f122954851e3d08"
+    },
+    {
+      "path": "kernels/__proptests__/787-corridor-cost-averages.proptest.mjs",
+      "sha256": "3a00f7e4e5fc726fca82aedf9f20d2a4bfc3a52fdf9a20518adff82127c08d74"
+    },
+    {
+      "path": "kernels/__proptests__/792-curator-vault-cap-auditor.proptest.mjs",
+      "sha256": "62456a276e03ddde98b4dcde009f60cc4cf5fd06d58fa2e0d8eacfd1c151fe71"
+    },
+    {
+      "path": "kernels/__proptests__/794-event-fee-recompute.proptest.mjs",
+      "sha256": "e9335ddef43197595091de8ede7063b75539f360bf3b02b2c1a0f3a78e65da52"
+    },
+    {
+      "path": "kernels/__proptests__/795-stablecoin-refund-dispute.proptest.mjs",
+      "sha256": "89c0d0b9996fb093790bc880965fecb3a816f0dc1699b0f546527241ba9641e1"
+    },
+    {
+      "path": "kernels/__proptests__/797-stablecoin-cash-equivalent-test.proptest.mjs",
+      "sha256": "918a1b3aae4aa22f43a6b2f8d16e2442b78991913a60697096585cc819c9469a"
+    },
+    {
+      "path": "kernels/__proptests__/798-assess-sandbox-application-readiness.proptest.mjs",
+      "sha256": "ed58af466c84864f5a12649ef947494f958d8ae44cdbeb3a4e988f83c54d650d"
+    },
+    {
+      "path": "kernels/__proptests__/806-event-contract-terms-lint.proptest.mjs",
+      "sha256": "68d6bbd0a97ba872c28d8d3ed2ce1c793396d169adb9b943857f187a531f45df"
+    },
+    {
+      "path": "kernels/__proptests__/808-lst-share-rate-reconciler.proptest.mjs",
+      "sha256": "876fcffa2708304208c53ae50408373a0493cbd120c3b636c63b89bdf61d0ba6"
+    },
+    {
+      "path": "kernels/__proptests__/810-contract-bytecode-identity-verifier.proptest.mjs",
+      "sha256": "6c75347bace92d2dde2589fca8d679c46efeddd7fdece24f0066f2e600794dc5"
+    },
+    {
+      "path": "kernels/__proptests__/812-eth-staking-queue.proptest.mjs",
+      "sha256": "f9f7590be9f354dbd4bbe12c3f6eabf783df52edd0d334e63e02e9fa7ca4334e"
+    },
+    {
+      "path": "kernels/__proptests__/813-eth-staking-accounting.proptest.mjs",
+      "sha256": "44c1878d907ac6c95708dea3b0ba431b7ca6fd3a606c0934c669b743b2c22089"
+    },
+    {
+      "path": "kernels/__proptests__/815-eth-fee-market.proptest.mjs",
+      "sha256": "f4404824263e0fa8eb7f1f55b17bffe389d6102f66b28f9ca76f7d76934e3081"
+    },
+    {
+      "path": "kernels/__proptests__/817-eth-l2-stage-classifier.proptest.mjs",
+      "sha256": "a9e777e01e9c04baf3eaafeee45746036264b5c1dbd9c9c03f2a1be0d1e71ff3"
+    },
+    {
+      "path": "kernels/__proptests__/822-zcash-supply-check.proptest.mjs",
+      "sha256": "7b6e68a50feaedea769d5892dac2e703913cb55b08d30fc9e73205f7f2893ca3"
+    },
+    {
+      "path": "kernels/__proptests__/824-zip317-transfer-fee.proptest.mjs",
+      "sha256": "da15f0558eb6fe9bcd44fdbca3cca40e1722b1a36f8a0428a9765876a94a4ece"
+    },
+    {
+      "path": "kernels/__proptests__/825-reconcile-ucp-checkout-totals.proptest.mjs",
+      "sha256": "a16b818d5d1719cebd2559f42f43c1863b840e13edcf58a55c4b6f892c3d0daa"
+    },
+    {
+      "path": "kernels/__proptests__/827-agent-cred-class-matrix.proptest.mjs",
+      "sha256": "c7333735f78b7c85ac04a08036b99996f990a1536445ba6c6d39f0d782d9c226"
+    },
+    {
+      "path": "kernels/__proptests__/829-safe-tx-hash-recompute.proptest.mjs",
+      "sha256": "2f9d6cee0f6a974036ed0df78618ea89e148fba575657658c125b7d417527392"
+    },
+    {
+      "path": "kernels/__proptests__/836-payment-services-activity-classifier.proptest.mjs",
+      "sha256": "c1c879333ff44f944dcbfefd74ed5c3e54b56d5371c0cf02ae50d17518743437"
+    },
+    {
+      "path": "kernels/__proptests__/837-issuer-yield-share.proptest.mjs",
+      "sha256": "de0e8feaa655c8ffe1bccc71df6f38c175172b6a93318cbc2a9d67765bfd68b3"
+    },
+    {
+      "path": "kernels/__proptests__/838-control-frequency-sample.proptest.mjs",
+      "sha256": "17821fbef727890f65beb712e24441dd6219bf06e0eaf17e258b59aab4ad9a35"
+    },
+    {
+      "path": "kernels/__proptests__/841-planning-materiality.proptest.mjs",
+      "sha256": "1a77f11940c6a25bdc51707e4a8a5729aa040e4e85212ebf2208cdacbf319769"
+    },
+    {
+      "path": "kernels/__proptests__/844-workload-identity-claims.proptest.mjs",
+      "sha256": "a04b21c7558fbdf1be901b32100e79006c867a51741d87e3aa163665e4ea711a"
+    },
+    {
+      "path": "kernels/__proptests__/845-je-period-lock-gate.proptest.mjs",
+      "sha256": "5a18a1bc2e8193f7e6bb5e9db20032da2500d113592d887eb2e96a576403f69a"
     },
     {
       "path": "kernels/__proptests__/art-01-ap2-mandate-chain-validator.proptest.mjs",
@@ -292,7 +444,7 @@
     },
     {
       "path": "kernels/__proptests__/art-124-content-credential-signature-verifier.proptest.mjs",
-      "sha256": "529c39db3532dcd101b1876ca1ba51fbe34b006388c171e4bdea9ac9bd95ea9d"
+      "sha256": "37b2deaf0f2083ac94b7a15e49729ab049a4389d4a0a49a698b36a97ec59524f"
     },
     {
       "path": "kernels/__proptests__/art-125-provenance-ingredient-tree-resolver.proptest.mjs",
@@ -540,7 +692,7 @@
     },
     {
       "path": "kernels/__proptests__/art-180-solvency2-scr-ratio-calculator.proptest.mjs",
-      "sha256": "f135ad758b174dc86f3b061d79fc72fdf7baa351292a4bee2cfb2aa444ae5c90"
+      "sha256": "26e3557870c6f85c2386f1b19166411b818f24943298cb126db0bafc1d3d7440"
     },
     {
       "path": "kernels/__proptests__/art-181-sii-ifrs17-reconciliation-bridger.proptest.mjs",
@@ -704,7 +856,7 @@
     },
     {
       "path": "kernels/__proptests__/art-218-qm-points-and-fees.proptest.mjs",
-      "sha256": "8959339fb3f1670e88615bfd5bb72cb92efc3747d0f114ce2de82407a07b64c4"
+      "sha256": "66c7c828819fc75b4478b126a794dd11b83d7be7e8e4b7f038d06feea8a509ec"
     },
     {
       "path": "kernels/__proptests__/art-219-qm-apr-apor-spread.proptest.mjs",
@@ -776,7 +928,7 @@
     },
     {
       "path": "kernels/__proptests__/art-234-test-hoepa-high-cost.proptest.mjs",
-      "sha256": "6f24acf447b28605f9f480d978f82cb952b1383eebebf2d63996776c3da47954"
+      "sha256": "653c6c18931de21cd09e744b300e12b18bba58045dd02f1a907406ec1870053e"
     },
     {
       "path": "kernels/__proptests__/art-235-test-hpml-escrow.proptest.mjs",
@@ -808,7 +960,7 @@
     },
     {
       "path": "kernels/__proptests__/art-241-cbpr-structured-address-linter.proptest.mjs",
-      "sha256": "9c4e9892a16ae3b16d8e58d432ff85fa73b8d2c6cdf3334be2dbed30b38061a3"
+      "sha256": "cfab92f9294d44f6867a83999508459cbbe493761a3fe0f9a7361bdc5f46bd28"
     },
     {
       "path": "kernels/__proptests__/art-242-pacs008-party-completeness-validator.proptest.mjs",
@@ -824,7 +976,7 @@
     },
     {
       "path": "kernels/__proptests__/art-245-mt-mx-translation-fidelity-scorer.proptest.mjs",
-      "sha256": "636c7ad4b42df6065e9031d786c458100dad35d8b2dfcf4c0677d5b201f8b396"
+      "sha256": "57558db6dc9e74c8abba5e2374885e7b22af8555ee34090282446ef244482740"
     },
     {
       "path": "kernels/__proptests__/art-246-lei-payment-binding-linter.proptest.mjs",
@@ -832,7 +984,7 @@
     },
     {
       "path": "kernels/__proptests__/art-247-prevalidation-readiness-scorer.proptest.mjs",
-      "sha256": "f66c43b642aab2dad89093f580ce81c1c62f1c650003b6b21064ed63d4bf6f38"
+      "sha256": "9b1f40e4d0304581df8577bfb39b0147dbc29f1f1af04c57043ae0fd66ea285f"
     },
     {
       "path": "kernels/__proptests__/art-248-compute-remittance-disclosure.proptest.mjs",
@@ -960,7 +1112,7 @@
     },
     {
       "path": "kernels/__proptests__/art-275-genius-reserve-disclosure-checker.proptest.mjs",
-      "sha256": "3c600b8ffcdbca233a64302731a4655bc7ff7d90ac9b19d9e33ba20618793aef"
+      "sha256": "d23a5880d8ccc7c54e9427801c13e9e8ffb3c921f7d651c74fbc235071e38b9a"
     },
     {
       "path": "kernels/__proptests__/art-276-mutual-nda-composer.proptest.mjs",
@@ -1244,7 +1396,7 @@
     },
     {
       "path": "kernels/__proptests__/art-349-fedwire-structured-address-linter.proptest.mjs",
-      "sha256": "ce1089845c49796d512a51f67d1aefa824c556711df4e7158ac4a1e638b6668b"
+      "sha256": "e00c76ef879f8c7c928e0176999c9cf6ca3f409981f8ccc70619f829c3443bc7"
     },
     {
       "path": "kernels/__proptests__/art-35-tempo-payments-business-case.proptest.mjs",
@@ -1308,7 +1460,7 @@
     },
     {
       "path": "kernels/__proptests__/art-365-compute-globe-topup-tax.proptest.mjs",
-      "sha256": "0099845572121791b9026f9c050e964914be5f28ff412c96707704479c517c1a"
+      "sha256": "4fb213f52fc9a30fc1b3ed49517bfab348cfe0bab68c1da7354930723a2085d2"
     },
     {
       "path": "kernels/__proptests__/art-366-price-embedded-insurance.proptest.mjs",
@@ -1516,7 +1668,7 @@
     },
     {
       "path": "kernels/__proptests__/art-424-witness-cosignature-verifier.proptest.mjs",
-      "sha256": "a558e9467fcb237acc57a3091ca2906010c2dda9ad8d3ab634302f8185620d21"
+      "sha256": "5b0bd37b03e9ebe2de84942b84c2e471340449f9e9b35d8b0b66a2a6bf48b222"
     },
     {
       "path": "kernels/__proptests__/art-425-large-exposures-limit-check.proptest.mjs",
@@ -1812,7 +1964,7 @@
     },
     {
       "path": "kernels/__proptests__/art-497-validator-change-control-receipt.proptest.mjs",
-      "sha256": "66347d3aa34087a36349fb56f2225b170acfd1ae4b1037891b2e628f903f3e04"
+      "sha256": "77b186ede6dc00b9cf67e8e0fbae4f7c6b7140fe6c98703fb9ee9dee7cc85a0b"
     },
     {
       "path": "kernels/__proptests__/art-498-reward-flow-related-party.proptest.mjs",
@@ -2136,7 +2288,7 @@
     },
     {
       "path": "kernels/__proptests__/art-577-exchange-fee-tier-recompute.proptest.mjs",
-      "sha256": "de59aa32e7d58b9b2fbf11abe85bf9fd296243c2fdfcdc5d51a428908d369f08"
+      "sha256": "a67a745195f06bce959accd716085fe4c4f361afa572b669860053462a26cc4b"
     },
     {
       "path": "kernels/__proptests__/art-578-etf-pcf-basket-verification.proptest.mjs",
@@ -2204,7 +2356,7 @@
     },
     {
       "path": "kernels/__proptests__/art-593-webbotauth-nonce-replay-check.proptest.mjs",
-      "sha256": "705192ab6b8feea2d1084cd9f97da06e1c9fccd4cb1a97f23e970dc976483d74"
+      "sha256": "496e71f7b67ad31894243b94773405afbe99c1110db046ce277a5e05917f2c9c"
     },
     {
       "path": "kernels/__proptests__/art-594-tempo-mpp-voucher-receipt-verifier.proptest.mjs",
@@ -2248,7 +2400,7 @@
     },
     {
       "path": "kernels/__proptests__/art-603-stablecoin-reserve-3source-recompute.proptest.mjs",
-      "sha256": "cb71e517e30aa08211bda58a9d1f1aeaf8b22eb4374ca29b7d3eb07c1ec119f7"
+      "sha256": "970097d2de2ad41c4f83e6adc0f46fa2ff2b1145145fab73158f59890a560cfa"
     },
     {
       "path": "kernels/__proptests__/art-604-erc8004-registry-entry-verifier.proptest.mjs",
@@ -2368,7 +2520,7 @@
     },
     {
       "path": "kernels/__proptests__/art-64-ai-act-highrisk-fit-diagnostic.proptest.mjs",
-      "sha256": "c5bcc48a4e3dd115811be0c14626f03514c6d7cfcf3bf9b2fd693568e3b10aae"
+      "sha256": "73e5978fdd71188a82ac94c5e010b21fc9471722390988c86af79d1acf10621e"
     },
     {
       "path": "kernels/__proptests__/art-645-compute-index-weights.proptest.mjs",
@@ -2564,7 +2716,7 @@
     },
     {
       "path": "kernels/__proptests__/art-693-isa530-audit-sampling-mus.proptest.mjs",
-      "sha256": "4ea022cae390f03eda1b3994101d51196719faa269f6061e68787aa74707aff1"
+      "sha256": "60444cddf470f0c78521f5b7a9e8d19b1147a3f683746f3801fb61700957cbff"
     },
     {
       "path": "kernels/__proptests__/art-699-x402-permit2-evidence-recomputer.proptest.mjs",
@@ -2580,7 +2732,7 @@
     },
     {
       "path": "kernels/__proptests__/art-701-three-way-invoice-match.proptest.mjs",
-      "sha256": "50c6c3bc94e466dc82e44bed270ea60b7297f460c33fdb344790813b94353110"
+      "sha256": "c2ccc6b7381256717112aa69141bc6e4a4a1aa996d84e1eaa6013670f0882f13"
     },
     {
       "path": "kernels/__proptests__/art-702-runway-goal-path.proptest.mjs",
@@ -2628,7 +2780,7 @@
     },
     {
       "path": "kernels/__proptests__/art-712-workforce-board-roi.proptest.mjs",
-      "sha256": "4721cef82f6ebabbd4520feeb6767b1477861732528b7e34226e1bbeebbd4056"
+      "sha256": "d824e927c72be9aefd594f7340ac85e477202a7c4d4db5f8ccf3ca9a7e2efcef"
     },
     {
       "path": "kernels/__proptests__/art-713-scorp-election-break-even.proptest.mjs",
@@ -2636,7 +2788,7 @@
     },
     {
       "path": "kernels/__proptests__/art-715-token2022-transfer-fee-reconciler.proptest.mjs",
-      "sha256": "0823097c96d94c5c1e5930fef14f859ab90506e2756cb59fcaad08330c7d0c3a"
+      "sha256": "4e285fe96e415005b71245df950c9055a4970058a2cedcb02d7e49fff22a82dd"
     },
     {
       "path": "kernels/__proptests__/art-72-cbam-precursor-emissions-aggregator.proptest.mjs",
@@ -2651,52 +2803,260 @@
       "sha256": "018bcaf1226810e1944177a1a1f619606cb4ba83ab725c39c032fa8fafd1656d"
     },
     {
+      "path": "kernels/__proptests__/art-735-solana-dvp-prefund-verifier.proptest.mjs",
+      "sha256": "58acdeeb765ad469dd50a29643b36a5a097d659a7ad9df8e9113c149efd1b86c"
+    },
+    {
       "path": "kernels/__proptests__/art-74-taxonomy-kpi-gar-aggregator.proptest.mjs",
       "sha256": "7b8ab1c6bd8306df79aad03e2d616b6cb4f349df046a70362134794efc936bf4"
+    },
+    {
+      "path": "kernels/__proptests__/art-749-solana-paychan-voucher-verifier.proptest.mjs",
+      "sha256": "a5fa9be6a8e0c93307212a420687f1086c3c9578622b851434089fce16b0150c"
     },
     {
       "path": "kernels/__proptests__/art-75-eugb-factsheet-validator.proptest.mjs",
       "sha256": "b99a383ec96d1062b4e655dfba0085610279048de33b50c5916bb78299395156"
     },
     {
+      "path": "kernels/__proptests__/art-750-diff-evidence-bundles.proptest.mjs",
+      "sha256": "d05d8787ca36736e4253fc3ca91c8e72763159ab7bb9b6c48a9459f2787ee51b"
+    },
+    {
+      "path": "kernels/__proptests__/art-751-sha256-hmac-digest-demonstrator.proptest.mjs",
+      "sha256": "93767247c0e966784fafbdf4e8b92eb767f38315d60bb41f6b2dcb69f9823b29"
+    },
+    {
+      "path": "kernels/__proptests__/art-752-freelance-quarterly-estimated-tax.proptest.mjs",
+      "sha256": "5350f9bc624d821b493bc76a16a04ae095c76790783bd161b125e3dad54c786b"
+    },
+    {
+      "path": "kernels/__proptests__/art-753-home-office-augusta.proptest.mjs",
+      "sha256": "f01130d5666638559e91c90c59654b07b683fd0568c34be047368395d6dc47fb"
+    },
+    {
+      "path": "kernels/__proptests__/art-754-equity-exit-waterfall.proptest.mjs",
+      "sha256": "36a5e4b06ba666eefbb5a6123f08d3e67ae7bb17b88d0ee2b5f19a953e6b7bce"
+    },
+    {
+      "path": "kernels/__proptests__/art-756-sales-ote-commission-analyzer.proptest.mjs",
+      "sha256": "74a7be2bf17a4e8b154669b01359464be3560d05178a3ed95c2962b70ef8e49b"
+    },
+    {
+      "path": "kernels/__proptests__/art-758-hdhp-ppo-break-even.proptest.mjs",
+      "sha256": "bbf8ea9d7115982023cb44f4f286ce8677ce893c9cb428d137c6fb6701a38654"
+    },
+    {
+      "path": "kernels/__proptests__/art-759-iso-amt-exposure-modeler.proptest.mjs",
+      "sha256": "83e988e8083d9dabb318cb825a73b7c5d20c9d3ecc34e00a990a70b7ac1e4b98"
+    },
+    {
       "path": "kernels/__proptests__/art-76-climate-scenario-applicator.proptest.mjs",
       "sha256": "6640869cab61c2bf5c213f3bf51f34e589ae3c486348dab9a2b619e0fb9f04e9"
+    },
+    {
+      "path": "kernels/__proptests__/art-760-espp-break-even-optimal-sell.proptest.mjs",
+      "sha256": "e7c2f30dd217d507f77e8d7e9ed6e4de9e61a8277c5f0ddde0c480c44a23d6d9"
+    },
+    {
+      "path": "kernels/__proptests__/art-761-caregiver-income-impact.proptest.mjs",
+      "sha256": "416722879bd10fb5996c39ab93d7d2d13e903792a13a26ee8512ada343c93be0"
     },
     {
       "path": "kernels/__proptests__/art-763-ai-displacement-risk-screener.proptest.mjs",
       "sha256": "9e1f6b95c8f0f46657b0fbb1c7c1e96557923c5d17b621ca0126e10440b2893d"
     },
     {
+      "path": "kernels/__proptests__/art-764-solo-401k-vs-sep-ira.proptest.mjs",
+      "sha256": "8202ffbd715af7ff73f1d06a573b94cd99b4944fd03062b140e2d49f5e5c878e"
+    },
+    {
+      "path": "kernels/__proptests__/art-765-dependent-care-fsa-cdctc-optimizer.proptest.mjs",
+      "sha256": "885f2652ddb5faa085fe77f18ce40c0ee216ef0e8f458184a487152e4c2448fd"
+    },
+    {
+      "path": "kernels/__proptests__/art-766-parental-leave-income-gap.proptest.mjs",
+      "sha256": "290a5b93d99b7fa405a1b321c0e73c49f41607009aea92ed6f67539c906c239a"
+    },
+    {
+      "path": "kernels/__proptests__/art-768-medicare-plan-comparison.proptest.mjs",
+      "sha256": "9735ed1728b047399378eb79ba9a83d470b32389128cbab1fd56382b8a448735"
+    },
+    {
+      "path": "kernels/__proptests__/art-769-medicare-oop-exposure.proptest.mjs",
+      "sha256": "d98a8c32eef18d5b36e8fd591b2d6ffbbe05b7eb041997b813f60bdb4713f234"
+    },
+    {
       "path": "kernels/__proptests__/art-77-t1-settlement-readiness-diagnostic.proptest.mjs",
       "sha256": "8e87bd7ee30bce7f932f2c61d2e9e0cdbee6b1fc0ca2f27d0122125f18445907"
+    },
+    {
+      "path": "kernels/__proptests__/art-770-total-cost-of-homeownership.proptest.mjs",
+      "sha256": "823ba5388e984bf6e286c864d43228e1f6dc68c0475b2e8018d6e2b6489141d1"
+    },
+    {
+      "path": "kernels/__proptests__/art-771-automation-payback.proptest.mjs",
+      "sha256": "855e67364d1d44eea6749feb59d2eefc95f9613338f0e8a2771525144abad03f"
+    },
+    {
+      "path": "kernels/__proptests__/art-772-money-primitives-demonstrator.proptest.mjs",
+      "sha256": "b92977672d5632e60214744f9df853d7a22cefa0be3e839ae70e55fdd2039c74"
+    },
+    {
+      "path": "kernels/__proptests__/art-773-daycount-year-fraction.proptest.mjs",
+      "sha256": "2af5ae44124cc03df89fd0738a694ace7d67e1f044e88f8e25c0f8e68e09c6b8"
+    },
+    {
+      "path": "kernels/__proptests__/art-774-beacon-seeded-fair-sampling-v2.proptest.mjs",
+      "sha256": "f6c98a4af9cb21e41ed386970a2f6aba2719dfda088c323688b8fc872210f1ae"
+    },
+    {
+      "path": "kernels/__proptests__/art-776-paypal-dispute-deadline-evidence.proptest.mjs",
+      "sha256": "cfd6a2cd03939ecd8d92abeec6b1bbd8c3318c3dda49f6601496ac1ade658a26"
+    },
+    {
+      "path": "kernels/__proptests__/art-777-psp-dispute-reason-crosswalk.proptest.mjs",
+      "sha256": "eb6606f510eafd3a5c9830485ce009f31e4b9d1fd6c429cd57ef2cc8aabfff0c"
+    },
+    {
+      "path": "kernels/__proptests__/art-778-token2022-withheld-fee-reconciler.proptest.mjs",
+      "sha256": "dce2b7ee6957f7462bd0b23a135d155e6fd77f50f7824c8d7df15cdd230ba859"
+    },
+    {
+      "path": "kernels/__proptests__/art-779-bnpl-plan-comparator.proptest.mjs",
+      "sha256": "7c8b289ebc24871eed42e84166891f98ec9af9922409e33364c2a1084bb52851"
     },
     {
       "path": "kernels/__proptests__/art-78-csdr-penalty-calculator.proptest.mjs",
       "sha256": "7c3aefdb9b5e2aa119d0979042438d4c97c1e86e9fd9aaca086bd965fd488cad"
     },
     {
+      "path": "kernels/__proptests__/art-780-solana-pda-ata-audit.proptest.mjs",
+      "sha256": "d4bcde58f1817ae117694402cc5b30d3ab303d60f2bbdcc8cd107920baa79690"
+    },
+    {
+      "path": "kernels/__proptests__/art-782-modified-premium.proptest.mjs",
+      "sha256": "7ad5d63c2b308a1e93b1974c012bd2a3089338f73f3a2e8ace0f397909f5c763"
+    },
+    {
+      "path": "kernels/__proptests__/art-788-csv-rfc4180-parser.proptest.mjs",
+      "sha256": "5d6a63828bb1136c8c005157cf2f1b6e6112dde4cfb5103e42f055d43caa5dd3"
+    },
+    {
       "path": "kernels/__proptests__/art-79-settlement-fail-predictor.proptest.mjs",
       "sha256": "5c0248ac4225b7aa00046dbbbd10578ace9bd79cc72112ec363c144c67530fa4"
+    },
+    {
+      "path": "kernels/__proptests__/art-793-government-stablecoin-acceptance.proptest.mjs",
+      "sha256": "613ecf6ffeab902e3366eb73f533ee21c3ff9d4df6dbff24e9c50a5fca9372ae"
     },
     {
       "path": "kernels/__proptests__/art-80-ssi-conformance-checker.proptest.mjs",
       "sha256": "9f7a85ea2ce293901b98bdc397d4d2dfc935b2e43bcc8c7ab97386e9b8a06fca"
     },
     {
+      "path": "kernels/__proptests__/art-805-agt-audit-chain-verifier.proptest.mjs",
+      "sha256": "4b2bb3387b0819550c660c1c16d15dc3a6129f97a1535cb6daca17082abea8e8"
+    },
+    {
+      "path": "kernels/__proptests__/art-807-erc3643-transfer-decision.proptest.mjs",
+      "sha256": "3551d1d07f5d9c51895ef86aec520ffbe06f155ce588849db05232d552786167"
+    },
+    {
+      "path": "kernels/__proptests__/art-809-check-reserves-cover-outstanding-private.proptest.mjs",
+      "sha256": "50f0c119546e7958ee5fd820c392908a45f324ac8dd6b1f5f8e2c0c32aee99f3"
+    },
+    {
       "path": "kernels/__proptests__/art-81-allocation-affirmation-conformance.proptest.mjs",
-      "sha256": "fcce6ee30c020b61bf03c3a92483e17af2f659102e2dda6a993c95cc33509115"
+      "sha256": "c52b07b30758d17aca9731d7ec1e70948289d98cdc7fc5e39f96ac2d1ac0f986"
+    },
+    {
+      "path": "kernels/__proptests__/art-811-check-dti-within-policy-private.proptest.mjs",
+      "sha256": "b55464f3244822f10dd80373ad65d0b86fba863250be50d766a89f4e96b5eabc"
+    },
+    {
+      "path": "kernels/__proptests__/art-814-qf-pairwise-recompute.proptest.mjs",
+      "sha256": "6b41edd0f4b3e90ab54d519cabb72f8e67aa62c893dbf176ebca993c6b690903"
+    },
+    {
+      "path": "kernels/__proptests__/art-816-eip3009-agent-spend-gate.proptest.mjs",
+      "sha256": "bc3d17e408a205843f40b8b9281597491ce5cbdc1643b11aa247001e9a4c3220"
+    },
+    {
+      "path": "kernels/__proptests__/art-818-zcash-reg-classifier.proptest.mjs",
+      "sha256": "41b0a96e2ddb6fe23575208c781eb1ea96aa8315772e71f836f8a4db82b6fdb0"
+    },
+    {
+      "path": "kernels/__proptests__/art-819-ucp-request-constraints.proptest.mjs",
+      "sha256": "7b9558e880c2422b9ae9b8c6fa5547a7ae927b9bc41161f7790bbae272c15467"
     },
     {
       "path": "kernels/__proptests__/art-82-securities-settlement-message-linter.proptest.mjs",
       "sha256": "e6bd3b1f59b8e0fe974ed69f2108bdec7fe8f74a6a5949dd6d68145d6f3a4076"
     },
     {
+      "path": "kernels/__proptests__/art-820-negotiate-ucp-capabilities.proptest.mjs",
+      "sha256": "a7e2905d4f504270e91af8c45ce2baa6ce7b673dd83bb189e2381a467e3a129d"
+    },
+    {
+      "path": "kernels/__proptests__/art-826-authenticator-assurance-level.proptest.mjs",
+      "sha256": "f2cf8cd3ec0285688ea200ebe16ab63703e5ca93ad0cf6e2d80068537840be78"
+    },
+    {
+      "path": "kernels/__proptests__/art-828-reconcile-omnibus-token-position.proptest.mjs",
+      "sha256": "f8097ca31b7f8b32d5310a7cc24a655252342f7559cb577668c42376cf603a03"
+    },
+    {
       "path": "kernels/__proptests__/art-83-buy-in-exposure-modeler.proptest.mjs",
       "sha256": "86b5d3e0530bcd49b5168b9a963dc2324ba53386445fb724a76d77de06a3fe20"
     },
     {
+      "path": "kernels/__proptests__/art-830-eip3009-spend-exposure-reconciler.proptest.mjs",
+      "sha256": "0d56f127f78d13d5f731b80af7ccef36929f746dbcdb3081fe6f78cf89d59160"
+    },
+    {
+      "path": "kernels/__proptests__/art-831-receipt-export-envelopes.proptest.mjs",
+      "sha256": "6b02579c6e633a0b450c3ab56afd4393c5c9a6f33b3440cd723452d8b8e47bf3"
+    },
+    {
+      "path": "kernels/__proptests__/art-832-card-data-flow-scope.proptest.mjs",
+      "sha256": "39d5731d7dfd0dd26fb3da51e699202c9f51b13f30ab786fe17d6d175aa53b8e"
+    },
+    {
+      "path": "kernels/__proptests__/art-833-lint-pan-sad-exposure.proptest.mjs",
+      "sha256": "9c9f8f7d0dc9129a0cb165da8ef3bce58d0ad2333cd3156dccd6960c63c6b4c2"
+    },
+    {
+      "path": "kernels/__proptests__/art-834-asc606-transaction-price-allocator.proptest.mjs",
+      "sha256": "3b0aeca17142b2eda06f88cc45c9aa19375664ea1154a7a46b21f186a85821b2"
+    },
+    {
+      "path": "kernels/__proptests__/art-835-bank-reconciliation-recompute.proptest.mjs",
+      "sha256": "a765a8fc8bc209c42ebae758addb1f44734dc4c02298e5733bbc0d8ecfa92669"
+    },
+    {
+      "path": "kernels/__proptests__/art-839-statement-footing-crossfoot.proptest.mjs",
+      "sha256": "b34f15ea79574b6e684a1cb03fa7fee95f183462603a65c69a0f673ee9ab0db9"
+    },
+    {
       "path": "kernels/__proptests__/art-84-settlement-efficiency-kpi.proptest.mjs",
       "sha256": "5f6f318e83b21db93ef74b44b979c395eda0f8e04d2fa15762a6a6c0affe4e77"
+    },
+    {
+      "path": "kernels/__proptests__/art-840-gl-flux-explainer.proptest.mjs",
+      "sha256": "408ca45066e2d7a8b6d8baeab441abce8be01fe88ba5d699fd43708741fabb35"
+    },
+    {
+      "path": "kernels/__proptests__/art-842-soc-report-coverage-gap.proptest.mjs",
+      "sha256": "0bb6b495cb10201fac6564efa04ffc01352cb1407b8d3fc8582464b4c35f7391"
+    },
+    {
+      "path": "kernels/__proptests__/art-843-tap-message-validator.proptest.mjs",
+      "sha256": "4b264d5492122eb4ac6eb0b9265ebb17865067ccaea5efc35edb4dbe648811df"
+    },
+    {
+      "path": "kernels/__proptests__/art-846-assess-pfmi-proportional.proptest.mjs",
+      "sha256": "52c188e3735f84ce469fce32c45ba2a8d347fc85f70faae5dd5e8ea3e1a8fd75"
     },
     {
       "path": "kernels/__proptests__/art-85-pqc-timeline-fit-diagnostic.proptest.mjs",
@@ -3083,6 +3443,1166 @@
       "sha256": "40df5152204c238497af53df3afd02f0873f1bc5d490b9a12c64259494f36efd"
     },
     {
+      "path": "kernels/__replay__/corpus/503-canton.genuine-1.receipt.json",
+      "sha256": "88d27da33aa9d968627057fbc3b7d87d74ee005b9d082bde0b6f8c5f86ffccd2"
+    },
+    {
+      "path": "kernels/__replay__/corpus/503-canton.genuine-2.receipt.json",
+      "sha256": "a0e5cab775cc1e48064345f6c868588438de634e618961d6a2d214e75915c939"
+    },
+    {
+      "path": "kernels/__replay__/corpus/503-canton.stale-flip.receipt.json",
+      "sha256": "a2bf181281c0740608ca7aa84678ff23a15e97db5cc5af542ff580fca9cc8c0f"
+    },
+    {
+      "path": "kernels/__replay__/corpus/503-canton.stale-member.receipt.json",
+      "sha256": "749b75d56ee5cf294068ff6a53d665d2f9ab29029481bdc23f8b9a33c8bb296d"
+    },
+    {
+      "path": "kernels/__replay__/corpus/art-04.genuine-1.receipt.json",
+      "sha256": "a030dbf2c5026f45f93cd6cdc23d8f9f6845e172e8c93cda92509a7e43c62677"
+    },
+    {
+      "path": "kernels/__replay__/corpus/art-04.genuine-2.receipt.json",
+      "sha256": "4af6ba1f4903c0c72456c026bd8a3d0cd724e40d5f1c62175a41f43dd773404a"
+    },
+    {
+      "path": "kernels/__replay__/corpus/art-04.stale-flip.receipt.json",
+      "sha256": "50524f434cffadb5ab63dd5f7af2ce0bf72c434f66d742d18883f4ae8aee6386"
+    },
+    {
+      "path": "kernels/__replay__/corpus/art-04.stale-member.receipt.json",
+      "sha256": "510801bfee666572ea011094c239af9e6fc5b7de02bcde2dedf49c8c370f3578"
+    },
+    {
+      "path": "kernels/__replay__/corpus/art-218.genuine-1.receipt.json",
+      "sha256": "1a7842b56629f46e9f0109bb24c55359948ca35d9c862f101f38d18461fcbf65"
+    },
+    {
+      "path": "kernels/__replay__/corpus/art-218.genuine-2.receipt.json",
+      "sha256": "1b911831dc3565326970ca7d2720afac64455058ce45f416edce56430686f379"
+    },
+    {
+      "path": "kernels/__replay__/corpus/art-218.stale-flip.receipt.json",
+      "sha256": "a9ef0064a48f23df961b10efc0d4de92b989e972d7bcce57c427c3856a911d3d"
+    },
+    {
+      "path": "kernels/__replay__/corpus/art-218.stale-member.receipt.json",
+      "sha256": "e511481d6b6ff26ebca316e3c96b6dc6eb0878d05647af15272605098115c724"
+    },
+    {
+      "path": "kernels/__replay__/corpus/art-220.genuine-1.receipt.json",
+      "sha256": "14f6e21405d3cc5ceee491caa3d5bf7d5030fd3df1d4c7e039115463c86b1387"
+    },
+    {
+      "path": "kernels/__replay__/corpus/art-220.genuine-2.receipt.json",
+      "sha256": "359ccd82a1229b70756bbd11f112713bdee444ce6ffef1725e9d58be4587a506"
+    },
+    {
+      "path": "kernels/__replay__/corpus/art-220.stale-flip.receipt.json",
+      "sha256": "e1e8688f012a05c20f89002b14bb8c9dbc953b96f8e1991d87fb0d2766b70eb3"
+    },
+    {
+      "path": "kernels/__replay__/corpus/art-220.stale-member.receipt.json",
+      "sha256": "32ae9131fce599a78302fcfd1af72e71d98c692d4513e729c1bba61d45953a5e"
+    },
+    {
+      "path": "kernels/__replay__/corpus/art-275.genuine-1.receipt.json",
+      "sha256": "3014d0d37735e5663d25fd01767779ac6bb8061648c4ce9da0a7d10f29ffef2d"
+    },
+    {
+      "path": "kernels/__replay__/corpus/art-275.genuine-2.receipt.json",
+      "sha256": "09330b18bfea8f10314b44cae600b1ccc63a1f3fdf30cc1a1f4b099f76bad63b"
+    },
+    {
+      "path": "kernels/__replay__/corpus/art-275.stale-flip.receipt.json",
+      "sha256": "a3eaa6d0841905eb4ceb1f8e58f96424e00977300752edf9e656e9f8efa91832"
+    },
+    {
+      "path": "kernels/__replay__/corpus/art-275.stale-member.receipt.json",
+      "sha256": "30814fa55eb94c539d8cc9f6cd5f647fff30790859a35ecaad1e5b16d2282d1d"
+    },
+    {
+      "path": "kernels/__replay__/corpus/expected.json",
+      "sha256": "99262ab521be7ebbf022928042ff332096d821a4269dfd5a997a2c53ff246932"
+    },
+    {
+      "path": "kernels/__upstream-vectors__/c2sp-cosignature/C2SP/.github/LICENSE-BSD-1-CLAUSE",
+      "sha256": "ccea66763c12f526fb366431906603820e94e705779a99e5fdf8182f9e9807f9"
+    },
+    {
+      "path": "kernels/__upstream-vectors__/c2sp-cosignature/C2SP/tlog-cosignature.md",
+      "sha256": "9cf3f0ef2690319697fcbb4d1e823b593d90a1769912fdcb859ab89a3f924fbe"
+    },
+    {
+      "path": "kernels/__upstream-vectors__/c2sp-cosignature/openssl-mldsa44/vector.json",
+      "sha256": "607e9b3f8a3020cc0acba313779980fb29f45597c6eb7103dabc35d07dc0553e"
+    },
+    {
+      "path": "kernels/__upstream-vectors__/c2sp-cosignature/PROVENANCE.json",
+      "sha256": "3762e9196fa074ddf3b77b237a14e98de71976f244c25121ccbaf84a8e22e396"
+    },
+    {
+      "path": "kernels/__upstream-vectors__/c2sp-cosignature/sigsum-go/LICENSE",
+      "sha256": "6a1e3378dcd18baade08ac30ec4ba33b72d1b1697c00226ef85b9c9cefdb4e65"
+    },
+    {
+      "path": "kernels/__upstream-vectors__/c2sp-cosignature/sigsum-go/pkg/checkpoint/checkpoint_test.go",
+      "sha256": "ce9cb21bc8a2699c62f23d1395f46bf2536247af0761bfec7add00559b7ab19a"
+    },
+    {
+      "path": "kernels/__upstream-vectors__/didwebvh/didwebvh-test-suite/LICENSE",
+      "sha256": "c71d239df91726fc519c6eb72d318ec65820627232b2f796219e87dcf35d0ab4"
+    },
+    {
+      "path": "kernels/__upstream-vectors__/didwebvh/didwebvh-test-suite/vectors/basic-create/did.jsonl",
+      "sha256": "d31f101026c638bfc8531329263c066bc531be9fed9a705af38b49717611ba6c"
+    },
+    {
+      "path": "kernels/__upstream-vectors__/didwebvh/didwebvh-test-suite/vectors/basic-create/resolutionResult.json",
+      "sha256": "8a5360852c8d3c396e801c1da6f789a47a33eac1178abdb40220ef7c8d86cfd6"
+    },
+    {
+      "path": "kernels/__upstream-vectors__/didwebvh/didwebvh-test-suite/vectors/basic-update/did.jsonl",
+      "sha256": "ac0004384a36d65be76a80bc204d681f6579effcf2c890e39681b49652d9f99b"
+    },
+    {
+      "path": "kernels/__upstream-vectors__/didwebvh/didwebvh-test-suite/vectors/basic-update/resolutionResult.json",
+      "sha256": "b31f6628eb3bbf98fa4eb38c7b1157d68e2f7a603aece42366facf8a1eba85ad"
+    },
+    {
+      "path": "kernels/__upstream-vectors__/didwebvh/didwebvh-test-suite/vectors/deactivate/did.jsonl",
+      "sha256": "eeddd4b10b9603b12f271a328f39846e09626a9666d20ece4287e427ea7bd310"
+    },
+    {
+      "path": "kernels/__upstream-vectors__/didwebvh/didwebvh-test-suite/vectors/deactivate/resolutionResult.json",
+      "sha256": "14166c219c726eb7a53cf16315a272591cee7e4c80b92eec869c4ea0f79930a5"
+    },
+    {
+      "path": "kernels/__upstream-vectors__/didwebvh/didwebvh-test-suite/vectors/key-rotation/did.jsonl",
+      "sha256": "edcbf4b9ac81ef0327ddf91884866f8e6b03898c9e7405e6f8f891572548fc37"
+    },
+    {
+      "path": "kernels/__upstream-vectors__/didwebvh/didwebvh-test-suite/vectors/key-rotation/resolutionResult.json",
+      "sha256": "c2393698a2139a4ed3e58f2ea10bc209c39866b8f26c097b0886d1e2251753df"
+    },
+    {
+      "path": "kernels/__upstream-vectors__/didwebvh/didwebvh-test-suite/vectors/negative-pre-rotation-omit-updatekeys/did.jsonl",
+      "sha256": "f5962caed33f7324bc990927955733cd1c65ae4500e148e8ff9aa25cdfdeec1b"
+    },
+    {
+      "path": "kernels/__upstream-vectors__/didwebvh/didwebvh-test-suite/vectors/negative-pre-rotation-omit-updatekeys/resolutionResult.json",
+      "sha256": "1ef041df10100b60e22147868f05c5a6faa5092fd7888100197c0157e4a9184c"
+    },
+    {
+      "path": "kernels/__upstream-vectors__/didwebvh/didwebvh-test-suite/vectors/negative-scid-mismatch-genesis/did.jsonl",
+      "sha256": "e5d012a80280122813713eeffcf6cb8b2c474ad5eb3da191c87e15766e649c52"
+    },
+    {
+      "path": "kernels/__upstream-vectors__/didwebvh/didwebvh-test-suite/vectors/negative-scid-mismatch-genesis/resolutionResult.json",
+      "sha256": "52d17320e79186cba4d7a5d97c80249c051bd4db4484a3872cb5c4ba56011a41"
+    },
+    {
+      "path": "kernels/__upstream-vectors__/didwebvh/didwebvh-test-suite/vectors/negative-versiontime-future/did.jsonl",
+      "sha256": "9017e627275a444732b3511128bcd1b0c3208e99a345ed555ed8e9dfea933b97"
+    },
+    {
+      "path": "kernels/__upstream-vectors__/didwebvh/didwebvh-test-suite/vectors/negative-versiontime-future/resolutionResult.json",
+      "sha256": "52d17320e79186cba4d7a5d97c80249c051bd4db4484a3872cb5c4ba56011a41"
+    },
+    {
+      "path": "kernels/__upstream-vectors__/didwebvh/didwebvh-test-suite/vectors/negative-wrong-cryptosuite/did.jsonl",
+      "sha256": "97d8e4fab10d3f92e26026cdf0f33a14726b96e55a3e472d6ed0b5edd0c5574c"
+    },
+    {
+      "path": "kernels/__upstream-vectors__/didwebvh/didwebvh-test-suite/vectors/negative-wrong-cryptosuite/resolutionResult.json",
+      "sha256": "b3956ef58ae4ff9af21e77bff5acdff302ea023cbb64680fa46befc93d26ee55"
+    },
+    {
+      "path": "kernels/__upstream-vectors__/didwebvh/PROVENANCE.json",
+      "sha256": "c87652e35c5752981ed139ea76423db1cc42f2e57ca9fbd9afacb44a3e9cf82a"
+    },
+    {
+      "path": "kernels/__upstream-vectors__/kanon-x402/LICENSE",
+      "sha256": "c69c581d1b0a38852d4bf085410256b6766b891fe09d074b860e582a2c6689e2"
+    },
+    {
+      "path": "kernels/__upstream-vectors__/kanon-x402/PROVENANCE.json",
+      "sha256": "bebbbd38ddd5e645f855fba6709c7cabd3c8f990becbce5f98c40a80d10438e1"
+    },
+    {
+      "path": "kernels/__upstream-vectors__/kanon-x402/schema/reason-codes.md",
+      "sha256": "81b8d6b7b91efb660cf3d121e3b89850078565d049ec732a1d978e7b6acdea6c"
+    },
+    {
+      "path": "kernels/__upstream-vectors__/kanon-x402/vectors/x402/exact/evm/eip3009/x402-evm-eip3009-amount-insufficient-001.json",
+      "sha256": "7aa48839ed718b5f8201435ff12c10ad5a2b484ea6b3f5c0fe024d40fdda98e2"
+    },
+    {
+      "path": "kernels/__upstream-vectors__/kanon-x402/vectors/x402/exact/evm/eip3009/x402-evm-eip3009-cross-chain-replay-001.json",
+      "sha256": "9dbfd9c3bdf68d8d9df9e1051dd691918898ff85faeddf3491a18780c6d8d8b6"
+    },
+    {
+      "path": "kernels/__upstream-vectors__/kanon-x402/vectors/x402/exact/evm/eip3009/x402-evm-eip3009-cross-contract-replay-001.json",
+      "sha256": "79d1a57cbb0ea33aa7db694a9e0adfaa732b6a1ab164a73041a792fd0bb80d96"
+    },
+    {
+      "path": "kernels/__upstream-vectors__/kanon-x402/vectors/x402/exact/evm/eip3009/x402-evm-eip3009-domain-name-mismatch-001.json",
+      "sha256": "6ba21b40bc72e49d895dd96735f03f2ed7a6cd62fd1041898f18f4226906599b"
+    },
+    {
+      "path": "kernels/__upstream-vectors__/kanon-x402/vectors/x402/exact/evm/eip3009/x402-evm-eip3009-expired-001.json",
+      "sha256": "3a9503e4ccfe95929d06dbd59c1ecbadc7c27ac297fb92b3946d974337b75209"
+    },
+    {
+      "path": "kernels/__upstream-vectors__/kanon-x402/vectors/x402/exact/evm/eip3009/x402-evm-eip3009-network-mismatch-001.json",
+      "sha256": "d0be37ea95f947a6621e9b0934dd8acde4988ce0bc8eee36ea1af697a9d8ea2e"
+    },
+    {
+      "path": "kernels/__upstream-vectors__/kanon-x402/vectors/x402/exact/evm/eip3009/x402-evm-eip3009-nonce-replay-001.json",
+      "sha256": "ea3b071425d6d6d62540fa423e8a13656ec536c7672262bf822f4f920c94c2a1"
+    },
+    {
+      "path": "kernels/__upstream-vectors__/kanon-x402/vectors/x402/exact/evm/eip3009/x402-evm-eip3009-not-yet-valid-001.json",
+      "sha256": "392f6feb790bf6393a62ed8f918220e0551e6a1dee602cd63b9d0d654ad8dfec"
+    },
+    {
+      "path": "kernels/__upstream-vectors__/kanon-x402/vectors/x402/exact/evm/eip3009/x402-evm-eip3009-sig-malleable-high-s-001.json",
+      "sha256": "f324bd81880c7b1844dc9797e0106c64616041b0abb02c286eeba85f05008cec"
+    },
+    {
+      "path": "kernels/__upstream-vectors__/kanon-x402/vectors/x402/exact/evm/eip3009/x402-evm-eip3009-valid-baseline-001.json",
+      "sha256": "46c1203e2b9d4edb25143fb05f3cb98528e7b45860a06c38891ff7ceed362706"
+    },
+    {
+      "path": "kernels/__upstream-vectors__/multiformats-ipld/js-car/LICENSE-APACHE",
+      "sha256": "30fdfde4dbde73c66123aba24487366771ffc54bba09566b313338199c3eb7dc"
+    },
+    {
+      "path": "kernels/__upstream-vectors__/multiformats-ipld/js-car/LICENSE-MIT",
+      "sha256": "8f71659370c5268d9a1dc962a46232540e8fca63462586d8efaa95aab492a208"
+    },
+    {
+      "path": "kernels/__upstream-vectors__/multiformats-ipld/js-car/test/fixtures-expectations.js",
+      "sha256": "af3caf87761f84cd1aeffdca1e3ad1175b12eeb98806085a954b35dd87399ac7"
+    },
+    {
+      "path": "kernels/__upstream-vectors__/multiformats-ipld/js-car/test/fixtures/sample-v1.car",
+      "sha256": "a94c376598d06d2cf4061079c8b25f7d544a94766da710182c839f754951a730"
+    },
+    {
+      "path": "kernels/__upstream-vectors__/multiformats-ipld/js-car/test/test-writer.spec.js",
+      "sha256": "97b6b523cadc4e41536a7e6684554fc0e2ab1d35045b1154924fc54371872995"
+    },
+    {
+      "path": "kernels/__upstream-vectors__/multiformats-ipld/js-multiformats/LICENSE-APACHE",
+      "sha256": "30fdfde4dbde73c66123aba24487366771ffc54bba09566b313338199c3eb7dc"
+    },
+    {
+      "path": "kernels/__upstream-vectors__/multiformats-ipld/js-multiformats/LICENSE-MIT",
+      "sha256": "8f71659370c5268d9a1dc962a46232540e8fca63462586d8efaa95aab492a208"
+    },
+    {
+      "path": "kernels/__upstream-vectors__/multiformats-ipld/js-multiformats/test/test-cid.spec.ts",
+      "sha256": "cf931e547e0c1ccc37e68d48d1147bfb2d254f51314f79a7de78dbdca198688b"
+    },
+    {
+      "path": "kernels/__upstream-vectors__/multiformats-ipld/PROVENANCE.json",
+      "sha256": "0a946ef16b622219cc28dbb2360da4e11b98ad0d0cd9ba12e4ee863edef514a7"
+    },
+    {
+      "path": "kernels/__upstream-vectors__/README.md",
+      "sha256": "6a34598895f49f880258e7cf8824851657b9f02620b077315e95f074dd6fe6dc"
+    },
+    {
+      "path": "kernels/__upstream-vectors__/rfc6962-merkle/PROVENANCE.json",
+      "sha256": "76dba67e2a9139b2674466523801e3b2bb690572bef3c6eaa797694baea4fbc0"
+    },
+    {
+      "path": "kernels/__upstream-vectors__/rfc6962-merkle/transparency-dev-merkle/LICENSE",
+      "sha256": "cfc7749b96f63bd31c3c42b5c471bf756814053e847c10f3eb003417bc523d30"
+    },
+    {
+      "path": "kernels/__upstream-vectors__/rfc6962-merkle/transparency-dev-merkle/testdata/consistency/0/happy-path.json",
+      "sha256": "5aae6059f25e905b9ba2eb20471d584e50f31ba5dc8a1797547fb38af25d032e"
+    },
+    {
+      "path": "kernels/__upstream-vectors__/rfc6962-merkle/transparency-dev-merkle/testdata/consistency/1/empty-proof.json",
+      "sha256": "e22197c7668bd10a4db4d7f19549972ffaf10ec740fe82d60c7fc5930f1d01b1"
+    },
+    {
+      "path": "kernels/__upstream-vectors__/rfc6962-merkle/transparency-dev-merkle/testdata/consistency/1/happy-path.json",
+      "sha256": "3d94a9f4a5ecd5ec6338beba1a523798a8553553cadb8247ed5d9e3ba9b3cea6"
+    },
+    {
+      "path": "kernels/__upstream-vectors__/rfc6962-merkle/transparency-dev-merkle/testdata/consistency/1/modified-proof@0-bit-@4.json",
+      "sha256": "7aea5234a5c9491e26e059b969c982f856d427198afb532493230002117047e0"
+    },
+    {
+      "path": "kernels/__upstream-vectors__/rfc6962-merkle/transparency-dev-merkle/testdata/consistency/1/modified-proof@1-bit-@4.json",
+      "sha256": "5f765f45be75e9b8c56b258851e63094d93db22c832cc33e83f3951ba89cf5c9"
+    },
+    {
+      "path": "kernels/__upstream-vectors__/rfc6962-merkle/transparency-dev-merkle/testdata/consistency/1/modified-proof@2-bit-@4.json",
+      "sha256": "93fbbc14cb1f8ab4a8a95957278cd5b513b5c5ec707719f14250b659a807871c"
+    },
+    {
+      "path": "kernels/__upstream-vectors__/rfc6962-merkle/transparency-dev-merkle/testdata/consistency/1/preceding-garbage.json",
+      "sha256": "0492cbb368964bb6518c27a7d2773cafd580d3bd7f4fc738d652202ba47f5ee7"
+    },
+    {
+      "path": "kernels/__upstream-vectors__/rfc6962-merkle/transparency-dev-merkle/testdata/consistency/1/preceding-proof-@0.json",
+      "sha256": "316ba3f26f0a7d945b44966bd95337bab46efe969b9093e07bc341bce5c1f812"
+    },
+    {
+      "path": "kernels/__upstream-vectors__/rfc6962-merkle/transparency-dev-merkle/testdata/consistency/1/preceding-root1.json",
+      "sha256": "9299ea4a93730f27e4e8c50907b054629dd5613b762dc39bf5dd51bfeba3e959"
+    },
+    {
+      "path": "kernels/__upstream-vectors__/rfc6962-merkle/transparency-dev-merkle/testdata/consistency/1/preceding-root2.json",
+      "sha256": "34d248aac57627ccb2566c72aee832d33f442dd8bde79f76a5437a7994c66302"
+    },
+    {
+      "path": "kernels/__upstream-vectors__/rfc6962-merkle/transparency-dev-merkle/testdata/consistency/1/size1-plus-@1.json",
+      "sha256": "3ca2763008e0b542f02cea8b2da0b8554bd9c03818341a74ead4891228d65c5c"
+    },
+    {
+      "path": "kernels/__upstream-vectors__/rfc6962-merkle/transparency-dev-merkle/testdata/consistency/1/size1-sub-@1.json",
+      "sha256": "e784ea9ce8505c2cb087456955c5df865ab863867fc3257aa6697036e15f4e39"
+    },
+    {
+      "path": "kernels/__upstream-vectors__/rfc6962-merkle/transparency-dev-merkle/testdata/consistency/1/size1-XOR-@2.json",
+      "sha256": "a74bd77dbe60ffe1fa9bc7f57edaa20dc3af929c4f7bf21b476b1b705df39dfd"
+    },
+    {
+      "path": "kernels/__upstream-vectors__/rfc6962-merkle/transparency-dev-merkle/testdata/consistency/1/size2-div-@2.json",
+      "sha256": "122bdb60562f6704534757be7b11dea22e8f773df24c27b0ca87a93839513232"
+    },
+    {
+      "path": "kernels/__upstream-vectors__/rfc6962-merkle/transparency-dev-merkle/testdata/consistency/1/size2-mul-@2.json",
+      "sha256": "9afba685da42a34942406cc3b842e80c1b590018ff7bea1ce2778621dab1a5e9"
+    },
+    {
+      "path": "kernels/__upstream-vectors__/rfc6962-merkle/transparency-dev-merkle/testdata/consistency/1/swapped-roots.json",
+      "sha256": "cfe90529e7e1dab013c7d9ae534497cd002570cc1c93f739382eff237f453cc6"
+    },
+    {
+      "path": "kernels/__upstream-vectors__/rfc6962-merkle/transparency-dev-merkle/testdata/consistency/1/trailing-garbage.json",
+      "sha256": "d6db5479b148a4eee252e300a30112e0f90930c419ac3a562d0402a2508bf5ae"
+    },
+    {
+      "path": "kernels/__upstream-vectors__/rfc6962-merkle/transparency-dev-merkle/testdata/consistency/1/trailing-root1.json",
+      "sha256": "f59ad1b2b91b9b38c73ed8750d27f77cf1325b461c6b2696ce8b1eabbd5c4505"
+    },
+    {
+      "path": "kernels/__upstream-vectors__/rfc6962-merkle/transparency-dev-merkle/testdata/consistency/1/trailing-root2.json",
+      "sha256": "39cf65408da86bd265b4b2b1ed03cc9b2d250e18bfdf4a2038cde3ced7a8147b"
+    },
+    {
+      "path": "kernels/__upstream-vectors__/rfc6962-merkle/transparency-dev-merkle/testdata/consistency/1/truncated-proof.json",
+      "sha256": "f73c0d8e39eddc7a248779a832dee06b297664727e1995d83a726c1cc4cfb1ed"
+    },
+    {
+      "path": "kernels/__upstream-vectors__/rfc6962-merkle/transparency-dev-merkle/testdata/consistency/1/wrong-root1.json",
+      "sha256": "0b2d0031fafdd2db9d4adc267817001fb35e4e486f40c38a7c83c51f4465f07c"
+    },
+    {
+      "path": "kernels/__upstream-vectors__/rfc6962-merkle/transparency-dev-merkle/testdata/consistency/1/wrong-root2.json",
+      "sha256": "03c7f02303a8c87fbbb5182f3bb802a46587ceb8bcb2218c2d12dacb34948480"
+    },
+    {
+      "path": "kernels/__upstream-vectors__/rfc6962-merkle/transparency-dev-merkle/testdata/consistency/2/empty-proof.json",
+      "sha256": "ec4082660edcd526de3c60c921c04cfe54d0c4148c4c3d5bd1f3b230dab852ea"
+    },
+    {
+      "path": "kernels/__upstream-vectors__/rfc6962-merkle/transparency-dev-merkle/testdata/consistency/2/happy-path.json",
+      "sha256": "084d20811521ec2017cb0cf8d4ebe9aa987e7415e559374f51f5647635b12636"
+    },
+    {
+      "path": "kernels/__upstream-vectors__/rfc6962-merkle/transparency-dev-merkle/testdata/consistency/2/modified-proof@0-bit-@4.json",
+      "sha256": "ca4601ea9acbc444cf958417ec115e807ac7606d570df51d11945a0eed53e193"
+    },
+    {
+      "path": "kernels/__upstream-vectors__/rfc6962-merkle/transparency-dev-merkle/testdata/consistency/2/modified-proof@1-bit-@4.json",
+      "sha256": "ec8e65d8c107ea1e4081d3a015e37b05f23e99dccd357b27240b1c665ada8fc6"
+    },
+    {
+      "path": "kernels/__upstream-vectors__/rfc6962-merkle/transparency-dev-merkle/testdata/consistency/2/modified-proof@2-bit-@4.json",
+      "sha256": "e40a4a25d7944443a348e6b69fb0bc63bf4d6d71803cf5faa0d8c10ff3715303"
+    },
+    {
+      "path": "kernels/__upstream-vectors__/rfc6962-merkle/transparency-dev-merkle/testdata/consistency/2/preceding-garbage.json",
+      "sha256": "dd83c355a69a2260b1230e0d239b9b172f98ec550c38ed2dfa9750f9d280a698"
+    },
+    {
+      "path": "kernels/__upstream-vectors__/rfc6962-merkle/transparency-dev-merkle/testdata/consistency/2/preceding-proof-@0.json",
+      "sha256": "17665e47af7ad7f4064a4f6727e3a99e3e77593e79d1cdef5355ce00c6ad9086"
+    },
+    {
+      "path": "kernels/__upstream-vectors__/rfc6962-merkle/transparency-dev-merkle/testdata/consistency/2/preceding-root1.json",
+      "sha256": "34bdc545493448ae0724fbfd25202c837bfee4e524ed5a1a47618540a543e81b"
+    },
+    {
+      "path": "kernels/__upstream-vectors__/rfc6962-merkle/transparency-dev-merkle/testdata/consistency/2/preceding-root2.json",
+      "sha256": "0624b19da287c268a4731a346e2c6783c0ab85098cc93ccb95b5624520f10ce1"
+    },
+    {
+      "path": "kernels/__upstream-vectors__/rfc6962-merkle/transparency-dev-merkle/testdata/consistency/2/size1-plus-@1.json",
+      "sha256": "5c7b1c43cf2f3771c24abc1c8995e19696ccf5a8ce6f5c290249d3d203c5e7e8"
+    },
+    {
+      "path": "kernels/__upstream-vectors__/rfc6962-merkle/transparency-dev-merkle/testdata/consistency/2/size1-sub-@1.json",
+      "sha256": "7339cab4aec340df69c12a25b90cd65733b45647ed4a7c81996a924711b719a8"
+    },
+    {
+      "path": "kernels/__upstream-vectors__/rfc6962-merkle/transparency-dev-merkle/testdata/consistency/2/size1-XOR-@2.json",
+      "sha256": "9124a65062ec50f4bf2bbe6e380bfcf0f50e08df3383fc66fe1ba5d80a6cc8d2"
+    },
+    {
+      "path": "kernels/__upstream-vectors__/rfc6962-merkle/transparency-dev-merkle/testdata/consistency/2/size2-div-@2.json",
+      "sha256": "7b42e05913ab0ed36c0c047c98ca083396ae39994619b09d430f5928ee5a5f9c"
+    },
+    {
+      "path": "kernels/__upstream-vectors__/rfc6962-merkle/transparency-dev-merkle/testdata/consistency/2/size2-mul-@2.json",
+      "sha256": "d99d28b305790311fdcd433c8d121b8c7b7bb6015ee4a8c996df87fce35a00e5"
+    },
+    {
+      "path": "kernels/__upstream-vectors__/rfc6962-merkle/transparency-dev-merkle/testdata/consistency/2/swapped-roots.json",
+      "sha256": "9d76aec8d78cadf9cc655835416df1f4e3ba92937759645ea40f1e1298377750"
+    },
+    {
+      "path": "kernels/__upstream-vectors__/rfc6962-merkle/transparency-dev-merkle/testdata/consistency/2/trailing-garbage.json",
+      "sha256": "49a5a29d30bc1805ce6576a61587cf7b761b9c3ad717697b3540ccd636d18e78"
+    },
+    {
+      "path": "kernels/__upstream-vectors__/rfc6962-merkle/transparency-dev-merkle/testdata/consistency/2/trailing-root1.json",
+      "sha256": "9bffee17990f1c5ac172e39bf345813c072da4dd580bc1030d825c5b1d0ec3da"
+    },
+    {
+      "path": "kernels/__upstream-vectors__/rfc6962-merkle/transparency-dev-merkle/testdata/consistency/2/trailing-root2.json",
+      "sha256": "9fd95aba94cbde262587336903afd0172bbba1920700a0f5bdec1bc7874ee356"
+    },
+    {
+      "path": "kernels/__upstream-vectors__/rfc6962-merkle/transparency-dev-merkle/testdata/consistency/2/truncated-proof.json",
+      "sha256": "eb06d644bed264654e6c29bdd728cda1c22970a8f12195a10dc9aa19bb0ae589"
+    },
+    {
+      "path": "kernels/__upstream-vectors__/rfc6962-merkle/transparency-dev-merkle/testdata/consistency/2/wrong-root1.json",
+      "sha256": "06058a6f79166a691676c603e67d6ddeb5bac948df26236215397ab9f75b45ff"
+    },
+    {
+      "path": "kernels/__upstream-vectors__/rfc6962-merkle/transparency-dev-merkle/testdata/consistency/2/wrong-root2.json",
+      "sha256": "70ff2bb5a5072eb47738123c65c6767eb00e76f90d3cdf8ee64ee6f2109292d2"
+    },
+    {
+      "path": "kernels/__upstream-vectors__/rfc6962-merkle/transparency-dev-merkle/testdata/consistency/3/empty-proof.json",
+      "sha256": "2e38d4aa541d6831fc5c4ed4356d3c3ec0048327663efdbe20e7e8bef1935d46"
+    },
+    {
+      "path": "kernels/__upstream-vectors__/rfc6962-merkle/transparency-dev-merkle/testdata/consistency/3/happy-path.json",
+      "sha256": "2254557f34595bcbeff662da226507648be8cbf570653f54d053806024d12f8c"
+    },
+    {
+      "path": "kernels/__upstream-vectors__/rfc6962-merkle/transparency-dev-merkle/testdata/consistency/3/modified-proof@0-bit-@4.json",
+      "sha256": "cb42966dced2a55ca0afc0818a284414c2f5e9909e4470f78e3c77aec7c91ff5"
+    },
+    {
+      "path": "kernels/__upstream-vectors__/rfc6962-merkle/transparency-dev-merkle/testdata/consistency/3/modified-proof@1-bit-@4.json",
+      "sha256": "12d92f178f0038ffac5e02663d5fdf1905270a8fb66cb11f54c534cc7db89a32"
+    },
+    {
+      "path": "kernels/__upstream-vectors__/rfc6962-merkle/transparency-dev-merkle/testdata/consistency/3/preceding-garbage.json",
+      "sha256": "7cfde166b55587cc75a05bab19c287afcfa85cb6bc4e4328c0f5f89c1e607601"
+    },
+    {
+      "path": "kernels/__upstream-vectors__/rfc6962-merkle/transparency-dev-merkle/testdata/consistency/3/preceding-proof-@0.json",
+      "sha256": "56284726d95dae03dfb3e1f5a9b77a017839fff8eb481edc4274d8465c9e7942"
+    },
+    {
+      "path": "kernels/__upstream-vectors__/rfc6962-merkle/transparency-dev-merkle/testdata/consistency/3/preceding-root1.json",
+      "sha256": "8196dc52cf6eb43a0bcd342e6455b3eeca48f874eedfc39ccfb2f61107617551"
+    },
+    {
+      "path": "kernels/__upstream-vectors__/rfc6962-merkle/transparency-dev-merkle/testdata/consistency/3/preceding-root2.json",
+      "sha256": "2adbb8259c0b125bab7f92a59f6588d59d785e4288f365ca6be8f3e6c4925177"
+    },
+    {
+      "path": "kernels/__upstream-vectors__/rfc6962-merkle/transparency-dev-merkle/testdata/consistency/3/size1-plus-@1.json",
+      "sha256": "0a7d8772d38dc785ae00c94883bde0c57210b65d4929da6f2789192a44d272c8"
+    },
+    {
+      "path": "kernels/__upstream-vectors__/rfc6962-merkle/transparency-dev-merkle/testdata/consistency/3/size1-sub-@1.json",
+      "sha256": "311af0ee236b2029a7c074f7d40d750812137377c67f0fcdca7c8c0f2762173a"
+    },
+    {
+      "path": "kernels/__upstream-vectors__/rfc6962-merkle/transparency-dev-merkle/testdata/consistency/3/size1-XOR-@2.json",
+      "sha256": "07939ec79bdb2990bd27e9ff20f56142c5a9094c76023f69978e1ec88c40ab43"
+    },
+    {
+      "path": "kernels/__upstream-vectors__/rfc6962-merkle/transparency-dev-merkle/testdata/consistency/3/size2-div-@2.json",
+      "sha256": "652ba8e0cc4a5c04bed1b4f34d6a3dbffe4370f9fd6d4923afbb7b40a782d5ca"
+    },
+    {
+      "path": "kernels/__upstream-vectors__/rfc6962-merkle/transparency-dev-merkle/testdata/consistency/3/size2-mul-@2.json",
+      "sha256": "baca1b282559d2d4dae1534927210201e91a4555a8f50f37746cb619a153e9d8"
+    },
+    {
+      "path": "kernels/__upstream-vectors__/rfc6962-merkle/transparency-dev-merkle/testdata/consistency/3/swapped-roots.json",
+      "sha256": "4d64c8f6329e84848c70cb0bd47674659eb2815424ec0a9aae5d844a30b5018d"
+    },
+    {
+      "path": "kernels/__upstream-vectors__/rfc6962-merkle/transparency-dev-merkle/testdata/consistency/3/trailing-garbage.json",
+      "sha256": "578bbb940df9a2a0520c101f726ddf41205761b7bf5ac0a796bbfe856e209107"
+    },
+    {
+      "path": "kernels/__upstream-vectors__/rfc6962-merkle/transparency-dev-merkle/testdata/consistency/3/trailing-root1.json",
+      "sha256": "a57f5d5490fae1f34c05c0aa00a92f63e9d5a9cd0228f68123fb0b84deaeef0c"
+    },
+    {
+      "path": "kernels/__upstream-vectors__/rfc6962-merkle/transparency-dev-merkle/testdata/consistency/3/trailing-root2.json",
+      "sha256": "07c015d2181b07f135142c6af774b1a8e93594ecfa0c23dcda0209fbaa940f7b"
+    },
+    {
+      "path": "kernels/__upstream-vectors__/rfc6962-merkle/transparency-dev-merkle/testdata/consistency/3/truncated-proof.json",
+      "sha256": "dc9f13d86c5c89c01375106968925786eb255764fe32dd3b9b17dfd700fd14ed"
+    },
+    {
+      "path": "kernels/__upstream-vectors__/rfc6962-merkle/transparency-dev-merkle/testdata/consistency/3/wrong-root1.json",
+      "sha256": "94f0a364e6ccede8ad4206876ca351411384b57b73cd567c012f5fd1b8818cd2"
+    },
+    {
+      "path": "kernels/__upstream-vectors__/rfc6962-merkle/transparency-dev-merkle/testdata/consistency/3/wrong-root2.json",
+      "sha256": "78252fd2ccb009a0216bebcf159c27428419f22069086cced32070d3d839e267"
+    },
+    {
+      "path": "kernels/__upstream-vectors__/rfc6962-merkle/transparency-dev-merkle/testdata/consistency/4/empty-proof.json",
+      "sha256": "5415576db5f90989ab2fb53746452709fb8fb31a0675ac4bdb6872936029a641"
+    },
+    {
+      "path": "kernels/__upstream-vectors__/rfc6962-merkle/transparency-dev-merkle/testdata/consistency/4/happy-path.json",
+      "sha256": "e57266a3bff16d997c57a1a30b6f9283cf8dd150d165201016cb4d9774cde020"
+    },
+    {
+      "path": "kernels/__upstream-vectors__/rfc6962-merkle/transparency-dev-merkle/testdata/consistency/4/modified-proof@0-bit-@4.json",
+      "sha256": "ad0e9ed6a5508d77163bea7c0f0fd1894c13bd4a07656cc2cdadd32ffeeee02c"
+    },
+    {
+      "path": "kernels/__upstream-vectors__/rfc6962-merkle/transparency-dev-merkle/testdata/consistency/4/modified-proof@1-bit-@4.json",
+      "sha256": "d819ae30905ba2ed95bc16693b43cd2c53cd60505c0c8358bb2b6aa2df49c582"
+    },
+    {
+      "path": "kernels/__upstream-vectors__/rfc6962-merkle/transparency-dev-merkle/testdata/consistency/4/modified-proof@2-bit-@4.json",
+      "sha256": "fee5be7b0e9aacf6e654396a5c406335e92991aac778d5f0277343f6222142b1"
+    },
+    {
+      "path": "kernels/__upstream-vectors__/rfc6962-merkle/transparency-dev-merkle/testdata/consistency/4/preceding-garbage.json",
+      "sha256": "612afff8a9018bc6d6867b169ba67fd05dbf0458522bdc017864c0895ab3bfa7"
+    },
+    {
+      "path": "kernels/__upstream-vectors__/rfc6962-merkle/transparency-dev-merkle/testdata/consistency/4/preceding-proof-@0.json",
+      "sha256": "5703cdc64cf313e4b99dea6511c58e465f4e3f0e4b41347d5da1db91d65147c3"
+    },
+    {
+      "path": "kernels/__upstream-vectors__/rfc6962-merkle/transparency-dev-merkle/testdata/consistency/4/preceding-root1.json",
+      "sha256": "203257657718e04de9ad16e26c37f54cf3785d5a1cbf1bdde7f76c2e49905922"
+    },
+    {
+      "path": "kernels/__upstream-vectors__/rfc6962-merkle/transparency-dev-merkle/testdata/consistency/4/preceding-root2.json",
+      "sha256": "0d99d21e81f4cb4df8c52d2bd28b37820ff36aded81bb28cead41f87a522a864"
+    },
+    {
+      "path": "kernels/__upstream-vectors__/rfc6962-merkle/transparency-dev-merkle/testdata/consistency/4/size1-plus-@1.json",
+      "sha256": "16c803cd5e99418ab5431c603536ae7b156a37211ca81041b4a629eb9de20a3a"
+    },
+    {
+      "path": "kernels/__upstream-vectors__/rfc6962-merkle/transparency-dev-merkle/testdata/consistency/4/size1-sub-@1.json",
+      "sha256": "c5c223dbe3e5a19917b94cf85ceee3d337cc8d276b383c00bebb37045566601f"
+    },
+    {
+      "path": "kernels/__upstream-vectors__/rfc6962-merkle/transparency-dev-merkle/testdata/consistency/4/size1-XOR-@2.json",
+      "sha256": "8c5e004fa63b506917df613cdd23349d1769cc1661a0c4e3f94113f765845687"
+    },
+    {
+      "path": "kernels/__upstream-vectors__/rfc6962-merkle/transparency-dev-merkle/testdata/consistency/4/size2-div-@2.json",
+      "sha256": "021ac7e0ca7d1cd8c6a94661e675f5cee954162aee2aa713e9db1549395c606f"
+    },
+    {
+      "path": "kernels/__upstream-vectors__/rfc6962-merkle/transparency-dev-merkle/testdata/consistency/4/size2-mul-@2.json",
+      "sha256": "48a7aad932f8246b5d2693686f02693a5b441e462c2becd52a53808531c895fd"
+    },
+    {
+      "path": "kernels/__upstream-vectors__/rfc6962-merkle/transparency-dev-merkle/testdata/consistency/4/swapped-roots.json",
+      "sha256": "aa6721f3bb2070b5ef38862590bc96cb1967d2752c3c5760359bc7cd81be770b"
+    },
+    {
+      "path": "kernels/__upstream-vectors__/rfc6962-merkle/transparency-dev-merkle/testdata/consistency/4/trailing-garbage.json",
+      "sha256": "2fbf98562c089581a696084cafd5218d26a7a68c9e469e770c65646ec46ff2b3"
+    },
+    {
+      "path": "kernels/__upstream-vectors__/rfc6962-merkle/transparency-dev-merkle/testdata/consistency/4/trailing-root1.json",
+      "sha256": "c4e59019ca947ba89017fa95d185b2de4540be02055fe8304ad200b451b25050"
+    },
+    {
+      "path": "kernels/__upstream-vectors__/rfc6962-merkle/transparency-dev-merkle/testdata/consistency/4/trailing-root2.json",
+      "sha256": "508c72702068c99247077c1a9abcb359202b27c630c6329df8d059e6fbcda800"
+    },
+    {
+      "path": "kernels/__upstream-vectors__/rfc6962-merkle/transparency-dev-merkle/testdata/consistency/4/truncated-proof.json",
+      "sha256": "fbea51e83a7dc75b4cd2d540f12fac9a4b4add96e8a91feea9f41b3635d964fc"
+    },
+    {
+      "path": "kernels/__upstream-vectors__/rfc6962-merkle/transparency-dev-merkle/testdata/consistency/4/wrong-root1.json",
+      "sha256": "eea7504c638633507c4deb91ad78d95107c53cc956c4aecb61a1de95118737b1"
+    },
+    {
+      "path": "kernels/__upstream-vectors__/rfc6962-merkle/transparency-dev-merkle/testdata/consistency/4/wrong-root2.json",
+      "sha256": "c6d331e4a31b5f65b2dacfb9c1c80a803b5571675ddcd211d2309e00104e1fc5"
+    },
+    {
+      "path": "kernels/__upstream-vectors__/rfc6962-merkle/transparency-dev-merkle/testdata/consistency/additional/consistency-check-on-empty-tree-size1-is-zero-is-useless.json",
+      "sha256": "79f3c30ab409e6dfa03d7e867f3fdc805c2746acdafad14723415201dbb54344"
+    },
+    {
+      "path": "kernels/__upstream-vectors__/rfc6962-merkle/transparency-dev-merkle/testdata/consistency/additional/roots-do-not-match-and-sizes-are-zero.json",
+      "sha256": "9cdc69e52597ef811d4c41f5e0082972d0b0490c7564d326725ff95787a7b5f5"
+    },
+    {
+      "path": "kernels/__upstream-vectors__/rfc6962-merkle/transparency-dev-merkle/testdata/consistency/additional/roots-do-not-not-match-and-sizes-are-one.json",
+      "sha256": "84368b54d79503141bff7be768ad68cb67b08357ca22c526369e603a2773c265"
+    },
+    {
+      "path": "kernels/__upstream-vectors__/rfc6962-merkle/transparency-dev-merkle/testdata/consistency/additional/size1-is-greater-than-size2-again.json",
+      "sha256": "7a773a5005c1afea01e61d33482ed57139ebffa4027efc6c1ad051d6d7302331"
+    },
+    {
+      "path": "kernels/__upstream-vectors__/rfc6962-merkle/transparency-dev-merkle/testdata/consistency/additional/size1-is-greater-than-size2.json",
+      "sha256": "a041a04840d45657a4d7a0d251b9fc55e4e39d2fed50746640925c943de103ab"
+    },
+    {
+      "path": "kernels/__upstream-vectors__/rfc6962-merkle/transparency-dev-merkle/testdata/consistency/additional/size1-is-zero-and-does-not-equal-size2.json",
+      "sha256": "a9575876b7008b6309ef7152c07f993c5a33f1ecbda3c9536b82d7d669362483"
+    },
+    {
+      "path": "kernels/__upstream-vectors__/rfc6962-merkle/transparency-dev-merkle/testdata/consistency/additional/size1-is-zero-and-size2-is-not-zero.json",
+      "sha256": "302e69cf1464e0d64259ffcdccdb4ecd5224b503a76a831a93a0f2b9900caa54"
+    },
+    {
+      "path": "kernels/__upstream-vectors__/rfc6962-merkle/transparency-dev-merkle/testdata/consistency/additional/sizes-are-equal-one-and-proof-is-empty.json",
+      "sha256": "c2c2292dcd1a35d783fd140c7372d7c82b0fd8eb489c7f9c116a21cdab4bf0d4"
+    },
+    {
+      "path": "kernels/__upstream-vectors__/rfc6962-merkle/transparency-dev-merkle/testdata/consistency/additional/sizes-are-equal-one-but-roots-are-not.json",
+      "sha256": "351b5066571d0b95ebbefca9b52ba19321477e17dbcde90ca2113a16c1c2260f"
+    },
+    {
+      "path": "kernels/__upstream-vectors__/rfc6962-merkle/transparency-dev-merkle/testdata/consistency/additional/sizes-are-equal-zero-and-proof-is-empty.json",
+      "sha256": "536902781661a7544731f807820b3a80f4ff5809f0c6ba3a959a4e7fb85baad6"
+    },
+    {
+      "path": "kernels/__upstream-vectors__/rfc6962-merkle/transparency-dev-merkle/testdata/consistency/additional/sizes-are-equal-zero-but-roots-are-not.json",
+      "sha256": "99479e80081302a4e964d7cd23c1e6a2f4c1b912fd1901f4e157f5d0af2f37b3"
+    },
+    {
+      "path": "kernels/__upstream-vectors__/rfc6962-merkle/transparency-dev-merkle/testdata/consistency/additional/sizes-do-not-watch-and-proof-is-empty.json",
+      "sha256": "fc68307eea04595a05317159d80a17e1d3ad327a31b7bb1a7e8bd8965bbd1ce1"
+    },
+    {
+      "path": "kernels/__upstream-vectors__/rfc6962-merkle/transparency-dev-merkle/testdata/consistency/additional/sizes-match-but-proof-is-not-empty-and-sizes-are-one.json",
+      "sha256": "3744febfb161c8a900818e0aa5df455642b293fa2260ba1b7bc5563b753119fa"
+    },
+    {
+      "path": "kernels/__upstream-vectors__/rfc6962-merkle/transparency-dev-merkle/testdata/consistency/additional/sizes-match-but-proof-is-not-empty-and-sizes-are-zero.json",
+      "sha256": "98f195a665b1f82475485aa320a11938ef2a60bde63bafc13c1454e7d7b5e9fd"
+    },
+    {
+      "path": "kernels/__upstream-vectors__/rfc6962-merkle/transparency-dev-merkle/testdata/inclusion/0/empty-root.json",
+      "sha256": "49c60e3481571610effff504baf45c51873457a50dbc98d4b9e0466afbd7fc24"
+    },
+    {
+      "path": "kernels/__upstream-vectors__/rfc6962-merkle/transparency-dev-merkle/testdata/inclusion/0/happy-path.json",
+      "sha256": "c572c07efd1183529a7139b88d7b9785969067bcc6fa7cac54c9b14ac7f5ef01"
+    },
+    {
+      "path": "kernels/__upstream-vectors__/rfc6962-merkle/transparency-dev-merkle/testdata/inclusion/0/leafIdx-plus-@1.json",
+      "sha256": "cd341d61f2c0c5d0cdca5acaa770438a9339ef1d5552ab551247d7bbf96e2cc5"
+    },
+    {
+      "path": "kernels/__upstream-vectors__/rfc6962-merkle/transparency-dev-merkle/testdata/inclusion/0/leafIdx-sub-@1.json",
+      "sha256": "e85d8d50c729f7821ad9391c99def401142ee4e2c0a221605229091018705ace"
+    },
+    {
+      "path": "kernels/__upstream-vectors__/rfc6962-merkle/transparency-dev-merkle/testdata/inclusion/0/leafIdx-XOR-@2.json",
+      "sha256": "fc6ebac11917d580cad1851ab53fee4d1c110cbf42b0dd25f7f198d256eb008f"
+    },
+    {
+      "path": "kernels/__upstream-vectors__/rfc6962-merkle/transparency-dev-merkle/testdata/inclusion/0/preceding-garbage.json",
+      "sha256": "5471d958a722a55559614f4ac36529427ffea96005cfe7e60b46d92e837a7d80"
+    },
+    {
+      "path": "kernels/__upstream-vectors__/rfc6962-merkle/transparency-dev-merkle/testdata/inclusion/0/preceding-root.json",
+      "sha256": "7c1459e998e80cca6ea75d0fd58636ff157b6c5bd9c2df3db3ddc30f64a439b3"
+    },
+    {
+      "path": "kernels/__upstream-vectors__/rfc6962-merkle/transparency-dev-merkle/testdata/inclusion/0/random-root.json",
+      "sha256": "79653653f6458d132029dbf196a3505d4ebf2fab2326eb2cd463be7a120337c5"
+    },
+    {
+      "path": "kernels/__upstream-vectors__/rfc6962-merkle/transparency-dev-merkle/testdata/inclusion/0/trailing-garbage.json",
+      "sha256": "1ec76ed568c6ed4ba10f07402457bef4d7d34ca26db67481400fbb958434ad0f"
+    },
+    {
+      "path": "kernels/__upstream-vectors__/rfc6962-merkle/transparency-dev-merkle/testdata/inclusion/0/trailing-root.json",
+      "sha256": "931ec4202a1a797cb56f34b1cfdea3338a519ab28014d44324f133a6a09cf8ce"
+    },
+    {
+      "path": "kernels/__upstream-vectors__/rfc6962-merkle/transparency-dev-merkle/testdata/inclusion/0/treeSize-div-@2.json",
+      "sha256": "b7d2509f3997469d7240fad67d029eb2b0df208df10b686d3b15eddee4d74000"
+    },
+    {
+      "path": "kernels/__upstream-vectors__/rfc6962-merkle/transparency-dev-merkle/testdata/inclusion/0/treeSize-mul-@2.json",
+      "sha256": "ddd436700a216fee45b7b5514903ce129777cc25233bf0315ff11d8ee6184bb1"
+    },
+    {
+      "path": "kernels/__upstream-vectors__/rfc6962-merkle/transparency-dev-merkle/testdata/inclusion/0/wrong-leaf.json",
+      "sha256": "1da0ded53e2dac76b4071b20ad0cfb88f485498d4639747f1a2d9ec8948de26d"
+    },
+    {
+      "path": "kernels/__upstream-vectors__/rfc6962-merkle/transparency-dev-merkle/testdata/inclusion/1/empty-root.json",
+      "sha256": "64353e828949fb9c074dfce9933b6508df935189bfccd2950b96e9c2db358c9f"
+    },
+    {
+      "path": "kernels/__upstream-vectors__/rfc6962-merkle/transparency-dev-merkle/testdata/inclusion/1/happy-path.json",
+      "sha256": "d345b72a74b4647f68f92e9bcd05c19f7fd3080858bc6ff25979270d9d9b0083"
+    },
+    {
+      "path": "kernels/__upstream-vectors__/rfc6962-merkle/transparency-dev-merkle/testdata/inclusion/1/inserted-component.json",
+      "sha256": "6721a6ccc273f0827375c7f48f68ee5869091f7364b06f9e744d0e332780afb4"
+    },
+    {
+      "path": "kernels/__upstream-vectors__/rfc6962-merkle/transparency-dev-merkle/testdata/inclusion/1/leafIdx-plus-@1.json",
+      "sha256": "9a5d8eecc571d523cc8a94c32dc3c46184250826d9ac38651caa5ebcdb002c84"
+    },
+    {
+      "path": "kernels/__upstream-vectors__/rfc6962-merkle/transparency-dev-merkle/testdata/inclusion/1/leafIdx-sub-@1.json",
+      "sha256": "195f8b32e49d23e59a39fd9afc9d860405bb353c31714987e1cac8a366f1f6a1"
+    },
+    {
+      "path": "kernels/__upstream-vectors__/rfc6962-merkle/transparency-dev-merkle/testdata/inclusion/1/leafIdx-XOR-@2.json",
+      "sha256": "0e7d66ab6f07a23c947824846b56de03f8a71bf7c2873100182d42d6fead9b81"
+    },
+    {
+      "path": "kernels/__upstream-vectors__/rfc6962-merkle/transparency-dev-merkle/testdata/inclusion/1/modified-proof[0]-bit-@3.json",
+      "sha256": "00a90656df361da6bf3cc6a13b95304a2f7ade3c957e77a69a665d5fcae0d89a"
+    },
+    {
+      "path": "kernels/__upstream-vectors__/rfc6962-merkle/transparency-dev-merkle/testdata/inclusion/1/modified-proof[1]-bit-@3.json",
+      "sha256": "3ce7c6aa398fd340282215ca4c1009fb7bcba0f02e81162cc4c3114a28d3b42e"
+    },
+    {
+      "path": "kernels/__upstream-vectors__/rfc6962-merkle/transparency-dev-merkle/testdata/inclusion/1/modified-proof[2]-bit-@3.json",
+      "sha256": "29edf45b54edf9b22a8ea34c0f9d0d048f0a0801df0e0a7160d586ec625f9a7f"
+    },
+    {
+      "path": "kernels/__upstream-vectors__/rfc6962-merkle/transparency-dev-merkle/testdata/inclusion/1/preceding-garbage.json",
+      "sha256": "7ee5db90485543bca520278e6e76004e64208e459abe93e88ace755d22c07367"
+    },
+    {
+      "path": "kernels/__upstream-vectors__/rfc6962-merkle/transparency-dev-merkle/testdata/inclusion/1/preceding-root.json",
+      "sha256": "5efa69ab7fa90d14ccefad40f1d6fb5e14af0c8b91fd144ab39916f988eaaf26"
+    },
+    {
+      "path": "kernels/__upstream-vectors__/rfc6962-merkle/transparency-dev-merkle/testdata/inclusion/1/random-root.json",
+      "sha256": "bcf0651e31665674611764af6d8eb4615e600b907e655f1a815be414124e2776"
+    },
+    {
+      "path": "kernels/__upstream-vectors__/rfc6962-merkle/transparency-dev-merkle/testdata/inclusion/1/removed-component.json",
+      "sha256": "d84c110a5dbb638094e30e1acec27820ef101593708843be6b179ce55e8ba8ed"
+    },
+    {
+      "path": "kernels/__upstream-vectors__/rfc6962-merkle/transparency-dev-merkle/testdata/inclusion/1/trailing-garbage.json",
+      "sha256": "bcfee455d703eab1ba3d08b0e028031eda28550067feb1ef63eeab72b8b4a994"
+    },
+    {
+      "path": "kernels/__upstream-vectors__/rfc6962-merkle/transparency-dev-merkle/testdata/inclusion/1/trailing-root.json",
+      "sha256": "551b28a65d251d73506549cf42007db0a2732f18fc4593fd191eb25d2b3fb3a4"
+    },
+    {
+      "path": "kernels/__upstream-vectors__/rfc6962-merkle/transparency-dev-merkle/testdata/inclusion/1/treeSize-div-@2.json",
+      "sha256": "a5cafe5a8c7e9240e7d903a67c5b6bca92dad496a83ab193a22ed1468bae504a"
+    },
+    {
+      "path": "kernels/__upstream-vectors__/rfc6962-merkle/transparency-dev-merkle/testdata/inclusion/1/treeSize-mul-@2.json",
+      "sha256": "89da536879c37224412aad743335bbda10c53191c2379cebf5d66197624efe8f"
+    },
+    {
+      "path": "kernels/__upstream-vectors__/rfc6962-merkle/transparency-dev-merkle/testdata/inclusion/1/wrong-leaf.json",
+      "sha256": "0778d328f25dbffd6aa399c594cd6bbc7803b5a0ff18af14c018f8b4b68b3636"
+    },
+    {
+      "path": "kernels/__upstream-vectors__/rfc6962-merkle/transparency-dev-merkle/testdata/inclusion/2/empty-root.json",
+      "sha256": "d2b7307d64ae92d1ec996f5198ee957ad75cca5cf86ae986862aee14a8d68d3c"
+    },
+    {
+      "path": "kernels/__upstream-vectors__/rfc6962-merkle/transparency-dev-merkle/testdata/inclusion/2/happy-path.json",
+      "sha256": "4eede9de7ed9989bcc2f53cb8ae770cecf5c56dbfae25e2d38d9e551e7226722"
+    },
+    {
+      "path": "kernels/__upstream-vectors__/rfc6962-merkle/transparency-dev-merkle/testdata/inclusion/2/inserted-component.json",
+      "sha256": "d7058a89521142a591f52c9f6e00901078c87c58f768bc66c8e16d1b141f58a1"
+    },
+    {
+      "path": "kernels/__upstream-vectors__/rfc6962-merkle/transparency-dev-merkle/testdata/inclusion/2/leafIdx-plus-@1.json",
+      "sha256": "ff0c91216fbd1905ae1669983d9f6eeb25b2f238926daefe3892547562873473"
+    },
+    {
+      "path": "kernels/__upstream-vectors__/rfc6962-merkle/transparency-dev-merkle/testdata/inclusion/2/leafIdx-sub-@1.json",
+      "sha256": "98240a93c60721764425167ce2c4f48cf7924c23838e5c9715b0144b7fe3a44d"
+    },
+    {
+      "path": "kernels/__upstream-vectors__/rfc6962-merkle/transparency-dev-merkle/testdata/inclusion/2/leafIdx-XOR-@2.json",
+      "sha256": "9e9254c2a7988b5eb2a5303c1941c8856fe9539b238094d07f662e704f2ee8ba"
+    },
+    {
+      "path": "kernels/__upstream-vectors__/rfc6962-merkle/transparency-dev-merkle/testdata/inclusion/2/modified-proof[0]-bit-@3.json",
+      "sha256": "c2251f169001fd697b4e25ee9e17a93daf6586b5dfcde5c1ac447f8dc8597016"
+    },
+    {
+      "path": "kernels/__upstream-vectors__/rfc6962-merkle/transparency-dev-merkle/testdata/inclusion/2/modified-proof[1]-bit-@3.json",
+      "sha256": "e1380f2bcdbef9be155ee89ebbd2f0a0b4a30b2353a98af96f8ca4f879f331a5"
+    },
+    {
+      "path": "kernels/__upstream-vectors__/rfc6962-merkle/transparency-dev-merkle/testdata/inclusion/2/modified-proof[2]-bit-@3.json",
+      "sha256": "df9ca0a261fd850c66178ac6fb3ce8bacb3b5d49ba76229841c352348396d235"
+    },
+    {
+      "path": "kernels/__upstream-vectors__/rfc6962-merkle/transparency-dev-merkle/testdata/inclusion/2/preceding-garbage.json",
+      "sha256": "e51cbedb2324accbf5656d029cc7cf6f3fdcb47a908bfd076b4c01a95f5a6926"
+    },
+    {
+      "path": "kernels/__upstream-vectors__/rfc6962-merkle/transparency-dev-merkle/testdata/inclusion/2/preceding-root.json",
+      "sha256": "7d227ea7caf8046f86524d4e911097d9ab4374c1da6954c7e09d996a31662af8"
+    },
+    {
+      "path": "kernels/__upstream-vectors__/rfc6962-merkle/transparency-dev-merkle/testdata/inclusion/2/random-root.json",
+      "sha256": "b3c3e971919ede714779acf6d4b4a51bcaff6190c290d03e1c944bb4928cb16e"
+    },
+    {
+      "path": "kernels/__upstream-vectors__/rfc6962-merkle/transparency-dev-merkle/testdata/inclusion/2/removed-component.json",
+      "sha256": "3f39d26ff30967eea864d639496553e3e960f4ad0ab9ccf7ca3ba39ec7bc9f69"
+    },
+    {
+      "path": "kernels/__upstream-vectors__/rfc6962-merkle/transparency-dev-merkle/testdata/inclusion/2/trailing-garbage.json",
+      "sha256": "848c508ebb432fd940fe17b4fda69af10f55f97804619b653f7e5591332302dc"
+    },
+    {
+      "path": "kernels/__upstream-vectors__/rfc6962-merkle/transparency-dev-merkle/testdata/inclusion/2/trailing-root.json",
+      "sha256": "38f64097a21eb529416d1d4b7f2b4a9dba02990413ee9a4fa13285255c369bb1"
+    },
+    {
+      "path": "kernels/__upstream-vectors__/rfc6962-merkle/transparency-dev-merkle/testdata/inclusion/2/treeSize-div-@2.json",
+      "sha256": "57d282d5629097d2fb7c3e75e49bd7e1e3c862d4a3163eb54c64f13998f3b848"
+    },
+    {
+      "path": "kernels/__upstream-vectors__/rfc6962-merkle/transparency-dev-merkle/testdata/inclusion/2/treeSize-mul-@2.json",
+      "sha256": "ae71179776ed7bd381d1671ad2496723135a70a57219e5cec811ec7e255b757e"
+    },
+    {
+      "path": "kernels/__upstream-vectors__/rfc6962-merkle/transparency-dev-merkle/testdata/inclusion/2/wrong-leaf.json",
+      "sha256": "402fd231a00310203025960779d68516fe8d6bf7e25dffff4b41b8457e45ce6a"
+    },
+    {
+      "path": "kernels/__upstream-vectors__/rfc6962-merkle/transparency-dev-merkle/testdata/inclusion/3/empty-root.json",
+      "sha256": "0f1a3485e7d89d1722ad41fa09fb9bd05c4e4ac93645bf2c4963474171648725"
+    },
+    {
+      "path": "kernels/__upstream-vectors__/rfc6962-merkle/transparency-dev-merkle/testdata/inclusion/3/happy-path.json",
+      "sha256": "be604298d4ed651d66dd96dc769fdd6c60f3b04db1080afaff4b10a1070d2e23"
+    },
+    {
+      "path": "kernels/__upstream-vectors__/rfc6962-merkle/transparency-dev-merkle/testdata/inclusion/3/leafIdx-plus-@1.json",
+      "sha256": "bd22f331af3a05d5e81ba8520a135fc7a0b976953f6262ec23942a9ffb3d99de"
+    },
+    {
+      "path": "kernels/__upstream-vectors__/rfc6962-merkle/transparency-dev-merkle/testdata/inclusion/3/leafIdx-sub-@1.json",
+      "sha256": "0f76a4ac9a85d1e8acc621206f3f4e6ed17c358d7dc881cd922f34f1fc48aae7"
+    },
+    {
+      "path": "kernels/__upstream-vectors__/rfc6962-merkle/transparency-dev-merkle/testdata/inclusion/3/leafIdx-XOR-@2.json",
+      "sha256": "896c301e0aee42913e8f96437e13221c5dc26f3ef701058aaccf9fc190ecea1c"
+    },
+    {
+      "path": "kernels/__upstream-vectors__/rfc6962-merkle/transparency-dev-merkle/testdata/inclusion/3/modified-proof[0]-bit-@3.json",
+      "sha256": "5e96f6006b5add71776861867117b8d3ce505797a6e6d29546c43ab3bdbbce51"
+    },
+    {
+      "path": "kernels/__upstream-vectors__/rfc6962-merkle/transparency-dev-merkle/testdata/inclusion/3/preceding-garbage.json",
+      "sha256": "676580c5771b5cd710614c2a9acab913f60016f048f1e86d6bd84a4ee52a5cd8"
+    },
+    {
+      "path": "kernels/__upstream-vectors__/rfc6962-merkle/transparency-dev-merkle/testdata/inclusion/3/preceding-root.json",
+      "sha256": "6c5cfe1e9a04fae841fbf6ff2f49b1f59424643cdb23793d3b2972fcb5463ace"
+    },
+    {
+      "path": "kernels/__upstream-vectors__/rfc6962-merkle/transparency-dev-merkle/testdata/inclusion/3/random-root.json",
+      "sha256": "baafc5e12448c1c74cf173d0c7bc1d111b400ab865ff98d75639eb6bae95fd38"
+    },
+    {
+      "path": "kernels/__upstream-vectors__/rfc6962-merkle/transparency-dev-merkle/testdata/inclusion/3/removed-component.json",
+      "sha256": "ce663b252842c0efa3d673df07ca8b75d2949c9bb2b8965c8cd52f05faaa8b0c"
+    },
+    {
+      "path": "kernels/__upstream-vectors__/rfc6962-merkle/transparency-dev-merkle/testdata/inclusion/3/trailing-garbage.json",
+      "sha256": "cde76073261de9bdf00907264acb7f9f8dff48d445458542fa9418efb2d58a7a"
+    },
+    {
+      "path": "kernels/__upstream-vectors__/rfc6962-merkle/transparency-dev-merkle/testdata/inclusion/3/trailing-root.json",
+      "sha256": "783a38bb0483c3f02a3f222caf3d81b8890edd012b87ff66b0898899048cdbcb"
+    },
+    {
+      "path": "kernels/__upstream-vectors__/rfc6962-merkle/transparency-dev-merkle/testdata/inclusion/3/treeSize-div-@2.json",
+      "sha256": "886354eb8bdf646df49a2fe20dea3986b71ae8412e66a08045a402dd6d244a3b"
+    },
+    {
+      "path": "kernels/__upstream-vectors__/rfc6962-merkle/transparency-dev-merkle/testdata/inclusion/3/treeSize-mul-@2.json",
+      "sha256": "a974090a34b2ee7ede35a4ad833d813fca0f213795b23a97ee8cff6c94eb7759"
+    },
+    {
+      "path": "kernels/__upstream-vectors__/rfc6962-merkle/transparency-dev-merkle/testdata/inclusion/3/wrong-leaf.json",
+      "sha256": "0c10a0b7508da6647b809d33f7f5df45457f9bfc7dc9ddcb40d1f6c1e4e07052"
+    },
+    {
+      "path": "kernels/__upstream-vectors__/rfc6962-merkle/transparency-dev-merkle/testdata/inclusion/4/empty-root.json",
+      "sha256": "2f6645153982bc9cf2f9cbd96064f26ac11415970fc1ceb7b51e5a6dbf04b3ad"
+    },
+    {
+      "path": "kernels/__upstream-vectors__/rfc6962-merkle/transparency-dev-merkle/testdata/inclusion/4/happy-path.json",
+      "sha256": "0d5679d8a828eebda5d498ca0187a568c805e4d1be17f373ec5058c99b74a9cc"
+    },
+    {
+      "path": "kernels/__upstream-vectors__/rfc6962-merkle/transparency-dev-merkle/testdata/inclusion/4/inserted-component.json",
+      "sha256": "c7410ebae0d3f4404d1502f2939511421adad7e79ba4ea27473ec2b9e4c2d54e"
+    },
+    {
+      "path": "kernels/__upstream-vectors__/rfc6962-merkle/transparency-dev-merkle/testdata/inclusion/4/leafIdx-plus-@1.json",
+      "sha256": "4b1bed80ba0a94c43dab1ce92569c95d68c8651b2a03f0ec74b93e47ce0754b6"
+    },
+    {
+      "path": "kernels/__upstream-vectors__/rfc6962-merkle/transparency-dev-merkle/testdata/inclusion/4/leafIdx-sub-@1.json",
+      "sha256": "9fcd62dc8dc74633e6f2e6534c4d9f19900cc8905b525002130763c093728749"
+    },
+    {
+      "path": "kernels/__upstream-vectors__/rfc6962-merkle/transparency-dev-merkle/testdata/inclusion/4/leafIdx-XOR-@2.json",
+      "sha256": "556fb30d4818add1cc6b91f6c42da32f428522ec180e45375778ae3f657fd2a1"
+    },
+    {
+      "path": "kernels/__upstream-vectors__/rfc6962-merkle/transparency-dev-merkle/testdata/inclusion/4/modified-proof[0]-bit-@3.json",
+      "sha256": "7e6dc8a7dfc7153547589910410fe351701213f94bf121f7a2d1e270a80d47a9"
+    },
+    {
+      "path": "kernels/__upstream-vectors__/rfc6962-merkle/transparency-dev-merkle/testdata/inclusion/4/modified-proof[1]-bit-@3.json",
+      "sha256": "8ef528da21f596725d74948e0ef5cb31f051724d541e6f38526b65d05951fd8c"
+    },
+    {
+      "path": "kernels/__upstream-vectors__/rfc6962-merkle/transparency-dev-merkle/testdata/inclusion/4/modified-proof[2]-bit-@3.json",
+      "sha256": "6a1cdf54dc03e2bf01c72fab2b5be7fbdb0e167e235a6210d50799476a3bf45a"
+    },
+    {
+      "path": "kernels/__upstream-vectors__/rfc6962-merkle/transparency-dev-merkle/testdata/inclusion/4/preceding-garbage.json",
+      "sha256": "d7d70f059711a1b2e651165262aed2bd1b3593f2b51402111488aac2bdd10874"
+    },
+    {
+      "path": "kernels/__upstream-vectors__/rfc6962-merkle/transparency-dev-merkle/testdata/inclusion/4/preceding-root.json",
+      "sha256": "a0ef85b059e67daf7d7c802d46f4facba3868fe0e1bcf483e94b8070ea7b2222"
+    },
+    {
+      "path": "kernels/__upstream-vectors__/rfc6962-merkle/transparency-dev-merkle/testdata/inclusion/4/random-root.json",
+      "sha256": "6ebaf001a309e496e731aaa938eaaccd8c262064b8ffc0cf6dbad7cf8859ccf0"
+    },
+    {
+      "path": "kernels/__upstream-vectors__/rfc6962-merkle/transparency-dev-merkle/testdata/inclusion/4/removed-component.json",
+      "sha256": "f23baf1da87b054d1c531a16920c6e3d834485e0934733422c46d1cf58d54521"
+    },
+    {
+      "path": "kernels/__upstream-vectors__/rfc6962-merkle/transparency-dev-merkle/testdata/inclusion/4/trailing-garbage.json",
+      "sha256": "f6655f3aa96ae4b0445e9338fbc672e93d25261bb48a164221769dde4711be8b"
+    },
+    {
+      "path": "kernels/__upstream-vectors__/rfc6962-merkle/transparency-dev-merkle/testdata/inclusion/4/trailing-root.json",
+      "sha256": "287033ca6a6ae4be6ce38b85ab646b78d6bda19aba00b0e8f89056efc8a59152"
+    },
+    {
+      "path": "kernels/__upstream-vectors__/rfc6962-merkle/transparency-dev-merkle/testdata/inclusion/4/treeSize-div-@2.json",
+      "sha256": "e8cbf31519bf539310afd996735f5a6d3df7714e55877d659cbd43d0b9bfeb70"
+    },
+    {
+      "path": "kernels/__upstream-vectors__/rfc6962-merkle/transparency-dev-merkle/testdata/inclusion/4/treeSize-mul-@2.json",
+      "sha256": "ab63412075d15e52e482d7cd1d8b86cad9a5a27652c5cbe29626f55524a3eee8"
+    },
+    {
+      "path": "kernels/__upstream-vectors__/rfc6962-merkle/transparency-dev-merkle/testdata/inclusion/4/wrong-leaf.json",
+      "sha256": "d2910423f45844100c010ac6f12f64b3d38f3fe3485718349ee9fc2457cc74bf"
+    },
+    {
+      "path": "kernels/__upstream-vectors__/rfc6962-merkle/transparency-dev-merkle/testdata/inclusion/additional/0/empty-root-and-random-leaf.json",
+      "sha256": "a4a381fbea0dfc21c525b69f87260711c7bc184fa21821670df1aee54c7598b2"
+    },
+    {
+      "path": "kernels/__upstream-vectors__/rfc6962-merkle/transparency-dev-merkle/testdata/inclusion/additional/0/empty-root.json",
+      "sha256": "b20ad20f009741c98a3b2eb017cd681f80ddc1b49e728a281d715049bfaa08cb"
+    },
+    {
+      "path": "kernels/__upstream-vectors__/rfc6962-merkle/transparency-dev-merkle/testdata/inclusion/additional/0/random-leaf.json",
+      "sha256": "52831bb836f3ca92a5231014bb90844ce24ec89585113db899e60ef7d3f58db0"
+    },
+    {
+      "path": "kernels/__upstream-vectors__/rfc6962-merkle/transparency-dev-merkle/testdata/inclusion/additional/1/empty-root-and-random-leaf.json",
+      "sha256": "f00e3a49610f5471ceeff0f71a23d71fff009c2d2011f990b8ecdb3c96c5c0e2"
+    },
+    {
+      "path": "kernels/__upstream-vectors__/rfc6962-merkle/transparency-dev-merkle/testdata/inclusion/additional/1/empty-root.json",
+      "sha256": "9b53639e844b729d39b7697eb6ef4d7342f65b598d818753c43b021b99952aae"
+    },
+    {
+      "path": "kernels/__upstream-vectors__/rfc6962-merkle/transparency-dev-merkle/testdata/inclusion/additional/1/random-leaf.json",
+      "sha256": "ad393f42d540d5032d38387b6f41a6b7f4836c7493c38af011d64d4502a53635"
+    },
+    {
+      "path": "kernels/__upstream-vectors__/rfc6962-merkle/transparency-dev-merkle/testdata/inclusion/additional/2/empty-root-and-random-leaf.json",
+      "sha256": "b067969bf5212e2304ca45f204dd5e5b56c65a5dc4fece5734284abb2fc00d2d"
+    },
+    {
+      "path": "kernels/__upstream-vectors__/rfc6962-merkle/transparency-dev-merkle/testdata/inclusion/additional/2/empty-root.json",
+      "sha256": "f9ff0889ce8130a1293eeccf6cbf0caa7a772529929f6a7f2151baa2965fce69"
+    },
+    {
+      "path": "kernels/__upstream-vectors__/rfc6962-merkle/transparency-dev-merkle/testdata/inclusion/additional/2/random-leaf.json",
+      "sha256": "4e31982e6daeb6a156e96e77c97026c58899b3f2ab7b6a1c5d0e7089d860e905"
+    },
+    {
+      "path": "kernels/__upstream-vectors__/rfc6962-merkle/transparency-dev-merkle/testdata/inclusion/additional/3/empty-root-and-random-leaf.json",
+      "sha256": "219ad7488f89a97d4ed861296081758996845b0814c21d3c757cd5edc3eb6872"
+    },
+    {
+      "path": "kernels/__upstream-vectors__/rfc6962-merkle/transparency-dev-merkle/testdata/inclusion/additional/3/empty-root.json",
+      "sha256": "89f82438aa56133f8621b15eb7f187af49d86ec95364757d789e54cedcdf5474"
+    },
+    {
+      "path": "kernels/__upstream-vectors__/rfc6962-merkle/transparency-dev-merkle/testdata/inclusion/additional/3/random-leaf.json",
+      "sha256": "9e739bb231fbdd4acb621fe9fd24905fa758320621da20aa7d08535100ef1c06"
+    },
+    {
+      "path": "kernels/__upstream-vectors__/rfc6962-merkle/transparency-dev-merkle/testdata/inclusion/single-entry/empty-leaf.json",
+      "sha256": "cf8578f16eeabb320133ac0c354542ea57d4def346abf7833d95817991b5fe95"
+    },
+    {
+      "path": "kernels/__upstream-vectors__/rfc6962-merkle/transparency-dev-merkle/testdata/inclusion/single-entry/empty-root-and-leaf.json",
+      "sha256": "ce963f0164ba6a666ff8768d7e7982366ec0b574fa5459d86ab1a6def024314c"
+    },
+    {
+      "path": "kernels/__upstream-vectors__/rfc6962-merkle/transparency-dev-merkle/testdata/inclusion/single-entry/empty-root.json",
+      "sha256": "000c6f1ae9ea7cb001107c5f855000edb49ada3f2cad193554194e4e227f7041"
+    },
+    {
+      "path": "kernels/__upstream-vectors__/rfc6962-merkle/transparency-dev-merkle/testdata/inclusion/single-entry/matching-root-and-leaf.json",
+      "sha256": "cb747833f4781723e61100928ae05498e322a31abab3ec400a036f008b896766"
+    },
+    {
+      "path": "kernels/__upstream-vectors__/rfc9421/LICENSE-ietf-tlp.md",
+      "sha256": "56a85c3bdaa5afc99a85e506ff1d9ec079c92f4313b3929b4dd1acd2d1fc7a5d"
+    },
+    {
+      "path": "kernels/__upstream-vectors__/rfc9421/PROVENANCE.json",
+      "sha256": "4872632cda74299c6bbb3b1ecb87ca171827e3395e09c3ddfa6c07ea9c69e925"
+    },
+    {
+      "path": "kernels/__upstream-vectors__/rfc9421/rfc-editor.org/rfc9421.txt",
+      "sha256": "612655786bf4293bfc486e4177571467fbb3de6e6f0eea90cb74c346a34fdf3c"
+    },
+    {
+      "path": "kernels/__upstream-vectors__/sanctions-list-binding/PROVENANCE.json",
+      "sha256": "8b803aa42a6eac1be8c79b478beccbe5b0827a01060c2abd5f8d0e7434b7f88e"
+    },
+    {
+      "path": "kernels/__upstream-vectors__/sanctions-list-binding/vectors.json",
+      "sha256": "7c9fd7f09bc1a3d1055129465888a9b5ef7cfa25ebe4b0f138b4be8ca62cf999"
+    },
+    {
+      "path": "kernels/__upstream-vectors__/w3c-bitstring-status-list/PROVENANCE.json",
+      "sha256": "723c76f68e9fcd0135456d2f2a4c52c0221586859ef67429d4c2a630d2a87631"
+    },
+    {
+      "path": "kernels/__upstream-vectors__/w3c-bitstring-status-list/vc-bitstring-status-list/LICENSE.md",
+      "sha256": "cad8da6404199f732387340029f0f91d55acb98092bf45089064b4a9b8bb0295"
+    },
+    {
+      "path": "kernels/__upstream-vectors__/w3c-bitstring-status-list/vc-bitstring-status-list/transitions/2025/REC/index.html.txt",
+      "sha256": "10f88c9663a1bc71f09696decc4114eec0b33058ee715c176032ec229c09627c"
+    },
+    {
+      "path": "kernels/__vintages__/art-218-qm-points-and-fees.uses.json",
+      "sha256": "5569e12bd89c49c24190b633f92ca4725f49d66c17b25176f6b5c5c2cd76983e"
+    },
+    {
+      "path": "kernels/__vintages__/art-220-reg-z-threshold-lookup.uses.json",
+      "sha256": "f73817b292ad8622d74fb5d5972ac7719f13a17c60c76858779576bb00f38554"
+    },
+    {
+      "path": "kernels/__vintages__/art-223-conforming-loan-limit.uses.json",
+      "sha256": "6f4dc580df06aee757f18087ece96e1d3fc6d07cf748c5a03fae3a47065f1a6c"
+    },
+    {
+      "path": "kernels/__vintages__/art-234-test-hoepa-high-cost.uses.json",
+      "sha256": "5bfd0e5c1d3be84e15025352123acd1965c8d46fcfff3463832711fe09f5f57e"
+    },
+    {
+      "path": "kernels/__vintages__/art-282-social-security-claiming-optimizer.uses.json",
+      "sha256": "f44c13ada2e6713fcaf4d3588fef56c25ab5a6263336ce3493b123b27a76e910"
+    },
+    {
+      "path": "kernels/__vintages__/art-339-compute-gross-to-net.uses.json",
+      "sha256": "d1f5c76fc4e12473d9dc9e53799b47139d61ca35f9ab5026187573edd236dbcb"
+    },
+    {
+      "path": "kernels/__vintages__/art-713-scorp-election-break-even.uses.json",
+      "sha256": "f8650661ba09685be8c8beadfebd7791a26cc77d792ee40f8cfb55d7312a6b5a"
+    },
+    {
+      "path": "kernels/__vintages__/art-752-freelance-quarterly-estimated-tax.uses.json",
+      "sha256": "ffe22d0e183210e13c9fa82d9ee4b84759481c1bc7f78bde9a33f72419863997"
+    },
+    {
+      "path": "kernels/__vintages__/art-759-iso-amt-exposure-modeler.uses.json",
+      "sha256": "cb970f6256092528509d1949a794100dc5f78227ad61f03581167942747c59cf"
+    },
+    {
+      "path": "kernels/__vintages__/art-761-caregiver-income-impact.uses.json",
+      "sha256": "3e1de12e4882a390c98a83ad6a586c58f7ce4113fb4fc48dd168452a97239410"
+    },
+    {
+      "path": "kernels/__vintages__/art-764-solo-401k-vs-sep-ira.uses.json",
+      "sha256": "45c359b4c3958c98d550ff575d34214e2d23a634ebe2cdc5c527155896ca9445"
+    },
+    {
+      "path": "kernels/__vintages__/art-765-dependent-care-fsa-cdctc-optimizer.uses.json",
+      "sha256": "6ef0f8bb760d98878482a73e0053564b0dc44549806bd97172d290e98b6b57f6"
+    },
+    {
+      "path": "kernels/__vintages__/check-vintages.mjs",
+      "sha256": "2942291f0ad791f8c38a8591ffb314c2d4d936390862fd61b27d66002293647d"
+    },
+    {
+      "path": "kernels/__vintages__/README.md",
+      "sha256": "beba8f18500f72e35173af8d6e8de1bf39c77c950774f433309055bdb05a239c"
+    },
+    {
+      "path": "kernels/__vintages__/v3-baseline.json",
+      "sha256": "a3b0bea4ada8de9f8a4ca7ba41e28f47f81dc5105d860efedd313bfb6de5951f"
+    },
+    {
+      "path": "kernels/_amort.bundle.authorship.json",
+      "sha256": "b9d3b59bacb85ebc6df0cbf4f2dfc5c83f1330be1ba88ca64616eb24d85e7168"
+    },
+    {
       "path": "kernels/_amort.bundle.mjs",
       "sha256": "5ed6543d4c343a2a8359966aeebe6279645eecbb0717bf1ad2df1cea1f66df31"
     },
@@ -3120,15 +4640,35 @@
     },
     {
       "path": "kernels/_computeproof.mjs",
-      "sha256": "1cc34cae13d2582185bc45c10e508063a514759eb538bd33c6e7f75e0fed4e56"
+      "sha256": "e959873798991c56eb00a2f8b42f0f5a92f1bfc4e951955ec868c5625221d6c7"
     },
     {
       "path": "kernels/_csv_injection.mjs",
       "sha256": "5b8f5889ec1d91d069ce6619170b8b63a2acd93519ba4182515d3c81e689a741"
     },
     {
+      "path": "kernels/_csv.bundle.authorship.json",
+      "sha256": "ba7ce91f6e055019f4142d89c26e5f3390e8109ab97dfd3a3cea612cd7ce6f57"
+    },
+    {
+      "path": "kernels/_csv.bundle.mjs",
+      "sha256": "95429b31368e72b002a0883bbe07158c2bee22a135810d008c72a7a359853c6c"
+    },
+    {
+      "path": "kernels/_daycount.bundle.authorship.json",
+      "sha256": "bce871e45d13649d2116ba18ee22159bb7187c6390456f5e13adf6c9d661e157"
+    },
+    {
+      "path": "kernels/_daycount.bundle.mjs",
+      "sha256": "54d62b20ada50c4f9d90eef7e2dca0a0dcfe1e0f3d47fdd2081fafd1d5c06e73"
+    },
+    {
       "path": "kernels/_detmath.bundle.mjs",
       "sha256": "fd3ebdb0a5192b04bd33703ab03d1daf0b80cf0887bb84958ab9488467c516cd"
+    },
+    {
+      "path": "kernels/_dtree.bundle.authorship.json",
+      "sha256": "2e1fc826e402919cc29af6e0f1d0f97459009cf32d631a944a34494a78e39ec2"
     },
     {
       "path": "kernels/_dtree.bundle.mjs",
@@ -3157,6 +4697,26 @@
     {
       "path": "kernels/_head.mjs",
       "sha256": "5b365513dac1d168dc4a52536ed48fa7ffcfb1c2dec67011686ab115a99e5c4b"
+    },
+    {
+      "path": "kernels/_headroom.mjs",
+      "sha256": "5425af316ade3aeae063f24dce638744fdd2ad878f4f2d3b7a9e75af47acac3c"
+    },
+    {
+      "path": "kernels/_input.mjs",
+      "sha256": "0d412ac71eb381f55e3bd6a39e9924e7017164603e5cf2f6571085c59c17c4bf"
+    },
+    {
+      "path": "kernels/_input.selftest.mjs",
+      "sha256": "48038b0c56225ae96fd62715fcce3e99c27416a92e2c64010da280b22301bc19"
+    },
+    {
+      "path": "kernels/_money.bundle.authorship.json",
+      "sha256": "5ecadf1a147daf179777f8fca3b3398c890284ddfdba517911792ee60ebe09ac"
+    },
+    {
+      "path": "kernels/_money.bundle.mjs",
+      "sha256": "a97564424ea4c1be594c6682404e957a0e2578d5429051de0946734428d0f29d"
     },
     {
       "path": "kernels/_noble-bn254.bundle.mjs",
@@ -3191,8 +4751,20 @@
       "sha256": "c262f39a66e18ace3bcbb25c5b8ecc74c1aa304de740cf0b3cf39db1f8393682"
     },
     {
+      "path": "kernels/_ruleversion.bundle.authorship.json",
+      "sha256": "825873f079168c3ee5de29c4a5c4741b17162001e5117ab4fac02b0e9059afd5"
+    },
+    {
       "path": "kernels/_ruleversion.bundle.mjs",
       "sha256": "838a6db80a8a76fc41ec20ff0a5821ae0b7ea4ec8f987e487246193249c2cc34"
+    },
+    {
+      "path": "kernels/_sha256.bundle.authorship.json",
+      "sha256": "361c89f07412dc68f2d3106eea60e6e2f4a870fca303af7be661a5074137c2cf"
+    },
+    {
+      "path": "kernels/_sha256.bundle.mjs",
+      "sha256": "941331d31ec2002642b1cf02b1fb63ddd9e71424e690f644db8cbb00646b86a7"
     },
     {
       "path": "kernels/_shape.mjs",
@@ -3201,6 +4773,18 @@
     {
       "path": "kernels/_signverdict.inline.js",
       "sha256": "63302e866aedf695401f66ae43ffe584984154a79e57820d16b9b586d92bd31e"
+    },
+    {
+      "path": "kernels/_vintage.bundle.authorship.json",
+      "sha256": "deb4ac3cb6dffb13eb3bf5ca76e00de2fcf2887ef9ce5b159474134ee02ddfc7"
+    },
+    {
+      "path": "kernels/_vintage.bundle.mjs",
+      "sha256": "e6e3ac2d4e97ba8de2266d7d8027869a533b2f111205dd1856444d9ad7db8649"
+    },
+    {
+      "path": "kernels/_vintage.selftest.mjs",
+      "sha256": "61baee236c4eb4e0f3436b9deab4097328ffb2d403d545d9e98ae6cb850a6040"
     },
     {
       "path": "kernels/503-canton-tokenization-readiness-diagnostic.kernel.mjs",
@@ -3251,6 +4835,10 @@
       "sha256": "50741b9d96f28fae793b5612ef94aa0a7d4d82c7caee633d71ef57ed9a5430fe"
     },
     {
+      "path": "kernels/514-tokenized-fund-collateral-validator.mutation.json",
+      "sha256": "e75e4232e1628def6f9077f107121a0a1ee9699cddaf4178a9ceb28d7f0e3d60"
+    },
+    {
       "path": "kernels/515-collateral-swap-eligibility-validator.kernel.mjs",
       "sha256": "678f918188301de63b9847665aa262f6fc73e09a1b28292b6bd3a8b79e4a51bf"
     },
@@ -3261,6 +4849,130 @@
     {
       "path": "kernels/733-servicing-compliance-clock.kernel.mjs",
       "sha256": "e7eac9a4322542b6e39434f60df84cdc6eb24ceee9887b282aadc16f319bb4ea"
+    },
+    {
+      "path": "kernels/783-emv-mpm-qr-validator.kernel.mjs",
+      "sha256": "8eddb4fb6dd1e0ba8b4a2e22879e8bcad709c7714fbe9ec95cad0c822385dd0b"
+    },
+    {
+      "path": "kernels/783-emv-mpm-qr-validator.mutation.json",
+      "sha256": "6c053b6436e39a28751894bc7722f42be50d4d9e2d1287192b7fb1a918f5fc81"
+    },
+    {
+      "path": "kernels/784-cbr-data-return-validator.kernel.mjs",
+      "sha256": "6db8e707c2076c107ff6e822f5d0472eae91ee706aab0d16b635dd4c68709e29"
+    },
+    {
+      "path": "kernels/784-cbr-data-return-validator.mutation.json",
+      "sha256": "9fb986509f9a5234ce4555644291b7a3cec654f23d92a2d7ce4172635f7bcf8d"
+    },
+    {
+      "path": "kernels/785-qr-golive-readiness.kernel.mjs",
+      "sha256": "5f6d4f0dabd1435299ed3c56a8e3237a7991da822543467c1813a0a1cec44676"
+    },
+    {
+      "path": "kernels/787-corridor-cost-averages.kernel.mjs",
+      "sha256": "3f15eda7d86118242457565ba8092451718ef4bcb3ab37c400e78abc8a9cdf8d"
+    },
+    {
+      "path": "kernels/792-curator-vault-cap-auditor.kernel.mjs",
+      "sha256": "5c179330342a136524f4808a6f201ab22ba0f39015250bc42ef835c7cd944a1e"
+    },
+    {
+      "path": "kernels/794-event-fee-recompute.kernel.mjs",
+      "sha256": "291ae813ace3e651e3d2482de004aaf9bd391ef5c98aa80a8a7c7e1c2642d245"
+    },
+    {
+      "path": "kernels/795-stablecoin-refund-dispute.kernel.mjs",
+      "sha256": "6732f77e7fd36d16eb53e230d2cef36876c58d2adc6c0e88e6f040fae0229c0a"
+    },
+    {
+      "path": "kernels/797-stablecoin-cash-equivalent-test.kernel.mjs",
+      "sha256": "643f5a36069f70daa86c7d7bbee6a65e227f4de5813fe2974819c3e8899de17d"
+    },
+    {
+      "path": "kernels/798-assess-sandbox-application-readiness.kernel.mjs",
+      "sha256": "1baf99ad45ac55bbd6ee95ff9e3f6cd47197a717cce1ab82bab0271f4df4a827"
+    },
+    {
+      "path": "kernels/806-event-contract-terms-lint.kernel.mjs",
+      "sha256": "8a45e6e92437b794e7087e2b86ca9e15027ca56a2bbe83cb744c8a65fd7f28bb"
+    },
+    {
+      "path": "kernels/808-lst-share-rate-reconciler.kernel.mjs",
+      "sha256": "f6044ca84c60dfa9079d6d27691a8f235605ba96458294298aaa0f4e6dc9a8ad"
+    },
+    {
+      "path": "kernels/810-contract-bytecode-identity-verifier.kernel.mjs",
+      "sha256": "9bc94068a33ab9fdd9c3323a0e898bb099328f10fb4ca970424388670379e009"
+    },
+    {
+      "path": "kernels/812-eth-staking-queue.kernel.mjs",
+      "sha256": "572c5fe067f787dfd04db12afdff90642261ea262745766d1989302747979106"
+    },
+    {
+      "path": "kernels/813-eth-staking-accounting.kernel.mjs",
+      "sha256": "3c67f800389a0cc0ff46a484c2793943fdc886a2d2f941562eb9eae23c90e52d"
+    },
+    {
+      "path": "kernels/815-eth-fee-market.kernel.mjs",
+      "sha256": "ece5f6ae119b18e933b9721f6a6a8c04bf77d3c998cf8c607f5c521dea771996"
+    },
+    {
+      "path": "kernels/817-eth-l2-stage-classifier.kernel.mjs",
+      "sha256": "eca370b7187bde0cbb1d36a7817952e7b4ad2ac4e69048edb7ceb9c5f88e5881"
+    },
+    {
+      "path": "kernels/822-zcash-supply-check.kernel.mjs",
+      "sha256": "2397989fc513e950d3aff26aa95ea695317c3075a79fa8b58f25abf539c91070"
+    },
+    {
+      "path": "kernels/824-zip317-transfer-fee.kernel.mjs",
+      "sha256": "38023a18209f0dc06831183dbfc13980e8cc7c746cec450a21bc0f97710b8068"
+    },
+    {
+      "path": "kernels/825-reconcile-ucp-checkout-totals.kernel.mjs",
+      "sha256": "9a5c782686ba02ea75b2ea3cdbe73e6edfb8abc4e3061119c1cad45ede1fc7bd"
+    },
+    {
+      "path": "kernels/825-reconcile-ucp-checkout-totals.mutation.json",
+      "sha256": "9babe555a505478ce62e9218a8a21562b0178967cd579e73f6fea951c0aa376c"
+    },
+    {
+      "path": "kernels/827-agent-cred-class-matrix.kernel.mjs",
+      "sha256": "958f0ba4ec1952e6069a73353e103148c7b697d61cc12de33d2522c3705cdf59"
+    },
+    {
+      "path": "kernels/829-safe-tx-hash-recompute.kernel.mjs",
+      "sha256": "60f4ab23d5ec5710081df25793e9ee65e04141114c12d370882a8cc288a54397"
+    },
+    {
+      "path": "kernels/836-payment-services-activity-classifier.kernel.mjs",
+      "sha256": "ce5101bdf7bab885a56b62a774c5f2baa696ae8de6f23e59315b7c4b6b90e959"
+    },
+    {
+      "path": "kernels/837-issuer-yield-share.kernel.mjs",
+      "sha256": "32a5df7a7d778940d00ca00119638af45db6f188e16f110b05fbe43e3d9c8d32"
+    },
+    {
+      "path": "kernels/838-control-frequency-sample.kernel.mjs",
+      "sha256": "ef38f2b9c6edc9bb0965709b8f01de02b4c97a3e799a68b68c5dd88fa5c27d8a"
+    },
+    {
+      "path": "kernels/841-planning-materiality.kernel.mjs",
+      "sha256": "9fcd1053366d67e60bf7aa73be27b28e45fc7a1bfa6a50c129e7ea7d002490ed"
+    },
+    {
+      "path": "kernels/844-workload-identity-claims.kernel.mjs",
+      "sha256": "e4313b344850b2c7040ae269adb56f5cbdd1c8a9007d44b071c872a31bd3837d"
+    },
+    {
+      "path": "kernels/845-je-period-lock-gate.kernel.mjs",
+      "sha256": "b35abb05342c065e575bd5f9adc60744f4f7cc6b7f818e93f6844f292d1b6b88"
+    },
+    {
+      "path": "kernels/845-je-period-lock-gate.mutation.json",
+      "sha256": "38d439f60148d39fca4d13fb3dcae6e06ed8a8bbf9083030a21ea20bcf0230cf"
     },
     {
       "path": "kernels/amortization-apr-chain.test.mjs",
@@ -3279,6 +4991,10 @@
       "sha256": "21bb183dab5514851b032b8c5f42354cb6845ba26aa51648175a2a62de0e4af3"
     },
     {
+      "path": "kernels/art-02-agent-spend-policy-simulator.mutation.json",
+      "sha256": "743c33b3c3639046d9db16a6649042e883f0727b79c588e20097d3ba182a269c"
+    },
+    {
       "path": "kernels/art-03-x402-settlement-modeler.kernel.mjs",
       "sha256": "5d693ae08f52fbf0719d500857977fff760b19d533358ae2f5edd6693854de81"
     },
@@ -3293,6 +5009,10 @@
     {
       "path": "kernels/art-06-genius-act-reserve-attestation.kernel.mjs",
       "sha256": "ec85212f943fdac1370d3afaa204e2c1a9e6d0d742a7c888666679c75bfe19bf"
+    },
+    {
+      "path": "kernels/art-06-genius-act-reserve-attestation.mutation.json",
+      "sha256": "63cc1b13bfa2f1d97d278b14d5defb2f16b4257d2201f29cf5837a3e8e05bb4d"
     },
     {
       "path": "kernels/art-07-basel31-reporting-delta-calculator.kernel.mjs",
@@ -3416,7 +5136,7 @@
     },
     {
       "path": "kernels/art-124-content-credential-signature-verifier.kernel.mjs",
-      "sha256": "815b73ede91f61e07afc98d9ac7e04f808c7c477c00535e5f0817df1f041bca9"
+      "sha256": "b981b2371977fc579fe38b36751006634179e1490bee56375ea6c48deccd980b"
     },
     {
       "path": "kernels/art-125-provenance-ingredient-tree-resolver.kernel.mjs",
@@ -3664,7 +5384,7 @@
     },
     {
       "path": "kernels/art-180-solvency2-scr-ratio-calculator.kernel.mjs",
-      "sha256": "58ddc09d3c1b6bccab424d5392e51c690e34d0466a76b885b19a819ef7f7875f"
+      "sha256": "9d4a1025e0982e476cc0158b3b0d24b87328adae662f2f1449a49c356fc4ee1a"
     },
     {
       "path": "kernels/art-181-sii-ifrs17-reconciliation-bridger.kernel.mjs",
@@ -3703,12 +5423,20 @@
       "sha256": "366d56b7225bb3a094fb31f8ff393b6a63adf21a07735d58df87c49b385b71cd"
     },
     {
+      "path": "kernels/art-189-markdown-document-converter.mutation.json",
+      "sha256": "9babe555a505478ce62e9218a8a21562b0178967cd579e73f6fea951c0aa376c"
+    },
+    {
       "path": "kernels/art-19-agentic-checkout-protocol-selector.kernel.mjs",
       "sha256": "4219bb286318e4b2c15e45b65ee7be8d960c49a3f2a805aee2e9b9d49ff797e0"
     },
     {
       "path": "kernels/art-190-tabular-data-converter.kernel.mjs",
       "sha256": "ebda2b1d4bde79561f6c8555da36e765a44fa6a0b32cf475c953c59d3f38bb67"
+    },
+    {
+      "path": "kernels/art-190-tabular-data-converter.mutation.json",
+      "sha256": "9babe555a505478ce62e9218a8a21562b0178967cd579e73f6fea951c0aa376c"
     },
     {
       "path": "kernels/art-191-conversion-receipt-builder.kernel.mjs",
@@ -3723,8 +5451,16 @@
       "sha256": "2d8ae35efdc10161078c887a54e33ac94a5faba77d639714ebe390c32a9759b0"
     },
     {
+      "path": "kernels/art-193-metadata-sanitization-prover.mutation.json",
+      "sha256": "9babe555a505478ce62e9218a8a21562b0178967cd579e73f6fea951c0aa376c"
+    },
+    {
       "path": "kernels/art-194-digest-manifest-builder.kernel.mjs",
       "sha256": "f7773f9cb20b6ccffd83c7dc8eadff91a541c6046f38620c66139db89449959b"
+    },
+    {
+      "path": "kernels/art-194-digest-manifest-builder.mutation.json",
+      "sha256": "9babe555a505478ce62e9218a8a21562b0178967cd579e73f6fea951c0aa376c"
     },
     {
       "path": "kernels/art-195-creative-commons-license-chooser.kernel.mjs",
@@ -3828,7 +5564,7 @@
     },
     {
       "path": "kernels/art-218-qm-points-and-fees.kernel.mjs",
-      "sha256": "451c7b3b5ae225db716a4b46040eb80af02bf7aa2a2ac25a35f3da1e295700ce"
+      "sha256": "bf3100793d1d3480208df28e8a6e20238cb59334219cb7f49cfaf7d75995b726"
     },
     {
       "path": "kernels/art-219-qm-apr-apor-spread.kernel.mjs",
@@ -3900,7 +5636,7 @@
     },
     {
       "path": "kernels/art-234-test-hoepa-high-cost.kernel.mjs",
-      "sha256": "395efd18dd8233b45dc22b2414180fd195afa91e131b4ea32e131175efaedd9e"
+      "sha256": "55ffa3354198aee2a6c610962a6463ee8c8b54ae0f605f4f5f67b3501780d1d4"
     },
     {
       "path": "kernels/art-235-test-hpml-escrow.kernel.mjs",
@@ -3932,7 +5668,7 @@
     },
     {
       "path": "kernels/art-241-cbpr-structured-address-linter.kernel.mjs",
-      "sha256": "63e488bc42ce3ecf75573b02a8fae9dd4044c91928f1f019e53895bf08f6bf86"
+      "sha256": "dab26511e0747afa95ae4ba156a6704e1c9e807a52ddfe74d48140b96822ccf7"
     },
     {
       "path": "kernels/art-242-pacs008-party-completeness-validator.kernel.mjs",
@@ -3948,7 +5684,7 @@
     },
     {
       "path": "kernels/art-245-mt-mx-translation-fidelity-scorer.kernel.mjs",
-      "sha256": "df068aac811711ab2100e95147d96ce76694c32836ca079e405fbd586fbe351a"
+      "sha256": "73f7c3c049de7635ae66cf29bf86a1bef0c8cc9a4e52ce6c1ae66c27e4c90f4d"
     },
     {
       "path": "kernels/art-246-lei-payment-binding-linter.kernel.mjs",
@@ -3956,7 +5692,7 @@
     },
     {
       "path": "kernels/art-247-prevalidation-readiness-scorer.kernel.mjs",
-      "sha256": "5474f7090f70ee2ec83b77349b3e6a1aa511bfb76c6e43c9b8972f5556b752c7"
+      "sha256": "3a611321fca01c490b5bf91489ba7bf44e4a97c1b74ae28e82cf1e047fc247d9"
     },
     {
       "path": "kernels/art-248-compute-remittance-disclosure.kernel.mjs",
@@ -4080,7 +5816,11 @@
     },
     {
       "path": "kernels/art-275-genius-reserve-disclosure-checker.kernel.mjs",
-      "sha256": "c1ee715ad62a5e063ca3fe43e2da0b537ee17a436894a26b554ce7bd542049ce"
+      "sha256": "2449b3e7a73e1c3bff2b3e03b01c6c35f1e9f5dc41a69abdb1bd136a3cfa1f97"
+    },
+    {
+      "path": "kernels/art-275-genius-reserve-disclosure-checker.mutation.json",
+      "sha256": "40ced62b034baa46e29daf4e3d7c181d206450ff40815efe4b73989e146a546c"
     },
     {
       "path": "kernels/art-276-mutual-nda-composer.kernel.mjs",
@@ -4107,6 +5847,10 @@
       "sha256": "309081fd66892352af23884e11bc1173c96b88fc3bbebe8ffce1db60bb235dba"
     },
     {
+      "path": "kernels/art-280-reserve-proof-verifier.mutation.json",
+      "sha256": "9babe555a505478ce62e9218a8a21562b0178967cd579e73f6fea951c0aa376c"
+    },
+    {
       "path": "kernels/art-281-sco60-crypto-asset-exposure-classifier.kernel.mjs",
       "sha256": "27ca4b94e8f9b63be974894cab2c35fdb00b72b8c405455fead9dc3a6de0cdd9"
     },
@@ -4123,12 +5867,20 @@
       "sha256": "81db00c29bffa3930a936bf2799074b45050cf8e17021a34267efb1418a52acc"
     },
     {
+      "path": "kernels/art-284-did-webvh-log-verifier.mutation.json",
+      "sha256": "9babe555a505478ce62e9218a8a21562b0178967cd579e73f6fea951c0aa376c"
+    },
+    {
       "path": "kernels/art-285-acdc-delegation-chain-verifier.kernel.mjs",
       "sha256": "6126b6c80552a767fe0de0b45f76f0896f0dbb7f0576c62d25a6968418f9f819"
     },
     {
       "path": "kernels/art-286-anchored-extract-verifier.kernel.mjs",
       "sha256": "7532df2eced1bf011b8bb608c7ca0038e116d7d554d5439e90d09905d997091c"
+    },
+    {
+      "path": "kernels/art-286-anchored-extract-verifier.mutation.json",
+      "sha256": "9babe555a505478ce62e9218a8a21562b0178967cd579e73f6fea951c0aa376c"
     },
     {
       "path": "kernels/art-287-revocation-status-verifier.kernel.mjs",
@@ -4295,6 +6047,10 @@
       "sha256": "3248ec11b6d575a1795556fc220cc80b0f59b917cf7753117589a66df18b53a6"
     },
     {
+      "path": "kernels/art-326-tvm-xirr.mutation.json",
+      "sha256": "9babe555a505478ce62e9218a8a21562b0178967cd579e73f6fea951c0aa376c"
+    },
+    {
       "path": "kernels/art-327-tvm-annuity.kernel.mjs",
       "sha256": "165274b6b7aaf7bdd149aa20b208b60dd4d5a632e159d6801d213a8808b2e4e9"
     },
@@ -4307,16 +6063,32 @@
       "sha256": "1a9ea550792a2f97b68467d9ee4ba5672eb14643c70df767526da61b7913d531"
     },
     {
+      "path": "kernels/art-329-tvm-bond-duration.mutation.json",
+      "sha256": "9babe555a505478ce62e9218a8a21562b0178967cd579e73f6fea951c0aa376c"
+    },
+    {
       "path": "kernels/art-33-mcp-server-self-attestation-pack.kernel.mjs",
       "sha256": "f5e88b40ff67283153a60a064c7226387fe7da982ac9d1cb6d8224e6e2c4f07f"
+    },
+    {
+      "path": "kernels/art-33-mcp-server-self-attestation-pack.mutation.json",
+      "sha256": "984fc33d2f749a06b2139756c9d4a51e05b9763acbe6df406f8d820be5aa28d0"
     },
     {
       "path": "kernels/art-330-tvm-dv01.kernel.mjs",
       "sha256": "76262e8984a1549f9ff95eb1312333c269fc15afbeb9c2f7fc6a7364393ef966"
     },
     {
+      "path": "kernels/art-330-tvm-dv01.mutation.json",
+      "sha256": "9babe555a505478ce62e9218a8a21562b0178967cd579e73f6fea951c0aa376c"
+    },
+    {
       "path": "kernels/art-331-tvm-convexity.kernel.mjs",
       "sha256": "56d259be1b9261ab5eb2f2370e7965b48ec47f329ad585c5e980a327525262c5"
+    },
+    {
+      "path": "kernels/art-331-tvm-convexity.mutation.json",
+      "sha256": "9babe555a505478ce62e9218a8a21562b0178967cd579e73f6fea951c0aa376c"
     },
     {
       "path": "kernels/art-332-build-amortization-schedule.kernel.mjs",
@@ -4364,7 +6136,7 @@
     },
     {
       "path": "kernels/art-349-fedwire-structured-address-linter.kernel.mjs",
-      "sha256": "5d00ddaa78f298a5fa938bf6f520102ef38a75b1de34b7fdb631905ef13cadc8"
+      "sha256": "809f84acec184e0f58a1ba119c5745f23171d8f0138189902c8da6e5d93452ea"
     },
     {
       "path": "kernels/art-35-tempo-payments-business-case.kernel.mjs",
@@ -4428,7 +6200,7 @@
     },
     {
       "path": "kernels/art-365-compute-globe-topup-tax.kernel.mjs",
-      "sha256": "13a6650112aa3c9d98d82f8b01e865c13a0a80fedbda70988c9d012207a66e89"
+      "sha256": "00345a29d08e888a3d52f4c6b836d8b0cdd7354058044e517c7bb94e7c4bace4"
     },
     {
       "path": "kernels/art-366-price-embedded-insurance.kernel.mjs",
@@ -4640,7 +6412,7 @@
     },
     {
       "path": "kernels/art-424-witness-cosignature-verifier.kernel.mjs",
-      "sha256": "d9ed5d3a0780e192b9d8f56ff41b6893ab74c516128dfca643191e9a76324caf"
+      "sha256": "1a82a2cec784c5dd89cb995a168d7b03079fd74282e9eb1402f31f69daed08a0"
     },
     {
       "path": "kernels/art-425-large-exposures-limit-check.kernel.mjs",
@@ -4936,7 +6708,7 @@
     },
     {
       "path": "kernels/art-497-validator-change-control-receipt.kernel.mjs",
-      "sha256": "54af35dcf6e35f959764ddf334f63dafbdf57047a8f810e47e3f980586a861b3"
+      "sha256": "dc2fd0401a33be9a8facce69b9973dd015445c249cdc58410366c2a7ea3c5751"
     },
     {
       "path": "kernels/art-498-reward-flow-related-party.kernel.mjs",
@@ -4971,12 +6743,24 @@
       "sha256": "7092917c1c069bc0681a899f7807db3b1927a96accc5ac068fee5faa0d0f19dc"
     },
     {
+      "path": "kernels/art-504-classify-carf-reportable.mutation.json",
+      "sha256": "c0afaba801fc486443153b8e24dfca78ebc642c41c272d2e8d75b6259bd8d4af"
+    },
+    {
       "path": "kernels/art-505-dispose-carf-status-message.kernel.mjs",
       "sha256": "035ab5ed297070b1f9a69babee5ab27760f0ac1404e3cc2f4383a6816ab39729"
     },
     {
+      "path": "kernels/art-505-dispose-carf-status-message.mutation.json",
+      "sha256": "609017d4fd78f38c336b4882c9a75513f7715e207eacf8a3d434f8b69e930215"
+    },
+    {
       "path": "kernels/art-506-classify-t1-posttrade-timing.kernel.mjs",
       "sha256": "bdca1dc3844ae202963a66ac4fb582aeafa1861b4dc2945696bf1d060d5bf780"
+    },
+    {
+      "path": "kernels/art-506-classify-t1-posttrade-timing.mutation.json",
+      "sha256": "09dc6877f3804d9c41cfeaf0d7aa4b690698631a3a31de7d43d6d5fa83ac0917"
     },
     {
       "path": "kernels/art-507-determine-deposit-insurance-coverage.kernel.mjs",
@@ -4987,8 +6771,16 @@
       "sha256": "400131baae5bef4da3dcb65a389b7eae6ef0e310ab7d91747a5a89bb26666102"
     },
     {
+      "path": "kernels/art-508-recompute-bordereau.mutation.json",
+      "sha256": "2a172658676932fe4034ede29215d6914278b37b0a6bde20a42e4c0d7a313003"
+    },
+    {
       "path": "kernels/art-509-recompute-payment-waterfall.kernel.mjs",
       "sha256": "79ba683f5f9684c6c7ab2b2cfe7cdd8546591b5de200da9f10a3bb9637e408f1"
+    },
+    {
+      "path": "kernels/art-509-recompute-payment-waterfall.mutation.json",
+      "sha256": "c1dd0ec034b3ee08f3fc42bcf675669595bd59791f161dc897fa76b32b3d476b"
     },
     {
       "path": "kernels/art-51-cross-margining-benefit-estimator.kernel.mjs",
@@ -5260,7 +7052,7 @@
     },
     {
       "path": "kernels/art-577-exchange-fee-tier-recompute.kernel.mjs",
-      "sha256": "caed451dceca161ee2dd898a0aee48ceeaee497d39ac0eab2963ebad4437f5d8"
+      "sha256": "24864e8b2866414d271eeb1d5b37aed745f7e9f0ed45587420a0a6886971d7a4"
     },
     {
       "path": "kernels/art-578-etf-pcf-basket-verification.kernel.mjs",
@@ -5323,24 +7115,40 @@
       "sha256": "4dfa2047d3aeebb35c0825fa07d54d487c7b254d0ad031e2d0c360a3736b5ab7"
     },
     {
+      "path": "kernels/art-591-x402-signer-recovery-verifier.mutation.json",
+      "sha256": "9babe555a505478ce62e9218a8a21562b0178967cd579e73f6fea951c0aa376c"
+    },
+    {
       "path": "kernels/art-592-x402-domain-nonce-window-checker.kernel.mjs",
       "sha256": "b38255c8483b8792648d21f7a06a061fa24aaaea6ffce83ffb9c9b340afab72a"
     },
     {
       "path": "kernels/art-593-webbotauth-nonce-replay-check.kernel.mjs",
-      "sha256": "4d4491d75002a02d8a1448ca25e0aa851ccd4ea646dccde0afdd5d745f48967b"
+      "sha256": "138c2f487a173ef2bd8b97435481bbacafd2c216a9a9a9663f7526c835d8f57c"
     },
     {
       "path": "kernels/art-594-tempo-mpp-voucher-receipt-verifier.kernel.mjs",
       "sha256": "8f2fed1a5536e8df4848f7026a0126867f1ee41058c3aac5f5bbaf57e9dc5cae"
     },
     {
+      "path": "kernels/art-594-tempo-mpp-voucher-receipt-verifier.mutation.json",
+      "sha256": "4daa945549f5ef18f509e0271ecf914c5754fb0d003e4d059561c6d54d7a03d6"
+    },
+    {
       "path": "kernels/art-595-ap2-cartmandate-hashchain-builder.kernel.mjs",
       "sha256": "b0b1ed06bbeb16d1227f7073af8e46c323bff835b503b0d2f3a7231baa44803e"
     },
     {
+      "path": "kernels/art-595-ap2-cartmandate-hashchain-builder.mutation.json",
+      "sha256": "9babe555a505478ce62e9218a8a21562b0178967cd579e73f6fea951c0aa376c"
+    },
+    {
       "path": "kernels/art-596-ap2-x402-cart-correlation.kernel.mjs",
       "sha256": "ca67c63df5452d0fd9bf794ae06e15c4e0b373729431053ac2e47b04792153ab"
+    },
+    {
+      "path": "kernels/art-596-ap2-x402-cart-correlation.mutation.json",
+      "sha256": "38bcf6bc2bc60743c0cbd2abbb77663f9bd9c807296163f00afe23384a7594dd"
     },
     {
       "path": "kernels/art-597-c2pa-aiml-assertion-decoder.kernel.mjs",
@@ -5372,7 +7180,7 @@
     },
     {
       "path": "kernels/art-603-stablecoin-reserve-3source-recompute.kernel.mjs",
-      "sha256": "c8316be3de60b7720200258695a7e8932fc30fc151208c12d87714c647bfc3db"
+      "sha256": "2ab3f0b33aeb38c56b77a129faa2beb19e0ba6b0943efd5c704bc6c1aefb2189"
     },
     {
       "path": "kernels/art-604-erc8004-registry-entry-verifier.kernel.mjs",
@@ -5381,6 +7189,10 @@
     {
       "path": "kernels/art-605-merkle-airdrop-proof-verifier.kernel.mjs",
       "sha256": "b4ca349f69674d520b252804bfdcfb4e76d917db449c46bfdfa2ac1632ea2763"
+    },
+    {
+      "path": "kernels/art-605-merkle-airdrop-proof-verifier.mutation.json",
+      "sha256": "9babe555a505478ce62e9218a8a21562b0178967cd579e73f6fea951c0aa376c"
     },
     {
       "path": "kernels/art-606-erc165-interface-id-verifier.kernel.mjs",
@@ -5415,6 +7227,10 @@
       "sha256": "a1bb4dd8ffefcc70f0f060116f108f2ff146c650f95ac1ed8d962c838b721ffd"
     },
     {
+      "path": "kernels/art-612-erc2612-permit-binding-verifier.mutation.json",
+      "sha256": "9babe555a505478ce62e9218a8a21562b0178967cd579e73f6fea951c0aa376c"
+    },
+    {
       "path": "kernels/art-613-erc4337-userop-math.kernel.mjs",
       "sha256": "5590e940c1c036d108e0bfb8662b88bdfec6c275cc55843ac2a9f14cd0c78ba9"
     },
@@ -5429,6 +7245,10 @@
     {
       "path": "kernels/art-616-mla-mapr-actuarial-recompute.kernel.mjs",
       "sha256": "a964af8add6f214ff8c3c7020a994b3b0436422b20c2145f90543968854ec2d0"
+    },
+    {
+      "path": "kernels/art-616-mla-mapr-actuarial-recompute.mutation.json",
+      "sha256": "95a071058c36874536b7a72106b8f96dd2d90a71443f4ccd46dac80567570f15"
     },
     {
       "path": "kernels/art-617-m3p-monthly-cap-calculator.kernel.mjs",
@@ -5467,6 +7287,10 @@
       "sha256": "23fafefb1f2949dbb40b7bfb74f121ebae0388f743e72666aba5713731f80239"
     },
     {
+      "path": "kernels/art-628-declarative-decision-tree-evaluator.mutation.json",
+      "sha256": "9babe555a505478ce62e9218a8a21562b0178967cd579e73f6fea951c0aa376c"
+    },
+    {
       "path": "kernels/art-63-agent-service-metering-modeler.kernel.mjs",
       "sha256": "db80ef83629be0220c5b3db867b3911ee1a7817bb6e530149ec725258b0edafe"
     },
@@ -5492,7 +7316,7 @@
     },
     {
       "path": "kernels/art-64-ai-act-highrisk-fit-diagnostic.kernel.mjs",
-      "sha256": "e7cbaf562ec7a4b991bdd70cfafb39fcd09bb43a73d085fd0ea270e45dd2c0cb"
+      "sha256": "2a9a7dc41081e1500c8380adcc35bf1b59b38f29d746552bcd0fd7ba5ab8d616"
     },
     {
       "path": "kernels/art-645-compute-index-weights.kernel.mjs",
@@ -5527,8 +7351,16 @@
       "sha256": "85446228f22d4a193cc19d26eae1288b1c31eaca06f84f181ae878c72335bea3"
     },
     {
+      "path": "kernels/art-652-verify-receipt.mutation.json",
+      "sha256": "7bdfa4f2750a62a675d3b950bab534f622e0675e288dcb177ddc13d3797d5fe2"
+    },
+    {
       "path": "kernels/art-653-pta-verifier.kernel.mjs",
       "sha256": "ebbb6f4037561bc965add6110991854f0ebdb2fe8f9e73b011486ff577dcbd36"
+    },
+    {
+      "path": "kernels/art-653-pta-verifier.mutation.json",
+      "sha256": "9babe555a505478ce62e9218a8a21562b0178967cd579e73f6fea951c0aa376c"
     },
     {
       "path": "kernels/art-654-perp-funding-implied-yield.kernel.mjs",
@@ -5569,6 +7401,10 @@
     {
       "path": "kernels/art-662-odnsf-fee-recompute.kernel.mjs",
       "sha256": "08217afde2dfb95ca1d609a0f728de20f5c0786e6784d47b79847984109622a3"
+    },
+    {
+      "path": "kernels/art-662-odnsf-fee-recompute.mutation.json",
+      "sha256": "3bb7ccdd470f800d281d1893fef1ce989c8ab839d3cf87cd9c0729b4e96594b7"
     },
     {
       "path": "kernels/art-663-apy-earned-recompute.kernel.mjs",
@@ -5688,11 +7524,19 @@
     },
     {
       "path": "kernels/art-693-isa530-audit-sampling-mus.kernel.mjs",
-      "sha256": "e92c7887ebf4004dfc6cc8f68bdea0bc5ae6ac9b7b90356275ea4b1a5ee3cd8c"
+      "sha256": "4a0de636bbeea81172cf57d31a081cb364e22b340318c644ffe74461dde4a53c"
+    },
+    {
+      "path": "kernels/art-693-isa530-audit-sampling-mus.mutation.json",
+      "sha256": "57a497a6c270152730b1032240aa27b09b7c5903426f1a10e1f6bd619fe283d4"
     },
     {
       "path": "kernels/art-699-x402-permit2-evidence-recomputer.kernel.mjs",
       "sha256": "0c36a136f75d75a9dbc83a6d6230e082a4d33eb3fb43c2c52de58b9dcc2b39f9"
+    },
+    {
+      "path": "kernels/art-699-x402-permit2-evidence-recomputer.mutation.json",
+      "sha256": "230687ef1cae591fe74cc803feb031ad686d884768124ed83f54a70b9ead3d72"
     },
     {
       "path": "kernels/art-70-cbam-default-value-resolver.kernel.mjs",
@@ -5703,8 +7547,12 @@
       "sha256": "6f656bb896a5c568378f091572e1c6bcf1d22803b6929de33b9315eb3771d6ac"
     },
     {
+      "path": "kernels/art-700-authorization-payload-linter.mutation.json",
+      "sha256": "26d02262bbe3420c0bd9ce374ece1af45bdea4140c0356f1468dec35da062710"
+    },
+    {
       "path": "kernels/art-701-three-way-invoice-match.kernel.mjs",
-      "sha256": "b57f647a37e62cd55bd20c9fb5aec358e2ccf0127aa4f2261772e718808a1625"
+      "sha256": "750cab31c114f06d0cb64d91acc3b3caca115e9adf10c69953ebfa3d1cac7a59"
     },
     {
       "path": "kernels/art-702-runway-goal-path.kernel.mjs",
@@ -5715,12 +7563,20 @@
       "sha256": "de1fb32291e04241870bd357ee96bddc43e5c271c831b79b0928246896875475"
     },
     {
+      "path": "kernels/art-703-mandate-authorization-gate.mutation.json",
+      "sha256": "a955a6f49d50faa4c88f10ac5be4b5ec08b782fd047948c15cc057d935fd03de"
+    },
+    {
       "path": "kernels/art-704-ai-token-spend.kernel.mjs",
       "sha256": "1c2518f6e01085420d06609b2ae4d1354d5832d04729e000d4cf0bfba9460b15"
     },
     {
       "path": "kernels/art-705-bond-ladder-builder.kernel.mjs",
       "sha256": "970caa8ad9d2832a8a9eb606726654fa1529c9669bee6a67cd0042ed88929bdb"
+    },
+    {
+      "path": "kernels/art-705-bond-ladder-builder.mutation.json",
+      "sha256": "19a3ca7e08e5eefab61ddc34acf877387646df7a7a8aa115fb9a387e4595819f"
     },
     {
       "path": "kernels/art-705-bond-ladder-builder.parity.test.mjs",
@@ -5756,7 +7612,7 @@
     },
     {
       "path": "kernels/art-712-workforce-board-roi.kernel.mjs",
-      "sha256": "6657f151d3920546003c4c6eced39e5805a32e7e65d2109a812eda50e8582782"
+      "sha256": "ad0b073ca9de4acac2578fa939e9b8086cc3363383fca72988fbecc6d5631c44"
     },
     {
       "path": "kernels/art-713-scorp-election-break-even.kernel.mjs",
@@ -5764,7 +7620,7 @@
     },
     {
       "path": "kernels/art-715-token2022-transfer-fee-reconciler.kernel.mjs",
-      "sha256": "020915c5c02c1d2cb9bcb284db4b533d4828472f3b005e2ad70d94c473ab4578"
+      "sha256": "c414a3768622106b76dff42ac67c64552af24be5aae08474f240c16e0f676cdc"
     },
     {
       "path": "kernels/art-72-cbam-precursor-emissions-aggregator.kernel.mjs",
@@ -5779,52 +7635,304 @@
       "sha256": "dbad1174408ec1f0f5c95733d54dba4f6fb04ce2add7c6bb270fa77b271b8c39"
     },
     {
+      "path": "kernels/art-735-solana-dvp-prefund-verifier.kernel.mjs",
+      "sha256": "7f829143fa17775ede38a2a9591a5de5b4f4090ce1f6e12e9d0cfc41d97b560b"
+    },
+    {
       "path": "kernels/art-74-taxonomy-kpi-gar-aggregator.kernel.mjs",
       "sha256": "5810a300b83afde6fbf0bba7ce4da33b6fce0152cfdd4ccf02eb94258ea957d3"
+    },
+    {
+      "path": "kernels/art-749-solana-paychan-voucher-verifier.kernel.mjs",
+      "sha256": "6264bf5f2da03bba7b4b978a27f112253e00955c788b4a28213e38838029744c"
     },
     {
       "path": "kernels/art-75-eugb-factsheet-validator.kernel.mjs",
       "sha256": "6764ffb26c2786330c5c9ec5912f6c5c37ae6e0e6b3c69efa0576e0cdb1a269f"
     },
     {
+      "path": "kernels/art-750-diff-evidence-bundles.kernel.mjs",
+      "sha256": "693b7edea3f0a7a3d0123d9918e30abee3503aa91c3cf880d882c89fb78aab16"
+    },
+    {
+      "path": "kernels/art-751-sha256-hmac-digest-demonstrator.kernel.mjs",
+      "sha256": "1f96ec6c3b47f1e0093abd08bace5c8c120615fc5a06e952b201640a27a53b72"
+    },
+    {
+      "path": "kernels/art-751-sha256-hmac-digest-demonstrator.mutation.json",
+      "sha256": "36d7028c214f70049e071db3d3b81bdadebb678192d69ee01dca517134333cdb"
+    },
+    {
+      "path": "kernels/art-752-freelance-quarterly-estimated-tax.kernel.mjs",
+      "sha256": "5fe02008851f9211e0952edc9d0b99ab09485f0b1f7d9452b408961d0bc5e3cf"
+    },
+    {
+      "path": "kernels/art-753-home-office-augusta.kernel.mjs",
+      "sha256": "6d83f8dc0cf5f4459dea7103f7ef5666695670004ec94a3efba9dcf4d0edc3b1"
+    },
+    {
+      "path": "kernels/art-754-equity-exit-waterfall.kernel.mjs",
+      "sha256": "48b85460b3225af44a79ed74664c8f16736b8cef433492fa32e1a1a4ef79c3b3"
+    },
+    {
+      "path": "kernels/art-756-sales-ote-commission-analyzer.kernel.mjs",
+      "sha256": "b16c64afb3ceeef8652c4aa0d61ba66b70be5f669ed8970d4a480b4e6aa8b87f"
+    },
+    {
+      "path": "kernels/art-758-hdhp-ppo-break-even.kernel.mjs",
+      "sha256": "f7ee5d3baff235297d8382e1aae987363d0a062aa075b9ba66df59a826c5bdbe"
+    },
+    {
+      "path": "kernels/art-759-iso-amt-exposure-modeler.kernel.mjs",
+      "sha256": "ca6aae702afb676f7736a5e1e754cb2c58885eb4117eb3d4dfe93d85f5747941"
+    },
+    {
       "path": "kernels/art-76-climate-scenario-applicator.kernel.mjs",
       "sha256": "b93b7309081c0f6c2d2a5f3e8728d9d2cd11f4701cc936c42efc0d4d29c7809a"
+    },
+    {
+      "path": "kernels/art-760-espp-break-even-optimal-sell.kernel.mjs",
+      "sha256": "bfdfad68ef74e4bf837405730e2352a16e0b593d907e51738f4dbccc36d7f42e"
+    },
+    {
+      "path": "kernels/art-761-caregiver-income-impact.kernel.mjs",
+      "sha256": "bae9e36268ac108df324d80f876981fd05436acf6bb21bab46ca1884f18ce145"
     },
     {
       "path": "kernels/art-763-ai-displacement-risk-screener.kernel.mjs",
       "sha256": "91fb630e8e4abce5da6b62416996e456f8665988098ae412e7f24786ac07dedc"
     },
     {
+      "path": "kernels/art-764-solo-401k-vs-sep-ira.kernel.mjs",
+      "sha256": "2832967e017299fa4023575d5b141110985215f4da2bb9d6e4a10be38ffb8186"
+    },
+    {
+      "path": "kernels/art-765-dependent-care-fsa-cdctc-optimizer.kernel.mjs",
+      "sha256": "96cb71d2b11c805572ba28f74fbbf54b7f78610048317107148f162d394ddf90"
+    },
+    {
+      "path": "kernels/art-766-parental-leave-income-gap.kernel.mjs",
+      "sha256": "3bd313964df3132d90e18f864f0b031d2f357b800ce7f0354d80004216c28679"
+    },
+    {
+      "path": "kernels/art-768-medicare-plan-comparison.kernel.mjs",
+      "sha256": "1484250d3fddfc6ee88c17bc0308f135f4e58922497b12f97d1003ae038b4fdd"
+    },
+    {
+      "path": "kernels/art-769-medicare-oop-exposure.kernel.mjs",
+      "sha256": "8da5afef94905e85214f687d89d290ee3e272913db2e52d117496d7f30b859d1"
+    },
+    {
       "path": "kernels/art-77-t1-settlement-readiness-diagnostic.kernel.mjs",
       "sha256": "3152f3bd790393117c348ef2ecfd1f0eab68504808ece058103511bd988c616d"
+    },
+    {
+      "path": "kernels/art-77-t1-settlement-readiness-diagnostic.mutation.json",
+      "sha256": "ce9ac94db1e6153a349d6566d9b3b80db91b91aff0fc5ea02bff9db081665a23"
+    },
+    {
+      "path": "kernels/art-770-total-cost-of-homeownership.kernel.mjs",
+      "sha256": "6ff9267e9f0d21e4d41ddfd58002d583a93cb9b1a0bbde24df335df244c38f71"
+    },
+    {
+      "path": "kernels/art-771-automation-payback.kernel.mjs",
+      "sha256": "f1cbca96684bdb0eb0cc36aab3ccdd2afb1ba0c35afbf5acf2375fc3d781341a"
+    },
+    {
+      "path": "kernels/art-772-money-primitives-demonstrator.kernel.mjs",
+      "sha256": "f62737dbdb17a19dd9e2a94982362402465ce65482936b1e6ca3e4a9b3020f74"
+    },
+    {
+      "path": "kernels/art-773-daycount-year-fraction.kernel.mjs",
+      "sha256": "721ab5ce139162c47765e35a2a179cd0a9636dd5af5cd74035961ce8182386fc"
+    },
+    {
+      "path": "kernels/art-773-daycount-year-fraction.mutation.json",
+      "sha256": "cb4f99d97d8c71b6e9bd4a5fb50a929f12b7db02fce65e7f08f83c78aaf62cf2"
+    },
+    {
+      "path": "kernels/art-774-beacon-seeded-fair-sampling-v2.kernel.mjs",
+      "sha256": "225a33c9b312d9564601be3adb3aaf90e35f077f3d2352d63ad7a9dc9d55b102"
+    },
+    {
+      "path": "kernels/art-774-beacon-seeded-fair-sampling-v2.mutation.json",
+      "sha256": "20cc7467f9b83f5159888b35bec3557e32cfe7194f2cab7103d1d02b43283de9"
+    },
+    {
+      "path": "kernels/art-776-paypal-dispute-deadline-evidence.kernel.mjs",
+      "sha256": "b516d992d795da30c7dbe1222219c526bbf07fdaf8658f4efcd8ba7847a41a5a"
+    },
+    {
+      "path": "kernels/art-777-psp-dispute-reason-crosswalk.kernel.mjs",
+      "sha256": "8932a23abee00ab938d8cbc12ccc3cc44bd59addb232c25e4097e343e4383037"
+    },
+    {
+      "path": "kernels/art-778-token2022-withheld-fee-reconciler.kernel.mjs",
+      "sha256": "7a3439e0dec0a2b4f853b0e62b3ae84f881f7f7ef933bc83a442052570449d63"
+    },
+    {
+      "path": "kernels/art-779-bnpl-plan-comparator.kernel.mjs",
+      "sha256": "1210161ca3752bb13065afddf23612751c2b1b0894750dd19848c6c6f23595e4"
     },
     {
       "path": "kernels/art-78-csdr-penalty-calculator.kernel.mjs",
       "sha256": "696b46349d69a4f615727264f5a7a59492a6dfc1eb9b73e631af142a6d436a80"
     },
     {
+      "path": "kernels/art-780-solana-pda-ata-audit.kernel.mjs",
+      "sha256": "c5e354f27179836563a27c97f829ddca9906255cd8e9da9c524dca9a1eb0b0fe"
+    },
+    {
+      "path": "kernels/art-780-solana-pda-ata-audit.mutation.json",
+      "sha256": "5d9da43eb0651fd52f51346055e56ff0f2a9ebb3b83a2645067c44e376cd7a69"
+    },
+    {
+      "path": "kernels/art-782-modified-premium.kernel.mjs",
+      "sha256": "80255536c762ed27ca6df77742ee49616fc091e90c599083f8a8c4d6e948fee8"
+    },
+    {
+      "path": "kernels/art-788-csv-rfc4180-parser.kernel.mjs",
+      "sha256": "c34b449deffbcaba90e9e3d2df644f2bf51f90b1f9b31a00025de8ab6a836152"
+    },
+    {
       "path": "kernels/art-79-settlement-fail-predictor.kernel.mjs",
       "sha256": "660bc62de036808e6dcb648dd7ef377f3d403d9f3b2771459507ff4c7702ea0c"
+    },
+    {
+      "path": "kernels/art-793-government-stablecoin-acceptance.kernel.mjs",
+      "sha256": "d44f492e6dce3ac9d6b9ea5064405ca5b994b83c4df9fa45ed2ca8732a00f812"
     },
     {
       "path": "kernels/art-80-ssi-conformance-checker.kernel.mjs",
       "sha256": "659829e3ae373c2b2984bd7be749ccc18790106ac4bbfca7a0fc0884047ad958"
     },
     {
+      "path": "kernels/art-805-agt-audit-chain-verifier.kernel.mjs",
+      "sha256": "d3a96683e60729156f0ca539f5eec22cd1d4facd9f5a4b397b7262bdad3e54fc"
+    },
+    {
+      "path": "kernels/art-807-erc3643-transfer-decision.kernel.mjs",
+      "sha256": "8414998d60f89bb7841e516b0d9fedf7aa8038973a47ecf91876fc8105c6f899"
+    },
+    {
+      "path": "kernels/art-809-check-reserves-cover-outstanding-private.kernel.mjs",
+      "sha256": "dab6040704081c505af95dc176902c11f171b0199cd4b8b53dcaa11e4e429936"
+    },
+    {
       "path": "kernels/art-81-allocation-affirmation-conformance.kernel.mjs",
-      "sha256": "bfd9eea1801c12c0b1358e111e33f08fcc221f3e847edd481053c5e90f81cd12"
+      "sha256": "9fc6a79e641f9ef6d5828a5d7dab51f388fea19179dfc01ec116853d112c07a4"
+    },
+    {
+      "path": "kernels/art-81-allocation-affirmation-conformance.mutation.json",
+      "sha256": "4dfc092c3b961d18892ae34cfafa8ceac142361d47fd8c8466e18740b4f96719"
+    },
+    {
+      "path": "kernels/art-811-check-dti-within-policy-private.kernel.mjs",
+      "sha256": "decfd41bf3e450e1251e6cf36e4c3286f4008c9c8cfa831220b10804b8da7cb6"
+    },
+    {
+      "path": "kernels/art-814-qf-pairwise-recompute.kernel.mjs",
+      "sha256": "bbfed88877a9fdee108d9e5f9d8630c385c5189a03ffbe826ac2f334413f311f"
+    },
+    {
+      "path": "kernels/art-816-eip3009-agent-spend-gate.kernel.mjs",
+      "sha256": "293c629322d68219dd18b8bff66afcffb4684ff1c4f64b159fe8e25414c0b10a"
+    },
+    {
+      "path": "kernels/art-816-eip3009-agent-spend-gate.mutation.json",
+      "sha256": "6fe93f9e78818ea7c5033d972fc3735475dca36f4253560861dd2b4331856037"
+    },
+    {
+      "path": "kernels/art-818-zcash-reg-classifier.kernel.mjs",
+      "sha256": "e63a3b644b37385180c551cc2febe28fbfc8ac21bc46f60e1b2e673983242e3b"
+    },
+    {
+      "path": "kernels/art-819-ucp-request-constraints.kernel.mjs",
+      "sha256": "4a5187312e049580210fd22d0251703f75812c440d72262fa7286ad1afe624d0"
     },
     {
       "path": "kernels/art-82-securities-settlement-message-linter.kernel.mjs",
       "sha256": "2ad79af4b3bfd8d91a04886d9edfee8f37018b827cc9fb189caa66583cfebcc3"
     },
     {
+      "path": "kernels/art-820-negotiate-ucp-capabilities.kernel.mjs",
+      "sha256": "f09fdc7369978626a800a5464785c62999cad6868894f8be97db94225f52dc7a"
+    },
+    {
+      "path": "kernels/art-826-authenticator-assurance-level.kernel.mjs",
+      "sha256": "753097999c8df944333000a9093ba2448c0aec45306ed0f6aa21d19d8f437227"
+    },
+    {
+      "path": "kernels/art-828-reconcile-omnibus-token-position.kernel.mjs",
+      "sha256": "244e06c7cefd3bae92387a5258f61abacd8262681516cdeb488e318b1cf588bf"
+    },
+    {
       "path": "kernels/art-83-buy-in-exposure-modeler.kernel.mjs",
       "sha256": "712b7d6c95243d64d2a14195636f2436a56610776c59001a266d2dcf1691ef04"
     },
     {
+      "path": "kernels/art-830-eip3009-spend-exposure-reconciler.kernel.mjs",
+      "sha256": "efd4e9216f23a4af29fb30e2bac8e020fb1eda46c218b7e77a7f35f3e3b1f87d"
+    },
+    {
+      "path": "kernels/art-830-eip3009-spend-exposure-reconciler.mutation.json",
+      "sha256": "61588f9de39b8809a7b708650a235578f678e1062c57af103bd262b85b0a9036"
+    },
+    {
+      "path": "kernels/art-831-receipt-export-envelopes.kernel.mjs",
+      "sha256": "6b5124a707256357710470b5fb0166dec13fab7f5d4c61c09838aae782ae0d3c"
+    },
+    {
+      "path": "kernels/art-832-card-data-flow-scope.kernel.mjs",
+      "sha256": "7fe434424122964fce410178670ac486390412d92da1d4a10ef5fb8f60055bc4"
+    },
+    {
+      "path": "kernels/art-833-lint-pan-sad-exposure.kernel.mjs",
+      "sha256": "07dbbbd2dc31801c760e3185eb4279d959cf912d990f48a07f0373beb5974e72"
+    },
+    {
+      "path": "kernels/art-834-asc606-transaction-price-allocator.kernel.mjs",
+      "sha256": "05728d2b15a4ff8b5de683c055a3cc4fb06fd5eaab95f2f2e289a6fcbd9bf27e"
+    },
+    {
+      "path": "kernels/art-835-bank-reconciliation-recompute.kernel.mjs",
+      "sha256": "b3e7e01f5b854caaa5d8988fa47fb8f12c0cffd3db36c5e647b35b788bc5fcea"
+    },
+    {
+      "path": "kernels/art-839-statement-footing-crossfoot.kernel.mjs",
+      "sha256": "b2e2101d8a5aa0fb8ae96aaba936355c6d614eae9d1a5c7c2618b20c977893c8"
+    },
+    {
+      "path": "kernels/art-839-statement-footing-crossfoot.mutation.json",
+      "sha256": "3ef122e6eef7173f9c44997ce6540e15dce9ae6c676fb9b7e9e41a96a64dfe70"
+    },
+    {
       "path": "kernels/art-84-settlement-efficiency-kpi.kernel.mjs",
       "sha256": "6689dbe2c2f23a87ca2ee46102cd5d983d628b2edebd17f51773a2749d6aa9e6"
+    },
+    {
+      "path": "kernels/art-840-gl-flux-explainer.kernel.mjs",
+      "sha256": "70dae3c060496b0689c16134963d1f8f9605e75feff806df2770c420d7d10542"
+    },
+    {
+      "path": "kernels/art-840-gl-flux-explainer.mutation.json",
+      "sha256": "3ef122e6eef7173f9c44997ce6540e15dce9ae6c676fb9b7e9e41a96a64dfe70"
+    },
+    {
+      "path": "kernels/art-842-soc-report-coverage-gap.kernel.mjs",
+      "sha256": "2e77afa1c11f02cfd456e36c6ed4499408644f5f13e3f5e25e6836c95821b3c9"
+    },
+    {
+      "path": "kernels/art-843-tap-message-validator.kernel.mjs",
+      "sha256": "21620c0d82bb37b194635a5398d98a2657501776390cf37fdc29f661fa5dd81e"
+    },
+    {
+      "path": "kernels/art-846-assess-pfmi-proportional.kernel.mjs",
+      "sha256": "be69ab19112e05d4429f68929527ac80e97eabea3e7ce35f90742b432cd8c8b3"
+    },
+    {
+      "path": "kernels/art-846-assess-pfmi-proportional.mutation.json",
+      "sha256": "20cc7467f9b83f5159888b35bec3557e32cfe7194f2cab7103d1d02b43283de9"
     },
     {
       "path": "kernels/art-85-pqc-timeline-fit-diagnostic.kernel.mjs",
@@ -5892,11 +8000,11 @@
     },
     {
       "path": "kernels/c2sp-tlog-verify.mjs",
-      "sha256": "1fdd41c202c1a155c1dcdcdb1312487cedff2e07b1b483cf7aecc7985e382e6c"
+      "sha256": "7e6291e1f606b01bbde1b420d41506cfb7080ef626661795916c654e680066c9"
     },
     {
       "path": "kernels/c2sp-tlog-verify.test.mjs",
-      "sha256": "1f65bdf1a6358c283aed9c91a7eeae08c7a3d9e05ac30dde63c4ef28b01ed022"
+      "sha256": "4c3ce18a4094cc417e8abe4c2caa61a64c53562ee962b90ea6e2d4656da2f464"
     },
     {
       "path": "kernels/check-guest-builtin-safety.mjs",
@@ -5920,7 +8028,7 @@
     },
     {
       "path": "kernels/compute-proof.test.mjs",
-      "sha256": "234ead3c3b8a191aae9c09ac142ded372503221f93224f4c654ef64ff6ef11c9"
+      "sha256": "5a464c81ed28068e07109210305ff2d0c7e7dfbb2ff6a61bb9c9265b2f7d6192"
     },
     {
       "path": "kernels/cry-01-zk-compliance-proof-generator.kernel.mjs",
@@ -5948,7 +8056,7 @@
     },
     {
       "path": "kernels/determinism-replay.test.mjs",
-      "sha256": "3f06a8a5ede09003662fe1601d095857cd876fd34165a1647b0d5f5a777dc044"
+      "sha256": "a858cbfa25db10fb8481b518041cd16ac0cb0a9d7469df0daacc4a711955db3d"
     },
     {
       "path": "kernels/ed25519-webcrypto-equivalence.test.mjs",
@@ -6037,6 +8145,162 @@
     {
       "path": "kernels/fixtures/733-servicing-compliance-clock.reachability.json",
       "sha256": "70436b67ad8178b46b7985b35ec6e874365a672a19fd6248f81361e2fee62a41"
+    },
+    {
+      "path": "kernels/fixtures/783-emv-mpm-qr-validator.fixtures.json",
+      "sha256": "baebfd04a8348c2f9e0c281c7d863f0fbaed7e5a209622fca872a28c383f4860"
+    },
+    {
+      "path": "kernels/fixtures/783-emv-mpm-qr-validator.profiles.json",
+      "sha256": "8dc7db6484d06a0cedfeb8d94c82d0c889a52f294f5f3b388bb30ccfc2a95201"
+    },
+    {
+      "path": "kernels/fixtures/784-cbr-data-return-validator.fixtures.json",
+      "sha256": "1ec1b0cc6e49515448d2bddc9ab9ab9abfe814532994bd1ee793cca3706a1376"
+    },
+    {
+      "path": "kernels/fixtures/784-cbr-data-return-validator.reachability.json",
+      "sha256": "978c71556710eb9f2db2abf597730875dfc3f755f1388b6cf237930068726b5e"
+    },
+    {
+      "path": "kernels/fixtures/785-qr-golive-readiness.fixtures.json",
+      "sha256": "9b3728d6ea2c7b9eae049d172b14919d31875580c2dda02436594d074f82739e"
+    },
+    {
+      "path": "kernels/fixtures/785-qr-golive-readiness.gates.json",
+      "sha256": "0330de35a049fb857348a96e38b2be7e439587f3f64d27bd1f615eae940ea571"
+    },
+    {
+      "path": "kernels/fixtures/787-corridor-cost-averages.fixtures.json",
+      "sha256": "c7b9a9adaea1f445efbce9b434fd590a3a82ac792fb3640293f519b7312be9b9"
+    },
+    {
+      "path": "kernels/fixtures/787-corridor-cost-averages.reachability.json",
+      "sha256": "9f2614b8082b468b48e9fef95b56717128f6368e1a7b8eb28618b69c26567122"
+    },
+    {
+      "path": "kernels/fixtures/792-curator-vault-cap-auditor.fixtures.json",
+      "sha256": "8f6ab8ac0b8f823eea2c0c432c3a2c1a6870e6ea6021d85704a08cca4058c363"
+    },
+    {
+      "path": "kernels/fixtures/794-event-fee-recompute.fixtures.json",
+      "sha256": "cb3de83f050889cb34dedd417589e32ff6c40cadf412da07793f4a547d152bc6"
+    },
+    {
+      "path": "kernels/fixtures/794-event-fee-recompute.profiles.json",
+      "sha256": "cd9bc6070fb77ec9d46d786ac2174e4535f659fac8bc897977b64d9a65bed1d8"
+    },
+    {
+      "path": "kernels/fixtures/794-event-fee-recompute.reachability.json",
+      "sha256": "86d6bbe97a56a57d183ad502d2f6e0f06808341c392cb67a09262fd140b794bd"
+    },
+    {
+      "path": "kernels/fixtures/795-stablecoin-refund-dispute.fixtures.json",
+      "sha256": "c7a6677729572a63cf3a28e1239ab46899ed57bedacac536c8349d81cd679dbb"
+    },
+    {
+      "path": "kernels/fixtures/797-stablecoin-cash-equivalent-test.fixtures.json",
+      "sha256": "fb1e3c1b1c075cb5bd2d586e96cf86624bf2b7723a0b3efddfc11a9684a01932"
+    },
+    {
+      "path": "kernels/fixtures/798-assess-sandbox-application-readiness.fixtures.json",
+      "sha256": "2e6d9c8aa0c0e161d70cb0041350001a4d17ace598597ed19d41747a194c96b5"
+    },
+    {
+      "path": "kernels/fixtures/806-event-contract-terms-lint.fixtures.json",
+      "sha256": "b140d03b47eb63b3e54f7eb888224eea97564f3a7b5d774a6dc8b65565cbd275"
+    },
+    {
+      "path": "kernels/fixtures/808-lst-share-rate-reconciler.fixtures.json",
+      "sha256": "fcb46b0a605bd48906204fea31e2a2c67dbf02599ef33269300a8536f950c72c"
+    },
+    {
+      "path": "kernels/fixtures/810-contract-bytecode-identity-verifier.fixtures.json",
+      "sha256": "09b676fc7422895b8ce639394ed7d58ca35fb5d5133013ad0a31143baddab0fb"
+    },
+    {
+      "path": "kernels/fixtures/812-eth-staking-queue.fixtures.json",
+      "sha256": "aaf000d9f96554b7d39ac5d0b17869d7abe12c39bcc1c5a6cc3c07a064cb067d"
+    },
+    {
+      "path": "kernels/fixtures/813-eth-staking-accounting.fixtures.json",
+      "sha256": "2f39a404d0a5c742b06558f440cc67ae3bcc37a0506d9bb13e4b787075e6fc66"
+    },
+    {
+      "path": "kernels/fixtures/815-eth-fee-market.fixtures.json",
+      "sha256": "f1f8e0bf994b732bdd467eae34156eb24eecf4fa3b1dedc60ff7dcb304e21a0b"
+    },
+    {
+      "path": "kernels/fixtures/817-eth-l2-stage-classifier.fixtures.json",
+      "sha256": "d77c9c0466e70bd57f4f38bb6b6e6f899835b1d7664e5d7950414b4f7ccba5ea"
+    },
+    {
+      "path": "kernels/fixtures/822-zcash-supply-check.fixtures.json",
+      "sha256": "7cbdab9dfcf2feebbb2adcaff1b7129d6020efb8d100543650e15e63758285e2"
+    },
+    {
+      "path": "kernels/fixtures/822-zcash-supply-check.reachability.json",
+      "sha256": "56ab91aa05e129f5f96bbfc9b7c875c94fd721793edbaecc969c18b09f258468"
+    },
+    {
+      "path": "kernels/fixtures/824-zip317-transfer-fee.fixtures.json",
+      "sha256": "c4cbc1dd5a0eb2993ae499fd81d9c12da45e2c7c2481dda15be274fc2ca0d41a"
+    },
+    {
+      "path": "kernels/fixtures/824-zip317-transfer-fee.reachability.json",
+      "sha256": "04820490030c8529029156d6c82649514a106996b9763273f3add6d9a247c835"
+    },
+    {
+      "path": "kernels/fixtures/825-reconcile-ucp-checkout-totals.fixtures.json",
+      "sha256": "abedc5d7b217aa638bfff4bd162a9cb573ef5a2b8f6ac79ea834e11df128dd3b"
+    },
+    {
+      "path": "kernels/fixtures/825-reconcile-ucp-checkout-totals.reachability.json",
+      "sha256": "4e9dfde6f8fb6eaf00340f2cc88206c2d492ae0cafdef43a66d715a91c67e263"
+    },
+    {
+      "path": "kernels/fixtures/827-agent-cred-class-matrix.fixtures.json",
+      "sha256": "a97ba58727f91e2023811a1f256c466df2e2e3903b4ab98df64cdd1823126879"
+    },
+    {
+      "path": "kernels/fixtures/827-agent-cred-class-matrix.reachability.json",
+      "sha256": "62b8d1179abff125646ec300d07f7b29432dd1f27acf28f7f8f420e3790be258"
+    },
+    {
+      "path": "kernels/fixtures/829-safe-tx-hash-recompute.fixtures.json",
+      "sha256": "6ee5f7cd649e829a2a4fc1363dc210365339a9e6b42389b8f520c676a4d5fb43"
+    },
+    {
+      "path": "kernels/fixtures/829-safe-tx-hash-recompute.reachability.json",
+      "sha256": "c02bb16a832816ebd8f5f729e6d85846b0a1afe31a1a840548a0233925e9a220"
+    },
+    {
+      "path": "kernels/fixtures/836-payment-services-activity-classifier.fixtures.json",
+      "sha256": "d74b678ec4036f2c96c200431ccd018fd80ebf1ee4272a24287f39fbe84f0950"
+    },
+    {
+      "path": "kernels/fixtures/836-payment-services-activity-classifier.profiles.json",
+      "sha256": "4571b94ab1511432afa9086a3aeb0e09cca2d76c6e827099b8ac7af80b3dec0a"
+    },
+    {
+      "path": "kernels/fixtures/837-issuer-yield-share.fixtures.json",
+      "sha256": "16eaeacd1a65bac6b23abfefbd8405a326ec052aaa8f627cfaf6663adf8ca781"
+    },
+    {
+      "path": "kernels/fixtures/838-control-frequency-sample.fixtures.json",
+      "sha256": "ed091a6a8cc7f76729d739d77642d6b7ae56f45fba66161749bf0d04d28b943c"
+    },
+    {
+      "path": "kernels/fixtures/841-planning-materiality.fixtures.json",
+      "sha256": "7a781f9d19bffd4a5f646b7fcd2b1c4e06aaff60afd48825e14eddd45c99b8ce"
+    },
+    {
+      "path": "kernels/fixtures/844-workload-identity-claims.fixtures.json",
+      "sha256": "9777a67fc74a7eab9b4347323d100f0e54558818978e11e51ac0caf47ebcc252"
+    },
+    {
+      "path": "kernels/fixtures/845-je-period-lock-gate.fixtures.json",
+      "sha256": "3664e6aaa63afaa44bab34ca758535d9550f996c70876ca2e832e4e932d9086b"
     },
     {
       "path": "kernels/fixtures/aiuc1-catalog-2026-q1.json",
@@ -6204,7 +8468,7 @@
     },
     {
       "path": "kernels/fixtures/art-124-content-credential-signature-verifier.fixtures.json",
-      "sha256": "8ab91aed37132f489afc071b726c569774e8fad5057a229ce6e0f3418f96c91c"
+      "sha256": "bc6eafd140217d228d99b864e8f26f1640b698359dd6c239258529b9bea1d466"
     },
     {
       "path": "kernels/fixtures/art-125-provenance-ingredient-tree-resolver.fixtures.json",
@@ -6452,7 +8716,7 @@
     },
     {
       "path": "kernels/fixtures/art-180-solvency2-scr-ratio-calculator.fixtures.json",
-      "sha256": "fbf6dade55c2502b1cc84ee4c11d398d04b41119751c6273986b4eb96d18f469"
+      "sha256": "720b20b475f6f53f44b7313f56615dc94cb8d0ff5c3500240ebc45db77ae879e"
     },
     {
       "path": "kernels/fixtures/art-181-sii-ifrs17-reconciliation-bridger.fixtures.json",
@@ -6720,7 +8984,7 @@
     },
     {
       "path": "kernels/fixtures/art-241-cbpr-structured-address-linter.fixtures.json",
-      "sha256": "02cda5de6c2e1931c821080706b271bb406040c3ae895b0eb0b3672dfcde9117"
+      "sha256": "5615a1c53427e71039b71e6013c68b1c994ef4f52bdd8511688cc4e9a4a361a0"
     },
     {
       "path": "kernels/fixtures/art-242-pacs008-party-completeness-validator.fixtures.json",
@@ -6736,7 +9000,7 @@
     },
     {
       "path": "kernels/fixtures/art-245-mt-mx-translation-fidelity-scorer.fixtures.json",
-      "sha256": "c0e5d73a4f1ef6dd8dd96b52586fae7187cbd45e782a75e80313c22bce518076"
+      "sha256": "92881c0e6f22d6e91271157f0282067837061798a41a8446058aae70a2e9b16a"
     },
     {
       "path": "kernels/fixtures/art-246-lei-payment-binding-linter.fixtures.json",
@@ -6744,7 +9008,7 @@
     },
     {
       "path": "kernels/fixtures/art-247-prevalidation-readiness-scorer.fixtures.json",
-      "sha256": "18e467f1d2d3df7611e2e41d135175e6397be411793c2d070c5f53c2feca8a96"
+      "sha256": "88e0ebd23f0cc1320d486c48dec8b74952d6a2f71d728238400ae78ce5afcc32"
     },
     {
       "path": "kernels/fixtures/art-248-compute-remittance-disclosure.fixtures.json",
@@ -6868,7 +9132,7 @@
     },
     {
       "path": "kernels/fixtures/art-275-genius-reserve-disclosure-checker.fixtures.json",
-      "sha256": "8ded07d0163ff90b8d909917186834366e64192ff303432c9da7f59b7c667ddd"
+      "sha256": "cb47eb9bf2e2824a78b0d1f363bc0cd89b8ed3b40ff8e67162fdb44843f9c389"
     },
     {
       "path": "kernels/fixtures/art-276-mutual-nda-composer.fixtures.json",
@@ -7160,7 +9424,7 @@
     },
     {
       "path": "kernels/fixtures/art-349-fedwire-structured-address-linter.fixtures.json",
-      "sha256": "38e3189e65fa9399955ac5a5290a966b59f5e3c34ad84a56778887bac5213f10"
+      "sha256": "746405396d597d9058e9c257d1f45e94473c27cdedcc59b10bcf80a97339b836"
     },
     {
       "path": "kernels/fixtures/art-35-tempo-payments-business-case.fixtures.json",
@@ -7224,7 +9488,7 @@
     },
     {
       "path": "kernels/fixtures/art-365-compute-globe-topup-tax.fixtures.json",
-      "sha256": "08eeb13a4b1de02e5bda341661a6e9e9521b9a936c0d55a368a94572d016189c"
+      "sha256": "b0bcec0b4a07cc4e15b412f4f29fb593664923288df1495a79edb7a74dabd65d"
     },
     {
       "path": "kernels/fixtures/art-366-price-embedded-insurance.fixtures.json",
@@ -7464,7 +9728,7 @@
     },
     {
       "path": "kernels/fixtures/art-424-witness-cosignature-verifier.fixtures.json",
-      "sha256": "154c36b52fc15d595cf3386c05a6c01ba3b5a4a13b27c6072bb004af73b33656"
+      "sha256": "79f78da0aa2eb3247e349a9911fe95d7289067a12347a67fc3bf8830348e9ef8"
     },
     {
       "path": "kernels/fixtures/art-425-large-exposures-limit-check.fixtures.json",
@@ -7760,7 +10024,7 @@
     },
     {
       "path": "kernels/fixtures/art-497-validator-change-control-receipt.fixtures.json",
-      "sha256": "de32b4a9431ca38421879c725e42fa315861719619e74ef92a56c9c100dae7a8"
+      "sha256": "ff721dcf7901fcddcd48d331527a74a25df6e93fa52274f8b8dbbc3150aa92c0"
     },
     {
       "path": "kernels/fixtures/art-498-reward-flow-related-party.fixtures.json",
@@ -8092,7 +10356,7 @@
     },
     {
       "path": "kernels/fixtures/art-577-exchange-fee-tier-recompute.fixtures.json",
-      "sha256": "9458efbae75b9424eb5bb1331f4303b1c1f2e7e58ca686b8dcca52015147e0aa"
+      "sha256": "1c834a862bec63a33051453eda2b8d39ca76b8d1edd3230b6d41ec975f69ec29"
     },
     {
       "path": "kernels/fixtures/art-578-etf-pcf-basket-verification.fixtures.json",
@@ -8160,7 +10424,7 @@
     },
     {
       "path": "kernels/fixtures/art-593-webbotauth-nonce-replay-check.fixtures.json",
-      "sha256": "00f17f5c02ae774eaf7ec825d9e6390c4b07b0e69f59b014d3875d34bf5c7604"
+      "sha256": "b2a67d12e36644472eb5cdbea346229e41991737eb6683f1189f0f9c89c60602"
     },
     {
       "path": "kernels/fixtures/art-594-tempo-mpp-voucher-receipt-verifier.fixtures.json",
@@ -8204,7 +10468,7 @@
     },
     {
       "path": "kernels/fixtures/art-603-stablecoin-reserve-3source-recompute.fixtures.json",
-      "sha256": "596be906a24ba1fd578f3b3102236571b6ba18c9abccefa9bd78dff893ace9c9"
+      "sha256": "b85a289c06655f665da4e0fb9a243c2d9516032e03e7497610ab43d970e1855e"
     },
     {
       "path": "kernels/fixtures/art-604-erc8004-registry-entry-verifier.fixtures.json",
@@ -8328,7 +10592,7 @@
     },
     {
       "path": "kernels/fixtures/art-64-ai-act-highrisk-fit-diagnostic.fixtures.json",
-      "sha256": "3009a0f05b3512ef22b8966ee4d79d9b15d760298b922ec931fba41a68f21529"
+      "sha256": "3ea31e5d553bcb13de597cc6f2977d8224a9b2804a0799475a551c447d7a9fac"
     },
     {
       "path": "kernels/fixtures/art-645-compute-index-weights.fixtures.json",
@@ -8528,7 +10792,7 @@
     },
     {
       "path": "kernels/fixtures/art-693-isa530-audit-sampling-mus.fixtures.json",
-      "sha256": "2eafc96fe70133b8d2e3c2517ef8b97016a590df3fc4e80b276becb2cee97bc1"
+      "sha256": "83a4b31ff699367dc4a931bd4c715872c05b822b48e04797d0dd19e6d21b6566"
     },
     {
       "path": "kernels/fixtures/art-699-x402-permit2-evidence-recomputer.fixtures.json",
@@ -8596,7 +10860,7 @@
     },
     {
       "path": "kernels/fixtures/art-712-workforce-board-roi.fixtures.json",
-      "sha256": "9fb7abfbd9e8c8c96eb496cc8ce2648ca2854c051efbdb43dc4bd2c30b20656d"
+      "sha256": "379fd587c12d2496691186eaa0ef88677f39fddaae057e225a36ae73e238088e"
     },
     {
       "path": "kernels/fixtures/art-713-scorp-election-break-even.fixtures.json",
@@ -8623,52 +10887,292 @@
       "sha256": "9c59d87125c0e5ef1f4fbe627224a22977e4869db7fddb3d979f72e77e607096"
     },
     {
+      "path": "kernels/fixtures/art-735-solana-dvp-prefund-verifier.fixtures.json",
+      "sha256": "857d7ea71c7253ad222ce71b831dcbbcda3a529e8373b9d2482d085f35c7e04b"
+    },
+    {
+      "path": "kernels/fixtures/art-735-solana-dvp-prefund-verifier.reachability.json",
+      "sha256": "09c21eff4e117702cc4428771a05b90083968682ed5b415c784b2af39a21b723"
+    },
+    {
       "path": "kernels/fixtures/art-74-taxonomy-kpi-gar-aggregator.fixtures.json",
       "sha256": "69864cead10974e94488a94512adb1c62dfc5b75cef9da13c267f3d3f5474459"
+    },
+    {
+      "path": "kernels/fixtures/art-749-solana-paychan-voucher-verifier.fixtures.json",
+      "sha256": "13d513c5bcf9a6b1742be74fe4ed1579df1e115a7d0864629867ab8311f343e4"
     },
     {
       "path": "kernels/fixtures/art-75-eugb-factsheet-validator.fixtures.json",
       "sha256": "84a91637c4638d592857f952633c85db69851ef5d98daa7205fd6af4a0a15379"
     },
     {
+      "path": "kernels/fixtures/art-750-diff-evidence-bundles.fixtures.json",
+      "sha256": "41e2d86940790bcc377305cc1a60f6530e83aa14e17519d339822e4300c5e64b"
+    },
+    {
+      "path": "kernels/fixtures/art-751-sha256-hmac-digest-demonstrator.fixtures.json",
+      "sha256": "99660e4d6329413a656787d9b953f0787664cb86d328c7c135101610d549a6e8"
+    },
+    {
+      "path": "kernels/fixtures/art-752-freelance-quarterly-estimated-tax.fixtures.json",
+      "sha256": "738a4256174751eb6807132485af425d4c87666d414600102baa8ff947f02e5b"
+    },
+    {
+      "path": "kernels/fixtures/art-753-home-office-augusta.fixtures.json",
+      "sha256": "15fc6227721e63ee3f89aa4440dea099914d5f8c9ebbff096f118dd7dcd00d2d"
+    },
+    {
+      "path": "kernels/fixtures/art-754-equity-exit-waterfall.fixtures.json",
+      "sha256": "56d31fac8bfd967afe7b29feefb5504ee90d86de1ec9c6e7ff53fde42b27c342"
+    },
+    {
+      "path": "kernels/fixtures/art-756-sales-ote-commission-analyzer.fixtures.json",
+      "sha256": "acea5a6300fffb3921e5649c61f0ccc2587e1d056344567521f97f38a20eed72"
+    },
+    {
+      "path": "kernels/fixtures/art-758-hdhp-ppo-break-even.fixtures.json",
+      "sha256": "047671f867980f160859692916357cecb935808926c237585a0b180be13ed4a7"
+    },
+    {
+      "path": "kernels/fixtures/art-759-iso-amt-exposure-modeler.fixtures.json",
+      "sha256": "8e96b6d2caf29d71a9134ca87304dc9b5f64ab2af5ceacdfa39057585aa9d575"
+    },
+    {
       "path": "kernels/fixtures/art-76-climate-scenario-applicator.fixtures.json",
       "sha256": "2270716fab66562fe5407101897e8e81f18136713e60ef8d1d5655651dbe6081"
+    },
+    {
+      "path": "kernels/fixtures/art-760-espp-break-even-optimal-sell.fixtures.json",
+      "sha256": "b24d832b29443fea5d0981cf957f792b82b3ba235355a401cea50ad5ccdf46e9"
+    },
+    {
+      "path": "kernels/fixtures/art-761-caregiver-income-impact.fixtures.json",
+      "sha256": "d47134975b9e6224caa12f97e0b02fbb95f3063580b2a5a7881e08738e1ce3b9"
     },
     {
       "path": "kernels/fixtures/art-763-ai-displacement-risk-screener.fixtures.json",
       "sha256": "fb32cc71f9a81e3f371116fc9933ba2a4350e9587ead02d88bf066ac46ef987f"
     },
     {
+      "path": "kernels/fixtures/art-764-solo-401k-vs-sep-ira.fixtures.json",
+      "sha256": "86ac07d5e50370a7005b033878186e4a2ab24880e613bb33e7d7b8b77b546cc3"
+    },
+    {
+      "path": "kernels/fixtures/art-765-dependent-care-fsa-cdctc-optimizer.fixtures.json",
+      "sha256": "42e64f16e80eb21fd67b41949094d1ae0dd64fbf25468bfda315f436e4ce8c03"
+    },
+    {
+      "path": "kernels/fixtures/art-766-parental-leave-income-gap.fixtures.json",
+      "sha256": "0910136bf3f1905faa54e45a8163897401140bebc58a49bbebb7ae0b6aaa81b4"
+    },
+    {
+      "path": "kernels/fixtures/art-768-medicare-plan-comparison.fixtures.json",
+      "sha256": "ceb68cbb30b266a8fb7cf220e6721a23deade104468e61475de956b88451c834"
+    },
+    {
+      "path": "kernels/fixtures/art-769-medicare-oop-exposure.fixtures.json",
+      "sha256": "0f49ec4755fb40645dd046c52dac413e1f0c0ad0a3416a580e79c08b6c26c1a6"
+    },
+    {
       "path": "kernels/fixtures/art-77-t1-settlement-readiness-diagnostic.fixtures.json",
       "sha256": "b51bc1b6fd686754ceae088a124d144d641f70bcfb8217bbd4dcd972c0ceec26"
+    },
+    {
+      "path": "kernels/fixtures/art-770-total-cost-of-homeownership.fixtures.json",
+      "sha256": "af07e2796af5e799baa8ee7a717019d8ce225a044921a9d1f00efe2ea6b3f1c9"
+    },
+    {
+      "path": "kernels/fixtures/art-771-automation-payback.fixtures.json",
+      "sha256": "b3ecc77248664e747bf75f2d6f3d1a01a36355477ffeb02c7f95d119e5002fc2"
+    },
+    {
+      "path": "kernels/fixtures/art-772-money-primitives-demonstrator.fixtures.json",
+      "sha256": "3101f7d6e4f79950e3505b4a45bf0f629158f5b52c32f93f11524552ae9b794c"
+    },
+    {
+      "path": "kernels/fixtures/art-773-daycount-year-fraction.fixtures.json",
+      "sha256": "f5d0aea2d684c4e71ddde6e9215d98d6f2dbeb0d53db05d319f1fc7a235b1fb5"
+    },
+    {
+      "path": "kernels/fixtures/art-774-beacon-seeded-fair-sampling-v2.fixtures.json",
+      "sha256": "238345e95e2482e8b60f28f52e346a2283d6e33e77646845ff1c224c43eafb19"
+    },
+    {
+      "path": "kernels/fixtures/art-776-paypal-dispute-deadline-evidence.fixtures.json",
+      "sha256": "122fc99fb49689c749b082ca4ca357b35ee802934ce2a291375ae940b96cbcaa"
+    },
+    {
+      "path": "kernels/fixtures/art-777-psp-dispute-reason-crosswalk.fixtures.json",
+      "sha256": "0a9324953bc1e9a5657599ba10ab06c8da7da9bd0d46bd91743aab001589b119"
+    },
+    {
+      "path": "kernels/fixtures/art-778-token2022-withheld-fee-reconciler.fixtures.json",
+      "sha256": "d4407a44eb9a9243b2a99f7f25536825a8bf5d06eb652288ecb18b181e02dd0a"
+    },
+    {
+      "path": "kernels/fixtures/art-779-bnpl-plan-comparator.fixtures.json",
+      "sha256": "54ab5ab20fb6f8cda56abc651457639dd4e39623725cc47b9ded7167824423c1"
     },
     {
       "path": "kernels/fixtures/art-78-csdr-penalty-calculator.fixtures.json",
       "sha256": "f6e2bedc4c9f0a3a87e69f26df92e53e853776481029d36b3c606c76c860cf15"
     },
     {
+      "path": "kernels/fixtures/art-780-solana-pda-ata-audit.fixtures.json",
+      "sha256": "2210f6a35c7571e13d638c5de6badf715367fba062cba072b96a08ce8869e88c"
+    },
+    {
+      "path": "kernels/fixtures/art-782-modified-premium.fixtures.json",
+      "sha256": "3c11350846faa43057cd3396f46770a5344baea3879a9033e70f75e282448f79"
+    },
+    {
+      "path": "kernels/fixtures/art-788-csv-rfc4180-parser.fixtures.json",
+      "sha256": "9436cd8208d53637924137ebc541ffdd619e646ff3ee9213ca88dbe210a4c713"
+    },
+    {
       "path": "kernels/fixtures/art-79-settlement-fail-predictor.fixtures.json",
       "sha256": "8379dd3f1cc64ede794ffeddd9514dec872fe4f58e834cbb97bc4738cc4fd58d"
+    },
+    {
+      "path": "kernels/fixtures/art-793-government-stablecoin-acceptance.fixtures.json",
+      "sha256": "949232ea233ab2d89ec12b5ffc71c038def95bea556f7d492501fb6c988e99b3"
     },
     {
       "path": "kernels/fixtures/art-80-ssi-conformance-checker.fixtures.json",
       "sha256": "88557386a2ae81cc26ffeb4cddd033872e1c3de13759d466048ac78f7e636adf"
     },
     {
+      "path": "kernels/fixtures/art-805-agt-audit-chain-verifier.fixtures.json",
+      "sha256": "3a0291829999694aa451433b60f695e074855045f3bb1cc15131d3593a835c90"
+    },
+    {
+      "path": "kernels/fixtures/art-807-erc3643-transfer-decision.fixtures.json",
+      "sha256": "45edc7b47a66026833f0982ae1295fa781b431b7e70fbc2ada2ce4e652e845d2"
+    },
+    {
+      "path": "kernels/fixtures/art-809-check-reserves-cover-outstanding-private.disclosure.json",
+      "sha256": "014f30920ef39be5d16e779b838a0448dd7937eb97d47dddeff47c9b1a8a71d7"
+    },
+    {
+      "path": "kernels/fixtures/art-809-check-reserves-cover-outstanding-private.fixtures.json",
+      "sha256": "f470f818feecfdbdc8d80e8c1ea50ac3ffd9b1143b7ec34197503c98915b7f9a"
+    },
+    {
       "path": "kernels/fixtures/art-81-allocation-affirmation-conformance.fixtures.json",
       "sha256": "64497ecc7ffce48fd21436d009a07b01f5fb14dfc57bb31f8fb4710879379d85"
+    },
+    {
+      "path": "kernels/fixtures/art-811-check-dti-within-policy-private.disclosure.json",
+      "sha256": "f14dda462745799ec09121f0dd7f1d0ced5c0586fa2c732c824c954fc04665d9"
+    },
+    {
+      "path": "kernels/fixtures/art-811-check-dti-within-policy-private.fixtures.json",
+      "sha256": "7d0ac39a7c37fd6b2b0c07559f6997c0d9f51dab294dfed4121999234c1b9f48"
+    },
+    {
+      "path": "kernels/fixtures/art-814-qf-pairwise-recompute.fixtures.json",
+      "sha256": "3930e025713e473e450a2b86bd45748bec77ca090ec35fd1c06ff4b7b5c3acf8"
+    },
+    {
+      "path": "kernels/fixtures/art-816-eip3009-agent-spend-gate.fixtures.json",
+      "sha256": "30bf1c91408420a50f0362c2b4946d8199f94f61adc7fa4f39acfb456724ce0b"
+    },
+    {
+      "path": "kernels/fixtures/art-818-zcash-reg-classifier.fixtures.json",
+      "sha256": "b8664cd1a1d8a277d5775503da610dfc4693fb84f548d66d1c7f6e3384266feb"
+    },
+    {
+      "path": "kernels/fixtures/art-819-ucp-request-constraints.fixtures.json",
+      "sha256": "d8822d50fbd87cab1a6a9ad4376e61437d3a915a39de6ef8b1b30a1eb4a62354"
     },
     {
       "path": "kernels/fixtures/art-82-securities-settlement-message-linter.fixtures.json",
       "sha256": "0035456353963f61fdc60b30aa3030fe4b55a3e63ce6ccff4c47960f0810e9b8"
     },
     {
+      "path": "kernels/fixtures/art-820-negotiate-ucp-capabilities.fixtures.json",
+      "sha256": "e4d7d3f7a140f812aac70781a5a6e46ea4e7ef81b3f60104702c2ea2a21298af"
+    },
+    {
+      "path": "kernels/fixtures/art-820-negotiate-ucp-capabilities.reachability.json",
+      "sha256": "6454f0f818a7e2da96e62eae8486e84ab7f6b8e7a5c3fe6649e19cba37371549"
+    },
+    {
+      "path": "kernels/fixtures/art-826-authenticator-assurance-level.fixtures.json",
+      "sha256": "11a5eb6b737a2d523b39561baf281f2f18c972a9491e79b6ab59c1c7c146bb59"
+    },
+    {
+      "path": "kernels/fixtures/art-828-reconcile-omnibus-token-position.fixtures.json",
+      "sha256": "fb31519a4c98fcb101ac33d2c9068749b1cfbf4b3ec9353feb47e13b21684284"
+    },
+    {
+      "path": "kernels/fixtures/art-828-reconcile-omnibus-token-position.reachability.json",
+      "sha256": "63a797eeb26f3a10992a6499785faa4a7cd6c08a7ae212de7d5b422030a22a01"
+    },
+    {
       "path": "kernels/fixtures/art-83-buy-in-exposure-modeler.fixtures.json",
       "sha256": "c1cb0d865d25387ab73dfe5e6a8bef4679d20ef201529c76e46922f488ab2d15"
     },
     {
+      "path": "kernels/fixtures/art-830-eip3009-spend-exposure-reconciler.fixtures.json",
+      "sha256": "a1b7c5d44d1287469dcada59bac107463c4d8a2b1f9df1bde613614308f83d21"
+    },
+    {
+      "path": "kernels/fixtures/art-830-eip3009-spend-exposure-reconciler.reachability.json",
+      "sha256": "c32dc33b9bbbfc13afad03883c03079c9e33d2f1cf2b1d9d68c4c7d7d0b0f88b"
+    },
+    {
+      "path": "kernels/fixtures/art-831-receipt-export-envelopes.fixtures.json",
+      "sha256": "1bae783fcdfde66bac6694519deb26fef95ea38197c8fbba800abbbb90f85fee"
+    },
+    {
+      "path": "kernels/fixtures/art-832-card-data-flow-scope.fixtures.json",
+      "sha256": "21bf1e46b54dc5a66f146ffc71d8d6a3e84707a0ebc7a8591c2fdb02b7e590d3"
+    },
+    {
+      "path": "kernels/fixtures/art-833-lint-pan-sad-exposure.fixtures.json",
+      "sha256": "6d7aa24c6d49786748ad547d309e120b0bab24503d1bb301a300ec8dc20af3c0"
+    },
+    {
+      "path": "kernels/fixtures/art-833-lint-pan-sad-exposure.reachability.json",
+      "sha256": "96b9d1ec1b8ccccfc565c2596ef723e5b32f7d042a87febcde5da7d3d1b04f4a"
+    },
+    {
+      "path": "kernels/fixtures/art-834-asc606-transaction-price-allocator.fixtures.json",
+      "sha256": "96371866785924cd87be57712bea5adf32c92900ea81f7123b78abd0d49147af"
+    },
+    {
+      "path": "kernels/fixtures/art-835-bank-reconciliation-recompute.fixtures.json",
+      "sha256": "6df4261d4fe36c6c5b16435bd3ccdf7c436350ecc784d6d7064f358c40edf7fd"
+    },
+    {
+      "path": "kernels/fixtures/art-839-statement-footing-crossfoot.fixtures.json",
+      "sha256": "6d99f8c1b89064da9bb27163481b91a11fc6700f7a232a26daef65ff3457d0cd"
+    },
+    {
       "path": "kernels/fixtures/art-84-settlement-efficiency-kpi.fixtures.json",
       "sha256": "b3fcfc432a2366b9ed928f55354d5952989528c8a4d718929a58f01ee3b3baf7"
+    },
+    {
+      "path": "kernels/fixtures/art-840-gl-flux-explainer.fixtures.json",
+      "sha256": "720bf6b5137583b597bbafe48ecc30341f674388ee58f36034daee4ce14f0710"
+    },
+    {
+      "path": "kernels/fixtures/art-842-soc-report-coverage-gap.fixtures.json",
+      "sha256": "ed0c23c1e5c94e4d7c36c95b99e1710fdc2dccfec5c101528ce733bf54def25c"
+    },
+    {
+      "path": "kernels/fixtures/art-843-tap-message-validator.fixtures.json",
+      "sha256": "ad03a85d24af79f7a95b5743c2c2c30deea60aa35a10058b69e3c6b538c4f157"
+    },
+    {
+      "path": "kernels/fixtures/art-846-assess-pfmi-proportional.fixtures.json",
+      "sha256": "5c13d5dbf90ad71a6dd3c2823d5dd8e94e844918a4047a98c27af782f95f6b62"
+    },
+    {
+      "path": "kernels/fixtures/art-846-assess-pfmi-proportional.tier-map.json",
+      "sha256": "5ef8221442aaae89b098e4cca119bad8585153dd346f920d888244445b5f9f0d"
     },
     {
       "path": "kernels/fixtures/art-85-pqc-timeline-fit-diagnostic.fixtures.json",
@@ -8789,6 +11293,54 @@
     {
       "path": "kernels/fixtures/compute-proof/733-servicing-compliance-clock.receipt.json",
       "sha256": "22ed2c57d80e11e29c56f85fff49e858ad154a1f6469dd82632f5cb7e512f4ba"
+    },
+    {
+      "path": "kernels/fixtures/compute-proof/784-cbr-data-return-validator.receipt.json",
+      "sha256": "e247890f8f04c29404e0f7d8be78021db26083e70b2f2358cc3eba8a74780902"
+    },
+    {
+      "path": "kernels/fixtures/compute-proof/787-corridor-cost-averages.receipt.json",
+      "sha256": "c6351a8569b550c4ce1af95a7cb208f785b5711cfdc4de76e2aea431ad669f56"
+    },
+    {
+      "path": "kernels/fixtures/compute-proof/792-curator-vault-cap-auditor.receipt.json",
+      "sha256": "50e3393b3e45735d17fc8fe0d88c1d6eced84ff4339c16a116da6baa3ca47d57"
+    },
+    {
+      "path": "kernels/fixtures/compute-proof/795-stablecoin-refund-dispute.receipt.json",
+      "sha256": "0561e7d5f4e5a8c1a5d3031595ee91e3d18cd439bacbe2208c0db33be8c5fa37"
+    },
+    {
+      "path": "kernels/fixtures/compute-proof/806-event-contract-terms-lint.receipt.json",
+      "sha256": "a1f2df91ccaed8c5d1d5e190832c0756f9af9b47666e3719aa5d0ec7afbe404b"
+    },
+    {
+      "path": "kernels/fixtures/compute-proof/808-lst-share-rate-reconciler.receipt.json",
+      "sha256": "7a6889af66939eb032b3deca42b2bcb8b94c429fdf0fb00d2467da3a6d250567"
+    },
+    {
+      "path": "kernels/fixtures/compute-proof/812-eth-staking-queue.receipt.json",
+      "sha256": "1ff69bf53edda811ae40ac1c36991ea0120d2a8647820b337cff48704cd22c27"
+    },
+    {
+      "path": "kernels/fixtures/compute-proof/813-eth-staking-accounting.receipt.json",
+      "sha256": "9b6724a4e30698bb6c6c009ccae4a7e2bee2fdff9d52ff5960125e644088a450"
+    },
+    {
+      "path": "kernels/fixtures/compute-proof/815-eth-fee-market.receipt.json",
+      "sha256": "ac1ed206955b460ab9a2399ed9bbe882bdd2c2f27ac8913afabcc144909ce89f"
+    },
+    {
+      "path": "kernels/fixtures/compute-proof/822-zcash-supply-check.receipt.json",
+      "sha256": "da57476f286c2a07ab3416e7fe13761da37fb87a9114e52c7cfec64244564cdb"
+    },
+    {
+      "path": "kernels/fixtures/compute-proof/824-zip317-transfer-fee.receipt.json",
+      "sha256": "6a9f04663cdc28d2a54219b14f2f07678358b365528bb863a7d68e14b9ce3dbf"
+    },
+    {
+      "path": "kernels/fixtures/compute-proof/827-agent-cred-class-matrix.receipt.json",
+      "sha256": "d19db517ce2eea5636d00d7216acfa84e5c1e0c8add606be76e5358e30fa46cd"
     },
     {
       "path": "kernels/fixtures/compute-proof/art-01-ap2-mandate-chain-validator.receipt.json",
@@ -8920,7 +11472,7 @@
     },
     {
       "path": "kernels/fixtures/compute-proof/art-124-content-credential-signature-verifier.receipt.json",
-      "sha256": "c65c643921089bdf7449547b93466bd96131163ff6ef80de5bfbe4f41b265a56"
+      "sha256": "4bbbcc3f5f3b23db9fa78706b0326fcf23af3c157ebd4077e7aec1052061c152"
     },
     {
       "path": "kernels/fixtures/compute-proof/art-125-provenance-ingredient-tree-resolver.receipt.json",
@@ -9152,7 +11704,7 @@
     },
     {
       "path": "kernels/fixtures/compute-proof/art-180-solvency2-scr-ratio-calculator.receipt.json",
-      "sha256": "252cea9566f5c94d018c0d899de85060c1fa9f75b6f758975b791b1af7d9d9c2"
+      "sha256": "067511f7400e51735082587776837a86252318705144f7c1bf2d0ddbc7f36091"
     },
     {
       "path": "kernels/fixtures/compute-proof/art-181-sii-ifrs17-reconciliation-bridger.receipt.json",
@@ -9264,7 +11816,7 @@
     },
     {
       "path": "kernels/fixtures/compute-proof/art-218-qm-points-and-fees.receipt.json",
-      "sha256": "442539a599a1b295276a124e3e58b1548368578211f4dc533d9f2f876b5df885"
+      "sha256": "413db547391ac8b419f6cd8dbd1b0dcc244fe80e627d719c35d214efa236f50d"
     },
     {
       "path": "kernels/fixtures/compute-proof/art-219-qm-apr-apor-spread.receipt.json",
@@ -9336,7 +11888,7 @@
     },
     {
       "path": "kernels/fixtures/compute-proof/art-234-test-hoepa-high-cost.receipt.json",
-      "sha256": "a7d447503a5b09c1294010192ecf99be0071a578a7000ee451187387de42144d"
+      "sha256": "3a9492accddafa79349cd9f16ef6916fb13b9409eac2b7158b257896d1a07596"
     },
     {
       "path": "kernels/fixtures/compute-proof/art-235-test-hpml-escrow.receipt.json",
@@ -9368,7 +11920,7 @@
     },
     {
       "path": "kernels/fixtures/compute-proof/art-241-cbpr-structured-address-linter.receipt.json",
-      "sha256": "9f39f63481f9f5e7bd6d9016b0aa1bdef958531285ca7409186ddae5e95db180"
+      "sha256": "800eb26fc391587da6d7c45d9412eceb7c02f592fb393f3509f28e5a0e9f437f"
     },
     {
       "path": "kernels/fixtures/compute-proof/art-242-pacs008-party-completeness-validator.receipt.json",
@@ -9384,7 +11936,7 @@
     },
     {
       "path": "kernels/fixtures/compute-proof/art-245-mt-mx-translation-fidelity-scorer.receipt.json",
-      "sha256": "56670cc61d61be4cc60744fb802eebc936fd36fd744192d45782b3ad0eb148d9"
+      "sha256": "c642a44f07474752898848a7344a4382d4f2cdd44aaae4b77ddebe4d16d24a30"
     },
     {
       "path": "kernels/fixtures/compute-proof/art-246-lei-payment-binding-linter.receipt.json",
@@ -9392,7 +11944,7 @@
     },
     {
       "path": "kernels/fixtures/compute-proof/art-247-prevalidation-readiness-scorer.receipt.json",
-      "sha256": "e21baf0cee94d6575b5b38e6e02559e80cf6e8c999e0c91557118519b2c2bf7e"
+      "sha256": "4cb57c89b4613638c2c8da15d995716aa48b113f3a45c6ed1de69066414011b9"
     },
     {
       "path": "kernels/fixtures/compute-proof/art-248-compute-remittance-disclosure.receipt.json",
@@ -9516,7 +12068,7 @@
     },
     {
       "path": "kernels/fixtures/compute-proof/art-275-genius-reserve-disclosure-checker.receipt.json",
-      "sha256": "c386d2b43b392fd269f78e12064f04fb7a795df4d927aa0e43241e526526f8d8"
+      "sha256": "4591862c4dd089dccba60831933ebd576e4048501fd4511e7935cf5121bbf86f"
     },
     {
       "path": "kernels/fixtures/compute-proof/art-276-mutual-nda-composer.receipt.json",
@@ -9747,6 +12299,10 @@
       "sha256": "07b62c2a7abcd5c9ace038720aace7b778a840db7ec9466e68f51e5cf9b1d307"
     },
     {
+      "path": "kernels/fixtures/compute-proof/art-497-validator-change-control-receipt.receipt.json",
+      "sha256": "c1b5f0fb7ca812c98dc8f055fe7130323d4b0d57ecb66c50e54a599088df9849"
+    },
+    {
       "path": "kernels/fixtures/compute-proof/art-50-ficc-margin-netting-estimator.receipt.json",
       "sha256": "77972bfdab12ffd40e0f833020ee61dcdff5d4e0c80cba57812e5585949cfaae"
     },
@@ -9785,6 +12341,10 @@
     {
       "path": "kernels/fixtures/compute-proof/art-59-settlement-asset-finality-classifier.receipt.json",
       "sha256": "3476aa051ce38024b54839ccb8c6447b4065a781092264e83f93685c96d34949"
+    },
+    {
+      "path": "kernels/fixtures/compute-proof/art-593-webbotauth-nonce-replay-check.receipt.json",
+      "sha256": "00a785e7af8a4dcd1fe75fa53e62ca6220b62cd266e0e5ea8462ade46a16f097"
     },
     {
       "path": "kernels/fixtures/compute-proof/art-594-tempo-mpp-voucher-receipt-verifier.receipt.json",
@@ -9836,7 +12396,7 @@
     },
     {
       "path": "kernels/fixtures/compute-proof/art-64-ai-act-highrisk-fit-diagnostic.receipt.json",
-      "sha256": "8de20df8d28ad34ac0857a5d2cae9838dcfe17bebf09aad1eb1ca0823d5e9425"
+      "sha256": "43b1f54913260f025f1b2f923187a43c95c66b66313504e7332c55ad9165965c"
     },
     {
       "path": "kernels/fixtures/compute-proof/art-649-publish-model-risk-head.receipt.json",
@@ -9951,8 +12511,16 @@
       "sha256": "c06ded1e8b96a6295f5f28fcb4d2466557c3a5219ea1768821120f29e365f224"
     },
     {
+      "path": "kernels/fixtures/compute-proof/art-701-three-way-invoice-match.receipt.json",
+      "sha256": "18cb96d190e92fc1cbbb06a433dd4b273dda0b0d953f8d18f8c0218826f8bc3c"
+    },
+    {
       "path": "kernels/fixtures/compute-proof/art-702-runway-goal-path.receipt.json",
       "sha256": "37d326fcea007cba7566c25c230d86974209653f03f7c866b0a3c35273ec8e29"
+    },
+    {
+      "path": "kernels/fixtures/compute-proof/art-703-mandate-authorization-gate.receipt.json",
+      "sha256": "f47602f53e6d0203b84071c8197b57a8cb6750e83baeb0e261652e363c2c88a1"
     },
     {
       "path": "kernels/fixtures/compute-proof/art-704-ai-token-spend.receipt.json",
@@ -9967,8 +12535,20 @@
       "sha256": "3861d70f60661185759abdda539384f9532668a9be315b9fa7946035d7ba698d"
     },
     {
+      "path": "kernels/fixtures/compute-proof/art-708-v4-hook-permission-reconciler.receipt.json",
+      "sha256": "57fee020793fb0f4f404a0663a50016d1aaf0159b0ae98cebfc91d177e872640"
+    },
+    {
+      "path": "kernels/fixtures/compute-proof/art-709-v4-hook-fee-conformance.receipt.json",
+      "sha256": "5d6aada84046c6e29152a7386fe82fd3511f9dbe3c6b06c4fc7f33875cffab5a"
+    },
+    {
       "path": "kernels/fixtures/compute-proof/art-71-cbam-certificate-cost-engine.receipt.json",
       "sha256": "128f96f7ac30c2a471e7c57224dca32cab887c9b8ba81a333709521d62240496"
+    },
+    {
+      "path": "kernels/fixtures/compute-proof/art-710-tsv-stoppage-concurrency.receipt.json",
+      "sha256": "0a98e701fa200f42d16b14320bea9123aec25b4d01817f00bc0b5a2bd366490c"
     },
     {
       "path": "kernels/fixtures/compute-proof/art-711-sco60-crypto-asset-exposure-classifier-v2.receipt.json",
@@ -9977,6 +12557,10 @@
     {
       "path": "kernels/fixtures/compute-proof/art-713-scorp-election-break-even.receipt.json",
       "sha256": "f7931fa3627be97775e1ac6e9a0599c762f4b6643068ca537999822bf270e90a"
+    },
+    {
+      "path": "kernels/fixtures/compute-proof/art-715-token2022-transfer-fee-reconciler.receipt.json",
+      "sha256": "ae93fb49bb588c3cbbea750d5f3d510de9c73c5a7734d529a086c30d225a369d"
     },
     {
       "path": "kernels/fixtures/compute-proof/art-72-cbam-precursor-emissions-aggregator.receipt.json",
@@ -9991,44 +12575,176 @@
       "sha256": "d0a8d31ace08596a597525edc3c8ae15dc4e42d8362d1495424195b007e24a19"
     },
     {
+      "path": "kernels/fixtures/compute-proof/art-735-solana-dvp-prefund-verifier.receipt.json",
+      "sha256": "a24cd0aa57f5ff1c04f981b60dbc5ca0204f8751646fa5d274fbb71803c7a208"
+    },
+    {
       "path": "kernels/fixtures/compute-proof/art-74-taxonomy-kpi-gar-aggregator.receipt.json",
       "sha256": "fed5019a399c93c021714f79b95b731c4fac3484e53c88a12fd7fa37b2ea5516"
+    },
+    {
+      "path": "kernels/fixtures/compute-proof/art-749-solana-paychan-voucher-verifier.receipt.json",
+      "sha256": "e526f0a4a135c02dd041b77e0cb9f439a08a89f165543b0ba39b3dc4a67bf785"
     },
     {
       "path": "kernels/fixtures/compute-proof/art-75-eugb-factsheet-validator.receipt.json",
       "sha256": "27443f5a36f00849e0ef1a764c1780a323a4e0b647675751fcb8ae3713755166"
     },
     {
+      "path": "kernels/fixtures/compute-proof/art-750-diff-evidence-bundles.receipt.json",
+      "sha256": "98155be836327fa4a7b81541984781936b7ef3bca24644ecede13cbfa12266a2"
+    },
+    {
+      "path": "kernels/fixtures/compute-proof/art-752-freelance-quarterly-estimated-tax.receipt.json",
+      "sha256": "4de1d40e2663c5a263378cca698ed5694ec04ca985c32157b3351330f2a4e243"
+    },
+    {
+      "path": "kernels/fixtures/compute-proof/art-754-equity-exit-waterfall.receipt.json",
+      "sha256": "599ec6b5995252975be9b30de4f4e1fc5331aedae3811c33645288a8dd41f845"
+    },
+    {
+      "path": "kernels/fixtures/compute-proof/art-756-sales-ote-commission-analyzer.receipt.json",
+      "sha256": "27c35782cb8936a8bb21209e829af571e23aeba99af3227c820f1eee4d03dd86"
+    },
+    {
+      "path": "kernels/fixtures/compute-proof/art-758-hdhp-ppo-break-even.receipt.json",
+      "sha256": "7c3723e869574d018c7b2c81c0506d229b94d427fce95a64dfddb242d043f89a"
+    },
+    {
+      "path": "kernels/fixtures/compute-proof/art-759-iso-amt-exposure-modeler.receipt.json",
+      "sha256": "31f8c74f7a1bf2636b3e00499a6270c786d30208e2c4163befe85d99d93aabf8"
+    },
+    {
       "path": "kernels/fixtures/compute-proof/art-76-climate-scenario-applicator.receipt.json",
       "sha256": "6ec884e491c4372e633825edb32d5bd164bddd31e2c451776998254e5bf13328"
+    },
+    {
+      "path": "kernels/fixtures/compute-proof/art-760-espp-break-even-optimal-sell.receipt.json",
+      "sha256": "ca6ac067108ad3b93b4bd915425abcf1df200ccc220f66b643d2910a1b470d71"
+    },
+    {
+      "path": "kernels/fixtures/compute-proof/art-761-caregiver-income-impact.receipt.json",
+      "sha256": "c4dd46327a1db1d667234835fc486fdd2c3bbb75f69cb772044aae3b7f086d25"
+    },
+    {
+      "path": "kernels/fixtures/compute-proof/art-763-ai-displacement-risk-screener.receipt.json",
+      "sha256": "7f608dd26e09ec4782c1668425b2ee458eebaf0b8fa5a2d5cfbe31c3060cf863"
+    },
+    {
+      "path": "kernels/fixtures/compute-proof/art-764-solo-401k-vs-sep-ira.receipt.json",
+      "sha256": "f6beb838809e1af2362b35ed4e4ee05599fa6d7fda31f6c9b2b2fafc71de6aa4"
+    },
+    {
+      "path": "kernels/fixtures/compute-proof/art-765-dependent-care-fsa-cdctc-optimizer.receipt.json",
+      "sha256": "b9d56c86670ab9494fbea3e0f7312a2f0724a64f5399ee0eef9a5f33194af68e"
+    },
+    {
+      "path": "kernels/fixtures/compute-proof/art-769-medicare-oop-exposure.receipt.json",
+      "sha256": "5e4ddc7cb6324282147ee0c01f11325d5b78a1bf8f216e85e1a7d7bd5f81e4a7"
     },
     {
       "path": "kernels/fixtures/compute-proof/art-77-t1-settlement-readiness-diagnostic.receipt.json",
       "sha256": "5c262b44644a85bad878eb23b74228ef317d6cd02f1cbecc5e8f2633a4712b53"
     },
     {
+      "path": "kernels/fixtures/compute-proof/art-770-total-cost-of-homeownership.receipt.json",
+      "sha256": "1d8471d1499b202e10105bdc50af719d4da50df03d85aa6b0bf66ea0629a8380"
+    },
+    {
+      "path": "kernels/fixtures/compute-proof/art-771-automation-payback.receipt.json",
+      "sha256": "df3a07acb1a6854995ceb38a37c893e43663fea5d18bc4cb4bb9f719c3eb09bc"
+    },
+    {
+      "path": "kernels/fixtures/compute-proof/art-772-money-primitives-demonstrator.receipt.json",
+      "sha256": "a0b9f696692528ad541362f28f6514fe9d0cc1feb71933fa8d06c286f044965c"
+    },
+    {
+      "path": "kernels/fixtures/compute-proof/art-774-beacon-seeded-fair-sampling-v2.receipt.json",
+      "sha256": "c73b1b8fea947c81d860178296afcbc61e8e8ff48bae6265fe2e468eedb862b1"
+    },
+    {
+      "path": "kernels/fixtures/compute-proof/art-776-paypal-dispute-deadline-evidence.receipt.json",
+      "sha256": "21491727dfa1257b5d41b084273e9d235db471017060546892f8e80996e53d73"
+    },
+    {
+      "path": "kernels/fixtures/compute-proof/art-777-psp-dispute-reason-crosswalk.receipt.json",
+      "sha256": "00ecf999ab9792bac6084af5772a8bc455db634b49b22a8397c85f61cbfbb727"
+    },
+    {
+      "path": "kernels/fixtures/compute-proof/art-778-token2022-withheld-fee-reconciler.receipt.json",
+      "sha256": "6e1e0da1d689ac1a7cb9c302a11831eb7864fdc635e405b2c543effc85be6bc8"
+    },
+    {
+      "path": "kernels/fixtures/compute-proof/art-779-bnpl-plan-comparator.receipt.json",
+      "sha256": "5725a971514198fc1af6dd936eb946d4261b92294c45414c1ab9400094ea9bfa"
+    },
+    {
       "path": "kernels/fixtures/compute-proof/art-78-csdr-penalty-calculator.receipt.json",
       "sha256": "edd724303bd38a746a5a1841a6deb64910cf081d28b07270124f68bedd7d67aa"
+    },
+    {
+      "path": "kernels/fixtures/compute-proof/art-780-solana-pda-ata-audit.receipt.json",
+      "sha256": "6367b680990ea8e2cce2bf65c33df630bface44ba6e97c844272fef56aceb16d"
+    },
+    {
+      "path": "kernels/fixtures/compute-proof/art-782-modified-premium.receipt.json",
+      "sha256": "73a4a7a41e111440e815ace75f713e3f9aadcc74c68e138bcd056c3a86fe8941"
+    },
+    {
+      "path": "kernels/fixtures/compute-proof/art-788-csv-rfc4180-parser.receipt.json",
+      "sha256": "ce81ccafcfecda470755a990cf1d9c6dcc338034f56fa274efdf96cf72935092"
     },
     {
       "path": "kernels/fixtures/compute-proof/art-79-settlement-fail-predictor.receipt.json",
       "sha256": "5c0ada306da330a7814f9eb3c2f0d500f52b810bb661647a21b5a8e17a7bbac0"
     },
     {
+      "path": "kernels/fixtures/compute-proof/art-793-government-stablecoin-acceptance.receipt.json",
+      "sha256": "69e0ed7ab96616b2be96ec673b702075291a324ee2d51e9662263541bf0a3e79"
+    },
+    {
       "path": "kernels/fixtures/compute-proof/art-80-ssi-conformance-checker.receipt.json",
       "sha256": "8d3f1fef6251ef0de4ee6a1d9af827df1bf5b53f4e2abbf82da594db39e722c0"
     },
     {
+      "path": "kernels/fixtures/compute-proof/art-807-erc3643-transfer-decision.receipt.json",
+      "sha256": "5b317f296e5dcb5b7503b7174222aad051a08b711836315c9a05479b093ba1a0"
+    },
+    {
       "path": "kernels/fixtures/compute-proof/art-81-allocation-affirmation-conformance.receipt.json",
-      "sha256": "e50c56ef4256f7f3e8323f3bba165c54cb8ed428f8abf7d619821cc53340f193"
+      "sha256": "d923cc72497b4a5c786ef4f40cc9337c56a084f19cfe51eab46698439d0b6642"
+    },
+    {
+      "path": "kernels/fixtures/compute-proof/art-814-qf-pairwise-recompute.receipt.json",
+      "sha256": "3bc1e8b6f275974fc5fb5ab061ee5d2d2f58acae96721cdd1cef79a0799b4f5c"
+    },
+    {
+      "path": "kernels/fixtures/compute-proof/art-818-zcash-reg-classifier.receipt.json",
+      "sha256": "393b5dd3b45a75717cd1e128671a41036c6aaebe294361b3f226f9686f7a1d6d"
+    },
+    {
+      "path": "kernels/fixtures/compute-proof/art-819-ucp-request-constraints.receipt.json",
+      "sha256": "ce96c6a62678ef547317e770b78b624af2b1864c3c1c5c5a3397b2810f61f45d"
     },
     {
       "path": "kernels/fixtures/compute-proof/art-82-securities-settlement-message-linter.receipt.json",
       "sha256": "141ab736b9a112f0fb36c66d40b1ef007defac3730e57af01f996286f44d576b"
     },
     {
+      "path": "kernels/fixtures/compute-proof/art-820-negotiate-ucp-capabilities.receipt.json",
+      "sha256": "8d9ca06b9a42caf69178881aaeac90ab11a6c4effa1481510bc2381875c91e5b"
+    },
+    {
+      "path": "kernels/fixtures/compute-proof/art-826-authenticator-assurance-level.receipt.json",
+      "sha256": "0990b14f59300be2995e2a22012ebf999d698679d98c282865befea94380362a"
+    },
+    {
       "path": "kernels/fixtures/compute-proof/art-83-buy-in-exposure-modeler.receipt.json",
       "sha256": "84ce35291115b9c292daca8e925d2d46bced83d7d41d1f70289c9bd1cfc563c9"
+    },
+    {
+      "path": "kernels/fixtures/compute-proof/art-831-receipt-export-envelopes.receipt.json",
+      "sha256": "b4986436f504f6737a8c73aba448221efc6189eeb0bf2fb31c1ab28de14edabd"
     },
     {
       "path": "kernels/fixtures/compute-proof/art-84-settlement-efficiency-kpi.receipt.json",
@@ -10315,6 +13031,14 @@
       "sha256": "6f42a08fcb9e99d55c919af23e8ca8ddda98e8a33a1060907df032099bef2201"
     },
     {
+      "path": "kernels/fixtures/vendor/openlineage-1.55.0/LICENSE",
+      "sha256": "c71d239df91726fc519c6eb72d318ec65820627232b2f796219e87dcf35d0ab4"
+    },
+    {
+      "path": "kernels/fixtures/vendor/openlineage-1.55.0/OpenLineage.json",
+      "sha256": "69f68bee00b9beac88a87059c0102410e7bb05f3f43c46d02a0409831eceb0d2"
+    },
+    {
       "path": "kernels/fixtures/zg1_gen_model.py",
       "sha256": "ad3913618db7f89643b5b907eff5c8b82565d3dda280fe76a9e914cb57409d3a"
     },
@@ -10324,11 +13048,11 @@
     },
     {
       "path": "kernels/gen-kernel-identity.mjs",
-      "sha256": "bbf40cc3845979c434b4aff495acb1c241a7ab13c71f3c477332619e811cb38e"
+      "sha256": "24da5193f71009214f84e269a16e1d2c0da9dca797148ac9e879b06ef26e3e27"
     },
     {
       "path": "kernels/gen-kernel-identity.test.mjs",
-      "sha256": "2e2f7bff156cf16077383e8f60927bcc049a1621b7a2455222623cbb5471fc98"
+      "sha256": "6d76f8b35cd4c6228e9fc596e7ad3c6c7ee18514f2a43af24d45f1070ba7afbb"
     },
     {
       "path": "kernels/globals.d.ts",
@@ -10352,7 +13076,7 @@
     },
     {
       "path": "kernels/index.mjs",
-      "sha256": "480394d54bc298aee4cef3226f1cb8f3e61ed723b4f18b7416aa732b828129c4"
+      "sha256": "7ec09dbe36ada91bf11cbd3d06eaf5288caaf4d9bf2ef2e1308b4a0f42e2b09b"
     },
     {
       "path": "kernels/inline-hash-equality.test.mjs",
@@ -10377,6 +13101,10 @@
     {
       "path": "kernels/kernel-identity.test.mjs",
       "sha256": "046eec5e628282d3591584a543626ec3abe6a4e6e90f86297bdc560531e3a869"
+    },
+    {
+      "path": "kernels/lint-caller-key-lookup.mjs",
+      "sha256": "268d8f1453a2c7a1fdd05427f3176ed681da5e0ba866d88365ea46a1d9adf3f8"
     },
     {
       "path": "kernels/lint-cgcanon-twin.mjs",
@@ -10407,12 +13135,20 @@
       "sha256": "ad5e65c90d06ca772a56e65a332990b9fdec2d8966a2eec552aece2dadf7d3a1"
     },
     {
+      "path": "kernels/ml-02-credit-default-risk-scorer.mutation.json",
+      "sha256": "18ae472010d53e776835dda57edd6f71c6307541ab6a6802ab45fe0d0c6ba472"
+    },
+    {
       "path": "kernels/ml-03-timeseries-anomaly-detector.kernel.mjs",
       "sha256": "ae20b291caf5eac025d4e7103782427565fe7cf0c99f4045122257c87db0d9c6"
     },
     {
       "path": "kernels/mms-03-app-fraud-graph.kernel.mjs",
       "sha256": "6514f17393677b3e9ae953a3eb856118a0e8ffd5a2736eab9e7aa02a94292a81"
+    },
+    {
+      "path": "kernels/mms-03-app-fraud-graph.mutation.json",
+      "sha256": "e2046ddeb865846e0cebc5d16d35d16019bc1b1444af19868e567f3f2aaf98ab"
     },
     {
       "path": "kernels/mutation-tier-split.mjs",
@@ -10424,7 +13160,7 @@
     },
     {
       "path": "kernels/mutation-tiers.config.json",
-      "sha256": "65fc068a7f058ab777f0440a9a18def7c52095b0d43b53a9dcf61b8fefbdbe50"
+      "sha256": "f543a2844c47859328422bfc53b3a588bd28d62e698b7a70c6f662ce5b5e8b2d"
     },
     {
       "path": "kernels/parity-art-01.test.mjs",
@@ -10433,6 +13169,10 @@
     {
       "path": "kernels/pnr-01-dora-ict-cascade-simulator.kernel.mjs",
       "sha256": "9d917a01d1bdbc594839dfc77028fc2bbd81a07914a295e215976b7fa3141cb6"
+    },
+    {
+      "path": "kernels/pnr-01-dora-ict-cascade-simulator.mutation.json",
+      "sha256": "f13064405f16c05d4362b7e7cacd59b39d375ca92781a57371f3477c61c6624d"
     },
     {
       "path": "kernels/policy-params-hash.test.mjs",
@@ -10451,8 +13191,16 @@
       "sha256": "85150b0c10d583588c0584d76ea17a3378c4a1af666c1c700db412574c42587b"
     },
     {
+      "path": "kernels/qfa-01-options-greeks.mutation.json",
+      "sha256": "0ca985637715cb2ef2e46a2dc1eac6c74cf25777761f555d1e2b598fb9ae3618"
+    },
+    {
       "path": "kernels/qfa-02-portfolio-var-engine.kernel.mjs",
       "sha256": "67c5c2976b7975d288b117c00cca935f88d372df75fd8bfb91665ace700deed9"
+    },
+    {
+      "path": "kernels/qfa-02-portfolio-var-engine.mutation.json",
+      "sha256": "71857a875bd1934c4e533eab669d25e32f498620bd9ffedf77b82fc8012da055"
     },
     {
       "path": "kernels/qfa-03-stress-test-engine.kernel.mjs",
@@ -10463,6 +13211,10 @@
       "sha256": "610e4753f0cc5efc58fe433b1ebc1277facbc7952b89439515a00493070bb3e0"
     },
     {
+      "path": "kernels/qfa-04-xva-cva-calculator.mutation.json",
+      "sha256": "9babe555a505478ce62e9218a8a21562b0178967cd579e73f6fea951c0aa376c"
+    },
+    {
       "path": "kernels/quantization-parity.test.mjs",
       "sha256": "a66b50f65831584ac8436e540b047b23c30fee666fbb98e085a0446cd3042250"
     },
@@ -10471,8 +13223,16 @@
       "sha256": "270c13fb871367dfb26354afef861b44f31e9ab426a797814c7cd667b1f4a584"
     },
     {
+      "path": "kernels/rca-01-frtb-ima-pre-validator.mutation.json",
+      "sha256": "abd94b32626631ddcf4052d3c3f238f4d96d90a3cfe6ebae13dc94422940674a"
+    },
+    {
       "path": "kernels/rca-02-mica-reserve-stress.kernel.mjs",
       "sha256": "05e290e886586a4be8d741f9d6d1bea7e8a45270d4adb37775997bbea621430f"
+    },
+    {
+      "path": "kernels/rca-02-mica-reserve-stress.mutation.json",
+      "sha256": "6c0aac8bb90df3e12f09c1a5cc2587aab22d50f36d55739b5df1c61e26589ee4"
     },
     {
       "path": "kernels/rca-03-iso20022-address-migration-verifier.kernel.mjs",
@@ -10480,7 +13240,7 @@
     },
     {
       "path": "kernels/registry-lineage-records.json",
-      "sha256": "8e70353fa4117d84512404d346d0077ad7e91b1fac8958807d396784227d3a9b"
+      "sha256": "b884b98bdaded59e67a1f8822dbc9a83c145a4d85a88053a69a1aebe64055e21"
     },
     {
       "path": "kernels/seed-replay.test.mjs",
@@ -10491,8 +13251,16 @@
       "sha256": "fb69a706dc5cd8e24698505d9ae745075b414f231d6515dfc39c9f8b2ca2b907"
     },
     {
+      "path": "kernels/sim-01-lcr-nsfr-liquidity-stress-test.mutation.json",
+      "sha256": "5785e2d937c17305e695ae2f1ee8a38e05241b75386dea5412acc0285c8e0086"
+    },
+    {
       "path": "kernels/sim-03-basel-rwa-scenario-modeler.kernel.mjs",
       "sha256": "14b190b3b3c72743aa24ef2ee999acf4ee34f237f10a7eb26f8d2686e295c5fb"
+    },
+    {
+      "path": "kernels/sim-03-basel-rwa-scenario-modeler.mutation.json",
+      "sha256": "8f3c52263b91de9430b7a14d406635fea896be3f6921b127b747e342b91227d5"
     },
     {
       "path": "kernels/sim-07-open-banking-consent-flow-stress.kernel.mjs",
@@ -10556,7 +13324,7 @@
     },
     {
       "path": "SPEC.md",
-      "sha256": "27ceec007c8035426d8ad4b2ade603d763c5b223d5a2e86369e7c27af06fca2b"
+      "sha256": "565f2dd45a55e0ff0f8dafde8c1080f9e1484b32a5aaa96f4d7739a236b9258a"
     }
   ]
 }

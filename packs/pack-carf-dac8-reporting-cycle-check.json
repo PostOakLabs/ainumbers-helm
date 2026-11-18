@@ -1,0 +1,49 @@
+{
+  "workflow_id": "pack-carf-dac8-reporting-cycle-check",
+  "name": "CARF / DAC8 Reporting Cycle Check",
+  "outcome": "Check a CARF/DAC8 reporting cycle in two stages, plus a session receipt. First, classify crypto-asset user records and their transactions against a policy set the caller declares rather than one the node asserts: reportable residence jurisdictions, in-scope transaction classes, due-diligence rule codes and pinned schema version, with self-certification as the gating step and undetermined verdicts naming the missing input and the deciding role (ART-504). Then dispose the authority's returned CARF/DAC8 status message for that filed population into a break list, counting only dispositions signed by a named signer and carrying prior-cycle dispositions forward with signer and cycle attached; the node refuses to invent a break list when the jurisdiction's return channel is not declared (ART-505). Finally, a session receipt aggregating the run's execution hashes (CRY-05). The classification output is the filing population that the disposition stage answers; disposition without a classified filing has nothing to disposition, and classification alone cannot say whether the filing came back clean. The nodes state no view on how any jurisdiction has implemented CARF or DAC8, compute no tax liability, submit and transmit nothing, and are not legal or tax advice.",
+  "spec_version": "ocg-control-plane@1",
+  "manifest": {
+    "manifest_version": "1",
+    "workflow_id": "pack-carf-dac8-reporting-cycle-check",
+    "trigger": {
+      "type": "manual"
+    },
+    "nodes": [
+      {
+        "node_id": "n1",
+        "kernel_id": "art-504-classify-carf-reportable",
+        "kernel_digest": "sha256:7092917c1c069bc0681a899f7807db3b1927a96accc5ac068fee5faa0d0f19dc"
+      },
+      {
+        "node_id": "n2",
+        "kernel_id": "art-505-dispose-carf-status-message",
+        "kernel_digest": "sha256:035ab5ed297070b1f9a69babee5ab27760f0ac1404e3cc2f4383a6816ab39729"
+      },
+      {
+        "node_id": "n3",
+        "kernel_id": "cry-05-agent-action-audit-trail-aggregator",
+        "kernel_digest": "sha256:5f7f6ab0bb2e2b736805ecde518ca59ba9a83ad38b17545a8c7c133cffa1481f"
+      }
+    ],
+    "connectors": [],
+    "gates": [],
+    "actions": []
+  },
+  "workflow_manifest_digest": "sha256:2a5f7202a5290f1605c4d18803daef4cbac990067ee1af338b3061f8cff42756",
+  "declared_inputs": [],
+  "steps_meta": [
+    {
+      "node_id": "n1",
+      "data_classification": "compute"
+    },
+    {
+      "node_id": "n2",
+      "data_classification": "compute"
+    },
+    {
+      "node_id": "n3",
+      "data_classification": "compute"
+    }
+  ]
+}

@@ -1,0 +1,49 @@
+{
+  "workflow_id": "pack-supplier-invoice-three-way-match-check",
+  "name": "Supplier Invoice Three-Way Match Check",
+  "outcome": "Decide whether a supplier invoice is safe to pay in two independent stages: match the invoice against its purchase order and goods receipt line by line, with quantity, price-tolerance, and totals checks plus duplicate-invoice suspicion screening (ART-701), then recompute the invoice's line VAT, tax subtotals, and grand total under the declared rounding convention and compare against the document-asserted amounts (ART-294), closing with a session receipt aggregating the run's execution hashes (CRY-05). Arithmetic checks only; not a fraud determination and not tax advice.",
+  "spec_version": "ocg-control-plane@1",
+  "manifest": {
+    "manifest_version": "1",
+    "workflow_id": "pack-supplier-invoice-three-way-match-check",
+    "trigger": {
+      "type": "manual"
+    },
+    "nodes": [
+      {
+        "node_id": "n1",
+        "kernel_id": "art-701-three-way-invoice-match",
+        "kernel_digest": "sha256:750cab31c114f06d0cb64d91acc3b3caca115e9adf10c69953ebfa3d1cac7a59"
+      },
+      {
+        "node_id": "n2",
+        "kernel_id": "art-294-einvoice-vat-calc-verifier",
+        "kernel_digest": "sha256:986d37866299487054398f63d3e4ea13b3ae3c3ccd2e7c315e21d8269f9696e2"
+      },
+      {
+        "node_id": "n3",
+        "kernel_id": "cry-05-agent-action-audit-trail-aggregator",
+        "kernel_digest": "sha256:5f7f6ab0bb2e2b736805ecde518ca59ba9a83ad38b17545a8c7c133cffa1481f"
+      }
+    ],
+    "connectors": [],
+    "gates": [],
+    "actions": []
+  },
+  "workflow_manifest_digest": "sha256:7e8a1daa648bf2cc494d8a6377b10729e23f8ccc535e593d5db72fa480757538",
+  "declared_inputs": [],
+  "steps_meta": [
+    {
+      "node_id": "n1",
+      "data_classification": "compute"
+    },
+    {
+      "node_id": "n2",
+      "data_classification": "compute"
+    },
+    {
+      "node_id": "n3",
+      "data_classification": "compute"
+    }
+  ]
+}

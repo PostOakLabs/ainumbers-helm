@@ -1,7 +1,7 @@
 {
   "workflow_id": "pack-canton-repo-mobility",
   "name": "Canton Repo Collateral Mobility Chain",
-  "outcome": "Compute repo haircut with Canton 24/7 valuation, verify collateral and cash-leg finality.",
+  "outcome": "Compute repo haircut with Canton 24/7 valuation, verify collateral and cash-leg finality. Per DTCC's October 28, 2026 launch announcement, the DTCC Tokenization Service is live, minting tokenized entitlements to DTC-custodied securities on the Canton Network and DTCC's private Besu network; as of November 2026 its cash leg settles by wire or ACH over fiat rails while the tokenized asset leg moves on chain.",
   "spec_version": "ocg-control-plane@1",
   "manifest": {
     "manifest_version": "1",

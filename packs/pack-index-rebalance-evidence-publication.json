@@ -1,0 +1,67 @@
+{
+  "workflow_id": "pack-index-rebalance-evidence-publication",
+  "name": "Index Rebalance Evidence Publication Check",
+  "outcome": "Prove an index rebalance in five independent runs plus a session receipt: record a caller-declared constituent set as of a stated date (ART-557), compute a weight per constituent under a stated methodology from caller-supplied input rows (ART-645), compile one rebalance event into a pack diffing current against prior constituent and weight rows and citing the step 1 and step 2 receipts (ART-646), publish the pack as one sequence-numbered head-commit event for the index stream (ART-658), closing with a session receipt aggregating the run execution hashes (CRY-05). Every constituent row, input row, methodology, and verification claim is caller-supplied and asserted, never fetched; each run is an independent recompute from its own declared inputs. This chain attests declared inputs in sequence, it does not verify them against market data, and it is not a live index feed.",
+  "spec_version": "ocg-control-plane@1",
+  "manifest": {
+    "manifest_version": "1",
+    "workflow_id": "pack-index-rebalance-evidence-publication",
+    "trigger": {
+      "type": "manual"
+    },
+    "nodes": [
+      {
+        "node_id": "n1",
+        "kernel_id": "art-557-record-index-constituents",
+        "kernel_digest": "sha256:9fa0ed744db004c384a593d82dbf01220683bac4c5daef6601790bfb5ffbd175"
+      },
+      {
+        "node_id": "n2",
+        "kernel_id": "art-645-compute-index-weights",
+        "kernel_digest": "sha256:89e1c42dc3d59ad3566052948cdbe988799613418a705f2fb499bf4c98e981cb"
+      },
+      {
+        "node_id": "n3",
+        "kernel_id": "art-646-compile-rebalance-evidence-pack",
+        "kernel_digest": "sha256:06a6f6215cff260bdeadad70817cacf72195aebec6e2d5ac436002c095b70fde"
+      },
+      {
+        "node_id": "n4",
+        "kernel_id": "art-658-publish-index-head",
+        "kernel_digest": "sha256:193c856ed0239a7110d9d91b252f23f001a5cf0e2297162478ef4dcfe48b1b2c"
+      },
+      {
+        "node_id": "n5",
+        "kernel_id": "cry-05-agent-action-audit-trail-aggregator",
+        "kernel_digest": "sha256:5f7f6ab0bb2e2b736805ecde518ca59ba9a83ad38b17545a8c7c133cffa1481f"
+      }
+    ],
+    "connectors": [],
+    "gates": [],
+    "actions": []
+  },
+  "workflow_manifest_digest": "sha256:bdf36df1fccedf4b9cb480f1c4d8434170c0fb118de5839804d8e27f65f39534",
+  "declared_inputs": [],
+  "steps_meta": [
+    {
+      "node_id": "n1",
+      "data_classification": "compute"
+    },
+    {
+      "node_id": "n2",
+      "data_classification": "compute"
+    },
+    {
+      "node_id": "n3",
+      "data_classification": "compute"
+    },
+    {
+      "node_id": "n4",
+      "data_classification": "compute"
+    },
+    {
+      "node_id": "n5",
+      "data_classification": "compute"
+    }
+  ]
+}

@@ -1,0 +1,40 @@
+{
+  "workflow_id": "pack-overdraft-nsf-fee-recompute-check",
+  "name": "Overdraft / NSF Fee Recompute Check",
+  "outcome": "Recompute overdraft and NSF fee events in two stages: an independent replay of the posted ledger under the caller's declared posting-order policy and fee schedule, diffed by post date and fee type against caller-supplied core-charged fees with a MATCHES, DIVERGES, or INDETERMINATE verdict (ART-662), then a session receipt aggregating the run's execution hashes (CRY-05). Posting order and every fee-schedule term are caller-declared inputs; a divergence is an arithmetic finding, never a determination that a fee was charged incorrectly. Not legal advice.",
+  "spec_version": "ocg-control-plane@1",
+  "manifest": {
+    "manifest_version": "1",
+    "workflow_id": "pack-overdraft-nsf-fee-recompute-check",
+    "trigger": {
+      "type": "manual"
+    },
+    "nodes": [
+      {
+        "node_id": "n1",
+        "kernel_id": "art-662-odnsf-fee-recompute",
+        "kernel_digest": "sha256:08217afde2dfb95ca1d609a0f728de20f5c0786e6784d47b79847984109622a3"
+      },
+      {
+        "node_id": "n2",
+        "kernel_id": "cry-05-agent-action-audit-trail-aggregator",
+        "kernel_digest": "sha256:5f7f6ab0bb2e2b736805ecde518ca59ba9a83ad38b17545a8c7c133cffa1481f"
+      }
+    ],
+    "connectors": [],
+    "gates": [],
+    "actions": []
+  },
+  "workflow_manifest_digest": "sha256:28f6010cd1c8f96fea90fd4ca90b9f2b8778f4cd8da816105c10ca74e132c9c2",
+  "declared_inputs": [],
+  "steps_meta": [
+    {
+      "node_id": "n1",
+      "data_classification": "compute"
+    },
+    {
+      "node_id": "n2",
+      "data_classification": "compute"
+    }
+  ]
+}

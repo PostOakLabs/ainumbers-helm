@@ -1,0 +1,49 @@
+{
+  "workflow_id": "pack-aml-typology-vop-mismatch-hunt",
+  "name": "AML Typology VoP Mismatch Hunt",
+  "outcome": "Score a synthetic transaction graph against AML typologies, then run a separate SEPA IBAN-name match batch over payee records the caller selects from the flagged accounts, and close with a session receipt. Each run computes from its own declared inputs, and each run hash is cited in the session receipt.",
+  "spec_version": "ocg-control-plane@1",
+  "manifest": {
+    "manifest_version": "1",
+    "workflow_id": "pack-aml-typology-vop-mismatch-hunt",
+    "trigger": {
+      "type": "manual"
+    },
+    "nodes": [
+      {
+        "node_id": "n1",
+        "kernel_id": "art-10-amla-transaction-typology-risk-scorer",
+        "kernel_digest": "sha256:c02483af798b9da4593d70b071619e12487bbd02e21b016eb9d46ced84c5ab90"
+      },
+      {
+        "node_id": "n2",
+        "kernel_id": "art-11-vop-batch-match-rate-analyser",
+        "kernel_digest": "sha256:dc6cecdac12b5053afc065404fa713ef895d66b7721806ce245957a45a7011c6"
+      },
+      {
+        "node_id": "n3",
+        "kernel_id": "cry-05-agent-action-audit-trail-aggregator",
+        "kernel_digest": "sha256:5f7f6ab0bb2e2b736805ecde518ca59ba9a83ad38b17545a8c7c133cffa1481f"
+      }
+    ],
+    "connectors": [],
+    "gates": [],
+    "actions": []
+  },
+  "workflow_manifest_digest": "sha256:dfe68656ba63c713f79a553baa0795b5bc2019e0e13280fbce105d963f35f6b1",
+  "declared_inputs": [],
+  "steps_meta": [
+    {
+      "node_id": "n1",
+      "data_classification": "compute"
+    },
+    {
+      "node_id": "n2",
+      "data_classification": "compute"
+    },
+    {
+      "node_id": "n3",
+      "data_classification": "compute"
+    }
+  ]
+}

@@ -1,0 +1,67 @@
+{
+  "workflow_id": "pack-month-end-close-substantiation-check",
+  "name": "Month-End Close Substantiation Check",
+  "outcome": "Check month-end close substantiation in four independent stages from caller-supplied datasets, plus a session receipt. First, reconcile a caller-declared expected-source inventory against observed arrivals, marking each source arrived, missing, late or stale (ART-524). Then recompute subledger-to-GL totals from a caller-supplied posted ledger and a caller-declared chart-of-accounts mapping, diffed against reported trial-balance figures (ART-665). Then match intercompany receivable and payable pairs from caller-declared entity pairs, reporting matched pairs, mismatches with differences, elimination total and unmatched residual (ART-684). Then verify accrual-to-coding-entry linkage from caller-declared entries, reporting unlinked accruals, dangling references and duplicate lineage keys (ART-692). Finally, a session receipt aggregating the run's execution hashes (CRY-05). Each stage uses its own caller-supplied dataset; no stage's output is an input to another stage, and the order is interpretive: a feed that never arrived can make a tie-out pass on incomplete data, which is why freshness precedes the tie-out. Findings are arithmetic findings, never audit opinions or close approvals. Not legal advice.",
+  "spec_version": "ocg-control-plane@1",
+  "manifest": {
+    "manifest_version": "1",
+    "workflow_id": "pack-month-end-close-substantiation-check",
+    "trigger": {
+      "type": "manual"
+    },
+    "nodes": [
+      {
+        "node_id": "n1",
+        "kernel_id": "art-524-source-arrival-freshness-register",
+        "kernel_digest": "sha256:27d4e48514eb2b1eed2231094e43e116be6b1457bbd2be49c4c5eca810550c64"
+      },
+      {
+        "node_id": "n2",
+        "kernel_id": "art-665-gl-tieout-recompute",
+        "kernel_digest": "sha256:a584ec949403437257fff542b1a398296b05bd693748e96a1382329d3dff139c"
+      },
+      {
+        "node_id": "n3",
+        "kernel_id": "art-684-intercompany-elimination-netting",
+        "kernel_digest": "sha256:095706cb39c4376c2a3782381693f0cb72986cfd7fabe8cc894cef4d385aece3"
+      },
+      {
+        "node_id": "n4",
+        "kernel_id": "art-692-close-posting-lineage",
+        "kernel_digest": "sha256:2fbdf2a15df31817b5e737ad6147b32c418ea3886cee9b44a3262930ff7eae83"
+      },
+      {
+        "node_id": "n5",
+        "kernel_id": "cry-05-agent-action-audit-trail-aggregator",
+        "kernel_digest": "sha256:5f7f6ab0bb2e2b736805ecde518ca59ba9a83ad38b17545a8c7c133cffa1481f"
+      }
+    ],
+    "connectors": [],
+    "gates": [],
+    "actions": []
+  },
+  "workflow_manifest_digest": "sha256:9aeb1e7e2f2728bc49ff68e41317298b093494f35eb4241214e3f3ecb163378b",
+  "declared_inputs": [],
+  "steps_meta": [
+    {
+      "node_id": "n1",
+      "data_classification": "compute"
+    },
+    {
+      "node_id": "n2",
+      "data_classification": "compute"
+    },
+    {
+      "node_id": "n3",
+      "data_classification": "compute"
+    },
+    {
+      "node_id": "n4",
+      "data_classification": "compute"
+    },
+    {
+      "node_id": "n5",
+      "data_classification": "compute"
+    }
+  ]
+}

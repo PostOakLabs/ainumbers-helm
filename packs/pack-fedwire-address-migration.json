@@ -13,7 +13,7 @@
       {
         "node_id": "n1",
         "kernel_id": "art-349-fedwire-structured-address-linter",
-        "kernel_digest": "sha256:5d00ddaa78f298a5fa938bf6f520102ef38a75b1de34b7fdb631905ef13cadc8"
+        "kernel_digest": "sha256:809f84acec184e0f58a1ba119c5745f23171d8f0138189902c8da6e5d93452ea"
       },
       {
         "node_id": "n2",
@@ -31,7 +31,7 @@
     "gates": [],
     "actions": []
   },
-  "workflow_manifest_digest": "sha256:ad68582e582f7a47bf8e4e6e77234926f2e022d6048228b57036c2de357ab294",
+  "workflow_manifest_digest": "sha256:643b51f1062c07a7dc044bdf341d376f7a3513465900eab853c8b83017c96c0c",
   "declared_inputs": [],
   "steps_meta": [
     {

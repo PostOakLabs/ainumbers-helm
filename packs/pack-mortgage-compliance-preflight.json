@@ -23,7 +23,7 @@
       {
         "node_id": "n3",
         "kernel_id": "art-218-qm-points-and-fees",
-        "kernel_digest": "sha256:451c7b3b5ae225db716a4b46040eb80af02bf7aa2a2ac25a35f3da1e295700ce"
+        "kernel_digest": "sha256:bf3100793d1d3480208df28e8a6e20238cb59334219cb7f49cfaf7d75995b726"
       },
       {
         "node_id": "n4",
@@ -35,7 +35,7 @@
     "gates": [],
     "actions": []
   },
-  "workflow_manifest_digest": "sha256:f7d3ceac484c088080ac03baebf48953b10bc3ccc162f98ba0779165a3e9d893",
+  "workflow_manifest_digest": "sha256:5ef0a150c9be54f83e393d57a934184d6f9100aea594b9c5ce43c76936a94e31",
   "declared_inputs": [],
   "steps_meta": [
     {

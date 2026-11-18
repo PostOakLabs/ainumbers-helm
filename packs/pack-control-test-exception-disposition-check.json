@@ -1,0 +1,58 @@
+{
+  "workflow_id": "pack-control-test-exception-disposition-check",
+  "name": "Control Test Exception Disposition Check",
+  "outcome": "Check SOX 404 / ICFR control-test exceptions in three independent runs plus a session receipt: plan an attribute sample from caller-declared policy inputs and a caller-declared population hash (ART-458), reconcile a caller-declared sample and per-item test results into a test conclusion with an exception list (ART-461), then assemble a signed workpaper bundle that records a disposition for each exception, grouped by control (ART-465), closing with a session receipt aggregating the run execution hashes (CRY-05). Each run is an independent recompute from its own declared inputs. The bundle records that a disposition was declared. It does not judge whether a disposition was correct. Population hash is carried between runs as a declared field. It is not cross-verified by any kernel in this chain. This chain is a workpaper completeness check. It is not a severity verdict and not an audit opinion.",
+  "spec_version": "ocg-control-plane@1",
+  "manifest": {
+    "manifest_version": "1",
+    "workflow_id": "pack-control-test-exception-disposition-check",
+    "trigger": {
+      "type": "manual"
+    },
+    "nodes": [
+      {
+        "node_id": "n1",
+        "kernel_id": "art-458-attribute-sampling-plan",
+        "kernel_digest": "sha256:5bcd64e2925ab483c805160229d7a37241e311140192cd080b09be6d358fec1b"
+      },
+      {
+        "node_id": "n2",
+        "kernel_id": "art-461-control-test-evidence-composer",
+        "kernel_digest": "sha256:ab7d9c5cf26d42cb2205025bca9f91353454bea181602f0dd0508aa55c4e94e4"
+      },
+      {
+        "node_id": "n3",
+        "kernel_id": "art-465-workpaper-bundle-composer",
+        "kernel_digest": "sha256:60abc4f1aab3d73fb82fee1c60cd97697dfbb0b5df878b0afb3b1e879cc682ce"
+      },
+      {
+        "node_id": "n4",
+        "kernel_id": "cry-05-agent-action-audit-trail-aggregator",
+        "kernel_digest": "sha256:5f7f6ab0bb2e2b736805ecde518ca59ba9a83ad38b17545a8c7c133cffa1481f"
+      }
+    ],
+    "connectors": [],
+    "gates": [],
+    "actions": []
+  },
+  "workflow_manifest_digest": "sha256:fcf20ce3b9d717c5b441ca5190ce7b8a1cced26acb15f09b4aad0047cb79e695",
+  "declared_inputs": [],
+  "steps_meta": [
+    {
+      "node_id": "n1",
+      "data_classification": "compute"
+    },
+    {
+      "node_id": "n2",
+      "data_classification": "compute"
+    },
+    {
+      "node_id": "n3",
+      "data_classification": "compute"
+    },
+    {
+      "node_id": "n4",
+      "data_classification": "compute"
+    }
+  ]
+}
