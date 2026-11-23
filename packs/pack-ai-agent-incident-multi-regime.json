@@ -1,0 +1,58 @@
+{
+  "workflow_id": "pack-ai-agent-incident-multi-regime",
+  "name": "AI Agent Incident Across Regimes",
+  "outcome": "A four-stage review of one caller-declared agent incident across three regulatory regimes. Step 1 applies the DORA major-incident numeric criteria to the declared impact figures and reports a major or non-major classification with the reporting clock a major finding starts (art-467). Step 2 then scores the declared disruption, affected-user and loss figures against the NIS2 significance criteria and reports a significance verdict (art-144). Step 3 then starts the clock obligations for the regimes the caller declares applicable from one determination timestamp (art-428). Step 4 then validates the declared agent audit-trail records and returns a conformance result (art-237). Each step computes from its own declared inputs; the order is a review sequence, not a statutory one, and the chain determines no reporting obligation.",
+  "spec_version": "ocg-control-plane@1",
+  "manifest": {
+    "manifest_version": "1",
+    "workflow_id": "pack-ai-agent-incident-multi-regime",
+    "trigger": {
+      "type": "manual"
+    },
+    "nodes": [
+      {
+        "node_id": "n1",
+        "kernel_id": "art-467-dora-incident-classifier",
+        "kernel_digest": "sha256:2f4fe65161e59aee68e9609258e251c1a571a671f2167a00a2d0dc1c514ac4a7"
+      },
+      {
+        "node_id": "n2",
+        "kernel_id": "art-144-nis2-incident-significance-scorer",
+        "kernel_digest": "sha256:3cedfccda08a549a70693a65306d63f4593eb7be89533f956fd171400b76bfd2"
+      },
+      {
+        "node_id": "n3",
+        "kernel_id": "art-428-cyber-incident-clock",
+        "kernel_digest": "sha256:6bbd5af5d5a8f8a001a6b5e62fde257a5a22943d218e038ce6c4ae78bb142c8e"
+      },
+      {
+        "node_id": "n4",
+        "kernel_id": "art-237-validate-agent-audit-trail",
+        "kernel_digest": "sha256:4b708c0479222377ddaec18a19c7c15708dac8a9bc59d4e6e6b53661301c9801"
+      }
+    ],
+    "connectors": [],
+    "gates": [],
+    "actions": []
+  },
+  "workflow_manifest_digest": "sha256:c41a2adfcd44286573346b2524c45d9bcd0ce51f682c90fadae9a61ae238c00e",
+  "declared_inputs": [],
+  "steps_meta": [
+    {
+      "node_id": "n1",
+      "data_classification": "compute"
+    },
+    {
+      "node_id": "n2",
+      "data_classification": "compute"
+    },
+    {
+      "node_id": "n3",
+      "data_classification": "compute"
+    },
+    {
+      "node_id": "n4",
+      "data_classification": "compute"
+    }
+  ]
+}
