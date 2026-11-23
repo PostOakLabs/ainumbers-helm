@@ -1,0 +1,40 @@
+{
+  "workflow_id": "pack-escrow-statement-check",
+  "name": "Escrow Statement Check",
+  "outcome": "Audit a mortgage servicer's escrow accounting statement from the borrower's side, line by line: recompute the aggregate-accounting trial running balance month by month from the stated opening balance, monthly escrow deposits, and disbursements; diff the servicer's stated end-of-month balances against the recomputation, flagging each discrepant line; check the stated cushion against the one-sixth cap; and classify the account as balanced, shortage, surplus, or deficiency (732), then a session receipt aggregating the run's execution hashes (CRY-05). This checks the borrower-side statement, distinct from the servicer-side servicing-audit chain. Numeric values only, never identifiers; a divergence is an arithmetic finding, never a legal determination. Not legal advice.",
+  "spec_version": "ocg-control-plane@1",
+  "manifest": {
+    "manifest_version": "1",
+    "workflow_id": "pack-escrow-statement-check",
+    "trigger": {
+      "type": "manual"
+    },
+    "nodes": [
+      {
+        "node_id": "n1",
+        "kernel_id": "732-borrower-escrow-auditor",
+        "kernel_digest": "sha256:b9e2ac19f3a7bba67b8bef47d7c1ef77a631ed51cb3d865f9859117e790164cd"
+      },
+      {
+        "node_id": "n2",
+        "kernel_id": "cry-05-agent-action-audit-trail-aggregator",
+        "kernel_digest": "sha256:5f7f6ab0bb2e2b736805ecde518ca59ba9a83ad38b17545a8c7c133cffa1481f"
+      }
+    ],
+    "connectors": [],
+    "gates": [],
+    "actions": []
+  },
+  "workflow_manifest_digest": "sha256:3a3e42dcd8a3eb7ec46dbf171134f5c5a31f2674150c83011a947b7876d06e52",
+  "declared_inputs": [],
+  "steps_meta": [
+    {
+      "node_id": "n1",
+      "data_classification": "compute"
+    },
+    {
+      "node_id": "n2",
+      "data_classification": "compute"
+    }
+  ]
+}

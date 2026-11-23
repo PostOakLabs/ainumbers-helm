@@ -1,0 +1,49 @@
+{
+  "workflow_id": "pack-cass15-safeguarding-audit-pack",
+  "name": "CASS 15 Safeguarding Audit Pack",
+  "outcome": "Three-step safeguarding audit pack for a UK payment or e-money firm under CASS 15. Step 1 classifies each declared funds stream's safeguarding method and records whether the asserted method is coherent on the supplied facts (art-500). Step 2 reconciles the safeguarding requirement against the resource components for the same as-of date, returning a covered, tolerance or shortfall verdict with the gap in minor units (art-499). Step 3 assembles the auditor's evidence pack over the classification and the reconciliation result, itemising each evidence element with its supporting figures (art-501). Each step computes from its own declared inputs; the order is analytical, not a statutory sequence.",
+  "spec_version": "ocg-control-plane@1",
+  "manifest": {
+    "manifest_version": "1",
+    "workflow_id": "pack-cass15-safeguarding-audit-pack",
+    "trigger": {
+      "type": "manual"
+    },
+    "nodes": [
+      {
+        "node_id": "n1",
+        "kernel_id": "art-500-classify-safeguarding-method",
+        "kernel_digest": "sha256:314afddd557143ad20b8ecc8db1f7ebf34c9ff4eded6024723b8cde4d9501938"
+      },
+      {
+        "node_id": "n2",
+        "kernel_id": "art-499-check-safeguarding-reconciliation",
+        "kernel_digest": "sha256:ee7c278f77ba168b6c221d6a703d01ad0390c884fd1551198e71f423d3fe4554"
+      },
+      {
+        "node_id": "n3",
+        "kernel_id": "art-501-build-safeguarding-audit-evidence",
+        "kernel_digest": "sha256:5156c7482d1a3d1e1bb5c0a83beeb2ebb542c9e5cd257c31c2007cd8fc4daab8"
+      }
+    ],
+    "connectors": [],
+    "gates": [],
+    "actions": []
+  },
+  "workflow_manifest_digest": "sha256:05c62a730c273dbb524daea29d4cf272c2c6c9400b883eadb2b93746eaa4197e",
+  "declared_inputs": [],
+  "steps_meta": [
+    {
+      "node_id": "n1",
+      "data_classification": "compute"
+    },
+    {
+      "node_id": "n2",
+      "data_classification": "compute"
+    },
+    {
+      "node_id": "n3",
+      "data_classification": "compute"
+    }
+  ]
+}

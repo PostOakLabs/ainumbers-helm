@@ -1,0 +1,116 @@
+{
+  "workflow_id": "pack-agent-payment-compliance-trail",
+  "name": "Agent Payment Compliance Trail",
+  "outcome": "A nine-stage agent payment workflow over caller-declared data. Step 1 validates the AP2 Intent, Cart and Payment mandate trio for signature-chain integrity, scope and limit consistency, expiry and over-spend (art-01). Step 2 then validates the on-behalf-of mandate the agent acts under, covering subject, scope, intent and validity window (art-151). Step 3 then cross-checks the declared KYA credential scope against the declared x402 payment payload (art-565). Step 4 then scores the declared transaction graph for laundering typologies (art-10). Step 5 then validates travel-rule field completeness across the declared transfer batch (art-104). Step 6 then binds the screening decision to the exact dataset version it was screened against (art-585). Step 7 then verifies the payment receipt against its mandate chain under the human-not-present guardrail (art-62). Step 8 then recomputes the Permit2 settlement digest for the declared payment (art-699). Step 9 aggregates the declared execution hashes of the session into one Merkle-root audit receipt (cry-05). Each step computes from its own declared inputs; the order is analytical, not a statutory sequence, and the workflow certifies nothing.",
+  "spec_version": "ocg-control-plane@1",
+  "manifest": {
+    "manifest_version": "1",
+    "workflow_id": "pack-agent-payment-compliance-trail",
+    "trigger": {
+      "type": "manual"
+    },
+    "nodes": [
+      {
+        "node_id": "n1",
+        "kernel_id": "art-01-ap2-mandate-chain-validator",
+        "kernel_digest": "sha256:623495f9378cb65cb88c889831f43c2c82c8844af29dfaa32e3a5d1e6cfa5337"
+      },
+      {
+        "node_id": "n2",
+        "kernel_id": "art-151-agent-obo-mandate-validator",
+        "kernel_digest": "sha256:3e6402dbb86314d81a2323ad9509ad6ea85359eeaed521b4442a944f53a4ad54"
+      },
+      {
+        "node_id": "n3",
+        "kernel_id": "art-565-kya-x402-scope-verifier",
+        "kernel_digest": "sha256:f6c593e542fe2fbd5e4226a231dff7ce88a280d8fa68cc757c9fe6602afe29f3"
+      },
+      {
+        "node_id": "n4",
+        "kernel_id": "art-10-amla-transaction-typology-risk-scorer",
+        "kernel_digest": "sha256:c02483af798b9da4593d70b071619e12487bbd02e21b016eb9d46ced84c5ab90"
+      },
+      {
+        "node_id": "n5",
+        "kernel_id": "art-104-tfr-travel-rule-batch-validator",
+        "kernel_digest": "sha256:5d9d7105b7d6a2e1265f3c02ee2c2b2bb573c7d0e5fc816dac04771392117b30"
+      },
+      {
+        "node_id": "n6",
+        "kernel_id": "art-585-sanctions-screening-evidence-pack",
+        "kernel_digest": "sha256:c686a99d6d05d28e3feba866c69df7eb43ba13b49c2ce7c8e260be818d13c8a6"
+      },
+      {
+        "node_id": "n7",
+        "kernel_id": "art-62-ap2-payment-receipt-verifier",
+        "kernel_digest": "sha256:ca4201c7c2cff9069746a1e76dc3f53f390845654f2049dfb8769857a7ae12b9"
+      },
+      {
+        "node_id": "n8",
+        "kernel_id": "art-699-x402-permit2-evidence-recomputer",
+        "kernel_digest": "sha256:0c36a136f75d75a9dbc83a6d6230e082a4d33eb3fb43c2c52de58b9dcc2b39f9"
+      },
+      {
+        "node_id": "n9",
+        "kernel_id": "cry-05-agent-action-audit-trail-aggregator",
+        "kernel_digest": "sha256:5f7f6ab0bb2e2b736805ecde518ca59ba9a83ad38b17545a8c7c133cffa1481f"
+      }
+    ],
+    "connectors": [],
+    "gates": [],
+    "actions": []
+  },
+  "workflow_manifest_digest": "sha256:74cc26a2c22952c20134bc5c7c8f5622e39e53d75d8976d16852b96991f79317",
+  "declared_inputs": [
+    {
+      "from": "art-02-agent-spend-policy-simulator",
+      "kind": "external"
+    },
+    {
+      "from": "art-12-acp-checkout-conformance-validator",
+      "kind": "external"
+    },
+    {
+      "from": "art-36-tempo-mpp-agent-mandate",
+      "kind": "external"
+    }
+  ],
+  "steps_meta": [
+    {
+      "node_id": "n1",
+      "data_classification": "compute"
+    },
+    {
+      "node_id": "n2",
+      "data_classification": "compute"
+    },
+    {
+      "node_id": "n3",
+      "data_classification": "compute"
+    },
+    {
+      "node_id": "n4",
+      "data_classification": "compute"
+    },
+    {
+      "node_id": "n5",
+      "data_classification": "compute"
+    },
+    {
+      "node_id": "n6",
+      "data_classification": "compute"
+    },
+    {
+      "node_id": "n7",
+      "data_classification": "compute"
+    },
+    {
+      "node_id": "n8",
+      "data_classification": "compute"
+    },
+    {
+      "node_id": "n9",
+      "data_classification": "compute"
+    }
+  ]
+}

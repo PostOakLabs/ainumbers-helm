@@ -1,0 +1,54 @@
+{
+  "workflow_id": "pack-claim-dispute-bundle-to-pld-disclosure-pack",
+  "name": "Claim Dispute Bundle to PLD Disclosure Pack",
+  "outcome": "Back office flow scoped to the dispute lifecycle. Two-step product-liability disclosure flow: build a two-sided replay-challenge dossier for a disputed execution claim, then build the disclosure and rebuttal pack from the receipts in that bundle. The pack traces the receipts in the step 1 bundle; the operator is responsible for putting only in-window receipts into the claim, because art-308 does not filter receipts by disputed_window. Step 1's insufficient_evidence and bundle_claim_strength travel with the pack next to step 2's trace_digest and gap_in_window, so a pack built after step 1 reported insufficient_evidence never reads as a complete dossier. Prepared for Directive (EU) 2024/2853, transposition 9 December 2026.",
+  "spec_version": "ocg-control-plane@1",
+  "manifest": {
+    "manifest_version": "1",
+    "workflow_id": "pack-claim-dispute-bundle-to-pld-disclosure-pack",
+    "trigger": {
+      "type": "manual"
+    },
+    "nodes": [
+      {
+        "node_id": "n1",
+        "kernel_id": "art-307-claim-dispute-bundle-builder",
+        "kernel_digest": "sha256:1daef6202ad1566e6f94d6f395e4e645e4d15288589e2864a84c2c2e33415211"
+      },
+      {
+        "node_id": "n2",
+        "kernel_id": "art-308-pld-disclosure-pack-builder",
+        "kernel_digest": "sha256:4d73f240d1e0e36ad7081116436c2a27d5b2c23d184cc4269306079ed753ccfb"
+      },
+      {
+        "node_id": "n3",
+        "kernel_id": "cry-05-agent-action-audit-trail-aggregator",
+        "kernel_digest": "sha256:5f7f6ab0bb2e2b736805ecde518ca59ba9a83ad38b17545a8c7c133cffa1481f"
+      }
+    ],
+    "connectors": [],
+    "gates": [],
+    "actions": []
+  },
+  "workflow_manifest_digest": "sha256:b1cf5dcadc06e476c43a833de2a790406a8ddf9c7babe9cddf6cd12ef4049558",
+  "declared_inputs": [
+    {
+      "from": "art-306-agent-insurability-evidence-scorer",
+      "kind": "external"
+    }
+  ],
+  "steps_meta": [
+    {
+      "node_id": "n1",
+      "data_classification": "compute"
+    },
+    {
+      "node_id": "n2",
+      "data_classification": "compute"
+    },
+    {
+      "node_id": "n3",
+      "data_classification": "compute"
+    }
+  ]
+}

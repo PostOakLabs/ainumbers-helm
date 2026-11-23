@@ -24,7 +24,7 @@
       {
         "node_id": "n3",
         "kernel_id": "art-64-ai-act-highrisk-fit-diagnostic",
-        "kernel_digest": "sha256:e7cbaf562ec7a4b991bdd70cfafb39fcd09bb43a73d085fd0ea270e45dd2c0cb"
+        "kernel_digest": "sha256:2a9a7dc41081e1500c8380adcc35bf1b59b38f29d746552bcd0fd7ba5ab8d616"
       },
       {
         "node_id": "n4",
@@ -63,7 +63,7 @@
     "gates": [],
     "actions": []
   },
-  "workflow_manifest_digest": "sha256:a74d9c313402ceb9488f41af830c45acc2aa2f2031ad4c8fcd414b70f0660178",
+  "workflow_manifest_digest": "sha256:2522e756f02574129d875e4f217eec664911621a8974212bcee7f8721bd50450",
   "declared_inputs": [
     {
       "from": "art-64-ai-act-highrisk-fit-diagnostic",

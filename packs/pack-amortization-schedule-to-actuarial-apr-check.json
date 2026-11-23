@@ -1,0 +1,49 @@
+{
+  "workflow_id": "pack-amortization-schedule-to-actuarial-apr-check",
+  "name": "Amortization Schedule to Actuarial APR Check",
+  "outcome": "Three-step chain. Step 1 rebuilds the amortization schedule from loan amount, note rate, and term, for level-payment, ARM, interest-only, balloon, and temporary-buydown structures, and for a payment derived from the note rate. Step 2 computes the actuarial annual percentage rate and finance charge from that schedule under 12 CFR 1026 Appendix J. Step 3 is the receipt step only. Step 1 matters for non-level schedules, where the payment stream is irregular and must be built before any rate is solved; for a level-payment loan, step 2 alone suffices, since its advances and payments are already a regular stream. This chain makes NO disclosed-APR comparison and NO section 1026.22(a) tolerance claim: step 2 emits no tolerance, and art-217-trid-apr-accuracy, which carries tolerance, is not in this chain. The finance charge equals total interest only when the schedule fully amortizes, with ending balance zero; for a balloon schedule the finance charge differs by the ending balance. The actuarial APR is a Regulation Z computation, not a GAAP ASC 470 effective interest rate, and fees and costs enter it only if they are in the payment stream. Art-332 has no fee input: its advances are one amount equal to the full loan amount, so the amount financed in step 2 is the full loan amount. Prepaid finance charges, including points and origination fees, are not modelled. The APR from this chain is therefore not the Regulation Z disclosed APR when such fees exist; for an ordinary loan it is close to the note rate. Compare this APR to a disclosed APR only for fee-free loans. Federal math only; not legal advice and not tax or accounting advice.",
+  "spec_version": "ocg-control-plane@1",
+  "manifest": {
+    "manifest_version": "1",
+    "workflow_id": "pack-amortization-schedule-to-actuarial-apr-check",
+    "trigger": {
+      "type": "manual"
+    },
+    "nodes": [
+      {
+        "node_id": "n1",
+        "kernel_id": "art-332-build-amortization-schedule",
+        "kernel_digest": "sha256:c43a019193d999e9f93930a4bf793f51192c11245151211f1c26f038629caef9"
+      },
+      {
+        "node_id": "n2",
+        "kernel_id": "art-215-reg-z-appendix-j-apr",
+        "kernel_digest": "sha256:11378014fd087d551a663ee640914801101ae04fd8a943a8d669314da98f2c88"
+      },
+      {
+        "node_id": "n3",
+        "kernel_id": "cry-05-agent-action-audit-trail-aggregator",
+        "kernel_digest": "sha256:5f7f6ab0bb2e2b736805ecde518ca59ba9a83ad38b17545a8c7c133cffa1481f"
+      }
+    ],
+    "connectors": [],
+    "gates": [],
+    "actions": []
+  },
+  "workflow_manifest_digest": "sha256:2c0b4e227eabb31f1bb6204e4f5de536dfb28139a9740974f462281c7ee7da3b",
+  "declared_inputs": [],
+  "steps_meta": [
+    {
+      "node_id": "n1",
+      "data_classification": "compute"
+    },
+    {
+      "node_id": "n2",
+      "data_classification": "compute"
+    },
+    {
+      "node_id": "n3",
+      "data_classification": "compute"
+    }
+  ]
+}

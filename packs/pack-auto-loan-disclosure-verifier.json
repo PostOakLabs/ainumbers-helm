@@ -1,0 +1,40 @@
+{
+  "workflow_id": "pack-auto-loan-disclosure-verifier",
+  "name": "Auto-Loan Disclosure Verifier",
+  "outcome": "Two-step chain. Step 1 rebuilds the auto-loan amortization schedule from amount financed, rate, and term. Step 2 checks the disclosed Amount Financed, Finance Charge, and Total of Payments against the recomputed totals under 12 CFR 1026.18. Tolerance follows 12 CFR 1026.18(d)(2): $5 when the amount financed is $1,000 or less, $10 when it is more than $1,000. APR is not checked in v1. Dealer participation is a self-declared assertion, not a detected finding. Federal TILA math only; not legal advice and not a discrimination finding.",
+  "spec_version": "ocg-control-plane@1",
+  "manifest": {
+    "manifest_version": "1",
+    "workflow_id": "pack-auto-loan-disclosure-verifier",
+    "trigger": {
+      "type": "manual"
+    },
+    "nodes": [
+      {
+        "node_id": "n1",
+        "kernel_id": "art-332-build-amortization-schedule",
+        "kernel_digest": "sha256:c43a019193d999e9f93930a4bf793f51192c11245151211f1c26f038629caef9"
+      },
+      {
+        "node_id": "n2",
+        "kernel_id": "art-404-check-retail-installment-disclosures",
+        "kernel_digest": "sha256:06ea130127d2c462fd7cf1f689399a8c38d577cfe49220ea12f30a71eacaf87e"
+      }
+    ],
+    "connectors": [],
+    "gates": [],
+    "actions": []
+  },
+  "workflow_manifest_digest": "sha256:d47055b1440951af3ce4495ad4bf54d9c8e12fe113b3656f3e360f0930747ae6",
+  "declared_inputs": [],
+  "steps_meta": [
+    {
+      "node_id": "n1",
+      "data_classification": "compute"
+    },
+    {
+      "node_id": "n2",
+      "data_classification": "compute"
+    }
+  ]
+}

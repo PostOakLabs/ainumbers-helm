@@ -13,7 +13,7 @@
       {
         "node_id": "n1",
         "kernel_id": "art-234-test-hoepa-high-cost",
-        "kernel_digest": "sha256:395efd18dd8233b45dc22b2414180fd195afa91e131b4ea32e131175efaedd9e"
+        "kernel_digest": "sha256:55ffa3354198aee2a6c610962a6463ee8c8b54ae0f605f4f5f67b3501780d1d4"
       },
       {
         "node_id": "n2",
@@ -25,7 +25,7 @@
     "gates": [],
     "actions": []
   },
-  "workflow_manifest_digest": "sha256:c8984acf45738a1e08b8a52e4027d3b3423dd9107d40707a1e1bdf64994c1a08",
+  "workflow_manifest_digest": "sha256:70d40da8c3f54c57818873830ec389fa50ec8751bad27fcf0d8aeb3028406604",
   "declared_inputs": [
     {
       "from": "art-220-reg-z-threshold-lookup",

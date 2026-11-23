@@ -1,0 +1,58 @@
+{
+  "workflow_id": "pack-nav-error-disclosure-evidence-pack",
+  "name": "NAV Error Disclosure Evidence Pack",
+  "outcome": "A fund administrator recomputes a NAV per share from declared holdings, accruals, liabilities and shares, tests whether the difference against the published NAV is material under a declared policy, and bundles the two receipts into a disclosure evidence pack shaped for CSSF Circular 24/856, citing each receipt by execution_hash. Every price, FX rate, accrual input, erroneous NAV and correction fact is caller-supplied and asserted, never fetched; each run is an independent recompute or citation from its own declared inputs. The pack cites receipts only, never recomputes a NAV and never re-derives a materiality verdict, and it makes no claim of CSSF 24/856 compliance and is not a regulatory filing. The half-cent and 1 percent figures in art-374 are industry conventions. They are neither codified rules nor circular thresholds. Special-report checklist, UCITS and UCI Part II only, CSSF Circular 24/856 point 138: a special report is required only where the error relates to a UCITS or a UCI Part II and total compensation (to the UCI plus all investors) exceeds EUR 50,000 or compensation to one single investor exceeds EUR 5,000; the special report reviews all the errors. Below both thresholds for a UCITS or UCI Part II, the separate report carries a sample-based review of the errors. Table 9 rows for SIF and SICAR funds: above one or both thresholds, the separate report carries a sample-based review of the errors and no special report is issued; below both thresholds, the separate report carries a sample-based review of the errors. Table 9 rows for closed-ended funds: a significant NAV calculation error in a closed-ended UCI, whether UCITS Part II or SIF and SICAR, carries no intervention under Table 9, with the footnote that the approved statutory auditor verifies, as part of its statutory audit, that the NAV accurately reflects the value of the UCI assets and liabilities calculated in line with the constitutive documents or the prospectus. Do not extend the UCITS and UCI Part II special-report trigger to SIF, SICAR or closed-ended funds. Notification window, CSSF Circular 24/856 point 158: notification to the CSSF is due 4 to 8 weeks after detection, for both compensation cases and no-compensation cases; the same window applies to both, with no different window for either case. Out of scope: fair-value opinions, independent valuations, determinations that a NAV error legally occurred, evidence that declared inputs were accurate, and tax or legal advice are all outside this chain.",
+  "spec_version": "ocg-control-plane@1",
+  "manifest": {
+    "manifest_version": "1",
+    "workflow_id": "pack-nav-error-disclosure-evidence-pack",
+    "trigger": {
+      "type": "manual"
+    },
+    "nodes": [
+      {
+        "node_id": "n1",
+        "kernel_id": "art-373-recompute-fund-nav",
+        "kernel_digest": "sha256:3814c169b6e2757ca9d93f31022a7c6234d75676d9a66c7d253f672a4a4ae8ac"
+      },
+      {
+        "node_id": "n2",
+        "kernel_id": "art-374-test-nav-error-materiality",
+        "kernel_digest": "sha256:ea70af686a6a7920e78cc9a8c561971099404d2b051fae1c6f6fcf613ab89e7a"
+      },
+      {
+        "node_id": "n3",
+        "kernel_id": "art-660-compile-nav-error-evidence-pack",
+        "kernel_digest": "sha256:1514ff4a117f5236fa49288fa88c886c63ec0ed4cd1e3b1815ee7c84abef3528"
+      },
+      {
+        "node_id": "n4",
+        "kernel_id": "cry-05-agent-action-audit-trail-aggregator",
+        "kernel_digest": "sha256:5f7f6ab0bb2e2b736805ecde518ca59ba9a83ad38b17545a8c7c133cffa1481f"
+      }
+    ],
+    "connectors": [],
+    "gates": [],
+    "actions": []
+  },
+  "workflow_manifest_digest": "sha256:620e073b495e42dbc067f8d58781a79890cb7b127c74ad1aea5092949855cf97",
+  "declared_inputs": [],
+  "steps_meta": [
+    {
+      "node_id": "n1",
+      "data_classification": "compute"
+    },
+    {
+      "node_id": "n2",
+      "data_classification": "compute"
+    },
+    {
+      "node_id": "n3",
+      "data_classification": "compute"
+    },
+    {
+      "node_id": "n4",
+      "data_classification": "compute"
+    }
+  ]
+}

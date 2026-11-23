@@ -279,6 +279,20 @@
       "upstream_ships_notice": false,
       "repos": ["helm"],
       "paths": { "helm": ["ui/vendored/pptxgen.bundle.js"] }
+    },
+    {
+      "id": "openlineage-schema",
+      "name": "OpenLineage RunEvent schema (OpenLineage.json)",
+      "version": "1.55.0",
+      "license": "Apache-2.0",
+      "upstream_url": "https://github.com/OpenLineage/OpenLineage",
+      "upstream_ships_notice": false,
+      "note": "Vendored unmodified (OpenLineage.json + LICENSE, no NOTICE file at the 1.55.0 release) for art-831-receipt-export-envelopes: the kernel proptest validates the exported lineage RunEvent against the pinned upstream schema. Directory-path entry; the coverage gate keys on the vendored fixture paths. In this repo the fixtures arrive mirrored at their hub/vendored/ocg/kernels path via the pinned OCG mirror (scripts/vendor.config.json), byte-identical to the site-repo original credited by the site repo's own registry entry of the same id.",
+      "repos": ["repo", "helm"],
+      "paths": {
+        "repo": ["chaingraph/kernels/fixtures/vendor/openlineage-1.55.0/"],
+        "helm": ["hub/vendored/ocg/kernels/fixtures/vendor/openlineage-1.55.0/"]
+      }
     }
   ],
   "pattern_only": [

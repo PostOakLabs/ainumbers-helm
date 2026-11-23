@@ -1,0 +1,58 @@
+{
+  "workflow_id": "pack-vendor-onboarding-ubo-screening-check",
+  "name": "Vendor Onboarding UBO Screening Check",
+  "outcome": "Screen a vendor's ultimate beneficial owners in four independent stages: first compute 25% UBO ownership from caller-supplied ownership structure under the FinCEN Customer Due Diligence rule (ART-268, bank KYB, not CTA/BOI beneficial ownership reporting and not the OFAC 50% rule); then screen caller-supplied persons against a caller-supplied private test list, never live sanctions data (ART-413, the screened list stays private); then assemble the screening evidence pack from caller-supplied run facts (ART-585); then a session receipt aggregating the run's execution hashes (CRY-05). All ownership, screening, and evidence facts are caller-supplied; findings are arithmetic findings, never compliance determinations. Federal only, not legal advice.",
+  "spec_version": "ocg-control-plane@1",
+  "manifest": {
+    "manifest_version": "1",
+    "workflow_id": "pack-vendor-onboarding-ubo-screening-check",
+    "trigger": {
+      "type": "manual"
+    },
+    "nodes": [
+      {
+        "node_id": "n1",
+        "kernel_id": "art-268-compute-cdd-ownership-25pct",
+        "kernel_digest": "sha256:642fc536fb114413087309fee7485f146927deeabb3ad8e9eac8e3bf98f5d36a"
+      },
+      {
+        "node_id": "n2",
+        "kernel_id": "art-413-screen-sanctions-private",
+        "kernel_digest": "sha256:2af360c0c70be73aaad6a5c1ac72f0718d6480b7b8d524a8d929b684532805e2"
+      },
+      {
+        "node_id": "n3",
+        "kernel_id": "art-585-sanctions-screening-evidence-pack",
+        "kernel_digest": "sha256:c686a99d6d05d28e3feba866c69df7eb43ba13b49c2ce7c8e260be818d13c8a6"
+      },
+      {
+        "node_id": "n4",
+        "kernel_id": "cry-05-agent-action-audit-trail-aggregator",
+        "kernel_digest": "sha256:5f7f6ab0bb2e2b736805ecde518ca59ba9a83ad38b17545a8c7c133cffa1481f"
+      }
+    ],
+    "connectors": [],
+    "gates": [],
+    "actions": []
+  },
+  "workflow_manifest_digest": "sha256:3ecb54a0cedda11da742eb506f4994dcb6fca7349e77f507504521eab779df38",
+  "declared_inputs": [],
+  "steps_meta": [
+    {
+      "node_id": "n1",
+      "data_classification": "compute"
+    },
+    {
+      "node_id": "n2",
+      "data_classification": "compute"
+    },
+    {
+      "node_id": "n3",
+      "data_classification": "compute"
+    },
+    {
+      "node_id": "n4",
+      "data_classification": "compute"
+    }
+  ]
+}

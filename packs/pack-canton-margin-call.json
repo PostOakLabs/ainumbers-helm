@@ -1,7 +1,7 @@
 {
   "workflow_id": "pack-canton-margin-call",
   "name": "Canton Margin Call & Collateral Mobilization Chain",
-  "outcome": "Margin computation (UMR/d499 for derivatives; GMRA/d349 for repo/SFT), collateral eligibility, and cash-leg finality.",
+  "outcome": "Margin computation (UMR/d499 for derivatives; GMRA/d349 for repo/SFT), collateral eligibility, and cash-leg finality. Tokenized collateral has been accepted in production: DTCC's July 15, 2026 live production trades included posting tokenized assets to satisfy CCP margin, and the DTCC Tokenization Service went live October 28, 2026; as of November 2026 its cash leg settles by wire or ACH over fiat rails.",
   "spec_version": "ocg-control-plane@1",
   "manifest": {
     "manifest_version": "1",

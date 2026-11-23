@@ -1,0 +1,49 @@
+{
+  "workflow_id": "pack-order-execution-quality-pack",
+  "name": "Order Execution Quality Pack",
+  "outcome": "A three-stage order execution quality workflow over caller-declared fill data. Step 1 scores every declared fill for price improvement in basis points against the NBBO at execution and reports the share of fills at or better, the average improvement, and the fill count (art-541). Step 2 then compiles a best-execution monitoring evidence pack over the declared per-venue figures, weighing improvement by venue and flagging any venue whose declared improvement prints negative for committee review (art-681). Step 3 composes the periodic publication rows, reporting the effective-versus-quoted spread ratio and the covered-order roll-up over the declared covered orders, shares and spread statistics (art-682). Each step computes from its own declared inputs; the order is analytical, not a statutory sequence.",
+  "spec_version": "ocg-control-plane@1",
+  "manifest": {
+    "manifest_version": "1",
+    "workflow_id": "pack-order-execution-quality-pack",
+    "trigger": {
+      "type": "manual"
+    },
+    "nodes": [
+      {
+        "node_id": "n1",
+        "kernel_id": "art-541-best-execution-recompute",
+        "kernel_digest": "sha256:3fe3f8f91aee95249b6c690837eac8476621b70688946d1417dda593e4c1915c"
+      },
+      {
+        "node_id": "n2",
+        "kernel_id": "art-681-best-execution-evidence-pack",
+        "kernel_digest": "sha256:fdd1917a5a6fa8051b0636a4e2a78af93da66b2cea56d8f699fd0cf8f63a0d20"
+      },
+      {
+        "node_id": "n3",
+        "kernel_id": "art-682-rule-605-publication-composer",
+        "kernel_digest": "sha256:102dc03590fc41678c0b5303fa14a37825e69015161b20e6636d79a4210520b4"
+      }
+    ],
+    "connectors": [],
+    "gates": [],
+    "actions": []
+  },
+  "workflow_manifest_digest": "sha256:c35037f0904e2c98df620b4cb9cdfe5d638db4b58a93f4f299db09710b04011f",
+  "declared_inputs": [],
+  "steps_meta": [
+    {
+      "node_id": "n1",
+      "data_classification": "compute"
+    },
+    {
+      "node_id": "n2",
+      "data_classification": "compute"
+    },
+    {
+      "node_id": "n3",
+      "data_classification": "compute"
+    }
+  ]
+}

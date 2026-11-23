@@ -1,0 +1,108 @@
+{
+  "workflow_id": "pack-agent-trade-evidence",
+  "name": "Agent Trade Evidence",
+  "outcome": "A nine-stage agent trade evidence workflow over caller-declared inputs. Step 1 validates the trading agent's on-behalf-of mandate, its subject, scope, intent and validity window, and step 2 then applies a fixed ten-rule authorization order to the declared mandate, budget, rail state and proposed request. Step 3 aggregates the declared oracle submissions into the single price an oracle network would publish, and step 4 then publishes the head event that sequence-numbers the mark-price print stream. Step 5 slices the declared order into VWAP, TWAP and participation-of-volume schedules and decomposes implementation shortfall; step 6 then scores every declared fill for price improvement against the NBBO at execution, and step 7 weighs the declared per-venue figures into a monitoring evidence pack with an overall verdict. Step 8 validates the agent's audit-trail records for completeness and chain-link conformance, and step 9 then aggregates the session into one Merkle-root receipt with inclusion proofs. Each step computes from its own declared inputs; the order is analytical, not a statutory sequence, and the chain certifies nothing.",
+  "spec_version": "ocg-control-plane@1",
+  "manifest": {
+    "manifest_version": "1",
+    "workflow_id": "pack-agent-trade-evidence",
+    "trigger": {
+      "type": "manual"
+    },
+    "nodes": [
+      {
+        "node_id": "n1",
+        "kernel_id": "art-151-agent-obo-mandate-validator",
+        "kernel_digest": "sha256:3e6402dbb86314d81a2323ad9509ad6ea85359eeaed521b4442a944f53a4ad54"
+      },
+      {
+        "node_id": "n2",
+        "kernel_id": "art-703-mandate-authorization-gate",
+        "kernel_digest": "sha256:de1fb32291e04241870bd357ee96bddc43e5c271c831b79b0928246896875475"
+      },
+      {
+        "node_id": "n3",
+        "kernel_id": "art-560-oracle-price-aggregation",
+        "kernel_digest": "sha256:ba126694afd24428319b321cbc06447608573deb30aaa75f5905a25146b3b91f"
+      },
+      {
+        "node_id": "n4",
+        "kernel_id": "art-655-publish-market-mark-head",
+        "kernel_digest": "sha256:6c5a944ad3d3508d828bc34a320e09734f576f2f1b8522d1f9b16eac803bd568"
+      },
+      {
+        "node_id": "n5",
+        "kernel_id": "art-669-algo-execution-schedule-simulator",
+        "kernel_digest": "sha256:4bdbc0208024145fd6927060a0ca39b66c00ff5b437427fa38ae6d928628bbed"
+      },
+      {
+        "node_id": "n6",
+        "kernel_id": "art-541-best-execution-recompute",
+        "kernel_digest": "sha256:3fe3f8f91aee95249b6c690837eac8476621b70688946d1417dda593e4c1915c"
+      },
+      {
+        "node_id": "n7",
+        "kernel_id": "art-681-best-execution-evidence-pack",
+        "kernel_digest": "sha256:fdd1917a5a6fa8051b0636a4e2a78af93da66b2cea56d8f699fd0cf8f63a0d20"
+      },
+      {
+        "node_id": "n8",
+        "kernel_id": "art-237-validate-agent-audit-trail",
+        "kernel_digest": "sha256:4b708c0479222377ddaec18a19c7c15708dac8a9bc59d4e6e6b53661301c9801"
+      },
+      {
+        "node_id": "n9",
+        "kernel_id": "cry-05-agent-action-audit-trail-aggregator",
+        "kernel_digest": "sha256:5f7f6ab0bb2e2b736805ecde518ca59ba9a83ad38b17545a8c7c133cffa1481f"
+      }
+    ],
+    "connectors": [],
+    "gates": [],
+    "actions": []
+  },
+  "workflow_manifest_digest": "sha256:2856ae9f3af63af8f549c61fa442484af90d1c460f8b6ca278d3ec09a06c5fed",
+  "declared_inputs": [
+    {
+      "from": "art-150-mcp-tool-scope-revocation-auditor",
+      "kind": "external"
+    }
+  ],
+  "steps_meta": [
+    {
+      "node_id": "n1",
+      "data_classification": "compute"
+    },
+    {
+      "node_id": "n2",
+      "data_classification": "compute"
+    },
+    {
+      "node_id": "n3",
+      "data_classification": "compute"
+    },
+    {
+      "node_id": "n4",
+      "data_classification": "compute"
+    },
+    {
+      "node_id": "n5",
+      "data_classification": "compute"
+    },
+    {
+      "node_id": "n6",
+      "data_classification": "compute"
+    },
+    {
+      "node_id": "n7",
+      "data_classification": "compute"
+    },
+    {
+      "node_id": "n8",
+      "data_classification": "compute"
+    },
+    {
+      "node_id": "n9",
+      "data_classification": "compute"
+    }
+  ]
+}
