@@ -1,18 +1,18 @@
 {
   "sourceRepo": "https://github.com/PostOakLabs/ainumbers.git",
   "license": "MIT License, Copyright (c) 2026 PostOakLabs (same license/holder as this repo; see this repo's own LICENSE for full terms; no third-party code in this vendored subtree)",
-  "pinnedSha": "8bdd256fdd4547cb410ce3357a5054edbe6a5840",
+  "pinnedSha": "919129ea06f05c431e651dc56c920f79aad8ea97",
   "vendoredPaths": [
     "chaingraph/kernels",
     "chaingraph/standard/SPEC.md",
     "chaingraph/standard/openchain-graph-v0.4.schema.json",
     "chaingraph/chaingraph.json"
   ],
-  "fileCount": 3329,
+  "fileCount": 3402,
   "files": [
     {
       "path": "chaingraph.json",
-      "sha256": "97005b46ca3673f68cea228bbcb0bdf36cdb5bd3a12bde82214030441958a189"
+      "sha256": "ec4bf558d2b8b5fe77c54b648314a729a0f0c809d71f3e102e8500004ad38e67"
     },
     {
       "path": "kernels/__boundary_mr__/_mr-harness.mjs",
@@ -71,6 +71,34 @@
       "sha256": "c20b47999f1dda5e4370c30e60792907b9a8061c7f9b55caad5b99f2657518c0"
     },
     {
+      "path": "kernels/__headroom__/506-onchain-cash-leg-finality-checker.headroom.json",
+      "sha256": "2dadf60e757d1c90327196718338d272d29f3bc04b183dad5260cc26619a2d0e"
+    },
+    {
+      "path": "kernels/__headroom__/514-tokenized-fund-collateral-validator.headroom.json",
+      "sha256": "c6ea2c5020fcc159c448d4289678292d8b19b5543888badee1d6cc3e42106523"
+    },
+    {
+      "path": "kernels/__headroom__/792-curator-vault-cap-auditor.headroom.json",
+      "sha256": "85b81aa5c77cc126693557e2fac517269d678c66e864df9086994cf34af98240"
+    },
+    {
+      "path": "kernels/__headroom__/798-assess-sandbox-application-readiness.headroom.json",
+      "sha256": "a9ef6cf60c5d5d41b726f7cba23d1e3fca2dcd08f7735a0b357f423f3b658c25"
+    },
+    {
+      "path": "kernels/__headroom__/806-event-contract-terms-lint.headroom.json",
+      "sha256": "ba43b3c199e4685e6cff6686a56a7a9fb8c5a857f77a6371910cf76538dd2628"
+    },
+    {
+      "path": "kernels/__headroom__/art-08-en16931-einvoice-batch-validator.headroom.json",
+      "sha256": "f599debb109b9452c6d60ec57fec5422a3b1d1b10c5b7f6782e4d1eab55e62ab"
+    },
+    {
+      "path": "kernels/__headroom__/art-166-eudr-geolocation-plot-validator.headroom.json",
+      "sha256": "079afbf9782179ecc68070ac4f7013a1c7d19437aa2986dc6406c73a25ee66b7"
+    },
+    {
       "path": "kernels/__headroom__/art-213-perp-liquidation-calculator.headroom.json",
       "sha256": "3c4dfafb5ebd55b7a7e6791cfdcf70dbaf1d60ebf92652142cad5629265cd8da"
     },
@@ -87,20 +115,60 @@
       "sha256": "ee626a3882981486d33198ae1df3c6e157122451fe5ec6bca9275ae9415da2d0"
     },
     {
+      "path": "kernels/__headroom__/art-222-agency-eligibility-matrix.headroom.json",
+      "sha256": "7e7719cdc09c59d84aeae541a61f60f19409d57bc4d2e6484e47000ca0922cd6"
+    },
+    {
       "path": "kernels/__headroom__/art-273-pendle-yield.headroom.json",
       "sha256": "32ff9a1105fede548bfc4cd694ace8e3c491d0087042c8476ab9935604987d53"
+    },
+    {
+      "path": "kernels/__headroom__/art-284-did-webvh-log-verifier.headroom.json",
+      "sha256": "1dffee57e7d21bffc91bb9d02822336412b5606ed21350fa932235c683607d54"
+    },
+    {
+      "path": "kernels/__headroom__/art-399-lint-x12-claim-records.headroom.json",
+      "sha256": "173dde30e38291aa91f0855803860328f93fb2947432fe67fd179e69d8ae3f2c"
+    },
+    {
+      "path": "kernels/__headroom__/art-401-validate-form5500-schedules.headroom.json",
+      "sha256": "0f8d06e128a888d60cb79d32a6ef85bea1506ba884a43b79a8d5cf475cecf9bc"
+    },
+    {
+      "path": "kernels/__headroom__/art-404-check-retail-installment-disclosures.headroom.json",
+      "sha256": "df9674f1a2535b9935e03f155fc2c1cc6f9705c09d6a724c14c29e25d633aef6"
+    },
+    {
+      "path": "kernels/__headroom__/art-447-securitization-risk-retention-check.headroom.json",
+      "sha256": "494740c7199764a955e427a841ee4eeb6d36491b63aad452128e6484ee7b44a5"
     },
     {
       "path": "kernels/__headroom__/art-521-settlement-asset-backing-invariant.headroom.json",
       "sha256": "de12416b16e12fa6ddd27e9aedd7842659c6b03452f4ce4d5fe2edf4a4b9c524"
     },
     {
+      "path": "kernels/__headroom__/art-621-summa-mst-liability-aggregator.headroom.json",
+      "sha256": "a0a74ed02dcd388b0827c07dda832c2553bf61e71882b2773f74b0db60321356"
+    },
+    {
       "path": "kernels/__headroom__/art-703-mandate-authorization-gate.headroom.json",
       "sha256": "10397f750de3e7817bf65f5d22de8a3dd5319509963d5940d2e6a0712716f1e0"
     },
     {
+      "path": "kernels/__headroom__/art-734-force-placed-insurance-checker.headroom.json",
+      "sha256": "892ab725f7e8f141d97c611cf05dfc616408a40a8b336f9f45e625fd12165836"
+    },
+    {
+      "path": "kernels/__headroom__/art-807-erc3643-transfer-decision.headroom.json",
+      "sha256": "ac9d917b2277c6757b7eba1ec61f76ae957fed48a0535d10d652a3ea78c3fee5"
+    },
+    {
       "path": "kernels/__headroom__/art-816-eip3009-agent-spend-gate.headroom.json",
       "sha256": "400a66386eb5da7353d016337f94eda3ff3e6c2613dc633785cf39264e3f0d0d"
+    },
+    {
+      "path": "kernels/__headroom__/census-headroom.mjs",
+      "sha256": "aec1739dad9a42cf7d50f7c0af6ac567eb15110fe3ac35cbf9bbbcf7cf42880f"
     },
     {
       "path": "kernels/__headroom__/headroom-gates.mjs",
@@ -200,11 +268,15 @@
     },
     {
       "path": "kernels/__proptests__/785-qr-golive-readiness.proptest.mjs",
-      "sha256": "6d3cf3f9ba07c4d380bb6a99c482d73aeb202a2f10b3680f1f122954851e3d08"
+      "sha256": "08b611f792028a7200a6b2c2586abcda427f66608c97e594f859c379873c1868"
     },
     {
       "path": "kernels/__proptests__/787-corridor-cost-averages.proptest.mjs",
       "sha256": "3a00f7e4e5fc726fca82aedf9f20d2a4bfc3a52fdf9a20518adff82127c08d74"
+    },
+    {
+      "path": "kernels/__proptests__/790-event-position-limit-check.proptest.mjs",
+      "sha256": "56ab3ee5a8c5605f46ca4f63a871ebcff62d48453c9fd9fd5c93544d8ce4e2ff"
     },
     {
       "path": "kernels/__proptests__/792-curator-vault-cap-auditor.proptest.mjs",
@@ -219,8 +291,12 @@
       "sha256": "89c0d0b9996fb093790bc880965fecb3a816f0dc1699b0f546527241ba9641e1"
     },
     {
+      "path": "kernels/__proptests__/796-payment-system-mi-pack.proptest.mjs",
+      "sha256": "11e8b26b928b75cfec8fac1c5383cceeedbded8be4b8a56d0b0fa368336d022a"
+    },
+    {
       "path": "kernels/__proptests__/797-stablecoin-cash-equivalent-test.proptest.mjs",
-      "sha256": "918a1b3aae4aa22f43a6b2f8d16e2442b78991913a60697096585cc819c9469a"
+      "sha256": "7c6ee2c5c045b7a0d77f6dec7166ce28379906fe0970068884a08e3dbcb19e39"
     },
     {
       "path": "kernels/__proptests__/798-assess-sandbox-application-readiness.proptest.mjs",
@@ -244,7 +320,7 @@
     },
     {
       "path": "kernels/__proptests__/813-eth-staking-accounting.proptest.mjs",
-      "sha256": "44c1878d907ac6c95708dea3b0ba431b7ca6fd3a606c0934c669b743b2c22089"
+      "sha256": "68088f2eedde5da2e7776124e83a6cca339d6552cee94f21dd51109c82550838"
     },
     {
       "path": "kernels/__proptests__/815-eth-fee-market.proptest.mjs",
@@ -264,7 +340,7 @@
     },
     {
       "path": "kernels/__proptests__/825-reconcile-ucp-checkout-totals.proptest.mjs",
-      "sha256": "a16b818d5d1719cebd2559f42f43c1863b840e13edcf58a55c4b6f892c3d0daa"
+      "sha256": "a08d5ef8a2910c236c63debbb75d0744b62e67cfa022d79bda6f5a46ee1d1f51"
     },
     {
       "path": "kernels/__proptests__/827-agent-cred-class-matrix.proptest.mjs",
@@ -964,7 +1040,7 @@
     },
     {
       "path": "kernels/__proptests__/art-242-pacs008-party-completeness-validator.proptest.mjs",
-      "sha256": "90eff502587c050e65dfaaa21c87407e72b152a930fb8e067137a1c7afebe8cb"
+      "sha256": "eb83a0abd0484d2eed042b1cab252a26bb75baa725abfeb314d5d0a52e3c39ba"
     },
     {
       "path": "kernels/__proptests__/art-243-purpose-code-requirement-checker.proptest.mjs",
@@ -1128,7 +1204,7 @@
     },
     {
       "path": "kernels/__proptests__/art-279-state-proof-verifier.proptest.mjs",
-      "sha256": "f4dfca82ebec3d3614cf0fffbb5e4261061fb73c0a82391bca930d4285a22221"
+      "sha256": "dd9cc0df399f45854bda2520af7ef2752fd8172566dea9fb15934cd05f797fbf"
     },
     {
       "path": "kernels/__proptests__/art-28-mcp-server-deployability-diagnostic.proptest.mjs",
@@ -1804,7 +1880,7 @@
     },
     {
       "path": "kernels/__proptests__/art-458-attribute-sampling-plan.proptest.mjs",
-      "sha256": "8804b93fb3e30e5715eb49f1d437112e7fa13afe3049a2dd3afe7f87fdb4fe9d"
+      "sha256": "57267b3fa555aae71fdc55a32940fd53199335c1f0fefeaf4bcd469f7ffa02be"
     },
     {
       "path": "kernels/__proptests__/art-459-sod-matrix-check.proptest.mjs",
@@ -2352,11 +2428,11 @@
     },
     {
       "path": "kernels/__proptests__/art-592-x402-domain-nonce-window-checker.proptest.mjs",
-      "sha256": "609e1e04754616068cee82ed45c9c7c06f668de09b5d8f866ddd50f8718cef9b"
+      "sha256": "51d21323987da8f2f3606f7e783a2400752a854bf653a52ba565b09de3d5cf51"
     },
     {
       "path": "kernels/__proptests__/art-593-webbotauth-nonce-replay-check.proptest.mjs",
-      "sha256": "496e71f7b67ad31894243b94773405afbe99c1110db046ce277a5e05917f2c9c"
+      "sha256": "9ee40763998da6ace2e20cec1b62a76c6b3cf81aa6cb7dcdd94965bfd0c2e419"
     },
     {
       "path": "kernels/__proptests__/art-594-tempo-mpp-voucher-receipt-verifier.proptest.mjs",
@@ -2860,7 +2936,7 @@
     },
     {
       "path": "kernels/__proptests__/art-761-caregiver-income-impact.proptest.mjs",
-      "sha256": "416722879bd10fb5996c39ab93d7d2d13e903792a13a26ee8512ada343c93be0"
+      "sha256": "d6d93afe68777fc93395088b0c74811c055eb084656ce24561ea2c89aaf5342d"
     },
     {
       "path": "kernels/__proptests__/art-763-ai-displacement-risk-screener.proptest.mjs",
@@ -2872,7 +2948,7 @@
     },
     {
       "path": "kernels/__proptests__/art-765-dependent-care-fsa-cdctc-optimizer.proptest.mjs",
-      "sha256": "885f2652ddb5faa085fe77f18ce40c0ee216ef0e8f458184a487152e4c2448fd"
+      "sha256": "7a96b190a850c6b862a91b82b400eee4440a2e55bcb25244bcfcbaa6b9e0ee40"
     },
     {
       "path": "kernels/__proptests__/art-766-parental-leave-income-gap.proptest.mjs",
@@ -2935,6 +3011,10 @@
       "sha256": "d4bcde58f1817ae117694402cc5b30d3ab303d60f2bbdcc8cd107920baa79690"
     },
     {
+      "path": "kernels/__proptests__/art-781-x402-svm-payment-outcome.proptest.mjs",
+      "sha256": "192920499f202d3eb15a3a1ca54bd16fe744aa50477eff1a2b55d5d328b48060"
+    },
+    {
       "path": "kernels/__proptests__/art-782-modified-premium.proptest.mjs",
       "sha256": "7ad5d63c2b308a1e93b1974c012bd2a3089338f73f3a2e8ace0f397909f5c763"
     },
@@ -2943,12 +3023,20 @@
       "sha256": "5d6a63828bb1136c8c005157cf2f1b6e6112dde4cfb5103e42f055d43caa5dd3"
     },
     {
+      "path": "kernels/__proptests__/art-789-stablecoin-admin-role-lint.proptest.mjs",
+      "sha256": "fa14d25d5af9d618f3ddeac7a358c6c96cc6f249db51223f925835d906bdd604"
+    },
+    {
       "path": "kernels/__proptests__/art-79-settlement-fail-predictor.proptest.mjs",
       "sha256": "5c0248ac4225b7aa00046dbbbd10578ace9bd79cc72112ec363c144c67530fa4"
     },
     {
+      "path": "kernels/__proptests__/art-791-check-je-multicurrency-balance.proptest.mjs",
+      "sha256": "320b76bb31ba79530f6b9d8ddb465fd0a5a3db2021530a0de95b3aa4c81b701b"
+    },
+    {
       "path": "kernels/__proptests__/art-793-government-stablecoin-acceptance.proptest.mjs",
-      "sha256": "613ecf6ffeab902e3366eb73f533ee21c3ff9d4df6dbff24e9c50a5fca9372ae"
+      "sha256": "e882bbdb81ca557f836c438d6f4724462fe50a39b4221f582c18c095d770e24f"
     },
     {
       "path": "kernels/__proptests__/art-80-ssi-conformance-checker.proptest.mjs",
@@ -2956,7 +3044,7 @@
     },
     {
       "path": "kernels/__proptests__/art-805-agt-audit-chain-verifier.proptest.mjs",
-      "sha256": "4b2bb3387b0819550c660c1c16d15dc3a6129f97a1535cb6daca17082abea8e8"
+      "sha256": "ba1145ad37547a03e556e5d439ef4b8f02bfe4d18ac05a904059177a9dc13ac8"
     },
     {
       "path": "kernels/__proptests__/art-807-erc3643-transfer-decision.proptest.mjs",
@@ -2964,7 +3052,7 @@
     },
     {
       "path": "kernels/__proptests__/art-809-check-reserves-cover-outstanding-private.proptest.mjs",
-      "sha256": "50f0c119546e7958ee5fd820c392908a45f324ac8dd6b1f5f8e2c0c32aee99f3"
+      "sha256": "b81bb67adb3e1a41d05be4536cd41337326dc6b7701ebed2400151ddebef44e7"
     },
     {
       "path": "kernels/__proptests__/art-81-allocation-affirmation-conformance.proptest.mjs",
@@ -2972,7 +3060,7 @@
     },
     {
       "path": "kernels/__proptests__/art-811-check-dti-within-policy-private.proptest.mjs",
-      "sha256": "b55464f3244822f10dd80373ad65d0b86fba863250be50d766a89f4e96b5eabc"
+      "sha256": "78e0ac4483ada1a61417b8ef90785cf284ad94f1dc3b87c7d1b0183036853046"
     },
     {
       "path": "kernels/__proptests__/art-814-qf-pairwise-recompute.proptest.mjs",
@@ -3059,8 +3147,36 @@
       "sha256": "52c188e3735f84ce469fce32c45ba2a8d347fc85f70faae5dd5e8ea3e1a8fd75"
     },
     {
+      "path": "kernels/__proptests__/art-847-cashleg-window-exposure.proptest.mjs",
+      "sha256": "efe40394cee7450c106310b2ab16f209033c5155cb0a7bba3a2ce65c9c7543f6"
+    },
+    {
+      "path": "kernels/__proptests__/art-849-deferred-comp-457b.proptest.mjs",
+      "sha256": "be757f9e7cd18637d9ff2e0cd2e49b2ea9498748a5050841e8d33490a271e5b1"
+    },
+    {
       "path": "kernels/__proptests__/art-85-pqc-timeline-fit-diagnostic.proptest.mjs",
       "sha256": "040d2f61d98cefe6f2ca6b79528cbd20e5ac1644454a61dbfbcab8d111cf27e2"
+    },
+    {
+      "path": "kernels/__proptests__/art-851-islamic-mmf-placement-limits.proptest.mjs",
+      "sha256": "20ff5acfd0485af07b62ad876c47b8d1566c71222c5c4d46618ed2514c4c863d"
+    },
+    {
+      "path": "kernels/__proptests__/art-852-murabahah-ibra-settlement.proptest.mjs",
+      "sha256": "2c19567896fc17751aab2b6893f484a34e1fc7af5046fe6d113fa3fa8acc8f5d"
+    },
+    {
+      "path": "kernels/__proptests__/art-854-sukuk-tradability-composition.proptest.mjs",
+      "sha256": "6d48a978d97ed46664126b315783378377e5f481fa399537be74c29945817bab"
+    },
+    {
+      "path": "kernels/__proptests__/art-855-murabahah-tawarruq-sequence.proptest.mjs",
+      "sha256": "774163f8e434ebc879ebe10f7c79ba9ecd8c9fbed4ac6af7548d568080129c7d"
+    },
+    {
+      "path": "kernels/__proptests__/art-856-ijarah-imbt-schedule.proptest.mjs",
+      "sha256": "7ecf0cba2ea7a10b2f09f4c5aea354f19c8bb39c416533d21428fb96c0d1e254"
     },
     {
       "path": "kernels/__proptests__/art-86-tls-pki-migration-planner.proptest.mjs",
@@ -3525,6 +3641,26 @@
     {
       "path": "kernels/__replay__/corpus/expected.json",
       "sha256": "99262ab521be7ebbf022928042ff332096d821a4269dfd5a997a2c53ff246932"
+    },
+    {
+      "path": "kernels/__replay__/errata-demo/expected.json",
+      "sha256": "8c4c42d0e93e1d1f232efbeb40d5601e098a47339745538bbddebeb990a4373e"
+    },
+    {
+      "path": "kernels/__replay__/errata-demo/folder/affected.receipt.json",
+      "sha256": "aa60f9664bd70b49d5dfccf57ea280a87d18d951bbc3cfa8e073e594bec606bf"
+    },
+    {
+      "path": "kernels/__replay__/errata-demo/folder/not-listed.receipt.json",
+      "sha256": "9da22e23b118123f0d20ddffc143b0b1c71b6be993dc34d6f997a89d3f9bda97"
+    },
+    {
+      "path": "kernels/__replay__/errata-demo/folder/unaffected.receipt.json",
+      "sha256": "65dff730e07f70b376125d351cae39eed39d823c62d2de92faa910e5d9272911"
+    },
+    {
+      "path": "kernels/__replay__/errata-demo/KE-2026-0002.json",
+      "sha256": "3b4a541f262d14bc7a73432b5040874a8b4be1f852c6cc633ff9ba178f1f4524"
     },
     {
       "path": "kernels/__upstream-vectors__/c2sp-cosignature/C2SP/.github/LICENSE-BSD-1-CLAUSE",
@@ -4868,11 +5004,15 @@
     },
     {
       "path": "kernels/785-qr-golive-readiness.kernel.mjs",
-      "sha256": "5f6d4f0dabd1435299ed3c56a8e3237a7991da822543467c1813a0a1cec44676"
+      "sha256": "b58f3a1db322c0acaf1938fc79d763d616f6143c5806a4cfa456fbf285cd2ecc"
     },
     {
       "path": "kernels/787-corridor-cost-averages.kernel.mjs",
       "sha256": "3f15eda7d86118242457565ba8092451718ef4bcb3ab37c400e78abc8a9cdf8d"
+    },
+    {
+      "path": "kernels/790-event-position-limit-check.kernel.mjs",
+      "sha256": "b8ce8e7e260662d41e52573c9cff9e684216e412ea9adc1fe1f514c70c207960"
     },
     {
       "path": "kernels/792-curator-vault-cap-auditor.kernel.mjs",
@@ -4887,8 +5027,20 @@
       "sha256": "6732f77e7fd36d16eb53e230d2cef36876c58d2adc6c0e88e6f040fae0229c0a"
     },
     {
+      "path": "kernels/796-payment-system-mi-pack.kernel.mjs",
+      "sha256": "55c21fb35d931deb93c587ac6e08422791fb39aa4a8e51372abef3a5dda38106"
+    },
+    {
+      "path": "kernels/796-payment-system-mi-pack.mutation.json",
+      "sha256": "4f79dfac8239e75aeb8bb36c344eaeb8c316cf61ba552d6771632ee99c8e2b5a"
+    },
+    {
       "path": "kernels/797-stablecoin-cash-equivalent-test.kernel.mjs",
-      "sha256": "643f5a36069f70daa86c7d7bbee6a65e227f4de5813fe2974819c3e8899de17d"
+      "sha256": "de6a5d338d3e22fb37b68a9ee9707fc38c51ffe8839c61331e1db4f69579f3c0"
+    },
+    {
+      "path": "kernels/797-stablecoin-cash-equivalent-test.mutation.json",
+      "sha256": "61588f9de39b8809a7b708650a235578f678e1062c57af103bd262b85b0a9036"
     },
     {
       "path": "kernels/798-assess-sandbox-application-readiness.kernel.mjs",
@@ -4912,7 +5064,7 @@
     },
     {
       "path": "kernels/813-eth-staking-accounting.kernel.mjs",
-      "sha256": "3c67f800389a0cc0ff46a484c2793943fdc886a2d2f941562eb9eae23c90e52d"
+      "sha256": "15729396060f993d9a831853089bc5cc992ffb1d1ad17e7021e73ef3be271689"
     },
     {
       "path": "kernels/815-eth-fee-market.kernel.mjs",
@@ -4932,11 +5084,11 @@
     },
     {
       "path": "kernels/825-reconcile-ucp-checkout-totals.kernel.mjs",
-      "sha256": "9a5c782686ba02ea75b2ea3cdbe73e6edfb8abc4e3061119c1cad45ede1fc7bd"
+      "sha256": "5525a49679c62c3b69584c513931c2ad557e794ae7a375dfd74b51188dc0369f"
     },
     {
       "path": "kernels/825-reconcile-ucp-checkout-totals.mutation.json",
-      "sha256": "9babe555a505478ce62e9218a8a21562b0178967cd579e73f6fea951c0aa376c"
+      "sha256": "38d439f60148d39fca4d13fb3dcae6e06ed8a8bbf9083030a21ea20bcf0230cf"
     },
     {
       "path": "kernels/827-agent-cred-class-matrix.kernel.mjs",
@@ -5672,7 +5824,7 @@
     },
     {
       "path": "kernels/art-242-pacs008-party-completeness-validator.kernel.mjs",
-      "sha256": "2aac07c9bd6463db4571c1800f17c85d5c09ee00b62151b485113a1ddb02de8a"
+      "sha256": "1992eefa054bfeb91ddb3725101be07b62a8db02cbbcd092c2096d8c47b09a5a"
     },
     {
       "path": "kernels/art-243-purpose-code-requirement-checker.kernel.mjs",
@@ -5837,6 +5989,10 @@
     {
       "path": "kernels/art-279-state-proof-verifier.kernel.mjs",
       "sha256": "cdf00978c1f9c8e64aa49fd927d7dab925a232f49b3f745381396674785ce592"
+    },
+    {
+      "path": "kernels/art-279-state-proof-verifier.mutation.json",
+      "sha256": "fd232c6977f2da6e41c1cbc36f2ad09976604fa4edcc385701fa0513bd255e7e"
     },
     {
       "path": "kernels/art-28-mcp-server-deployability-diagnostic.kernel.mjs",
@@ -6551,6 +6707,10 @@
       "sha256": "5bcd64e2925ab483c805160229d7a37241e311140192cd080b09be6d358fec1b"
     },
     {
+      "path": "kernels/art-458-attribute-sampling-plan.mutation.json",
+      "sha256": "d42e5753c8f4ec7642ed16f9f6cad8e1eb4133ddf3b24e5def58f70cfc8ef1d9"
+    },
+    {
       "path": "kernels/art-459-sod-matrix-check.kernel.mjs",
       "sha256": "991bda6ad22de1f56d310c7cfbe98b6a7a9e4fdace9805007b0cc161d05cd7cd"
     },
@@ -7120,11 +7280,11 @@
     },
     {
       "path": "kernels/art-592-x402-domain-nonce-window-checker.kernel.mjs",
-      "sha256": "b38255c8483b8792648d21f7a06a061fa24aaaea6ffce83ffb9c9b340afab72a"
+      "sha256": "13a983346c12f03c2626a1714a1c6e4b8df984252c8c5f68b8e853167ed52842"
     },
     {
       "path": "kernels/art-593-webbotauth-nonce-replay-check.kernel.mjs",
-      "sha256": "138c2f487a173ef2bd8b97435481bbacafd2c216a9a9a9663f7526c835d8f57c"
+      "sha256": "f3470256d6053732a98911c95987c2019b957f73ecb8bce762ad0013b48063c1"
     },
     {
       "path": "kernels/art-594-tempo-mpp-voucher-receipt-verifier.kernel.mjs",
@@ -7696,7 +7856,7 @@
     },
     {
       "path": "kernels/art-761-caregiver-income-impact.kernel.mjs",
-      "sha256": "bae9e36268ac108df324d80f876981fd05436acf6bb21bab46ca1884f18ce145"
+      "sha256": "3c16e24e31e72a555c95d70f83aa49d3ab203f17b706617b020df1491a5601ef"
     },
     {
       "path": "kernels/art-763-ai-displacement-risk-screener.kernel.mjs",
@@ -7708,7 +7868,7 @@
     },
     {
       "path": "kernels/art-765-dependent-care-fsa-cdctc-optimizer.kernel.mjs",
-      "sha256": "96cb71d2b11c805572ba28f74fbbf54b7f78610048317107148f162d394ddf90"
+      "sha256": "49ff910047ac0cb8468390e069089a20c1f5637f956b1e223cc23c9c10ac77f5"
     },
     {
       "path": "kernels/art-766-parental-leave-income-gap.kernel.mjs",
@@ -7787,6 +7947,14 @@
       "sha256": "5d9da43eb0651fd52f51346055e56ff0f2a9ebb3b83a2645067c44e376cd7a69"
     },
     {
+      "path": "kernels/art-781-x402-svm-payment-outcome.kernel.mjs",
+      "sha256": "4f5bae2b41de82ece147ef21e0f3947d10a0c85aec0af7fb420ee8b87202759c"
+    },
+    {
+      "path": "kernels/art-781-x402-svm-payment-outcome.mutation.json",
+      "sha256": "b79d7143b4669d9e1fb7f93f1de65c3a6ffc75683d70f327e9275be6ec2f2344"
+    },
+    {
       "path": "kernels/art-782-modified-premium.kernel.mjs",
       "sha256": "80255536c762ed27ca6df77742ee49616fc091e90c599083f8a8c4d6e948fee8"
     },
@@ -7795,12 +7963,20 @@
       "sha256": "c34b449deffbcaba90e9e3d2df644f2bf51f90b1f9b31a00025de8ab6a836152"
     },
     {
+      "path": "kernels/art-789-stablecoin-admin-role-lint.kernel.mjs",
+      "sha256": "22d832cff748eca7ef540907fb54fbdd43fde383ceecfdb64b62797b06fbb4e8"
+    },
+    {
       "path": "kernels/art-79-settlement-fail-predictor.kernel.mjs",
       "sha256": "660bc62de036808e6dcb648dd7ef377f3d403d9f3b2771459507ff4c7702ea0c"
     },
     {
+      "path": "kernels/art-791-check-je-multicurrency-balance.kernel.mjs",
+      "sha256": "5efbb74ddb2a6f6d072ccaa66ce2cf7c6d12c5f3be29925f4edb07ddc04efbb2"
+    },
+    {
       "path": "kernels/art-793-government-stablecoin-acceptance.kernel.mjs",
-      "sha256": "d44f492e6dce3ac9d6b9ea5064405ca5b994b83c4df9fa45ed2ca8732a00f812"
+      "sha256": "d35efd76b9c97ae13a71db844e350570fc1a1748624f040938d56a4ecf39ba64"
     },
     {
       "path": "kernels/art-80-ssi-conformance-checker.kernel.mjs",
@@ -7808,7 +7984,11 @@
     },
     {
       "path": "kernels/art-805-agt-audit-chain-verifier.kernel.mjs",
-      "sha256": "d3a96683e60729156f0ca539f5eec22cd1d4facd9f5a4b397b7262bdad3e54fc"
+      "sha256": "1b0aa1972e5c2e7936f07c6d4f263ac42c13cb7225e06f7ae794654ed5780156"
+    },
+    {
+      "path": "kernels/art-805-agt-audit-chain-verifier.mutation.json",
+      "sha256": "f1aad56c493f7901f00976ebd87d8985948b1abe621659c3026bb1a1a07588f9"
     },
     {
       "path": "kernels/art-807-erc3643-transfer-decision.kernel.mjs",
@@ -7816,7 +7996,7 @@
     },
     {
       "path": "kernels/art-809-check-reserves-cover-outstanding-private.kernel.mjs",
-      "sha256": "dab6040704081c505af95dc176902c11f171b0199cd4b8b53dcaa11e4e429936"
+      "sha256": "7d26c1807e88bd5c3368722638e1ba801d2c7df098232731cf81f08af42cfa8c"
     },
     {
       "path": "kernels/art-81-allocation-affirmation-conformance.kernel.mjs",
@@ -7828,7 +8008,7 @@
     },
     {
       "path": "kernels/art-811-check-dti-within-policy-private.kernel.mjs",
-      "sha256": "decfd41bf3e450e1251e6cf36e4c3286f4008c9c8cfa831220b10804b8da7cb6"
+      "sha256": "d4ecee284d8ad62222b32930df8b63868e33c22fe24da484f14365355bb584b2"
     },
     {
       "path": "kernels/art-814-qf-pairwise-recompute.kernel.mjs",
@@ -7935,8 +8115,60 @@
       "sha256": "20cc7467f9b83f5159888b35bec3557e32cfe7194f2cab7103d1d02b43283de9"
     },
     {
+      "path": "kernels/art-847-cashleg-window-exposure.kernel.mjs",
+      "sha256": "9d32e9011c337eb49339ba5a1df9f3151a7ace948e9dcbf053c7d4578a7ed33e"
+    },
+    {
+      "path": "kernels/art-847-cashleg-window-exposure.mutation.json",
+      "sha256": "9babe555a505478ce62e9218a8a21562b0178967cd579e73f6fea951c0aa376c"
+    },
+    {
+      "path": "kernels/art-849-deferred-comp-457b.kernel.mjs",
+      "sha256": "b1e1ed4f8f1f30cdf0918caca02b958d151fd33f71d27f5ac0a2ce6ec22ddc06"
+    },
+    {
       "path": "kernels/art-85-pqc-timeline-fit-diagnostic.kernel.mjs",
       "sha256": "84c05753ffb3bd7d71bd9af2b7dece0ba0c23b3e3aae66ac296f39975d339f23"
+    },
+    {
+      "path": "kernels/art-851-islamic-mmf-placement-limits.kernel.mjs",
+      "sha256": "e5682e41688ab0c7625e83bde9262669391b3f54744afdd1243aeafe18edb41f"
+    },
+    {
+      "path": "kernels/art-851-islamic-mmf-placement-limits.mutation.json",
+      "sha256": "20cc7467f9b83f5159888b35bec3557e32cfe7194f2cab7103d1d02b43283de9"
+    },
+    {
+      "path": "kernels/art-852-murabahah-ibra-settlement.kernel.mjs",
+      "sha256": "eacd2d28a4d95809504122f3e16aea48ab079915dba032bf4229555278944320"
+    },
+    {
+      "path": "kernels/art-852-murabahah-ibra-settlement.mutation.json",
+      "sha256": "20cc7467f9b83f5159888b35bec3557e32cfe7194f2cab7103d1d02b43283de9"
+    },
+    {
+      "path": "kernels/art-854-sukuk-tradability-composition.kernel.mjs",
+      "sha256": "1ce8d3adda42aeec33ed0bdc89246fdcbac71604f0558dac2287e5bc1d020415"
+    },
+    {
+      "path": "kernels/art-854-sukuk-tradability-composition.mutation.json",
+      "sha256": "3b5ead8e5a9cfcc5c7f745f31184502071f98406b44e89eec4507f9a71694c04"
+    },
+    {
+      "path": "kernels/art-855-murabahah-tawarruq-sequence.kernel.mjs",
+      "sha256": "ae0813958a65cbb0eea09d40577d332d8482f1a84057c43830c4ae23aaef62a5"
+    },
+    {
+      "path": "kernels/art-855-murabahah-tawarruq-sequence.mutation.json",
+      "sha256": "9babe555a505478ce62e9218a8a21562b0178967cd579e73f6fea951c0aa376c"
+    },
+    {
+      "path": "kernels/art-856-ijarah-imbt-schedule.kernel.mjs",
+      "sha256": "815286a7597ad28866e79d357f51554f93593408630f964ab2956f5a4029dd0f"
+    },
+    {
+      "path": "kernels/art-856-ijarah-imbt-schedule.mutation.json",
+      "sha256": "20cc7467f9b83f5159888b35bec3557e32cfe7194f2cab7103d1d02b43283de9"
     },
     {
       "path": "kernels/art-86-tls-pki-migration-planner.kernel.mjs",
@@ -8076,7 +8308,7 @@
     },
     {
       "path": "kernels/fix-hash-scheme.mjs",
-      "sha256": "db8f0d28ce9f738244b2be255bd1063c0cb231d8a5900c82955bdfa2ea1644df"
+      "sha256": "8cf1e9920070aa50e41555e2f89185a5a421963443742e42dd651db5852c3cba"
     },
     {
       "path": "kernels/fixtures/503-canton-tokenization-readiness-diagnostic.fixtures.json",
@@ -8164,11 +8396,11 @@
     },
     {
       "path": "kernels/fixtures/785-qr-golive-readiness.fixtures.json",
-      "sha256": "9b3728d6ea2c7b9eae049d172b14919d31875580c2dda02436594d074f82739e"
+      "sha256": "d9847eaf8b9f882bc24d8412d44cc162f2ce50bad3b63517c3155749819c54e1"
     },
     {
       "path": "kernels/fixtures/785-qr-golive-readiness.gates.json",
-      "sha256": "0330de35a049fb857348a96e38b2be7e439587f3f64d27bd1f615eae940ea571"
+      "sha256": "8b16c42895a7d6cc6a9126a46cb4c6a1699ffb256ef6a77fe9f123cda155f73b"
     },
     {
       "path": "kernels/fixtures/787-corridor-cost-averages.fixtures.json",
@@ -8177,6 +8409,14 @@
     {
       "path": "kernels/fixtures/787-corridor-cost-averages.reachability.json",
       "sha256": "9f2614b8082b468b48e9fef95b56717128f6368e1a7b8eb28618b69c26567122"
+    },
+    {
+      "path": "kernels/fixtures/790-event-position-limit-check.fixtures.json",
+      "sha256": "1109fbdbf74f12d94b46e202d94a1fc7def74be094f78030f0f7ea85e29214f4"
+    },
+    {
+      "path": "kernels/fixtures/790-event-position-limit-check.reachability.json",
+      "sha256": "8cd13b36fcb33272adafb463d4936dcd85ed147cb596ea59ad82e993c38ee348"
     },
     {
       "path": "kernels/fixtures/792-curator-vault-cap-auditor.fixtures.json",
@@ -8199,8 +8439,16 @@
       "sha256": "c7a6677729572a63cf3a28e1239ab46899ed57bedacac536c8349d81cd679dbb"
     },
     {
+      "path": "kernels/fixtures/796-payment-system-mi-pack.fixtures.json",
+      "sha256": "d62326c09f20db877739024a0b6d25d8e5719d4396c898b5951020cb7a86ac2c"
+    },
+    {
+      "path": "kernels/fixtures/796-payment-system-mi-pack.reachability.json",
+      "sha256": "f24d0db6a810fff42d1bc0254fc87c9a229d3ec0cf54fd162052a1ddd20dbdc0"
+    },
+    {
       "path": "kernels/fixtures/797-stablecoin-cash-equivalent-test.fixtures.json",
-      "sha256": "fb1e3c1b1c075cb5bd2d586e96cf86624bf2b7723a0b3efddfc11a9684a01932"
+      "sha256": "5f582e1ff53130d17f0bd0e2ea8c22573fcb9150d69f4093fda19d5aa2066f3c"
     },
     {
       "path": "kernels/fixtures/798-assess-sandbox-application-readiness.fixtures.json",
@@ -8224,7 +8472,7 @@
     },
     {
       "path": "kernels/fixtures/813-eth-staking-accounting.fixtures.json",
-      "sha256": "2f39a404d0a5c742b06558f440cc67ae3bcc37a0506d9bb13e4b787075e6fc66"
+      "sha256": "2240a62000fa0c81129a64312efeacbfba1af2c3abb3ab74b47b3c3c5c6f3597"
     },
     {
       "path": "kernels/fixtures/815-eth-fee-market.fixtures.json",
@@ -8252,11 +8500,11 @@
     },
     {
       "path": "kernels/fixtures/825-reconcile-ucp-checkout-totals.fixtures.json",
-      "sha256": "abedc5d7b217aa638bfff4bd162a9cb573ef5a2b8f6ac79ea834e11df128dd3b"
+      "sha256": "3e7a6cd466979f3978b6a66be16793ff8d1b05dcba5121e2d1113363f029b7f3"
     },
     {
       "path": "kernels/fixtures/825-reconcile-ucp-checkout-totals.reachability.json",
-      "sha256": "4e9dfde6f8fb6eaf00340f2cc88206c2d492ae0cafdef43a66d715a91c67e263"
+      "sha256": "687abb90cd51a074ea4d7122ff78eb8d0cbaec10455a3b7bc80019016ba37be4"
     },
     {
       "path": "kernels/fixtures/827-agent-cred-class-matrix.fixtures.json",
@@ -8988,7 +9236,7 @@
     },
     {
       "path": "kernels/fixtures/art-242-pacs008-party-completeness-validator.fixtures.json",
-      "sha256": "f31c9d44d74fc85fd5b7db89a87963cef59eff770c47e8979a2e03e1077f89c5"
+      "sha256": "13cb8c16dc041f842fe75c4cc10a66657b3cebd4456bda6958d7b83c65e4a244"
     },
     {
       "path": "kernels/fixtures/art-243-purpose-code-requirement-checker.fixtures.json",
@@ -10420,11 +10668,11 @@
     },
     {
       "path": "kernels/fixtures/art-592-x402-domain-nonce-window-checker.fixtures.json",
-      "sha256": "7d3fa47a3136d9f541e7fc1ffa84f3142a7a067a2a1bd8c0c88f64e99dbe8205"
+      "sha256": "faf4c8a6263522ed1a46bfe3c3a7a2103a6aca0f3fabdd4cd07e170ce6a633b5"
     },
     {
       "path": "kernels/fixtures/art-593-webbotauth-nonce-replay-check.fixtures.json",
-      "sha256": "b2a67d12e36644472eb5cdbea346229e41991737eb6683f1189f0f9c89c60602"
+      "sha256": "30b329e813ed7f4de14b8cc95a4a9d5034c2b8941f4dca9d104248a3bf6549a5"
     },
     {
       "path": "kernels/fixtures/art-594-tempo-mpp-voucher-receipt-verifier.fixtures.json",
@@ -10948,7 +11196,7 @@
     },
     {
       "path": "kernels/fixtures/art-761-caregiver-income-impact.fixtures.json",
-      "sha256": "d47134975b9e6224caa12f97e0b02fbb95f3063580b2a5a7881e08738e1ce3b9"
+      "sha256": "194389d1a5da3292f864d5c499b7c3e8fa19f266431f93ce1fae5d4bdf9b1e29"
     },
     {
       "path": "kernels/fixtures/art-763-ai-displacement-risk-screener.fixtures.json",
@@ -10960,7 +11208,7 @@
     },
     {
       "path": "kernels/fixtures/art-765-dependent-care-fsa-cdctc-optimizer.fixtures.json",
-      "sha256": "42e64f16e80eb21fd67b41949094d1ae0dd64fbf25468bfda315f436e4ce8c03"
+      "sha256": "57c1ed28089918af62e995e4cb6e266d2c4ad6bf882790e31ff9b9550fa21306"
     },
     {
       "path": "kernels/fixtures/art-766-parental-leave-income-gap.fixtures.json",
@@ -11023,6 +11271,10 @@
       "sha256": "2210f6a35c7571e13d638c5de6badf715367fba062cba072b96a08ce8869e88c"
     },
     {
+      "path": "kernels/fixtures/art-781-x402-svm-payment-outcome.fixtures.json",
+      "sha256": "d2b0e4fb9c5eea83d40efa9c125f37287643973930d58ff09ed35e32aa433da7"
+    },
+    {
       "path": "kernels/fixtures/art-782-modified-premium.fixtures.json",
       "sha256": "3c11350846faa43057cd3396f46770a5344baea3879a9033e70f75e282448f79"
     },
@@ -11031,12 +11283,20 @@
       "sha256": "9436cd8208d53637924137ebc541ffdd619e646ff3ee9213ca88dbe210a4c713"
     },
     {
+      "path": "kernels/fixtures/art-789-stablecoin-admin-role-lint.fixtures.json",
+      "sha256": "95f2ba61be3a28ddc7a5c11a530bfd0a1cc2b812a3ef2d88976f8f2bc95ce32b"
+    },
+    {
       "path": "kernels/fixtures/art-79-settlement-fail-predictor.fixtures.json",
       "sha256": "8379dd3f1cc64ede794ffeddd9514dec872fe4f58e834cbb97bc4738cc4fd58d"
     },
     {
+      "path": "kernels/fixtures/art-791-check-je-multicurrency-balance.fixtures.json",
+      "sha256": "d6636e635297048b3fc315a193ff75b6a4c3d5efcdce2c275e3e4c655a7ee41c"
+    },
+    {
       "path": "kernels/fixtures/art-793-government-stablecoin-acceptance.fixtures.json",
-      "sha256": "949232ea233ab2d89ec12b5ffc71c038def95bea556f7d492501fb6c988e99b3"
+      "sha256": "05155eede19c5da998d749c3a0c23c3dab025e70257d1d6f12b47b1e3c686247"
     },
     {
       "path": "kernels/fixtures/art-80-ssi-conformance-checker.fixtures.json",
@@ -11044,7 +11304,7 @@
     },
     {
       "path": "kernels/fixtures/art-805-agt-audit-chain-verifier.fixtures.json",
-      "sha256": "3a0291829999694aa451433b60f695e074855045f3bb1cc15131d3593a835c90"
+      "sha256": "1ed97d177c0433e38f2cdb9ec984cc0024004819ba771f276b5098e10a38c621"
     },
     {
       "path": "kernels/fixtures/art-807-erc3643-transfer-decision.fixtures.json",
@@ -11056,7 +11316,7 @@
     },
     {
       "path": "kernels/fixtures/art-809-check-reserves-cover-outstanding-private.fixtures.json",
-      "sha256": "f470f818feecfdbdc8d80e8c1ea50ac3ffd9b1143b7ec34197503c98915b7f9a"
+      "sha256": "83c0d317554411673750a7f54d29b5c1295ee0701b310efeb23e6a20a191782c"
     },
     {
       "path": "kernels/fixtures/art-81-allocation-affirmation-conformance.fixtures.json",
@@ -11068,7 +11328,7 @@
     },
     {
       "path": "kernels/fixtures/art-811-check-dti-within-policy-private.fixtures.json",
-      "sha256": "7d0ac39a7c37fd6b2b0c07559f6997c0d9f51dab294dfed4121999234c1b9f48"
+      "sha256": "2a4da5ad4fddcb25e61f2d8c3d37bd2e7c64dc68fa13d9440298b499232ef9d4"
     },
     {
       "path": "kernels/fixtures/art-814-qf-pairwise-recompute.fixtures.json",
@@ -11175,8 +11435,36 @@
       "sha256": "5ef8221442aaae89b098e4cca119bad8585153dd346f920d888244445b5f9f0d"
     },
     {
+      "path": "kernels/fixtures/art-847-cashleg-window-exposure.fixtures.json",
+      "sha256": "1b46065e5986fe8dc74fe2a146cfc2ae591eff63aa8031fe2d6e931f99a367d6"
+    },
+    {
+      "path": "kernels/fixtures/art-849-deferred-comp-457b.fixtures.json",
+      "sha256": "5c61960bf1f8a0cfd26663d69ce0e840f35805b29635deb9d0bcce346e3f33d0"
+    },
+    {
       "path": "kernels/fixtures/art-85-pqc-timeline-fit-diagnostic.fixtures.json",
       "sha256": "3e07afed64988310bbb06d0545a349bce6ca106012cfa86dec2265b6d00b8d49"
+    },
+    {
+      "path": "kernels/fixtures/art-851-islamic-mmf-placement-limits.fixtures.json",
+      "sha256": "225a01308591d220127240803775be07e9ed44f2981c358c6eb7aa4133ea5fe1"
+    },
+    {
+      "path": "kernels/fixtures/art-852-murabahah-ibra-settlement.fixtures.json",
+      "sha256": "a9fdf644dd5011fc330ad15d3e984851afe9c300140bba3f6f1be8253667e234"
+    },
+    {
+      "path": "kernels/fixtures/art-854-sukuk-tradability-composition.fixtures.json",
+      "sha256": "2ee14af79f486b4b9a131f84e03b4a2055835f2b974e21910942f29b0c9dd19f"
+    },
+    {
+      "path": "kernels/fixtures/art-855-murabahah-tawarruq-sequence.fixtures.json",
+      "sha256": "6c3bfecab01cc9679c76067872cd97790f3a4a4faed541fb15b9ffc872c9c008"
+    },
+    {
+      "path": "kernels/fixtures/art-856-ijarah-imbt-schedule.fixtures.json",
+      "sha256": "9c362217fd019d2154273f1616641d02f3f68c5df10a142afb361b471d5548fd"
     },
     {
       "path": "kernels/fixtures/art-86-tls-pki-migration-planner.fixtures.json",
@@ -11324,7 +11612,7 @@
     },
     {
       "path": "kernels/fixtures/compute-proof/813-eth-staking-accounting.receipt.json",
-      "sha256": "9b6724a4e30698bb6c6c009ccae4a7e2bee2fdff9d52ff5960125e644088a450"
+      "sha256": "ba5b9d25db613562c823d10c05c0f4fe3d62400f0c2fbd2c86f97323c012e767"
     },
     {
       "path": "kernels/fixtures/compute-proof/815-eth-fee-market.receipt.json",
@@ -11924,7 +12212,7 @@
     },
     {
       "path": "kernels/fixtures/compute-proof/art-242-pacs008-party-completeness-validator.receipt.json",
-      "sha256": "4a7dc706e4404ae72fac2076f84c5b87f86a4c7544559d389b9d5f427a43d5bf"
+      "sha256": "847537075d75f220982619a351bbbb316d4cdb2729a969ae3d752ff9f8918e1e"
     },
     {
       "path": "kernels/fixtures/compute-proof/art-243-purpose-code-requirement-checker.receipt.json",
@@ -12343,8 +12631,12 @@
       "sha256": "3476aa051ce38024b54839ccb8c6447b4065a781092264e83f93685c96d34949"
     },
     {
+      "path": "kernels/fixtures/compute-proof/art-592-x402-domain-nonce-window-checker.receipt.json",
+      "sha256": "c2fc50fdbd5e4dac3311e95753a7fe1038c86741962d3588c616750888d60265"
+    },
+    {
       "path": "kernels/fixtures/compute-proof/art-593-webbotauth-nonce-replay-check.receipt.json",
-      "sha256": "00a785e7af8a4dcd1fe75fa53e62ca6220b62cd266e0e5ea8462ade46a16f097"
+      "sha256": "9a8ef63f579babffdf84376f2a8bb3403997ee4488ded222c53ce6fca2366007"
     },
     {
       "path": "kernels/fixtures/compute-proof/art-594-tempo-mpp-voucher-receipt-verifier.receipt.json",
@@ -12624,7 +12916,7 @@
     },
     {
       "path": "kernels/fixtures/compute-proof/art-761-caregiver-income-impact.receipt.json",
-      "sha256": "c4dd46327a1db1d667234835fc486fdd2c3bbb75f69cb772044aae3b7f086d25"
+      "sha256": "8719ec29775a01bef54caafbd2aeffb8dd325cdc2bd70611db37fd05f0fb189d"
     },
     {
       "path": "kernels/fixtures/compute-proof/art-763-ai-displacement-risk-screener.receipt.json",
@@ -12636,7 +12928,7 @@
     },
     {
       "path": "kernels/fixtures/compute-proof/art-765-dependent-care-fsa-cdctc-optimizer.receipt.json",
-      "sha256": "b9d56c86670ab9494fbea3e0f7312a2f0724a64f5399ee0eef9a5f33194af68e"
+      "sha256": "4cf3f467a83f462f806d437c59d6b0f938d3ced0273ead1a9ccbe5e98dfa2d4e"
     },
     {
       "path": "kernels/fixtures/compute-proof/art-769-medicare-oop-exposure.receipt.json",
@@ -12700,7 +12992,7 @@
     },
     {
       "path": "kernels/fixtures/compute-proof/art-793-government-stablecoin-acceptance.receipt.json",
-      "sha256": "69e0ed7ab96616b2be96ec673b702075291a324ee2d51e9662263541bf0a3e79"
+      "sha256": "c28fb5a0fec4bd2ada71edce814d822690a44de7556e07c022331dab2140e8e3"
     },
     {
       "path": "kernels/fixtures/compute-proof/art-80-ssi-conformance-checker.receipt.json",
@@ -13076,7 +13368,7 @@
     },
     {
       "path": "kernels/index.mjs",
-      "sha256": "7ec09dbe36ada91bf11cbd3d06eaf5288caaf4d9bf2ef2e1308b4a0f42e2b09b"
+      "sha256": "bcc1950c49a45ebc662dbaf063a860feb3ba5a1b7b2b59f348febf01a6cb433c"
     },
     {
       "path": "kernels/inline-hash-equality.test.mjs",
@@ -13240,7 +13532,7 @@
     },
     {
       "path": "kernels/registry-lineage-records.json",
-      "sha256": "b884b98bdaded59e67a1f8822dbc9a83c145a4d85a88053a69a1aebe64055e21"
+      "sha256": "fc1dc810df5f63ec65a96c6b4cad4abda59184b08010484c166b0f0e23541d23"
     },
     {
       "path": "kernels/seed-replay.test.mjs",
@@ -13320,11 +13612,11 @@
     },
     {
       "path": "openchain-graph-v0.4.schema.json",
-      "sha256": "80e83bd419c411657f190db9f49ee1a4fe9d5bf663ca6e771565c0db70aee9fb"
+      "sha256": "07e0ffe4c767ae8acc770d0addaa6a3e881e387840e141d873c486600162a1e4"
     },
     {
       "path": "SPEC.md",
-      "sha256": "565f2dd45a55e0ff0f8dafde8c1080f9e1484b32a5aaa96f4d7739a236b9258a"
+      "sha256": "c42548ca927e4589decf66a5377910359e5a0a83495fc2044faf651a04cb7705"
     }
   ]
 }

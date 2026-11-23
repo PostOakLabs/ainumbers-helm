@@ -1233,7 +1233,7 @@
   "status": "live",
   "conformance_fixtures": true,
   "compute_capability": "server",
-  "compute_images": [{"system":"sha256-source","image_id":"sha256:5f6d4f0dabd1435299ed3c56a8e3237a7991da822543467c1813a0a1cec44676","valid_from":"2026-11-14"}],
+  "compute_images": [{"system":"sha256-source","image_id":"sha256:b58f3a1db322c0acaf1938fc79d763d616f6143c5806a4cfa456fbf285cd2ecc","valid_from":"2026-11-19"}],
   "export_capability": ["json"],
   "standards_basis": "implements_standard",
   "cited_clause_digest": [
@@ -1381,6 +1381,72 @@
       }
     }
   }
+},
+    {
+  "tool_id": "790-event-position-limit-check",
+  "tool_version": "1.0.0",
+  "display_name": "Event Contract Position Limit Check",
+  "mcp_name": "check_event_contract_position_limits",
+  "mandate_type": "compliance_control",
+  "wave": 141,
+  "gpu": false,
+  "url": "https://ainumbers.co/chaingraph/790-event-position-limit-check.html",
+  "description": "Checks a book of event-contract positions, stated as quantities and prices only, against caller-declared position accountability levels and position limits, per contract, per event or per series: computes each position maximum loss from the side (yes loses its full cost, no loses payout minus price), rounded up to the next minor unit (ceiling, conservative toward finding); nets yes and no quantities on the same contract only when the caller declares per_contract_net; applies market-maker treatment as data (accountability multiplier default 10x and limit exemption on program contracts under the pinned Kalshi rulebook profile, all values caller-overridable, no defaults on the generic profile); and reports accountability breaches and limit breaches each with the profile rule cite, verdict WITHIN, ACCOUNTABILITY_REVIEW or LIMIT_BREACH. Every limit figure is caller-supplied -- the node hard-codes no venue figure -- and aggregation across similar contracts is venue-specific: CFTC staff guidance on that question (staff advisory and advance notice, 2026) sets no numeric levels. The node reports arithmetic against declared levels; it never states that a participant violated a rule. Declared domain exclusions: identifier-like labels (account ids, member ids, addresses, emails, hashes) are refused and never echoed; unknown profiles, malformed dates, out-of-window as_of, out-of-enum aggregation, netting, participant class, side and limit basis are refused with structured non-verdicts; no fee or pricing arithmetic (fee and pricing nodes art-211 and art-212 cover that); no trading or legal advice.",
+  "input_schema_ref": "chaingraph/790-event-position-limit-check.html#manifest",
+  "consumes": [],
+  "feeds": [],
+  "status": "live",
+  "conformance_fixtures": true,
+  "compute_capability": "server",
+  "compute_images": [{"system":"sha256-source","image_id":"sha256:b8ce8e7e260662d41e52573c9cff9e684216e412ea9adc1fe1f514c70c207960","valid_from":"2026-11-20"}],
+  "export_capability": [
+    "json"
+  ],
+  "standards_basis": "implements_standard",
+  "cited_clause_digest": [
+    {
+      "digest": "sha256:545afb7b94c8765b3da2780d8e8f9e9ab3059f374ccdd95aae86c01503e8ebd3",
+      "source_url": "https://kalshi-public-docs.s3.amazonaws.com/regulatory/rulebook/Kalshi%20DCM%20Rulebook%20v.1.29.pdf",
+      "retrieved_at": "2026-10-31",
+      "clause_path": "Kalshi DCM Rulebook v1.29 Chapter 1 Definitions (p.10) -- Position Accountability Level and Position Limit defined as maximum-loss levels, per contract, figures set in each contract Terms and Conditions",
+      "scheme": "kalshi-rulebook",
+      "id": "Kalshi DCM Rulebook v1.29 Ch.1 definitions (PAL, Position Limit)"
+    },
+    {
+      "digest": "sha256:5c63a6c5b291b35dfa486aa703fc7b5b4ab0e479bd5b5d618f0ac1cb5e2593ba",
+      "source_url": "https://kalshi-public-docs.s3.amazonaws.com/regulatory/rulebook/Kalshi%20DCM%20Rulebook%20v.1.29.pdf",
+      "retrieved_at": "2026-10-31",
+      "clause_path": "Kalshi DCM Rulebook v1.29 Rule 5.18 Position Accountability and Rule 5.19 Position Limits (pp.58-59) -- accountability obligations on exceeding a level; exceeding a position limit is a violation; market maker exclusion on program contracts",
+      "scheme": "kalshi-rulebook",
+      "id": "Kalshi DCM Rulebook v1.29 Rules 5.18/5.19 (position accountability, position limits)"
+    },
+    {
+      "digest": "sha256:8236a6c92be19ba029be6371c196036ea66a016c4dfd1bfcae97a8a22cab68c5",
+      "source_url": "https://kalshi-public-docs.s3.amazonaws.com/regulatory/rulebook/Kalshi%20DCM%20Rulebook%20v.1.29.pdf",
+      "retrieved_at": "2026-10-31",
+      "clause_path": "Kalshi DCM Rulebook v1.29 Rule 4.5 Market Maker Position Accountability Levels (p.41) -- market makers 10x accountability levels where quoting obligations apply; not subject to position limits on program contracts; CFTC limits always apply",
+      "scheme": "kalshi-rulebook",
+      "id": "Kalshi DCM Rulebook v1.29 Rule 4.5 (market maker accountability levels, limit exemption)"
+    },
+    {
+      "digest": "sha256:e1d424254f7e6ed5f1d8326c6f4181c2d039ee0ef75f91f45e4df6c563b9c09b",
+      "source_url": "https://www.ecfr.gov/api/versioner/v1/full/2026-10-29/title-17.xml?part=38&section=38.300",
+      "retrieved_at": "2026-10-31",
+      "clause_path": "17 CFR 38.300 Core Principle 5 -- the board shall adopt position limitations or position accountability for each contract as necessary and appropriate",
+      "scheme": "cfr",
+      "id": "17 CFR 38.300 Core Principle 5"
+    },
+    {
+      "digest": "sha256:0fac9ee8dc408f192ee2c1ab962f84573aaa7ebe63e0cd8a62b4b9666c5c1e07",
+      "source_url": "https://www.ecfr.gov/api/versioner/v1/full/2026-10-29/title-17.xml?part=38&section=38.301",
+      "retrieved_at": "2026-10-31",
+      "clause_path": "17 CFR 38.301 Position limitations and accountability -- a designated contract market must meet the requirements of parts 150 and 151, as applicable",
+      "scheme": "cfr",
+      "id": "17 CFR 38.301 position limitations and accountability"
+    }
+  ],
+  "compute_proof_ready": "deferred",
+  "deferred_reason": "New gpu:false node, 790-event-position-limit-check, scaffolded 2026-10-31 (KERNEL-SCAFFOLD-1). No GPU prove has been run and none is proposed by this scaffold — deferred per the section 18 steady-state rule (RIDER-KERNEL.md). Run GPU-CYCLE-PREFLIGHT-1's static pre-screen once compute() is real, then measure user_cycles with runq-cpu exec before booking."
 },
     {
   "tool_id": "792-curator-vault-cap-auditor",
@@ -1577,6 +1643,56 @@
   }
 },
     {
+  "tool_id": "796-payment-system-mi-pack",
+  "tool_version": "1.0.0",
+  "display_name": "Payment System MI Pack",
+  "mcp_name": "compute_payment_system_mi_pack",
+  "mandate_type": "compliance_control",
+  "wave": 141,
+  "gpu": false,
+  "url": "https://ainumbers.co/chaingraph/796-payment-system-mi-pack.html",
+  "description": "Computes a payment system's management-information pack from declared AGGREGATE counts only (no transaction-level records, no personal data): a fixed KPI set covering speed (share of transactions credited within one hour and within one business day), average cost in basis points of transaction value, failure rate, availability from scheduled versus unplanned-downtime minutes, fraud value and count shares, complaint resolution within SLA, adoption (users per 1000 eligible population and accepting locations count), and transparency (share of services disclosing cost and speed). Each KPI carries its definition source in definition_ref: the speed percentage is compared against the pinned 75-percent-within-one-hour cross-border retail speed target on the g20_retail and fast_payment_scheme profiles; the cost, access and transparency KPI families are adapted from the pinned FSB retail KPI definitions; availability is anchored to the pinned operational-risk principle with the 99.9-percent reference level declared as a design convention; the remaining KPIs are declared design conventions. Missing-input KPIs are null with a reason code, never zero; channel totals that do not reconcile, credited counts above the declared total, negative declared values, fractional declared count fields and impossible declared relations (a part above its whole, such as resolved complaints above received, downtime above scheduled minutes, active users above the eligible population or disclosing services above total services) raise data-quality flags and the affected KPI is null with a named reason; inputs the artifact path cannot canonicalize (integers beyond 2 to the power 53, non-finite numbers), malformed channel or failure entries, wrong-typed period or prior-period values and dates that are not real calendar dates are refused; a prior period of the same shape yields per-KPI deltas. Profile-keyed (generic, g20_retail, fast_payment_scheme, gov_payments). Declared scope limit: this node produces KPIs, not verdicts, it does not reconcile individual records and does not audit statements (the reconciliation and audit nodes art-516 and art-517 do that), and it never presents real scheme figures: every figure is computed from caller-declared aggregates.",
+  "input_schema_ref": "chaingraph/796-payment-system-mi-pack.html#manifest",
+  "consumes": [],
+  "feeds": [],
+  "status": "live",
+  "conformance_fixtures": true,
+  "compute_capability": "server",
+  "compute_images": [{"system":"sha256-source","image_id":"sha256:55c21fb35d931deb93c587ac6e08422791fb39aa4a8e51372abef3a5dda38106","valid_from":"2026-11-21"}],
+  "export_capability": [
+    "json"
+  ],
+  "standards_basis": "implements_standard",
+  "cited_clause_digest": [
+    {
+      "digest": "sha256:1be3ee790971aa88028365e143a484124d1684295ddfd16f52650ce75d8e9652",
+      "source_url": "https://www.fsb.org/uploads/P131021-2.pdf",
+      "retrieved_at": "2026-10-31",
+      "clause_path": "Quantified targets table, speed segment (wholesale and retail rows); retail cost framing",
+      "scheme": "fsb",
+      "id": "FSB cross-border payments targets 2021, speed (retail/wholesale) rows"
+    },
+    {
+      "digest": "sha256:f7303adf008073c88ccd0b4086ded93a0d4f82326bc62f6192ed20dfed1164a5",
+      "source_url": "https://www.fsb.org/uploads/P091025-2.pdf",
+      "retrieved_at": "2026-10-31",
+      "clause_path": "Table 3: Retail segment KPIs — cost, speed, access, transparency definitions",
+      "scheme": "fsb",
+      "id": "FSB G20 roadmap KPI methodology 2025, retail KPI definitions"
+    },
+    {
+      "digest": "sha256:73bd4103a706447d76dee22dd74ee4548fcf36ed695de116ae1fc0c3ce1b952e",
+      "source_url": "https://www.bis.org/pages/principles-financial-market-infrastructures/d101a.pdf",
+      "retrieved_at": "2026-10-31",
+      "clause_path": "Principle 17 Operational risk — principle statement (no numeric availability KPI)",
+      "scheme": "cpmi-iosco",
+      "id": "CPSS-IOSCO PFMI 2012 Principle 17 statement"
+    }
+  ],
+  "compute_proof_ready": "deferred",
+  "deferred_reason": "New gpu:false node, 796-payment-system-mi-pack, compute() authored 2026-10-31. No GPU prove has been run and none is proposed by this row — deferred per the section 18 steady-state rule (RIDER-KERNEL.md); the prove lands deferred and a SIDEBYSIDE row against the pinned FSB texts precedes any prove dispatch (SO #39)."
+},
+    {
   "tool_id": "797-stablecoin-cash-equivalent-test",
   "tool_version": "1.0.0",
   "display_name": "Stablecoin Cash Equivalent Test (FASB Proposed 2026-08)",
@@ -1592,13 +1708,7 @@
   "status": "live",
   "conformance_fixtures": true,
   "compute_capability": "server",
-  "compute_images": [
-    {
-      "system": "sha256-source",
-      "image_id": "sha256:643f5a36069f70daa86c7d7bbee6a65e227f4de5813fe2974819c3e8899de17d",
-      "valid_from": "2026-11-10"
-    }
-  ],
+  "compute_images": [{"system":"sha256-source","image_id":"sha256:de6a5d338d3e22fb37b68a9ee9707fc38c51ffe8839c61331e1db4f69579f3c0","valid_from":"2026-11-20"}],
   "export_capability": [
     "json"
   ],
@@ -2074,8 +2184,21 @@
   "status": "live",
   "conformance_fixtures": true,
   "compute_capability": "server",
-  "compute_images": [{"system":"sha256-source","image_id":"sha256:3c67f800389a0cc0ff46a484c2793943fdc886a2d2f941562eb9eae23c90e52d","valid_from":"2026-11-06"},{"system":"risc0","image_id":"sha256:a1a0bc89b5b1febaeda3519f6dbade0fa5ac16beeb143c4e1b01689573567bc6","valid_from":"2026-09-12"}],
-  "export_capability": ["json"],
+  "compute_images": [
+    {
+      "system": "sha256-source",
+      "image_id": "sha256:15729396060f993d9a831853089bc5cc992ffb1d1ad17e7021e73ef3be271689",
+      "valid_from": "2026-11-20"
+    },
+    {
+      "system": "risc0",
+      "image_id": "sha256:a1a0bc89b5b1febaeda3519f6dbade0fa5ac16beeb143c4e1b01689573567bc6",
+      "valid_from": "2026-09-12"
+    }
+  ],
+  "export_capability": [
+    "json"
+  ],
   "standards_basis": "implements_standard",
   "cited_clause_digest": [
     {
@@ -2140,10 +2263,10 @@
     "system": "risc0",
     "receiptFormat": "groth16-bn254",
     "imageId": "sha256:a1a0bc89b5b1febaeda3519f6dbade0fa5ac16beeb143c4e1b01689573567bc6",
-    "seal": "HuUd8VDQccWF5oa94STzLZleUrsYk2fx5tJetmN6GRgJabQJuI7Oav53WVnGaokVmB4r3IGhTBdooxPbOqBucRk3Sv8oob0dq6D+1HdmB9Cxt2l/VRptC383KkFx2Yt3HdA5arWSR0n/BwufVSsVw+mOOoP5CDo2qnv1eVe3hc8Y+MK5t2QbDtMq2R85NT/ahb403ReHrVcp3/1Z/AHLHClKmxqiMMyYpV/nU0LY1MOhWidp8Qu4a4ITh4EsQbTgEAZyPyEKpzcSEm0UFGz40hEw8pRBvQFkqiLfmpPaGxkWCxhD5deL6shuPR25H50+uNPQUN+R+kj2UXoDkEjISw==",
+    "seal": "KC5y/ArDI6UjHbT6lYCUTvsTGDCpmLjNnKd5swttub0oDk+coCIwpEGkjyaqSdCjugs3M6AZZTUAGwmr63QZ7RBfuDXggOLW5A5FKmem7YpOaa92Tdxe/Kd0d8LzP9+REwPfUGIZTaFlhYm0o8POt6EXCSkB/oWvqPIihWsvPJgaLlBb4bioP6sW9C9fXxZhNRTVzYapxl7VnfOCR7Pt6A1OCTOsowPLXNfoKvqFyyIO7jQ3Ot7/gM5cJG8l93Z0EKt9QFaqDZPc1Mr4iTO3zuvcyptJ8fftTh+FjYREaNQOO3eXv66GxuFD92Np4O1MjI44v5BQfnFDbxLGKqYNDQ==",
     "journal": {
       "chaingraph_version": "0.4.0",
-      "kernel_digest": "sha256:3c67f800389a0cc0ff46a484c2793943fdc886a2d2f941562eb9eae23c90e52d",
+      "kernel_digest": "sha256:15729396060f993d9a831853089bc5cc992ffb1d1ad17e7021e73ef3be271689",
       "output": {
         "base_reward_gwei": "11360",
         "base_reward_per_increment_gwei": "355",
@@ -2564,14 +2687,14 @@
   "wave": 142,
   "gpu": false,
   "url": "https://ainumbers.co/chaingraph/825-reconcile-ucp-checkout-totals.html",
-  "description": "Reconciles a pasted Universal Commerce Protocol (UCP 2026-08-25) cart, checkout or order totals block in integer minor units. Recomputes price x quantity per line (exact base-10 digit-array arithmetic, at most one rounding under the caller-declared policy, default half_even), rolls line subtotals into the document subtotal, checks the breakdown identity and the schema sign rules, and in order mode nets adjustment totals against the refund bound. Returns RECONCILED, MISMATCH or INDETERMINATE with per-finding JSON paths; structurally malformed input refuses the whole call with INPUT_REFUSED. Arithmetic consistency only: it never judges whether a tax, fee or discount amount itself was computed correctly, because UCP publishes no tax or rounding algorithm; Business-extension total types and lines priced on a different basis (item.unit_price) are skipped or reported indeterminate, never guessed. Negative totals are reported informationally (UCP issue #1025) and order discount attribution is reported as not evaluable (issue #1026). Verify-only, zero network calls, no fetched keys. Fixture provenance: derived from the UCP schema and issue material (github.com/Universal-Commerce-Protocol/ucp tag v2026-08-25, commit 7a5daa55313f8b468aba76caf01fb76851d37f84, Apache-2.0), including the repo's flower_shop reference storefront example.",
+  "description": "Reconciles a pasted Universal Commerce Protocol (UCP 2026-08-25) cart, checkout or order totals block in integer minor units. Recomputes price x quantity per line (exact base-10 digit-array arithmetic, at most one rounding under the caller-declared policy, default half_even), rolls line subtotals into the document subtotal, checks the breakdown identity and the schema sign rules, and in order mode nets adjustment totals against the refund bound. Returns RECONCILED, MISMATCH or INDETERMINATE with per-finding JSON paths; structurally malformed input refuses the whole call with INPUT_REFUSED. Arithmetic consistency only: it never judges whether a tax, fee or discount amount itself was computed correctly, because UCP publishes no tax or rounding algorithm; Business-extension total types, lines priced on a different basis (item.unit_price), lines without an assertable subtotal and reads truncated past a declared bound are skipped or reported indeterminate, never guessed: a partial evaluation is never RECONCILED. A present line_items or adjustments value that is not an array refuses the whole call (LINE_ITEMS_NOT_ARRAY, ADJUSTMENTS_NOT_ARRAY) instead of reading as empty, and every amount read is validated against the UCP 2^53-1 safe-integer domain (AMOUNT_NOT_INTEGER) rather than coerced. Negative totals are reported informationally (UCP issue #1025) and order discount attribution is reported as not evaluable (issue #1026). Verify-only, zero network calls, no fetched keys. Fixture provenance: derived from the UCP schema and issue material (github.com/Universal-Commerce-Protocol/ucp tag v2026-08-25, commit 7a5daa55313f8b468aba76caf01fb76851d37f84, Apache-2.0), including the repo's flower_shop reference storefront example.",
   "input_schema_ref": "chaingraph/825-reconcile-ucp-checkout-totals.html#manifest",
   "consumes": [],
   "feeds": [],
   "status": "live",
   "conformance_fixtures": true,
   "compute_capability": "server",
-  "compute_images": [{"system":"sha256-source","image_id":"sha256:9a5c782686ba02ea75b2ea3cdbe73e6edfb8abc4e3061119c1cad45ede1fc7bd","valid_from":"2026-11-10"}],
+  "compute_images": [{"system":"sha256-source","image_id":"sha256:5525a49679c62c3b69584c513931c2ad557e794ae7a375dfd74b51188dc0369f","valid_from":"2026-11-20"}],
   "export_capability": ["json"],
   "standards_basis": "implements_standard",
   "cited_clause_digest": [
@@ -19756,8 +19879,8 @@
   "compute_images": [
     {
       "system": "sha256-source",
-      "image_id": "sha256:2aac07c9bd6463db4571c1800f17c85d5c09ee00b62151b485113a1ddb02de8a",
-      "valid_from": "2026-10-08"
+      "image_id": "sha256:1992eefa054bfeb91ddb3725101be07b62a8db02cbbcd092c2096d8c47b09a5a",
+      "valid_from": "2026-11-20"
     },
     {
       "system": "risc0",
@@ -19773,10 +19896,10 @@
     "system": "risc0",
     "receiptFormat": "groth16-bn254",
     "imageId": "sha256:a1a0bc89b5b1febaeda3519f6dbade0fa5ac16beeb143c4e1b01689573567bc6",
-    "seal": "JhlQRWlkS+73UW/800COF2tWxEt78NIaU6sFJQHUVj8ov1AQ3uiY4OBrb0U8jwnTpWU5GkiHSHlmPQC+DSRneRRv/bR+c2/HAPvE2lWWF7uUat0YA0BsEHK8FRR711AFK0Whv76Abu0cPWZDdnBuHURV5UAzFByIDkTiuwwrN7IjJ3o0+m5KaF6xgbrDYgBznXxWTcD4B0wieFXlsvfgKgwtpbCB0RDXOn3mgM0P2BZeYZAtU8JdMomD2qqiXhjkDCZM/ItUsq2pnkB6Mx/06mYPQF+ft81dzYGdvamBavoEXWRFdqWJAVGYCTcFajTytd3BmswpxIKI0Q6tDKJzlQ==",
+    "seal": "HDFr69Sj3dMQZ47w4iuP2MN20IFpqyzL5zikpn/1yhQsHjs6Px+WeKTdIu/H5KSgzLgp6OYZ1Af4yF9h5wDzwABYubqTQRKf97NOGgYGtwbjNyNZoLX/GkM/0fWzqD7kJttUOLDaoVaVZyH6b3wgTHXc7w15iuAFOPPOWEeRCngXao4TdCAbwPN+D9L8L77bStBDiD0ra4kPjHwdce7p7hwE4qgW3LWx9XpER46HqeeZU/EJV4ZtQPnkVXnDuuMdEPnuq6h884964aJ3833TQe1RqAvgzPabO6l4w6pNvW8fEgjmL+uuzYIg7FQFdOGSQTG30XgzeGIhgpTG+xy1Jw==",
     "journal": {
       "chaingraph_version": "0.4.0",
-      "kernel_digest": "sha256:2aac07c9bd6463db4571c1800f17c85d5c09ee00b62151b485113a1ddb02de8a",
+      "kernel_digest": "sha256:1992eefa054bfeb91ddb3725101be07b62a8db02cbbcd092c2096d8c47b09a5a",
       "output": {
         "compliant": true,
         "cpmi_d218_score": 100,
@@ -47408,7 +47531,7 @@
   "wave": 99,
   "gpu": false,
   "url": "https://ainumbers.co/chaingraph/art-592-x402-domain-nonce-window-checker.html",
-  "description": "Checks an EIP-3009 TransferWithAuthorization's domain separation and replay-defense-adjacent fields against caller-supplied expectations. Takes expected_chain_id and expected_verifying_contract as separate, mandatory policy parameters -- distinct from the chainId/verifyingContract actually baked into the signed domain -- and refuses hard (never a soft warning) on either mismatch, the cross-domain replay defect class EIP-712 domain separation exists to prevent. Also checks the validAfter/validBefore window against a caller-supplied now_unix, and the nonce's format (bytes32, non-zero). Accepts an optional caller-supplied nonce_already_used boolean computed against the caller's own on-chain record; this kernel never queries a chain, so on-chain nonce uniqueness is enforced by the token contract at settlement time, not by this verifier. Zero network calls; never a facilitator, proxy, or settlement relay.",
+  "description": "Checks an EIP-3009 TransferWithAuthorization's domain separation and replay-defense-adjacent fields against caller-supplied expectations. Takes expected_chain_id and expected_verifying_contract as separate, mandatory policy parameters -- distinct from the chainId/verifyingContract actually baked into the signed domain -- and refuses hard (never a soft warning) on either mismatch, the cross-domain replay defect class EIP-712 domain separation exists to prevent. Also checks the validAfter/validBefore window against a caller-supplied now_unix, and the nonce's format (bytes32, non-zero). Accepts an optional caller-supplied nonce_already_used boolean computed against the caller's own on-chain record, and an optional signature/s form input for the EIP-2 low-s (malleability) check -- a supplied signature with s above half the secp256k1 order is a hard refuse with flag X402_SIGNATURE_HIGH_S, because low-s enforcing tokens reject it at settlement, and a zero r or s component is a hard refuse with flag X402_SIGNATURE_ZERO_COMPONENT (an invalid signature form: a well-formed ECDSA signing operation cannot produce one); signature_form reports s_above_half_order and zero_component and is emitted only when the signature is supplied. This kernel never queries a chain, so on-chain nonce uniqueness is enforced by the token contract at settlement time, not by this verifier. Zero network calls; never a facilitator, proxy, or settlement relay.",
   "input_schema_ref": "chaingraph/art-592-x402-domain-nonce-window-checker.html#manifest",
   "consumes": [],
   "feeds": [],
@@ -47419,8 +47542,8 @@
   "compute_images": [
     {
       "system": "sha256-source",
-      "image_id": "sha256:b38255c8483b8792648d21f7a06a061fa24aaaea6ffce83ffb9c9b340afab72a",
-      "valid_from": "2026-07-10"
+      "image_id": "sha256:13a983346c12f03c2626a1714a1c6e4b8df984252c8c5f68b8e853167ed52842",
+      "valid_from": "2026-11-20"
     },
     {
       "system": "risc0",
@@ -47437,10 +47560,10 @@
     "system": "risc0",
     "receiptFormat": "groth16-bn254",
     "imageId": "sha256:a1a0bc89b5b1febaeda3519f6dbade0fa5ac16beeb143c4e1b01689573567bc6",
-    "seal": "DThpcpBZ30Ov9IIXTrn33rrIC6YESLxXc+Aske5u+I8GVcYNI44eQx2hou9sip/pJ0u0f5P9aDFCpD9v7EgKmh5WB2FYcMYQ2KmbRqjP4Xn+w4KR69DHstiEJPiy9j9SEaBiKXmS+FNKtUQBhGKYvOSo9vkDn8EsLZBgXAytwHErUku4IM1/uXT37J/ItLTSDygK5OCMY7WmW9DnL8MfwxkmigX0ek7YPszDVOHSdOLS0hFFrAPOstDhziy9v8KTI3jxFHEtSj/JPgw1Ev6vCPzcxwyNar8AsichLDNaBAskVHZCw8X3dWCPteLticzTZKRdiCru1Eq994MhJuED6w==",
+    "seal": "C3+kiTvs650PJheicZtOHBVUWP5D5aPaelTMQW6kzhUAATWzkKmNiNTp0ZcyaNeuwM1NNcLOYNpjcbKtw1xVNC+acXtrokjsC0wpspbRZz4AnZxgvEs+rqZH2E6oEX8wDev0uLAEfetjyx5fVflU3RDfwSHFpcwX9NZhBy4Lig4H56iEPs5qnnY3kL79MJdNMF9P5Ybpqp3pmbab+TwQ8TAm9yE0CCVJ1A/zpYD6DOnOJgrq/ntRQvL7cHTZ1rrwHiFi5Vll0QuOF8THFveNcxcsaJH0KKHpe2eUKPiNni0g2nKnHlxspYGMzphH6iJ9oPUdYq1b4RqubJkpecV9Fg==",
     "journal": {
       "chaingraph_version": "0.4.0",
-      "kernel_digest": "sha256:b38255c8483b8792648d21f7a06a061fa24aaaea6ffce83ffb9c9b340afab72a",
+      "kernel_digest": "sha256:13a983346c12f03c2626a1714a1c6e4b8df984252c8c5f68b8e853167ed52842",
       "output": {
         "authorization_expired": false,
         "authorization_not_yet_valid": false,
@@ -47479,7 +47602,7 @@
   "wave": 99,
   "gpu": false,
   "url": "https://ainumbers.co/chaingraph/art-593-webbotauth-nonce-replay-check.html",
-  "description": "Checks a Visa TAP-shaped nonce for format (minimum entropy, base64url), freshness against a caller-supplied now_unix (created/expires spread capped at TAP's 8-minute limit), and an optional caller-supplied seen-nonce record. Fail-closed on required inputs: nonce, created, expires and now_unix are required, and a created/expires spread that cannot be evaluated (expires absent, null or non-numeric) never reads as satisfied, so the nonce is REFUSED rather than the 8-minute spread rule being bypassed. This kernel is a pure function invoked fresh per call with zero persistent storage -- it cannot itself remember whether a nonce was seen on a prior invocation. Replay prevention depends entirely on the caller supplying an accurate seen-nonce record from its own storage; this verifier is stateless and cannot detect replay on its own. Zero network calls; never a facilitator, proxy, or settlement relay. Feeds the signatures-directory validator (art-130) in the visa-tap-agent-verification chain.",
+  "description": "Checks a Visa TAP-shaped nonce for format (minimum entropy, base64url), freshness against a caller-supplied now_unix (created/expires spread capped at TAP's 8-minute limit), and an optional caller-supplied seen-nonce record. Fail-closed on required inputs: nonce, created, expires and now_unix are required, and a created/expires spread that cannot be evaluated (expires absent, null or non-numeric) never reads as satisfied, so the nonce is REFUSED rather than the 8-minute spread rule being bypassed. This kernel is a pure function invoked fresh per call with zero persistent storage -- it cannot itself remember whether a nonce was seen on a prior invocation. Replay prevention depends entirely on the caller supplying an accurate seen-nonce record from its own storage; this verifier is stateless and cannot detect replay on its own. When neither seen_nonces nor nonce_already_used is supplied the replay check is not evaluated: otherwise-valid input returns REPLAY_CHECK_NOT_EVALUATED with the NONCE_REPLAY_STORE_ABSENT flag, never ACCEPT (an empty seen_nonces list is a supplied, empty store). This node is a replay check, not a freshness verifier: it does not require now_unix to be at or before expires; freshness is bounded by created, max_age_s and the 8-minute spread. Zero network calls; never a facilitator, proxy, or settlement relay. Feeds the signatures-directory validator (art-130) in the visa-tap-agent-verification chain.",
   "input_schema_ref": "chaingraph/art-593-webbotauth-nonce-replay-check.html#manifest",
   "consumes": [],
   "feeds": [
@@ -47489,30 +47612,41 @@
   "standards_basis": "not_applicable",
   "conformance_fixtures": true,
   "compute_capability": "server",
-  "compute_images": [{"system":"sha256-source","image_id":"sha256:138c2f487a173ef2bd8b97435481bbacafd2c216a9a9a9663f7526c835d8f57c","valid_from":"2026-11-13"},{"system":"risc0","image_id":"sha256:a1a0bc89b5b1febaeda3519f6dbade0fa5ac16beeb143c4e1b01689573567bc6","valid_from":"2026-07-10"}],
+  "compute_images": [
+    {
+      "system": "sha256-source",
+      "image_id": "sha256:f3470256d6053732a98911c95987c2019b957f73ecb8bce762ad0013b48063c1",
+      "valid_from": "2026-11-19"
+    },
+    {
+      "system": "risc0",
+      "image_id": "sha256:a1a0bc89b5b1febaeda3519f6dbade0fa5ac16beeb143c4e1b01689573567bc6",
+      "valid_from": "2026-07-10"
+    }
+  ],
   "export_capability": [
     "json"
   ],
   "compute_proof_ready": "ready",
   "compute_proof": {
-      "type": "ZkVmReceipt",
-      "system": "risc0",
-      "receiptFormat": "groth16-bn254",
-      "imageId": "sha256:a1a0bc89b5b1febaeda3519f6dbade0fa5ac16beeb143c4e1b01689573567bc6",
-      "seal": "Ge6IYL/7bVIrqY666YILzJiQIkPiXUfw76PhPEsfZAooNr5wLaZ86sMMNKwj3CWHCgiyfBuhUn2S8iqUPqPzASt7uu+UdR3HPMH+ysRcrwPVrNe0tScBsKFQzqlshQXFCyurSQdz0Hrfa85/BHOUkzPjSygQNZdPL/+hjg4I/l4tms3tdQOzRGArAMFLJALET/TueAU9+I1KPvYjiuNSKA64DCfhBNklUBayjo8eldiO/582exwmvhQVX27oah+eIgMGo7ysLrFGVHjvP63Vne6RzJyl/VPZTcmUnJnJPJEV+FAkH/rZvcZ/9gpvX/wsaibS0OuTDUvgMKUA1wpLbw==",
-      "journal": {
-        "chaingraph_version": "0.4.0",
-        "kernel_digest": "sha256:138c2f487a173ef2bd8b97435481bbacafd2c216a9a9a9663f7526c835d8f57c",
-        "output": {
-          "already_used": false,
-          "format_ok": true,
-          "fresh": true,
-          "nonce_valid": true,
-          "spread_ok": true,
-          "verdict": "ACCEPT"
-        }
+    "type": "ZkVmReceipt",
+    "system": "risc0",
+    "receiptFormat": "groth16-bn254",
+    "imageId": "sha256:a1a0bc89b5b1febaeda3519f6dbade0fa5ac16beeb143c4e1b01689573567bc6",
+    "seal": "EBJy1yCCft7p6txouIoEVGGK+6EKSIZ66K8Lpwg0/nAAeSqNpxsfzp+hWLZzeKC66KbQZd7fDsfMHJWKPgzASy3ymN8igtzzKoUKuZ8pAb3B9xTVCFqC/dwXt89x/LiiEYO7e8YsNLy3B/i1fR/qVWg3qp8xAXCwhu1XKqK/MOsIyExPycGOf6m/O3d5oZVHDp0LypNpIymEq+PBTYNFlQ9oN9ZNYkvdPxVq4eTrqAlcTAd5f615AhTjp9b2yfDMLlCG82Ywj3bKZC5p/o6jlYWYc8wp5XEnZX4eRUcW30oGXWgM+2N5UiGVBQrfqU+f+B62P1VO9AzQLL3zDhVojw==",
+    "journal": {
+      "chaingraph_version": "0.4.0",
+      "kernel_digest": "sha256:f3470256d6053732a98911c95987c2019b957f73ecb8bce762ad0013b48063c1",
+      "output": {
+        "already_used": false,
+        "format_ok": true,
+        "fresh": true,
+        "nonce_valid": true,
+        "spread_ok": true,
+        "verdict": "ACCEPT"
       }
     }
+  }
 },
     {
   "tool_id": "art-594-tempo-mpp-voucher-receipt-verifier",
@@ -58059,8 +58193,8 @@
   "compute_images": [
     {
       "system": "sha256-source",
-      "image_id": "sha256:bae9e36268ac108df324d80f876981fd05436acf6bb21bab46ca1884f18ce145",
-      "valid_from": "2026-10-20"
+      "image_id": "sha256:3c16e24e31e72a555c95d70f83aa49d3ab203f17b706617b020df1491a5601ef",
+      "valid_from": "2026-11-19"
     },
     {
       "system": "risc0",
@@ -58080,10 +58214,10 @@
     "system": "risc0",
     "receiptFormat": "groth16-bn254",
     "imageId": "sha256:a1a0bc89b5b1febaeda3519f6dbade0fa5ac16beeb143c4e1b01689573567bc6",
-    "seal": "JzWRY1GNsO9gPyWv4oAWXyx0NBCBxXRNCXvM6V+Wvg0eZX12OhlMulQTB59v5kyPp3ODO3xv6h5afwzRgiyMmQ4rllPBdwE6oLrf6+AzwKq+t+lIhg9Xqk54Tfd0DcJ5Fu7VmSgz7RqnGdYnwq01O5j482qbAf+t2Dem9kg6xiYMKlYfqSXa2iq2B9cKiYJhpMeD8jriyRVE2M7V2mZdpgNAmv7N/ZslTej+YbpP26GXdR3WZ+tU7+M4QsORQYs6F+GJgxZg8YDzx6lqepaQ1qBCFAVk5hkf2vWRccgrzIkuTdxsZWbz+mQK2vl4pOVAAcKvUp8lt2gnPuotQvGc3w==",
+    "seal": "D/IE8psmdvUDRoRNlOOnXHohCtI0ZcykF6jouOqEQXYkOQsk5HRVAts+MC/kWumvOwoXhM/0WqUW9MhjYWQUyCskQHAcpnuEtDmaXK/p31oEWVao6K0KG8L8Pk7KrsboIZCmFxfW8arArQyyiNXOFAZOEqt4zJ1srqZcsboxUpwkKtWC5EGF/SWM0IuId+bjKHFBoGLq0Pmqz4UiicMwpyHxJEPDGz8LF+X7FnUExNRHr8KG9oE5itotUzgEwRovJem/fJYSFna1BflvnqNsTwsjPVs1WiKePAldPp2P0AMHLiGMLW2+swplN4vTGIopVV/RtyvBp4X0CZuE0ntdhw==",
     "journal": {
       "chaingraph_version": "0.4.0",
-      "kernel_digest": "sha256:bae9e36268ac108df324d80f876981fd05436acf6bb21bab46ca1884f18ce145",
+      "kernel_digest": "sha256:3c16e24e31e72a555c95d70f83aa49d3ab203f17b706617b020df1491a5601ef",
       "output": {
         "annual_401k_lost_cents": 270000,
         "annual_income_loss_cents": 4500000,
@@ -58350,8 +58484,8 @@
   "compute_images": [
     {
       "system": "sha256-source",
-      "image_id": "sha256:96cb71d2b11c805572ba28f74fbbf54b7f78610048317107148f162d394ddf90",
-      "valid_from": "2026-10-20"
+      "image_id": "sha256:49ff910047ac0cb8468390e069089a20c1f5637f956b1e223cc23c9c10ac77f5",
+      "valid_from": "2026-11-20"
     },
     {
       "system": "risc0",
@@ -58371,10 +58505,10 @@
     "system": "risc0",
     "receiptFormat": "groth16-bn254",
     "imageId": "sha256:a1a0bc89b5b1febaeda3519f6dbade0fa5ac16beeb143c4e1b01689573567bc6",
-    "seal": "FYQnDj1GS7uWBZEHlrFSPZYkuRrceOYxs5fl9nTgYWYSpiOmbuSl1jQdhfo44ZV878X55hATGZKajunXVtQUSi36c2znDAO+0z0nsV1lQqRCWx+R+ua9SaLWXg1/DYr0BHc4JPD3JFCSCZErgbaGK+zKWYWiWzWOdhnB4OK8BTMTHLzcQuDUseiKa/XtQLQ4uGO3SYf3lgJ76eRh8v883ALhqv+AKlzkkd5sxONAC5bSsjPZeuZoa59XX08XxFkhLFXonGLz1i6qr1pQhIkwvG7nImYU20FY6Uq3zmEuNPoZ6Of+upRTAjyRFQL0ysF6Uh/u5LzjVuomC7f9VgZPHQ==",
+    "seal": "L5XbjqTXDqcvfwhclXAYgsiFxgPI4Jq0QKGhsIVZV3wZfGZdLWKc9MTbc65qq6BxmDyvn+aW9X+Ujb0v0SnpmSmWbDqjSG3SNibvHjt4LN0QDcpG9N20ujmIbQUWouuzLm9RcYwuNBa0WN/AcRWg478RsMkGD4Gg+49ODl7yUZoP14NJfUpFpJtxKCKRylwLLC9+jeOY634wcRRA9bwCLycl73dklpQpwv9Oun12Y3IhEWPvCeBFX1l9/RilM477HI5rTGm1pcDwdhm7dgDHUnbiPOl/XKdelH4dEpL+i20QDgbTQlGFFiGp1B6uOMhsQMm/9bEoyjz2TiBcjCyY0Q==",
     "journal": {
       "chaingraph_version": "0.4.0",
-      "kernel_digest": "sha256:96cb71d2b11c805572ba28f74fbbf54b7f78610048317107148f162d394ddf90",
+      "kernel_digest": "sha256:49ff910047ac0cb8468390e069089a20c1f5637f956b1e223cc23c9c10ac77f5",
       "output": {
         "agi": 95000,
         "as_of": "2026-10-13",
@@ -59895,6 +60029,33 @@
   }
 },
     {
+  "tool_id": "art-781-x402-svm-payment-outcome",
+  "tool_version": "1.0.0",
+  "display_name": "x402 Exact Solana Payment Outcome Recompute",
+  "mcp_name": "verify_x402_svm_outcome",
+  "mandate_type": "compliance_mandate",
+  "wave": 139,
+  "gpu": false,
+  "url": "https://ainumbers.co/chaingraph/art-781-x402-svm-payment-outcome.html",
+  "description": "Clause-by-clause verdict recompute of an x402 exact-scheme Solana payment from pasted values: the decoded instruction list, the PaymentRequirements, the mint's declared token program and fee configuration, and optional Ed25519 signature checks over caller-pasted bytes. Spec readings are pinned at x402-foundation/x402 (the canonical repo) commit e4a086819f419e9395acbbdc1679fe6627029ff7, specs/schemes/exact/scheme_exact_svm.md, and reference readings at the same commit's TypeScript facilitator (scheme.ts, smartWalletVerification.ts). Each clause reports what the spec text accepts, what the reference code accepts, and a verdict of PASS, FAIL or DIVERGES where the readings disagree: the amount rule (the spec outcome accepts overpayment while the static path rejects any inequality, scheme.ts L1160), the single-matching-transfer rule, the destination ATA (recomputed under both token programs with the pinned associated-token-account derivation, so a classic-program derivation for a Token-2022 mint is visible as the two addresses differing), fee payer isolation, the net amount on a Token-2022 transfer-fee mint (the static path compares the gross instruction amount while the balance-delta readings compare the net after withheld fees, min(ceil(gross*bps/10000), maximum_fee)), the memo rule and transaction-version admission. Transaction version 1 is spec-defined as of the re-pin (advertised through extra.transactionVersions, integers 0 and 1, default 0, fail closed otherwise), which replaced the earlier spec-undefined stance recorded in the fixture notes. Two Kora advisories name exactly these seams (GHSA-725g-w329-g7qr transfer fee not deducted, GHSA-x442-m7cc-hr92 unrecognized instruction stubs bypassing fee payer policy; severity field medium on both records, first_patched_version 2.0.5 on both, vulnerable below 2.0.5) and are cited as facts. Values only, no wording about risk or intent. Zero network, zero RPC, nothing on-chain is read, no facilitator is called, no balance is looked up.",
+  "input_schema_ref": "chaingraph/art-781-x402-svm-payment-outcome.html#manifest",
+  "deadline": null,
+  "deadline_note": "No regulatory deadline: this node recomputes pasted payment values, it does not carry a dated obligation.",
+  "consumes": [],
+  "feeds": [],
+  "status": "live",
+  "standards_basis": "not_applicable",
+  "conformance_fixtures": true,
+  "compute_capability": "server",
+  "compute_images": [{"system":"sha256-source","image_id":"sha256:4f5bae2b41de82ece147ef21e0f3947d10a0c85aec0af7fb420ee8b87202759c","valid_from":"2026-11-19"}],
+  "export_capability": [
+    "json"
+  ],
+  "cited_clause_digest": [],
+  "compute_proof_ready": "deferred",
+  "deferred_reason": "New gpu:false node built 2026-10-29. String equality and BigInt comparisons over pasted values with vendored SHA-256, vendored Ed25519 point decompression and vendored Ed25519 signature verification (verify path only, on caller-pasted bytes), base58 integer conversion, the fixed 255-iteration canonical-bump scan inside the ATA derivation, and ceiling-division fee arithmetic in BigInt; no hashing inside the kernel beyond the vendored primitive (the artifact execution_hash is computed by the shared _hash.mjs outside it), no transcendentals, no in-guest signature generation. Expected FAST on a GPU static pre-screen. Excluded from section-18 proving until the next batch (SPEC.md section 18)."
+},
+    {
   "tool_id": "art-782-modified-premium",
   "tool_version": "1.0.0",
   "display_name": "Modified Premium Calculator",
@@ -60033,6 +60194,101 @@
   }
 },
     {
+  "tool_id": "art-789-stablecoin-admin-role-lint",
+  "tool_version": "1.0.0",
+  "display_name": "Stablecoin Admin Role Lint",
+  "mcp_name": "lint_stablecoin_admin_roles",
+  "mandate_type": "compliance_control",
+  "wave": 140,
+  "gpu": false,
+  "url": "https://ainumbers.co/chaingraph/art-789-stablecoin-admin-role-lint.html",
+  "description": "Lints a stablecoin token's declared admin-role configuration for separation of duties, key concentration and issuance-policy fit, over ROLE LABELS ONLY (never addresses or key material). Given a profile (Circle FiatToken, Paxos USDP, or generic caller-declared), holder kinds (eoa, multisig, timelock, hsm_service), a role-to-holder map (owner, proxy_admin, master_minter, pauser, blacklister, rescuer, supply_controller, asset_protection as the profile defines), minter allowances and an issuance policy, it reports: distinctness pairs held by the same label; labels holding multiple critical roles and single-signer holders of critical roles; per-minter and total allowance breaches against the declared ceilings; and whether pause, freeze and upgrade capabilities exist and who holds them. Verdict is PASS, PASS_WITH_FINDINGS or FAIL, each finding cited to the pinned source or marked caller-declared policy. Scope limits: configuration lint only: no live-chain reads, no key custody advice, no statutory claims (no lawful-order or GENIUS Act obligations are asserted); reserve-evidence questions are out of scope (art-06, art-275 cover reserve evidence; art-45 is the sibling linter for Arc xReserve bridge configuration). Any label resembling an address, public key or private key is refused.",
+  "input_schema_ref": "chaingraph/art-789-stablecoin-admin-role-lint.html#manifest",
+  "consumes": [],
+  "feeds": [],
+  "status": "live",
+  "conformance_fixtures": true,
+  "compute_capability": "server",
+  "compute_images": [{"system":"sha256-source","image_id":"sha256:22d832cff748eca7ef540907fb54fbdd43fde383ceecfdb64b62797b06fbb4e8","valid_from":"2026-11-19"}],
+  "export_capability": ["json"],
+  "standards_basis": "implements_standard",
+  "cited_clause_digest": [
+    {
+      "digest": "sha256:9a4e5bdc803713d7b6c8c892ad750225a2a06e2704c2d764295b15af1aa75a8d",
+      "source_url": "https://github.com/circlefin/stablecoin-evm/blob/fc85788bc7c23cefe3df1a757133048bfddadeaa/contracts/v1/Pausable.sol",
+      "retrieved_at": "2026-10-30",
+      "clause_path": "pauser role declaration (line 48), onlyPauser guard (line 63), pause() (line 70), unpause() (line 78)",
+      "scheme": "github-blob",
+      "id": "Circle stablecoin-evm Pausable.sol (fiattoken pauser)"
+    },
+    {
+      "digest": "sha256:40f152eed99d0147ad9b9daf32cb8b8a525aa09696b005f1ecb85e29abce5fa8",
+      "source_url": "https://github.com/circlefin/stablecoin-evm/blob/fc85788bc7c23cefe3df1a757133048bfddadeaa/contracts/v1/Blacklistable.sol",
+      "retrieved_at": "2026-10-30",
+      "clause_path": "blacklister role declaration (line 28), onlyBlacklister guard (lines 36-41), blacklist() (line 71)",
+      "scheme": "github-blob",
+      "id": "Circle stablecoin-evm Blacklistable.sol (fiattoken blacklister / freeze)"
+    },
+    {
+      "digest": "sha256:a986f9230cc02529ce97cbbc49117fb874ed4d11478fddd3e7dc7f61eeaadf5c",
+      "source_url": "https://github.com/circlefin/stablecoin-evm/blob/fc85788bc7c23cefe3df1a757133048bfddadeaa/contracts/v1.1/Rescuable.sol",
+      "retrieved_at": "2026-10-30",
+      "clause_path": "rescuer role storage (line 28) and rescuer() accessor (lines 33-37)",
+      "scheme": "github-blob",
+      "id": "Circle stablecoin-evm Rescuable.sol (fiattoken rescuer)"
+    },
+    {
+      "digest": "sha256:39e8029115c09b8593b91823d9d07d0cc16c84a1d78fd725e14d98ea3b5b4eb9",
+      "source_url": "https://github.com/circlefin/stablecoin-evm/blob/fc85788bc7c23cefe3df1a757133048bfddadeaa/contracts/minting/MasterMinter.sol",
+      "retrieved_at": "2026-10-30",
+      "clause_path": "masterMinter role, configureMinter / minterAllowance / onlyMasterMinter minting-allowance surface",
+      "scheme": "github-blob",
+      "id": "Circle stablecoin-evm MasterMinter.sol (fiattoken master_minter)"
+    },
+    {
+      "digest": "sha256:2e3e65191916aa5e2f5da1f70e1b257894575377e6f7e74589d49c998546afec",
+      "source_url": "https://github.com/circlefin/stablecoin-evm/blob/fc85788bc7c23cefe3df1a757133048bfddadeaa/contracts/upgradeability/AdminUpgradeabilityProxy.sol",
+      "retrieved_at": "2026-10-30",
+      "clause_path": "proxy admin mechanism — administration transfer event and ifAdmin-guarded admin()/implementation()/upgradeTo surface (comment block lines 25-33)",
+      "scheme": "github-blob",
+      "id": "Circle stablecoin-evm AdminUpgradeabilityProxy.sol (fiattoken proxy_admin / upgrade)"
+    },
+    {
+      "digest": "sha256:5348ec30390305eaacbbfaf6bb5740fb848377f0331012d012fa3beaff89385d",
+      "source_url": "https://github.com/paxosglobal/paxos-token-contracts/blob/674ac1046a0a40bfd2b6b892192998af9ac3b171/contracts/PaxosTokenV2.sol",
+      "retrieved_at": "2026-10-30",
+      "clause_path": "setSupplyControl under DEFAULT_ADMIN_ROLE with initialDelay timelock (lines 85-91), pause() under PAUSE_ROLE (line 267), freeze()/freezeBatch() under ASSET_PROTECTION_ROLE (lines 303-311), increaseSupply / increaseSupplyToAddress under supplyController (lines 348-364), admin-actions-as-owner-or-supplyController comment (line 18)",
+      "scheme": "github-blob",
+      "id": "Paxos paxos-token-contracts PaxosTokenV2.sol (usdp owner, pauser, asset_protection, supply_controller)"
+    }
+  ],
+  "compute_proof_ready": "deferred",
+  "deferred_reason": "New gpu:false node, art-789-stablecoin-admin-role-lint, implemented 2026-10-30 (STABLECOIN-ADMIN-ROLE-LINT-1). Deferred per the section 18 steady-state rule; static pre-screen clean (no signature/hash loops, no policy-bounded iteration counts, no non-sqrt transcendentals — pure comparison/set logic over role labels). GPU-CYCLE-PREFLIGHT-1 exec measurement and prove land via the async GPU queue."
+},
+    {
+  "tool_id": "art-791-check-je-multicurrency-balance",
+  "tool_version": "1.0.0",
+  "display_name": "Multicurrency JE Balance Check",
+  "mcp_name": "check_je_multicurrency_balance",
+  "mandate_type": "compliance_control",
+  "wave": 140,
+  "gpu": false,
+  "url": "https://ainumbers.co/chaingraph/art-791-check-je-multicurrency-balance.html",
+  "description": "Checks that structured journal entries balance, on a basis the caller declares: either every currency sums to zero separately (per_currency) or the caller-declared functional-currency amounts sum to zero (functional), always in integer minor units with debit positive. There is no default basis and none is inferred: the same USD +10800 / EUR -10000 currency-conversion entry is imbalanced on the per-currency basis and balanced on the functional basis, and the basis pair fixture proves both. A per-currency integer tolerance may be declared; the tolerance actually used is echoed in the output and is never inferred (the Beancount-style inferred-tolerance pattern is deliberately not used). Currency exponents are declared by the caller and only membership is checked -- the node does not fetch ISO 4217 and does not claim the declared exponents are authoritative. Amounts must be signed JSON integers checked with the safe-integer bound; non-integers are refused AMOUNT_NOT_INTEGER and integers beyond 2^53-1 are refused AMOUNT_UNSAFE_INTEGER, never coerced through floats. Named refusals cover the declared domain: BASIS_NOT_DECLARED, ENTRY_TOO_FEW_LINES, AMOUNT_NOT_INTEGER, AMOUNT_UNSAFE_INTEGER, UNKNOWN_CURRENCY, MISSING_FUNCTIONAL_AMOUNT, NEGATIVE_TOLERANCE, DUPLICATE_ENTRY_ID, DUPLICATE_LINE_ID, ENTRY_CAP_EXCEEDED. Out of scope in v1, stated plainly: the node does not recompute FX rates or check rounding lines -- functional_minor is a caller-declared input, taken as given. This node does NOT claim any entry is correct, approved or compliant; it claims only that an entry's arithmetic closes on the declared basis, or reports by how much it does not, and it does not claim the declared functional amounts or rates are right. Sibling relationship: art-653 is the plain-text, single-currency, two-decimal journal-entry verifier (parser plus Merkle evidence); this node is the structured, multi-currency, caller-declared-basis check and does not extend or alter art-653.",
+  "input_schema_ref": "chaingraph/art-791-check-je-multicurrency-balance.html#manifest",
+  "consumes": [],
+  "feeds": [],
+  "status": "live",
+  "conformance_fixtures": true,
+  "compute_capability": "server",
+  "compute_images": [{"system":"sha256-source","image_id":"sha256:5efbb74ddb2a6f6d072ccaa66ce2cf7c6d12c5f3be29925f4edb07ddc04efbb2","valid_from":"2026-11-19"}],
+  "export_capability": ["json"],
+  "standards_basis": "not_applicable",
+  "cited_clause_digest": [],
+  "compute_proof_ready": "deferred",
+  "deferred_reason": "New gpu:false node landed deferred (JE-MULTICCY-BALANCE-1): the row lands the complete node with compute_proof_ready deferred per the section 18 steady-state rule; proving is queued to the async GPU lane (expected FAST -- pure integer summation, no in-guest hashing; measured user_cycles quoted at prove staging). The section 18 ceiling is bumped by the pr-autofix per NEWNODE-DEFER-PIN-DOCTRINE.md."
+},
+    {
   "tool_id": "art-793-government-stablecoin-acceptance",
   "tool_version": "1.0.0",
   "display_name": "Government Stablecoin Acceptance Audit",
@@ -60048,7 +60304,18 @@
   "status": "live",
   "conformance_fixtures": true,
   "compute_capability": "server",
-  "compute_images": [{"system":"sha256-source","image_id":"sha256:d44f492e6dce3ac9d6b9ea5064405ca5b994b83c4df9fa45ed2ca8732a00f812","valid_from":"2026-11-08"},{"system":"risc0","image_id":"sha256:a1a0bc89b5b1febaeda3519f6dbade0fa5ac16beeb143c4e1b01689573567bc6","valid_from":"2026-09-12"}],
+  "compute_images": [
+    {
+      "system": "sha256-source",
+      "image_id": "sha256:d35efd76b9c97ae13a71db844e350570fc1a1748624f040938d56a4ecf39ba64",
+      "valid_from": "2026-11-20"
+    },
+    {
+      "system": "risc0",
+      "image_id": "sha256:a1a0bc89b5b1febaeda3519f6dbade0fa5ac16beeb143c4e1b01689573567bc6",
+      "valid_from": "2026-09-12"
+    }
+  ],
   "export_capability": [
     "json"
   ],
@@ -60061,10 +60328,10 @@
     "system": "risc0",
     "receiptFormat": "groth16-bn254",
     "imageId": "sha256:a1a0bc89b5b1febaeda3519f6dbade0fa5ac16beeb143c4e1b01689573567bc6",
-    "seal": "B1AzK478zgg8eHY973ishZucJrxZMDp9vc1vPGEpLwkKhi/Z0O/msMEl8uYh5wxu4dSEcAqVb2+BLTiHR522IBNj3oaQrvhr+KCkJSFJVmvo7+IYbpzS2neDVk2Ii6yJBCiaZC8NFm9AN4A9QNd9Ptv3FeHpCU3IFgoOiBdLaRcd5y+dbDxiFax+4UNpS1T9NK3kgoWS2Kt8ijXM9xaseCDms/YBIk9GAkGrm70FxgUR0rev0MA5g4G9CPhgGJvHII9jsIg7qDk+T5Wz44uR3PISUVtXZNQrZYo//MtL4JAKRLviYRS4cD6lLgMK5ummW14+9SCHIwS6mHuXIXfbSA==",
+    "seal": "CuT5ACVq6II5X7i6BKj1hW/OTZWjtovYGbjyluWWNFotuyjbskAZD19Gi2JOjDL2uBcleDniWYgqcHr8XvbOQQJ8pkLbzWIZObTHJz0wFoVqjNajrEo9bU0+2liuinB6Bf8IOXcEUcmImV7dhfPc6JmzqYXGRiJHjULQcXujaDkdGj5nvH4Dvfog+n335fvKkZ+bh0bqOS0DE0ctVaHpzQWkIsjStVnRZmNSRR7VZSsXmfYJZ5zQo8gqsaUlJ/BRJN1FoU2MMxZQ8pxU2EdHdcJyMQvxbFT2LAtxNKXPQtwkGSljSn8EvqlxtxweqjiZErVJtGHjOqz25xWSmTZRzA==",
     "journal": {
       "chaingraph_version": "0.4.0",
-      "kernel_digest": "sha256:d44f492e6dce3ac9d6b9ea5064405ca5b994b83c4df9fa45ed2ca8732a00f812",
+      "kernel_digest": "sha256:d35efd76b9c97ae13a71db844e350570fc1a1748624f040938d56a4ecf39ba64",
       "output": {
         "exposure": {
           "peak_unconverted_value": 0,
@@ -60120,14 +60387,14 @@
   "wave": 142,
   "gpu": false,
   "url": "https://ainumbers.co/chaingraph/art-805-agt-audit-chain-verifier.html",
-  "description": "Recomputes the hash chain of an exported agent-governance audit log offline, from the exported entries alone, and reports exactly where it breaks. Subject format: the open-source agent-governance-toolkit audit-log format (MIT), pinned at upstream commit 3433fa7: each link hash is sha256 over a Python json.dumps(sort_keys=True) serialisation of the entry (default separators, ensure_ascii=True, parent_hash null coalesced to empty string) , deliberately not RFC 8785; the chain root is the last link hash, not a Merkle root. Input: the exported entries (values only) plus an optional claimed root. Output: entry_count, chain_intact, first_break_index, per-break reason codes (HASH_MISMATCH, CHAIN_BROKEN), recomputed_root, and claimed_root_match. Fail-closed: any field outside the pinned entry schema (including free-form payloads, floats, or unknown keys) rejects the whole input, naming each rejected field; entry content is never echoed , the output carries hashes and indices only. The format carries no keyed signature field, so signature_status is reported as not checkable. Scope limits: verifies structural hash integrity and linkage only; it does not attribute blame, interpret change semantics, or validate timestamps against wall-clock time.",
+  "description": "Recomputes the hash chain of an exported agent-governance audit log offline, from the exported entries alone, and reports exactly where it breaks. Subject format: the open-source agent-governance-toolkit audit-log format (MIT), pinned at upstream commit 3433fa7: each link hash is sha256 over a Python json.dumps(sort_keys=True) serialisation of the entry (default separators, ensure_ascii=True, parent_hash null coalesced to empty string) , deliberately not RFC 8785; the chain root is the last link hash, not a Merkle root. Input: the exported entries (values only) plus an optional claimed root. Output: entry_count, chain_intact, first_break_index, per-break reason codes (HASH_MISMATCH, CHAIN_BROKEN), recomputed_root, and claimed_root_match. Fail-closed: any field outside the pinned entry schema (including free-form payloads, floats, or unknown keys) rejects the whole input, naming each rejected field; entry content is never echoed , the output carries hashes and indices only. The format carries no keyed signature field, so signature_status is reported as not checkable. Scope limits: verifies structural hash integrity and linkage only; it does not attribute blame, interpret change semantics, or validate timestamps against wall-clock time. An intact verdict attests only to the entries presented, not to chain completeness; an empty entry list is reported as EMPTY_CHAIN and never as intact.",
   "input_schema_ref": "chaingraph/art-805-agt-audit-chain-verifier.html#manifest",
   "consumes": [],
   "feeds": [],
   "status": "live",
   "conformance_fixtures": true,
   "compute_capability": "server",
-  "compute_images": [{"system":"sha256-source","image_id":"sha256:d3a96683e60729156f0ca539f5eec22cd1d4facd9f5a4b397b7262bdad3e54fc","valid_from":"2026-11-02"}],
+  "compute_images": [{"system":"sha256-source","image_id":"sha256:1b0aa1972e5c2e7936f07c6d4f263ac42c13cb7225e06f7ae794654ed5780156","valid_from":"2026-11-19"}],
   "export_capability": [
     "json"
   ],
@@ -60334,7 +60601,7 @@
   "status": "live",
   "conformance_fixtures": true,
   "compute_capability": "server",
-  "compute_images": [{"system":"sha256-source","image_id":"sha256:dab6040704081c505af95dc176902c11f171b0199cd4b8b53dcaa11e4e429936","valid_from":"2026-11-08"}],
+  "compute_images": [{"system":"sha256-source","image_id":"sha256:7d26c1807e88bd5c3368722638e1ba801d2c7df098232731cf81f08af42cfa8c","valid_from":"2026-11-20"}],
   "export_capability": ["json"],
   "standards_basis": "implements_standard",
   "cited_clause_digest": [
@@ -60366,7 +60633,7 @@
   "status": "live",
   "conformance_fixtures": true,
   "compute_capability": "server",
-  "compute_images": [{"system":"sha256-source","image_id":"sha256:decfd41bf3e450e1251e6cf36e4c3286f4008c9c8cfa831220b10804b8da7cb6","valid_from":"2026-11-03"}],
+  "compute_images": [{"system":"sha256-source","image_id":"sha256:d4ecee284d8ad62222b32930df8b63868e33c22fe24da484f14365355bb584b2","valid_from":"2026-11-20"}],
   "export_capability": ["json"],
   "standards_basis": "implements_standard",
   "cited_clause_digest": [
@@ -61458,6 +61725,292 @@
  ],
  "compute_proof_ready": "deferred",
  "deferred_reason": "New gpu:false node, art-846-assess-pfmi-proportional, authored 2026-10-29 by PFMI-PROPORTIONAL-SA-1. No GPU prove has been run and none is proposed by this row (prove lands deferred); a SIDEBYSIDE row against the pinned PFMI text precedes any prove dispatch (SO #39). GPU-CYCLE-PREFLIGHT-1 static pre-screen: no signature/hash verification loops, no policy-parameter-bounded iteration, no transcendentals, candidate FAST."
+},
+    {
+  "tool_id": "art-847-cashleg-window-exposure",
+  "tool_version": "1.0.0",
+  "display_name": "Cash-Leg Window Exposure",
+  "mcp_name": "cashleg_window_exposure",
+  "mandate_type": "compliance_control",
+  "wave": 144,
+  "gpu": false,
+  "url": "https://ainumbers.co/chaingraph/art-847-cashleg-window-exposure.html",
+  "description": "Computes how long a token leg that settles at any hour waits for a cash leg that only moves while a payment rail is open. From a token leg instant and either a list of UTC open windows or a caller-declared rail calendar (weekday window rules, UTC offsets declared by date range, holidays), it returns the exposure in seconds, the principal-seconds product as an exact decimal string, the next window open and close, a weekend-crossing flag, and an optional carry cost at a stated funding rate (actual over 365, rounded half to even). The verdict is ATOMIC_POSSIBLE inside an open window, WINDOWED when a later window opens within the horizon, and NO_WINDOW_IN_HORIZON otherwise. The node hardcodes no rail calendar and reads no clock: every hour, offset and holiday is a caller-asserted input, and the calendar must declare the dates it covers. Integers and strict UTC time strings only; floats, nulls, numeric principals, impossible dates and undeclared offsets refuse by named code. It computes no balance-sheet saving and names no unannounced product.",
+  "input_schema_ref": "chaingraph/art-847-cashleg-window-exposure.html#manifest",
+  "consumes": [],
+  "feeds": [],
+  "status": "live",
+  "conformance_fixtures": true,
+  "compute_capability": "server",
+  "compute_images": [{"system":"sha256-source","image_id":"sha256:9d32e9011c337eb49339ba5a1df9f3151a7ace948e9dcbf053c7d4578a7ed33e","valid_from":"2026-11-17"}],
+  "export_capability": ["json"],
+  "standards_basis": "not_applicable",
+  "cited_clause_digest": [],
+  "compute_proof_ready": "deferred",
+  "deferred_reason": "New gpu:false node, art-847-cashleg-window-exposure, authored 2026-11-15. No GPU prove has been run and none is proposed by this row: deferred per the section 18 steady-state rule (RIDER-KERNEL.md); a SIDEBYSIDE row precedes any prove dispatch (SO #39). Spec-time cycle-class statement per SO #43: the work is bounded integer arithmetic over at most a 60-day horizon of declared rule days and 500 declared windows, plus BigInt multiplication and one division, with no signature verification, no transcendentals and no loop bound taken from a string; FAST expected, to be confirmed by a runq-cpu exec measurement before any booking."
+},
+    {
+  "tool_id": "art-849-deferred-comp-457b",
+  "tool_version": "1.0.0",
+  "display_name": "Deferred Comp 457(b) Comparison",
+  "mcp_name": "compute_deferred_comp_457b",
+  "mandate_type": "compliance_control",
+  "wave": 150,
+  "gpu": false,
+  "url": "https://ainumbers.co/chaingraph/art-849-deferred-comp-457b.html",
+  "description": "Deferred Comp 457(b) comparison ported from ApexLogics Apex #44 (AL-49). For a single annual deferral (annual income echo, deferral amount, current and retirement marginal rates, years to retirement, growth rate, drawdown years, taxable-account return, long-term capital gains rate) the node compares scenario A, deferring pre-tax into a 457(b) that grows tax-deferred and is taxed on withdrawal, against scenario B, taking the pay and investing the after-tax cash in a taxable account taxed on gains at liquidation. It returns tax saved today, both ending balances, the level annual after-tax withdrawal, total after-tax value, the present value of each drawdown discounted at the growth rate, the total and present-value advantage, the break-even retirement rate (clamped to 0 to 100 percent) and a FAVORS_457B or FAVORS_TAXABLE verdict. It also names the smallest 2026 limit tier that would permit the deferral (standard 24,500 USD, plus 8,000 age 50 catch-up, plus 11,250 ages 60 to 63 catch-up, special catch-up up to 49,000) without testing eligibility. Every input is refused rather than coerced when absent, null, mistyped or out of its declared range, which differs from the Apex page where a zero deferral silently becomes 24,500. Arithmetic over declared figures, not tax advice; plan rules vary and the plan document governs. The 2026 limits follow IRS Notice 2025-67, with the 49,000 double-limit cap from IRC 457(b)(3); the no 10 percent early-withdrawal-penalty remark on the Apex page is UNGROUNDED here.",
+  "input_schema_ref": "chaingraph/art-849-deferred-comp-457b.html#manifest",
+  "consumes": [],
+  "feeds": [],
+  "status": "live",
+  "conformance_fixtures": true,
+  "compute_capability": "server",
+  "compute_images": [{"system":"sha256-source","image_id":"sha256:b1e1ed4f8f1f30cdf0918caca02b958d151fd33f71d27f5ac0a2ce6ec22ddc06","valid_from":"2026-11-22"}],
+  "export_capability": ["json"],
+  "standards_basis": "not_applicable",
+  "cited_clause_digest": [],
+  "compute_proof_ready": "deferred",
+  "deferred_reason": "New gpu:false node, art-849-deferred-comp-457b, landed 2026-11-19. No GPU prove has been run; deferred per the section 18 steady-state rule (RIDER-KERNEL.md). The kernel has no transcendental (integer-exponent loop) and no loop bound taken from a caller beyond 50 and 40 years; measure user_cycles with runq-cpu exec before booking."
+},
+    {
+  "tool_id": "art-851-islamic-mmf-placement-limits",
+  "tool_version": "1.0.0",
+  "display_name": "Islamic MMF Placement Limits",
+  "mcp_name": "check_islamic_mmf_placement_limits",
+  "mandate_type": "compliance_control",
+  "wave": 150,
+  "gpu": false,
+  "url": "https://ainumbers.co/chaingraph/art-851-islamic-mmf-placement-limits.html",
+  "description": "Checks a money market fund's placements against one pinned authority profile: the Saudi Capital Market Authority Investment Funds Regulations 2025, Article 56(a) to (j), as amended by Board Resolution 1-54-2025. From a fund's net asset value and a list of holdings with opaque issuer, counterparty and group tokens, it reports used percentage, cap, headroom and breach flag for each numeric limit: hedging derivatives, securitisation, single issuer, single counterparty, same group, fund units, weighted average life and liquidity. It also emits a maturity-bucket placement ladder and a stress-test frequency reminder. Government debt that meets the stated exemption is excluded from the concentration tests. Input types outside the permitted list, identifier-like tokens, non-hedging derivatives and any authority other than the pinned Saudi CMA profile are refused by name. Shariah eligibility of each holding is a caller input; the node does not assess it. Outputs are arithmetic and rule checks against the cited text, not a fatwa, Shariah certification, legal opinion or regulatory approval.",
+  "input_schema_ref": "chaingraph/art-851-islamic-mmf-placement-limits.html#manifest",
+  "consumes": [],
+  "feeds": [],
+  "status": "live",
+  "conformance_fixtures": true,
+  "compute_capability": "server",
+  "compute_images": [{"system":"sha256-source","image_id":"sha256:e5682e41688ab0c7625e83bde9262669391b3f54744afdd1243aeafe18edb41f","valid_from":"2026-11-20"}],
+  "export_capability": ["json"],
+  "standards_basis": "implements_standard",
+  "cited_clause_digest": [
+    {
+      "digest": "sha256:e0e32a1c1d4fa3a3c2543a22a127e8c7ef615b5fc5dc5d5a1708fbd80685a132",
+      "source_url": "https://cma.gov.sa/en/RulesRegulations/Regulations/Documents/Investment_Funds_Regulations_2025_EN.pdf",
+      "retrieved_at": "2026-11-20",
+      "clause_path": "Investment Funds Regulations 2025, Article 56(a)-(j)"
+    }
+  ],
+  "compute_proof_ready": "deferred",
+  "deferred_reason": "New gpu:false node, art-851-islamic-mmf-placement-limits, authored 2026-11-20. No GPU prove has been run and none is proposed by this row: deferred per the section 18 steady-state rule (RIDER-KERNEL.md); a SIDEBYSIDE row precedes any prove dispatch (SO #39). Cycle class per SO #43: FAST expected, bounded by at most 500 holdings, a fixed limit set, integer and BigInt arithmetic, three map reductions and no signature verification, transcendental or parameter-driven iteration; to be confirmed by a runq-cpu exec measurement before any GPU booking."
+},
+    {
+  "tool_id": "art-852-murabahah-ibra-settlement",
+  "tool_version": "1.0.0",
+  "display_name": "Murabahah Ibra' Settlement",
+  "mcp_name": "compute_murabahah_ibra_settle",
+  "mandate_type": "compliance_control",
+  "wave": 150,
+  "gpu": false,
+  "url": "https://ainumbers.co/chaingraph/art-852-murabahah-ibra-settlement.html",
+  "description": "Computes the disclosed instalment schedule of a deferred-price sale (cost plus a mark-up fixed at contract) in integer minor units: each period's profit and principal split, the outstanding cost and selling price, and the deferred (unaccrued) profit. It computes the rebate on early settlement as that deferred profit less permitted recovery costs, the settlement amount with late-payment charges shown separately, the variable-rate case with the per-period rebate between the contracted and prevailing profit bases, and the non-delivery case where the rebate also covers undisbursed principal. A conventional-loan side-by-side is available with compensation and penalty lines kept separate. Outputs are arithmetic and rule checks against the cited regulator paragraphs, not a fatwa, Shariah certification, legal opinion or regulatory approval. Explicitly out of scope: buy-now-pay-later and credit-card rebate treatments, and any cap on late-payment charges (amounts are pass-through only). No personal data is accepted.",
+  "input_schema_ref": "chaingraph/art-852-murabahah-ibra-settlement.html#manifest",
+  "consumes": [],
+  "feeds": [],
+  "status": "live",
+  "conformance_fixtures": true,
+  "compute_capability": "server",
+  "compute_images": [{"system":"sha256-source","image_id":"sha256:eacd2d28a4d95809504122f3e16aea48ab079915dba032bf4229555278944320","valid_from":"2026-11-21"}],
+  "export_capability": ["json"],
+  "standards_basis": "implements_standard",
+  "cited_clause_digest": [
+    {
+      "digest": "sha256:34a2c6daa735b8d044f400c01cdcbea511ac54f116ca48c78c330c73afdb0a3a",
+      "source_url": "https://www.bnm.gov.my/documents/20124/761700/20110111_DFI_PL_0008.pdf",
+      "retrieved_at": "2026-11-20",
+      "clause_path": "BNM/RH/GL 012-5 paragraphs 8.2-8.5, 8.7, 8.10-8.11, 9.1",
+      "scheme": "bnm_ibra",
+      "id": "BNM ibra guideline 012-5 (last updated 31 Jan 2013), calculation and disclosure"
+    },
+    {
+      "digest": "sha256:60763365b8213b5f19f4c2b731911b1c267477c92c606cae92386f60525d20fe",
+      "source_url": "https://www.bnm.gov.my/documents/20124/938039/20131223_S_O_0001.pdf/",
+      "retrieved_at": "2026-11-20",
+      "clause_path": "BNM/RH/STD 028-4 paragraphs 14.2, G14.3, 19.2",
+      "scheme": "bnm_murabahah",
+      "id": "BNM murabahah standard 028-4 (23 Dec 2013), price and late-payment composition"
+    }
+  ],
+  "compute_proof_ready": "deferred",
+  "deferred_reason": "New gpu:false node, art-852-murabahah-ibra-settlement, authored 2026-11-21 by ISLAMIC-MURABAHAH-IBRA-1 (RESUME-1). No GPU prove has been run and none is proposed by this row: deferred per the section 18 steady-state rule (RIDER-KERNEL.md); a read-only side-by-side against the pinned paragraphs precedes any prove dispatch (SO #39). SO #43 cycle class: FAST expected — the work is bounded integer arithmetic over at most 360 monthly rows (profit = round-half-even of outstanding cost times a rate denominator, plus addition and subtraction); no signature or hash verification in compute(), no transcendentals, no loop bound taken from a caller string. To be confirmed by a runq-cpu exec measurement before any GPU booking."
+},
+    {
+  "tool_id": "art-854-sukuk-tradability-composition",
+  "tool_version": "1.0.0",
+  "display_name": "Sukuk Tradability Composition",
+  "mcp_name": "check_sukuk_tradability_composition",
+  "mandate_type": "compliance_control",
+  "wave": 151,
+  "gpu": false,
+  "url": "https://ainumbers.co/chaingraph/art-854-sukuk-tradability-composition.html",
+  "description": "Checks whether sukuk with a mixed asset portfolio are tradable at a negotiated price, per authority and per period, from the portfolio composition alone. Two authority profiles are supported: the Securities Commission Malaysia Shariah Advisory Council 266th meeting resolutions of 16 March 2023, under which at least 33 percent of the sukuk proceeds must sit in non-debt investment assets at the time of each issuance, the percentage need not be maintained through the tenure but a non-debt component must remain at all times, and any non-debt component means the certificates are a portfolio of assets rather than debt, tradable at a negotiated price; and the State Bank of Pakistan IFPD Circular 10 of 2024 Appendix A adoption of AAOIFI Shariah Standard No. 59, under which tangible and like assets must be at least 33 percent of asset value (including ijarah and diminishing musharakah assets with debt created through tawarruq), assets combined without a commingled entity fall under the sale-of-debt provisions, and a genuine commingled entity not entirely composed of debt is tradable. Each authority-period verdict is one of tradable_at_negotiated_price, sale_of_debt_rules_apply or issuance_test_failed, with its paragraph. AAOIFI standards 17 and 59 as published, the draft standard 62 (a status note only, since it is not final), IIFA, CBB, DFSA, DSN-MUI and CMA are refused by name. Whether the portfolio is Shariah compliant overall is a caller determination; this node applies only the cited composition rules. Outputs are arithmetic and rule checks against the cited texts, not a fatwa, Shariah certification, legal opinion or regulatory approval.",
+  "input_schema_ref": "chaingraph/art-854-sukuk-tradability-composition.html#manifest",
+  "consumes": [],
+  "feeds": [],
+  "status": "live",
+  "conformance_fixtures": true,
+  "compute_capability": "server",
+  "compute_images": [{"system":"sha256-source","image_id":"sha256:1ce8d3adda42aeec33ed0bdc89246fdcbac71604f0558dac2287e5bc1d020415","valid_from":"2026-11-21"}],
+  "export_capability": ["json"],
+  "standards_basis": "implements_standard",
+  "cited_clause_digest": [
+    {
+      "digest": "sha256:2ba74717c5a6dccfce840c20f638e14349e3bb2ed65d80839760fe0ddf014148",
+      "source_url": "https://www.sc.com.my/api/documentms/download.ashx?id=884878a4-6a6c-4c13-938a-eb8f952e00d6",
+      "retrieved_at": "2026-11-20",
+      "clause_path": "SC SAC 266th meeting (16 March 2023), resolutions (A)(i)-(ii) and (B)(i)-(ii)"
+    },
+    {
+      "digest": "sha256:d86dd79c47e8f74790b8e710202f9570d3f98a7a23f75616a08890e8fa111e65",
+      "source_url": "https://www.sbp.org.pk/assets/documents/circulars/IFPD-2024-C10-Appendix-A.pdf",
+      "retrieved_at": "2026-11-20",
+      "clause_path": "SBP IFPD Circular 10 of 2024, Appendix A, items 22-25 (clauses 8/1, 8/2, 8/2/2, 8/3)"
+    }
+  ],
+  "compute_proof_ready": "deferred",
+  "deferred_reason": "New gpu:false node, art-854-sukuk-tradability-composition, authored 2026-11-21. No GPU prove has been run and none is proposed by this row: deferred per the section 18 steady-state rule (RIDER-KERNEL.md); a SIDEBYSIDE row precedes any prove dispatch (SO #39). Cycle class per SO #43: FAST expected, bounded by at most 2 authorities over at most 120 periods of exact BigInt threshold comparisons, no signature verification, transcendental or parameter-driven iteration; to be confirmed by a runq-cpu exec measurement before any GPU booking."
+},
+    {
+  "tool_id": "art-855-murabahah-tawarruq-sequence",
+  "tool_version": "1.0.0",
+  "display_name": "Murabahah Tawarruq Sequence Check",
+  "mcp_name": "check_murabahah_tawarruq_seq",
+  "mandate_type": "compliance_control",
+  "wave": 151,
+  "gpu": false,
+  "url": "https://ainumbers.co/chaingraph/art-855-murabahah-tawarruq-sequence.html",
+  "description": "Checks the order of steps and the content of a murabahah or tawarruq structure against the Bank Negara Malaysia policy documents for each, from a list of at most 64 step records (step name, ordinal, whether evidence is present, and flags for agent role, delivery restriction, on-sale obligation, promise to sell to a third party, promise to sell to its original seller, payment before contract and a wakalah embedded in the sale contract). Eleven fixed checks each return pass, fail or not applicable with the paragraph they rest on: ownership before the murabahah contract, the transfer step evidenced, the wa'd separate and before the contract, the agent purchase before the contract, separate evidenced tawarruq contracts, possession before the onward sale, delivery unrestricted, no on-sale obligation, no payment before the contract, a separate wakalah with the agent role specified, and no promise to sell to a third party or to its original seller. The output keeps order_ok and rules_ok as two separate flags and names the first failing check and step. The authority profile is Bank Negara Malaysia only; other authorities, IIFA Resolution 179 among them, are not assessed and a request for another profile is refused by name. This is arithmetic and rule checking against the cited text, not a fatwa, Shariah certification, legal opinion or regulatory approval, and every payload says not_a_shariah_ruling. Inputs are enum names, ordinals and booleans only, with no names, accounts or identifiers.",
+  "input_schema_ref": "chaingraph/art-855-murabahah-tawarruq-sequence.html#manifest",
+  "consumes": [],
+  "feeds": [],
+  "status": "live",
+  "conformance_fixtures": true,
+  "compute_capability": "server",
+  "compute_images": [{"system":"sha256-source","image_id":"sha256:ae0813958a65cbb0eea09d40577d332d8482f1a84057c43830c4ae23aaef62a5","valid_from":"2026-11-21"}],
+  "export_capability": ["json"],
+  "standards_basis": "implements_standard",
+  "cited_clause_digest": [
+    {
+      "digest": "sha256:84b2325f0320b6696a845e3692a1a704072a3c65bfb4079e78b624e1759eac7f",
+      "source_url": "https://www.bnm.gov.my/documents/20124/938039/20131223_S_O_0001.pdf/",
+      "retrieved_at": "2026-11-20",
+      "clause_path": "BNM-MURABAHAH para 23.17",
+      "scheme": "bnm-policy-document",
+      "id": "BNM/RH/STD 028-4 Murabahah, 23 Dec 2013, para 23.17"
+    },
+    {
+      "digest": "sha256:0a9f8847b3a59b4c9878570c0977e07c78ca2f895906805920d6a3b3097226a1",
+      "source_url": "https://www.bnm.gov.my/documents/20124/938039/20131223_S_O_0001.pdf/",
+      "retrieved_at": "2026-11-20",
+      "clause_path": "BNM-MURABAHAH para 13.5-13.7",
+      "scheme": "bnm-policy-document",
+      "id": "BNM/RH/STD 028-4 Murabahah, 23 Dec 2013, para 13.5-13.7"
+    },
+    {
+      "digest": "sha256:3d0adec3ded3d620e71f30a0cb787e78920c2a1b19e68306b7a3bdb01ec32f6f",
+      "source_url": "https://www.bnm.gov.my/documents/20124/938039/20131223_S_O_0001.pdf/",
+      "retrieved_at": "2026-11-20",
+      "clause_path": "BNM-MURABAHAH para 15.2-15.3",
+      "scheme": "bnm-policy-document",
+      "id": "BNM/RH/STD 028-4 Murabahah, 23 Dec 2013, para 15.2-15.3"
+    },
+    {
+      "digest": "sha256:0674a745175def1643568c68fedda08c1d78446b644f9ce208acdad6506f9e1b",
+      "source_url": "https://www.bnm.gov.my/documents/20124/938039/20131223_S_O_0001.pdf/",
+      "retrieved_at": "2026-11-20",
+      "clause_path": "BNM-MURABAHAH para 16.9",
+      "scheme": "bnm-policy-document",
+      "id": "BNM/RH/STD 028-4 Murabahah, 23 Dec 2013, para 16.9"
+    },
+    {
+      "digest": "sha256:12a08c4990702d5879f86b25344b487fd4016b453e4abcd3a28f9c4a16d99363",
+      "source_url": "https://www.bnm.gov.my/documents/20124/938039/pd_reissuancetawarruq_dec2018.pdf",
+      "retrieved_at": "2026-11-20",
+      "clause_path": "BNM-TAWARRUQ para 15.2-15.3",
+      "scheme": "bnm-policy-document",
+      "id": "BNM/RH/PD 028-8 Tawarruq, 28 Dec 2018, para 15.2-15.3"
+    },
+    {
+      "digest": "sha256:e8ce8cfb7271df549f511a95c19a729cafebd56b15a71f54a0328d211ba11201",
+      "source_url": "https://www.bnm.gov.my/documents/20124/938039/pd_reissuancetawarruq_dec2018.pdf",
+      "retrieved_at": "2026-11-20",
+      "clause_path": "BNM-TAWARRUQ para 13.8",
+      "scheme": "bnm-policy-document",
+      "id": "BNM/RH/PD 028-8 Tawarruq, 28 Dec 2018, para 13.8"
+    },
+    {
+      "digest": "sha256:ad2dd9f80f2d3f3417e0598272951a84afd13305de4179b877c0d3d9045d2f2e",
+      "source_url": "https://www.bnm.gov.my/documents/20124/938039/pd_reissuancetawarruq_dec2018.pdf",
+      "retrieved_at": "2026-11-20",
+      "clause_path": "BNM-TAWARRUQ para 15.4-15.5",
+      "scheme": "bnm-policy-document",
+      "id": "BNM/RH/PD 028-8 Tawarruq, 28 Dec 2018, para 15.4-15.5"
+    },
+    {
+      "digest": "sha256:899059db1838ed53f437513c5af5a8fd40e48bf6d6030c14259e15372cffb530",
+      "source_url": "https://www.bnm.gov.my/documents/20124/938039/pd_reissuancetawarruq_dec2018.pdf",
+      "retrieved_at": "2026-11-20",
+      "clause_path": "BNM-TAWARRUQ para 15.6",
+      "scheme": "bnm-policy-document",
+      "id": "BNM/RH/PD 028-8 Tawarruq, 28 Dec 2018, para 15.6"
+    },
+    {
+      "digest": "sha256:d0bbd520b22800747c9946de76029072087243aec68d8a18c38807ee7181daf0",
+      "source_url": "https://www.bnm.gov.my/documents/20124/938039/pd_reissuancetawarruq_dec2018.pdf",
+      "retrieved_at": "2026-11-20",
+      "clause_path": "BNM-TAWARRUQ para 16.3, 16.7",
+      "scheme": "bnm-policy-document",
+      "id": "BNM/RH/PD 028-8 Tawarruq, 28 Dec 2018, para 16.3, 16.7"
+    },
+    {
+      "digest": "sha256:62bca7e48b893a303c12a7969e1c52df5ade6650b5b8866a498933c4b56c3df1",
+      "source_url": "https://www.bnm.gov.my/documents/20124/938039/pd_reissuancetawarruq_dec2018.pdf",
+      "retrieved_at": "2026-11-20",
+      "clause_path": "BNM-TAWARRUQ para 18.2-18.3",
+      "scheme": "bnm-policy-document",
+      "id": "BNM/RH/PD 028-8 Tawarruq, 28 Dec 2018, para 18.2-18.3"
+    }
+  ],
+  "compute_proof_ready": "deferred",
+  "deferred_reason": "New gpu:false node, art-855-murabahah-tawarruq-sequence, authored 2026-11-21 (ISLAMIC-TAWARRUQ-SEQUENCE-1). No GPU prove has been run and none is proposed by this row, deferred per the section 18 steady-state rule (RIDER-KERNEL.md); the row lands deferred and SO #39 applies, so a side-by-side against the pinned paragraphs comes before any prove row."
+},
+    {
+  "tool_id": "art-856-ijarah-imbt-schedule",
+  "tool_version": "1.0.0",
+  "display_name": "Ijarah IMBT Rental Schedule",
+  "mcp_name": "compute_ijarah_imbt_schedule",
+  "mandate_type": "compliance_control",
+  "wave": 151,
+  "gpu": false,
+  "url": "https://ainumbers.co/chaingraph/art-856-ijarah-imbt-schedule.html",
+  "description": "Computes a month-by-month rental schedule for an ijarah lease that ends with the lessee owning the asset, against one pinned authority profile: the Malaysian regulator's Ijarah policy document, paragraphs 14, 16 and 22. Rental is fixed at inception on a fixed basis, a benchmark basis or a hybrid of the two; a benchmark-determined rental requires a floor and a cap and every benchmark-determined component is clamped into them; a rental revision without a declared mutual agreement is refused as a unilateral increase. Ownership-risk maintenance and takaful cost lines are shown as lessor lines, takaful is required unless a declared conventional-insurance circumstance is supplied with its own cost line, and a schedule with neither is refused. An optional total-loss event models the two branches: with a proven lessee fault the rent continues and restoration sits with the lessee; without it the rent stops from the loss month and takaful proceeds belong to the lessor. Ownership transfer is output as a separate post-lease event by sale at a declared price, conditional hibah, or wa'd to hibah; a wa'd to purchase triggered by anything other than default or breach of terms is refused. Amounts are integer minor units with round-half-even per month. Out of scope in v1: forward ijarah, sub-lease, leaseback, advance or deferred rental timing, and any authority other than the pinned profile, which is refused by name. Outputs are arithmetic and rule checks against the cited text, not a fatwa, Shariah certification, legal opinion or regulatory approval.",
+  "input_schema_ref": "chaingraph/art-856-ijarah-imbt-schedule.html#manifest",
+  "consumes": [],
+  "feeds": [],
+  "status": "live",
+  "conformance_fixtures": true,
+  "compute_capability": "server",
+  "compute_images": [{"system":"sha256-source","image_id":"sha256:815286a7597ad28866e79d357f51554f93593408630f964ab2956f5a4029dd0f","valid_from":"2026-11-21"}],
+  "export_capability": ["json"],
+  "standards_basis": "implements_standard",
+  "cited_clause_digest": [
+    {
+      "digest": "sha256:28770b573be3fe766bb1dfa4662e3a671cd386faa8728c40ba098d009c8d0014",
+      "source_url": "https://www.bnm.gov.my/documents/20124/938039/PD+Ijarah+28062018_Final.pdf",
+      "retrieved_at": "2026-11-20",
+      "clause_path": "paragraphs 14.1-14.6, 16.1-16.7A, 22.1-22.5"
+    }
+  ],
+  "compute_proof_ready": "deferred",
+  "deferred_reason": "New gpu:false node, art-856-ijarah-imbt-schedule, authored 2026-11-21. No GPU prove has been run and none is proposed by this row: deferred per the section 18 steady-state rule (RIDER-KERNEL.md); a SIDEBYSIDE row precedes any prove dispatch (SO #39). Cycle class per SO #43: FAST expected, bounded by at most 360 monthly schedule rows, integer and BigInt arithmetic, one linear tenor loop, no signature verification, transcendental or parameter-driven iteration; to be confirmed by a runq-cpu exec measurement before any GPU booking."
 },
     {
       "tool_id": "cry-01-zk-compliance-proof-generator",
@@ -63785,6 +64338,35 @@
         }
       ]
     },
+    {
+  "name": "ai-agent-incident-multi-regime",
+  "domain": "AI & Agent Governance",
+  "title": "AI Agent Incident Across Regimes",
+  "description": "A four-stage review of one caller-declared agent incident across three regulatory regimes. Step 1 applies the DORA major-incident numeric criteria to the declared impact figures and reports a major or non-major classification with the reporting clock a major finding starts (art-467). Step 2 then scores the declared disruption, affected-user and loss figures against the NIS2 significance criteria and reports a significance verdict (art-144). Step 3 then starts the clock obligations for the regimes the caller declares applicable from one determination timestamp (art-428). Step 4 then validates the declared agent audit-trail records and returns a conformance result (art-237). Each step computes from its own declared inputs; the order is a review sequence, not a statutory one, and the chain determines no reporting obligation.",
+  "composer_url": "https://ainumbers.co/chaingraph/chains/ai-agent-incident-multi-regime.html",
+  "regulatory_basis_status": "not_assessed",
+  "regulatory_basis_decided_by": "AGENTDESK-W1-CHAIN-INCIDENT-REGIMES-1",
+  "regulatory_basis_decided_at": "2026-10-29",
+  "export_capability": ["json"],
+  "steps": [
+    {
+      "tool_id": "art-467-dora-incident-classifier",
+      "handoff": "Applies the DORA Art. 18 numeric criteria over clients affected, duration, geographical spread, data losses, economic impact, critical services and reputational impact to the declared figures and reports a major or non-major classification with the reporting clock a major finding starts; step 2 then scores the same incident against the NIS2 significance criteria. Stage 1 of 4."
+    },
+    {
+      "tool_id": "art-144-nis2-incident-significance-scorer",
+      "handoff": "Scores the declared disruption, affected-user and loss figures against the NIS2 significance criteria and reports a significance verdict with the authorities it names; step 3 then starts the clock obligations for the regimes the caller declares applicable. Stage 2 of 4."
+    },
+    {
+      "tool_id": "art-428-cyber-incident-clock",
+      "handoff": "Starts the clock obligations for the regimes the caller declares applicable from one hash-anchored determination timestamp, giving each obligation its own attestation slot and stable obligation id; step 4 then validates the declared agent audit-trail records. Stage 3 of 4."
+    },
+    {
+      "tool_id": "art-237-validate-agent-audit-trail",
+      "handoff": "Validates the declared agent audit-trail records, checking required fields, chain-link format, signature presence and enum conformance, and returns a conformance result with a completeness score. Final stage."
+    }
+  ]
+},
     {
       "name": "ai-content-disclosure-conformance",
       "domain": "AI & Agent Governance",
