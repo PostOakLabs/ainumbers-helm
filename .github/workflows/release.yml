@@ -91,7 +91,11 @@ jobs:
           # is the current Intel image (supported through Aug 2027).
           - os: macos-15-intel
             tag: macos-x64
-          - os: macos-14
+          # macos-14 stopped being accepted (2026-11-24 run 45304701436:
+          # "The configuration 'macos-14-arm64-us-default' is not supported"),
+          # which cancelled this leg and left tag 2026.11.24 with no release.
+          # macos-15 is the current Apple-silicon image.
+          - os: macos-15
             tag: macos-arm64
     runs-on: ${{ matrix.os }}
     permissions:
@@ -342,7 +346,11 @@ jobs:
     needs: [sign-and-release]
     # On a dispatch, sign-and-release is skipped — skipped != failure, so
     # !failure() (not success()) is what lets this job run there.
-    if: ${{ !failure() && !cancelled() && (github.event_name == 'push' || inputs.tag != '') }}
+    # On a tag push it must wait for a real release: when a build leg is
+    # cancelled, sign-and-release is skipped too, and without the result
+    # check this job ran anyway and failed on "release not found"
+    # (2026-11-24, run 45304701436), hiding the real cause.
+    if: ${{ !failure() && !cancelled() && ((github.event_name == 'push' && needs.sign-and-release.result == 'success') || (github.event_name != 'push' && inputs.tag != '')) }}
     runs-on: ubuntu-latest
     permissions:
       contents: write
