@@ -13,14 +13,14 @@
       {
         "node_id": "n1",
         "kernel_id": "art-319-rhc-valuation-linter",
-        "kernel_digest": "sha256:1b2549c6c23eeff309d070117288897e871490b446375f87875bd6d973e25a31"
+        "kernel_digest": "sha256:586e3a4667367e70e143da5e81063ce81620f5f5fde7c386ba7ed9ecdea6adfe"
       }
     ],
     "connectors": [],
     "gates": [],
     "actions": []
   },
-  "workflow_manifest_digest": "sha256:24dfe375de943f221cbceee9fecd0992455a374e16c0f3d0610f108921339c79",
+  "workflow_manifest_digest": "sha256:ddacd7976f0f3027a6e5f9409dc9cfb13c380239e694600be303007e58bd733d",
   "declared_inputs": [],
   "steps_meta": [
     {

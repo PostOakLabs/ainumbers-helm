@@ -18,7 +18,7 @@
       {
         "node_id": "n2",
         "kernel_id": "art-663-apy-earned-recompute",
-        "kernel_digest": "sha256:8f873b59228d5260e6aaaf4c82cf1f455e515ad601dd4133e74517741edd7608"
+        "kernel_digest": "sha256:dde5c49b64af40bd9877ee9dc0ee23dfa58a463ababd68806a3928a8f382238c"
       },
       {
         "node_id": "n3",
@@ -30,7 +30,7 @@
     "gates": [],
     "actions": []
   },
-  "workflow_manifest_digest": "sha256:87cea1cbd0bc1c8550cf70cd3bf0cd5d48919c6afdedb32c30daeaf817490872",
+  "workflow_manifest_digest": "sha256:ff0b5eadfdad0d52f568a3612e6f07da520ae4cbe0c2d8c7786320ad6a6bb762",
   "declared_inputs": [],
   "steps_meta": [
     {

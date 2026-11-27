@@ -13,7 +13,7 @@
       {
         "node_id": "n1",
         "kernel_id": "art-573-section16b-short-swing-profit-recompute",
-        "kernel_digest": "sha256:2bf576ae353041e722a9e64447d9484503c9d7208b320a9338562368f15e41d2"
+        "kernel_digest": "sha256:ea37874e6b84c67d4d36a81673d0124380615956df289786362627e98fb08f8a"
       },
       {
         "node_id": "n2",
@@ -25,7 +25,7 @@
     "gates": [],
     "actions": []
   },
-  "workflow_manifest_digest": "sha256:c16fd8fdf7fd0d77be96112775af9deff1f6564d81f1c0730b89ed796c9121f9",
+  "workflow_manifest_digest": "sha256:2f593f9b24bf3abdc97938d154158ed50c8ac209c9018a7c5550434ddf8ecae9",
   "declared_inputs": [],
   "steps_meta": [
     {

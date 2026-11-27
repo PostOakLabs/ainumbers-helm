@@ -13,7 +13,7 @@
       {
         "node_id": "n1",
         "kernel_id": "art-241-cbpr-structured-address-linter",
-        "kernel_digest": "sha256:dab26511e0747afa95ae4ba156a6704e1c9e807a52ddfe74d48140b96822ccf7"
+        "kernel_digest": "sha256:c0c198eb8be05a3d5cdbf0f6f18abd3843c0ec237a32f53b4ea3fa90d8eec191"
       },
       {
         "node_id": "n2",
@@ -30,7 +30,7 @@
     "gates": [],
     "actions": []
   },
-  "workflow_manifest_digest": "sha256:193a89e0a35d173a1e2e2864edbdc3d011554561384027fa6fafd602611a2432",
+  "workflow_manifest_digest": "sha256:79045eb41d230291975d1398ef6e8d49c613cdf420e43b50845f0f021931f7ce",
   "declared_inputs": [],
   "steps_meta": [
     {

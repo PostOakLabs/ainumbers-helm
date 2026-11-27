@@ -23,7 +23,7 @@
       {
         "node_id": "n3",
         "kernel_id": "art-295-einvoice-jurisdiction-mandate-router",
-        "kernel_digest": "sha256:0b10eacc01a0d809c04d6f3548e9c09c589eb0eeb330672b8dfaab9877cd9d20"
+        "kernel_digest": "sha256:8a2cbba14b21c6af020c037f11334cbd7ea54a0b62eb89d71ad6e336959abb0f"
       },
       {
         "node_id": "n4",
@@ -35,7 +35,7 @@
     "gates": [],
     "actions": []
   },
-  "workflow_manifest_digest": "sha256:82b09ec4728f3b7cb8de6d4680051068353fa261d7df6772640d0c79e1f75d65",
+  "workflow_manifest_digest": "sha256:d7d76276bd517f534b713bd7e88f46676b4afd22d1a50fb9f48d7a4920568e6f",
   "declared_inputs": [],
   "steps_meta": [
     {

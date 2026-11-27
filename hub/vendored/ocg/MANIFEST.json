@@ -1,18 +1,18 @@
 {
   "sourceRepo": "https://github.com/PostOakLabs/ainumbers.git",
   "license": "MIT License, Copyright (c) 2026 PostOakLabs (same license/holder as this repo; see this repo's own LICENSE for full terms; no third-party code in this vendored subtree)",
-  "pinnedSha": "919129ea06f05c431e651dc56c920f79aad8ea97",
+  "pinnedSha": "7ec8216181bf63b73dd3c06558b0d72d0249eb12",
   "vendoredPaths": [
     "chaingraph/kernels",
     "chaingraph/standard/SPEC.md",
     "chaingraph/standard/openchain-graph-v0.4.schema.json",
     "chaingraph/chaingraph.json"
   ],
-  "fileCount": 3402,
+  "fileCount": 3434,
   "files": [
     {
       "path": "chaingraph.json",
-      "sha256": "ec4bf558d2b8b5fe77c54b648314a729a0f0c809d71f3e102e8500004ad38e67"
+      "sha256": "91021e70dd95bdbd3e7f3f2bf538e91a9a68f8566fbbcf8e5348899c0a33f71c"
     },
     {
       "path": "kernels/__boundary_mr__/_mr-harness.mjs",
@@ -120,7 +120,7 @@
     },
     {
       "path": "kernels/__headroom__/art-273-pendle-yield.headroom.json",
-      "sha256": "32ff9a1105fede548bfc4cd694ace8e3c491d0087042c8476ab9935604987d53"
+      "sha256": "160a048b8be0b3e7422fc4c7822b8924424c2216d03450d3e56905c3f21b2ff6"
     },
     {
       "path": "kernels/__headroom__/art-284-did-webvh-log-verifier.headroom.json",
@@ -276,11 +276,11 @@
     },
     {
       "path": "kernels/__proptests__/790-event-position-limit-check.proptest.mjs",
-      "sha256": "56ab3ee5a8c5605f46ca4f63a871ebcff62d48453c9fd9fd5c93544d8ce4e2ff"
+      "sha256": "ab5990484d41de1983e9cc735e94762ba151dbc2d05465072866c2c2d02ac93b"
     },
     {
       "path": "kernels/__proptests__/792-curator-vault-cap-auditor.proptest.mjs",
-      "sha256": "62456a276e03ddde98b4dcde009f60cc4cf5fd06d58fa2e0d8eacfd1c151fe71"
+      "sha256": "ddf5f4e38892e017b4a272ef30dfb6ae2ff0681715830d6c6d2c8f64e95e0077"
     },
     {
       "path": "kernels/__proptests__/794-event-fee-recompute.proptest.mjs",
@@ -288,7 +288,7 @@
     },
     {
       "path": "kernels/__proptests__/795-stablecoin-refund-dispute.proptest.mjs",
-      "sha256": "89c0d0b9996fb093790bc880965fecb3a816f0dc1699b0f546527241ba9641e1"
+      "sha256": "7f7126572335a4c5388da3a0185dd53af0e7b5eb2cc0d035912b3f5aa9c79e10"
     },
     {
       "path": "kernels/__proptests__/796-payment-system-mi-pack.proptest.mjs",
@@ -308,11 +308,11 @@
     },
     {
       "path": "kernels/__proptests__/808-lst-share-rate-reconciler.proptest.mjs",
-      "sha256": "876fcffa2708304208c53ae50408373a0493cbd120c3b636c63b89bdf61d0ba6"
+      "sha256": "12e169cf893971fd26fbcd4bf7dec2c3537c5a6659b5e2eb82846779a4a98a59"
     },
     {
       "path": "kernels/__proptests__/810-contract-bytecode-identity-verifier.proptest.mjs",
-      "sha256": "6c75347bace92d2dde2589fca8d679c46efeddd7fdece24f0066f2e600794dc5"
+      "sha256": "95c8470f35a13c5bc090661b6e4f8ea7ede3720a3c9c8af4fa1b0df46badc9de"
     },
     {
       "path": "kernels/__proptests__/812-eth-staking-queue.proptest.mjs",
@@ -344,11 +344,11 @@
     },
     {
       "path": "kernels/__proptests__/827-agent-cred-class-matrix.proptest.mjs",
-      "sha256": "c7333735f78b7c85ac04a08036b99996f990a1536445ba6c6d39f0d782d9c226"
+      "sha256": "75f6d34a911bce035504fc12b4501876b6162260944fbebc90346db9373f026e"
     },
     {
       "path": "kernels/__proptests__/829-safe-tx-hash-recompute.proptest.mjs",
-      "sha256": "2f9d6cee0f6a974036ed0df78618ea89e148fba575657658c125b7d417527392"
+      "sha256": "8c5f4ddc2139e431652676a5210aec18e2a1d6a2a2aa8dbe434fda4bf4360a89"
     },
     {
       "path": "kernels/__proptests__/836-payment-services-activity-classifier.proptest.mjs",
@@ -373,6 +373,10 @@
     {
       "path": "kernels/__proptests__/845-je-period-lock-gate.proptest.mjs",
       "sha256": "5a18a1bc2e8193f7e6bb5e9db20032da2500d113592d887eb2e96a576403f69a"
+    },
+    {
+      "path": "kernels/__proptests__/858-fill-quality-summary.proptest.mjs",
+      "sha256": "3adf8221982ea45306e8d4c0da3d04479d27e9c026be314d304e6f533d8a12d2"
     },
     {
       "path": "kernels/__proptests__/art-01-ap2-mandate-chain-validator.proptest.mjs",
@@ -500,7 +504,7 @@
     },
     {
       "path": "kernels/__proptests__/art-12-acp-checkout-conformance-validator.proptest.mjs",
-      "sha256": "21d7abbf53b2cdf688a19118522b1f40f295d8a78fd30d851f5fab9bd026984b"
+      "sha256": "621fa8a898b7681d5775184f71faaa52bb30bd3e0190f7ef0323f220fd5bdfd1"
     },
     {
       "path": "kernels/__proptests__/art-120-recall-trace-resolver.proptest.mjs",
@@ -888,7 +892,7 @@
     },
     {
       "path": "kernels/__proptests__/art-208-royalty-split-validator.proptest.mjs",
-      "sha256": "ecb1439f82318dc3d7441dc8210554d51785e668e1b8f5f0d388cc2ca49778d8"
+      "sha256": "0e2214a57a3f215b1635c4f359a6786a5177855e97eab418dc0ffc4b088b4773"
     },
     {
       "path": "kernels/__proptests__/art-209-nft-metadata-validator.proptest.mjs",
@@ -904,15 +908,15 @@
     },
     {
       "path": "kernels/__proptests__/art-211-prediction-market-analyzer.proptest.mjs",
-      "sha256": "2f029d274c807b559cdc55711e7bfd1d9745bc2061958afbbf34073220b6bd6e"
+      "sha256": "59ff80d132d834b37016fa989620fe6851aca5be802cb07fcb5945f91596f699"
     },
     {
       "path": "kernels/__proptests__/art-212-prediction-market-arbitrage.proptest.mjs",
-      "sha256": "a40cd6df72baa8a90a26b49e263e822f22433db8b6496ee8a39c93a170d54e2b"
+      "sha256": "33160892abfe88b43f74767dac6455070ad8bfe64745b07a5f2ad3796ff16949"
     },
     {
       "path": "kernels/__proptests__/art-213-perp-liquidation-calculator.proptest.mjs",
-      "sha256": "c457a89eef6266c25aa110f7224b2ac9fa4271fcd1f230342b06e598153aab4d"
+      "sha256": "935c75b79aa5bb687ed98509861da7f891c6ffc537df72a2f35603ce4dec7637"
     },
     {
       "path": "kernels/__proptests__/art-214-perp-position-lifecycle.proptest.mjs",
@@ -956,7 +960,7 @@
     },
     {
       "path": "kernels/__proptests__/art-223-conforming-loan-limit.proptest.mjs",
-      "sha256": "ac4df395ebb4b005494680dbafe07c640c53227b7e0254d7feff82b992b1f6c9"
+      "sha256": "5bcdb002eb4d190f6607ca9690052161f94ae314452663f52a9623199e395d78"
     },
     {
       "path": "kernels/__proptests__/art-224-fha-mip-eligibility.proptest.mjs",
@@ -972,7 +976,7 @@
     },
     {
       "path": "kernels/__proptests__/art-227-validate-adverse-action-notice.proptest.mjs",
-      "sha256": "264cc0f15925a3f6c16a8ab16a350f097c38d5bda9d1ddd736f68f42825b0ac8"
+      "sha256": "4b599ec85089652fa971c857e60914fff2ef2445a0fa875923c4ed9a79274a9c"
     },
     {
       "path": "kernels/__proptests__/art-228-build-adverse-action-notice.proptest.mjs",
@@ -1036,7 +1040,7 @@
     },
     {
       "path": "kernels/__proptests__/art-241-cbpr-structured-address-linter.proptest.mjs",
-      "sha256": "cfab92f9294d44f6867a83999508459cbbe493761a3fe0f9a7361bdc5f46bd28"
+      "sha256": "0f82a757d9cc9802da3cfb42e5a18bd51b7549668246dff0e8d481d2dbbf5938"
     },
     {
       "path": "kernels/__proptests__/art-242-pacs008-party-completeness-validator.proptest.mjs",
@@ -1052,7 +1056,7 @@
     },
     {
       "path": "kernels/__proptests__/art-245-mt-mx-translation-fidelity-scorer.proptest.mjs",
-      "sha256": "57558db6dc9e74c8abba5e2374885e7b22af8555ee34090282446ef244482740"
+      "sha256": "b890f5ea73d2a8c08f84719abf470a1c03171493534441ae999d1a8f163ddac2"
     },
     {
       "path": "kernels/__proptests__/art-246-lei-payment-binding-linter.proptest.mjs",
@@ -1060,7 +1064,7 @@
     },
     {
       "path": "kernels/__proptests__/art-247-prevalidation-readiness-scorer.proptest.mjs",
-      "sha256": "9b1f40e4d0304581df8577bfb39b0147dbc29f1f1af04c57043ae0fd66ea285f"
+      "sha256": "465939f4832793a7b4d36633b8d6f5313c1cb5f90d6ebb533ac24c5d3fd115ae"
     },
     {
       "path": "kernels/__proptests__/art-248-compute-remittance-disclosure.proptest.mjs",
@@ -1276,7 +1280,7 @@
     },
     {
       "path": "kernels/__proptests__/art-295-einvoice-jurisdiction-mandate-router.proptest.mjs",
-      "sha256": "e530359e6afc38bf116325bb4252d6de6b2eb31669eb5cb55f7d1e99e911934c"
+      "sha256": "0808728e8cb5a94a520dc4811c8410af255f1e4f32bd1490625087283c2c142c"
     },
     {
       "path": "kernels/__proptests__/art-296-einvoice-transmission-receipt-builder.proptest.mjs",
@@ -1360,7 +1364,7 @@
     },
     {
       "path": "kernels/__proptests__/art-317-rhc-multiplier-reconciler.proptest.mjs",
-      "sha256": "6077d4127a0c7a4389a20e6fb1c428b258ea31d8bce71a1c299df4cb59e0c241"
+      "sha256": "bb133320bcf931b52b7cf523cc091b98afeb88cc802dee6d095c3936dd57d7c4"
     },
     {
       "path": "kernels/__proptests__/art-318-rhc-regime-mapper.proptest.mjs",
@@ -1368,7 +1372,7 @@
     },
     {
       "path": "kernels/__proptests__/art-319-rhc-valuation-linter.proptest.mjs",
-      "sha256": "7ea3547aeccb2677dfc530d290cce7d359f9304e28a90b871ede31a5dbee41f0"
+      "sha256": "31ff9d44eb7eeb2fe7753042d71272cbbb7af6a0f5c359131f10ed5d145b0f6a"
     },
     {
       "path": "kernels/__proptests__/art-32-a2a-agent-card-trust-chain-validator.proptest.mjs",
@@ -1444,7 +1448,7 @@
     },
     {
       "path": "kernels/__proptests__/art-339-compute-gross-to-net.proptest.mjs",
-      "sha256": "624a0741f9b43ff7eae945cccd2d2d7caf3dc634a886702a89c464902417d915"
+      "sha256": "c8abe5a423c2f68d3c0830e427b018a7cdce5908e3de8b8bc190365ce23b637f"
     },
     {
       "path": "kernels/__proptests__/art-34-tempo-fit-diagnostic.proptest.mjs",
@@ -1472,7 +1476,7 @@
     },
     {
       "path": "kernels/__proptests__/art-349-fedwire-structured-address-linter.proptest.mjs",
-      "sha256": "e00c76ef879f8c7c928e0176999c9cf6ca3f409981f8ccc70619f829c3443bc7"
+      "sha256": "36d31b89b92b64ede4c3d474fed62fb6dfcea59c0bc208422cffd0ff6eafec29"
     },
     {
       "path": "kernels/__proptests__/art-35-tempo-payments-business-case.proptest.mjs",
@@ -1480,7 +1484,7 @@
     },
     {
       "path": "kernels/__proptests__/art-350-fedwire-address-sweep.proptest.mjs",
-      "sha256": "b7b4ef3f6a912f6fc029f651e96190a10bb1d3c51de1b4721bdc55ad113e8f5e"
+      "sha256": "6324f4ea7832bc5b8f5c3ebfa61e23a084ea4cc3954396b91e0886d132b08365"
     },
     {
       "path": "kernels/__proptests__/art-352-etr-control-evidence-checker.proptest.mjs",
@@ -1556,7 +1560,7 @@
     },
     {
       "path": "kernels/__proptests__/art-37-tempo-stablecoin-issuance.proptest.mjs",
-      "sha256": "98df28d02987e80c706dda650d90f06b8d49242d7bd2439afd2cdbba6917f0d2"
+      "sha256": "30292e42d437317dfe6c1e5c6ae33eb54764ab381fc61169ef98e0dec9582fd6"
     },
     {
       "path": "kernels/__proptests__/art-370-supervisory-scenario-replay.proptest.mjs",
@@ -1916,7 +1920,7 @@
     },
     {
       "path": "kernels/__proptests__/art-466-dora-roi-builder.proptest.mjs",
-      "sha256": "a3792cb9d2d5b73a4e00e0052eec7d522caa4910ccc5e570390678b17d943883"
+      "sha256": "8268ae02e323a1850ca9679ed4e2b30fc2ed928933249dbac04da63f37681517"
     },
     {
       "path": "kernels/__proptests__/art-467-dora-incident-classifier.proptest.mjs",
@@ -2048,7 +2052,7 @@
     },
     {
       "path": "kernels/__proptests__/art-499-check-safeguarding-reconciliation.proptest.mjs",
-      "sha256": "0edfc614a6a9e7731a97a2a869d3c27a450ef3fd44937e30c67e1c327f25b9a6"
+      "sha256": "a4b396dc52e687d05ac029444f6e75de0f1f91bf9dd2c30c6ee0ee14263c8743"
     },
     {
       "path": "kernels/__proptests__/art-50-ficc-margin-netting-estimator.proptest.mjs",
@@ -2168,7 +2172,7 @@
     },
     {
       "path": "kernels/__proptests__/art-527-classify-ledger-consensus-finality.proptest.mjs",
-      "sha256": "2d7cde4a12a37f628072dbef5632d4643a50fbde8c3998fb937a0c5b4f340998"
+      "sha256": "f154f5f0c36f243db012e69c22abaa68d7ba8db8229d2f894ccaf7c742825b1f"
     },
     {
       "path": "kernels/__proptests__/art-528-cross-ccp-pqd-comparator.proptest.mjs",
@@ -2324,7 +2328,7 @@
     },
     {
       "path": "kernels/__proptests__/art-568-securitization-trustee-report-recompute.proptest.mjs",
-      "sha256": "79b5bbdb2b3afe3cd5f4cc947dca8b05ecb25d004f540c9021c85fc94d91de19"
+      "sha256": "dafbdd93722bc287512ea90a3a42be1d2f094c4d9c2585555385bc972db7bdb8"
     },
     {
       "path": "kernels/__proptests__/art-569-muni-arbitrage-spending-exception-checker.proptest.mjs",
@@ -2340,19 +2344,19 @@
     },
     {
       "path": "kernels/__proptests__/art-571-lease-schedule-recompute-asc842-ifrs16.proptest.mjs",
-      "sha256": "94e0c726aa0de0eca27bfcc1f4d42ba1a085c65d50b756c3816fb8801fd105e5"
+      "sha256": "e11a1beca27ad2af6d4ad57acb4db869aaeecb563e36a82207c3a75a576eb7b3"
     },
     {
       "path": "kernels/__proptests__/art-572-multi-garnishment-stacking-recompute.proptest.mjs",
-      "sha256": "3f3d3311bf4f6a8d59c390d143ece4cdf9a2d610c962a4978aa907074a8df295"
+      "sha256": "27d115a67f88874479ca3b7804cf05cf8805e344ec7c03e053ba2c2c7b9f03e7"
     },
     {
       "path": "kernels/__proptests__/art-573-section16b-short-swing-profit-recompute.proptest.mjs",
-      "sha256": "13fe960211c8a114cbb51ad4ccef76105157e75f9e9da6efbaeb67419079fb59"
+      "sha256": "f31ebdc47f77b0e1161c049757c16e6aa3158b868640f0019662818fa0b08ff7"
     },
     {
       "path": "kernels/__proptests__/art-574-certified-payroll-prevailing-wage-recompute.proptest.mjs",
-      "sha256": "7e23266fd636bbc6c81bad3b5c207b062b7eec593db3597d7137baf37e916cfe"
+      "sha256": "949807706b78f5da58ef6375eccf887ffb1b6d5e1450e0ad9c6a2d039d838920"
     },
     {
       "path": "kernels/__proptests__/art-575-tmpg-fails-charge-recompute.proptest.mjs",
@@ -2396,7 +2400,7 @@
     },
     {
       "path": "kernels/__proptests__/art-584-proof-of-reserves-verifier.proptest.mjs",
-      "sha256": "9fbdbd14621d50b87cfe750076e2f7bfb0a636d141631cd58f480bf2b8d656e7"
+      "sha256": "0371be362fd57fe43881661136530e6787f882969ae867912848dd1a38619404"
     },
     {
       "path": "kernels/__proptests__/art-585-sanctions-screening-evidence-pack.proptest.mjs",
@@ -2480,7 +2484,7 @@
     },
     {
       "path": "kernels/__proptests__/art-604-erc8004-registry-entry-verifier.proptest.mjs",
-      "sha256": "b9f3dc96dda4b1052fb5da74fce6fab9b30606d30ad695ed48270934de94fa40"
+      "sha256": "28f938ce87253efe32c115d38002e47694ccd277e322e3002396592e89305bae"
     },
     {
       "path": "kernels/__proptests__/art-605-merkle-airdrop-proof-verifier.proptest.mjs",
@@ -2552,7 +2556,7 @@
     },
     {
       "path": "kernels/__proptests__/art-620-summa-mst-inclusion-checker.proptest.mjs",
-      "sha256": "ee626b4824891df5a20619e6cb48e5e80a403ac0c29c4f59606c2e18aae204f5"
+      "sha256": "cc28ce39f49219cba933a1b7f5a7efa55345b94080e9f310a2facea160f4bc20"
     },
     {
       "path": "kernels/__proptests__/art-621-summa-mst-liability-aggregator.proptest.mjs",
@@ -2636,7 +2640,7 @@
     },
     {
       "path": "kernels/__proptests__/art-654-perp-funding-implied-yield.proptest.mjs",
-      "sha256": "7ba0dd2fbf417f1a1a3b7f0291cdfc3208b50be06d1da17f38b909be2c17ea9e"
+      "sha256": "7753b74749fa0e6d96c03b9490cc0979abef295775a568828bf21b5dda31f6ed"
     },
     {
       "path": "kernels/__proptests__/art-655-publish-market-mark-head.proptest.mjs",
@@ -2672,11 +2676,11 @@
     },
     {
       "path": "kernels/__proptests__/art-662-odnsf-fee-recompute.proptest.mjs",
-      "sha256": "95958b3f5b5ff6e707c75d716a475062fda509da337b33407b8dc7cf1e57355c"
+      "sha256": "1e43a250b8042a06c6e0a3560e60cf0fb8a730061d6eb1a9dc7a79cabea910d9"
     },
     {
       "path": "kernels/__proptests__/art-663-apy-earned-recompute.proptest.mjs",
-      "sha256": "2c4e2f06cb979343f12dbcc330e9f4d5842e65aeaacc18c1149e312a4bf0580f"
+      "sha256": "d60b0e9f1afff2af384f21ab71af72f62fdfe858a7d8a7fa37644f0b8b11ce2e"
     },
     {
       "path": "kernels/__proptests__/art-664-loan-servicing-waterfall-recompute.proptest.mjs",
@@ -2684,7 +2688,7 @@
     },
     {
       "path": "kernels/__proptests__/art-665-gl-tieout-recompute.proptest.mjs",
-      "sha256": "1e9c3247f24813a82cb6d7c657db18cfa6788de4201d395ea17c5d03db09998c"
+      "sha256": "f80061ca07cba94800593fcd90fe05fc17a797c0345d722137c508a72d87fc53"
     },
     {
       "path": "kernels/__proptests__/art-669-algo-execution-schedule-simulator.proptest.mjs",
@@ -2832,15 +2836,15 @@
     },
     {
       "path": "kernels/__proptests__/art-707-tsv-tier-cap-ladder.proptest.mjs",
-      "sha256": "deaac75b71a7c18872cf1df86613bad4f950f81c31c0659b97608b07a3b394ed"
+      "sha256": "9bc7443ffd9f7076f6b1c27faa8533e59b33da5ac80d742ff4ad71829625c4f9"
     },
     {
       "path": "kernels/__proptests__/art-708-v4-hook-permission-reconciler.proptest.mjs",
-      "sha256": "d11b1939b7be61c25cab7ec31ad060d57d2bcb71e0c796a6d359052097d2d61b"
+      "sha256": "ca3fa2f30b7221738f0680ebdee0ccec224df45dd90c9cb881af43dbcff8c671"
     },
     {
       "path": "kernels/__proptests__/art-709-v4-hook-fee-conformance.proptest.mjs",
-      "sha256": "2c5903273cca4d0a4e116c4036b955ba625a84505afdaee41edfa8f48870fb82"
+      "sha256": "9e969cdf323687a46acabab8c6bbd1033f4846684532bac0f32ad39da400489d"
     },
     {
       "path": "kernels/__proptests__/art-71-cbam-certificate-cost-engine.proptest.mjs",
@@ -2848,7 +2852,7 @@
     },
     {
       "path": "kernels/__proptests__/art-710-tsv-stoppage-concurrency.proptest.mjs",
-      "sha256": "0193c7df3e19435156949074ab5a0d28b7b67f21bdd57a36577932b6588bb699"
+      "sha256": "617c96c0980abf07418e4ba3e0a6492cb585e2746a46b8450a4d176fa6433594"
     },
     {
       "path": "kernels/__proptests__/art-711-sco60-crypto-asset-exposure-classifier-v2.proptest.mjs",
@@ -2860,7 +2864,7 @@
     },
     {
       "path": "kernels/__proptests__/art-713-scorp-election-break-even.proptest.mjs",
-      "sha256": "e7ddf66b846503e18fa8a7857d0158c11a6780e7688bc95dde1372eb45d6ee02"
+      "sha256": "063c83acc19f89694551f7357dc83d72a2620ff940af760812846ba90692a6af"
     },
     {
       "path": "kernels/__proptests__/art-715-token2022-transfer-fee-reconciler.proptest.mjs",
@@ -2896,7 +2900,7 @@
     },
     {
       "path": "kernels/__proptests__/art-750-diff-evidence-bundles.proptest.mjs",
-      "sha256": "d05d8787ca36736e4253fc3ca91c8e72763159ab7bb9b6c48a9459f2787ee51b"
+      "sha256": "7da2446b0c9eb14ddba8e8cc90a1043b1d15c251e25ab5a9c5b5a1b82c588515"
     },
     {
       "path": "kernels/__proptests__/art-751-sha256-hmac-digest-demonstrator.proptest.mjs",
@@ -2916,7 +2920,7 @@
     },
     {
       "path": "kernels/__proptests__/art-756-sales-ote-commission-analyzer.proptest.mjs",
-      "sha256": "74a7be2bf17a4e8b154669b01359464be3560d05178a3ed95c2962b70ef8e49b"
+      "sha256": "1132bcd3131b4aa86fbf9e8d66597408af9170a1b9f5e460766367ed3c4a5763"
     },
     {
       "path": "kernels/__proptests__/art-758-hdhp-ppo-break-even.proptest.mjs",
@@ -2932,7 +2936,7 @@
     },
     {
       "path": "kernels/__proptests__/art-760-espp-break-even-optimal-sell.proptest.mjs",
-      "sha256": "e7c2f30dd217d507f77e8d7e9ed6e4de9e61a8277c5f0ddde0c480c44a23d6d9"
+      "sha256": "ed99bebba8a480d8583eca999ee9a538a9cee11dfb11df92ba05691425b4de48"
     },
     {
       "path": "kernels/__proptests__/art-761-caregiver-income-impact.proptest.mjs",
@@ -3056,7 +3060,7 @@
     },
     {
       "path": "kernels/__proptests__/art-81-allocation-affirmation-conformance.proptest.mjs",
-      "sha256": "c52b07b30758d17aca9731d7ec1e70948289d98cdc7fc5e39f96ac2d1ac0f986"
+      "sha256": "562eae5c664abe308c5be686a8f0d860b93d4b2ec59f91de09a175bad1cd0599"
     },
     {
       "path": "kernels/__proptests__/art-811-check-dti-within-policy-private.proptest.mjs",
@@ -3064,7 +3068,7 @@
     },
     {
       "path": "kernels/__proptests__/art-814-qf-pairwise-recompute.proptest.mjs",
-      "sha256": "6b41edd0f4b3e90ab54d519cabb72f8e67aa62c893dbf176ebca993c6b690903"
+      "sha256": "ae72df69b8f00d8648a7cb4c6d12ee7dfd3158e80ac090c7f7ab2981c0a0b562"
     },
     {
       "path": "kernels/__proptests__/art-816-eip3009-agent-spend-gate.proptest.mjs",
@@ -3084,15 +3088,15 @@
     },
     {
       "path": "kernels/__proptests__/art-820-negotiate-ucp-capabilities.proptest.mjs",
-      "sha256": "a7e2905d4f504270e91af8c45ce2baa6ce7b673dd83bb189e2381a467e3a129d"
+      "sha256": "878043bb57753bb814218ad4260e7078a140782b1d4b5fdb80a9d6e76376cf21"
     },
     {
       "path": "kernels/__proptests__/art-826-authenticator-assurance-level.proptest.mjs",
-      "sha256": "f2cf8cd3ec0285688ea200ebe16ab63703e5ca93ad0cf6e2d80068537840be78"
+      "sha256": "960d682097da59806de540817138da6794e740c5a487426074f29341dc4491ff"
     },
     {
       "path": "kernels/__proptests__/art-828-reconcile-omnibus-token-position.proptest.mjs",
-      "sha256": "f8097ca31b7f8b32d5310a7cc24a655252342f7559cb577668c42376cf603a03"
+      "sha256": "dc675ce7b259a4b8806e71c3d59b555568e93a7001a9288032e46f6b2dd136e0"
     },
     {
       "path": "kernels/__proptests__/art-83-buy-in-exposure-modeler.proptest.mjs",
@@ -3159,6 +3163,10 @@
       "sha256": "040d2f61d98cefe6f2ca6b79528cbd20e5ac1644454a61dbfbcab8d111cf27e2"
     },
     {
+      "path": "kernels/__proptests__/art-850-shariah-equity-purification.proptest.mjs",
+      "sha256": "98a294d72958be44bf6677dd9743713001d5197568f07c55fe7b2e3decd94bff"
+    },
+    {
       "path": "kernels/__proptests__/art-851-islamic-mmf-placement-limits.proptest.mjs",
       "sha256": "20ff5acfd0485af07b62ad876c47b8d1566c71222c5c4d46618ed2514c4c863d"
     },
@@ -3177,6 +3185,10 @@
     {
       "path": "kernels/__proptests__/art-856-ijarah-imbt-schedule.proptest.mjs",
       "sha256": "7ecf0cba2ea7a10b2f09f4c5aea354f19c8bb39c416533d21428fb96c0d1e254"
+    },
+    {
+      "path": "kernels/__proptests__/art-857-average-price-allocation.proptest.mjs",
+      "sha256": "6e89258c09f5efa3a183ee9ad09c9f98ce7edbabc6cb5113cb9ad2c74974ca34"
     },
     {
       "path": "kernels/__proptests__/art-86-tls-pki-migration-planner.proptest.mjs",
@@ -3356,7 +3368,7 @@
     },
     {
       "path": "kernels/__proptests__/FV-PROPFLOOR-SHARD-B5-1.manifest.json",
-      "sha256": "b17e87b4a989d5a0353e5646a7bfc45d69df0233180cd01b94dc70f281246201"
+      "sha256": "7ea5503da19e9bf90e02a2e9f159082db9b366885cce5e5fd8db77c6bf316854"
     },
     {
       "path": "kernels/__proptests__/FV-PROPFLOOR-SHARD-B6-1.manifest.json",
@@ -3484,7 +3496,7 @@
     },
     {
       "path": "kernels/__proptests__/MANIFEST-FV-PROPFLOOR-SHARD-C7-1.md",
-      "sha256": "a86269bcd71d170dcbd2c5b4bee0b6090472c75774b367cb834cfa6409271ced"
+      "sha256": "aa89a8f88a6341e98441e06ae407393988b96e853a7140392eddaa0ef9cd45d9"
     },
     {
       "path": "kernels/__proptests__/MANIFEST-FV-PROPFLOOR-SHARD-C8-1.md",
@@ -3500,7 +3512,7 @@
     },
     {
       "path": "kernels/__proptests__/ml-02-credit-default-risk-scorer.proptest.mjs",
-      "sha256": "04fcd472669bca8c27db828262f2c759f9bf3d3e1ef0524db79a1c198b6d260c"
+      "sha256": "00628ea30d1d8fc36a803f52ad3a153d424780bf8be3b54a4f3daad7fa01dbe3"
     },
     {
       "path": "kernels/__proptests__/ml-03-timeseries-anomaly-detector.proptest.mjs",
@@ -4684,7 +4696,7 @@
     },
     {
       "path": "kernels/__vintages__/art-223-conforming-loan-limit.uses.json",
-      "sha256": "6f4dc580df06aee757f18087ece96e1d3fc6d07cf748c5a03fae3a47065f1a6c"
+      "sha256": "a9630406a38492e0b073b840a94a8c19eb3bceee58008fa22271e9dd882a2ee1"
     },
     {
       "path": "kernels/__vintages__/art-234-test-hoepa-high-cost.uses.json",
@@ -4700,7 +4712,7 @@
     },
     {
       "path": "kernels/__vintages__/art-713-scorp-election-break-even.uses.json",
-      "sha256": "f8650661ba09685be8c8beadfebd7791a26cc77d792ee40f8cfb55d7312a6b5a"
+      "sha256": "e7a8d4fd8374ec77733fcc0e7c2d1f7c623c709bac836710b18199c2eb84e2c1"
     },
     {
       "path": "kernels/__vintages__/art-752-freelance-quarterly-estimated-tax.uses.json",
@@ -4724,7 +4736,7 @@
     },
     {
       "path": "kernels/__vintages__/check-vintages.mjs",
-      "sha256": "2942291f0ad791f8c38a8591ffb314c2d4d936390862fd61b27d66002293647d"
+      "sha256": "efc330204fa52574a474f5f333b7b4805b7bc44ad4b83146b6a4031e0b93d454"
     },
     {
       "path": "kernels/__vintages__/README.md",
@@ -4776,7 +4788,7 @@
     },
     {
       "path": "kernels/_computeproof.mjs",
-      "sha256": "e959873798991c56eb00a2f8b42f0f5a92f1bfc4e951955ec868c5625221d6c7"
+      "sha256": "94126532ca866d3b60cf3a9ceca225a4b18d88cd78aad0440341583f142ade30"
     },
     {
       "path": "kernels/_csv_injection.mjs",
@@ -4824,11 +4836,11 @@
     },
     {
       "path": "kernels/_hash.mjs",
-      "sha256": "ef6fd5a1f28131dce8ca5ea3adcd1662e93cec682b7cecb3759a9647b6a56f04"
+      "sha256": "412dcbe72d1aba89f49b4105ed5e1e8928bb7be2f57474d551ffaf469c7defe8"
     },
     {
       "path": "kernels/_hash.test.mjs",
-      "sha256": "a03ae8a876982f9bc8b1174cba1eac6c8769acb699b368a4ca69bbe3b3b0d6e1"
+      "sha256": "ebe38f15bc9653e3a7747c6989b7f7757313b10185cc7d25d8cd16f76a932d22"
     },
     {
       "path": "kernels/_head.mjs",
@@ -4844,7 +4856,7 @@
     },
     {
       "path": "kernels/_input.selftest.mjs",
-      "sha256": "48038b0c56225ae96fd62715fcce3e99c27416a92e2c64010da280b22301bc19"
+      "sha256": "105e0408f88342cf9aa342daaf48fd0cc8a314950c7888a46f3e37efe96f4ebf"
     },
     {
       "path": "kernels/_money.bundle.authorship.json",
@@ -5012,11 +5024,11 @@
     },
     {
       "path": "kernels/790-event-position-limit-check.kernel.mjs",
-      "sha256": "b8ce8e7e260662d41e52573c9cff9e684216e412ea9adc1fe1f514c70c207960"
+      "sha256": "c2ddcf46b3a0feaf41a421791b771c0b262d775a39dbd5e5e748a9fed4ce6ffa"
     },
     {
       "path": "kernels/792-curator-vault-cap-auditor.kernel.mjs",
-      "sha256": "5c179330342a136524f4808a6f201ab22ba0f39015250bc42ef835c7cd944a1e"
+      "sha256": "4acc868648ee3b4a2e474aa09cced8aa966e36dbc2500a40698f3218d4498a72"
     },
     {
       "path": "kernels/794-event-fee-recompute.kernel.mjs",
@@ -5024,7 +5036,7 @@
     },
     {
       "path": "kernels/795-stablecoin-refund-dispute.kernel.mjs",
-      "sha256": "6732f77e7fd36d16eb53e230d2cef36876c58d2adc6c0e88e6f040fae0229c0a"
+      "sha256": "4d7a86b07be753ede278b2f9eee405d5519e6d9c90fad8cd96f7985abea3d775"
     },
     {
       "path": "kernels/796-payment-system-mi-pack.kernel.mjs",
@@ -5052,11 +5064,11 @@
     },
     {
       "path": "kernels/808-lst-share-rate-reconciler.kernel.mjs",
-      "sha256": "f6044ca84c60dfa9079d6d27691a8f235605ba96458294298aaa0f4e6dc9a8ad"
+      "sha256": "1c1817fd2937bc5d5c88588ea12359d0265927fe6ae39f891874191732500c98"
     },
     {
       "path": "kernels/810-contract-bytecode-identity-verifier.kernel.mjs",
-      "sha256": "9bc94068a33ab9fdd9c3323a0e898bb099328f10fb4ca970424388670379e009"
+      "sha256": "207e505ea5a177c4bc88abae3ca379630bc88a7236277a08dca2f82f765962bd"
     },
     {
       "path": "kernels/812-eth-staking-queue.kernel.mjs",
@@ -5092,11 +5104,11 @@
     },
     {
       "path": "kernels/827-agent-cred-class-matrix.kernel.mjs",
-      "sha256": "958f0ba4ec1952e6069a73353e103148c7b697d61cc12de33d2522c3705cdf59"
+      "sha256": "0ad413441a1a4729ed7ee331f28cbbb6d77bda47b00549b72185e64e278f94c3"
     },
     {
       "path": "kernels/829-safe-tx-hash-recompute.kernel.mjs",
-      "sha256": "60f4ab23d5ec5710081df25793e9ee65e04141114c12d370882a8cc288a54397"
+      "sha256": "6d769a843fc2ebea51b35f9e276675969ee689337a738532703b12149840418c"
     },
     {
       "path": "kernels/836-payment-services-activity-classifier.kernel.mjs",
@@ -5125,6 +5137,10 @@
     {
       "path": "kernels/845-je-period-lock-gate.mutation.json",
       "sha256": "38d439f60148d39fca4d13fb3dcae6e06ed8a8bbf9083030a21ea20bcf0230cf"
+    },
+    {
+      "path": "kernels/858-fill-quality-summary.kernel.mjs",
+      "sha256": "9cb6593dd7b5df7f20ad18aaed32b8e998abdd197681340441a20ffa06cee686"
     },
     {
       "path": "kernels/amortization-apr-chain.test.mjs",
@@ -5268,7 +5284,7 @@
     },
     {
       "path": "kernels/art-12-acp-checkout-conformance-validator.kernel.mjs",
-      "sha256": "4ee210e9f360aea1ea09609253ca4e223bc00065d42aa2a672f4ffb5a866afc2"
+      "sha256": "763c756ba14cdb41f480953061d41148819391d5f84b8f804c9c9ba7a2b58dbe"
     },
     {
       "path": "kernels/art-120-recall-trace-resolver.kernel.mjs",
@@ -5672,7 +5688,7 @@
     },
     {
       "path": "kernels/art-208-royalty-split-validator.kernel.mjs",
-      "sha256": "e264583d242ab0d715775d7f1ac1a87d7a26916f3fa44a5082a6c2facfa61705"
+      "sha256": "20ed9dff4580fedd37d55f70933ea67a9c7396e92759cd1e8636dd1226067ecd"
     },
     {
       "path": "kernels/art-209-nft-metadata-validator.kernel.mjs",
@@ -5688,15 +5704,19 @@
     },
     {
       "path": "kernels/art-211-prediction-market-analyzer.kernel.mjs",
-      "sha256": "3db60f420ca07f2d35c4aa2707c39a13b6e04399b65f0924f3e1c71d1b619885"
+      "sha256": "b590598b241e9c943b8c4f28f5299ef88a217f66ac21db62dc90e02a9eccc5ea"
+    },
+    {
+      "path": "kernels/art-211-prediction-market-analyzer.mutation.json",
+      "sha256": "98be031589bf338dc66f85f52dacdc8fc2271fe49ff5403e27da536c292e8d0b"
     },
     {
       "path": "kernels/art-212-prediction-market-arbitrage.kernel.mjs",
-      "sha256": "50383b30da28ddff91ea438dbd7fb49e6a9688b10a493a72d42811a35733f2b9"
+      "sha256": "31222c0fda696a9d02bc813abe3e55542deca4ec9e97a4059a342e35f037fa50"
     },
     {
       "path": "kernels/art-213-perp-liquidation-calculator.kernel.mjs",
-      "sha256": "2fccd34d45ee83dbb10844e720e1c4469b6f63bec1243d60757849f139768803"
+      "sha256": "67d193e22593b52e68bada73b78c6777813b11bd4c2407bd4083298e4d2db90b"
     },
     {
       "path": "kernels/art-214-perp-position-lifecycle.kernel.mjs",
@@ -5740,7 +5760,7 @@
     },
     {
       "path": "kernels/art-223-conforming-loan-limit.kernel.mjs",
-      "sha256": "a8d8f41dc80af6482131e4333caca8533cb1f95a85979a3f51e7b6f45865f878"
+      "sha256": "e7f8db7b60aaff527d676307817873a54733549dc66a8de3c132986da3759eb3"
     },
     {
       "path": "kernels/art-224-fha-mip-eligibility.kernel.mjs",
@@ -5756,7 +5776,7 @@
     },
     {
       "path": "kernels/art-227-validate-adverse-action-notice.kernel.mjs",
-      "sha256": "8e6f6cc5b36d30e20843f8cc21fc37c9ed8e4e3e3754df6df4f74bb1f12ce44a"
+      "sha256": "74463b7230ff069a46ee9b8a95e5269e5219fa45604666a28c6e277a5d4595ad"
     },
     {
       "path": "kernels/art-228-build-adverse-action-notice.kernel.mjs",
@@ -5820,7 +5840,7 @@
     },
     {
       "path": "kernels/art-241-cbpr-structured-address-linter.kernel.mjs",
-      "sha256": "dab26511e0747afa95ae4ba156a6704e1c9e807a52ddfe74d48140b96822ccf7"
+      "sha256": "c0c198eb8be05a3d5cdbf0f6f18abd3843c0ec237a32f53b4ea3fa90d8eec191"
     },
     {
       "path": "kernels/art-242-pacs008-party-completeness-validator.kernel.mjs",
@@ -5836,7 +5856,7 @@
     },
     {
       "path": "kernels/art-245-mt-mx-translation-fidelity-scorer.kernel.mjs",
-      "sha256": "73f7c3c049de7635ae66cf29bf86a1bef0c8cc9a4e52ce6c1ae66c27e4c90f4d"
+      "sha256": "d1a0b8ba63bb570e013def9e6b9abdca1745788ff83e3b6e7aba1a6d5176ad90"
     },
     {
       "path": "kernels/art-246-lei-payment-binding-linter.kernel.mjs",
@@ -5844,7 +5864,7 @@
     },
     {
       "path": "kernels/art-247-prevalidation-readiness-scorer.kernel.mjs",
-      "sha256": "3a611321fca01c490b5bf91489ba7bf44e4a97c1b74ae28e82cf1e047fc247d9"
+      "sha256": "5475cd82599248e9b0a29409e2be19f7a51aa5e147187ef179377d0c5706998a"
     },
     {
       "path": "kernels/art-248-compute-remittance-disclosure.kernel.mjs",
@@ -6076,7 +6096,7 @@
     },
     {
       "path": "kernels/art-295-einvoice-jurisdiction-mandate-router.kernel.mjs",
-      "sha256": "0b10eacc01a0d809c04d6f3548e9c09c589eb0eeb330672b8dfaab9877cd9d20"
+      "sha256": "8a2cbba14b21c6af020c037f11334cbd7ea54a0b62eb89d71ad6e336959abb0f"
     },
     {
       "path": "kernels/art-296-einvoice-transmission-receipt-builder.kernel.mjs",
@@ -6160,7 +6180,7 @@
     },
     {
       "path": "kernels/art-317-rhc-multiplier-reconciler.kernel.mjs",
-      "sha256": "429e977403062feed23c749598080acc370be7c4fbe83704b1c1884bccc3a94f"
+      "sha256": "c16ce83974f3897c01348ed544f9926dbb2b75a947540b75650b756441b64f8a"
     },
     {
       "path": "kernels/art-318-rhc-regime-mapper.kernel.mjs",
@@ -6168,7 +6188,7 @@
     },
     {
       "path": "kernels/art-319-rhc-valuation-linter.kernel.mjs",
-      "sha256": "1b2549c6c23eeff309d070117288897e871490b446375f87875bd6d973e25a31"
+      "sha256": "586e3a4667367e70e143da5e81063ce81620f5f5fde7c386ba7ed9ecdea6adfe"
     },
     {
       "path": "kernels/art-32-a2a-agent-card-trust-chain-validator.kernel.mjs",
@@ -6264,7 +6284,7 @@
     },
     {
       "path": "kernels/art-339-compute-gross-to-net.kernel.mjs",
-      "sha256": "58c1128e8a66033dfe7cbae4e700f57f370ae362cf62b4b12ac7c70a1710afa5"
+      "sha256": "7a3914c54325f383deae7a39e1cc8b965811b3e7ffbba62ccadec99f70fda635"
     },
     {
       "path": "kernels/art-34-tempo-fit-diagnostic.kernel.mjs",
@@ -6292,7 +6312,7 @@
     },
     {
       "path": "kernels/art-349-fedwire-structured-address-linter.kernel.mjs",
-      "sha256": "809f84acec184e0f58a1ba119c5745f23171d8f0138189902c8da6e5d93452ea"
+      "sha256": "501fd66cf4de8f8e836ded3fdfd780c5311c5351a188307e66d68f79da44456a"
     },
     {
       "path": "kernels/art-35-tempo-payments-business-case.kernel.mjs",
@@ -6300,7 +6320,7 @@
     },
     {
       "path": "kernels/art-350-fedwire-address-sweep.kernel.mjs",
-      "sha256": "3ae08c2f86a8a34e3be03ac7e3df38b0d5d2d0ee47fda15364f8d365f6c295d2"
+      "sha256": "b4e82c38e4a19bd506f3a195fb346f9917425ea3e00a285fa12ed91dfbcdfffa"
     },
     {
       "path": "kernels/art-352-etr-control-evidence-checker.kernel.mjs",
@@ -6376,7 +6396,7 @@
     },
     {
       "path": "kernels/art-37-tempo-stablecoin-issuance.kernel.mjs",
-      "sha256": "252b8f7b8a64ab8a59613d891c4849f52fdc3322a68a98de86dd032a2305f6ae"
+      "sha256": "8a69e4f528386042c0313042e7aaf02e47a2332a7db9eb710b91e13f85467d4c"
     },
     {
       "path": "kernels/art-370-supervisory-scenario-replay.kernel.mjs",
@@ -6744,7 +6764,7 @@
     },
     {
       "path": "kernels/art-466-dora-roi-builder.kernel.mjs",
-      "sha256": "4f605ce91ebec16f4f7e409b383f1f5f273b5f3e0551894aed9765e2b7681d80"
+      "sha256": "32bccaf880b7193ab5430857244909678e38fbe92c16fbd0af6490c1565f0ef6"
     },
     {
       "path": "kernels/art-467-dora-incident-classifier.kernel.mjs",
@@ -6876,7 +6896,11 @@
     },
     {
       "path": "kernels/art-499-check-safeguarding-reconciliation.kernel.mjs",
-      "sha256": "ee7c278f77ba168b6c221d6a703d01ad0390c884fd1551198e71f423d3fe4554"
+      "sha256": "5ff532f59382cb2447813161167dfe615fc462f54f6a67b18d6113ac6bbcd9f8"
+    },
+    {
+      "path": "kernels/art-499-check-safeguarding-reconciliation.mutation.json",
+      "sha256": "2e471f53a88cfeae91209c4210f95dcf2b351457517fafbf13a851a8e1d24ea1"
     },
     {
       "path": "kernels/art-50-ficc-margin-netting-estimator.kernel.mjs",
@@ -7016,7 +7040,7 @@
     },
     {
       "path": "kernels/art-527-classify-ledger-consensus-finality.kernel.mjs",
-      "sha256": "46901368779de44333c60943c2a52d7458222841e0ac6420898016c6664114dd"
+      "sha256": "64328c8f484c5be040d0185308e0c072b4728975d7be8979f64b6169a3eb96d1"
     },
     {
       "path": "kernels/art-528-cross-ccp-pqd-comparator.kernel.mjs",
@@ -7172,7 +7196,7 @@
     },
     {
       "path": "kernels/art-568-securitization-trustee-report-recompute.kernel.mjs",
-      "sha256": "d055891899f36887772e5e5edccb200703d03fa965edd3ea178f6c6933e98578"
+      "sha256": "a05c9a9868a8e92ca6f96c21e1d7d68226af851f2f513be4ad0af973fc3046d9"
     },
     {
       "path": "kernels/art-569-muni-arbitrage-spending-exception-checker.kernel.mjs",
@@ -7188,19 +7212,19 @@
     },
     {
       "path": "kernels/art-571-lease-schedule-recompute-asc842-ifrs16.kernel.mjs",
-      "sha256": "41a5b1590955af3b2f923482346677130524a112c6673a9f5f2d45f96d0326c1"
+      "sha256": "e613e38e72d7ce4c3b135f3ffbeb8126378499e4000ee94aae7eb182e53af10a"
     },
     {
       "path": "kernels/art-572-multi-garnishment-stacking-recompute.kernel.mjs",
-      "sha256": "40566c4874e0229d5ecd0a9656e3643dfaabfb3bfdc79ddc78a332d900bec3bf"
+      "sha256": "8c136d165c60f037c99acb56b103c599d56337090c9d99a2e14739af14ff7a0c"
     },
     {
       "path": "kernels/art-573-section16b-short-swing-profit-recompute.kernel.mjs",
-      "sha256": "2bf576ae353041e722a9e64447d9484503c9d7208b320a9338562368f15e41d2"
+      "sha256": "ea37874e6b84c67d4d36a81673d0124380615956df289786362627e98fb08f8a"
     },
     {
       "path": "kernels/art-574-certified-payroll-prevailing-wage-recompute.kernel.mjs",
-      "sha256": "4da565b656d200c214becb712b820a097894e9edeae66b4275e34854847911c7"
+      "sha256": "15356ce6d2138cd5ab65250450f70aff4eb56c1ec9f44e8f64ed67cfa7b62d9d"
     },
     {
       "path": "kernels/art-575-tmpg-fails-charge-recompute.kernel.mjs",
@@ -7244,7 +7268,11 @@
     },
     {
       "path": "kernels/art-584-proof-of-reserves-verifier.kernel.mjs",
-      "sha256": "852795237d7839b503e955db5db49f8d87ff6dc9edeb5a31687fca2e6f660b66"
+      "sha256": "baa378330b8b67426fbb7c1bedb41d2dc689735f0740925ad22d70fa891fbcbf"
+    },
+    {
+      "path": "kernels/art-584-proof-of-reserves-verifier.mutation.json",
+      "sha256": "2e20b344d8adeaa4dcf8bf61a44e5b4af60980ef890a634ce73431e4d29069c7"
     },
     {
       "path": "kernels/art-585-sanctions-screening-evidence-pack.kernel.mjs",
@@ -7344,7 +7372,11 @@
     },
     {
       "path": "kernels/art-604-erc8004-registry-entry-verifier.kernel.mjs",
-      "sha256": "1da61365399f5cf6ccd435e837f00981a4c6f9ebd9264d0d0641bda3f38091bc"
+      "sha256": "e070d771eff503f44fbf430cb47475cbb4ff2b2db6cc3692e6d4f3b93370a8c3"
+    },
+    {
+      "path": "kernels/art-604-erc8004-registry-entry-verifier.mutation.json",
+      "sha256": "46b90667e3958170fe2899e662d160a03c624f9b82e4276f57f040d2d8ec2998"
     },
     {
       "path": "kernels/art-605-merkle-airdrop-proof-verifier.kernel.mjs",
@@ -7428,7 +7460,11 @@
     },
     {
       "path": "kernels/art-620-summa-mst-inclusion-checker.kernel.mjs",
-      "sha256": "2dc3bf8bb1f5ae7c1d3c1023fdd8c19a1abd94fae7105f93541303cf0f9c77a6"
+      "sha256": "b1d00b37e7585853e001320d57d046d9a9fde7008d810c8df91000726f21f864"
+    },
+    {
+      "path": "kernels/art-620-summa-mst-inclusion-checker.mutation.json",
+      "sha256": "6d2171cbfc928ebe7fbe4108cf390042ba33517324187b2a5eeca63a5771e139"
     },
     {
       "path": "kernels/art-621-summa-mst-liability-aggregator.kernel.mjs",
@@ -7560,15 +7596,19 @@
     },
     {
       "path": "kernels/art-662-odnsf-fee-recompute.kernel.mjs",
-      "sha256": "08217afde2dfb95ca1d609a0f728de20f5c0786e6784d47b79847984109622a3"
+      "sha256": "96b81492f13d9e398309ad1e6ffc48f4c4b91f2afd27992e83fed452bcad9fa6"
     },
     {
       "path": "kernels/art-662-odnsf-fee-recompute.mutation.json",
-      "sha256": "3bb7ccdd470f800d281d1893fef1ce989c8ab839d3cf87cd9c0729b4e96594b7"
+      "sha256": "0ef91b582f29b6c781d433fd0c0606ea010fea1e868cc960cc81affb26e81d80"
     },
     {
       "path": "kernels/art-663-apy-earned-recompute.kernel.mjs",
-      "sha256": "8f873b59228d5260e6aaaf4c82cf1f455e515ad601dd4133e74517741edd7608"
+      "sha256": "dde5c49b64af40bd9877ee9dc0ee23dfa58a463ababd68806a3928a8f382238c"
+    },
+    {
+      "path": "kernels/art-663-apy-earned-recompute.mutation.json",
+      "sha256": "5f22826fabad8bdb577de1263be8f036181718fa5cfc2649f831e9da9f26fa64"
     },
     {
       "path": "kernels/art-664-loan-servicing-waterfall-recompute.kernel.mjs",
@@ -7576,7 +7616,7 @@
     },
     {
       "path": "kernels/art-665-gl-tieout-recompute.kernel.mjs",
-      "sha256": "a584ec949403437257fff542b1a398296b05bd693748e96a1382329d3dff139c"
+      "sha256": "dfbd47a4ba2e0f31b7552382486c5306f356da18d5c1b6707b8368e595166eb8"
     },
     {
       "path": "kernels/art-669-algo-execution-schedule-simulator.kernel.mjs",
@@ -7748,15 +7788,15 @@
     },
     {
       "path": "kernels/art-707-tsv-tier-cap-ladder.kernel.mjs",
-      "sha256": "ec31622899cd563e7242a8382b47262710dadead214839f5029e2dee08ab9e6d"
+      "sha256": "53f197a5171f579e8477f319aedb57f7b886a4fe31b8808a6cc6fd95001cbc3a"
     },
     {
       "path": "kernels/art-708-v4-hook-permission-reconciler.kernel.mjs",
-      "sha256": "e08cd99eaa433bc5d34fddce29b5bc96932043799b00ecc03f90b6e8670d25e9"
+      "sha256": "e94242c93a8314d9b01cc07f3ae5fa0ad7afd8d32001c408db7413d46e2bd2a2"
     },
     {
       "path": "kernels/art-709-v4-hook-fee-conformance.kernel.mjs",
-      "sha256": "68ca34965c2b4f1c5f10617b45c673cf3034c7fe65de08d9cf763d9e0bb04a27"
+      "sha256": "006276eea211adf270ea4964fa8024c40abe4849bd45ced5872f07da1733bcfc"
     },
     {
       "path": "kernels/art-71-cbam-certificate-cost-engine.kernel.mjs",
@@ -7764,7 +7804,7 @@
     },
     {
       "path": "kernels/art-710-tsv-stoppage-concurrency.kernel.mjs",
-      "sha256": "50b06c5208854d0622f2454f8578b75ca6ec066405ff1afe74d0d529b30e7e8b"
+      "sha256": "fc85a5f96835280aa613cc54b48d9955a7f1e7a0aa0a22e8cb51779c77e60909"
     },
     {
       "path": "kernels/art-711-sco60-crypto-asset-exposure-classifier-v2.kernel.mjs",
@@ -7776,7 +7816,7 @@
     },
     {
       "path": "kernels/art-713-scorp-election-break-even.kernel.mjs",
-      "sha256": "7e1af77a80f8ba34c85d5ad070e0625aea5118c66bb72f50380f9413001b07f8"
+      "sha256": "1bb9d5ca33af735aa4f78452b9d65830fbda1cbfa378ea90dcc3ccea6a270b8f"
     },
     {
       "path": "kernels/art-715-token2022-transfer-fee-reconciler.kernel.mjs",
@@ -7812,7 +7852,7 @@
     },
     {
       "path": "kernels/art-750-diff-evidence-bundles.kernel.mjs",
-      "sha256": "693b7edea3f0a7a3d0123d9918e30abee3503aa91c3cf880d882c89fb78aab16"
+      "sha256": "10f7f50fb12b12ed1dacfb63edeeee56fba0eb383eb6cb7ed6fa0cf347b26b58"
     },
     {
       "path": "kernels/art-751-sha256-hmac-digest-demonstrator.kernel.mjs",
@@ -7836,7 +7876,7 @@
     },
     {
       "path": "kernels/art-756-sales-ote-commission-analyzer.kernel.mjs",
-      "sha256": "b16c64afb3ceeef8652c4aa0d61ba66b70be5f669ed8970d4a480b4e6aa8b87f"
+      "sha256": "43c1924980d70e686d9a6f5c9bc05f1040fc5530cd6f31f7fb7f56b866430416"
     },
     {
       "path": "kernels/art-758-hdhp-ppo-break-even.kernel.mjs",
@@ -7852,7 +7892,7 @@
     },
     {
       "path": "kernels/art-760-espp-break-even-optimal-sell.kernel.mjs",
-      "sha256": "bfdfad68ef74e4bf837405730e2352a16e0b593d907e51738f4dbccc36d7f42e"
+      "sha256": "86aa8770644771b0246a6d94d4d0e3ff1ed7975e006d24f0ded74d827aea24c8"
     },
     {
       "path": "kernels/art-761-caregiver-income-impact.kernel.mjs",
@@ -8000,7 +8040,7 @@
     },
     {
       "path": "kernels/art-81-allocation-affirmation-conformance.kernel.mjs",
-      "sha256": "9fc6a79e641f9ef6d5828a5d7dab51f388fea19179dfc01ec116853d112c07a4"
+      "sha256": "a32b3603ffe409a383537ba1407fd9965dc9331ac2793a34e0201f22a3f4f550"
     },
     {
       "path": "kernels/art-81-allocation-affirmation-conformance.mutation.json",
@@ -8012,7 +8052,7 @@
     },
     {
       "path": "kernels/art-814-qf-pairwise-recompute.kernel.mjs",
-      "sha256": "bbfed88877a9fdee108d9e5f9d8630c385c5189a03ffbe826ac2f334413f311f"
+      "sha256": "8225ffacee1d4a3679dd04456aac5017c0b4453384c215bf2b284ef12fa4a008"
     },
     {
       "path": "kernels/art-816-eip3009-agent-spend-gate.kernel.mjs",
@@ -8036,15 +8076,19 @@
     },
     {
       "path": "kernels/art-820-negotiate-ucp-capabilities.kernel.mjs",
-      "sha256": "f09fdc7369978626a800a5464785c62999cad6868894f8be97db94225f52dc7a"
+      "sha256": "c8d42a8493be23d708e33231041f3d21ab1ee37f76aa996b5f6fbbdcbbb1ab3a"
     },
     {
       "path": "kernels/art-826-authenticator-assurance-level.kernel.mjs",
-      "sha256": "753097999c8df944333000a9093ba2448c0aec45306ed0f6aa21d19d8f437227"
+      "sha256": "3ce0581c025cb13769f20057a204b52e32e89ea248a894eaa20276285ed886c5"
+    },
+    {
+      "path": "kernels/art-826-authenticator-assurance-level.mutation.json",
+      "sha256": "2e20b344d8adeaa4dcf8bf61a44e5b4af60980ef890a634ce73431e4d29069c7"
     },
     {
       "path": "kernels/art-828-reconcile-omnibus-token-position.kernel.mjs",
-      "sha256": "244e06c7cefd3bae92387a5258f61abacd8262681516cdeb488e318b1cf588bf"
+      "sha256": "29d56a8b435f1159f4c6964f88f12acd68b0cb982f2b4deff986d60a53feda53"
     },
     {
       "path": "kernels/art-83-buy-in-exposure-modeler.kernel.mjs",
@@ -8131,6 +8175,14 @@
       "sha256": "84c05753ffb3bd7d71bd9af2b7dece0ba0c23b3e3aae66ac296f39975d339f23"
     },
     {
+      "path": "kernels/art-850-shariah-equity-purification.kernel.mjs",
+      "sha256": "88ef28e687acec45d18a89748966234a7205381a374b6c38dbc1b2665a29bfd4"
+    },
+    {
+      "path": "kernels/art-850-shariah-equity-purification.mutation.json",
+      "sha256": "737fc3226bb9c45c1b65e222e17bd4d0fa8cff55fd7350def9940dd0af1aab3d"
+    },
+    {
       "path": "kernels/art-851-islamic-mmf-placement-limits.kernel.mjs",
       "sha256": "e5682e41688ab0c7625e83bde9262669391b3f54744afdd1243aeafe18edb41f"
     },
@@ -8169,6 +8221,10 @@
     {
       "path": "kernels/art-856-ijarah-imbt-schedule.mutation.json",
       "sha256": "20cc7467f9b83f5159888b35bec3557e32cfe7194f2cab7103d1d02b43283de9"
+    },
+    {
+      "path": "kernels/art-857-average-price-allocation.kernel.mjs",
+      "sha256": "6487cb6fdee65a7b749af930022f3d3df0f9a536a6395e5e5dda595da81a7b17"
     },
     {
       "path": "kernels/art-86-tls-pki-migration-planner.kernel.mjs",
@@ -8260,7 +8316,7 @@
     },
     {
       "path": "kernels/compute-proof.test.mjs",
-      "sha256": "5a464c81ed28068e07109210305ff2d0c7e7dfbb2ff6a61bb9c9265b2f7d6192"
+      "sha256": "509738d6d358ee07653b150f219b7ef87dc7c5fbe9ee49910940f181cae74aa0"
     },
     {
       "path": "kernels/cry-01-zk-compliance-proof-generator.kernel.mjs",
@@ -8412,7 +8468,7 @@
     },
     {
       "path": "kernels/fixtures/790-event-position-limit-check.fixtures.json",
-      "sha256": "1109fbdbf74f12d94b46e202d94a1fc7def74be094f78030f0f7ea85e29214f4"
+      "sha256": "eb0f0c07d45375b8c8a9d79923a885e9b1e4b9d7f9f121fb87073fe37d9749be"
     },
     {
       "path": "kernels/fixtures/790-event-position-limit-check.reachability.json",
@@ -8420,7 +8476,7 @@
     },
     {
       "path": "kernels/fixtures/792-curator-vault-cap-auditor.fixtures.json",
-      "sha256": "8f6ab8ac0b8f823eea2c0c432c3a2c1a6870e6ea6021d85704a08cca4058c363"
+      "sha256": "97b809c87c09d173fc82b5087c20840546bde11da8dff37c3b5c5a31b43f122a"
     },
     {
       "path": "kernels/fixtures/794-event-fee-recompute.fixtures.json",
@@ -8436,7 +8492,7 @@
     },
     {
       "path": "kernels/fixtures/795-stablecoin-refund-dispute.fixtures.json",
-      "sha256": "c7a6677729572a63cf3a28e1239ab46899ed57bedacac536c8349d81cd679dbb"
+      "sha256": "f704a859bf21c362f9c8cce424caeb71e99a998301d1c3d6f313bb56233b6bc9"
     },
     {
       "path": "kernels/fixtures/796-payment-system-mi-pack.fixtures.json",
@@ -8508,7 +8564,7 @@
     },
     {
       "path": "kernels/fixtures/827-agent-cred-class-matrix.fixtures.json",
-      "sha256": "a97ba58727f91e2023811a1f256c466df2e2e3903b4ab98df64cdd1823126879"
+      "sha256": "ac8ada05a7a6ec75ce03d4cd73f2ac801577462cd22575c629fbf5f89b101e7b"
     },
     {
       "path": "kernels/fixtures/827-agent-cred-class-matrix.reachability.json",
@@ -8549,6 +8605,10 @@
     {
       "path": "kernels/fixtures/845-je-period-lock-gate.fixtures.json",
       "sha256": "3664e6aaa63afaa44bab34ca758535d9550f996c70876ca2e832e4e932d9086b"
+    },
+    {
+      "path": "kernels/fixtures/858-fill-quality-summary.fixtures.json",
+      "sha256": "4216cbaa7f9a9771b4d1cd112afae44abc6bd221972c29c0fa433af96337deb2"
     },
     {
       "path": "kernels/fixtures/aiuc1-catalog-2026-q1.json",
@@ -9100,11 +9160,11 @@
     },
     {
       "path": "kernels/fixtures/art-211-prediction-market-analyzer.fixtures.json",
-      "sha256": "79501b989d27bf06fb1f8c15e0645e67e4aa22036dfc0f7b42b3751f952032c3"
+      "sha256": "43f0f6557ff17e17dee4899fdcea55a2b8c8eed6fddf80c08010a9baf08787ea"
     },
     {
       "path": "kernels/fixtures/art-212-prediction-market-arbitrage.fixtures.json",
-      "sha256": "27f4dd709d1723fe74cc697bfa075ef05306da9a1566026eb527a4f4f62ef316"
+      "sha256": "9181a8b9b156eb22124d1b151e8c539718ea4b470386f4bd6c16929a97f27497"
     },
     {
       "path": "kernels/fixtures/art-213-perp-liquidation-calculator.fixtures.json",
@@ -9152,7 +9212,7 @@
     },
     {
       "path": "kernels/fixtures/art-223-conforming-loan-limit.fixtures.json",
-      "sha256": "425b91916972e38bcf057f5ebd3e882e6cc1081c1ac9d29e8913ef3e3c89b902"
+      "sha256": "ff8e346f51228ebc15df3bf157edaef7158c91d20b509121aa08c8867b19d60f"
     },
     {
       "path": "kernels/fixtures/art-224-fha-mip-eligibility.fixtures.json",
@@ -9168,7 +9228,7 @@
     },
     {
       "path": "kernels/fixtures/art-227-validate-adverse-action-notice.fixtures.json",
-      "sha256": "337e0c36c6122502092d8f00002d37d48db056c6666baebec37f631ebeed2b6b"
+      "sha256": "ded81ed8e8df1cd99ee50688e665b1423ad7effd8215f619e9d73f1a0bb6e56e"
     },
     {
       "path": "kernels/fixtures/art-228-build-adverse-action-notice.fixtures.json",
@@ -9232,7 +9292,7 @@
     },
     {
       "path": "kernels/fixtures/art-241-cbpr-structured-address-linter.fixtures.json",
-      "sha256": "5615a1c53427e71039b71e6013c68b1c994ef4f52bdd8511688cc4e9a4a361a0"
+      "sha256": "bc7cbdb6136ec72ec0621e8e13856bf42d3f440694361a64ed8c3dc576b8f654"
     },
     {
       "path": "kernels/fixtures/art-242-pacs008-party-completeness-validator.fixtures.json",
@@ -9248,7 +9308,7 @@
     },
     {
       "path": "kernels/fixtures/art-245-mt-mx-translation-fidelity-scorer.fixtures.json",
-      "sha256": "92881c0e6f22d6e91271157f0282067837061798a41a8446058aae70a2e9b16a"
+      "sha256": "34c7a16fb77f14930dcb205c89424d8b619b86a706e502b4b1d435dca18e2124"
     },
     {
       "path": "kernels/fixtures/art-246-lei-payment-binding-linter.fixtures.json",
@@ -9256,7 +9316,7 @@
     },
     {
       "path": "kernels/fixtures/art-247-prevalidation-readiness-scorer.fixtures.json",
-      "sha256": "88e0ebd23f0cc1320d486c48dec8b74952d6a2f71d728238400ae78ce5afcc32"
+      "sha256": "0c3d433d96843dd2c863bb505e628164ca0d9b53f1679d9d4a0fa38a438c884a"
     },
     {
       "path": "kernels/fixtures/art-248-compute-remittance-disclosure.fixtures.json",
@@ -9468,7 +9528,7 @@
     },
     {
       "path": "kernels/fixtures/art-295-einvoice-jurisdiction-mandate-router.fixtures.json",
-      "sha256": "2a6ffbad5c56068b58327e784ed53645dafc8ca21432cef0c9682e1e11d8bb69"
+      "sha256": "e4896551f9b286b0729888ce1e3ca2d5971ba723b890c90e81d092fad38340dc"
     },
     {
       "path": "kernels/fixtures/art-296-einvoice-transmission-receipt-builder.fixtures.json",
@@ -9552,7 +9612,7 @@
     },
     {
       "path": "kernels/fixtures/art-317-rhc-multiplier-reconciler.fixtures.json",
-      "sha256": "d7beb0b7ae539c18f8f4b06c7654a68f74f201024acd607b93030a0c6e5c4e46"
+      "sha256": "a9a1ac0b908f2962b0e384e03873305e440a3be89b858846c9b67df7391247c0"
     },
     {
       "path": "kernels/fixtures/art-318-rhc-regime-mapper.fixtures.json",
@@ -9560,7 +9620,7 @@
     },
     {
       "path": "kernels/fixtures/art-319-rhc-valuation-linter.fixtures.json",
-      "sha256": "9e5810caded6bfc5646efea4a03a5b9aa594f50454c77a853fe4045044c278e0"
+      "sha256": "c8c9bb9a5aac6a0cf3c96e5e82dde3dcc14cf40f0103a8663a74ee721187ffaf"
     },
     {
       "path": "kernels/fixtures/art-32-a2a-agent-card-trust-chain-validator.fixtures.json",
@@ -9636,7 +9696,7 @@
     },
     {
       "path": "kernels/fixtures/art-339-compute-gross-to-net.fixtures.json",
-      "sha256": "4ff501bbc25c8d797551f6a4a8641395dd654d98dd23fa6de5d903c99b7a2d48"
+      "sha256": "c31d151201606b2b2291c1638b4128c000c30dcb8833cc3e166c35108882d507"
     },
     {
       "path": "kernels/fixtures/art-34-tempo-fit-diagnostic.fixtures.json",
@@ -9672,7 +9732,7 @@
     },
     {
       "path": "kernels/fixtures/art-349-fedwire-structured-address-linter.fixtures.json",
-      "sha256": "746405396d597d9058e9c257d1f45e94473c27cdedcc59b10bcf80a97339b836"
+      "sha256": "feb2746fbf031e89a51134e905cbabe25ffad2e298df490a61d54b44ada6fec8"
     },
     {
       "path": "kernels/fixtures/art-35-tempo-payments-business-case.fixtures.json",
@@ -9756,7 +9816,7 @@
     },
     {
       "path": "kernels/fixtures/art-37-tempo-stablecoin-issuance.fixtures.json",
-      "sha256": "1ab5a874cdbff4112c6005acb61494a41af5d2bf754dcfab01332e8c95cd11b1"
+      "sha256": "64613fe30f6ae99b7afa35e8035c2767a5af0c5734f239cee750adf8cbc54401"
     },
     {
       "path": "kernels/fixtures/art-370-fed-2026-scenarios/baseline-domestic.csv",
@@ -10148,7 +10208,7 @@
     },
     {
       "path": "kernels/fixtures/art-466-dora-roi-builder.fixtures.json",
-      "sha256": "b2be19825fdf3c38c52bb8cce80a5ec6b2adbe16ca4be94c63c5dc65aea8c1cd"
+      "sha256": "506f596d5d699853510d94ce9d3e4043579c327a7dd97d647089c96191ab8c85"
     },
     {
       "path": "kernels/fixtures/art-467-dora-incident-classifier.fixtures.json",
@@ -10280,7 +10340,7 @@
     },
     {
       "path": "kernels/fixtures/art-499-check-safeguarding-reconciliation.fixtures.json",
-      "sha256": "fc62f8bf73c12e80397152e575bf2c38f27841d8c4109e2d787a4f783ebc1fa7"
+      "sha256": "e1ce10120a01e6b3bba59cc560c9666c1430076d06560d197502cf99d41bd42a"
     },
     {
       "path": "kernels/fixtures/art-50-ficc-margin-netting-estimator.fixtures.json",
@@ -10400,7 +10460,7 @@
     },
     {
       "path": "kernels/fixtures/art-527-classify-ledger-consensus-finality.fixtures.json",
-      "sha256": "f5b39b37787af248aa5ef285f360d8571f3eb178d33341f465441a88d6a49886"
+      "sha256": "7a58c2978bb9d825331bccc65187a137e5d874e170537f4f76b11877596b8883"
     },
     {
       "path": "kernels/fixtures/art-528-cross-ccp-pqd-comparator.fixtures.json",
@@ -10564,7 +10624,7 @@
     },
     {
       "path": "kernels/fixtures/art-568-securitization-trustee-report-recompute.fixtures.json",
-      "sha256": "d86d1f7aff9d450b1cbb95ed1ac8dd4aec5ede2fd6990b851948a644cefbb346"
+      "sha256": "0bf9928b977e3f99ed269626e3002eb722c1f2099b1898b29b34d0a4ed25910f"
     },
     {
       "path": "kernels/fixtures/art-569-muni-arbitrage-spending-exception-checker.fixtures.json",
@@ -10580,19 +10640,19 @@
     },
     {
       "path": "kernels/fixtures/art-571-lease-schedule-recompute-asc842-ifrs16.fixtures.json",
-      "sha256": "f2f4f078d47d9112872f78357aa9775cecb1483c2a020232bdd51c80d276abcb"
+      "sha256": "8b8dab4ea0e7e75b1b4b23cdbde5f6c3057a764cc71c1dcbfc787574ba4eeec9"
     },
     {
       "path": "kernels/fixtures/art-572-multi-garnishment-stacking-recompute.fixtures.json",
-      "sha256": "5fc67c39f0fe35a0ca66b14a914477936c062cf880d4150261d763863a7619b7"
+      "sha256": "8786c8333dc7bc8263c8c9f8bf7ce5ea179323ca123937c83cfc685e480692ce"
     },
     {
       "path": "kernels/fixtures/art-573-section16b-short-swing-profit-recompute.fixtures.json",
-      "sha256": "b134835443b5f5e2a2518d606d199f889c1c3e32ff77f5685a3ac5b5a9a0011b"
+      "sha256": "9564ff9e15973830913870431ba321481e7ea1a47468eb7771b15c7ae4ef42e7"
     },
     {
       "path": "kernels/fixtures/art-574-certified-payroll-prevailing-wage-recompute.fixtures.json",
-      "sha256": "9fba8821b54e7c3bdf034850b93a105272c9553bb773c7800d9168e4d5edd2b7"
+      "sha256": "fb0771614a430589d27ca7a65e12e3b3b684e08d2e681bfe4614d0e5b1f01cb7"
     },
     {
       "path": "kernels/fixtures/art-575-tmpg-fails-charge-recompute.fixtures.json",
@@ -10636,7 +10696,7 @@
     },
     {
       "path": "kernels/fixtures/art-584-proof-of-reserves-verifier.fixtures.json",
-      "sha256": "e7fe98829910e6532830837cde1e3fd866fe81120c0e88a857d3603b6ea01b41"
+      "sha256": "7b14082d8562b5c5dcc4308587aee9fc315c16dbe012452fed29b8aefe53f16b"
     },
     {
       "path": "kernels/fixtures/art-585-sanctions-screening-evidence-pack.fixtures.json",
@@ -10720,7 +10780,7 @@
     },
     {
       "path": "kernels/fixtures/art-604-erc8004-registry-entry-verifier.fixtures.json",
-      "sha256": "0667e9aa3019c6099d1166af7d93228634545408df1ab1410f3dc42c5e3a9a21"
+      "sha256": "a5a0d7e997eb14de2694b5bf5e75301adc7dcb603339e2f554899a1262635554"
     },
     {
       "path": "kernels/fixtures/art-605-merkle-airdrop-proof-verifier.fixtures.json",
@@ -10792,7 +10852,7 @@
     },
     {
       "path": "kernels/fixtures/art-620-summa-mst-inclusion-checker.fixtures.json",
-      "sha256": "ccb47cd783b46dacb505e0741fccf1baff86ff100f10947191e6c2a7210553c5"
+      "sha256": "6f28240a4d79e5758a3742cae62e105f2053bf2f1f93f0c54258c4164f63c010"
     },
     {
       "path": "kernels/fixtures/art-621-summa-mst-liability-aggregator.fixtures.json",
@@ -10916,11 +10976,11 @@
     },
     {
       "path": "kernels/fixtures/art-662-odnsf-fee-recompute.fixtures.json",
-      "sha256": "1823b95e94252b76e87272ab79b0d4ba29d87e986b3e3fdb43f1230404a00417"
+      "sha256": "0984f6095006d3070c641c9cfb81c7d8706b4e038fc1a24accaae22d87d0a157"
     },
     {
       "path": "kernels/fixtures/art-663-apy-earned-recompute.fixtures.json",
-      "sha256": "50ce73ad1c6f4f67262aac5648a68e40a3092e52141d2e4d20ba94df03ee52ff"
+      "sha256": "a25c4e79ad1d174fc1dc224f5e8547f8770a708482f32de01cd5253c6e01a4c2"
     },
     {
       "path": "kernels/fixtures/art-663-apy-earned-recompute.reachability.json",
@@ -10932,7 +10992,7 @@
     },
     {
       "path": "kernels/fixtures/art-665-gl-tieout-recompute.fixtures.json",
-      "sha256": "77252aa88d379b760ea7866a4a2b7ff6ec7d9e2c57c7cf4a7a84c4fea8d1bdcb"
+      "sha256": "7a7eb08f048b3a16f95d0b5aab6a464e88a33b910af9c626924414cea2f47cd4"
     },
     {
       "path": "kernels/fixtures/art-669-algo-execution-schedule-simulator.fixtures.json",
@@ -11112,7 +11172,7 @@
     },
     {
       "path": "kernels/fixtures/art-713-scorp-election-break-even.fixtures.json",
-      "sha256": "432a47eef378325b6d2eda3f7fc0e23cdff8df43368a938cdf859bc6b5b262e0"
+      "sha256": "b20e9576c05c2ba19fb3567f2a6ff4221ddb47e353e39ee52a4843238953f373"
     },
     {
       "path": "kernels/fixtures/art-715-token2022-transfer-fee-reconciler.fixtures.json",
@@ -11156,7 +11216,7 @@
     },
     {
       "path": "kernels/fixtures/art-750-diff-evidence-bundles.fixtures.json",
-      "sha256": "41e2d86940790bcc377305cc1a60f6530e83aa14e17519d339822e4300c5e64b"
+      "sha256": "ac858118124f6e24d8015b252f27e941a0f7c22fb5c69830adbbd9afb4649fea"
     },
     {
       "path": "kernels/fixtures/art-751-sha256-hmac-digest-demonstrator.fixtures.json",
@@ -11176,7 +11236,7 @@
     },
     {
       "path": "kernels/fixtures/art-756-sales-ote-commission-analyzer.fixtures.json",
-      "sha256": "acea5a6300fffb3921e5649c61f0ccc2587e1d056344567521f97f38a20eed72"
+      "sha256": "d1ec4719028d90b8ec66702e9972422636351bfc6816837ae43b3f0cddc1cf72"
     },
     {
       "path": "kernels/fixtures/art-758-hdhp-ppo-break-even.fixtures.json",
@@ -11320,7 +11380,7 @@
     },
     {
       "path": "kernels/fixtures/art-81-allocation-affirmation-conformance.fixtures.json",
-      "sha256": "64497ecc7ffce48fd21436d009a07b01f5fb14dfc57bb31f8fb4710879379d85"
+      "sha256": "e93771dc169eaed56a58cd3ef144b49dde3f2dfe52816cd3832c7baeb0b119b3"
     },
     {
       "path": "kernels/fixtures/art-811-check-dti-within-policy-private.disclosure.json",
@@ -11332,7 +11392,7 @@
     },
     {
       "path": "kernels/fixtures/art-814-qf-pairwise-recompute.fixtures.json",
-      "sha256": "3930e025713e473e450a2b86bd45748bec77ca090ec35fd1c06ff4b7b5c3acf8"
+      "sha256": "2cda88ce80ab7cd75a3b00a7a9d4248b01f62c2c9c7e74c55d3eb79fc8eff765"
     },
     {
       "path": "kernels/fixtures/art-816-eip3009-agent-spend-gate.fixtures.json",
@@ -11352,7 +11412,7 @@
     },
     {
       "path": "kernels/fixtures/art-820-negotiate-ucp-capabilities.fixtures.json",
-      "sha256": "e4d7d3f7a140f812aac70781a5a6e46ea4e7ef81b3f60104702c2ea2a21298af"
+      "sha256": "f6594ec06240c0e6bdd006c1225944234ca2b8fb4d3a32ebadcb93ee5af5b19f"
     },
     {
       "path": "kernels/fixtures/art-820-negotiate-ucp-capabilities.reachability.json",
@@ -11360,11 +11420,11 @@
     },
     {
       "path": "kernels/fixtures/art-826-authenticator-assurance-level.fixtures.json",
-      "sha256": "11a5eb6b737a2d523b39561baf281f2f18c972a9491e79b6ab59c1c7c146bb59"
+      "sha256": "13ffe8f9154fd908e080ca787078eee51a6cd7495fda9b11f1d06903c2bc5cd8"
     },
     {
       "path": "kernels/fixtures/art-828-reconcile-omnibus-token-position.fixtures.json",
-      "sha256": "fb31519a4c98fcb101ac33d2c9068749b1cfbf4b3ec9353feb47e13b21684284"
+      "sha256": "3542248183957ae86e8e0fd041fcd2fe5781fae79e5da7409e4e18ab57c3731f"
     },
     {
       "path": "kernels/fixtures/art-828-reconcile-omnibus-token-position.reachability.json",
@@ -11447,6 +11507,14 @@
       "sha256": "3e07afed64988310bbb06d0545a349bce6ca106012cfa86dec2265b6d00b8d49"
     },
     {
+      "path": "kernels/fixtures/art-850-shariah-equity-purification.fixtures.json",
+      "sha256": "6eae6a083d053506777c9f90b8db85aab6137d85d5aec9a12757588c3da8fad9"
+    },
+    {
+      "path": "kernels/fixtures/art-850-shariah-equity-purification.reachability.json",
+      "sha256": "8a21b48f5dd88765911ef95addae052e124732b6dd6c1b424ab6f8c5b95c9d1c"
+    },
+    {
       "path": "kernels/fixtures/art-851-islamic-mmf-placement-limits.fixtures.json",
       "sha256": "225a01308591d220127240803775be07e9ed44f2981c358c6eb7aa4133ea5fe1"
     },
@@ -11465,6 +11533,10 @@
     {
       "path": "kernels/fixtures/art-856-ijarah-imbt-schedule.fixtures.json",
       "sha256": "9c362217fd019d2154273f1616641d02f3f68c5df10a142afb361b471d5548fd"
+    },
+    {
+      "path": "kernels/fixtures/art-857-average-price-allocation.fixtures.json",
+      "sha256": "976908264d3281bef6a9dc2e246c174cb3f0121884f1234d33ef2a1572dfc7ee"
     },
     {
       "path": "kernels/fixtures/art-86-tls-pki-migration-planner.fixtures.json",
@@ -11521,6 +11593,10 @@
     {
       "path": "kernels/fixtures/art-99-mica-transitional-deadline-router.fixtures.json",
       "sha256": "ae5d5012e6fc16d1b7c341b4704671f2e2b406972b373edf29cf93e5069c949c"
+    },
+    {
+      "path": "kernels/fixtures/compute-proof-310/art-313-traiga-exposure-assessor.receipt.json",
+      "sha256": "6568833ad48cfff45b8ac8a627fb53621b26b73158d4912b990a023b38a9ac1b"
     },
     {
       "path": "kernels/fixtures/compute-proof/503-canton-tokenization-readiness-diagnostic.receipt.json",
@@ -11592,11 +11668,11 @@
     },
     {
       "path": "kernels/fixtures/compute-proof/792-curator-vault-cap-auditor.receipt.json",
-      "sha256": "50e3393b3e45735d17fc8fe0d88c1d6eced84ff4339c16a116da6baa3ca47d57"
+      "sha256": "5a025543244fb74399273172dc0092d1b8c7037d71255d8e40c1c922cdabe208"
     },
     {
       "path": "kernels/fixtures/compute-proof/795-stablecoin-refund-dispute.receipt.json",
-      "sha256": "0561e7d5f4e5a8c1a5d3031595ee91e3d18cd439bacbe2208c0db33be8c5fa37"
+      "sha256": "9c6287b8f5857ab0d19b5f4390083fc782daca8d19a980d1035197373a3d7293"
     },
     {
       "path": "kernels/fixtures/compute-proof/806-event-contract-terms-lint.receipt.json",
@@ -11604,7 +11680,7 @@
     },
     {
       "path": "kernels/fixtures/compute-proof/808-lst-share-rate-reconciler.receipt.json",
-      "sha256": "7a6889af66939eb032b3deca42b2bcb8b94c429fdf0fb00d2467da3a6d250567"
+      "sha256": "64ecd8f0d9ee9a7b6ef39276df74d0d0f87746b3da215b1c49abc6b95fdf93ec"
     },
     {
       "path": "kernels/fixtures/compute-proof/812-eth-staking-queue.receipt.json",
@@ -11628,7 +11704,7 @@
     },
     {
       "path": "kernels/fixtures/compute-proof/827-agent-cred-class-matrix.receipt.json",
-      "sha256": "d19db517ce2eea5636d00d7216acfa84e5c1e0c8add606be76e5358e30fa46cd"
+      "sha256": "86bf533519ab296f690357b33370a878350867826bcd06594e9f35869b222924"
     },
     {
       "path": "kernels/fixtures/compute-proof/art-01-ap2-mandate-chain-validator.receipt.json",
@@ -11740,7 +11816,7 @@
     },
     {
       "path": "kernels/fixtures/compute-proof/art-12-acp-checkout-conformance-validator.receipt.json",
-      "sha256": "3c743310edd643d8e1a4f89ec43b35d35bc79d78146c718ed2eb53d6219f2334"
+      "sha256": "38a4b578e58c684e7947ab2888eaafb967f29be236ec4b481353b5d81f544bc9"
     },
     {
       "path": "kernels/fixtures/compute-proof/art-120-recall-trace-resolver.receipt.json",
@@ -12060,7 +12136,7 @@
     },
     {
       "path": "kernels/fixtures/compute-proof/art-208-royalty-split-validator.receipt.json",
-      "sha256": "d06645f9a9d75638f04980f292e376047b7b3840b3ed7e3ac18cbdaddbbdd334"
+      "sha256": "199c7a2e72dfdd57b2f2eabd3a539e249f27a804a2e466389c7b7f51a0a52bfe"
     },
     {
       "path": "kernels/fixtures/compute-proof/art-209-nft-metadata-validator.receipt.json",
@@ -12076,15 +12152,15 @@
     },
     {
       "path": "kernels/fixtures/compute-proof/art-211-prediction-market-analyzer.receipt.json",
-      "sha256": "2306b91bc7fe62cae0a1ce7d45e821ba8c4e99af7824830a36894545eeff3670"
+      "sha256": "e121f59c8fa1e580b53ecd01ac47bb7c141fee4e0b5b33e8be35f7db5b18007a"
     },
     {
       "path": "kernels/fixtures/compute-proof/art-212-prediction-market-arbitrage.receipt.json",
-      "sha256": "6aa09bd33a31d2e70c6350ad5bd9d012955f466db891361a5d14f65b0df3a46f"
+      "sha256": "242ee7bb342fe37c48c3910ad63b981128c8eed6fb808a1d9a4eba343fa302c6"
     },
     {
       "path": "kernels/fixtures/compute-proof/art-213-perp-liquidation-calculator.receipt.json",
-      "sha256": "a70c214b911ad62ecf0d24d559ee5b4c422248328d1ccaac3578d987d41168d2"
+      "sha256": "f3c5e10273b317a2a36583b4c41722ae567a4dbe841d0cb8355040e4419978ef"
     },
     {
       "path": "kernels/fixtures/compute-proof/art-214-perp-position-lifecycle.receipt.json",
@@ -12128,7 +12204,7 @@
     },
     {
       "path": "kernels/fixtures/compute-proof/art-223-conforming-loan-limit.receipt.json",
-      "sha256": "815530249bcbc51354e96db63ae45a56e3b475756a9bc6770c19ed8385616fdb"
+      "sha256": "a10911053f0f5404d1db4d127b4651d00343f102aa0277627bb025cdb1020445"
     },
     {
       "path": "kernels/fixtures/compute-proof/art-224-fha-mip-eligibility.receipt.json",
@@ -12144,7 +12220,7 @@
     },
     {
       "path": "kernels/fixtures/compute-proof/art-227-validate-adverse-action-notice.receipt.json",
-      "sha256": "ece712b15fde785fdb2a134bfb1355e5df1718b4c1a5587adfb3b693f261dbd0"
+      "sha256": "8ad9bb8bb3cc48007a5388fee69a90a20ae3b72768aa2b83b4ba2f7d0d6dc8ab"
     },
     {
       "path": "kernels/fixtures/compute-proof/art-228-build-adverse-action-notice.receipt.json",
@@ -12208,7 +12284,7 @@
     },
     {
       "path": "kernels/fixtures/compute-proof/art-241-cbpr-structured-address-linter.receipt.json",
-      "sha256": "800eb26fc391587da6d7c45d9412eceb7c02f592fb393f3509f28e5a0e9f437f"
+      "sha256": "eb75a4040922e21d0ef8a77f8609ad9ef239669984af2108799c1afcd826ac72"
     },
     {
       "path": "kernels/fixtures/compute-proof/art-242-pacs008-party-completeness-validator.receipt.json",
@@ -12224,7 +12300,7 @@
     },
     {
       "path": "kernels/fixtures/compute-proof/art-245-mt-mx-translation-fidelity-scorer.receipt.json",
-      "sha256": "c642a44f07474752898848a7344a4382d4f2cdd44aaae4b77ddebe4d16d24a30"
+      "sha256": "45d5c9186c868dbd2558929fd57d3dc815c6baa017b10f18f4df6fb0a40bf86a"
     },
     {
       "path": "kernels/fixtures/compute-proof/art-246-lei-payment-binding-linter.receipt.json",
@@ -12232,7 +12308,7 @@
     },
     {
       "path": "kernels/fixtures/compute-proof/art-247-prevalidation-readiness-scorer.receipt.json",
-      "sha256": "4cb57c89b4613638c2c8da15d995716aa48b113f3a45c6ed1de69066414011b9"
+      "sha256": "6faf354581441b322f2cf881efc7c319f12d295ca92da3b31c5f204c5e79477e"
     },
     {
       "path": "kernels/fixtures/compute-proof/art-248-compute-remittance-disclosure.receipt.json",
@@ -12392,7 +12468,7 @@
     },
     {
       "path": "kernels/fixtures/compute-proof/art-295-einvoice-jurisdiction-mandate-router.receipt.json",
-      "sha256": "dadb4100e11ae1496793185dd616345b3b6af859f66af59061d9fcc65582ff03"
+      "sha256": "3eafc88338370a77f7e9ef3aa4c1448a72f789a714c6958e0a788a15e795e763"
     },
     {
       "path": "kernels/fixtures/compute-proof/art-296-einvoice-transmission-receipt-builder.receipt.json",
@@ -12484,15 +12560,23 @@
     },
     {
       "path": "kernels/fixtures/compute-proof/art-339-compute-gross-to-net.receipt.json",
-      "sha256": "ed6da3e635dc7a4d521006461f7f93595fd8f0d18ee130620af9ef02eff6c27e"
+      "sha256": "5998c57f22538f0b03f67ddffb5a68f13e72e8b407fa0c199e3a40eef35ffcad"
     },
     {
       "path": "kernels/fixtures/compute-proof/art-34-tempo-fit-diagnostic.receipt.json",
       "sha256": "88732745bd57e4eeede76ca00d0cfdca20e7c848d50395e2faec4469f415292f"
     },
     {
+      "path": "kernels/fixtures/compute-proof/art-349-fedwire-structured-address-linter.receipt.json",
+      "sha256": "8c3c1af3b69a380788bb9fc81bfb58241e6d843525eab40d05de0836e3492b81"
+    },
+    {
       "path": "kernels/fixtures/compute-proof/art-35-tempo-payments-business-case.receipt.json",
       "sha256": "604234cc980e908278ad2d5bcdaa3b0b3659122881b068b9db1193a9c654bd8d"
+    },
+    {
+      "path": "kernels/fixtures/compute-proof/art-350-fedwire-address-sweep.receipt.json",
+      "sha256": "fee303c2d24041e8683df3b3aa2ba46487013774bdd500e26d429cccbaf11455"
     },
     {
       "path": "kernels/fixtures/compute-proof/art-355-erba-standardized-rwa-calculator.receipt.json",
@@ -12524,7 +12608,7 @@
     },
     {
       "path": "kernels/fixtures/compute-proof/art-37-tempo-stablecoin-issuance.receipt.json",
-      "sha256": "0b50e42cbfd12c2e72eccf25255171c71299cde8da451c27c6f9246d1db5ac85"
+      "sha256": "22173a20bfb31867f0422db1821a0f94bc4775947615a2049e2734190b3888c6"
     },
     {
       "path": "kernels/fixtures/compute-proof/art-370-supervisory-scenario-replay.receipt.json",
@@ -12591,6 +12675,10 @@
       "sha256": "c1b5f0fb7ca812c98dc8f055fe7130323d4b0d57ecb66c50e54a599088df9849"
     },
     {
+      "path": "kernels/fixtures/compute-proof/art-499-check-safeguarding-reconciliation.receipt.json",
+      "sha256": "2fac8e8588cc94de73283c58c3dc2d1a618d9fbe2b11cb32ed835a287447cc9a"
+    },
+    {
       "path": "kernels/fixtures/compute-proof/art-50-ficc-margin-netting-estimator.receipt.json",
       "sha256": "77972bfdab12ffd40e0f833020ee61dcdff5d4e0c80cba57812e5585949cfaae"
     },
@@ -12601,6 +12689,10 @@
     {
       "path": "kernels/fixtures/compute-proof/art-52-digital-trade-fit-diagnostic.receipt.json",
       "sha256": "5431fa3ae21095bb4e446e87e317a7e5b77a961de87ca2fc1f86928e65762e7f"
+    },
+    {
+      "path": "kernels/fixtures/compute-proof/art-527-classify-ledger-consensus-finality.receipt.json",
+      "sha256": "7dc3aaa479bcc18ae0e7dd95c653f8683b678f6c9b4cf6c8eb38a34b5680938c"
     },
     {
       "path": "kernels/fixtures/compute-proof/art-53-mletr-ebl-conformance-validator.receipt.json",
@@ -12619,12 +12711,36 @@
       "sha256": "fcdfc8ac92efd326a16b075c1facf34338a789937194fd653c2543ba77c72841"
     },
     {
+      "path": "kernels/fixtures/compute-proof/art-568-securitization-trustee-report-recompute.receipt.json",
+      "sha256": "98a633b329e43c0ee5c5a16d2d57b8343659f969533b866990829a65f5c26ea9"
+    },
+    {
       "path": "kernels/fixtures/compute-proof/art-57-deposit-token-compliance-validator.receipt.json",
       "sha256": "b4eed0c61329f8003be362b27aa9a141c25052e0573cac7793d2ce6de3821c00"
     },
     {
+      "path": "kernels/fixtures/compute-proof/art-571-lease-schedule-recompute-asc842-ifrs16.receipt.json",
+      "sha256": "6584474d3d8f93458dccd247deade6f59b1b67e3a0125953d51f7e8452c2a89d"
+    },
+    {
+      "path": "kernels/fixtures/compute-proof/art-572-multi-garnishment-stacking-recompute.receipt.json",
+      "sha256": "4f1dc1f53090e062555ba9daa7472fab0be4ed6f23c42a6371cf723f9c96ebf3"
+    },
+    {
+      "path": "kernels/fixtures/compute-proof/art-573-section16b-short-swing-profit-recompute.receipt.json",
+      "sha256": "32fba1ce12724eb6400533e50db324d89050b6387bcd29e4a8f8e3fff8d42c98"
+    },
+    {
+      "path": "kernels/fixtures/compute-proof/art-574-certified-payroll-prevailing-wage-recompute.receipt.json",
+      "sha256": "083400efa1af8a5f0b723635b52593c25ade958699cb6a3c5413ae8002b62c3c"
+    },
+    {
       "path": "kernels/fixtures/compute-proof/art-58-cross-network-settlement-validator.receipt.json",
       "sha256": "c6db9a38be67a4c2d82f414cfe3bf6079d0a7ada9130809f67849690189bbc3d"
+    },
+    {
+      "path": "kernels/fixtures/compute-proof/art-584-proof-of-reserves-verifier.receipt.json",
+      "sha256": "12fde96fde500718bb0e24a781d015f50a8f6102055dffb54f06d57897e76b77"
     },
     {
       "path": "kernels/fixtures/compute-proof/art-59-settlement-asset-finality-classifier.receipt.json",
@@ -12649,6 +12765,10 @@
     {
       "path": "kernels/fixtures/compute-proof/art-60-agent-economy-runtime-fit-diagnostic.receipt.json",
       "sha256": "384d5a42ee5b861438206420668c6a43919c5441be14cd2e9cbf2aac891b6b32"
+    },
+    {
+      "path": "kernels/fixtures/compute-proof/art-604-erc8004-registry-entry-verifier.receipt.json",
+      "sha256": "be8291532aeb59b00ddb4374cadc61d4420a2d3a5410dc6339a936761c8b856b"
     },
     {
       "path": "kernels/fixtures/compute-proof/art-605-merkle-airdrop-proof-verifier.receipt.json",
@@ -12679,6 +12799,10 @@
       "sha256": "502daf148a302c822faa0e116fd84c07924db96ca1cd111d268ea19f45c0b96f"
     },
     {
+      "path": "kernels/fixtures/compute-proof/art-620-summa-mst-inclusion-checker.receipt.json",
+      "sha256": "0e1f63bf0817721ca12f78ce1d5c147d63f4234945766cb79b386aebd3e61a6a"
+    },
+    {
       "path": "kernels/fixtures/compute-proof/art-63-agent-service-metering-modeler.receipt.json",
       "sha256": "c6c2531852a24f831754f515c2d9147af76ed14d39e92af9c8568d820fd1b269"
     },
@@ -12704,7 +12828,11 @@
     },
     {
       "path": "kernels/fixtures/compute-proof/art-663-apy-earned-recompute.receipt.json",
-      "sha256": "c00ecd858a8a4bbd29f6358673b5ca02a16229eabc00338c66f99a96334a10b1"
+      "sha256": "c29bc9150d870b3c6c02872452a7d14c207a7a0bc1b4fc84f0536b2485ae082e"
+    },
+    {
+      "path": "kernels/fixtures/compute-proof/art-665-gl-tieout-recompute.receipt.json",
+      "sha256": "6964a5a4ec1c92f8ac383b2e529b274a6facfd0b32ad8ff4bf7b9a04af60ed51"
     },
     {
       "path": "kernels/fixtures/compute-proof/art-67-agentic-ai-risk-classifier.receipt.json",
@@ -12828,11 +12956,11 @@
     },
     {
       "path": "kernels/fixtures/compute-proof/art-708-v4-hook-permission-reconciler.receipt.json",
-      "sha256": "57fee020793fb0f4f404a0663a50016d1aaf0159b0ae98cebfc91d177e872640"
+      "sha256": "0154ebaff587ff4bc68f6b23017224d33cdaf3edea5aadb8f93a2c0d27ca5e42"
     },
     {
       "path": "kernels/fixtures/compute-proof/art-709-v4-hook-fee-conformance.receipt.json",
-      "sha256": "5d6aada84046c6e29152a7386fe82fd3511f9dbe3c6b06c4fc7f33875cffab5a"
+      "sha256": "383c94f0649b602ac10daeb381ef4419f023d785985672cd153dc78c196db68a"
     },
     {
       "path": "kernels/fixtures/compute-proof/art-71-cbam-certificate-cost-engine.receipt.json",
@@ -12840,7 +12968,7 @@
     },
     {
       "path": "kernels/fixtures/compute-proof/art-710-tsv-stoppage-concurrency.receipt.json",
-      "sha256": "0a98e701fa200f42d16b14320bea9123aec25b4d01817f00bc0b5a2bd366490c"
+      "sha256": "f1e47d02b04f8d0e0bc53f02b2d4a0ffffca548f1b80f36ce806302866162932"
     },
     {
       "path": "kernels/fixtures/compute-proof/art-711-sco60-crypto-asset-exposure-classifier-v2.receipt.json",
@@ -12848,7 +12976,7 @@
     },
     {
       "path": "kernels/fixtures/compute-proof/art-713-scorp-election-break-even.receipt.json",
-      "sha256": "f7931fa3627be97775e1ac6e9a0599c762f4b6643068ca537999822bf270e90a"
+      "sha256": "c2482e8a2dada95e97d66bfa5ad62d2f635f0b6395994a423279368501a127ea"
     },
     {
       "path": "kernels/fixtures/compute-proof/art-715-token2022-transfer-fee-reconciler.receipt.json",
@@ -12884,7 +13012,7 @@
     },
     {
       "path": "kernels/fixtures/compute-proof/art-750-diff-evidence-bundles.receipt.json",
-      "sha256": "98155be836327fa4a7b81541984781936b7ef3bca24644ecede13cbfa12266a2"
+      "sha256": "d7ad2e6926039a6cad4bb2f9bb7f306a8b927576cb8f1c1f109acd136acfcce5"
     },
     {
       "path": "kernels/fixtures/compute-proof/art-752-freelance-quarterly-estimated-tax.receipt.json",
@@ -12896,7 +13024,7 @@
     },
     {
       "path": "kernels/fixtures/compute-proof/art-756-sales-ote-commission-analyzer.receipt.json",
-      "sha256": "27c35782cb8936a8bb21209e829af571e23aeba99af3227c820f1eee4d03dd86"
+      "sha256": "46e0201496877182379b473048ed0fab7ab17b280d947a13cdad07ec79c286c4"
     },
     {
       "path": "kernels/fixtures/compute-proof/art-758-hdhp-ppo-break-even.receipt.json",
@@ -12912,7 +13040,7 @@
     },
     {
       "path": "kernels/fixtures/compute-proof/art-760-espp-break-even-optimal-sell.receipt.json",
-      "sha256": "ca6ac067108ad3b93b4bd915425abcf1df200ccc220f66b643d2910a1b470d71"
+      "sha256": "9f44269018c30756e4f0d4fee8e5c9701e67becf575fe4d8f9302de3f9e4b013"
     },
     {
       "path": "kernels/fixtures/compute-proof/art-761-caregiver-income-impact.receipt.json",
@@ -13004,11 +13132,11 @@
     },
     {
       "path": "kernels/fixtures/compute-proof/art-81-allocation-affirmation-conformance.receipt.json",
-      "sha256": "d923cc72497b4a5c786ef4f40cc9337c56a084f19cfe51eab46698439d0b6642"
+      "sha256": "f8a7d37ab17ad72f1b655a3f83b0c8b59a925b6e50f88000510118caa3f45724"
     },
     {
       "path": "kernels/fixtures/compute-proof/art-814-qf-pairwise-recompute.receipt.json",
-      "sha256": "3bc1e8b6f275974fc5fb5ab061ee5d2d2f58acae96721cdd1cef79a0799b4f5c"
+      "sha256": "211382d3ced82fa7512a49d66c6e9b13a97f875edeed362cc51f549073ea2f02"
     },
     {
       "path": "kernels/fixtures/compute-proof/art-818-zcash-reg-classifier.receipt.json",
@@ -13024,11 +13152,11 @@
     },
     {
       "path": "kernels/fixtures/compute-proof/art-820-negotiate-ucp-capabilities.receipt.json",
-      "sha256": "8d9ca06b9a42caf69178881aaeac90ab11a6c4effa1481510bc2381875c91e5b"
+      "sha256": "babf3d0496f153580edbbc1b25432defcf9658480e1206735899e8e78122d6bb"
     },
     {
       "path": "kernels/fixtures/compute-proof/art-826-authenticator-assurance-level.receipt.json",
-      "sha256": "0990b14f59300be2995e2a22012ebf999d698679d98c282865befea94380362a"
+      "sha256": "d6d86c73b35401cf3ddb26f4e5689b9c0c1d019fdd45a7ca85733276b54daded"
     },
     {
       "path": "kernels/fixtures/compute-proof/art-83-buy-in-exposure-modeler.receipt.json",
@@ -13368,7 +13496,7 @@
     },
     {
       "path": "kernels/index.mjs",
-      "sha256": "bcc1950c49a45ebc662dbaf063a860feb3ba5a1b7b2b59f348febf01a6cb433c"
+      "sha256": "28d6932ed2672e6f155be87affa8d923a247bda7caf6415f349530265a07cce1"
     },
     {
       "path": "kernels/inline-hash-equality.test.mjs",
@@ -13452,7 +13580,7 @@
     },
     {
       "path": "kernels/mutation-tiers.config.json",
-      "sha256": "f543a2844c47859328422bfc53b3a588bd28d62e698b7a70c6f662ce5b5e8b2d"
+      "sha256": "2f2b4a5e7247ce983e0f3d111c361a60b8bbc64b2aef23dde543627ca925a5bb"
     },
     {
       "path": "kernels/parity-art-01.test.mjs",
@@ -13532,7 +13660,7 @@
     },
     {
       "path": "kernels/registry-lineage-records.json",
-      "sha256": "fc1dc810df5f63ec65a96c6b4cad4abda59184b08010484c166b0f0e23541d23"
+      "sha256": "48d35dcc8e7619fda1a8405226232ef956a27403f29fb163e2ae7f98c581b632"
     },
     {
       "path": "kernels/seed-replay.test.mjs",
@@ -13612,11 +13740,11 @@
     },
     {
       "path": "openchain-graph-v0.4.schema.json",
-      "sha256": "07e0ffe4c767ae8acc770d0addaa6a3e881e387840e141d873c486600162a1e4"
+      "sha256": "ccbc31d3a1bfb76af39693792133ce51f8ee75d0e6f56b540c76261f46f4e4d6"
     },
     {
       "path": "SPEC.md",
-      "sha256": "c42548ca927e4589decf66a5377910359e5a0a83495fc2044faf651a04cb7705"
+      "sha256": "c98fa06dea9858ac26301ea990afb1670da93ae75342598943d966cf8d266395"
     }
   ]
 }

@@ -18,7 +18,7 @@
       {
         "node_id": "n2",
         "kernel_id": "art-584-proof-of-reserves-verifier",
-        "kernel_digest": "sha256:852795237d7839b503e955db5db49f8d87ff6dc9edeb5a31687fca2e6f660b66"
+        "kernel_digest": "sha256:baa378330b8b67426fbb7c1bedb41d2dc689735f0740925ad22d70fa891fbcbf"
       },
       {
         "node_id": "n3",
@@ -35,7 +35,7 @@
     "gates": [],
     "actions": []
   },
-  "workflow_manifest_digest": "sha256:c85baf3a2d5b93a4684003405079c2f811f0008791d9e96cbe453b4d8fd0b5af",
+  "workflow_manifest_digest": "sha256:2d18251476fc1f204328fa8d8b9c0d64fda374d645054473dcb46b7d1c230e6e",
   "declared_inputs": [],
   "steps_meta": [
     {

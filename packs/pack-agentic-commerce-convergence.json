@@ -18,7 +18,7 @@
       {
         "node_id": "n2",
         "kernel_id": "art-12-acp-checkout-conformance-validator",
-        "kernel_digest": "sha256:4ee210e9f360aea1ea09609253ca4e223bc00065d42aa2a672f4ffb5a866afc2"
+        "kernel_digest": "sha256:763c756ba14cdb41f480953061d41148819391d5f84b8f804c9c9ba7a2b58dbe"
       },
       {
         "node_id": "n3",
@@ -30,7 +30,7 @@
     "gates": [],
     "actions": []
   },
-  "workflow_manifest_digest": "sha256:9cfc2adb11b69ab3978a9a5fc5f69a5d93c744d7d051fa840435c1403f6f0dbf",
+  "workflow_manifest_digest": "sha256:d8d0b6b2d4ae6f415e564eb0be91a98c01275fe4fd80857a5803c5e6ce38a2bb",
   "declared_inputs": [],
   "steps_meta": [
     {

@@ -18,14 +18,14 @@
       {
         "node_id": "n2",
         "kernel_id": "art-245-mt-mx-translation-fidelity-scorer",
-        "kernel_digest": "sha256:73f7c3c049de7635ae66cf29bf86a1bef0c8cc9a4e52ce6c1ae66c27e4c90f4d"
+        "kernel_digest": "sha256:d1a0b8ba63bb570e013def9e6b9abdca1745788ff83e3b6e7aba1a6d5176ad90"
       }
     ],
     "connectors": [],
     "gates": [],
     "actions": []
   },
-  "workflow_manifest_digest": "sha256:292f9089b701269b537a9c173de4b24491eed3d58fd2bf6ed473e468ff787e55",
+  "workflow_manifest_digest": "sha256:1122feebf2da2865fe2665602b88a8cb656cc5237210916fa6afb35dd064c57d",
   "declared_inputs": [],
   "steps_meta": [
     {

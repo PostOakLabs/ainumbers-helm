@@ -18,7 +18,7 @@
       {
         "node_id": "n2",
         "kernel_id": "art-12-acp-checkout-conformance-validator",
-        "kernel_digest": "sha256:4ee210e9f360aea1ea09609253ca4e223bc00065d42aa2a672f4ffb5a866afc2"
+        "kernel_digest": "sha256:763c756ba14cdb41f480953061d41148819391d5f84b8f804c9c9ba7a2b58dbe"
       },
       {
         "node_id": "n3",
@@ -35,7 +35,7 @@
     "gates": [],
     "actions": []
   },
-  "workflow_manifest_digest": "sha256:ae5527d51bf3d1cb90c4eefa15f5b01c16b982f743937196811086bff6a07258",
+  "workflow_manifest_digest": "sha256:ab68fd3c155e97745562df2d0e309eaac100b7b137b5a437a3c4e1a5e07dff9c",
   "declared_inputs": [
     {
       "from": "art-02-agent-spend-policy-simulator",
