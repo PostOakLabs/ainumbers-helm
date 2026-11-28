@@ -13,7 +13,7 @@
       {
         "node_id": "n1",
         "kernel_id": "art-81-allocation-affirmation-conformance",
-        "kernel_digest": "sha256:9fc6a79e641f9ef6d5828a5d7dab51f388fea19179dfc01ec116853d112c07a4"
+        "kernel_digest": "sha256:a32b3603ffe409a383537ba1407fd9965dc9331ac2793a34e0201f22a3f4f550"
       },
       {
         "node_id": "n2",
@@ -30,7 +30,7 @@
     "gates": [],
     "actions": []
   },
-  "workflow_manifest_digest": "sha256:bdc8fe0a0ac6259f75791d87de1f1bb96bbfbfd25c521ad4d76f547c0f99af73",
+  "workflow_manifest_digest": "sha256:f85aa5ab2e9af26d84e02f965c390d9603b04f0f7d67cbdb92c136b787f69ad8",
   "declared_inputs": [
     {
       "from": "art-77-t1-settlement-readiness-diagnostic",

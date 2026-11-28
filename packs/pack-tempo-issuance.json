@@ -13,7 +13,7 @@
       {
         "node_id": "n1",
         "kernel_id": "art-37-tempo-stablecoin-issuance",
-        "kernel_digest": "sha256:252b8f7b8a64ab8a59613d891c4849f52fdc3322a68a98de86dd032a2305f6ae"
+        "kernel_digest": "sha256:8a69e4f528386042c0313042e7aaf02e47a2332a7db9eb710b91e13f85467d4c"
       },
       {
         "node_id": "n2",
@@ -30,7 +30,7 @@
     "gates": [],
     "actions": []
   },
-  "workflow_manifest_digest": "sha256:310dbf6cb75225a657c28ac64d82847c43cc13bd5327087087e6ec2f87f2ce92",
+  "workflow_manifest_digest": "sha256:592e6e78fe1922c3bad2ac748a9869594afd14b1f8d0a3c4e57581c557479e3e",
   "declared_inputs": [
     {
       "from": "art-34-tempo-fit-diagnostic",

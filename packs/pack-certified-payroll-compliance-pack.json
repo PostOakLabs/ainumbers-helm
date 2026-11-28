@@ -13,7 +13,7 @@
       {
         "node_id": "n1",
         "kernel_id": "art-574-certified-payroll-prevailing-wage-recompute",
-        "kernel_digest": "sha256:4da565b656d200c214becb712b820a097894e9edeae66b4275e34854847911c7"
+        "kernel_digest": "sha256:15356ce6d2138cd5ab65250450f70aff4eb56c1ec9f44e8f64ed67cfa7b62d9d"
       },
       {
         "node_id": "n2",
@@ -30,7 +30,7 @@
     "gates": [],
     "actions": []
   },
-  "workflow_manifest_digest": "sha256:adf485b0e9e8407a55b511af2515579c8f4bcafd4f9b6d025a03a56c9381d5ba",
+  "workflow_manifest_digest": "sha256:d31c68bc79d71ccdf6f7553fa0b8edd3b23379ccdcb7cdd3212dceb21fd35900",
   "declared_inputs": [],
   "steps_meta": [
     {

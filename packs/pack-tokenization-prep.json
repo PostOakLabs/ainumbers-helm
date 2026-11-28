@@ -23,7 +23,7 @@
       {
         "node_id": "n3",
         "kernel_id": "art-208-royalty-split-validator",
-        "kernel_digest": "sha256:e264583d242ab0d715775d7f1ac1a87d7a26916f3fa44a5082a6c2facfa61705"
+        "kernel_digest": "sha256:20ed9dff4580fedd37d55f70933ea67a9c7396e92759cd1e8636dd1226067ecd"
       },
       {
         "node_id": "n4",
@@ -40,7 +40,7 @@
     "gates": [],
     "actions": []
   },
-  "workflow_manifest_digest": "sha256:c22f0d0572b0382e0cbef0a70db282f360f90d40e4096b67fb0ebdd7b78dea4e",
+  "workflow_manifest_digest": "sha256:e747bb5966cd732feca5cedd1b125f3bb960c38f0c2cb886f5234f72ca150e21",
   "declared_inputs": [],
   "steps_meta": [
     {

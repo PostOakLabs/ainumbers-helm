@@ -13,7 +13,7 @@
       {
         "node_id": "n1",
         "kernel_id": "art-662-odnsf-fee-recompute",
-        "kernel_digest": "sha256:08217afde2dfb95ca1d609a0f728de20f5c0786e6784d47b79847984109622a3"
+        "kernel_digest": "sha256:96b81492f13d9e398309ad1e6ffc48f4c4b91f2afd27992e83fed452bcad9fa6"
       },
       {
         "node_id": "n2",
@@ -25,7 +25,7 @@
     "gates": [],
     "actions": []
   },
-  "workflow_manifest_digest": "sha256:28f6010cd1c8f96fea90fd4ca90b9f2b8778f4cd8da816105c10ca74e132c9c2",
+  "workflow_manifest_digest": "sha256:9cc6bf0cecae31f474f70896e388db328c29754fee601da0ab2c8fd386ff3361",
   "declared_inputs": [],
   "steps_meta": [
     {

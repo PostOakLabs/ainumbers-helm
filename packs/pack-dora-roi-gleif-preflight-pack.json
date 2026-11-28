@@ -13,7 +13,7 @@
       {
         "node_id": "n1",
         "kernel_id": "art-466-dora-roi-builder",
-        "kernel_digest": "sha256:4f605ce91ebec16f4f7e409b383f1f5f273b5f3e0551894aed9765e2b7681d80"
+        "kernel_digest": "sha256:32bccaf880b7193ab5430857244909678e38fbe92c16fbd0af6490c1565f0ef6"
       },
       {
         "node_id": "n2",
@@ -35,7 +35,7 @@
     "gates": [],
     "actions": []
   },
-  "workflow_manifest_digest": "sha256:a9c30e0b80ee46c41535490d71a8b0b0a0783622f8314a84765cdd9225bd286b",
+  "workflow_manifest_digest": "sha256:afe7199ce201b698caddaa781f1d3fd2a0a19406014591a7a0364d7b588c9891",
   "declared_inputs": [],
   "steps_meta": [
     {
